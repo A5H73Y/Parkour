@@ -22,6 +22,9 @@ public class Parkour extends JavaPlugin {
 	private static Economy economy;
 
 	public void onEnable() {
+		System.out.println("Thank you for using a Parkour development build.");
+		System.out.println("Please add me on skype iA5H73Y to discuss anything.");
+		
 		//Option to populate entire courseList on join. Check if list is populated, then set static savedLocally = false. Method to return will check if set and retrieve appropriately
 		plugin = this;
 		config = new Configurations();
