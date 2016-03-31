@@ -1,0 +1,10 @@
+name: Parkour
+main: me.A5H73Y.Parkour.Parkour
+version: 4.0
+author: A5H73Y
+softdepend: [Vault]
+description: Most powerful Parkour plugin available
+commands:
+  parkour:
+    aliases: [pa, pkr]
+    description: Parkour commands
