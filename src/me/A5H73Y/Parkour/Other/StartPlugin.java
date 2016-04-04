@@ -20,14 +20,17 @@ import com.huskehhh.mysql.Database;
 import com.huskehhh.mysql.mysql.MySQL;
 import com.huskehhh.mysql.sqlite.SQLite;
 
+import de.bg.derh4nnes.TitleActionBarAPI;
+
 public class StartPlugin {
 
-	static Plugin vault;
-	
+	static Plugin vault, barAPI;
+
 	public static void run(){
 		Static.initiate();
 		initiateSQL();
 		setupVault();
+		setupBarAPI();
 		populatePlayers();
 		//Updater
 		Parkour.getMCLogger().info("[Parkour] Enabled Parkour v" + Static.getVersion() + "!");
@@ -60,7 +63,7 @@ public class StartPlugin {
 		}else{
 			database = new SQLite(Parkour.getPlugin().getDataFolder().toString() + File.separator + "parkour.db");
 		}
-		
+
 		try {
 			database.openConnection();
 		} catch (ClassNotFoundException e) {
@@ -72,7 +75,7 @@ public class StartPlugin {
 		}
 
 		database.setupTables();
-		
+
 		Parkour.setDatabaseObj(database);
 	}
 
@@ -83,12 +86,12 @@ public class StartPlugin {
 		}
 		return (Parkour.getEconomy() != null);
 	}
-	
-	
+
+
 	private static void populatePlayers(){
 		if (!new File(Static.PATH).exists())
 			return;
-		
+
 		try {
 			HashMap<String, PPlayer> players = (HashMap<String, PPlayer>) Utils.loadAllPlaying(Static.PATH);
 			PlayerMethods.setPlaying(players);
@@ -97,4 +100,13 @@ public class StartPlugin {
 		}
 	}
 
+	private static void setupBarAPI(){
+		PluginManager pm = Parkour.getPlugin().getServer().getPluginManager();
+		barAPI = pm.getPlugin("TitleActionbarAPI");
+		System.out.println(pm.getPlugins());
+		if (barAPI != null && barAPI.isEnabled()) {
+			Parkour.getMCLogger().info("[Parkour] Linked with TitleActionbarAPI v" + barAPI.getDescription().getVersion());
+			Static.setBarAPI(true);
+		}
+	}
 }

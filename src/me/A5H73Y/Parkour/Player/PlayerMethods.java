@@ -39,6 +39,7 @@ public class PlayerMethods {
 		
 		PPlayer pplayer = getPlayerInfo(playerName);
 		
+		Utils.sendTitle(player, "Joining " + course.getName());
 		//TODO Send Title (API Needed)
 		
 		if (pplayer == null){
@@ -56,6 +57,7 @@ public class PlayerMethods {
 			return;
 
 		PPlayer pplayer = getPlayerInfo(player.getName());
+		Utils.sendSubTitle(player, "Leaving " + pplayer.getCourse().getName());
 
 		player.sendMessage(Utils.getTranslation("Parkour.Leave").replace("%COURSE%", pplayer.getCourse().getName()));
 		removePlayer(player.getName());

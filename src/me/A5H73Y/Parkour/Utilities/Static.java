@@ -18,6 +18,7 @@ public class Static {
 	private static Map<String, String> questions = new HashMap<String, String>();
 	private static List<String> quiet = new ArrayList<String>();
 	private static boolean economy = false;
+	private static boolean barAPI = false;
 	private static boolean devBuild = true;
 	private static ParkourBlocks pblocks;
 
@@ -102,4 +103,11 @@ public class Static {
 		return pblocks;
 	}
 	
+	public static void setBarAPI(boolean value){
+		barAPI = value;
+	}
+	
+	public static boolean getBarAPI(){
+		return barAPI;
+	}
 }

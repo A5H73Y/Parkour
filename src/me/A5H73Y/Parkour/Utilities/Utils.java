@@ -12,13 +12,10 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map.Entry;
 
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Other.ParkourBlocks;
-import me.A5H73Y.Parkour.Player.PPlayer;
-import me.A5H73Y.Parkour.Player.PlayerMethods;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -28,6 +25,8 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+
+import de.bg.derh4nnes.TitleActionBarAPI;
 
 public final class Utils {
 
@@ -290,7 +289,6 @@ public final class Utils {
 	 * @throws Exception
 	 */
 	public static void saveAllPlaying(Object obj,String path){
-		System.out.println("Saving... " + obj);
 		try{
 			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path));
 			oos.writeObject(obj);
@@ -310,5 +308,38 @@ public final class Utils {
 			ex.printStackTrace();
 		}
 		return result;
+	}
+
+	public static void sendTitle(Player player, String title){
+		if (Static.containsQuiet(player.getName()))
+			return;
+		if (Static.getBarAPI())
+			TitleActionBarAPI.sendPlayerTitle(player, 5, 25, 5, title);
+		else
+			player.sendMessage(Static.getParkourString() + title);
+	}
+	public static void sendActionBar(Player player, String title){
+		if (Static.containsQuiet(player.getName()))
+			return;
+		if (Static.getBarAPI())
+			TitleActionBarAPI.sendPlayerActionbar(player, title);
+		else
+			player.sendMessage(Static.getParkourString() + title);
+	}
+	public static void sendFullTitle(Player player, String title, String subTitle){
+		if (Static.containsQuiet(player.getName()))
+			return;
+		if (Static.getBarAPI())
+			TitleActionBarAPI.sendFullTitle(player, 5, 25, 5, title, subTitle);
+		else
+			player.sendMessage(Static.getParkourString() + title + " " + subTitle);
+	}
+	public static void sendSubTitle(Player player, String subTitle){
+		if (Static.containsQuiet(player.getName()))
+			return;
+		if (Static.getBarAPI())
+			TitleActionBarAPI.sendPlayerSubTitle(player, 5, 25, 5, subTitle);
+		else
+			player.sendMessage(Static.getParkourString() + subTitle);
 	}
 }
