@@ -6,11 +6,13 @@ import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -18,6 +20,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 public class ParkourListener implements Listener {
 
@@ -130,7 +133,36 @@ public class ParkourListener implements Listener {
 		if (PlayerMethods.isPlaying(event.getEntity().getName()))
 			event.setCancelled(true);
 	}
+
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+			return;
+
+		Player player = event.getPlayer();
+
+		if (!player.isSneaking())
+			return;
+
+		if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.getAction().equals(Action.RIGHT_CLICK_AIR))
+			return;
+
+		//Check if test mode
+
+		if (player.getInventory().getItemInMainHand().getType() == Material.ARROW){
+			//pl.getConfig().getInt("SuicideID")){
+			PlayerMethods.playerDie(player);
+
+		} else if (player.getInventory().getItemInMainHand().getType() == Material.BONE){
+			Utils.toggleVisibility(player, Static.containsHidden(player.getName()));
+
+		} else if (player.getInventory().getItemInMainHand().getType() == Material.LEAVES) {
+			PlayerMethods.playerLeave(player);
+
+		} else if (player.getInventory().getItemInMainHand().getType() == Material.REDSTONE_TORCH_ON) {
+			//TODO CodJumper
+		}
+
+	}
 }
 
-
-}

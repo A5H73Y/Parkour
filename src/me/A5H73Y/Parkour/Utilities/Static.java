@@ -17,6 +17,7 @@ public class Static {
 	private static List<String> courseList = new ArrayList<String>();
 	private static Map<String, String> questions = new HashMap<String, String>();
 	private static List<String> quiet = new ArrayList<String>();
+	private static List<String> hidden = new ArrayList<String>();
 	private static boolean economy = false;
 	private static boolean barAPI = false;
 	private static boolean devBuild = true;
@@ -109,5 +110,17 @@ public class Static {
 	
 	public static boolean getBarAPI(){
 		return barAPI;
+	}
+
+	public static boolean containsHidden(String playerName){
+		return hidden.contains(playerName);
+	}
+	
+	public static void addHidden(String playerName) {
+		hidden.add(playerName);
+	}
+
+	public static void removeHidden(String playerName) {
+		hidden.remove(playerName);
 	}
 }

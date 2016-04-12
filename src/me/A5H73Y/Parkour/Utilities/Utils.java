@@ -346,4 +346,20 @@ public final class Utils {
 		else
 			player.sendMessage(Static.getParkourString() + subTitle);
 	}
+
+	public static void toggleVisibility(Player player, boolean enabled) {
+		for (Player players : Bukkit.getOnlinePlayers()) {
+			if (enabled)
+				player.hidePlayer(players);
+			else
+				player.showPlayer(players);
+		}
+		if (enabled){
+			Static.addHidden(player.getName());
+			player.sendMessage(Utils.getTranslation("Event.HideAll1"));
+		}else{
+			Static.removeHidden(player.getName());
+			player.sendMessage(Utils.getTranslation("Event.HideAll2"));
+		}
+	}
 }
