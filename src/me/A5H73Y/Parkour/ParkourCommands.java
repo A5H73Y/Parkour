@@ -19,8 +19,7 @@ public class ParkourCommands implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (label.equalsIgnoreCase("parkour") || label.equalsIgnoreCase("pa") || label.equalsIgnoreCase("pkr")) {
-
+		if (command.getName().equalsIgnoreCase("parkour")) {
 			// Player commands ============================================
 			if(sender instanceof Player){
 				Player player = (Player)sender;
@@ -161,7 +160,7 @@ public class ParkourCommands implements CommandExecutor {
 						PlayerMethods.toggleQuiet(player);
 					
 					} else if (args[0].equalsIgnoreCase("test")) {
-						if (!Utils.hasPermission(player, "Parkour.Basic", "Testmode"))
+						if (!Utils.hasPermission(player, "Parkour.Admin", "Testmode"))
 							return false;
 
 						//targetPlayer = Bukkit.getPlayer(cmdtarget);
@@ -176,7 +175,16 @@ public class ParkourCommands implements CommandExecutor {
 							return false;
 
 						Help.displayEconomy(args, player);
-
+						
+					} else if (args[0].equalsIgnoreCase("invite")) {
+						if (!Utils.hasPermission(player, "Parkour.Basic", "Invite"))
+							return false;
+						
+						if (!Utils.validateArgs(player, args.length, 2))
+							return false;
+						
+						PlayerMethods.invitePlayer(args, player);
+						
 					} else if (args[0].equalsIgnoreCase("list")) {
 						CourseMethods.list(args, player);
 
@@ -226,19 +234,16 @@ public class ParkourCommands implements CommandExecutor {
 					} else if (args[0].equalsIgnoreCase("cmds")) {
 						Help.displayCommands(args, player);
 
-					} else if (args[0].equalsIgnoreCase("yes")) {
+					} else if (args[0].equalsIgnoreCase("yes") || args[0].equalsIgnoreCase("no")) {
 						player.sendMessage(Static.getParkourString() + "You have not been asked a question!");
-
-					} else if (args[0].equalsIgnoreCase("no")) {
-						player.sendMessage(Static.getParkourString() + "You have not been asked a question!");	
 
 					} else if (args[0].equalsIgnoreCase("reload")){
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
 							return false;
 
-						Parkour.getParkourConfig().reload();;
+						Parkour.getParkourConfig().reload();
 						player.sendMessage(Utils.getTranslation("Other.Reload"));
-						Utils.Log(player.getName() + " reloaded the Parkour config");
+						Utils.logToFile(player.getName() + " reloaded the Parkour config");
 
 					} else {
 						player.sendMessage(Static.getParkourString() + "Unknown command!");
@@ -257,7 +262,7 @@ public class ParkourCommands implements CommandExecutor {
 						Backup.backupNow();
 						
 					} else if (args[0].equalsIgnoreCase("setlevel")){
-						
+						//TODO
 						
 					} else if (args[0].equalsIgnoreCase("cmds")) {
 						System.out.println("pa backup : Create a backup zip of the Parkour config folder");

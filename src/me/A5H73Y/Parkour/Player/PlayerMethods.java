@@ -10,6 +10,7 @@ import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -36,12 +37,12 @@ public class PlayerMethods {
 		prepareJoinPlayer(player);
 		player.teleport(course.getCheckpoints().get(0).getLocation());
 		CourseMethods.increaseView(course.getName());
-		
+
 		PPlayer pplayer = getPlayerInfo(playerName);
-		
+
 		Utils.sendTitle(player, "Joining " + course.getName());
 		//TODO Send Title (API Needed)
-		
+
 		if (pplayer == null){
 			addPlayer(playerName, new PPlayer(course));
 		}else{
@@ -118,15 +119,15 @@ public class PlayerMethods {
 			player.playEffect(player.getLocation(), Effect.FIREWORKS_SPARK, 5);
 			player.playSound(player.getLocation(), Sound.LEVEL_UP, 1L, 1L);
 		}
-		*/
-		
+		 */
+
 		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".Lobby")){
 			//TODO, load custom lobby
 		}
 		loadInventory(player);
 
 		//TODO prize
-		
+
 		DatabaseMethods.insertTime(courseName, player.getName(), pplayer.getTime(), pplayer.getDeaths());
 	}
 
@@ -137,7 +138,7 @@ public class PlayerMethods {
 	public static HashMap<String, PPlayer> getPlaying(){
 		return playing;
 	}
-	
+
 	public static void setPlaying(HashMap<String, PPlayer> pplayers){
 		playing = pplayers;
 	}
@@ -291,7 +292,7 @@ public class PlayerMethods {
 		 */
 		player.updateInventory();
 		player.sendMessage(Utils.getTranslation("Other.Kit"));
-		Utils.Log(player.getName() + " recieved the kit");
+		Utils.logToFile(player.getName() + " recieved the kit");
 	}
 
 	public static void getPermissions(Player player) {
@@ -313,11 +314,11 @@ public class PlayerMethods {
 			}
 		}
 	}
-	
+
 	private static void prepareJoinPlayer(Player player){
 		saveInventory(player);
 		preparePlayer(player, 0);
-		
+
 		//TODO did they join with a mode?
 		/*
 		if (usersData.contains("PlayerInfo." + player.getName() + ".Mode")){
@@ -329,7 +330,7 @@ public class PlayerMethods {
 				player.getInventory().setItem(3, suicide);
 			}
 		}*/
-		
+
 		//TODO inventory items
 		/*
 		if (getConfig().getBoolean("Other.onJoin.GiveSuicideID")) {
@@ -355,8 +356,8 @@ public class PlayerMethods {
 			suicide.setItemMeta(meta);
 			player.getInventory().setItem(2, suicide);
 		}
-		
-		
+
+
 			if (getConfig().getBoolean("Other.onJoin.GiveStatBook")) {
 				int leadertime1 = leaderData.getInt(course + ".1.time");
 				String leadername1 = leaderData.getString(course + ".1.player");
@@ -380,8 +381,8 @@ public class PlayerMethods {
 				player.getInventory().setItem(8, book);
 			}
 			player.updateInventory();
-		*/
-		
+		 */
+
 		//TODO charge player
 		/*
 		if (elinked) {
@@ -390,7 +391,7 @@ public class PlayerMethods {
 				player.sendMessage(econData.getInt("Price." + course + ".Join") + " was taken from your account for joining " + course);
 			}
 		}*/
-		
+
 	}
 
 	public static void preparePlayer(Player player, int gamemode){
@@ -481,12 +482,36 @@ public class PlayerMethods {
 		// TODO Change to testmode
 		if (isPlaying(player.getName())){
 			removePlayer(player.getName());
-			player.sendMessage(Static.getParkourString() + "Test mode: " + Static.Aqua + "OFF");
+			Utils.sendActionBar(player, Static.getParkourString() + Utils.Colour("Test Mode: &bOFF"));
 		}else{
 			Course course = new Course("Test Mode", null, Static.getParkourBlocks());
 			addPlayer(player.getName(), new PPlayer(course));
-			player.sendMessage(Static.getParkourString() + "Test mode: " + Static.Aqua + "ON");
+			Utils.sendActionBar(player, Static.getParkourString() + Utils.Colour("Test Mode: &bON"));
 		}
 
+	}
+
+	public static void invitePlayer(String[] args, Player player) {
+		if (!isPlaying(player.getName()))
+			return;
+
+		Course course = CourseMethods.findByPlayer(player.getName());
+		Player target = Bukkit.getPlayer(args[1]);
+
+		if (course == null || target == null)
+			return;
+
+		//TODO Check if = player or testmode
+
+		player.sendMessage(Utils.getTranslation("Parkour.Invite.Send")
+				.replace("%COURSE%", course.getName()
+						.replace("%TARGET%", target.getName())));
+
+		target.sendMessage(Utils.getTranslation("Parkour.Invite.Recieve1")
+				.replace("%COURSE%", course.getName()
+						.replace("%PLAYER%", player.getName())));
+
+		target.sendMessage(Utils.getTranslation("Parkour.Invite.Recieve2")
+				.replace("%COURSE%", course.getName()));
 	}
 }

@@ -86,13 +86,13 @@ public class Static {
 	}
 	
 	public static void addQuiet(Player player){
+		Utils.sendActionBar(player, getParkourString() + Utils.Colour("Quiet Mode: &bON"));
 		quiet.add(player.getName());
-		player.sendMessage(getParkourString() + Utils.Colour("Quiet Mode: &bON"));
 	}
 	
 	public static void removeQuiet(Player player){
 		quiet.remove(player.getName());
-		player.sendMessage(getParkourString() + Utils.Colour("Quiet Mode: &bOFF"));
+		Utils.sendActionBar(player, getParkourString() + Utils.Colour("Quiet Mode: &bOFF"));
 	}
 	
 	public static boolean containsQuiet(String playerName){

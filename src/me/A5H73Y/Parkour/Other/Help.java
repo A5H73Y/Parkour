@@ -6,6 +6,7 @@ import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public final class Help {
@@ -51,7 +52,7 @@ public final class Help {
 			player.sendMessage(Static.Gray + " Example: " + Static.White + example);
 		player.sendMessage("=== " + Static.Daqua + "Description" + Static.White + " ===");
 		player.sendMessage(description);
-		
+
 		player.sendMessage(ChatColor.BOLD + " " + ChatColor.RED + " Please remember this is a beta build, please report any inconsistancies or problems to A5H73Y.");
 	}
 
@@ -154,10 +155,8 @@ public final class Help {
 
 		if (args[1].equalsIgnoreCase("info")){
 			player.sendMessage(Static.getParkourString() + "Linked with Vault v" + StartPlugin.vault.getDescription().getVersion());
-			return;
-		}
 
-		if (args[1].equalsIgnoreCase("setprize")) {
+		}else if (args[1].equalsIgnoreCase("setprize")) {
 			if (!(args.length > 2)){
 				player.sendMessage(Utils.invalidSyntax("setprize", "(course) (amount)"));
 				return;
@@ -167,13 +166,9 @@ public final class Help {
 				return;
 			}
 
-			try {
-				Parkour.getParkourConfig().getEconData().set("Price." + args[2] + ".Finish", Integer.parseInt(args[3]));
-				Parkour.getParkourConfig().saveEcon();
-				player.sendMessage(Static.getParkourString() + "Prize for " + args[2] + " set to " + args[3]);
-			} catch (Exception ex) {
-				player.sendMessage(Utils.getTranslation("Error.Something").replaceAll("%ERROR%", ex.getMessage()));	
-			}
+			Parkour.getParkourConfig().getEconData().set("Price." + args[2] + ".Finish", Integer.parseInt(args[3]));
+			Parkour.getParkourConfig().saveEcon();
+			player.sendMessage(Static.getParkourString() + "Prize for " + args[2] + " set to " + args[3]);
 
 		}else if (args[1].equalsIgnoreCase("setfee")) {
 			if (!(args.length > 2)){
@@ -184,45 +179,50 @@ public final class Help {
 				player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[2]));
 				return;
 			}
-			
-			try {
-				Parkour.getParkourConfig().getEconData().set("Price." + args[2] + ".Join", Integer.parseInt(args[3]));
-				Parkour.getParkourConfig().saveEcon();
-				player.sendMessage(Static.getParkourString() + "Fee for " + args[2] + " set to " + args[3]);
-			} catch (Exception ex) {
-				player.sendMessage(Utils.getTranslation("Error.Something").replaceAll("%ERROR%", ex.getMessage()));	
-			}
+
+			Parkour.getParkourConfig().getEconData().set("Price." + args[2] + ".Join", Integer.parseInt(args[3]));
+			Parkour.getParkourConfig().saveEcon();
+			player.sendMessage(Static.getParkourString() + "Fee for " + args[2] + " set to " + args[3]);
+
 
 		} else if (args[1].equalsIgnoreCase("recreate")) {
 			player.sendMessage(Static.getParkourString() + "Starting Recreation...");
 			recreateEconomy();
 			player.sendMessage(Static.getParkourString() + "Process Complete!");
+			
 		} else {
 			player.sendMessage(Utils.invalidSyntax("econ", "(info / recreate / setprize / setfee)"));
 		}
 
 	}
-	
+
 	private static void recreateEconomy(){
+		FileConfiguration econ = Parkour.getParkourConfig().getEconData();
+		
 		for (int i = 0; i < Static.getCourses().size(); i++) {
 			String s = Static.getCourses().get(i);
 			try {
 				if (!(Parkour.getParkourConfig().getEconData().contains("Price." + s + ".Join"))) {
-					Parkour.getParkourConfig().getEconData().set("Price." + s + ".Join", 0);
+					econ.set("Price." + s + ".Join", 0);
 				}
 				if (!(Parkour.getParkourConfig().getEconData().contains("Price." + s + ".Finish"))) {
-					Parkour.getParkourConfig().getEconData().set("Price." + s + ".Finish", 0);
+					econ.set("Price." + s + ".Finish", 0);
 				}
-				Parkour.getParkourConfig().saveEcon();
 			} catch (Exception ex) {
-				System.out.println(Utils.getTranslation("Error.Something", false).replaceAll("%ERROR%", ex.getMessage()));	
+				Utils.log(Utils.getTranslation("Error.Something", false).replaceAll("%ERROR%", ex.getMessage()));	
 			}
 		}
+
+		Parkour.getParkourConfig().saveEcon();
 	}
 
 	public static void displaySQL(String[] args, Player player) {
 		player.sendMessage(Static.getParkourString() + "- SQL Details -");
-		player.sendMessage("Type: " + Parkour.getDatabaseObj().getType());
+
+		String type = Parkour.getDatabaseObj().getType();
+		player.sendMessage("Type: " + type);
+		player.sendMessage("Connected: " + (Parkour.getDatabaseObj().getConnection() != null));
+
 		//TODO 
 	}
 

@@ -7,13 +7,9 @@ import java.util.List;
 
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Utilities.Static;
-import me.A5H73Y.Parkour.Utilities.Utils;
 
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class Configurations {
 
@@ -197,6 +193,7 @@ public class Configurations {
 		stringData.addDefault("Event.AllCheckpoints", "All checkpoints achieved!");
 		stringData.addDefault("Event.HideAll1", "All players have magically reappeared!");
 		stringData.addDefault("Event.HideAll2", "All players have magically disappeared!");
+		stringData.addDefault("Event.Chat", "&0[%RANK%&0] &b%PLAYER%:&f %MESSAGE%");
 
 		stringData.addDefault("Parkour.Join", "Joined &b%COURSE%");
 		stringData.addDefault("Parkour.Leave", "You have left &b%COURSE%");

@@ -1,14 +1,22 @@
 package me.A5H73Y.Parkour;
 
 import me.A5H73Y.Parkour.Player.PlayerMethods;
+import me.A5H73Y.Parkour.Utilities.Settings;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class ParkourListener implements Listener {
@@ -27,7 +35,7 @@ public class ParkourListener implements Listener {
 				int command = Integer.parseInt(question[0]);
 				String argument = question[1];
 				Static.removeQuestion(player.getName());
-				
+
 				Utils.Confirm(command, argument, player);
 			} else if (event.getMessage().startsWith("/pa no")) {
 				player.sendMessage(Static.getParkourString() + "Question cancelled!");
@@ -58,4 +66,71 @@ public class ParkourListener implements Listener {
 			}
 		}
 	}
+
+	@EventHandler
+	public void onPlayerChat(AsyncPlayerChatEvent event) {
+		//if (pl.getConfig().getBoolean("Other.Use.Prefix")) {
+		//TODO
+		if (Settings.isDebug())
+			return;
+
+		String rank = Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + event.getPlayer().getName() + ".Rank");
+		rank = rank == null ? "Newbie" : rank;
+
+		event.setFormat(Utils.getTranslation("Event.Chat", false)
+				.replace("%RANK%", rank)
+				.replace("%PLAYER%", event.getPlayer().getName())
+				.replace("%MESSAGE%", event.getMessage()));
+	}
+
+
+	@EventHandler
+	public void onBlockPlace(BlockPlaceEvent event) {
+		if (PlayerMethods.isPlaying(event.getPlayer().getName()) && Utils.hasPermission(event.getPlayer(), "Parkour.Admin")) 
+			event.setCancelled(true);
+	}
+
+	@EventHandler
+	public void onBlockBreak(BlockBreakEvent event) {
+		if (PlayerMethods.isPlaying(event.getPlayer().getName()) && Utils.hasPermission(event.getPlayer(), "Parkour.Admin")) 
+			event.setCancelled(true);
+	}
+
+	@EventHandler
+	public void onEntityDamageEntity(EntityDamageByEntityEvent event) {
+		if (event.getEntity() instanceof Player) 
+			if (PlayerMethods.isPlaying(event.getEntity().getName()))
+				event.setCancelled(true);
+	}
+
+	@EventHandler
+	public void onPlayerDamage(EntityDamageEvent event) {
+		if (!(event.getEntity() instanceof Player))
+			return;
+
+		if (!PlayerMethods.isPlaying(event.getEntity().getName()))
+			return;
+
+		//TODO "Other.Use.PlayerDamage"
+		if (false)
+			event.setDamage(0);
+
+		Damageable player = (Player) event.getEntity();
+		if (player.getHealth() <= event.getDamage()) {
+			event.setCancelled(true);
+			PlayerMethods.playerDie((Player) event.getEntity()); 
+		}
+	}
+
+	@EventHandler
+	public void onHungerChange(FoodLevelChangeEvent event) {
+		if (!(event.getEntity() instanceof Player))
+			return;
+
+		if (PlayerMethods.isPlaying(event.getEntity().getName()))
+			event.setCancelled(true);
+	}
+}
+
+
 }

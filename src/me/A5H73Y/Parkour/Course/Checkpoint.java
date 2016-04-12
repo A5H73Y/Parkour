@@ -16,6 +16,9 @@ public class Checkpoint implements Serializable{
 
 	public Checkpoint(Location location, double x, double y, double z){
 		this.location = location;
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 	
 	public Location getLocation(){

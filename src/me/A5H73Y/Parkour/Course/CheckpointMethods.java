@@ -32,8 +32,8 @@ public class CheckpointMethods {
 			Location location = Utils.getLocation(courseName, "."+i+".");
 
 			if (location == null){
-				System.err.println("[Parkour] Invalid checkpoint: "+courseName+"."+i);
-				Utils.Log("Invalid checkpoint: "+courseName+"."+i);
+				Utils.log("[Parkour] Invalid checkpoint: "+courseName+"."+i);
+				Utils.logToFile("Invalid checkpoint: "+courseName+"."+i);
 				break;
 			}
 

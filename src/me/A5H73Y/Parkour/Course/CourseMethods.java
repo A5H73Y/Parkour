@@ -162,7 +162,7 @@ public class CourseMethods {
 		Parkour.getParkourConfig().getConfig().set(path + ".Z", loc.getZ());
 		Parkour.getParkourConfig().getConfig().set(path + ".Pitch", loc.getPitch());
 		Parkour.getParkourConfig().getConfig().set(path + ".Yaw", loc.getYaw());
-		Utils.Log(path + " was set by " + player.getName());
+		Utils.logToFile(path + " was set by " + player.getName());
 	}
 
 	public static void joinLobby(String[] args, Player player) {
@@ -247,7 +247,7 @@ public class CourseMethods {
 		player.sendMessage(Static.getParkourString() + "You are about to delete course " + Static.Aqua + args[1] + ChatColor.WHITE + "...");
 		player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
 		Static.addQuestion(player.getName(), 1, args[1]);
-		Utils.Log(args[1] + " was deleted by " + player.getName());
+		Utils.logToFile(args[1] + " was deleted by " + player.getName());
 	}
 
 	public static void list(String[] args, Player player) {
@@ -335,7 +335,7 @@ public class CourseMethods {
 		Parkour.getParkourConfig().saveCourses();
 
 		player.sendMessage(Utils.getTranslation("Parkour.Finish").replace("%COURSE%", args[1]));
-		Utils.Log(args[1] + " was set to finished by " + player.getName());
+		Utils.logToFile(args[1] + " was set to finished by " + player.getName());
 	}
 
 	public static void setPrize(String[] args, Player player) {
@@ -401,7 +401,7 @@ public class CourseMethods {
 		Parkour.getParkourConfig().getCourseData().set(selected + ".0.Z", player.getLocation().getZ());
 		Parkour.getParkourConfig().getCourseData().set(selected + ".0.Yaw", player.getLocation().getYaw());
 		Parkour.getParkourConfig().getCourseData().set(selected + ".0.Pitch", player.getLocation().getPitch());
-		Utils.Log(selected + " spawn was reset by " + player.getName());
+		Utils.logToFile(selected + " spawn was reset by " + player.getName());
 		player.sendMessage(Static.getParkourString() + "Spawn for " + Static.Aqua + selected + Static.White + " has been set to your position");
 
 	}

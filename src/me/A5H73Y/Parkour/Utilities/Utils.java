@@ -108,8 +108,12 @@ public final class Utils {
 
 		return seconds > 0 ? secondsn + ":" + minutesn + ":" + hoursn : minutesn + ":" + hoursn;
 	}
+	
+	public final static void log(String message) {
+		Parkour.getPlugin().getLogger().info(message);
+	}
 
-	public final static void Log(String message) {
+	public final static void logToFile(String message) {
 		if (Settings.isLog()){
 			try {
 				File saveTo = new File(Parkour.getParkourConfig().getDataFolder(), "Parkour.log");
