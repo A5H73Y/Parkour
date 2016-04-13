@@ -110,7 +110,7 @@ public class CourseMethods {
 			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", courseName));
 			return;
 		}
-		
+
 		if (!Validation.courseJoining(player, courseName))
 			return;
 
@@ -251,7 +251,7 @@ public class CourseMethods {
 		Utils.logToFile(args[1] + " was deleted by " + player.getName());
 	}
 
-	public static void list(String[] args, Player player) {
+	public static void displayList(String[] args, Player player) {
 		if (!(args.length == 1)) {
 			if (args[1].equalsIgnoreCase("players")) {
 				if (PlayerMethods.getPlaying().size() == 0){
@@ -261,6 +261,7 @@ public class CourseMethods {
 
 				player.sendMessage(Static.getParkourString() + PlayerMethods.getPlaying().size() + " players using Parkour: ");
 
+				//TODO pages
 				for (Map.Entry<String, PPlayer> entry : PlayerMethods.getPlaying().entrySet()) { 
 					player.sendMessage(" " + Static.Aqua + entry.getKey() + ChatColor.WHITE + " - " +
 							ChatColor.DARK_GRAY + " C: " + ChatColor.GRAY + entry.getValue().getCourse().getName() + 
@@ -274,11 +275,10 @@ public class CourseMethods {
 					return;
 				}
 
-
 				List<String> courseList = Static.getCourses();
 				int page = (args.length == 3 && args[2] != null ? Integer.parseInt(args[2]) : 1);
-				int pages = 1;
-				int x = 0;
+				int pages = 1, x = 0;
+
 				for (int i=0;i<courseList.size();i++){
 					x++;
 					if (x == 8){x = 0;pages++;}
@@ -286,16 +286,17 @@ public class CourseMethods {
 				player.sendMessage(Static.getParkourString() + courseList.size() + " courses:");
 				if (page < 1 || page > pages){
 					player.sendMessage(Static.getParkourString() + "Invalid page. Maximum: " + pages); 
-				}else{
-					// max of 8?
-					for (int i=0;i<courseList.size();i++){
-						int max = page * 8;
-						if(i >= (max - 8) && i < (max)){
-							player.sendMessage((i + 1) + ") " + Static.Aqua + courseList.get(i));	
-						}
-					}
-					player.sendMessage("== " + ChatColor.GRAY + page + Static.White + " / " + ChatColor.DARK_GRAY + pages + Static.White + " ==");
+					return;
 				}
+				
+				for (int i=0;i<courseList.size();i++){
+					int max = page * 8;
+					if(i >= (max - 8) && i < (max)){
+						player.sendMessage((i + 1) + ") " + Static.Aqua + courseList.get(i));	
+					}
+				}
+				player.sendMessage("== " + ChatColor.GRAY + page + Static.White + " / " + ChatColor.DARK_GRAY + pages + Static.White + " ==");
+
 			} else {
 				player.sendMessage(Utils.invalidSyntax("list", "(players / courses)"));
 			}
@@ -412,7 +413,7 @@ public class CourseMethods {
 			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
 			return;
 		}
-		
+
 		Parkour.getParkourConfig().getCourseData().set(args[1] + ".Creator", args[2]);
 		Parkour.getParkourConfig().saveCourses();
 		player.sendMessage(Static.getParkourString() + "Creator of " + args[1] + " was set to " + Static.Aqua +  args[2]);

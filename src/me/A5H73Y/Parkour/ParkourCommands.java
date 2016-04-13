@@ -186,7 +186,7 @@ public class ParkourCommands implements CommandExecutor {
 						PlayerMethods.invitePlayer(args, player);
 						
 					} else if (args[0].equalsIgnoreCase("list")) {
-						CourseMethods.list(args, player);
+						CourseMethods.displayList(args, player);
 
 					} else if (args[0].equalsIgnoreCase("help")) {
 						Help.lookupCommandHelp(args, player);

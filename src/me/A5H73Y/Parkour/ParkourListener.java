@@ -1,15 +1,19 @@
 package me.A5H73Y.Parkour;
 
-import me.A5H73Y.Parkour.Course.CourseMethods;
+import me.A5H73Y.Parkour.Course.Checkpoint;
+import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Other.SignMethods;
+import me.A5H73Y.Parkour.Player.PPlayer;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Settings;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,11 +29,15 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerToggleFlightEvent;
 
 public class ParkourListener implements Listener {
 
 	SignMethods sm = new SignMethods();
-	
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		Player player = event.getPlayer();
@@ -141,6 +149,54 @@ public class ParkourListener implements Listener {
 	}
 
 	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		//TODO actual joinonMessage settings
+		if (Settings.isWelcomeMessage()) {
+			event.getPlayer().sendMessage(Utils.getTranslation("Event.Join").replace("%VERSION%", Static.getVersion()));
+		}
+
+		//TODO check how performance is
+		if (PlayerMethods.isPlaying(event.getPlayer().getName())){
+			event.getPlayer().sendMessage(Utils.getTranslation("Parkour.Continue")
+					.replace("%COURSE%", PlayerMethods.getPlayerInfo(event.getPlayer().getName()).getCourse().getName()));
+		}
+	}
+
+
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		//TODO "Other.onLeave.ResetPlayer"
+		if (Settings.isWelcomeMessage()){
+			if (PlayerMethods.isPlaying(event.getPlayer().getName()))
+				PlayerMethods.playerLeave(event.getPlayer());
+		}
+	}
+
+	@EventHandler
+	public void onTeleport(PlayerTeleportEvent event) {
+		if (Settings.isForceWorld()){
+			if (PlayerMethods.isPlaying(event.getPlayer().getName())){
+				if (event.getFrom().getWorld() != event.getTo().getWorld()){
+					event.setCancelled(true);
+					event.getPlayer().sendMessage(Utils.getTranslation(""));
+					//TODO Translation "Teleporting to a different world has been cancelled."
+				}
+			}	
+		}
+	}
+
+	@EventHandler
+	public void onFlyToggle(PlayerToggleFlightEvent event) {
+		if (PlayerMethods.isPlaying(event.getPlayer().getName())) {
+			if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
+				event.getPlayer().setAllowFlight(false);
+				event.getPlayer().setFlying(false);
+				event.setCancelled(true);
+			}
+		}
+	}
+
+	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
 			return;
@@ -179,7 +235,7 @@ public class ParkourListener implements Listener {
 
 			if (event.getLine(1).equalsIgnoreCase("join") || event.getLine(1).equalsIgnoreCase("j")) {
 				sm.joinCourse(event, player);
-				
+
 			} else if (event.getLine(1).equalsIgnoreCase("finish") || event.getLine(1).equalsIgnoreCase("f")) {
 				sm.createStandardCourseSign(event, player, "Finish");
 
@@ -200,12 +256,50 @@ public class ParkourListener implements Listener {
 
 			} else if (event.getLine(1).equalsIgnoreCase("stats") || event.getLine(1).equalsIgnoreCase("s")) {
 				//TODO - Not sure what to do for this.
-				
+
 			} else {
 				player.sendMessage(Parkour.getParkourConfig() + "Unknown Command");
 				event.setLine(1, ChatColor.RED + "Unknown cmd");
 				event.setLine(2, "");
 				event.setLine(3, "");
+			}
+		}
+	}
+
+	@EventHandler
+	public void PressurePlate(PlayerInteractEvent event) {
+		if (event.getAction() == Action.PHYSICAL) {
+			Block plate = event.getClickedBlock();
+			Block below = plate.getRelative(BlockFace.DOWN);
+
+			if (below == null) 
+				return;
+
+			if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+				return;
+
+			PPlayer pplayer = PlayerMethods.getPlayerInfo(event.getPlayer().getName());
+			Course course = pplayer.getCourse();
+
+			if (course.getCheckpoints().size() <= pplayer.getCheckpoint())
+				return;
+
+			Checkpoint check = course.getCheckpoints().get(pplayer.getCheckpoint() + 1);
+
+			if (check == null)
+				return;
+
+			if (check.getX() == below.getLocation().getBlockX() &&
+					check.getY() == below.getLocation().getBlockY() &&
+					check.getZ() == below.getLocation().getBlockZ()){
+
+				pplayer.increaseCheckpoint();
+
+				if (course.getCheckpoints().size() == pplayer.getCheckpoint()){
+					event.getPlayer().sendMessage(Utils.getTranslation("Event.AllCheckpoints"));
+				} else {
+					event.getPlayer().sendMessage(Utils.getTranslation("Event.Checkpoint") + pplayer.getCheckpoint() +  " / " + course.getCheckpoints().size());
+				}
 			}
 		}
 	}
