@@ -27,6 +27,8 @@ public class PlayerMethods {
 
 	/**
 	 * This method is only called from the CourseMethods after course validation.
+	 * It will retrieve a course object which will then be referenced against the player. 
+	 * We prepare the player for the course here.
 	 * 
 	 * @param player
 	 * @param course
@@ -52,6 +54,11 @@ public class PlayerMethods {
 		}
 	}
 
+	/**
+	 * Called when the player requests to leave a course. 
+	 * Will remove the player from the players which will also dispose of their course session.
+	 * @param player
+	 */
 	public static void playerLeave(Player player){
 		//TODO Add admin forcing other players to leave
 		if (!isPlaying(player.getName()))
@@ -67,6 +74,11 @@ public class PlayerMethods {
 		loadInventory(player);
 	}
 
+	/**
+	 * Called when the player 'dies' this can be from real events (Like falling from too high), or native 
+	 * Parkour deaths (walking on a deathblock)
+	 * @param player
+	 */
 	public static void playerDie(Player player){
 		if (!isPlaying(player.getName()))
 			return;
@@ -105,6 +117,11 @@ public class PlayerMethods {
 		}
 	}
 
+	/**
+	 * This will be called when the player completes the course.
+	 * Their reward will be given here.
+	 * @param player
+	 */
 	public static void playerFinish(Player player){
 		if (!isPlaying(player.getName()))
 			return;
@@ -131,6 +148,19 @@ public class PlayerMethods {
 		DatabaseMethods.insertTime(courseName, player.getName(), pplayer.getTime(), pplayer.getDeaths());
 	}
 
+	/**
+	 * The following methods are used throughout the plugin.
+	 * Please see the PPlayer object for more information. 
+	 * @param playerName
+	 * @return
+	 */
+	public static PPlayer getPlayerInfo(String playerName){
+		if (isPlaying(playerName))
+			return playing.get(playerName);
+
+		return null;
+	}
+	
 	public static boolean isPlaying(String playerName){
 		return playing.containsKey(playerName);
 	}
@@ -143,13 +173,12 @@ public class PlayerMethods {
 		playing = pplayers;
 	}
 
-	public static PPlayer getPlayerInfo(String playerName){
-		if (isPlaying(playerName))
-			return playing.get(playerName);
-
-		return null;
-	}
-
+	/**
+	 * This is new as of 4.0. Thanks to the new system we can easily see what the player (or another player) is doing with the plugin.
+	 * We lookup their PPlayer object and interrogate it. We also check their offline stats from the config. (Their level etc.)
+	 * @param args
+	 * @param player
+	 */
 	public static void displayPlayerInfo(String[] args, Player player){
 		String playerName = args.length <= 1 ? player.getName() : args[1];
 
@@ -174,8 +203,11 @@ public class PlayerMethods {
 		 */
 	}
 
-	//private methods
-
+	/**
+	 * Private methods, these will only be used by the PlayerMethods class
+	 * @param playerName
+	 * @param player
+	 */
 	private static void addPlayer(String playerName, PPlayer player){
 		playing.put(playerName, player);
 	}
@@ -186,11 +218,13 @@ public class PlayerMethods {
 
 	private static void savePlayer(String playerName){
 		//Save player info - XP etc
-
-
 	}
 
-	//Other
+	/**
+	 * Retrieve the player's selected course for editing.
+	 * @param playerName
+	 * @return selected course
+	 */
 	public static String getSelected(String playerName){
 		String selected = null;
 		try{
@@ -199,6 +233,10 @@ public class PlayerMethods {
 		return selected;
 	}
 
+	/**
+	 * Executed via "/pa kit", will clear and populate the players inventory with the default Parkour tools.
+	 * @param player
+	 */
 	public static void givePlayerKit(Player player){
 		player.getInventory().clear();
 		FileConfiguration config = Parkour.getParkourConfig().getConfig();
@@ -295,26 +333,34 @@ public class PlayerMethods {
 		Utils.logToFile(player.getName() + " recieved the kit");
 	}
 
+	/**
+	 * Display the players Parkour permissions
+	 * @param player
+	 */
 	public static void getPermissions(Player player) {
 		player.sendMessage(ChatColor.BLACK + "[" + ChatColor.AQUA + "Parkour Permissions" + ChatColor.BLACK + "]");
 		if (player.hasPermission("Parkour.*") || player.isOp()) {
 			player.sendMessage("- Everything");
 		}else{
-			if (player.hasPermission("Parkour.Basic")) {
+			if (player.hasPermission("Parkour.Basic.*")) {
 				player.sendMessage("- Basic");
 			}
-			if (player.hasPermission("Parkour.Signs")) {
+			if (player.hasPermission("Parkour.Signs.*")) {
 				player.sendMessage("- Signs");
 			}
-			if (player.hasPermission("Parkour.Testmode")) {
+			if (player.hasPermission("Parkour.Testmode.*")) {
 				player.sendMessage("- Testmode");
 			}
-			if (player.hasPermission("Parkour.Admin")) {
+			if (player.hasPermission("Parkour.Admin.*")) {
 				player.sendMessage("- Admin");
 			}
 		}
 	}
 
+	/**
+	 * This method is only used on the course join, whereas the preparePlayer(player, int) can be called anytime.
+	 * @param player
+	 */
 	private static void prepareJoinPlayer(Player player){
 		saveInventory(player);
 		preparePlayer(player, 0);
@@ -394,6 +440,12 @@ public class PlayerMethods {
 
 	}
 
+	/**
+	 * This is called often during the course, 
+	 * for example when the player dies we fully prepare them to resume the course from the last checkpoint.
+	 * @param player
+	 * @param gamemode
+	 */
 	public static void preparePlayer(Player player, int gamemode){
 		for (PotionEffect effect : player.getActivePotionEffects()) {
 			player.removePotionEffect(effect.getType());
@@ -406,6 +458,12 @@ public class PlayerMethods {
 		player.setFallDistance(0);
 	}
 
+	/**
+	 * This is called when the player joins a course. Based on the config, this can be disabled.
+	 * I've now done a check to see if the inv is already saved, if it is then don't overwrite it.
+	 * This is because a player can join CourseA then join CourseB and potentially have their inv overwritten.
+	 * @param player
+	 */
 	private static void saveInventory(Player player){
 		if (!Parkour.getParkourConfig().getConfig().getBoolean("Other.Use.InvManagement"))
 			return;
@@ -424,6 +482,10 @@ public class PlayerMethods {
 		player.updateInventory();
 	}
 
+	/**
+	 * This will load the inventory for the player, then delete it from the file.
+	 * @param player
+	 */
 	private static void loadInventory(Player player){
 		if (!Parkour.getParkourConfig().getConfig().getBoolean("Other.Use.InvManagement"))
 			return;
@@ -460,6 +522,10 @@ public class PlayerMethods {
 		Parkour.getParkourConfig().saveInv();
 	}
 
+	/**
+	 * This will enable / disable Parkour notifications for the the player when they are using the plugin.
+	 * @param player
+	 */
 	public static void toggleQuiet(Player player) {
 		if (Static.containsQuiet(player.getName()))
 			Static.removeQuiet(player);
@@ -468,16 +534,21 @@ public class PlayerMethods {
 	}
 
 	/**
-	 * This will remove all said players times from the table
+	 * This will remove all trace of the player from the plugin.
+	 * All SQL time entries from the player will be removed, and their parkour stats will be deleted from the config.
 	 * @param args
 	 * @param player
 	 */
-	public static void deletePlayer(String[] args, Player player) {
-		//TODO
+	public static void resetPlayer(String[] args, Player player) {
+		//TODO Delete from players.yml 
 		DatabaseMethods.deleteAllTimesForPlayer(args[1]);
 		player.sendMessage(Static.getParkourString() + args[1] + " has been removed!");
 	}
 
+	/**
+	 * This will enable / disable the testmode functionality, by creating a dummy "Test Mode" course for the player.
+	 * @param player
+	 */
 	public static void toggleTestmode(Player player) {
 		// TODO Change to testmode
 		if (isPlaying(player.getName())){
@@ -491,6 +562,11 @@ public class PlayerMethods {
 
 	}
 
+	/**
+	 * This allows the player to invite another onto the course they are using.
+	 * @param args
+	 * @param player
+	 */
 	public static void invitePlayer(String[] args, Player player) {
 		if (!isPlaying(player.getName()))
 			return;

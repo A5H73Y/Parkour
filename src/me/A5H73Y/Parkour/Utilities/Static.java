@@ -2,6 +2,7 @@ package me.A5H73Y.Parkour.Utilities;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +25,9 @@ public class Static {
 	private static ParkourBlocks pblocks;
 
 	private final static String ParkourString = Utils.Colour("&0[&bParkour&0] &f");
-	public final static String PATH = Parkour.getPlugin().getDataFolder() + File.separator + "playing.bin";
 	private static String version;
 
+	public final static String PATH = Parkour.getPlugin().getDataFolder() + File.separator + "playing.bin";
 	public final static ChatColor Aqua = ChatColor.AQUA;
 	public final static ChatColor Daqua = ChatColor.DARK_AQUA;
 	public final static ChatColor Gray = ChatColor.GRAY;
@@ -51,11 +52,13 @@ public class Static {
 	}
 	
 	public static List<String> getCourses(){
+		
 		return courseList;
 	}
 	
 	public static void setCourses(List<String> courses){
 		courseList = courses;
+		Collections.sort(courses);
 	}
 	
 	public static boolean containsQuestion(String playerName){

@@ -20,6 +20,12 @@ import org.bukkit.entity.Player;
 
 public class CourseMethods {
 
+	/**
+	 * This is used very often, if this could be optimized it would be awesome.
+	 * I can see this becoming a problem when there are 100+ courses.
+	 * @param courseName
+	 * @return
+	 */
 	public static boolean exist(String courseName){
 		courseName = courseName.toLowerCase();
 		for (String course : Static.getCourses()) {
@@ -28,22 +34,35 @@ public class CourseMethods {
 		return false;
 	}
 
+	/**
+	 * The main method of course retrieval, everything is populated from this method (all checkpoints & information).
+	 * So with this in mind, this should only be used when necessary.
+	 * @param courseName
+	 * @return
+	 */
 	public static Course findByName(String courseName){
-		if (exist(courseName)){
-			courseName = courseName.toLowerCase();
-			//Get course information from config.yml
-			ParkourBlocks pblocks = Static.getParkourBlocks();
+		if (!exist(courseName))
+			return null;
+		
+		courseName = courseName.toLowerCase();
+		//Get course information from config.yml
+		ParkourBlocks pblocks = Static.getParkourBlocks();
 
-			if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".customBlocks"))//TODO
-				pblocks = Static.getParkourBlocks();
+		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".customBlocks"))//TODO
+			pblocks = Static.getParkourBlocks();
 
-			Course course = 
-					new Course(courseName, CheckpointMethods.getCheckpoints(courseName.toLowerCase()), pblocks);
-			return course;
-		}
-		return null;
+		Course course = new Course(courseName, CheckpointMethods.getCheckpoints(courseName.toLowerCase()), pblocks);
+		course.setMaxDeaths(Parkour.getParkourConfig().getCourseData().getInt(courseName + ".MaxDeaths"));
+
+		return course;
 	}
 
+
+	/**
+	 * Same as the method above but uses the list index which is displayed in "/pa list courses"
+	 * @param courseNumber
+	 * @return
+	 */
 	public static Course findByNumber(int courseNumber){	
 		if (courseNumber > 0 && courseNumber <= Static.getCourses().size()){
 			String courseName = Static.getCourses().get(courseNumber - 1);
@@ -52,15 +71,26 @@ public class CourseMethods {
 		return null;
 	}
 
+	/**
+	 * This is used several times to find out what / how the player is currently doing.
+	 * @param playerName
+	 * @return
+	 */
 	public static Course findByPlayer(String playerName){
 		if (PlayerMethods.isPlaying(playerName)){
-			Course course = PlayerMethods.getPlaying().get(playerName).getCourse();
-			return course;
+			return PlayerMethods.getPlaying().get(playerName).getCourse();
 		}
 		return null;
 	}
 
-
+	/**
+	 * This is the course creation. The spawn of the course is written in the courses.yml as checkpoint '0'. 
+	 * The world is assumed once the course is joined, so having 2 different checkpoints in 2 different worlds is not an option.
+	 * We don't assume or default any options, so there is less to process on completion / join etc. (SetMinLevel, rewards etc.)
+	 * All courses names are stored in a string list, which is held in memory then added / removed from. 
+	 * @param args
+	 * @param player
+	 */
 	public static void createCourse(String[] args, Player player){
 		if (!Validation.courseCreation(args, player))
 			return;
@@ -95,7 +125,6 @@ public class CourseMethods {
 
 	/**
 	 * This method only serves as a way of validating the course before joining the course as a player
-	 * 
 	 * @param player
 	 * @param courseName
 	 */
@@ -114,14 +143,25 @@ public class CourseMethods {
 		if (!Validation.courseJoining(player, courseName))
 			return;
 
+
 		PlayerMethods.playerJoin(player, course);
 	}
 
+	/**
+	 * This method will be executed when the finish course is triggered (standing on the finish block, clicking a finish sign)
+	 * @param player
+	 */
 	public static void finishCourse(Player player){
 
 	}
 
+	/**
+	 * This is accessed via the "/pa info (course)", not sure the best way of doing this yet.
+	 * @param args
+	 * @param player
+	 */
 	public static void displayCourseInfo(String[] args, Player player) {
+		//TODO
 
 		//Maybe display straight from config? Avoid checkpoints slamming IO
 		/*
@@ -135,6 +175,11 @@ public class CourseMethods {
 		 */
 	}
 
+	/**
+	 * This is creating the lobby, everything is calculated based on the arguments.
+	 * @param args
+	 * @param player
+	 */
 	public static void createLobby(String[] args, Player player) {
 		String created = Static.getParkourString() + "Lobby ";
 		setLobby(args, player);
@@ -154,18 +199,12 @@ public class CourseMethods {
 		player.sendMessage(created);
 	}
 
-	private final static void setLobby(String[] args, Player player){
-		Location loc = player.getLocation();
-		String path = args.length > 1 ? "Lobby." + args[1]  : "Lobby";
-		Parkour.getParkourConfig().getConfig().set(path + ".World", loc.getWorld().getName());
-		Parkour.getParkourConfig().getConfig().set(path + ".X", loc.getX());
-		Parkour.getParkourConfig().getConfig().set(path + ".Y", loc.getY());
-		Parkour.getParkourConfig().getConfig().set(path + ".Z", loc.getZ());
-		Parkour.getParkourConfig().getConfig().set(path + ".Pitch", loc.getPitch());
-		Parkour.getParkourConfig().getConfig().set(path + ".Yaw", loc.getYaw());
-		Utils.logToFile(path + " was set by " + player.getName());
-	}
-
+	/**
+	 * Joining the lobby. Can be accessed from the commands, and from the framework. 
+	 * The args will be null if it's from the framework, if this is the case we don't send them a message. (Finishing a course etc)
+	 * @param args
+	 * @param player
+	 */
 	public static void joinLobby(String[] args, Player player) {
 		//If args != null if sent from commands
 		FileConfiguration getConfig = Parkour.getParkourConfig().getConfig();
@@ -230,6 +269,12 @@ public class CourseMethods {
 		}
 	}
 
+
+	/**
+	 * Based on the path passed in, will return a lobby location object from the config.
+	 * @param path
+	 * @return
+	 */
 	private final static Location getLobby(String path){
 		World world = Bukkit.getWorld(Parkour.getParkourConfig().getConfig().getString(path + ".World"));
 		double x = Parkour.getParkourConfig().getConfig().getDouble(path + ".X");
@@ -240,6 +285,28 @@ public class CourseMethods {
 		return new Location(world, x, y, z, yaw, pitch);
 	}
 
+	/**
+	 * Based on the args, it will calculate whether or not it is setting a custom lobby.
+	 * @param args
+	 * @param player
+	 */
+	private final static void setLobby(String[] args, Player player){
+		Location loc = player.getLocation();
+		String path = args.length > 1 ? "Lobby." + args[1]  : "Lobby";
+		Parkour.getParkourConfig().getConfig().set(path + ".World", loc.getWorld().getName());
+		Parkour.getParkourConfig().getConfig().set(path + ".X", loc.getX());
+		Parkour.getParkourConfig().getConfig().set(path + ".Y", loc.getY());
+		Parkour.getParkourConfig().getConfig().set(path + ".Z", loc.getZ());
+		Parkour.getParkourConfig().getConfig().set(path + ".Pitch", loc.getPitch());
+		Parkour.getParkourConfig().getConfig().set(path + ".Yaw", loc.getYaw());
+		Utils.logToFile(path + " was set by " + player.getName());
+	}
+
+	/**
+	 * Adds a question against the player for them to confirm. This is so they don't enter the command by accident, or something?
+	 * @param args
+	 * @param player
+	 */
 	public static void deleteCourse(String[] args, Player player) {
 		if (!exist(args[1])){
 			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
@@ -251,6 +318,11 @@ public class CourseMethods {
 		Utils.logToFile(args[1] + " was deleted by " + player.getName());
 	}
 
+	/**
+	 * Displays all the Parkour courses or all the players using the plugin.
+	 * @param args
+	 * @param player
+	 */
 	public static void displayList(String[] args, Player player) {
 		if (!(args.length == 1)) {
 			if (args[1].equalsIgnoreCase("players")) {
@@ -288,7 +360,7 @@ public class CourseMethods {
 					player.sendMessage(Static.getParkourString() + "Invalid page. Maximum: " + pages); 
 					return;
 				}
-				
+
 				for (int i=0;i<courseList.size();i++){
 					int max = page * 8;
 					if(i >= (max - 8) && i < (max)){
@@ -305,6 +377,11 @@ public class CourseMethods {
 		}
 	}
 
+	/**
+	 * This is for functions that don't require a course parameter, for example creating a checkpoint.
+	 * @param args
+	 * @param player
+	 */
 	public static void selectCourse(String[] args, Player player) {
 		if (!exist(args[1])){
 			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
@@ -319,6 +396,11 @@ public class CourseMethods {
 		Parkour.getParkourConfig().saveUsers();
 	}
 
+	/**
+	 * No real purpose of this anymore, but it will stop the player from having a course selected.
+	 * @param args
+	 * @param player
+	 */
 	public static void deselectCourse(String[] args, Player player){
 		if (Parkour.getParkourConfig().getUsersData().contains("PlayerInfo." + player.getName() + ".Selected")){
 			Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Selected", null);
@@ -327,6 +409,11 @@ public class CourseMethods {
 		}
 	}
 
+	/**
+	 * Sets the Parkours course status to Complete, otherwise the player will get a notification saying it's still not finished on joining.
+	 * @param args
+	 * @param player
+	 */
 	public static void setFinished(String[] args, Player player) {
 		if (Parkour.getParkourConfig().getCourseData().contains(args[1] + ".Finished")){
 			player.sendMessage(Static.getParkourString() + Static.Aqua + args[1] + Static.White + " has already been set to finished!");
@@ -340,6 +427,12 @@ public class CourseMethods {
 		Utils.logToFile(args[1] + " was set to finished by " + player.getName());
 	}
 
+	/**
+	 * Set the prize that the player gets awarded with when the complete the course.
+	 * Can be an item with any amount and/or a command.
+	 * @param args
+	 * @param player
+	 */
 	public static void setPrize(String[] args, Player player) {
 		if (!(Utils.hasPermissionOrOwnership(player, "Parkour.Admin", "Finish", args[1])))
 			return;
@@ -376,6 +469,10 @@ public class CourseMethods {
 
 	}
 
+	/**
+	 * Below methods are self explanitory, they will increase the view and completion count when appropriate.
+	 * @param courseName
+	 */
 	public static void increaseComplete(String courseName){
 		int completed = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Completed");
 		Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Completed", completed++);
@@ -387,6 +484,11 @@ public class CourseMethods {
 		Parkour.getParkourConfig().saveCourses();
 	}
 
+	/**
+	 * Overwrite the original start of a course.
+	 * @param args
+	 * @param player
+	 */
 	public static void setStart(String[] args, Player player) {
 		if (!Parkour.getParkourConfig().getUsersData().contains("PlayerInfo." + player.getName() + ".Selected")) 
 			return;
@@ -408,6 +510,11 @@ public class CourseMethods {
 
 	}
 
+	/**
+	 * Overwrite the original Author of the course.
+	 * @param args
+	 * @param player
+	 */
 	public static void setCreator(String[] args, Player player) {
 		if (!CourseMethods.exist(args[1])){
 			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
@@ -417,5 +524,90 @@ public class CourseMethods {
 		Parkour.getParkourConfig().getCourseData().set(args[1] + ".Creator", args[2]);
 		Parkour.getParkourConfig().saveCourses();
 		player.sendMessage(Static.getParkourString() + "Creator of " + args[1] + " was set to " + Static.Aqua +  args[2]);
+	}
+
+	/**
+	 * Set the maximum amount of deaths the player has before automatically leaving the course.
+	 * @param args
+	 * @param player
+	 */
+	public static void setMaxDeaths(String[] args, Player player) {
+		if (!CourseMethods.exist(args[1])){
+			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
+			return;
+		}
+		if (!Utils.isNumber(args[2])){
+			player.sendMessage(Static.getParkourString() + "Amount of deaths is not valid.");
+			return;
+		}
+
+		player.sendMessage(Static.getParkourString() + args[1] + " maximum deaths was set to " + Static.Aqua + args[2]);
+		Parkour.getParkourConfig().getCourseData().set(args[1] + ".MaxDeaths", Integer.parseInt(args[2]));
+		Parkour.getParkourConfig().saveCourses();
+	}
+
+	/**
+	 * Set the mimimum Parkour level required to join a course.
+	 * @param args
+	 * @param player
+	 */
+	public static void setMinLevel(String[] args, Player player) {
+		if (!CourseMethods.exist(args[1])){
+			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
+			return;
+		}
+		if (!Utils.isNumber(args[2])){
+			player.sendMessage(Static.getParkourString() + "Amount of deaths is not valid.");
+			return;
+		}
+
+		player.sendMessage(Static.getParkourString() + args[1] + " minimum level requirement was set to " + Static.Aqua + args[2]);
+		Parkour.getParkourConfig().getCourseData().set(args[1] + ".MinimumLevel", Integer.parseInt(args[2]));
+		Parkour.getParkourConfig().saveCourses();
+	}
+
+	/**
+	 * This is the Parkour level the player gets awarded with on course completion.
+	 * @param args
+	 * @param player
+	 */
+	public static void rewardLevel(String[] args, Player player) {
+		if (!CourseMethods.exist(args[1])){
+			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
+			return;
+		}
+		if (!Utils.isNumber(args[2])){
+			player.sendMessage(Static.getParkourString() + "Amount of deaths is not valid.");
+			return;
+		}
+
+		player.sendMessage(Static.getParkourString() + args[1] + " reward level was set to " + Static.Aqua + args[2]);
+		Parkour.getParkourConfig().getCourseData().set(args[1] + ".RewardLevel", Integer.parseInt(args[2]));
+		Parkour.getParkourConfig().saveCourses();
+	}
+
+	/**
+	 * Not to be confused with rewardLevel, this associates a Parkour level with a message prefix.
+	 * E.g. Level 10: Pro; Level 99: God
+	 * @param args
+	 * @param player
+	 */
+	public static void rewardRank(String[] args, Player player) {
+		/*
+	} else if (isInt(args[1])) {
+		if (args.length == 3){
+
+			int rank = Integer.parseInt(args[1]);
+
+			usersData.set("ServerInfo.Levels." + rank + ".Rank", args[2]);
+
+
+			player.sendMessage(ParkourString + "Level " + args[1] + "s rank was set to " + Aqua + args[2]);
+			saveCourses();
+
+		}else{
+			player.sendMessage(ParkourString + "Invalid Syntax: /pa rewardrank (level) (rank)");
+		}
+		 */
 	}
 }

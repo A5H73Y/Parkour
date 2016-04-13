@@ -155,7 +155,53 @@ public class ParkourCommands implements CommandExecutor {
 							return false;
 
 						CheckpointMethods.teleportCheckpoint(args, player, true);
+						
+					} else if (args[0].equalsIgnoreCase("link")) {
+						if (!Utils.hasPermission(player, "Parkour.Admin", "Testmode"))
+							return false;
 
+						if (!Utils.validateArgs(player, args.length, 4))
+							return false;
+						
+						//TODO Link to lobby or course.
+
+					} else if (args[0].equalsIgnoreCase("setminlevel")){
+						if (!Utils.hasPermission(player, "Parkour.Admin"))
+							return false;
+
+						if (!Utils.validateArgs(player, args.length, 3))
+							return false;
+						
+						CourseMethods.setMinLevel(args, player);
+						
+					} else if (args[0].equalsIgnoreCase("setmaxdeath")) {
+						if (!Utils.hasPermission(player, "Parkour.Admin"))
+							return false;
+
+						if (!Utils.validateArgs(player, args.length, 3))
+							return false;
+						
+						CourseMethods.setMaxDeaths(args, player);
+						
+
+					} else if (args[0].equalsIgnoreCase("rewardlevel")) {
+						if (!Utils.hasPermission(player, "Parkour.Admin"))
+							return false;
+
+						if (!Utils.validateArgs(player, args.length, 3))
+							return false;
+						
+						CourseMethods.rewardLevel(args, player);
+						
+					} else if (args[0].equalsIgnoreCase("rewardrank")) {
+						if (!Utils.hasPermission(player, "Parkour.Admin"))
+							return false;
+
+						if (!Utils.validateArgs(player, args.length, 3))
+							return false;
+						
+						CourseMethods.rewardRank(args, player);
+						
 					} else if (args[0].equalsIgnoreCase("quiet")) {
 						PlayerMethods.toggleQuiet(player);
 					
@@ -191,14 +237,14 @@ public class ParkourCommands implements CommandExecutor {
 					} else if (args[0].equalsIgnoreCase("help")) {
 						Help.lookupCommandHelp(args, player);
 						
-					} else if (args[0].equalsIgnoreCase("removeplayer") || args[0].equalsIgnoreCase("deleteplayer")){
+					} else if (args[0].equalsIgnoreCase("resetplayer") || args[0].equalsIgnoreCase("removeplayer") || args[0].equalsIgnoreCase("deleteplayer")){
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
 							return false;
 
 						if (!Utils.validateArgs(player, args.length, 2))
 							return false;
 						
-						PlayerMethods.deletePlayer(args, player);
+						PlayerMethods.resetPlayer(args, player);
 						
 						//Other commands//	
 					} else if (args[0].equalsIgnoreCase("about")) {

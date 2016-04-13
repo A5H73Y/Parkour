@@ -16,6 +16,13 @@ public class PPlayer implements Serializable{
 	private Course course;
 	private String mode;
 	
+	/**
+	 * This is the PPlayer, which kind of stands for Parkour Player..? 
+	 * We use this object to track all the players information while on a course, how many times they've died etc.
+	 * When we want to find out what course a player is on, we will retrieve it through here, Rather than doing a course lookup for a player name.
+	 * There is also a "Mode" string, this will be used to remember different gametypes (in potential updates), one example is CodJumper mode (Which allows you to set checkpoints whereever)
+	 * @param course
+	 */
 	public PPlayer(Course course){
 		this.deaths = 0;
 		this.checkpoint = 0;

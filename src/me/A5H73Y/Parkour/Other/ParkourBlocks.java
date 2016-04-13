@@ -10,6 +10,21 @@ public class ParkourBlocks implements Serializable{
 	
 	private Material finish, climb, launch, speed, repulse, norun, nopotion, doublejump;
 	
+	
+	/**
+	 * New as of 4.0. Each course will have it's own ParkourBlocks. This will contain all the known blocks from previous version,
+	 * however each course can have it's own individual type of block. This is been requested several times and this seemed a good
+	 * way to resolve it.
+	 * 
+	 * @param finish
+	 * @param climb
+	 * @param launch
+	 * @param speed
+	 * @param repulse
+	 * @param norun
+	 * @param nopotion
+	 * @param doublejump
+	 */
 	public ParkourBlocks(Material finish, Material climb, Material launch, Material speed, Material repulse, Material norun, Material nopotion, Material doublejump){
 		this.finish = finish;
 		this.climb = climb;
