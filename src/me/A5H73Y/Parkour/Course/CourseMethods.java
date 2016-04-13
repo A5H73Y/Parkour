@@ -21,8 +21,9 @@ import org.bukkit.entity.Player;
 public class CourseMethods {
 
 	public static boolean exist(String courseName){
+		courseName = courseName.toLowerCase();
 		for (String course : Static.getCourses()) {
-			if (courseName.toLowerCase().equals(course)) return true;
+			if (courseName.equals(course)) return true;
 		}
 		return false;
 	}

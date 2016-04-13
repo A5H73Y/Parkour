@@ -20,8 +20,6 @@ import com.huskehhh.mysql.Database;
 import com.huskehhh.mysql.mysql.MySQL;
 import com.huskehhh.mysql.sqlite.SQLite;
 
-import de.bg.derh4nnes.TitleActionBarAPI;
-
 public class StartPlugin {
 
 	static Plugin vault, barAPI;

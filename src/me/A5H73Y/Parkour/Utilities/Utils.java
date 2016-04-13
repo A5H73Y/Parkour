@@ -81,7 +81,13 @@ public final class Utils {
 		return true;
 	}
 
-
+	public String standardizeText(String text) {
+	    if (text == null || text.length() == 0) {
+	        return text;
+	    }
+	    return text.substring(0, 1).toUpperCase() + text.substring(1).toLowerCase();
+	}
+	
 	public final static boolean isNumber(String args) {
 		try {
 			Integer.parseInt(args);

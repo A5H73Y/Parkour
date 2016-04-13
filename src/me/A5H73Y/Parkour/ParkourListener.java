@@ -1,5 +1,7 @@
 package me.A5H73Y.Parkour;
 
+import me.A5H73Y.Parkour.Course.CourseMethods;
+import me.A5H73Y.Parkour.Other.SignMethods;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Settings;
 import me.A5H73Y.Parkour.Utilities.Static;
@@ -7,6 +9,7 @@ import me.A5H73Y.Parkour.Utilities.Utils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,6 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -24,6 +28,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class ParkourListener implements Listener {
 
+	SignMethods sm = new SignMethods();
+	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		Player player = event.getPlayer();
@@ -162,7 +168,46 @@ public class ParkourListener implements Listener {
 		} else if (player.getInventory().getItemInMainHand().getType() == Material.REDSTONE_TORCH_ON) {
 			//TODO CodJumper
 		}
+	}
 
+	@EventHandler
+	public void onSignChange(SignChangeEvent event) {
+		if (event.getLine(0).equalsIgnoreCase("[parkour]") || event.getLine(0).equalsIgnoreCase("[pa]")) {
+			Player player = event.getPlayer();
+
+			event.setLine(0, ChatColor.BLACK + "[" + ChatColor.AQUA + "Parkour" + ChatColor.BLACK + "]");
+
+			if (event.getLine(1).equalsIgnoreCase("join") || event.getLine(1).equalsIgnoreCase("j")) {
+				sm.joinCourse(event, player);
+				
+			} else if (event.getLine(1).equalsIgnoreCase("finish") || event.getLine(1).equalsIgnoreCase("f")) {
+				sm.createStandardCourseSign(event, player, "Finish");
+
+			} else if (event.getLine(1).equalsIgnoreCase("lobby") || event.getLine(1).equalsIgnoreCase("l")) {
+				sm.joinLobby(event, player);
+
+			} else if (event.getLine(1).equalsIgnoreCase("store") || event.getLine(1).equalsIgnoreCase("s")) {
+				sm.createStandardSign(event, player, "Store");
+
+			} else if (event.getLine(1).equalsIgnoreCase("leave")) {
+				sm.createStandardSign(event, player, "Leave");
+
+			} else if (event.getLine(1).equalsIgnoreCase("joinall") || event.getLine(1).equalsIgnoreCase("ja")) {
+				sm.createStandardSign(event, player, "JoinAll");
+
+			} else if (event.getLine(1).equalsIgnoreCase("effect") || event.getLine(1).equalsIgnoreCase("e")) {
+				sm.createEffectSign(event, player, "Effect");
+
+			} else if (event.getLine(1).equalsIgnoreCase("stats") || event.getLine(1).equalsIgnoreCase("s")) {
+				//TODO - Not sure what to do for this.
+				
+			} else {
+				player.sendMessage(Parkour.getParkourConfig() + "Unknown Command");
+				event.setLine(1, ChatColor.RED + "Unknown cmd");
+				event.setLine(2, "");
+				event.setLine(3, "");
+			}
+		}
 	}
 }
 
