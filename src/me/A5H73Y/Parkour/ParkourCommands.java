@@ -182,7 +182,6 @@ public class ParkourCommands implements CommandExecutor {
 							return false;
 						
 						CourseMethods.setMaxDeaths(args, player);
-						
 
 					} else if (args[0].equalsIgnoreCase("rewardlevel")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))

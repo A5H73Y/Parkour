@@ -25,7 +25,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -58,13 +57,13 @@ public class ParkourListener implements Listener {
 
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
-		if (PlayerMethods.isPlaying(event.getPlayer().getName()) && Utils.hasPermission(event.getPlayer(), "Parkour.Admin")) 
+		if (PlayerMethods.isPlaying(event.getPlayer().getName()) && !Utils.hasPermission(event.getPlayer(), "Parkour.Admin")) 
 			event.setCancelled(true);
 	}
 
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
-		if (PlayerMethods.isPlaying(event.getPlayer().getName()) && Utils.hasPermission(event.getPlayer(), "Parkour.Admin")) 
+		if (PlayerMethods.isPlaying(event.getPlayer().getName()) && !Utils.hasPermission(event.getPlayer(), "Parkour.Admin")) 
 			event.setCancelled(true);
 	}
 
@@ -88,15 +87,15 @@ public class ParkourListener implements Listener {
 			event.setDamage(0);
 			return;
 		}
-		
+
 		Damageable player = (Player) event.getEntity();
 		if (player.getHealth() <= event.getDamage()) {
 			event.setCancelled(true);
 			PlayerMethods.playerDie((Player) event.getEntity()); 
 		}
 	}
-	
-	
+
+
 
 	@EventHandler
 	public void onHungerChange(FoodLevelChangeEvent event) {
@@ -110,9 +109,8 @@ public class ParkourListener implements Listener {
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		//TODO actual joinonMessage settings
-		if (Settings.isWelcomeMessage()) {
+		if (Settings.isWelcomeMessage())
 			event.getPlayer().sendMessage(Utils.getTranslation("Event.Join").replace("%VERSION%", Static.getVersion()));
-		}
 
 		//TODO check how performance is
 		if (PlayerMethods.isPlaying(event.getPlayer().getName())){
@@ -125,38 +123,43 @@ public class ParkourListener implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		//TODO "Other.onLeave.ResetPlayer"
-		if (Settings.isWelcomeMessage()){
-			if (PlayerMethods.isPlaying(event.getPlayer().getName()))
-				PlayerMethods.playerLeave(event.getPlayer());
-		}
+		if (!Settings.isWelcomeMessage())
+			return;
+
+		if (PlayerMethods.isPlaying(event.getPlayer().getName()))
+			PlayerMethods.playerLeave(event.getPlayer());
 	}
 
 	@EventHandler
 	public void onTeleport(PlayerTeleportEvent event) {
-		if (Settings.isForceWorld()){
-			if (PlayerMethods.isPlaying(event.getPlayer().getName())){
-				if (event.getFrom().getWorld() != event.getTo().getWorld()){
-					event.setCancelled(true);
-					event.getPlayer().sendMessage(Utils.getTranslation(""));
-					//TODO Translation "Teleporting to a different world has been cancelled."
-				}
-			}	
+		if (!Settings.isForceWorld())
+			return;
+
+		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+			return;
+
+		if (event.getFrom().getWorld() != event.getTo().getWorld()){
+			event.setCancelled(true);
+			event.getPlayer().sendMessage(Utils.getTranslation(""));
+			//TODO Translation "Teleporting to a different world has been cancelled."
 		}
+
 	}
 
 	@EventHandler
 	public void onFlyToggle(PlayerToggleFlightEvent event) {
-		if (PlayerMethods.isPlaying(event.getPlayer().getName())) {
-			if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
-				event.getPlayer().setAllowFlight(false);
-				event.getPlayer().setFlying(false);
-				event.setCancelled(true);
-			}
+		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+			return;
+
+		if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
+			event.getPlayer().setAllowFlight(false);
+			event.getPlayer().setFlying(false);
+			event.setCancelled(true);
 		}
 	}
 
 	@EventHandler
-	public void onPlayerInteract(PlayerInteractEvent event) {
+	public void onInventoryInteract(PlayerInteractEvent event) {
 		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
 			return;
 
@@ -186,7 +189,7 @@ public class ParkourListener implements Listener {
 	}
 
 	@EventHandler
-	public void onSignChange(SignChangeEvent event) {
+	public void onSignCreate(SignChangeEvent event) {
 		if (event.getLine(0).equalsIgnoreCase("[parkour]") || event.getLine(0).equalsIgnoreCase("[pa]")) {
 			Player player = event.getPlayer();
 
@@ -226,7 +229,7 @@ public class ParkourListener implements Listener {
 	}
 
 	@EventHandler
-	public void PressurePlate(PlayerInteractEvent event) {
+	public void onCheckpointEvent(PlayerInteractEvent event) {
 		if (event.getAction() != Action.PHYSICAL)
 			return;
 
@@ -242,7 +245,7 @@ public class ParkourListener implements Listener {
 		event.setCancelled(true);
 		PPlayer pplayer = PlayerMethods.getPlayerInfo(event.getPlayer().getName());
 		Course course = pplayer.getCourse();
-		
+
 		//This is so we don't include the spawn
 		int checkpoints = course.getCheckpoints().size() - 1;
 
@@ -260,15 +263,13 @@ public class ParkourListener implements Listener {
 
 			pplayer.increaseCheckpoint();
 
-			if (checkpoints == pplayer.getCheckpoint()){
+			if (checkpoints == pplayer.getCheckpoint())
 				event.getPlayer().sendMessage(Utils.getTranslation("Event.AllCheckpoints"));
-			} else {
+			else
 				event.getPlayer().sendMessage(Utils.getTranslation("Event.Checkpoint") + pplayer.getCheckpoint() +  " / " + checkpoints);
-			}
-
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		Player player = event.getPlayer();
@@ -297,19 +298,20 @@ public class ParkourListener implements Listener {
 		}
 
 		if (!commandIsPa && PlayerMethods.isPlaying(player.getName())) {
-			if (paDisabled) {
-				if (!(player.hasPermission("Parkour.Admin") || player.hasPermission("Parkour.*"))) {
-					boolean allowed = false;
-					for (String word : Parkour.getParkourConfig().getConfig().getStringList("Other.Commands.Whitelist")) {
-						if (event.getMessage().startsWith("/" + word)) {
-							allowed = true;
-							break;
-						}
+			if (!paDisabled)
+				return;
+
+			if (!(player.hasPermission("Parkour.Admin") || player.hasPermission("Parkour.*"))) {
+				boolean allowed = false;
+				for (String word : Parkour.getParkourConfig().getConfig().getStringList("Other.Commands.Whitelist")) {
+					if (event.getMessage().startsWith("/" + word)) {
+						allowed = true;
+						break;
 					}
-					if (allowed == false) {
-						event.setCancelled(true);
-						player.sendMessage(Utils.getTranslation("Error.Command"));
-					}
+				}
+				if (allowed == false) {
+					event.setCancelled(true);
+					player.sendMessage(Utils.getTranslation("Error.Command"));
 				}
 			}
 		}
