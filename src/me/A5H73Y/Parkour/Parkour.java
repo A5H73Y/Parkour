@@ -16,7 +16,6 @@ import com.huskehhh.mysql.Database;
 public class Parkour extends JavaPlugin {
 
 	private static JavaPlugin plugin;
-	private static Logger logger = Logger.getLogger("Minecraft");
 	private static Configurations config;
 	private static Database database;
 	private static Economy economy;
@@ -35,7 +34,7 @@ public class Parkour extends JavaPlugin {
 	}
 
 	public void onDisable() {
-		logger.info("[Parkour] Disabled Parkour v" + Static.getVersion() + "!");
+		Utils.log("[Parkour] Disabled Parkour v" + Static.getVersion() + "!");
 		Utils.saveAllPlaying(PlayerMethods.getPlaying(), Static.PATH);
 		config.saveAll();
 		getParkourConfig().reload();
@@ -52,10 +51,6 @@ public class Parkour extends JavaPlugin {
 	//Getters
 	public static Database getDatabaseObj(){
 		return database;
-	}
-
-	public static Logger getMCLogger(){
-		return logger;
 	}
 
 	public static JavaPlugin getPlugin() {

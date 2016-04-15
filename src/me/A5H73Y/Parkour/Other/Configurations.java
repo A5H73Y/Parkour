@@ -7,6 +7,7 @@ import java.util.List;
 
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Utilities.Static;
+import me.A5H73Y.Parkour.Utilities.Utils;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -40,10 +41,10 @@ public class Configurations {
 		if (!courseFile.exists()) {
 			try {
 				courseFile.createNewFile();
-				Parkour.getMCLogger().info("[Parkour] Created courses.yml");
+				Utils.log("[Parkour] Created courses.yml");
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				Parkour.getMCLogger().info("[Parkour] Failed!");
+				Utils.log("[Parkour] Failed!");
 			}
 		}
 		try {
@@ -56,10 +57,10 @@ public class Configurations {
 		if (!leaderFile.exists()) {
 			try {
 				leaderFile.createNewFile();
-				Parkour.getMCLogger().info("[Parkour] Created leaderboards.yml");
+				Utils.log("[Parkour] Created leaderboards.yml");
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				Parkour.getMCLogger().info("[Parkour] Failed!");
+				Utils.log("[Parkour] Failed!");
 			}
 		}
 		try {
@@ -72,11 +73,11 @@ public class Configurations {
 		if (!stringFile.exists()) {
 			try {
 				stringFile.createNewFile();
-				Parkour.getMCLogger().info("[Parkour] Created strings.yml");
+				Utils.log("[Parkour] Created strings.yml");
 				saveStrings();
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				Parkour.getMCLogger().info("[Parkour] Failed!");
+				Utils.log("[Parkour] Failed!");
 			}
 		}
 
@@ -90,10 +91,10 @@ public class Configurations {
 		if (!usersFile.exists()) {
 			try {
 				usersFile.createNewFile();
-				Parkour.getMCLogger().info("[Parkour] Created players.yml");
+				Utils.log("[Parkour] Created players.yml");
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				Parkour.getMCLogger().info("[Parkour] Failed!");
+				Utils.log("[Parkour] Failed!");
 			}
 		}
 		try {
@@ -106,10 +107,10 @@ public class Configurations {
 		if (!invFile.exists()) {
 			try {
 				invFile.createNewFile();
-				Parkour.getMCLogger().info("[Parkour] Created inventory.yml");
+				Utils.log("[Parkour] Created inventory.yml");
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				Parkour.getMCLogger().info("[Parkour] Failed!");
+				Utils.log("[Parkour] Failed!");
 			}
 		}
 		try {
@@ -122,10 +123,10 @@ public class Configurations {
 		if (!checkFile.exists()) {
 			try {
 				checkFile.createNewFile();
-				Parkour.getMCLogger().info("[Parkour] Created checkpoints.yml");
+				Utils.log("[Parkour] Created checkpoints.yml");
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				Parkour.getMCLogger().info("[Parkour] Failed!");
+				Utils.log("[Parkour] Failed!");
 			}
 		}
 		try {
@@ -138,10 +139,10 @@ public class Configurations {
 		if (!upgFile.exists()) {
 			try {
 				upgFile.createNewFile();
-				Parkour.getMCLogger().info("[Parkour] Created upgrades.yml");	
+				Utils.log("[Parkour] Created upgrades.yml");	
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				Parkour.getMCLogger().info("[Parkour] Failed!");
+				Utils.log("[Parkour] Failed!");
 			}
 		}
 		try {
@@ -477,11 +478,11 @@ public class Configurations {
 		if (!econFile.exists()) {
 			try {
 				econFile.createNewFile();
-				Parkour.getMCLogger().info("[Parkour] Created economy.yml");
+				Utils.log("[Parkour] Created economy.yml");
 				saveEcon();
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				Parkour.getMCLogger().info("[Parkour] Failed.");
+				Utils.log("[Parkour] Failed.");
 			}
 		}
 		try {

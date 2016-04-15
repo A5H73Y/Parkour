@@ -31,7 +31,7 @@ public class StartPlugin {
 		setupBarAPI();
 		populatePlayers();
 		//Updater
-		Parkour.getMCLogger().info("[Parkour] Enabled Parkour v" + Static.getVersion() + "!");
+		Utils.log("[Parkour] Enabled Parkour v" + Static.getVersion() + "!");
 	}
 
 	private static void setupVault() {
@@ -39,14 +39,14 @@ public class StartPlugin {
 		vault = pm.getPlugin("Vault");
 		if (vault != null && vault.isEnabled()) {
 			if (!setupEconomy()) {
-				Parkour.getMCLogger().info("[Parkour] Attempted to link with Vault, but something went wrong: ");
+				Utils.log("[Parkour] Attempted to link with Vault, but something went wrong: ");
 				Parkour.getPlugin().getConfig().set("Other.Use.Economy", false);
 				Parkour.getPlugin().saveConfig();
 			} else {
-				Parkour.getMCLogger().info("[Parkour] Linked with Economy v" + vault.getDescription().getVersion());
+				Utils.log("[Parkour] Linked with Economy v" + vault.getDescription().getVersion());
 			}
 		} else {
-			Parkour.getMCLogger().info("[Parkour] Vault is missing, disabling Economy Use.");
+			Utils.log("[Parkour] Vault is missing, disabling Economy Use.");
 			Parkour.getPlugin().getConfig().set("Other.Use.Economy", false);
 			Parkour.getPlugin().saveConfig();
 		}
@@ -65,10 +65,10 @@ public class StartPlugin {
 		try {
 			database.openConnection();
 		} catch (ClassNotFoundException e) {
-			Parkour.getMCLogger().info("[Parkour] MySQL connection problem: " + e.getMessage());
+			Utils.log("[Parkour] MySQL connection problem: " + e.getMessage());
 			e.printStackTrace();
 		} catch (SQLException e) {
-			Parkour.getMCLogger().info("[Parkour] MySQL connection problem: " + e.getMessage());
+			Utils.log("[Parkour] MySQL connection problem: " + e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -103,7 +103,7 @@ public class StartPlugin {
 		barAPI = pm.getPlugin("TitleActionbarAPI");
 		System.out.println(pm.getPlugins());
 		if (barAPI != null && barAPI.isEnabled()) {
-			Parkour.getMCLogger().info("[Parkour] Linked with TitleActionbarAPI v" + barAPI.getDescription().getVersion());
+			Utils.log("[Parkour] Linked with TitleActionbarAPI v" + barAPI.getDescription().getVersion());
 			Static.setBarAPI(true);
 		}
 	}
