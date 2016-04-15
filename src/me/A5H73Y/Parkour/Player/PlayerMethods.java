@@ -43,7 +43,6 @@ public class PlayerMethods {
 		PPlayer pplayer = getPlayerInfo(playerName);
 
 		Utils.sendTitle(player, "Joining " + course.getName());
-		//TODO Send Title (API Needed)
 
 		if (pplayer == null){
 			addPlayer(playerName, new PPlayer(course));
@@ -92,8 +91,10 @@ public class PlayerMethods {
 			return;
 		}
 
-		//if it's their first death
-		if (pplayer.getDeaths() == 1){
+		player.teleport(pplayer.getCourse().getCheckpoints().get(pplayer.getCheckpoint()).getLocation());
+
+		//if it's the first checkpoint
+		if (pplayer.getCheckpoint() == 0){
 			if (Parkour.getParkourConfig().getConfig().getBoolean("Other.onDie.ResetTimeOnStart")){
 				pplayer.resetTimeStarted();
 				if (!Static.containsQuiet(player.getName())) 
@@ -104,7 +105,7 @@ public class PlayerMethods {
 			}
 		}else{
 			if (!Static.containsQuiet(player.getName())) 
-				player.sendMessage(Utils.getTranslation("Parkour.Die2").replaceAll("%POINT%", String.valueOf(pplayer.getDeaths())));
+				player.sendMessage(Utils.getTranslation("Parkour.Die2").replace("%POINT%", String.valueOf(pplayer.getCheckpoint())));
 		}
 
 		if (Parkour.getParkourConfig().getConfig().getBoolean("Other.onDie.SetAsXPBar"))
@@ -115,6 +116,8 @@ public class PlayerMethods {
 			//TODO Play with sounds
 			player.playSound(player.getLocation(), Sound.ENCHANT_THORNS_HIT, 1L, 1L);
 		}
+
+		preparePlayer(player, 0);
 	}
 
 	/**
@@ -124,6 +127,10 @@ public class PlayerMethods {
 	 */
 	public static void playerFinish(Player player){
 		if (!isPlaying(player.getName()))
+			return;
+
+		//Validate - check if they've got all checkpoints
+		if (false)
 			return;
 
 		PPlayer pplayer = getPlayerInfo(player.getName());
@@ -138,14 +145,20 @@ public class PlayerMethods {
 		}
 		 */
 
-		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".Lobby")){
-			//TODO, load custom lobby
-		}
-		loadInventory(player);
-
 		//TODO prize
+		//TODO economy
 
 		DatabaseMethods.insertTime(courseName, player.getName(), pplayer.getTime(), pplayer.getDeaths());
+
+		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".Lobby")){
+			//TODO, load custom lobby
+		} else {
+			CourseMethods.joinLobby(null, player);
+		}
+
+		preparePlayer(player, Parkour.getParkourConfig().getConfig().getInt("Other.onFinish.Gamemode")); //TODO get leave gamemode
+		loadInventory(player);
+		removePlayer(player.getName());
 	}
 
 	/**
@@ -160,7 +173,7 @@ public class PlayerMethods {
 
 		return null;
 	}
-	
+
 	public static boolean isPlaying(String playerName){
 		return playing.containsKey(playerName);
 	}
@@ -197,6 +210,7 @@ public class PlayerMethods {
 			player.sendMessage("Checkpoint: "+Static.Aqua+pplayer.getCheckpoint());
 		}
 
+		System.out.println("-= Player information =-");
 		/*if (usersData.contains("PlayerInfo." + targetPlayer.getName() + ".Selected")) {
 		if (usersData.contains("PlayerInfo." + targetPlayer.getName() + ".Level")){
 		if (usersData.contains("PlayerInfo." + targetPlayer.getName() + ".Points")){
@@ -365,44 +379,47 @@ public class PlayerMethods {
 		saveInventory(player);
 		preparePlayer(player, 0);
 
-		//TODO did they join with a mode?
-		/*
-		if (usersData.contains("PlayerInfo." + player.getName() + ".Mode")){
-			if (usersData.getString("PlayerInfo." + player.getName() + ".Mode").toString() == "CJ"){
-				ItemStack suicide = new ItemStack(76, 1);
-				ItemMeta meta = suicide.getItemMeta();
-				meta.setDisplayName(ChatColor.RED + "CodJumper Tool");
-				suicide.setItemMeta(meta);
-				player.getInventory().setItem(3, suicide);
-			}
-		}*/
-
 		//TODO inventory items
-		/*
-		if (getConfig().getBoolean("Other.onJoin.GiveSuicideID")) {
-			ItemStack suicide = new ItemStack(getConfig().getInt("SuicideID"), 1);
+
+		FileConfiguration config = Parkour.getParkourConfig().getConfig();
+
+		if (config.getBoolean("Other.onJoin.GiveSuicideID")) {
+			ItemStack suicide = new ItemStack(config.getInt("SuicideID"), 1);
 			ItemMeta meta = suicide.getItemMeta();
-			meta.setDisplayName(Colour(stringData.getString("Other.Item_Suicide")));
+			meta.setDisplayName(Utils.getTranslation("Other.Item_Suicide", false));
 			suicide.setItemMeta(meta);
 			player.getInventory().setItem(0, suicide);
 		}
 
-		if (getConfig().getBoolean("Other.onJoin.GiveHideAllID")) {
-			ItemStack suicide = new ItemStack(getConfig().getInt("HideAllID"), 1);
+		if (config.getBoolean("Other.onJoin.GiveHideAllID")) {
+			ItemStack suicide = new ItemStack(config.getInt("HideAllID"), 1);
 			ItemMeta meta = suicide.getItemMeta();
-			meta.setDisplayName(Colour(stringData.getString("Other.Item_HideAll")));
+			meta.setDisplayName(Utils.getTranslation("Other.Item_HideAll", false));
 			suicide.setItemMeta(meta);
 			player.getInventory().setItem(1, suicide);
 		}
 
-		if (getConfig().getBoolean("Other.onJoin.GiveLeaveID")) {
-			ItemStack suicide = new ItemStack(getConfig().getInt("LeaveID"), 1);
+		if (config.getBoolean("Other.onJoin.GiveLeaveID")) {
+			ItemStack suicide = new ItemStack(config.getInt("LeaveID"), 1);
 			ItemMeta meta = suicide.getItemMeta();
-			meta.setDisplayName(Colour(stringData.getString("Other.Item_Leave")));
+			meta.setDisplayName(Utils.getTranslation("Other.Item_Leave", false));
 			suicide.setItemMeta(meta);
 			player.getInventory().setItem(2, suicide);
 		}
 
+		//TODO did they join with a mode?
+		/*
+				if (usersData.contains("PlayerInfo." + player.getName() + ".Mode")){
+					if (usersData.getString("PlayerInfo." + player.getName() + ".Mode").toString() == "CJ"){
+						ItemStack suicide = new ItemStack(76, 1);
+						ItemMeta meta = suicide.getItemMeta();
+						meta.setDisplayName(ChatColor.RED + "CodJumper Tool");
+						suicide.setItemMeta(meta);
+						player.getInventory().setItem(3, suicide);
+					}
+				}*/
+
+		/*
 
 			if (getConfig().getBoolean("Other.onJoin.GiveStatBook")) {
 				int leadertime1 = leaderData.getInt(course + ".1.time");
@@ -450,12 +467,17 @@ public class PlayerMethods {
 		for (PotionEffect effect : player.getActivePotionEffects()) {
 			player.removePotionEffect(effect.getType());
 		}
-		player.setGameMode(Utils.getGamemode(gamemode));
+		while (player.getFireTicks() > 0){
+			player.sendMessage(": Waiting... ");
+			player.setFireTicks(0);
+		}
+		
 		Damageable damag = player;
 		damag.setHealth(damag.getMaxHealth());
+		player.setGameMode(Utils.getGamemode(gamemode));
 		player.setFoodLevel(20);
-		player.setFireTicks(0);
 		player.setFallDistance(0);
+		player.setFireTicks(0);
 	}
 
 	/**

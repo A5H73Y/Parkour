@@ -46,13 +46,17 @@ public class CourseMethods {
 		
 		courseName = courseName.toLowerCase();
 		//Get course information from config.yml
-		ParkourBlocks pblocks = Static.getParkourBlocks();
+		ParkourBlocks pblocks;
 
 		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".customBlocks"))//TODO
 			pblocks = Static.getParkourBlocks();
+		else
+			pblocks = Static.getParkourBlocks();
 
-		Course course = new Course(courseName, CheckpointMethods.getCheckpoints(courseName.toLowerCase()), pblocks);
-		course.setMaxDeaths(Parkour.getParkourConfig().getCourseData().getInt(courseName + ".MaxDeaths"));
+		List<Checkpoint> checkpoints = CheckpointMethods.getCheckpoints(courseName);
+		Course course = new Course(courseName, checkpoints, pblocks);
+		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".MaxDeaths"))
+			course.setMaxDeaths(Parkour.getParkourConfig().getCourseData().getInt(courseName + ".MaxDeaths"));
 
 		return course;
 	}
@@ -173,6 +177,7 @@ public class CourseMethods {
 		player.sendMessage("Creator:      " + course.getCreator());
 		% completed = complete / views * 100
 		 */
+		System.out.println("-= Course info =-");
 	}
 
 	/**
@@ -521,7 +526,7 @@ public class CourseMethods {
 			return;
 		}
 
-		Parkour.getParkourConfig().getCourseData().set(args[1] + ".Creator", args[2]);
+		Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".Creator", args[2]);
 		Parkour.getParkourConfig().saveCourses();
 		player.sendMessage(Static.getParkourString() + "Creator of " + args[1] + " was set to " + Static.Aqua +  args[2]);
 	}

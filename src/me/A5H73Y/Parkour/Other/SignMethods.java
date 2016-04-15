@@ -11,29 +11,30 @@ import org.bukkit.event.block.SignChangeEvent;
 
 public class SignMethods {
 
-	public void createStandardSign(SignChangeEvent sign, Player player, String title){
+	public boolean createStandardSign(SignChangeEvent sign, Player player, String title){
 		if (!hasPermission(player, sign, title))
-			return;
+			return false;
 
 		sign.setLine(1, title);
 		sign.setLine(2, "");
 		sign.setLine(3, "-----");
 		player.sendMessage(Static.getParkourString() + title + " sign created!");
+		return true;
 	}
 
 	public void createStandardCourseSign(SignChangeEvent sign, Player player, String title){
 		createStandardCourseSign(sign, player, title, true);
 	}
 
-	public void createStandardCourseSign(SignChangeEvent sign, Player player, String title, boolean message){
+	public boolean createStandardCourseSign(SignChangeEvent sign, Player player, String title, boolean message){
 		if (!hasPermission(player, sign, title))
-			return;
-		
+			return false;
+
 		if (!CourseMethods.exist(sign.getLine(2))){
 			player.sendMessage(Utils.getTranslation("Error.Unknown"));
 			sign.setLine(2, ChatColor.RED + "Unknown Course!");
 			sign.setLine(3, "");
-			return;
+			return false;
 		}
 
 		sign.setLine(1, title);
@@ -41,10 +42,12 @@ public class SignMethods {
 
 		if (message)
 			player.sendMessage(Static.getParkourString() + Static.Daqua + title + Static.White + " sign for " + Static.Aqua + sign.getLine(2) + Static.White + " created!");
+		return true;
 	}
 
 	public void joinCourse(SignChangeEvent sign, Player player){
-		createStandardCourseSign(sign, player, "Join", false);
+		if (!createStandardCourseSign(sign, player, "Join", false))
+			return;
 
 		if (sign.getLine(3).equalsIgnoreCase("cj")){
 			sign.setLine(1, sign.getLine(1).toString() + " (CJ)");
@@ -98,7 +101,7 @@ public class SignMethods {
 				sign.getBlock().breakNaturally();
 				return;
 			}
-			
+
 			sign.setLine(2, "Jump");
 			player.sendMessage(Static.getParkourString() + "Created Jump sign");
 
@@ -106,17 +109,17 @@ public class SignMethods {
 			sign.setLine(2, "Speed");
 			sign.setLine(3, "-----");
 			player.sendMessage(Static.getParkourString() + "Created Speed sign");
-			
+
 		} else if (sign.getLine(2).equalsIgnoreCase("pain") || sign.getLine(2).equalsIgnoreCase("painresist")) {
 			sign.setLine(2, "Pain Resist");
 			sign.setLine(3, "-----");
 			player.sendMessage(Static.getParkourString() + "Created Pain Resistance sign");
-			
+
 		} else if (sign.getLine(2).equalsIgnoreCase("fire") || sign.getLine(2).equalsIgnoreCase("fireresist")) {
 			sign.setLine(2, "Fire Resist");
 			sign.setLine(3, "-----");
 			player.sendMessage(Static.getParkourString() + "Created Fire Resistance sign");
-			
+
 		} else if (sign.getLine(2).equalsIgnoreCase("gamemode")) {
 			sign.setLine(2, "Gamemode");
 			if (sign.getLine(3).equalsIgnoreCase("creative") || sign.getLine(3).equalsIgnoreCase("c")) {
@@ -124,13 +127,14 @@ public class SignMethods {
 			} else {
 				sign.setLine(3, "Survival");
 			}
+			
 		} else {
-			sign.setLine(2, "Unknown Effect");
+			sign.setLine(2, ChatColor.RED + "Unknown Effect");
 			sign.setLine(3, "");
 			player.sendMessage(Static.getParkourString() + "Unknown Effect");
 		}
 	}
-	
+
 	private boolean hasPermission(Player player, SignChangeEvent sign, String permission){
 		if (!Utils.hasPermission(player, "Parkour.Sign", permission)){
 			sign.setCancelled(true);

@@ -91,12 +91,12 @@ public class ParkourCommands implements CommandExecutor {
 						CourseMethods.setStart(args, player);
 						
 					} else if (args[0].equalsIgnoreCase("finish")) {
+						if (!Utils.validateArgs(player, args.length, 2))
+							return false;
+						
 						if (!Utils.hasPermissionOrOwnership(player, "Parkour.Admin", "Finish", args[1]))
 							return false;
 						
-						if (!Utils.validateArgs(player, args.length, 2))
-							return false;
-
 						CourseMethods.setFinished(args, player);
 
 					} else if (args[0].equalsIgnoreCase("prize")) {
@@ -291,6 +291,13 @@ public class ParkourCommands implements CommandExecutor {
 						player.sendMessage(Utils.getTranslation("Other.Reload"));
 						Utils.logToFile(player.getName() + " reloaded the Parkour config");
 
+						//TODO Delete 2 methods below
+					} else if (args[0].equalsIgnoreCase("die")) {
+						PlayerMethods.playerDie(player);
+						
+					} else if (args[0].equalsIgnoreCase("win")) {
+						PlayerMethods.playerFinish(player);
+						
 					} else {
 						player.sendMessage(Static.getParkourString() + "Unknown command!");
 						player.sendMessage(Static.Daqua + "/pa " + Static.Aqua + "cmds [1-3]" + ChatColor.BLACK + " : " + Static.White + "To display all available commands");
@@ -312,7 +319,7 @@ public class ParkourCommands implements CommandExecutor {
 						
 					} else if (args[0].equalsIgnoreCase("cmds")) {
 						System.out.println("pa backup : Create a backup zip of the Parkour config folder");
-						System.out.println("pa setlevel (player) : Set a players Parkour Level");
+						System.out.println("pa setlevel (player) (level) : Set a players Parkour Level");
 						
 					} else {
 						System.out.println("[Parkour] Unknown Command. Enter 'pa cmds' to display all commands.");

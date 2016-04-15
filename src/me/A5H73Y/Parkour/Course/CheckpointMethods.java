@@ -20,12 +20,19 @@ import org.bukkit.entity.Player;
 
 public class CheckpointMethods {
 
+	/**
+	 * Retrieval of Checkpoints. Each checkpoint object has a Location (for the player to teleport to on death)
+	 * and an XYZ coordinate for pressureplate detection.
+	 * NOTE: Checkpoint 0 will be made, this is JUST for the joining of the course, the XYZ will be 0.
+	 * @param courseName
+	 * @return
+	 */
 	public static List<Checkpoint> getCheckpoints(String courseName){
 		List<Checkpoint> checkpoints = new ArrayList<Checkpoint>();
 		Configurations config = Parkour.getParkourConfig();
 		FileConfiguration checkData = config.getCheckData();
 
-		int current = config.getCourseData().getInt("Points") + 1;
+		int current = config.getCourseData().getInt(courseName + ".Points") + 1;
 
 		for (int i=0; i < current; i++){
 
@@ -39,6 +46,7 @@ public class CheckpointMethods {
 
 			Checkpoint checkpoint = 
 					new Checkpoint(location, checkData.getDouble(courseName + "." + i + ".X"), checkData.getDouble(courseName + "." + i + ".Y"), checkData.getDouble(courseName + "." + i + ".Z"));
+			
 			checkpoints.add(checkpoint);
 		}
 
@@ -72,6 +80,11 @@ public class CheckpointMethods {
 
 			pointcount = Integer.parseInt(args[1]);
 		}
+		
+		if (pointcount < 1){
+			player.sendMessage(Static.getParkourString() + "Invalid checkpoint number.");
+			return;
+		}
 
 		createCheckpointData(selected, location, pointcount);
 
@@ -88,6 +101,9 @@ public class CheckpointMethods {
 		FileConfiguration courseData = Parkour.getParkourConfig().getCourseData();
 		FileConfiguration checkData = Parkour.getParkourConfig().getCheckData();
 
+		int points = courseData.getInt(selected + ".Points");
+		pointcount = points >= pointcount ? points : pointcount;
+		
 		courseData.set(selected + ".Points", pointcount);
 		courseData.set(selected + "." + pointcount + ".X", location.getBlockX() + 0.5);
 		courseData.set(selected + "." + pointcount + ".Y", location.getBlockY() + 0.5);

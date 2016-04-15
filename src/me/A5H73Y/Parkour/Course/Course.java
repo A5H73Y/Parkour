@@ -28,7 +28,7 @@ public class Course implements Serializable{
 		return checkpoints;
 	}
 	
-	public void setMaxDeaths(int maxDeaths){
+	public void setMaxDeaths(Integer maxDeaths){
 		this.maxDeaths = maxDeaths;
 	}
 	

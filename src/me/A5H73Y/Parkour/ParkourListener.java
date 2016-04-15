@@ -25,6 +25,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -37,52 +38,6 @@ import org.bukkit.event.player.PlayerToggleFlightEvent;
 public class ParkourListener implements Listener {
 
 	SignMethods sm = new SignMethods();
-
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
-		Player player = event.getPlayer();
-
-		//TODO
-		boolean paDisabled = true; //pl.getConfig().getBoolean("Other.DisableCommands.OnParkour");
-		boolean commandIsPa = event.getMessage().startsWith("/pa");
-
-		if (commandIsPa && Static.containsQuestion(player.getName())) {
-			if (event.getMessage().startsWith("/pa yes")) {
-				String question[] = Static.getQuestion(player.getName()).split(",");
-				int command = Integer.parseInt(question[0]);
-				String argument = question[1];
-				Static.removeQuestion(player.getName());
-
-				Utils.Confirm(command, argument, player);
-			} else if (event.getMessage().startsWith("/pa no")) {
-				player.sendMessage(Static.getParkourString() + "Question cancelled!");
-				Static.removeQuestion(player.getName());
-			} else {
-				player.sendMessage(Static.getParkourString() + ChatColor.RED + "Invalid question answer.");
-				player.sendMessage("Please use either " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " or " + ChatColor.AQUA + "/pa no");
-			}
-			event.setCancelled(true);
-			return;
-		}
-
-		if (!commandIsPa && PlayerMethods.isPlaying(player.getName())) {
-			if (paDisabled) {
-				if (!(player.hasPermission("Parkour.Admin") || player.hasPermission("Parkour.*"))) {
-					boolean allowed = false;
-					for (String word : Parkour.getParkourConfig().getConfig().getStringList("Other.Commands.Whitelist")) {
-						if (event.getMessage().startsWith("/" + word)) {
-							allowed = true;
-							break;
-						}
-					}
-					if (allowed == false) {
-						event.setCancelled(true);
-						player.sendMessage(Utils.getTranslation("Error.Command"));
-					}
-				}
-			}
-		}
-	}
 
 	@EventHandler
 	public void onPlayerChat(AsyncPlayerChatEvent event) {
@@ -129,15 +84,19 @@ public class ParkourListener implements Listener {
 			return;
 
 		//TODO "Other.Use.PlayerDamage"
-		if (false)
+		if (false){
 			event.setDamage(0);
-
+			return;
+		}
+		
 		Damageable player = (Player) event.getEntity();
 		if (player.getHealth() <= event.getDamage()) {
 			event.setCancelled(true);
 			PlayerMethods.playerDie((Player) event.getEntity()); 
 		}
 	}
+	
+	
 
 	@EventHandler
 	public void onHungerChange(FoodLevelChangeEvent event) {
@@ -258,7 +217,7 @@ public class ParkourListener implements Listener {
 				//TODO - Not sure what to do for this.
 
 			} else {
-				player.sendMessage(Parkour.getParkourConfig() + "Unknown Command");
+				player.sendMessage(Static.getParkourString() + "Unknown Sign Command");
 				event.setLine(1, ChatColor.RED + "Unknown cmd");
 				event.setLine(2, "");
 				event.setLine(3, "");
@@ -268,37 +227,89 @@ public class ParkourListener implements Listener {
 
 	@EventHandler
 	public void PressurePlate(PlayerInteractEvent event) {
-		if (event.getAction() == Action.PHYSICAL) {
-			Block plate = event.getClickedBlock();
-			Block below = plate.getRelative(BlockFace.DOWN);
+		if (event.getAction() != Action.PHYSICAL)
+			return;
 
-			if (below == null) 
-				return;
+		Block plate = event.getClickedBlock();
+		Block below = plate.getRelative(BlockFace.DOWN);
 
-			if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
-				return;
+		if (below == null) 
+			return;
 
-			PPlayer pplayer = PlayerMethods.getPlayerInfo(event.getPlayer().getName());
-			Course course = pplayer.getCourse();
+		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+			return;
 
-			if (course.getCheckpoints().size() <= pplayer.getCheckpoint())
-				return;
+		event.setCancelled(true);
+		PPlayer pplayer = PlayerMethods.getPlayerInfo(event.getPlayer().getName());
+		Course course = pplayer.getCourse();
+		
+		//This is so we don't include the spawn
+		int checkpoints = course.getCheckpoints().size() - 1;
 
-			Checkpoint check = course.getCheckpoints().get(pplayer.getCheckpoint() + 1);
+		if (checkpoints <= (pplayer.getCheckpoint()))
+			return;
 
-			if (check == null)
-				return;
+		Checkpoint check = course.getCheckpoints().get(pplayer.getCheckpoint() + 1);
 
-			if (check.getX() == below.getLocation().getBlockX() &&
-					check.getY() == below.getLocation().getBlockY() &&
-					check.getZ() == below.getLocation().getBlockZ()){
+		if (check == null)
+			return;
 
-				pplayer.increaseCheckpoint();
+		if (check.getX() == below.getLocation().getBlockX() &&
+				check.getY() == below.getLocation().getBlockY() &&
+				check.getZ() == below.getLocation().getBlockZ()){
 
-				if (course.getCheckpoints().size() == pplayer.getCheckpoint()){
-					event.getPlayer().sendMessage(Utils.getTranslation("Event.AllCheckpoints"));
-				} else {
-					event.getPlayer().sendMessage(Utils.getTranslation("Event.Checkpoint") + pplayer.getCheckpoint() +  " / " + course.getCheckpoints().size());
+			pplayer.increaseCheckpoint();
+
+			if (checkpoints == pplayer.getCheckpoint()){
+				event.getPlayer().sendMessage(Utils.getTranslation("Event.AllCheckpoints"));
+			} else {
+				event.getPlayer().sendMessage(Utils.getTranslation("Event.Checkpoint") + pplayer.getCheckpoint() +  " / " + checkpoints);
+			}
+
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
+		Player player = event.getPlayer();
+
+		//TODO
+		boolean paDisabled = true; //pl.getConfig().getBoolean("Other.DisableCommands.OnParkour");
+		boolean commandIsPa = event.getMessage().startsWith("/pa");
+
+		if (commandIsPa && Static.containsQuestion(player.getName())) {
+			if (event.getMessage().startsWith("/pa yes")) {
+				String question[] = Static.getQuestion(player.getName()).split(",");
+				int command = Integer.parseInt(question[0]);
+				String argument = question[1];
+				Static.removeQuestion(player.getName());
+
+				Utils.Confirm(command, argument, player);
+			} else if (event.getMessage().startsWith("/pa no")) {
+				player.sendMessage(Static.getParkourString() + "Question cancelled!");
+				Static.removeQuestion(player.getName());
+			} else {
+				player.sendMessage(Static.getParkourString() + ChatColor.RED + "Invalid question answer.");
+				player.sendMessage("Please use either " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " or " + ChatColor.AQUA + "/pa no");
+			}
+			event.setCancelled(true);
+			return;
+		}
+
+		if (!commandIsPa && PlayerMethods.isPlaying(player.getName())) {
+			if (paDisabled) {
+				if (!(player.hasPermission("Parkour.Admin") || player.hasPermission("Parkour.*"))) {
+					boolean allowed = false;
+					for (String word : Parkour.getParkourConfig().getConfig().getStringList("Other.Commands.Whitelist")) {
+						if (event.getMessage().startsWith("/" + word)) {
+							allowed = true;
+							break;
+						}
+					}
+					if (allowed == false) {
+						event.setCancelled(true);
+						player.sendMessage(Utils.getTranslation("Error.Command"));
+					}
 				}
 			}
 		}

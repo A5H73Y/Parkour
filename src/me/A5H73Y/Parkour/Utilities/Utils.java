@@ -52,30 +52,32 @@ public final class Utils {
 		if (player.hasPermission(permissionBranch + ".*") || player.hasPermission(permissionBranch + "." + permission) || player.hasPermission("Parkour.*"))
 			return true;
 
-		player.sendMessage(Utils.getTranslation("NoPermission").replace("%PERMISSION%", permission));
+		player.sendMessage(Utils.getTranslation("NoPermission").replace("%PERMISSION%", permissionBranch + permission));
 		return false;
 	}
 
 	public final static boolean hasPermissionOrOwnership(Player player, String permissionBranch, String permission, String courseName){
-		if (!(player.hasPermission(permissionBranch + ".*") || player.hasPermission(permissionBranch + "." + permission) || player.hasPermission("Parkour.*"))){
-			player.sendMessage(Utils.getTranslation("NoPermission").replace("%PERMISSION%", permission));
-			return false;
-		} else if (!(CourseMethods.exist(courseName))){
+		if (!(CourseMethods.exist(courseName))){
 			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", courseName));
 			return false;
-		} else if (player.getName().toString() != Parkour.getParkourConfig().getCourseData().getString(courseName + ".Creator")){
-			player.sendMessage(Static.getParkourString() + courseName + " is not your course!");
-			return false;
+			
+		} else if (player.hasPermission(permissionBranch + ".*") || player.hasPermission(permissionBranch + "." + permission) || player.hasPermission("Parkour.*")){
+			return true;
+			
+		} else if (player.getName().equals(Parkour.getParkourConfig().getCourseData().getString(courseName + ".Creator"))){
+			return true;
 		}
-		return true;
+		
+		player.sendMessage(Utils.getTranslation("NoPermission").replace("%PERMISSION%", permission));
+		return false;
 	}
 
 	public final static boolean validateArgs(Player player, int args, int desired){
 		if (args > desired) {
-			player.sendMessage(Utils.getTranslation("Error.TooMany"));
+			player.sendMessage(Utils.getTranslation("Error.TooMany") + " (" + desired + ")");
 			return false;
 		} else if (args < desired) { // || args == (desired - 1))
-			player.sendMessage(Utils.getTranslation("Error.TooLittle"));
+			player.sendMessage(Utils.getTranslation("Error.TooLittle") + " (" + desired + ")");
 			return false;
 		}
 		return true;
@@ -185,7 +187,6 @@ public final class Utils {
 		float yaw = (float) config.getDouble(courseName + path + "Yaw");
 		float pitch = (float) config.getDouble(courseName + path + "Pitch");
 		World world = Bukkit.getWorld(config.getString(courseName + ".World"));
-
 
 		return new Location(world, x, y, z, yaw, pitch);
 	}

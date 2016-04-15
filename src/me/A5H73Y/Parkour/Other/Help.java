@@ -58,6 +58,10 @@ public final class Help {
 
 
 	public static final void displayCommands(String[] args, Player player) {
+		//Check if args == "signs" 
+		//Display Sign commands /w usage
+		
+		
 		ChatColor Daqua = Static.Daqua;
 		ChatColor Aqua = Static.Aqua;
 		ChatColor Black = ChatColor.BLACK;
