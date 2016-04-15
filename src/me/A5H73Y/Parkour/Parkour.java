@@ -1,7 +1,5 @@
 package me.A5H73Y.Parkour;
 
-import java.util.logging.Logger;
-
 import me.A5H73Y.Parkour.Other.Configurations;
 import me.A5H73Y.Parkour.Other.StartPlugin;
 import me.A5H73Y.Parkour.Player.PlayerMethods;

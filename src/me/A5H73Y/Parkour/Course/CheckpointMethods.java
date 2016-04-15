@@ -102,9 +102,9 @@ public class CheckpointMethods {
 		FileConfiguration checkData = Parkour.getParkourConfig().getCheckData();
 
 		int points = courseData.getInt(selected + ".Points");
-		pointcount = points >= pointcount ? points : pointcount;
+		int pointmax = points >= pointcount ? points : pointcount;
 		
-		courseData.set(selected + ".Points", pointcount);
+		courseData.set(selected + ".Points", pointmax);
 		courseData.set(selected + "." + pointcount + ".X", location.getBlockX() + 0.5);
 		courseData.set(selected + "." + pointcount + ".Y", location.getBlockY() + 0.5);
 		courseData.set(selected + "." + pointcount + ".Z", location.getBlockZ() + 0.5);

@@ -17,8 +17,7 @@ public class Settings {
 	private static boolean welcomeMessage, creatorJoin, finishedError, XPReward, LevelReward, TitleOnJoin, stayInvisibleOnCancel, teleportToLobby;
 	
 	//Database
-	private static boolean useDatabase;
-	private static String host, username, password, database, table;
+	private static boolean useMySQL;
 	
 	public static void initialize(){
 		FileConfiguration config = Parkour.getParkourConfig().getConfig();
@@ -166,28 +165,12 @@ public class Settings {
 		return teleportToLobby;
 	}
 
-	public static boolean isUseDatabase() {
-		return useDatabase;
+	public static boolean isForceFullComplete() {
+		return forceFullComplete;
 	}
 
-	public static String getHost() {
-		return host;
-	}
-
-	public static String getUsername() {
-		return username;
-	}
-
-	public static String getPassword() {
-		return password;
-	}
-
-	public static String getDatabase() {
-		return database;
-	}
-
-	public static String getTable() {
-		return table;
+	public static boolean isUseMySQL() {
+		return useMySQL;
 	}
 	
 }

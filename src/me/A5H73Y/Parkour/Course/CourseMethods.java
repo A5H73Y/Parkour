@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import me.A5H73Y.Parkour.Parkour;
-import me.A5H73Y.Parkour.Other.ParkourBlocks;
 import me.A5H73Y.Parkour.Other.Validation;
 import me.A5H73Y.Parkour.Player.PPlayer;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
@@ -46,15 +45,13 @@ public class CourseMethods {
 		
 		courseName = courseName.toLowerCase();
 		//Get course information from config.yml
-		ParkourBlocks pblocks;
-
-		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".customBlocks"))//TODO
-			pblocks = Static.getParkourBlocks();
-		else
-			pblocks = Static.getParkourBlocks();
-
+		
 		List<Checkpoint> checkpoints = CheckpointMethods.getCheckpoints(courseName);
-		Course course = new Course(courseName, checkpoints, pblocks);
+		Course course = new Course(courseName, checkpoints);
+		
+		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".customBlocks"))//TODO
+			course.setParkourBlocks(Static.getParkourBlocks());//TODO
+		
 		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".MaxDeaths"))
 			course.setMaxDeaths(Parkour.getParkourConfig().getCourseData().getInt(courseName + ".MaxDeaths"));
 

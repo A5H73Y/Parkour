@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import me.A5H73Y.Parkour.Other.ParkourBlocks;
+import me.A5H73Y.Parkour.Utilities.Static;
 
 public class Course implements Serializable{	
 	
@@ -14,10 +15,10 @@ public class Course implements Serializable{
 	private Integer maxDeaths;
 	private ParkourBlocks parkourBlocks;
 	
-	public Course(String name, List<Checkpoint> checkpoints, ParkourBlocks parkourBlocks) {
+	public Course(String name, List<Checkpoint> checkpoints) {
 		this.name = name;
 		this.checkpoints = checkpoints;
-		this.parkourBlocks = parkourBlocks;
+		this.parkourBlocks = Static.getParkourBlocks();
 	}
 
 	public String getName() {
@@ -38,6 +39,10 @@ public class Course implements Serializable{
 	
 	public ParkourBlocks getParkourBlocks(){
 		return parkourBlocks;
+	}
+	
+	public void setParkourBlocks(ParkourBlocks parkourBlocks){
+		this.parkourBlocks = parkourBlocks;
 	}
 	
 }

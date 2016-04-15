@@ -35,11 +35,14 @@ public class StartPlugin {
 	}
 
 	private static void setupVault() {
+		if (!Parkour.getParkourConfig().getConfig().getBoolean("Other.Use.Economy"))
+			return;
+		
 		PluginManager pm = Parkour.getPlugin().getServer().getPluginManager();
 		vault = pm.getPlugin("Vault");
 		if (vault != null && vault.isEnabled()) {
 			if (!setupEconomy()) {
-				Utils.log("[Parkour] Attempted to link with Vault, but something went wrong: ");
+				Utils.log("[Parkour] Attempted to link with Vault, but something went wrong.");
 				Parkour.getPlugin().getConfig().set("Other.Use.Economy", false);
 				Parkour.getPlugin().saveConfig();
 			} else {
@@ -64,6 +67,8 @@ public class StartPlugin {
 
 		try {
 			database.openConnection();
+			database.setupTables();
+			Parkour.setDatabaseObj(database);
 		} catch (ClassNotFoundException e) {
 			Utils.log("[Parkour] MySQL connection problem: " + e.getMessage());
 			e.printStackTrace();
@@ -71,10 +76,6 @@ public class StartPlugin {
 			Utils.log("[Parkour] MySQL connection problem: " + e.getMessage());
 			e.printStackTrace();
 		}
-
-		database.setupTables();
-
-		Parkour.setDatabaseObj(database);
 	}
 
 	private static boolean setupEconomy() {
@@ -101,10 +102,13 @@ public class StartPlugin {
 	private static void setupBarAPI(){
 		PluginManager pm = Parkour.getPlugin().getServer().getPluginManager();
 		barAPI = pm.getPlugin("TitleActionbarAPI");
-		System.out.println(pm.getPlugins());
 		if (barAPI != null && barAPI.isEnabled()) {
-			Utils.log("[Parkour] Linked with TitleActionbarAPI v" + barAPI.getDescription().getVersion());
-			Static.setBarAPI(true);
+			if (true){ //TitleActionBarAPI.getValid()
+				Utils.log("[Parkour] Linked with TitleActionbarAPI v" + barAPI.getDescription().getVersion());
+				Static.setBarAPI(true);
+			}else{
+				Utils.log("[Parkour] Attempted to Link with TitleActionbarAPI, but server is too outdated.");
+			}
 		}
 	}
 }

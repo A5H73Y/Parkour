@@ -129,21 +129,19 @@ public class PlayerMethods {
 		if (!isPlaying(player.getName()))
 			return;
 
-		//Validate - check if they've got all checkpoints
-		if (false)
-			return;
-
 		PPlayer pplayer = getPlayerInfo(player.getName());
+		
+		//Validate - check if they've got all checkpoints
+		if (Parkour.getParkourConfig().getConfig().getBoolean("Other.Use.ForceFullCompletion") && 
+				pplayer.getCheckpoint() != (pplayer.getCourse().getCheckpoints().size() - 1)){
+			player.sendMessage(Static.getParkourString() + "Please do not cheat.");
+			player.sendMessage(ChatColor.BOLD + "You must achieve all " + (pplayer.getCourse().getCheckpoints().size() - 1) + " points!");
+			playerDie(player);
+			return;
+		}	
+		
 		String courseName = pplayer.getCourse().getName();
 		CourseMethods.increaseComplete(courseName);
-
-		//TODO 
-		/*
-		if (getConfig().getBoolean("Other.Use.Sounds")) {
-			player.playEffect(player.getLocation(), Effect.FIREWORKS_SPARK, 5);
-			player.playSound(player.getLocation(), Sound.LEVEL_UP, 1L, 1L);
-		}
-		 */
 
 		//TODO prize
 		//TODO economy
@@ -577,7 +575,7 @@ public class PlayerMethods {
 			removePlayer(player.getName());
 			Utils.sendActionBar(player, Static.getParkourString() + Utils.Colour("Test Mode: &bOFF"));
 		}else{
-			Course course = new Course("Test Mode", null, Static.getParkourBlocks());
+			Course course = new Course("Test Mode", null);
 			addPlayer(player.getName(), new PPlayer(course));
 			Utils.sendActionBar(player, Static.getParkourString() + Utils.Colour("Test Mode: &bON"));
 		}
