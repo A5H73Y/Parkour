@@ -162,6 +162,12 @@ public class CourseMethods {
 	 * @param player
 	 */
 	public static void displayCourseInfo(String[] args, Player player) {
+		if (!exist(args[1])){
+			//TODO
+			player.sendMessage("Course doesn't exist");
+			return;
+		}
+		
 		//TODO
 
 		//Maybe display straight from config? Avoid checkpoints slamming IO
@@ -174,7 +180,7 @@ public class CourseMethods {
 		player.sendMessage("Creator:      " + course.getCreator());
 		% completed = complete / views * 100
 		 */
-		System.out.println("-= Course info =-");
+		player.sendMessage("-= Course info =-");
 	}
 
 	/**

@@ -52,7 +52,7 @@ public final class Utils {
 		if (player.hasPermission(permissionBranch + ".*") || player.hasPermission(permissionBranch + "." + permission) || player.hasPermission("Parkour.*"))
 			return true;
 
-		player.sendMessage(Utils.getTranslation("NoPermission").replace("%PERMISSION%", permissionBranch + permission));
+		player.sendMessage(Utils.getTranslation("NoPermission").replace("%PERMISSION%", permissionBranch + "." + permission));
 		return false;
 	}
 

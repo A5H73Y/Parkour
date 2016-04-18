@@ -31,7 +31,7 @@ public class StartPlugin {
 		setupBarAPI();
 		populatePlayers();
 		//Updater
-		Utils.log("[Parkour] Enabled Parkour v" + Static.getVersion() + "!");
+		Utils.log("Enabled Parkour v" + Static.getVersion() + "!");
 	}
 
 	private static void setupVault() {
@@ -42,14 +42,14 @@ public class StartPlugin {
 		vault = pm.getPlugin("Vault");
 		if (vault != null && vault.isEnabled()) {
 			if (!setupEconomy()) {
-				Utils.log("[Parkour] Attempted to link with Vault, but something went wrong.");
+				Utils.log("Attempted to link with Vault, but something went wrong.");
 				Parkour.getPlugin().getConfig().set("Other.Use.Economy", false);
 				Parkour.getPlugin().saveConfig();
 			} else {
-				Utils.log("[Parkour] Linked with Economy v" + vault.getDescription().getVersion());
+				Utils.log("Linked with Economy v" + vault.getDescription().getVersion());
 			}
 		} else {
-			Utils.log("[Parkour] Vault is missing, disabling Economy Use.");
+			Utils.log("Vault is missing, disabling Economy Use.");
 			Parkour.getPlugin().getConfig().set("Other.Use.Economy", false);
 			Parkour.getPlugin().saveConfig();
 		}

@@ -28,16 +28,15 @@ public class ParkourCommands implements CommandExecutor {
 						&& !Utils.hasPermission(player, "Parkour.Basic", "Commands"))
 					return false;
 
-
 				if (args.length >= 1) {
 					if (args[0].equalsIgnoreCase("create")) {
-						if (!Utils.hasPermission(player, "Parkour.Create"))
+						if (!Utils.hasPermission(player, "Parkour.Basic", "Create"))
 							return false;
 
 						CourseMethods.createCourse(args, player);
 
 					} else if (args[0].equalsIgnoreCase("join")) {
-						if (!Utils.hasPermission(player, "Parkour.Join"))
+						if (!Utils.hasPermission(player, "Parkour.Basic", "Join"))
 							return false;
 
 						if (!Utils.validateArgs(player, args.length, 2))
@@ -76,7 +75,7 @@ public class ParkourCommands implements CommandExecutor {
 						CourseMethods.setCreator(args, player);
 
 					} else if (args[0].equalsIgnoreCase("checkpoint")) {
-						if (!Utils.hasPermission(player, "Parkour.Admin", "Delete"))
+						if (!Utils.hasPermission(player, "Parkour.Admin", "Checkpoint"))
 							return false;
 
 						CheckpointMethods.createCheckpoint(args, player);
@@ -102,7 +101,10 @@ public class ParkourCommands implements CommandExecutor {
 					} else if (args[0].equalsIgnoreCase("prize")) {
 						if (!Utils.validateArgs(player, args.length, 4))
 							return false;
-
+						
+						if (!Utils.hasPermissionOrOwnership(player, "Parkour.Admin", "Prize", args[1]))
+							return false;
+						
 						CourseMethods.setPrize(args, player);
 
 					} else if (args[0].equalsIgnoreCase("perms")) {
@@ -115,7 +117,7 @@ public class ParkourCommands implements CommandExecutor {
 						PlayerMethods.givePlayerKit(player);
 
 					} else if (args[0].equalsIgnoreCase("delete")) {
-						if (!Utils.hasPermission(player, "Parour.Admin", "Delete"))
+						if (!Utils.hasPermission(player, "Parkour.Admin", "Delete"))
 							return false;
 
 						if (!Utils.validateArgs(player, args.length, 2))
@@ -157,7 +159,7 @@ public class ParkourCommands implements CommandExecutor {
 						CheckpointMethods.teleportCheckpoint(args, player, true);
 						
 					} else if (args[0].equalsIgnoreCase("link")) {
-						if (!Utils.hasPermission(player, "Parkour.Admin", "Testmode"))
+						if (!Utils.hasPermission(player, "Parkour.Admin"))
 							return false;
 
 						if (!Utils.validateArgs(player, args.length, 4))

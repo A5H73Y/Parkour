@@ -32,7 +32,7 @@ public class Parkour extends JavaPlugin {
 	}
 
 	public void onDisable() {
-		Utils.log("[Parkour] Disabled Parkour v" + Static.getVersion() + "!");
+		Utils.log("Disabled Parkour v" + Static.getVersion() + "!");
 		Utils.saveAllPlaying(PlayerMethods.getPlaying(), Static.PATH);
 		config.saveAll();
 		getParkourConfig().reload();

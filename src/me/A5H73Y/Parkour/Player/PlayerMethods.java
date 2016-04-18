@@ -60,8 +60,10 @@ public class PlayerMethods {
 	 */
 	public static void playerLeave(Player player){
 		//TODO Add admin forcing other players to leave
-		if (!isPlaying(player.getName()))
+		if (!isPlaying(player.getName())){
+			player.sendMessage(Static.getParkourString() + "You aren't on a course.");
 			return;
+		}
 
 		PPlayer pplayer = getPlayerInfo(player.getName());
 		Utils.sendSubTitle(player, "Leaving " + pplayer.getCourse().getName());
@@ -207,8 +209,8 @@ public class PlayerMethods {
 			player.sendMessage("Time: "+Static.Aqua+pplayer.displayTime());
 			player.sendMessage("Checkpoint: "+Static.Aqua+pplayer.getCheckpoint());
 		}
-
-		System.out.println("-= Player information =-");
+	
+		player.sendMessage("-= Player information =-");
 		/*if (usersData.contains("PlayerInfo." + targetPlayer.getName() + ".Selected")) {
 		if (usersData.contains("PlayerInfo." + targetPlayer.getName() + ".Level")){
 		if (usersData.contains("PlayerInfo." + targetPlayer.getName() + ".Points")){
@@ -354,18 +356,25 @@ public class PlayerMethods {
 		if (player.hasPermission("Parkour.*") || player.isOp()) {
 			player.sendMessage("- Everything");
 		}else{
+			boolean anyPerms = false;
 			if (player.hasPermission("Parkour.Basic.*")) {
 				player.sendMessage("- Basic");
+				anyPerms = true;
 			}
 			if (player.hasPermission("Parkour.Signs.*")) {
 				player.sendMessage("- Signs");
+				anyPerms = true;
 			}
 			if (player.hasPermission("Parkour.Testmode.*")) {
 				player.sendMessage("- Testmode");
+				anyPerms = true;
 			}
 			if (player.hasPermission("Parkour.Admin.*")) {
 				player.sendMessage("- Admin");
+				anyPerms = true;
 			}
+			if (!anyPerms)
+				player.sendMessage("- You don't have any Parkour permissions.");
 		}
 	}
 
