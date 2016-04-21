@@ -17,9 +17,6 @@ public class Validation {
 		} else if (args[1].length() > 15) {
 			player.sendMessage("Course name is too long!");
 			return false;
-		} else if (args[1].equalsIgnoreCase("TestMode")) {
-			player.sendMessage("This name is already taken!");
-			return false;
 		} else if (args[1].contains(".")) {
 			player.sendMessage("Course names can not contain '.'");
 			return false;

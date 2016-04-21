@@ -122,7 +122,7 @@ public final class Utils {
 	}
 
 	public final static void logToFile(String message) {
-		if (Settings.isLog()){
+		if (Parkour.getSettings().isLog()){
 			try {
 				File saveTo = new File(Parkour.getParkourConfig().getDataFolder(), "Parkour.log");
 				if (!saveTo.exists()) {
@@ -325,7 +325,7 @@ public final class Utils {
 		if (Static.containsQuiet(player.getName()))
 			return;
 		if (Static.getBarAPI())
-			TitleActionBarAPI.sendPlayerTitle(player, 5, 25, 5, title);
+			TitleActionBarAPI.sendPlayerTitle(player, 5, 20, 5, title);
 		else
 			player.sendMessage(Static.getParkourString() + title);
 	}
@@ -341,7 +341,7 @@ public final class Utils {
 		if (Static.containsQuiet(player.getName()))
 			return;
 		if (Static.getBarAPI())
-			TitleActionBarAPI.sendFullTitle(player, 5, 25, 5, title, subTitle);
+			TitleActionBarAPI.sendFullTitle(player, 5, 20, 5, title, subTitle);
 		else
 			player.sendMessage(Static.getParkourString() + title + " " + subTitle);
 	}
@@ -349,7 +349,7 @@ public final class Utils {
 		if (Static.containsQuiet(player.getName()))
 			return;
 		if (Static.getBarAPI())
-			TitleActionBarAPI.sendPlayerSubTitle(player, 5, 25, 5, subTitle);
+			TitleActionBarAPI.sendPlayerSubTitle(player, 5, 20, 5, subTitle);
 		else
 			player.sendMessage(Static.getParkourString() + subTitle);
 	}

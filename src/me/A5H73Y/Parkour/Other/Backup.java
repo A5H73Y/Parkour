@@ -19,12 +19,18 @@ public class Backup {
 	private static final String SOURCE_FOLDER = Parkour.getPlugin().getDataFolder().toString();
 
 	public static void backupNow(){
-		System.out.println("[Parkour] Beginning backup...");
+		backupNow(true);
+	}
+
+	public static void backupNow(boolean message){
+		if (message)
+			Utils.log("Beginning backup...");
 		fileList = new ArrayList<String>();
 
 		generateFileList(new File(SOURCE_FOLDER));
 		zipIt(OUTPUT_ZIP_FILE);
-		System.out.println("[Parkour] Backup completed!");
+		if(message)
+			Utils.log("Backup completed!");
 	}
 
 	/**

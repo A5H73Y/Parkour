@@ -25,7 +25,7 @@ public class Static {
 	private static ParkourBlocks pblocks;
 
 	private final static String ParkourString = Utils.Colour("&0[&bParkour&0] &f");
-	private static String version;
+	private static Double version;
 
 	public final static String PATH = Parkour.getPlugin().getDataFolder() + File.separator + "playing.bin";
 	public final static ChatColor Aqua = ChatColor.AQUA;
@@ -34,7 +34,7 @@ public class Static {
 	public final static ChatColor White = ChatColor.WHITE;
 	
 	public static void initiate(){
-		version = Parkour.getPlugin().getDescription().getVersion();
+		version = Double.parseDouble(Parkour.getPlugin().getDescription().getVersion());
 		courseList = Parkour.getParkourConfig().getAllCourses();
 		pblocks = Utils.populateParkourBlocks();
 	}
@@ -47,12 +47,11 @@ public class Static {
 		return ParkourString;
 	}
 
-	public static String getVersion(){
+	public static Double getVersion(){
 		return version;
 	}
 	
 	public static List<String> getCourses(){
-		
 		return courseList;
 	}
 	

@@ -42,12 +42,12 @@ public class PlayerMethods {
 
 		PPlayer pplayer = getPlayerInfo(playerName);
 
-		Utils.sendTitle(player, "Joining " + course.getName());
-
 		if (pplayer == null){
+			Utils.sendTitle(player, "Joining " + course.getName());
 			addPlayer(playerName, new PPlayer(course));
 		}else{
-			pplayer.resetTimeStarted();
+			removePlayer(playerName);
+			addPlayer(playerName, new PPlayer(course));
 			if (!Static.containsQuiet(playerName))
 				player.sendMessage(Static.getParkourString() + "Your time has been restarted!");
 		}

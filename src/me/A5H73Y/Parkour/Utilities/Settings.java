@@ -7,19 +7,19 @@ import me.A5H73Y.Parkour.Parkour;
 public class Settings {
 
 	//Main
-	private static boolean log, debug, checkForUpdates, economy, forceFullComplete, parkourBlocks, signProtection, invManagement, scoreboard, playerDamage, sounds, forceWorld, disableCommands;
-	private static int maxFall, leaderboardType, gamemodeFinish;
+	private boolean log, debug, checkForUpdates, economy, forceFullComplete, parkourBlocks, signProtection, invManagement, scoreboard, playerDamage, sounds, forceWorld, disableCommands;
+	private int maxFall, leaderboardType, gamemodeFinish;
 	
 	//OnEvents
-	private static boolean forceFinished, giveSuicide, giveHideAll, giveLeave, giveStatBook, resetPlayer, resetTimeOnDie, setXPBar, tpToLobby, broadcastFinish;
+	private boolean forceFinished, giveSuicide, giveHideAll, giveLeave, giveStatBook, resetPlayer, resetTimeOnDie, setXPBar, tpToLobby, broadcastFinish;
 	
 	//Display
-	private static boolean welcomeMessage, creatorJoin, finishedError, XPReward, LevelReward, TitleOnJoin, stayInvisibleOnCancel, teleportToLobby;
+	private boolean welcomeMessage, creatorJoin, finishedError, XPReward, LevelReward, TitleOnJoin, stayInvisibleOnCancel, teleportToLobby;
 	
 	//Database
-	private static boolean useMySQL;
+	private boolean useMySQL;
 	
-	public static void initialize(){
+	public Settings(){
 		FileConfiguration config = Parkour.getParkourConfig().getConfig();
 		log = config.getBoolean("Log");
 		debug = config.getBoolean("Debug");
@@ -33,143 +33,143 @@ public class Settings {
 		//TODO finish me
 	}
 
-	public static boolean isLog() {
+	public boolean isLog() {
 		return log;
 	}
 
-	public static boolean isDebug() {
+	public boolean isDebug() {
 		return debug;
 	}
 
-	public static boolean isCheckForUpdates() {
+	public boolean isCheckForUpdates() {
 		return checkForUpdates;
 	}
 
-	public static boolean isEconomy() {
+	public boolean isEconomy() {
 		return economy;
 	}
 
-	public static boolean isParkourBlocks() {
+	public boolean isParkourBlocks() {
 		return parkourBlocks;
 	}
 
-	public static boolean isSignProtection() {
+	public boolean isSignProtection() {
 		return signProtection;
 	}
 
-	public static boolean isInvManagement() {
+	public boolean isInvManagement() {
 		return invManagement;
 	}
 
-	public static boolean isScoreboard() {
+	public boolean isScoreboard() {
 		return scoreboard;
 	}
 
-	public static boolean isPlayerDamage() {
+	public boolean isPlayerDamage() {
 		return playerDamage;
 	}
 
-	public static boolean isSounds() {
+	public boolean isSounds() {
 		return sounds;
 	}
 
-	public static boolean isForceWorld() {
+	public boolean isForceWorld() {
 		return forceWorld;
 	}
 
-	public static boolean isDisableCommands() {
+	public boolean isDisableCommands() {
 		return disableCommands;
 	}
 
-	public static int getMaxFall() {
+	public int getMaxFall() {
 		return maxFall;
 	}
 
-	public static int getLeaderboardType() {
+	public int getLeaderboardType() {
 		return leaderboardType;
 	}
 
-	public static int getGamemodeFinish() {
+	public int getGamemodeFinish() {
 		return gamemodeFinish;
 	}
 
-	public static boolean isForceFinished() {
+	public boolean isForceFinished() {
 		return forceFinished;
 	}
 
-	public static boolean isGiveSuicide() {
+	public boolean isGiveSuicide() {
 		return giveSuicide;
 	}
 
-	public static boolean isGiveHideAll() {
+	public boolean isGiveHideAll() {
 		return giveHideAll;
 	}
 
-	public static boolean isGiveLeave() {
+	public boolean isGiveLeave() {
 		return giveLeave;
 	}
 
-	public static boolean isGiveStatBook() {
+	public boolean isGiveStatBook() {
 		return giveStatBook;
 	}
 
-	public static boolean isResetPlayer() {
+	public boolean isResetPlayer() {
 		return resetPlayer;
 	}
 
-	public static boolean isResetTimeOnDie() {
+	public boolean isResetTimeOnDie() {
 		return resetTimeOnDie;
 	}
 
-	public static boolean isSetXPBar() {
+	public boolean isSetXPBar() {
 		return setXPBar;
 	}
 
-	public static boolean isTpToLobby() {
+	public boolean isTpToLobby() {
 		return tpToLobby;
 	}
 
-	public static boolean isBroadcastFinish() {
+	public boolean isBroadcastFinish() {
 		return broadcastFinish;
 	}
 
-	public static boolean isWelcomeMessage() {
+	public boolean isWelcomeMessage() {
 		return welcomeMessage;
 	}
 
-	public static boolean isCreatorJoin() {
+	public boolean isCreatorJoin() {
 		return creatorJoin;
 	}
 
-	public static boolean isFinishedError() {
+	public boolean isFinishedError() {
 		return finishedError;
 	}
 
-	public static boolean isXPReward() {
+	public boolean isXPReward() {
 		return XPReward;
 	}
 
-	public static boolean isLevelReward() {
+	public boolean isLevelReward() {
 		return LevelReward;
 	}
 
-	public static boolean isTitleOnJoin() {
+	public boolean isTitleOnJoin() {
 		return TitleOnJoin;
 	}
 
-	public static boolean isStayInvisibleOnCancel() {
+	public boolean isStayInvisibleOnCancel() {
 		return stayInvisibleOnCancel;
 	}
 
-	public static boolean isTeleportToLobby() {
+	public boolean isTeleportToLobby() {
 		return teleportToLobby;
 	}
 
-	public static boolean isForceFullComplete() {
+	public boolean isForceFullComplete() {
 		return forceFullComplete;
 	}
 
-	public static boolean isUseMySQL() {
+	public boolean isUseMySQL() {
 		return useMySQL;
 	}
 	

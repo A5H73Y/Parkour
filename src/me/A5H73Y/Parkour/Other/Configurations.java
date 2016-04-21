@@ -169,14 +169,14 @@ public class Configurations {
 	public void reload(){
 		//TODO finish me
 		Parkour.getPlugin().reloadConfig();
-		/*
+		
 		courseData = YamlConfiguration.loadConfiguration(courseFile);
 		leaderData = YamlConfiguration.loadConfiguration(leaderFile);
 		stringData = YamlConfiguration.loadConfiguration(stringFile);
 		usersData = YamlConfiguration.loadConfiguration(usersFile);
 		invData = YamlConfiguration.loadConfiguration(invFile);
 		checkData = YamlConfiguration.loadConfiguration(checkFile);
-		 */
+		
 	}
 
 	//AllStrings

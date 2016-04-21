@@ -1,6 +1,11 @@
 package me.A5H73Y.Parkour.Other;
 
 import java.io.File;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.HashMap;
 
@@ -20,6 +25,8 @@ import com.huskehhh.mysql.Database;
 import com.huskehhh.mysql.mysql.MySQL;
 import com.huskehhh.mysql.sqlite.SQLite;
 
+import de.bg.derh4nnes.TitleActionBarAPI;
+
 public class StartPlugin {
 
 	static Plugin vault, barAPI;
@@ -31,13 +38,14 @@ public class StartPlugin {
 		setupBarAPI();
 		populatePlayers();
 		//Updater
+		convertToLatest();
 		Utils.log("Enabled Parkour v" + Static.getVersion() + "!");
 	}
 
 	private static void setupVault() {
 		if (!Parkour.getParkourConfig().getConfig().getBoolean("Other.Use.Economy"))
 			return;
-		
+
 		PluginManager pm = Parkour.getPlugin().getServer().getPluginManager();
 		vault = pm.getPlugin("Vault");
 		if (vault != null && vault.isEnabled()) {
@@ -60,7 +68,7 @@ public class StartPlugin {
 		FileConfiguration config = Parkour.getParkourConfig().getConfig();
 
 		if (config.getBoolean("MySQL.Use")){
-			database = new MySQL(config.getString("SQL.Host"), config.getString("SQL.Port"), config.getString("SQL.Database"), config.getString("SQL.User"), config.getString("SQL.Password"));
+			database = new MySQL(config.getString("MySQL.Host"), config.getString("MySQL.Port"), config.getString("MySQL.Database"), config.getString("MySQL.User"), config.getString("MySQL.Password"));
 		}else{
 			database = new SQLite(Parkour.getPlugin().getDataFolder().toString() + File.separator + "parkour.db");
 		}
@@ -70,10 +78,10 @@ public class StartPlugin {
 			database.setupTables();
 			Parkour.setDatabaseObj(database);
 		} catch (ClassNotFoundException e) {
-			Utils.log("[Parkour] MySQL connection problem: " + e.getMessage());
+			Utils.log("SQL connection problem: " + e.getMessage());
 			e.printStackTrace();
 		} catch (SQLException e) {
-			Utils.log("[Parkour] MySQL connection problem: " + e.getMessage());
+			Utils.log("SQL connection problem: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -87,6 +95,7 @@ public class StartPlugin {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	private static void populatePlayers(){
 		if (!new File(Static.PATH).exists())
 			return;
@@ -103,12 +112,43 @@ public class StartPlugin {
 		PluginManager pm = Parkour.getPlugin().getServer().getPluginManager();
 		barAPI = pm.getPlugin("TitleActionbarAPI");
 		if (barAPI != null && barAPI.isEnabled()) {
-			if (true){ //TitleActionBarAPI.getValid()
-				Utils.log("[Parkour] Linked with TitleActionbarAPI v" + barAPI.getDescription().getVersion());
+			if (TitleActionBarAPI.isValidVersion()){ //TitleActionBarAPI.getValid()
+				Utils.log("Linked with TitleActionbarAPI v" + barAPI.getDescription().getVersion());
 				Static.setBarAPI(true);
 			}else{
-				Utils.log("[Parkour] Attempted to Link with TitleActionbarAPI, but server is too outdated.");
+				Utils.log("Attempted to Link with TitleActionbarAPI, but server version is not supported");
 			}
 		}
+	}
+
+	private static void convertToLatest(){
+		double configVersion = Parkour.getParkourConfig().getConfig().getDouble("Version");
+
+		if (configVersion < Static.getVersion()){
+			Utils.log("Updating config to " + Static.getVersion() + "...");
+			
+			Backup.backupNow(false);
+			
+			try{
+				Charset charset = StandardCharsets.UTF_8;
+
+				Path path = Paths.get(Parkour.getPlugin().getDataFolder().getPath(), "courses.yml");
+				String content = new String(Files.readAllBytes(path), charset);
+
+				for (String course : Static.getCourses()){
+					content = content.replaceAll(course, course.toLowerCase());
+				}
+
+				Files.write(path, content.getBytes(charset));
+				
+				Static.initiate();
+				Utils.log("Done.");
+			} catch (Exception ex){
+				Utils.log("Failed: " + ex.getMessage());
+			}
+			//Parkour.getParkourConfig().getConfig().set("Version", Static.getVersion());
+
+		}
+
 	}
 }

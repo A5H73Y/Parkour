@@ -42,7 +42,7 @@ public class ParkourListener implements Listener {
 	public void onPlayerChat(AsyncPlayerChatEvent event) {
 		//if (pl.getConfig().getBoolean("Other.Use.Prefix")) {
 		//TODO
-		if (Settings.isDebug())
+		if (Parkour.getSettings().isDebug())
 			return;
 
 		String rank = Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + event.getPlayer().getName() + ".Rank");
@@ -95,8 +95,6 @@ public class ParkourListener implements Listener {
 		}
 	}
 
-
-
 	@EventHandler
 	public void onHungerChange(FoodLevelChangeEvent event) {
 		if (!(event.getEntity() instanceof Player))
@@ -109,8 +107,8 @@ public class ParkourListener implements Listener {
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		//TODO actual joinonMessage settings
-		if (Settings.isWelcomeMessage())
-			event.getPlayer().sendMessage(Utils.getTranslation("Event.Join").replace("%VERSION%", Static.getVersion()));
+		if (Parkour.getSettings().isWelcomeMessage())
+			event.getPlayer().sendMessage(Utils.getTranslation("Event.Join").replace("%VERSION%", Static.getVersion().toString()));
 
 		//TODO check how performance is
 		if (PlayerMethods.isPlaying(event.getPlayer().getName())){
@@ -119,11 +117,10 @@ public class ParkourListener implements Listener {
 		}
 	}
 
-
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		//TODO "Other.onLeave.ResetPlayer"
-		if (!Settings.isWelcomeMessage())
+		if (!Parkour.getSettings().isWelcomeMessage())
 			return;
 
 		if (PlayerMethods.isPlaying(event.getPlayer().getName()))
@@ -132,7 +129,7 @@ public class ParkourListener implements Listener {
 
 	@EventHandler
 	public void onTeleport(PlayerTeleportEvent event) {
-		if (!Settings.isForceWorld())
+		if (!Parkour.getSettings().isForceWorld())
 			return;
 
 		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
