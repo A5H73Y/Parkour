@@ -4,7 +4,6 @@ import me.A5H73Y.Parkour.Course.Checkpoint;
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Player.PPlayer;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
-import me.A5H73Y.Parkour.Utilities.Settings;
 import me.A5H73Y.Parkour.Utilities.SignMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
@@ -42,7 +41,7 @@ public class ParkourListener implements Listener {
 	public void onPlayerChat(AsyncPlayerChatEvent event) {
 		//if (pl.getConfig().getBoolean("Other.Use.Prefix")) {
 		//TODO
-		if (Parkour.getSettings().isDebug())
+		if (Parkour.getSettings() != null)
 			return;
 
 		String rank = Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + event.getPlayer().getName() + ".Rank");
@@ -83,7 +82,7 @@ public class ParkourListener implements Listener {
 			return;
 
 		//TODO "Other.Use.PlayerDamage"
-		if (false){
+		if (Parkour.getSettings() != null){
 			event.setDamage(0);
 			return;
 		}
@@ -107,7 +106,7 @@ public class ParkourListener implements Listener {
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		//TODO actual joinonMessage settings
-		if (Parkour.getSettings().isWelcomeMessage())
+		if (Parkour.getSettings() != null)
 			event.getPlayer().sendMessage(Utils.getTranslation("Event.Join").replace("%VERSION%", Static.getVersion().toString()));
 
 		//TODO check how performance is
@@ -120,7 +119,7 @@ public class ParkourListener implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		//TODO "Other.onLeave.ResetPlayer"
-		if (!Parkour.getSettings().isWelcomeMessage())
+		if (Parkour.getSettings() != null)
 			return;
 
 		if (PlayerMethods.isPlaying(event.getPlayer().getName()))
@@ -129,7 +128,7 @@ public class ParkourListener implements Listener {
 
 	@EventHandler
 	public void onTeleport(PlayerTeleportEvent event) {
-		if (!Parkour.getSettings().isForceWorld())
+		if (Parkour.getSettings() != null)
 			return;
 
 		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
@@ -137,8 +136,7 @@ public class ParkourListener implements Listener {
 
 		if (event.getFrom().getWorld() != event.getTo().getWorld()){
 			event.setCancelled(true);
-			event.getPlayer().sendMessage(Utils.getTranslation(""));
-			//TODO Translation "Teleporting to a different world has been cancelled."
+			event.getPlayer().sendMessage(Utils.getTranslation("Error.WorldTeleport"));
 		}
 
 	}
@@ -246,7 +244,7 @@ public class ParkourListener implements Listener {
 		//This is so we don't include the spawn
 		int checkpoints = course.getCheckpoints().size() - 1;
 
-		if (checkpoints <= (pplayer.getCheckpoint()))
+		if (checkpoints <= pplayer.getCheckpoint())
 			return;
 
 		Checkpoint check = course.getCheckpoints().get(pplayer.getCheckpoint() + 1);
@@ -282,7 +280,7 @@ public class ParkourListener implements Listener {
 				String argument = question[1];
 				Static.removeQuestion(player.getName());
 
-				Utils.Confirm(command, argument, player);
+				Utils.questionConfirm(command, argument, player);
 			} else if (event.getMessage().startsWith("/pa no")) {
 				player.sendMessage(Static.getParkourString() + "Question cancelled!");
 				Static.removeQuestion(player.getName());

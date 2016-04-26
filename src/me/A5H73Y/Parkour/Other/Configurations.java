@@ -17,8 +17,12 @@ public class Configurations {
 	private File dataFolder, courseFile, leaderFile, stringFile, usersFile, invFile, checkFile, upgFile, econFile;
 	private FileConfiguration courseData, leaderData, stringData, usersData, invData, checkData, upgData, econData, config;
 
+	/**
+	 * This no longer generates the default config.yml to allow the ability of creating a backup of the existing config.
+	 * 
+	 */
 	public Configurations(){
-		setupConfig();
+		Parkour.getPlugin().saveConfig();
 
 		dataFolder = Parkour.getPlugin().getDataFolder();
 
@@ -41,113 +45,78 @@ public class Configurations {
 		if (!courseFile.exists()) {
 			try {
 				courseFile.createNewFile();
-				Utils.log("[Parkour] Created courses.yml");
+				Utils.log("Created courses.yml");
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				Utils.log("[Parkour] Failed!");
+				Utils.log("Failed!");
 			}
-		}
-		try {
-			courseData.load(courseFile);
-		} catch (Exception ex) {
-			ex.printStackTrace();
 		}
 
 		// leaderboards
 		if (!leaderFile.exists()) {
 			try {
 				leaderFile.createNewFile();
-				Utils.log("[Parkour] Created leaderboards.yml");
+				Utils.log("Created leaderboards.yml");
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				Utils.log("[Parkour] Failed!");
+				Utils.log("Failed!");
 			}
-		}
-		try {
-			leaderData.load(leaderFile);
-		} catch (Exception ex) {
-			ex.printStackTrace();
 		}
 
 		// Strings
 		if (!stringFile.exists()) {
 			try {
 				stringFile.createNewFile();
-				Utils.log("[Parkour] Created strings.yml");
+				Utils.log("Created strings.yml");
 				saveStrings();
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				Utils.log("[Parkour] Failed!");
+				Utils.log("Failed!");
 			}
-		}
-
-		try {
-			stringData.load(stringFile);
-		} catch (Exception ex) {
-			ex.printStackTrace();
 		}
 
 		// users
 		if (!usersFile.exists()) {
 			try {
 				usersFile.createNewFile();
-				Utils.log("[Parkour] Created players.yml");
+				Utils.log("Created players.yml");
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				Utils.log("[Parkour] Failed!");
+				Utils.log("Failed!");
 			}
-		}
-		try {
-			usersData.load(usersFile);
-		} catch (Exception ex) {
-			ex.printStackTrace();
 		}
 
 		// inventory
 		if (!invFile.exists()) {
 			try {
 				invFile.createNewFile();
-				Utils.log("[Parkour] Created inventory.yml");
+				Utils.log("Created inventory.yml");
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				Utils.log("[Parkour] Failed!");
+				Utils.log("Failed!");
 			}
-		}
-		try {
-			invData.load(invFile);
-		} catch (Exception ex) {
-			ex.printStackTrace();
 		}
 
 		// checkpoints
 		if (!checkFile.exists()) {
 			try {
 				checkFile.createNewFile();
-				Utils.log("[Parkour] Created checkpoints.yml");
+				Utils.log("Created checkpoints.yml");
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				Utils.log("[Parkour] Failed!");
+				Utils.log("Failed!");
 			}
-		}
-		try {
-			checkData.load(checkFile);
-		} catch (Exception ex) {
-			ex.printStackTrace();
 		}
 
-		// upgrades
-		if (!upgFile.exists()) {
-			try {
-				upgFile.createNewFile();
-				Utils.log("[Parkour] Created upgrades.yml");	
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				Utils.log("[Parkour] Failed!");
-			}
-		}
-		try {
-			upgData.load(upgFile);
-		} catch (Exception ex) {
+		try{
+			courseData.load(courseFile);
+			leaderData.load(leaderFile);
+			stringData.load(stringFile);
+			usersData.load(usersFile);
+			invData.load(invFile);
+			checkData.load(checkFile);
+		} catch (Exception ex){
+			Utils.log("Failed loading config: " + ex.getMessage());
 			ex.printStackTrace();
 		}
 
@@ -169,20 +138,17 @@ public class Configurations {
 	public void reload(){
 		//TODO finish me
 		Parkour.getPlugin().reloadConfig();
-		
+
 		courseData = YamlConfiguration.loadConfiguration(courseFile);
 		leaderData = YamlConfiguration.loadConfiguration(leaderFile);
 		stringData = YamlConfiguration.loadConfiguration(stringFile);
 		usersData = YamlConfiguration.loadConfiguration(usersFile);
 		invData = YamlConfiguration.loadConfiguration(invFile);
 		checkData = YamlConfiguration.loadConfiguration(checkFile);
-		
 	}
 
 	//AllStrings
 	public void saveStrings() {
-
-		//ParkourMessages
 		stringData.addDefault("==| README |==", "TO SAVE THESE VALUES: STOP THE SERVER. SAVE YOUR CHANGES. START THE SERVER!");
 		stringData.addDefault("Parkour.PrefixColour", "b");
 		if (stringData.getString("Parkour.PrefixColour").length() != 1){
@@ -250,7 +216,7 @@ public class Configurations {
 		stringData.addDefault("Kit.NoPotion", "&bNoPotion Block");
 		stringData.addDefault("Kit.Sign", "&bSign");
 		stringData.addDefault("Kit.Death", "&bDeath Block");
-		
+
 		stringData.addDefault("Kit.DoubleJump", "&bDoubleJump Block");
 
 		stringData.addDefault("Spectate.AlertPlayer", "You are now being spectated by &b%PLAYER%");
@@ -263,7 +229,7 @@ public class Configurations {
 		stringData.addDefault("NoPermission", "You do not have Permission: &b%PERMISSION%");
 		stringData.options().copyDefaults(true);
 	}
-	
+
 
 	public void setupConfig(){
 		config = Parkour.getPlugin().getConfig();
@@ -402,7 +368,6 @@ public class Configurations {
 		try {
 			courseData.addDefault("Courses", new ArrayList<String>());
 			courseData.options().copyDefaults(true);
-
 			courseData.save(courseFile);
 		} catch (IOException ex) {
 			ex.printStackTrace();
@@ -446,9 +411,7 @@ public class Configurations {
 			upgData.addDefault("XPRankUpAt", 500);
 			upgData.addDefault("XPRankUpMultiplier", 100);
 			upgData.options().copyDefaults(true);
-
 			upgData.save(upgFile);
-
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
@@ -458,7 +421,6 @@ public class Configurations {
 		try {
 			econData.addDefault("Price.Kit", 0);
 			econData.options().copyDefaults(true);
-
 			econData.save(econFile);
 		} catch (IOException ex) {
 			ex.printStackTrace();
@@ -478,11 +440,11 @@ public class Configurations {
 		if (!econFile.exists()) {
 			try {
 				econFile.createNewFile();
-				Utils.log("[Parkour] Created economy.yml");
+				Utils.log("Created economy.yml");
 				saveEcon();
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				Utils.log("[Parkour] Failed.");
+				Utils.log("Failed.");
 			}
 		}
 		try {

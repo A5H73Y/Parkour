@@ -122,7 +122,7 @@ public final class Utils {
 	}
 
 	public final static void logToFile(String message) {
-		if (Parkour.getSettings().isLog()){
+		if (Parkour.getSettings() != null){
 			try {
 				File saveTo = new File(Parkour.getParkourConfig().getDataFolder(), "Parkour.log");
 				if (!saveTo.exists()) {
@@ -139,6 +139,11 @@ public final class Utils {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public final static void broadcastMessage(String message, String permission){
+		Bukkit.broadcast(message, permission);
+		log(message);
 	}
 
 	public final static String getDateTime() {
@@ -191,7 +196,7 @@ public final class Utils {
 		return new Location(world, x, y, z, yaw, pitch);
 	}
 
-	public static void Confirm(int command, String argument, Player player) {
+	public static void questionConfirm(int command, String argument, Player player) {
 		switch(command){
 		case 1:	
 			List<String> courselist = Static.getCourses();
@@ -201,8 +206,10 @@ public final class Utils {
 			Parkour.getParkourConfig().saveCourses();
 
 			player.sendMessage(Utils.getTranslation(("Parkour.Delete")).replace("%COURSE%", argument));
+
+			Utils.logToFile(argument + " was deleted by " + player.getName());
 			/*
-				if (pl.getConfig().getBoolean("Database.Use")) {
+				if (pl.getConfig().getBoolean("Database.Use")) { //DeleteTimesFromDatabase
 					pl.logger.info("[Parkour] [SQL] Deleting from database...");
 					MySQL.deleteRecord(argument);
 				}*/
@@ -321,6 +328,11 @@ public final class Utils {
 		return result;
 	}
 
+	/**
+	 * Different methods for displaying titles, the fallback option is to just message the player
+	 * @param player
+	 * @param title
+	 */
 	public static void sendTitle(Player player, String title){
 		if (Static.containsQuiet(player.getName()))
 			return;

@@ -24,13 +24,11 @@ public class Parkour extends JavaPlugin {
 		System.out.println("Thank you for using a Parkour development build.");
 		System.out.println("Please add me on skype iA5H73Y to discuss anything.");
 		
-		//Option to populate entire courseList on join. Check if list is populated, then set static savedLocally = false. Method to return will check if set and retrieve appropriately
 		plugin = this;
 		config = new Configurations();
-		settings = new Settings();
-		
 		StartPlugin.run();
-
+		
+		settings = new Settings();
 		getServer().getPluginManager().registerEvents(new ParkourListener(), this);
 		getCommand("parkour").setExecutor(new ParkourCommands());
 	}
@@ -48,6 +46,10 @@ public class Parkour extends JavaPlugin {
 
 	public static void setEconomy(Economy newEconomy){
 		economy = newEconomy;
+	}
+	
+	public static void setSettings(Settings newSettings){
+		settings = newSettings;
 	}
 
 	//Getters

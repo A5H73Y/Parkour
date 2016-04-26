@@ -323,7 +323,6 @@ public class CourseMethods {
 		player.sendMessage(Static.getParkourString() + "You are about to delete course " + Static.Aqua + args[1] + ChatColor.WHITE + "...");
 		player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
 		Static.addQuestion(player.getName(), 1, args[1]);
-		Utils.logToFile(args[1] + " was deleted by " + player.getName());
 	}
 
 	/**
