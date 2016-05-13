@@ -44,7 +44,6 @@ public class CourseMethods {
 			return null;
 		
 		courseName = courseName.toLowerCase();
-		//Get course information from config.yml
 		
 		List<Checkpoint> checkpoints = CheckpointMethods.getCheckpoints(courseName);
 		Course course = new Course(courseName, checkpoints);
@@ -144,7 +143,6 @@ public class CourseMethods {
 		if (!Validation.courseJoining(player, courseName))
 			return;
 
-
 		PlayerMethods.playerJoin(player, course);
 	}
 
@@ -163,8 +161,7 @@ public class CourseMethods {
 	 */
 	public static void displayCourseInfo(String[] args, Player player) {
 		if (!exist(args[1])){
-			//TODO
-			player.sendMessage("Course doesn't exist");
+			player.sendMessage(Utils.getTranslation("Error.Unknown"));
 			return;
 		}
 		
@@ -244,7 +241,7 @@ public class CourseMethods {
 
 			if (level > 0 && !player.hasPermission("Parkour.MinBypass")){
 				if (Parkour.getParkourConfig().getUsersData().getInt("PlayerInfo." + player.getName() + ".Level") < level){
-					player.sendMessage(Utils.getTranslation("Error.RequiredLvl").replaceAll("%LEVEL%", String.valueOf(level)));
+					player.sendMessage(Utils.getTranslation("Error.RequiredLvl").replace("%LEVEL%", String.valueOf(level)));
 					return;
 				}
 
@@ -270,7 +267,7 @@ public class CourseMethods {
 			return;
 
 		if (custom){
-			player.sendMessage(Utils.getTranslation("Parkour.LobbyOther").replaceAll("%LOBBY%", args[1]));
+			player.sendMessage(Utils.getTranslation("Parkour.LobbyOther").replace("%LOBBY%", args[1]));
 		}else{
 			player.sendMessage(Utils.getTranslation("Parkour.Lobby"));
 
@@ -455,7 +452,7 @@ public class CourseMethods {
 				arguments.append(args[i]);
 				arguments.append(" ");
 			}
-			String commandString = arguments.toString().replaceAll("/", "");
+			String commandString = arguments.toString().replace("/", "");
 			Parkour.getParkourConfig().getCourseData().set(args[1] + ".Prize.CMD", commandString);
 			Parkour.getParkourConfig().saveCourses();
 			player.sendMessage(Static.getParkourString() + "Finish command set to " + arguments.toString());

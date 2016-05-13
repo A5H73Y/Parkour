@@ -3,6 +3,7 @@ package me.A5H73Y.Parkour;
 import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Other.Backup;
+import me.A5H73Y.Parkour.Other.ConsoleCommandMethods;
 import me.A5H73Y.Parkour.Other.Help;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
@@ -24,7 +25,7 @@ public class ParkourCommands implements CommandExecutor {
 			if(sender instanceof Player){
 				Player player = (Player)sender;
 
-				if (Parkour.getParkourConfig().getConfig().getBoolean("Other.Use.CmdPermission") 
+				if (Parkour.getSettings().isCommandPermission()//TODO
 						&& !Utils.hasPermission(player, "Parkour.Basic", "Commands"))
 					return false;
 
@@ -140,7 +141,7 @@ public class ParkourCommands implements CommandExecutor {
 
 						CourseMethods.deselectCourse(args, player);
 
-					} else if (args[0].equalsIgnoreCase("tp")) {
+					} else if (args[0].equalsIgnoreCase("tp") || args[0].equalsIgnoreCase("teleport")) {
 						if (!Utils.hasPermission(player, "Parkour.Basic", "TP"))
 							return false;
 
@@ -247,6 +248,12 @@ public class ParkourCommands implements CommandExecutor {
 						
 						PlayerMethods.resetPlayer(args, player);
 						
+					} else if (args[0].equalsIgnoreCase("sql")) {
+						if (!Utils.hasPermission(player, "Parkour.Admin"))
+							return false;
+						
+						Help.displaySQL(args, player);
+						
 						//Other commands//	
 					} else if (args[0].equalsIgnoreCase("about")) {
 						player.sendMessage(Static.getParkourString() + "Server is running Parkour " + Static.Gray + Static.getVersion());
@@ -261,15 +268,8 @@ public class ParkourCommands implements CommandExecutor {
 						player.sendMessage(" Parkour URL: " + Static.Aqua + "http://dev.bukkit.org/server-mods/parkour/");
 
 					} else if (args[0].equalsIgnoreCase("request") || args[0].equalsIgnoreCase("bug")) {
-
 						player.sendMessage(Static.getParkourString() + "To Request a feature or to Report a bug...");
 						player.sendMessage("Click here: " + ChatColor.DARK_AQUA + "http://dev.bukkit.org/server-mods/parkour/forum/");
-						
-					} else if (args[0].equalsIgnoreCase("sql")) {
-						if (!Utils.hasPermission(player, "Parkour.Admin"))
-							return false;
-						
-						Help.displaySQL(args, player);
 
 					} else if (args[0].equalsIgnoreCase("settings")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin")) 
@@ -300,7 +300,7 @@ public class ParkourCommands implements CommandExecutor {
 						PlayerMethods.playerFinish(player);
 						
 					} else {
-						player.sendMessage(Static.getParkourString() + "Unknown command!");
+						player.sendMessage(Utils.getTranslation("Error.UnknownCmd"));
 						player.sendMessage(Static.Daqua + "/pa " + Static.Aqua + "cmds [1-3]" + ChatColor.BLACK + " : " + Static.White + "To display all available commands");
 					}
 
@@ -316,17 +316,17 @@ public class ParkourCommands implements CommandExecutor {
 						Backup.backupNow();
 						
 					} else if (args[0].equalsIgnoreCase("setlevel")){
-						//TODO
+						ConsoleCommandMethods.setLevel(args);
 						
 					} else if (args[0].equalsIgnoreCase("cmds")) {
-						System.out.println("pa backup : Create a backup zip of the Parkour config folder");
-						System.out.println("pa setlevel (player) (level) : Set a players Parkour Level");
+						Utils.log("pa backup : Create a backup zip of the Parkour config folder");
+						Utils.log("pa setlevel (player) (level) : Set a players Parkour Level");
 						
 					} else {
-						System.out.println("[Parkour] Unknown Command. Enter 'pa cmds' to display all commands.");
+						Utils.log("Unknown Command. Enter 'pa cmds' to display all commands.");
 					}
 				}else{
-					System.out.println("[Parkour] v" + Static.getVersion() + " installed. Plugin created by A5H73Y.");
+					Utils.log("v" + Static.getVersion() + " installed. Plugin created by A5H73Y.");
 				}
 			}
 		}

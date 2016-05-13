@@ -38,11 +38,8 @@ public class Backup {
 	 * @param zipFile output ZIP file location
 	 */
 	public static void zipIt(String zipFile){
-
 		byte[] buffer = new byte[1024];
-
 		try{
-
 			FileOutputStream fos = new FileOutputStream(zipFile);
 			ZipOutputStream zos = new ZipOutputStream(fos);
 
@@ -57,10 +54,8 @@ public class Backup {
 				while ((len = in.read(buffer)) > 0) {
 					zos.write(buffer, 0, len);
 				}
-
 				in.close();
 			}
-
 			zos.closeEntry();
 			//remember close it
 			zos.close();

@@ -10,6 +10,16 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public final class Help {
+	
+	/**
+	 * 
+	 * =====
+	 * 
+	 * I'm not going to bother updating this class until the plugin is almost complete.
+	 * 
+	 * =====
+	 * 
+	 */
 
 	public static void lookupCommandHelp(String[] args, Player player){
 
@@ -61,6 +71,7 @@ public final class Help {
 		//Check if args == "signs" 
 		//Display Sign commands /w usage
 		
+		//TODO Sort this shit out
 		
 		ChatColor Daqua = Static.Daqua;
 		ChatColor Aqua = Static.Aqua;
@@ -213,7 +224,7 @@ public final class Help {
 					econ.set("Price." + s + ".Finish", 0);
 				}
 			} catch (Exception ex) {
-				Utils.log(Utils.getTranslation("Error.Something", false).replaceAll("%ERROR%", ex.getMessage()));	
+				Utils.log(Utils.getTranslation("Error.Something", false).replace("%ERROR%", ex.getMessage()));	
 			}
 		}
 

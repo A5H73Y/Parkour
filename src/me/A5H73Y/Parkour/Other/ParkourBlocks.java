@@ -12,9 +12,9 @@ public class ParkourBlocks implements Serializable{
 	
 	
 	/**
-	 * New as of 4.0. Each course will have it's own ParkourBlocks. This will contain all the known blocks from previous version,
-	 * however each course can have it's own individual type of block. This is been requested several times and this seemed a good
-	 * way to resolve it.
+	 * New as of 4.0. I've rethought how I'm going to achieve this. There will be ParkourBlock types, each with an identifier.
+	 * For example if I was going to have different themes throughout the server, each course theme would have it's own set of ParkourBlocks.
+	 * The course then gets linked to a parkourBlock set and not the other way around.
 	 * 
 	 * @param finish
 	 * @param climb

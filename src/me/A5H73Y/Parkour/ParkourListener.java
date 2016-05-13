@@ -10,7 +10,9 @@ import me.A5H73Y.Parkour.Utilities.Utils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Damageable;
@@ -29,6 +31,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
@@ -38,10 +41,22 @@ public class ParkourListener implements Listener {
 	SignMethods sm = new SignMethods();
 
 	@EventHandler
+	public void onPlayerMove(PlayerMoveEvent event){
+		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+			return;
+
+		//TODO try me out
+
+		Location loc = event.getPlayer().getLocation().add(0, 0.4, 0);
+		Particle eff = Particle.REDSTONE;
+
+		event.getPlayer().getWorld().spawnParticle(eff, loc, 1);
+
+	}
+
+	@EventHandler
 	public void onPlayerChat(AsyncPlayerChatEvent event) {
-		//if (pl.getConfig().getBoolean("Other.Use.Prefix")) {
-		//TODO
-		if (Parkour.getSettings() != null)
+		if (Parkour.getSettings().isChatPrefix())
 			return;
 
 		String rank = Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + event.getPlayer().getName() + ".Rank");
@@ -81,14 +96,14 @@ public class ParkourListener implements Listener {
 		if (!PlayerMethods.isPlaying(event.getEntity().getName()))
 			return;
 
-		//TODO "Other.Use.PlayerDamage"
-		if (Parkour.getSettings() != null){
+		if (Parkour.getSettings().isDisablePlayerDamage()){
 			event.setDamage(0);
 			return;
 		}
 
 		Damageable player = (Player) event.getEntity();
 		if (player.getHealth() <= event.getDamage()) {
+			event.setDamage(0);
 			event.setCancelled(true);
 			PlayerMethods.playerDie((Player) event.getEntity()); 
 		}
@@ -105,8 +120,7 @@ public class ParkourListener implements Listener {
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		//TODO actual joinonMessage settings
-		if (Parkour.getSettings() != null)
+		if (Parkour.getSettings().isDisplayWelcome())
 			event.getPlayer().sendMessage(Utils.getTranslation("Event.Join").replace("%VERSION%", Static.getVersion().toString()));
 
 		//TODO check how performance is
@@ -118,8 +132,7 @@ public class ParkourListener implements Listener {
 
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		//TODO "Other.onLeave.ResetPlayer"
-		if (Parkour.getSettings() != null)
+		if (Parkour.getSettings().isResetOnLeave())
 			return;
 
 		if (PlayerMethods.isPlaying(event.getPlayer().getName()))
@@ -128,10 +141,10 @@ public class ParkourListener implements Listener {
 
 	@EventHandler
 	public void onTeleport(PlayerTeleportEvent event) {
-		if (Parkour.getSettings() != null)
+		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
 			return;
 
-		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+		if (!Parkour.getSettings().isEnforceWorld())
 			return;
 
 		if (event.getFrom().getWorld() != event.getTo().getWorld()){
@@ -166,16 +179,17 @@ public class ParkourListener implements Listener {
 		if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.getAction().equals(Action.RIGHT_CLICK_AIR))
 			return;
 
-		//Check if test mode
+		if (PlayerMethods.isPlayerInTestmode(player.getName()))
+			return;
 
-		if (player.getInventory().getItemInMainHand().getType() == Material.ARROW){
+		if (player.getInventory().getItemInMainHand().getType() == Parkour.getSettings().getSuicide()) {
 			//pl.getConfig().getInt("SuicideID")){
 			PlayerMethods.playerDie(player);
 
-		} else if (player.getInventory().getItemInMainHand().getType() == Material.BONE){
+		} else if (player.getInventory().getItemInMainHand().getType() == Parkour.getSettings().getHideall()) {
 			Utils.toggleVisibility(player, Static.containsHidden(player.getName()));
 
-		} else if (player.getInventory().getItemInMainHand().getType() == Material.LEAVES) {
+		} else if (player.getInventory().getItemInMainHand().getType() == Parkour.getSettings().getLeave()) {
 			PlayerMethods.playerLeave(player);
 
 		} else if (player.getInventory().getItemInMainHand().getType() == Material.REDSTONE_TORCH_ON) {
@@ -215,7 +229,7 @@ public class ParkourListener implements Listener {
 				//TODO - Not sure what to do for this.
 
 			} else {
-				player.sendMessage(Static.getParkourString() + "Unknown Sign Command");
+				player.sendMessage(Utils.getTranslation("Error.UnknownSignCommand"));
 				event.setLine(1, ChatColor.RED + "Unknown cmd");
 				event.setLine(2, "");
 				event.setLine(3, "");
@@ -269,18 +283,14 @@ public class ParkourListener implements Listener {
 	public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		Player player = event.getPlayer();
 
-		//TODO
-		boolean paDisabled = true; //pl.getConfig().getBoolean("Other.DisableCommands.OnParkour");
 		boolean commandIsPa = event.getMessage().startsWith("/pa");
 
 		if (commandIsPa && Static.containsQuestion(player.getName())) {
 			if (event.getMessage().startsWith("/pa yes")) {
 				String question[] = Static.getQuestion(player.getName()).split(",");
-				int command = Integer.parseInt(question[0]);
-				String argument = question[1];
 				Static.removeQuestion(player.getName());
 
-				Utils.questionConfirm(command, argument, player);
+				Utils.questionConfirm(Integer.parseInt(question[0]), question[1], player);
 			} else if (event.getMessage().startsWith("/pa no")) {
 				player.sendMessage(Static.getParkourString() + "Question cancelled!");
 				Static.removeQuestion(player.getName());
@@ -293,7 +303,7 @@ public class ParkourListener implements Listener {
 		}
 
 		if (!commandIsPa && PlayerMethods.isPlaying(player.getName())) {
-			if (!paDisabled)
+			if (!Parkour.getSettings().isDisableCommands())
 				return;
 
 			if (!(player.hasPermission("Parkour.Admin") || player.hasPermission("Parkour.*"))) {

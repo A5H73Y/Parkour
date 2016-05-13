@@ -60,14 +60,14 @@ public final class Utils {
 		if (!(CourseMethods.exist(courseName))){
 			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", courseName));
 			return false;
-			
+
 		} else if (player.hasPermission(permissionBranch + ".*") || player.hasPermission(permissionBranch + "." + permission) || player.hasPermission("Parkour.*")){
 			return true;
-			
+
 		} else if (player.getName().equals(Parkour.getParkourConfig().getCourseData().getString(courseName + ".Creator"))){
 			return true;
 		}
-		
+
 		player.sendMessage(Utils.getTranslation("NoPermission").replace("%PERMISSION%", permission));
 		return false;
 	}
@@ -84,12 +84,12 @@ public final class Utils {
 	}
 
 	public String standardizeText(String text) {
-	    if (text == null || text.length() == 0) {
-	        return text;
-	    }
-	    return text.substring(0, 1).toUpperCase() + text.substring(1).toLowerCase();
+		if (text == null || text.length() == 0) {
+			return text;
+		}
+		return text.substring(0, 1).toUpperCase() + text.substring(1).toLowerCase();
 	}
-	
+
 	public final static boolean isNumber(String args) {
 		try {
 			Integer.parseInt(args);
@@ -116,9 +116,26 @@ public final class Utils {
 
 		return seconds > 0 ? secondsn + ":" + minutesn + ":" + hoursn : minutesn + ":" + hoursn;
 	}
-	
+
+	public final static void log(String message, int severity){
+		switch (severity){
+		case 0:
+			Parkour.getPlugin().getLogger().info(message);
+			break;
+		case 1:
+			Parkour.getPlugin().getLogger().warning(message);
+			break;
+		case 2:
+			Parkour.getPlugin().getLogger().severe("! " + message);
+			break;
+		default:
+			Parkour.getPlugin().getLogger().info(message);
+			break;
+		}
+	}
+
 	public final static void log(String message) {
-		Parkour.getPlugin().getLogger().info(message);
+		log(message, 0);
 	}
 
 	public final static void logToFile(String message) {
@@ -140,35 +157,20 @@ public final class Utils {
 			}
 		}
 	}
-	
+
 	public final static void broadcastMessage(String message, String permission){
 		Bukkit.broadcast(message, permission);
 		log(message);
 	}
 
 	public final static String getDateTime() {
-		Date date = new Date();
 		Format formatter = new SimpleDateFormat("[dd/MM/yyyy | HH:mm:ss]");
-		String s = formatter.format(date);
-		return s;
+		return formatter.format(new Date());
 	}
 
 	public final static String getDate() {
-		Date date = new Date();
 		Format formatter = new SimpleDateFormat("dd-MM-yyyy");
-		String s = formatter.format(date);
-		return s;
-	}
-
-	public final static void saveAllConfig() {
-		Parkour.getParkourConfig().saveCheck();
-		Parkour.getParkourConfig().saveCourses();
-		Parkour.getParkourConfig().saveEcon();
-		Parkour.getParkourConfig().saveInv();
-		Parkour.getParkourConfig().saveLeaders();
-		Parkour.getParkourConfig().saveStrings();
-		Parkour.getParkourConfig().saveUpgrades();
-		Parkour.getParkourConfig().saveUsers();
+		return formatter.format(new Date());
 	}
 
 	public final static Location getLocation(String courseName, String path) {
@@ -257,7 +259,7 @@ public final class Utils {
 	}
 
 	public static String invalidSyntax(String command, String arguments){
-		return getTranslation("Error.Syntax").replaceAll("%COMMAND%", command).replaceAll("%ARGUMENTS%", arguments);
+		return getTranslation("Error.Syntax").replace("%COMMAND%", command).replace("%ARGUMENTS%", arguments);
 	}
 
 	public static GameMode getGamemode(int gamemode){
@@ -277,14 +279,14 @@ public final class Utils {
 		FileConfiguration config = Parkour.getParkourConfig().getConfig();
 
 		ParkourBlocks pb = new ParkourBlocks(
-				Material.getMaterial(config.getString("Block.Finish.ID")),
-				Material.getMaterial(config.getString("Block.Climb.ID")),
-				Material.getMaterial(config.getString("Block.Launch.ID")),
-				Material.getMaterial(config.getString("Block.Speed.ID")),
-				Material.getMaterial(config.getString("Block.Repulse.ID")),
-				Material.getMaterial(config.getString("Block.NoRun.ID")),
-				Material.getMaterial(config.getString("Block.NoPotion.ID")),
-				Material.getMaterial(config.getString("Block.DoubleJump.ID"))
+				Material.getMaterial(config.getString("DefaultBlocks.Finish.Material")),
+				Material.getMaterial(config.getString("DefaultBlocks.Climb.Material")),
+				Material.getMaterial(config.getString("DefaultBlocks.Launch.Material")),
+				Material.getMaterial(config.getString("DefaultBlocks.Speed.Material")),
+				Material.getMaterial(config.getString("DefaultBlocks.Repulse.Material")),
+				Material.getMaterial(config.getString("DefaultBlocks.NoRun.Material")),
+				Material.getMaterial(config.getString("DefaultBlocks.NoPotion.Material")),
+				Material.getMaterial(config.getString("DefaultBlocks.Bounce.Material"))
 				);
 
 		return pb;

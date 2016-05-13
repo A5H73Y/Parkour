@@ -34,23 +34,20 @@ public class PlayerMethods {
 	 * @param course
 	 */
 	public static void playerJoin(Player player, Course course){
-		String playerName = player.getName();
-		player.sendMessage(Utils.getTranslation("Parkour.Join").replace("%COURSE%", course.getName()));
 		prepareJoinPlayer(player);
 		player.teleport(course.getCheckpoints().get(0).getLocation());
 		CourseMethods.increaseView(course.getName());
 
-		PPlayer pplayer = getPlayerInfo(playerName);
-
-		if (pplayer == null){
+		if (getPlayerInfo(player.getName()) == null){
 			Utils.sendTitle(player, "Joining " + course.getName());
-			addPlayer(playerName, new PPlayer(course));
+			addPlayer(player.getName(), new PPlayer(course));
 		}else{
-			removePlayer(playerName);
-			addPlayer(playerName, new PPlayer(course));
-			if (!Static.containsQuiet(playerName))
+			removePlayer(player.getName());
+			addPlayer(player.getName(), new PPlayer(course));
+			if (!Static.containsQuiet(player.getName()))
 				player.sendMessage(Static.getParkourString() + "Your time has been restarted!");
 		}
+		player.sendMessage(Utils.getTranslation("Parkour.Join").replace("%COURSE%", course.getName()));
 	}
 
 	/**
@@ -88,7 +85,7 @@ public class PlayerMethods {
 		pplayer.increaseDeath();
 
 		if (pplayer.getCourse().getMaxDeaths() != null && pplayer.getCourse().getMaxDeaths() <= pplayer.getDeaths()){
-			player.sendMessage(Utils.getTranslation("Parkour.MaxDeaths").replaceAll("%AMOUNT%", pplayer.getCourse().getMaxDeaths().toString()));
+			player.sendMessage(Utils.getTranslation("Parkour.MaxDeaths").replace("%AMOUNT%", pplayer.getCourse().getMaxDeaths().toString()));
 			playerLeave(player);
 			return;
 		}
@@ -113,12 +110,9 @@ public class PlayerMethods {
 		if (Parkour.getParkourConfig().getConfig().getBoolean("Other.onDie.SetAsXPBar"))
 			player.setLevel(pplayer.getDeaths());
 
-
-		if (Parkour.getParkourConfig().getConfig().getBoolean("Other.Use.Sounds")) {
-			//TODO Play with sounds
+		if (Parkour.getParkourConfig().getConfig().getBoolean("Other.Use.Sounds")) //TODO Experiment with sounds
 			player.playSound(player.getLocation(), Sound.ENCHANT_THORNS_HIT, 1L, 1L);
-		}
-
+		
 		preparePlayer(player, 0);
 	}
 
@@ -133,9 +127,8 @@ public class PlayerMethods {
 
 		PPlayer pplayer = getPlayerInfo(player.getName());
 		
-		//Validate - check if they've got all checkpoints
-		if (Parkour.getParkourConfig().getConfig().getBoolean("Other.Use.ForceFullCompletion") && 
-				pplayer.getCheckpoint() != (pplayer.getCourse().getCheckpoints().size() - 1)){
+		//TODO Validate - check if they've got all checkpoints
+		if (Parkour.getSettings() != null && pplayer.getCheckpoint() != (pplayer.getCourse().getCheckpoints().size() - 1)){
 			player.sendMessage(Static.getParkourString() + "Please do not cheat.");
 			player.sendMessage(ChatColor.BOLD + "You must achieve all " + (pplayer.getCourse().getCheckpoints().size() - 1) + " points!");
 			playerDie(player);
@@ -151,7 +144,7 @@ public class PlayerMethods {
 		DatabaseMethods.insertTime(courseName, player.getName(), pplayer.getTime(), pplayer.getDeaths());
 
 		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".Lobby")){
-			//TODO, load custom lobby
+			//TODO, load custom lobby OR linked course
 		} else {
 			CourseMethods.joinLobby(null, player);
 		}
@@ -164,6 +157,7 @@ public class PlayerMethods {
 	/**
 	 * The following methods are used throughout the plugin.
 	 * Please see the PPlayer object for more information. 
+	 * Will return null if player isn't playing.
 	 * @param playerName
 	 * @return
 	 */
@@ -175,7 +169,7 @@ public class PlayerMethods {
 	}
 
 	public static boolean isPlaying(String playerName){
-		return playing.containsKey(playerName);
+		return playing.get(playerName) != null;
 	}
 
 	public static HashMap<String, PPlayer> getPlaying(){
@@ -253,52 +247,51 @@ public class PlayerMethods {
 	 */
 	public static void givePlayerKit(Player player){
 		player.getInventory().clear();
-		FileConfiguration config = Parkour.getParkourConfig().getConfig();
-
+		
 		// Speed Block
-		ItemStack s = new ItemStack(Material.getMaterial(config.getString("Block.Speed.ID")));
+		ItemStack s = new ItemStack(Static.getParkourBlocks().getSpeed());
 		ItemMeta m = s.getItemMeta();
 		m.setDisplayName(Utils.getTranslation("Kit.Speed", false));
 		s.setItemMeta(m);
 		player.getInventory().addItem(s);
 
-		s = new ItemStack(Material.getMaterial(config.getString("Block.Climb.ID")));
+		s = new ItemStack(Static.getParkourBlocks().getClimb());
 		m = s.getItemMeta();
 		m.setDisplayName(Utils.getTranslation("Kit.Climb", false));
 		s.setItemMeta(m);
 		player.getInventory().addItem(s);
 
-		s = new ItemStack(Material.getMaterial(config.getString("Block.Launch.ID")));
+		s = new ItemStack(Static.getParkourBlocks().getLaunch());
 		m = s.getItemMeta();
 		m.setDisplayName(Utils.getTranslation("Kit.Launch", false));
 		s.setItemMeta(m);
 		player.getInventory().addItem(s);
 
-		s = new ItemStack(Material.getMaterial(config.getString("Block.Finish.ID")));
+		s = new ItemStack(Static.getParkourBlocks().getFinish());
 		m = s.getItemMeta();
 		m.setDisplayName(Utils.getTranslation("Kit.Finish", false));
 		s.setItemMeta(m);
 		player.getInventory().addItem(s);
 
-		s = new ItemStack(Material.getMaterial(config.getString("Block.Repulse.ID")));
+		s = new ItemStack(Static.getParkourBlocks().getRepulse());
 		m = s.getItemMeta();
 		m.setDisplayName(Utils.getTranslation("Kit.Repulse", false));
 		s.setItemMeta(m);
 		player.getInventory().addItem(s);
 
-		s = new ItemStack(Material.getMaterial(config.getString("Block.NoRun.ID")));
+		s = new ItemStack(Static.getParkourBlocks().getNorun());
 		m = s.getItemMeta();
 		m.setDisplayName(Utils.getTranslation("Kit.NoRun", false));
 		s.setItemMeta(m);
 		player.getInventory().addItem(s);
 
-		s = new ItemStack(Material.getMaterial(config.getString("Block.NoPotion.ID")));
+		s = new ItemStack(Static.getParkourBlocks().getNopotion());
 		m = s.getItemMeta();
 		m.setDisplayName(Utils.getTranslation("Kit.NoPotion", false));
 		s.setItemMeta(m);
 		player.getInventory().addItem(s);
 
-		s = new ItemStack(Material.getMaterial(config.getString("Block.DoubleJump.ID")));
+		s = new ItemStack(Static.getParkourBlocks().getDoublejump());
 		m = s.getItemMeta();
 		m.setDisplayName(Utils.getTranslation("Kit.DoubleJump", false));
 		s.setItemMeta(m);
@@ -337,7 +330,7 @@ public class PlayerMethods {
 				player.getInventory().setItem(first, iss);
 				player.updateInventory();
 			} catch (Exception ex) {
-				player.sendMessage(ParkourString + Colour(stringData.getString("Error.Something").replaceAll("%ERROR%", ex.getMessage())));
+				player.sendMessage(ParkourString + Colour(stringData.getString("Error.Something").replace("%ERROR%", ex.getMessage())));
 			}
 		}
 		player.sendMessage("Deathblock(s): " + config.getIntegerList("Block.Death.ID"));
@@ -618,5 +611,14 @@ public class PlayerMethods {
 
 		target.sendMessage(Utils.getTranslation("Parkour.Invite.Recieve2")
 				.replace("%COURSE%", course.getName()));
+	}
+	
+	public static boolean isPlayerInTestmode(String playerName){
+		PPlayer pplayer = getPlayerInfo(playerName);
+		
+		if (pplayer == null)
+			return false;
+		
+		return pplayer.getCourse().getName().equals("Test Mode");
 	}
 }

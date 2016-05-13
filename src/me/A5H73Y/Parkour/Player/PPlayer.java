@@ -15,6 +15,7 @@ public class PPlayer implements Serializable{
 	private long timestarted;
 	private Course course;
 	private String mode;
+	private boolean useTrail;
 	
 	/**
 	 * This is the PPlayer, which kind of stands for Parkour Player..? 
@@ -68,5 +69,9 @@ public class PPlayer implements Serializable{
 	
 	public String getMode(){
 		return mode;
+	}
+	
+	public boolean getUseTrail(){
+		return useTrail;
 	}
 }

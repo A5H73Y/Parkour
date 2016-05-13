@@ -44,22 +44,22 @@ public class StartPlugin {
 	}
 
 	private static void setupVault() {
-		if (!Parkour.getParkourConfig().getConfig().getBoolean("Other.Use.Economy"))
+		if (!Parkour.getParkourConfig().getConfig().getBoolean("Other.Economy.Enabled"))
 			return;
 
 		PluginManager pm = Parkour.getPlugin().getServer().getPluginManager();
 		vault = pm.getPlugin("Vault");
 		if (vault != null && vault.isEnabled()) {
-			if (!setupEconomy()) {
-				Utils.log("Attempted to link with Vault, but something went wrong.");
-				Parkour.getPlugin().getConfig().set("Other.Use.Economy", false);
-				Parkour.getPlugin().saveConfig();
-			} else {
+			if (setupEconomy()) {
 				Utils.log("Linked with Economy v" + vault.getDescription().getVersion());
+			} else {
+				Utils.log("Attempted to link with Vault, but something went wrong.");
+				Parkour.getPlugin().getConfig().set("Other.Economy.Enabled", false);
+				Parkour.getPlugin().saveConfig();
 			}
 		} else {
 			Utils.log("Vault is missing, disabling Economy Use.");
-			Parkour.getPlugin().getConfig().set("Other.Use.Economy", false);
+			Parkour.getPlugin().getConfig().set("Other.Economy.Enabled", false);
 			Parkour.getPlugin().saveConfig();
 		}
 	}
@@ -83,12 +83,18 @@ public class StartPlugin {
 			database.setupTables();
 			Parkour.setDatabaseObj(database);
 		} catch (ClassNotFoundException e) {
-			Utils.log("SQL connection problem: " + e.getMessage());
-			initiateSQL(true);
+			failedSQL(e);
 		} catch (SQLException e) {
-			Utils.log("SQL connection problem: " + e.getMessage());
-			initiateSQL(true);
+			failedSQL(e);
 		}
+	}
+	
+	private static void failedSQL(Exception e){
+		Utils.log("SQL connection problem: " + e.getMessage());
+		Utils.log("Defaulting to SQLite...");
+		Parkour.getParkourConfig().getConfig().set("MySQL.Use", false);
+		Parkour.getPlugin().saveConfig();
+		initiateSQL(true);
 	}
 
 	private static boolean setupEconomy() {
@@ -109,7 +115,7 @@ public class StartPlugin {
 			HashMap<String, PPlayer> players = (HashMap<String, PPlayer>) Utils.loadAllPlaying(Static.PATH);
 			PlayerMethods.setPlaying(players);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Utils.log("Failed to load players: " + e.getMessage());
 		}
 	}
 
@@ -131,7 +137,7 @@ public class StartPlugin {
 		double currentVersion = Double.parseDouble(Parkour.getPlugin().getDescription().getVersion());
 		
 		if (configVersion < currentVersion){
-			Utils.log("Updating config to " + Static.getVersion() + "...");
+			Utils.log("Updating config to " + currentVersion + "...");
 			//We backup all their files first before touching them
 			Backup.backupNow(false);
 			Utils.broadcastMessage("Your existing config has been backed up. We have generated a new config, please reapply the settings you want.", "Parkour.Admin");
@@ -146,27 +152,44 @@ public class StartPlugin {
 			Path path = Paths.get(Parkour.getPlugin().getDataFolder().getPath(), "courses.yml");
 			String content = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
 			for (String course : Static.getCourses()){
-				content = content.replaceAll(course, course.toLowerCase());
+				content = content.replace(course, course.toLowerCase());
 			}
 			Files.write(path, content.getBytes(StandardCharsets.UTF_8));
 
 			//Store lobby
-			//TODO
+			String[] lobbyData = getLobbyData();
 			
 			//Reset current config
 			for(String key : Parkour.getPlugin().getConfig().getKeys(false)){
 				Parkour.getPlugin().getConfig().set(key,null);
 			}
 			
-			
 			Parkour.getPlugin().saveConfig();
 			Parkour.getParkourConfig().setupConfig();
 			Parkour.setSettings(new Settings());
+			
+			setLobbyData(lobbyData);
 			
 			Static.initiate();
 			Utils.log("Done.");
 		} catch (Exception ex){
 			Utils.log("Failed: " + ex.getMessage());
 		}
+	}
+	
+	private static String[] getLobbyData(){
+		String[] details = new String[6];
+		
+		
+		return details;
+	}
+	
+	private static void setLobbyData(String[] lobbyData){
+		Parkour.getParkourConfig().getConfig().set("Lobby.World", lobbyData[0]);
+		Parkour.getParkourConfig().getConfig().set("Lobby.X", lobbyData[1]);
+		Parkour.getParkourConfig().getConfig().set("Lobby.Y", lobbyData[2]);
+		Parkour.getParkourConfig().getConfig().set("Lobby.Z", lobbyData[3]);
+		Parkour.getParkourConfig().getConfig().set("Lobby.Pitch", lobbyData[4]);
+		Parkour.getParkourConfig().getConfig().set("Lobby.Yaw", lobbyData[5]);
 	}
 }

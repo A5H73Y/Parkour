@@ -48,7 +48,7 @@ public class Validation {
 				if (cur >= min){
 
 				}else{
-					player.sendMessage(ParkourString + Colour(stringData.getString("Error.RequiredLvl").replaceAll("%LEVEL%", ""+min)));	
+					player.sendMessage(ParkourString + Colour(stringData.getString("Error.RequiredLvl").replace("%LEVEL%", ""+min)));	
 					return;
 				}
 			}

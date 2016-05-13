@@ -35,7 +35,6 @@ public class CheckpointMethods {
 		int current = config.getCourseData().getInt(courseName + ".Points") + 1;
 
 		for (int i=0; i < current; i++){
-
 			Location location = Utils.getLocation(courseName, "."+i+".");
 
 			if (location == null){
@@ -44,12 +43,9 @@ public class CheckpointMethods {
 				break;
 			}
 
-			Checkpoint checkpoint = 
-					new Checkpoint(location, checkData.getDouble(courseName + "." + i + ".X"), checkData.getDouble(courseName + "." + i + ".Y"), checkData.getDouble(courseName + "." + i + ".Z"));
-			
+			Checkpoint checkpoint = new Checkpoint(location, checkData.getDouble(courseName + "." + i + ".X"), checkData.getDouble(courseName + "." + i + ".Y"), checkData.getDouble(courseName + "." + i + ".Z"));
 			checkpoints.add(checkpoint);
 		}
-
 		return checkpoints;
 	}
 
@@ -92,7 +88,8 @@ public class CheckpointMethods {
 		block.setType(Material.STONE_PLATE);
 		location.setY(location.getBlockY() - 1);
 		block = location.getBlock();
-		block.setType(Material.STONE);
+		if (block.getType().equals(Material.AIR))
+			block.setType(Material.STONE);
 
 		player.sendMessage(Static.getParkourString() + "Checkpoint " + ChatColor.DARK_AQUA + pointcount + ChatColor.WHITE + " set on " + ChatColor.AQUA + selected);
 	}
@@ -137,13 +134,13 @@ public class CheckpointMethods {
 		float pitch = courseData.getInt(path + ".Pitch");
 
 		if (x == 0 && y == 0 && z == 0) {
-			player.sendMessage(Static.getParkourString() + ChatColor.RED + "ERROR: " + Static.White + "This checkpoint is invalid or doesn't exist");
+			player.sendMessage(Static.getParkourString() + ChatColor.RED + "ERROR: " + Static.White + "This checkpoint is invalid or doesn't exist!");
 			return;
 		}
 
 		Location l = new Location(world, x, y, z, yaw, pitch);
 		player.teleport(l);
-		String message = Static.getParkourString() + "You have teleported to " + Static.Aqua + arenaname;
+		String message = Utils.getTranslation("Parkour.Teleport");
 		player.sendMessage(checkpoint ? message + Static.White + " (" + Static.Daqua + args[2] + Static.White + ")" : message);
 	}
 
