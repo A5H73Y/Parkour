@@ -160,7 +160,7 @@ public class Configurations {
 			stringData.addDefault("Event.AllCheckpoints", "All checkpoints achieved!");
 			stringData.addDefault("Event.HideAll1", "All players have magically reappeared!");
 			stringData.addDefault("Event.HideAll2", "All players have magically disappeared!");
-			stringData.addDefault("Event.Chat", "&0[%RANK%&0] &b%PLAYER%:&f %MESSAGE%");
+			stringData.addDefault("Event.Chat", "&0[&b%RANK%&0] &f%PLAYER%&0:&f %MESSAGE%");
 
 			stringData.addDefault("Parkour.Join", "Joined &b%COURSE%");
 			stringData.addDefault("Parkour.Leave", "You have left &b%COURSE%");
@@ -264,7 +264,7 @@ public class Configurations {
 		config.addDefault("OnJoin.EnforceFinished", true); //TODO onJoin, do permission / owner check
 		config.addDefault("OnJoin.Item.Suicide.Material", "ARROW");
 		config.addDefault("OnJoin.Item.HideAll.Material", "BONE");
-		config.addDefault("OnJoin.Item.Leave.Material", "LEAVES");
+		config.addDefault("OnJoin.Item.Leave.Material", "SAPLING");
 
 		config.addDefault("OnCourse.EnforceParkourCommands.Enabled", true);
 		String[] whitelisted = {"login"};
@@ -272,7 +272,7 @@ public class Configurations {
 		config.addDefault("OnCourse.EnforceParkourSigns", true);
 		config.addDefault("OnCourse.DisablePlayerDamage", false);
 		config.addDefault("OnCourse.MaxFallTicks", 80);
-		config.addDefault("OnCourse.Checkpoint", "FINISHME"); //TODO No idea what I was thinking about..?
+		config.addDefault("OnCourse.AllowTrails", true);
 		config.addDefault("OnCourse.LiveLeaderboard.Enabled", true);
 		config.addDefault("OnCourse.LiveLeaderboard.Type", 1);
 

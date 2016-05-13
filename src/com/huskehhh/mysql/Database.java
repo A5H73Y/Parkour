@@ -118,9 +118,7 @@ public abstract class Database {
 
 		Statement statement = connection.createStatement();
 
-		int result = statement.executeUpdate(query);
-
-		return result;
+		return statement.executeUpdate(query);
 	}
 
 	public abstract String getType();

@@ -41,31 +41,38 @@ public class ParkourListener implements Listener {
 	SignMethods sm = new SignMethods();
 
 	@EventHandler
-	public void onPlayerMove(PlayerMoveEvent event){
+	public void onPlayerMoveTrails(PlayerMoveEvent event){
 		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
 			return;
 
-		//TODO try me out
-
+		if (!Parkour.getSettings().isAllowTrails())
+			return;
+		
+		//Redstone - Best
+		//Drip_Lava - Awesome
+		//Drip_Water - Awesome
+		//Crit_magic - not bad
+		//Heart - interesting...
+		//Snowball - bit crap
+		//Slime - also a bit crap
+		
 		Location loc = event.getPlayer().getLocation().add(0, 0.4, 0);
-		Particle eff = Particle.REDSTONE;
-
-		event.getPlayer().getWorld().spawnParticle(eff, loc, 1);
+		event.getPlayer().getWorld().spawnParticle(Particle.REDSTONE, loc, 1);
 
 	}
 
 	@EventHandler
 	public void onPlayerChat(AsyncPlayerChatEvent event) {
-		if (Parkour.getSettings().isChatPrefix())
+		if (!Parkour.getSettings().isChatPrefix())
 			return;
 
 		String rank = Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + event.getPlayer().getName() + ".Rank");
 		rank = rank == null ? "Newbie" : rank;
 
-		event.setFormat(Utils.getTranslation("Event.Chat", false)
+		event.setFormat(Utils.Colour(Utils.getTranslation("Event.Chat", false)
 				.replace("%RANK%", rank)
 				.replace("%PLAYER%", event.getPlayer().getName())
-				.replace("%MESSAGE%", event.getMessage()));
+				.replace("%MESSAGE%", event.getMessage())));
 	}
 
 
@@ -123,7 +130,6 @@ public class ParkourListener implements Listener {
 		if (Parkour.getSettings().isDisplayWelcome())
 			event.getPlayer().sendMessage(Utils.getTranslation("Event.Join").replace("%VERSION%", Static.getVersion().toString()));
 
-		//TODO check how performance is
 		if (PlayerMethods.isPlaying(event.getPlayer().getName())){
 			event.getPlayer().sendMessage(Utils.getTranslation("Parkour.Continue")
 					.replace("%COURSE%", PlayerMethods.getPlayerInfo(event.getPlayer().getName()).getCourse().getName()));
@@ -132,7 +138,7 @@ public class ParkourListener implements Listener {
 
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		if (Parkour.getSettings().isResetOnLeave())
+		if (!Parkour.getSettings().isResetOnLeave())
 			return;
 
 		if (PlayerMethods.isPlaying(event.getPlayer().getName()))

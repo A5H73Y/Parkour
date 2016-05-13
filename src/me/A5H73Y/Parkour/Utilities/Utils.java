@@ -376,10 +376,10 @@ public final class Utils {
 				player.showPlayer(players);
 		}
 		if (enabled){
-			Static.addHidden(player.getName());
+			Static.removeHidden(player.getName());
 			player.sendMessage(Utils.getTranslation("Event.HideAll1"));
 		}else{
-			Static.removeHidden(player.getName());
+			Static.addHidden(player.getName());
 			player.sendMessage(Utils.getTranslation("Event.HideAll2"));
 		}
 	}
