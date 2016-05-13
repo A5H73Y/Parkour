@@ -9,7 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public class Settings {
 
-	private boolean commandPermission, chatPrefix, disablePlayerDamage, resetOnLeave, enforceWorld, disableCommands;
+	private boolean commandPermission, chatPrefix, disablePlayerDamage, resetOnLeave, enforceWorld, disableCommands, allowTrails;
 	
 	//Display
 	private boolean displayWelcome;
@@ -29,12 +29,17 @@ public class Settings {
 		resetOnLeave = config.getBoolean("OnLeave.ResetPlayer");
 		enforceWorld = config.getBoolean("OnJoin.EnforceWorld");
 		disableCommands = config.getBoolean("OnCourse.EnforceParkourCommands.Enabled");
+		allowTrails = config.getBoolean("OnCourse.AllowTrails");
 		
 		suicide = Material.getMaterial(config.getString("OnJoin.Item.Suicide.Material"));
 		hideall = Material.getMaterial(config.getString("OnJoin.Item.HideAll.Material"));
 		leave = Material.getMaterial(config.getString("OnJoin.Item.Leave.Material"));
 		
 		displayWelcome = config.getBoolean("Other.Display.JoinWelcomeMessage");
+	}
+
+	public boolean isAllowTrails() {
+		return allowTrails;
 	}
 
 	public boolean isDisableCommands() {

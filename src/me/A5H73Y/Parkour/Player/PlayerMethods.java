@@ -376,35 +376,35 @@ public class PlayerMethods {
 	 * @param player
 	 */
 	private static void prepareJoinPlayer(Player player){
+		FileConfiguration config = Parkour.getParkourConfig().getConfig();
 		saveInventory(player);
 		preparePlayer(player, 0);
 
-		//TODO inventory items
-
-		FileConfiguration config = Parkour.getParkourConfig().getConfig();
-
-		if (config.getBoolean("Other.onJoin.GiveSuicideID")) {
-			ItemStack suicide = new ItemStack(config.getInt("SuicideID"), 1);
-			ItemMeta meta = suicide.getItemMeta();
+		ItemStack item;
+		ItemMeta meta;
+		
+		if (Parkour.getSettings().getSuicide() != null) {
+			item = new ItemStack(Parkour.getSettings().getSuicide(), 1);
+			meta = item.getItemMeta();
 			meta.setDisplayName(Utils.getTranslation("Other.Item_Suicide", false));
-			suicide.setItemMeta(meta);
-			player.getInventory().setItem(0, suicide);
+			item.setItemMeta(meta);
+			player.getInventory().setItem(0, item);
 		}
-
-		if (config.getBoolean("Other.onJoin.GiveHideAllID")) {
-			ItemStack suicide = new ItemStack(config.getInt("HideAllID"), 1);
-			ItemMeta meta = suicide.getItemMeta();
+		
+		if (Parkour.getSettings().getHideall() != null) {
+			item = new ItemStack(Parkour.getSettings().getHideall(), 1);
+			meta = item.getItemMeta();
 			meta.setDisplayName(Utils.getTranslation("Other.Item_HideAll", false));
-			suicide.setItemMeta(meta);
-			player.getInventory().setItem(1, suicide);
+			item.setItemMeta(meta);
+			player.getInventory().setItem(1, item);
 		}
 
-		if (config.getBoolean("Other.onJoin.GiveLeaveID")) {
-			ItemStack suicide = new ItemStack(config.getInt("LeaveID"), 1);
-			ItemMeta meta = suicide.getItemMeta();
+		if (Parkour.getSettings().getLeave() != null) {
+			item = new ItemStack(Parkour.getSettings().getLeave(), 1);
+			meta = item.getItemMeta();
 			meta.setDisplayName(Utils.getTranslation("Other.Item_Leave", false));
-			suicide.setItemMeta(meta);
-			player.getInventory().setItem(2, suicide);
+			item.setItemMeta(meta);
+			player.getInventory().setItem(2, item);
 		}
 
 		//TODO did they join with a mode?
@@ -454,6 +454,7 @@ public class PlayerMethods {
 				player.sendMessage(econData.getInt("Price." + course + ".Join") + " was taken from your account for joining " + course);
 			}
 		}*/
+		player.updateInventory();
 
 	}
 
@@ -487,7 +488,7 @@ public class PlayerMethods {
 	 * @param player
 	 */
 	private static void saveInventory(Player player){
-		if (!Parkour.getParkourConfig().getConfig().getBoolean("Other.Use.InvManagement"))
+		if (!Parkour.getParkourConfig().getConfig().getBoolean("Other.Parkour.InventoryManagement"))
 			return;
 
 		if (Parkour.getParkourConfig().getInvData().contains(player.getName() + ".Inventory"))
@@ -509,7 +510,7 @@ public class PlayerMethods {
 	 * @param player
 	 */
 	private static void loadInventory(Player player){
-		if (!Parkour.getParkourConfig().getConfig().getBoolean("Other.Use.InvManagement"))
+		if (!Parkour.getParkourConfig().getConfig().getBoolean("Other.Parkour.InventoryManagement"))
 			return;
 
 		Object a = Parkour.getParkourConfig().getInvData().get(player.getName() + ".Inventory");
