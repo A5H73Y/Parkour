@@ -16,7 +16,10 @@ public abstract class Database {
 
 	protected Connection connection;
 
-	public abstract void setupTables();
+	/**
+	 * @return The database type that's currently being used.
+	 */
+	public abstract String getType();
 
 	/**
 	 * Creates a new Database
@@ -93,8 +96,7 @@ public abstract class Database {
 		}
 
 		Statement statement = connection.createStatement();
-		ResultSet result = statement.executeQuery(query);
-		return result;
+		return statement.executeQuery(query);
 	}
 
 	/**
@@ -117,10 +119,6 @@ public abstract class Database {
 		}
 
 		Statement statement = connection.createStatement();
-
 		return statement.executeUpdate(query);
 	}
-
-	public abstract String getType();
-
 }

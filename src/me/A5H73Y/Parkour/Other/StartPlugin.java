@@ -11,6 +11,7 @@ import java.util.HashMap;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Player.PPlayer;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
+import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Settings;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
@@ -51,14 +52,14 @@ public class StartPlugin {
 		vault = pm.getPlugin("Vault");
 		if (vault != null && vault.isEnabled()) {
 			if (setupEconomy()) {
-				Utils.log("Linked with Economy v" + vault.getDescription().getVersion());
+				Utils.log("[Vault] Linked with Vault v" + vault.getDescription().getVersion());
 			} else {
-				Utils.log("Attempted to link with Vault, but something went wrong.");
+				Utils.log("[Vault] Attempted to link with Vault, but something went wrong.", 2);
 				Parkour.getPlugin().getConfig().set("Other.Economy.Enabled", false);
 				Parkour.getPlugin().saveConfig();
 			}
 		} else {
-			Utils.log("Vault is missing, disabling Economy Use.");
+			Utils.log("[Vault] Vault is missing, disabling Economy Use.", 1);
 			Parkour.getPlugin().getConfig().set("Other.Economy.Enabled", false);
 			Parkour.getPlugin().saveConfig();
 		}
@@ -68,11 +69,12 @@ public class StartPlugin {
 		initiateSQL(false);
 	}
 
-	private static void initiateSQL(boolean forceSQL){
+	private static void initiateSQL(boolean forceSQLite){
 		Database database;
 		FileConfiguration config = Parkour.getParkourConfig().getConfig();
 
-		if (config.getBoolean("MySQL.Use") && !forceSQL){
+		//Only use MySQL if they have enabled it, configured it, and we aren't forcing SQLite (MySQL failed)
+		if (config.getBoolean("MySQL.Use") && !config.getString("MySQL.Host").equals("Host") && !forceSQLite){
 			database = new MySQL(config.getString("MySQL.Host"), config.getString("MySQL.Port"), config.getString("MySQL.Database"), config.getString("MySQL.User"), config.getString("MySQL.Password"));
 		}else{
 			database = new SQLite(Parkour.getPlugin().getDataFolder().toString() + File.separator + "parkour.db");
@@ -80,8 +82,8 @@ public class StartPlugin {
 
 		try {
 			database.openConnection();
-			database.setupTables();
 			Parkour.setDatabaseObj(database);
+			DatabaseMethods.setupTables();
 		} catch (ClassNotFoundException e) {
 			failedSQL(e);
 		} catch (SQLException e) {
@@ -90,8 +92,8 @@ public class StartPlugin {
 	}
 	
 	private static void failedSQL(Exception e){
-		Utils.log("SQL connection problem: " + e.getMessage());
-		Utils.log("Defaulting to SQLite...");
+		Utils.log("[SQL] Connection problem: " + e.getMessage(), 2);
+		Utils.log("[SQL] Defaulting to SQLite...", 1);
 		Parkour.getParkourConfig().getConfig().set("MySQL.Use", false);
 		Parkour.getPlugin().saveConfig();
 		initiateSQL(true);
@@ -115,7 +117,7 @@ public class StartPlugin {
 			HashMap<String, PPlayer> players = (HashMap<String, PPlayer>) Utils.loadAllPlaying(Static.PATH);
 			PlayerMethods.setPlaying(players);
 		} catch (Exception e) {
-			Utils.log("Failed to load players: " + e.getMessage());
+			Utils.log("Failed to load players: " + e.getMessage(), 2);
 		}
 	}
 
@@ -124,10 +126,10 @@ public class StartPlugin {
 		barAPI = pm.getPlugin("TitleActionbarAPI");
 		if (barAPI != null && barAPI.isEnabled()) {
 			if (TitleActionBarAPI.isValidVersion()){ //TitleActionBarAPI.getValid()
-				Utils.log("Linked with TitleActionbarAPI v" + barAPI.getDescription().getVersion());
+				Utils.log("[Tab] Linked with TitleActionbarAPI v" + barAPI.getDescription().getVersion());
 				Static.setBarAPI(true);
 			}else{
-				Utils.log("Attempted to Link with TitleActionbarAPI, but server version is not supported");
+				Utils.log("[Tab] Attempted to Link with TitleActionbarAPI, but server version is not supported", 1);
 			}
 		}
 	}
@@ -137,10 +139,10 @@ public class StartPlugin {
 		double currentVersion = Double.parseDouble(Parkour.getPlugin().getDescription().getVersion());
 		
 		if (configVersion < currentVersion){
-			Utils.log("Updating config to " + currentVersion + "...");
+			Utils.log("[Backup] Updating config to " + currentVersion + "...");
 			//We backup all their files first before touching them
 			Backup.backupNow(false);
-			Utils.broadcastMessage("Your existing config has been backed up. We have generated a new config, please reapply the settings you want.", "Parkour.Admin");
+			Utils.broadcastMessage("[Backup] Your existing config has been backed up. We have generated a new config, please reapply the settings you want.", "Parkour.Admin");
 			convertToLatest();
 			Parkour.getParkourConfig().getConfig().set("Version", currentVersion);
 		}
@@ -156,7 +158,7 @@ public class StartPlugin {
 			}
 			Files.write(path, content.getBytes(StandardCharsets.UTF_8));
 
-			//Store lobby
+			//TODO Store lobby
 			String[] lobbyData = getLobbyData();
 			
 			//Reset current config
@@ -168,12 +170,13 @@ public class StartPlugin {
 			Parkour.getParkourConfig().setupConfig();
 			Parkour.setSettings(new Settings());
 			
-			setLobbyData(lobbyData);
+			if (lobbyData.length > 0)
+				setLobbyData(lobbyData);
 			
 			Static.initiate();
-			Utils.log("Done.");
+			Utils.log("[Backup] Complete.");
 		} catch (Exception ex){
-			Utils.log("Failed: " + ex.getMessage());
+			Utils.log("[Backup] Failed: " + ex.getMessage());
 		}
 	}
 	

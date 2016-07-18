@@ -75,29 +75,6 @@ public class MySQL extends Database {
 		return connection;
 	}
 	
-	public void setupTables(){
-		try {
-			//Create 'Times'
-			updateSQL("CREATE TABLE IF NOT EXISTS `times` ("
-					+ "`id` int(11) NOT NULL AUTO_INCREMENT, "
-					+ "`course` varchar(15) NOT NULL, "
-					+ "`player` varchar(20) NOT NULL, "
-					+ "`time` decimal(13,0) NOT NULL, "
-					+ "`deaths` int(5) NOT NULL, "
-					+ "PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
-			
-			//Create 'Trails'
-			updateSQL("CREATE TABLE IF NOT EXISTS `trails` ("
-					+ "`particle` varchar(30) NOT NULL, "
-					+ "`cost` decimal(10,2) NOT NULL, "
-					+ "PRIMARY KEY (`particle`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	@Override
 	public String getType(){
 		return "MySQL";

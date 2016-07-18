@@ -10,7 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public final class Help {
-	
+
 	/**
 	 * 
 	 * =====
@@ -25,58 +25,56 @@ public final class Help {
 
 		if (args.length == 1){
 			player.sendMessage(Static.getParkourString() + "Find help about any Parkour command:");
-			player.sendMessage(Static.Daqua + "             /pa " + Static.White + "help " + ChatColor.WHITE + "(command)");
+			player.sendMessage("             /pa help " + ChatColor.AQUA + "(command)");
 			return;
 		}
 
 		if (args[1].equalsIgnoreCase("join")){
 			displayHelpMessage(player, "Joining a Course", "/pa join (courseName)", "/pa join Tutorial",
-					" You are now able to join a course using its name, no longer having to use the correct case. Each course has a unique numeric identifier which can be used to join the course, to display these use the '/pa list courses [page]' command. Using the course ID you can use '/pa join (ID)' to quickly join the course.");
+					" You are able to join a course using its name, no longer having to use the correct case. Each course has a unique numeric identifier which can be used to join the course, to display these use the '/pa list courses [page]' command. Using the course ID you can use '/pa join (ID)' to quickly join the course.");
 
-		}else if (args[1].equalsIgnoreCase("create")){
+		} else if (args[1].equalsIgnoreCase("create")){
 			displayHelpMessage(player, "Creating a Course", "/pa create (courseName)", "/pa create Tutorial",
 					" Creating a new Parkour course only takes 1 command, all the setup is automatic. Remember that your location and the way you're facing is saved and then loaded once the course is joined. By default the course will be 'unfinished' until set otherwise.");
 
-		}else if (args[1].equalsIgnoreCase("leave")){
+		} else if (args[1].equalsIgnoreCase("leave")){
 			displayHelpMessage(player, "Leaving a Course", "/pa leave", null,
 					" Leaving the course you are currently playing will terminate all information tracking your current progress and you will be teleported back to the Parkour lobby. Players with permission have the ability to force other players to leave by using an extra argument: '/pa leave [player]'");
 
-		}else if (args[1].equalsIgnoreCase("info")){
+		} else if (args[1].equalsIgnoreCase("info")){
 			displayHelpMessage(player, "Leaving a Course", "/pa info", null,
 					" Display all the info, lol");
 
-		}else if (args[1].equalsIgnoreCase("leave")){
+		} else if (args[1].equalsIgnoreCase("leave")){
 
-		}else if (args[1].equalsIgnoreCase("leave")){
+		} else if (args[1].equalsIgnoreCase("leave")){
 
-		}else{
+		} else{
 			player.sendMessage(Static.getParkourString() + "This is not a valid Parkour command");
 		}
 	}
 
 
 	private static void displayHelpMessage(Player player, String title, String syntax, String example, String description){
-		player.sendMessage("=== " + Static.Aqua + title + Static.White + " ===");
-		player.sendMessage(Static.Gray + " Syntax: " + Static.White + syntax);
+		player.sendMessage("=== " + ChatColor.AQUA + title + ChatColor.WHITE + " ===");
+		player.sendMessage(ChatColor.GRAY + " Syntax: " + ChatColor.WHITE + syntax);
 		if (example != null)
-			player.sendMessage(Static.Gray + " Example: " + Static.White + example);
-		player.sendMessage("=== " + Static.Daqua + "Description" + Static.White + " ===");
+			player.sendMessage(ChatColor.GRAY + " Example: " + ChatColor.WHITE + example);
+		player.sendMessage("=== " + ChatColor.DARK_AQUA + "Description" + ChatColor.WHITE + " ===");
 		player.sendMessage(description);
-
-		player.sendMessage(ChatColor.BOLD + " " + ChatColor.RED + " Please remember this is a beta build, please report any inconsistancies or problems to A5H73Y.");
 	}
 
 
 	public static final void displayCommands(String[] args, Player player) {
 		//Check if args == "signs" 
 		//Display Sign commands /w usage
-		
+
 		//TODO Sort this shit out
-		
-		ChatColor Daqua = Static.Daqua;
-		ChatColor Aqua = Static.Aqua;
+
+		ChatColor Daqua = ChatColor.DARK_AQUA;
+		ChatColor Aqua = ChatColor.AQUA;
 		ChatColor Black = ChatColor.BLACK;
-		ChatColor White = Static.White;
+		ChatColor White = ChatColor.WHITE;
 		if (args.length == 1) {
 			player.sendMessage("-=- " + Static.getParkourString() + "-=-");
 			player.sendMessage(Daqua + "/pa " + Aqua + "join " + ChatColor.YELLOW + "(course)" + Black + " : " + White + "Join the course");
@@ -171,7 +169,7 @@ public final class Help {
 		if (args[1].equalsIgnoreCase("info")){
 			player.sendMessage(Static.getParkourString() + "Linked with Vault v" + StartPlugin.vault.getDescription().getVersion());
 
-		}else if (args[1].equalsIgnoreCase("setprize")) {
+		} else if (args[1].equalsIgnoreCase("setprize")) {
 			if (!(args.length > 2)){
 				player.sendMessage(Utils.invalidSyntax("setprize", "(course) (amount)"));
 				return;
@@ -185,7 +183,7 @@ public final class Help {
 			Parkour.getParkourConfig().saveEcon();
 			player.sendMessage(Static.getParkourString() + "Prize for " + args[2] + " set to " + args[3]);
 
-		}else if (args[1].equalsIgnoreCase("setfee")) {
+		} else if (args[1].equalsIgnoreCase("setfee")) {
 			if (!(args.length > 2)){
 				player.sendMessage(Utils.invalidSyntax("setfee", "(course) (amount)"));
 				return;
@@ -204,7 +202,7 @@ public final class Help {
 			player.sendMessage(Static.getParkourString() + "Starting Recreation...");
 			recreateEconomy();
 			player.sendMessage(Static.getParkourString() + "Process Complete!");
-			
+
 		} else {
 			player.sendMessage(Utils.invalidSyntax("econ", "(info / recreate / setprize / setfee)"));
 		}
@@ -213,15 +211,14 @@ public final class Help {
 
 	private static void recreateEconomy(){
 		FileConfiguration econ = Parkour.getParkourConfig().getEconData();
-		
-		for (int i = 0; i < Static.getCourses().size(); i++) {
-			String s = Static.getCourses().get(i);
+
+		for (String course : Static.getCourses()) {
 			try {
-				if (!(Parkour.getParkourConfig().getEconData().contains("Price." + s + ".Join"))) {
-					econ.set("Price." + s + ".Join", 0);
+				if (!(Parkour.getParkourConfig().getEconData().contains("Price." + course + ".Join"))) {
+					econ.set("Price." + course + ".Join", 0);
 				}
-				if (!(Parkour.getParkourConfig().getEconData().contains("Price." + s + ".Finish"))) {
-					econ.set("Price." + s + ".Finish", 0);
+				if (!(Parkour.getParkourConfig().getEconData().contains("Price." + course + ".Finish"))) {
+					econ.set("Price." + course + ".Finish", 0);
 				}
 			} catch (Exception ex) {
 				Utils.log(Utils.getTranslation("Error.Something", false).replace("%ERROR%", ex.getMessage()));	

@@ -21,15 +21,13 @@ public class Parkour extends JavaPlugin {
 	private static Settings settings;
 
 	public void onEnable() {
-		System.out.println("Thank you for using a Parkour development build.");
-		System.out.println("Please add me on skype iA5H73Y to discuss anything.");
-		
 		plugin = this;
 		config = new Configurations();
 		StartPlugin.run();
 		
 		settings = new Settings();
 		getServer().getPluginManager().registerEvents(new ParkourListener(), this);
+		getServer().getPluginManager().registerEvents(new ParkourSignListener(), this);
 		getCommand("parkour").setExecutor(new ParkourCommands());
 	}
 

@@ -8,7 +8,11 @@ public class ParkourBlocks implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	private Material finish, climb, launch, speed, repulse, norun, nopotion, doublejump;
+	private Material death, finish, climb, launch, speed, repulse, norun, nopotion, doublejump;
+	
+	private double str_launch, str_climb, str_repulse, str_doublejump;
+	
+	private int str_speed, dur_speed;
 	
 	
 	/**
@@ -25,7 +29,8 @@ public class ParkourBlocks implements Serializable{
 	 * @param nopotion
 	 * @param doublejump
 	 */
-	public ParkourBlocks(Material finish, Material climb, Material launch, Material speed, Material repulse, Material norun, Material nopotion, Material doublejump){
+	public ParkourBlocks(Material death, Material finish, Material climb, Material launch, Material speed, Material repulse, Material norun, Material nopotion, Material doublejump){
+		this.death = death;
 		this.finish = finish;
 		this.climb = climb;
 		this.launch = launch;
@@ -34,6 +39,14 @@ public class ParkourBlocks implements Serializable{
 		this.norun = norun;
 		this.nopotion = nopotion;
 		this.doublejump = doublejump;
+	}
+	
+	public Material getDeath() {
+		return death;
+	}
+	
+	public void setDeath(Material death) {
+		this.death = death;
 	}
 
 	public Material getFinish() {
@@ -99,4 +112,53 @@ public class ParkourBlocks implements Serializable{
 	public void setDoublejump(Material doublejump) {
 		this.doublejump = doublejump;
 	}
+
+	public double getStr_launch() {
+		return str_launch;
+	}
+
+	public void setStr_launch(double str_launch) {
+		this.str_launch = str_launch;
+	}
+
+	public double getStr_climb() {
+		return str_climb;
+	}
+
+	public void setStr_climb(double str_climb) {
+		this.str_climb = str_climb;
+	}
+
+	public int getStr_speed() {
+		return str_speed;
+	}
+
+	public void setStr_speed(int str_speed) {
+		this.str_speed = str_speed;
+	}
+
+	public double getStr_repulse() {
+		return str_repulse;
+	}
+
+	public void setStr_repulse(double str_repulse) {
+		this.str_repulse = str_repulse;
+	}
+
+	public double getStr_doublejump() {
+		return str_doublejump;
+	}
+
+	public void setStr_doublejump(double str_doublejump) {
+		this.str_doublejump = str_doublejump;
+	}
+
+	public int getDur_speed() {
+		return dur_speed;
+	}
+
+	public void setDur_speed(int dur_speed) {
+		this.dur_speed = dur_speed;
+	}
+
 }

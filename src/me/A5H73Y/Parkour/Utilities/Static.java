@@ -10,119 +10,127 @@ import java.util.Map;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Other.ParkourBlocks;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class Static {
+public final class Static {
 
 	private static List<String> courseList = new ArrayList<String>();
 	private static Map<String, String> questions = new HashMap<String, String>();
 	private static List<String> quiet = new ArrayList<String>();
 	private static List<String> hidden = new ArrayList<String>();
+	private static List<String> createPB = new ArrayList<String>();
 	private static boolean economy = false;
 	private static boolean barAPI = false;
 	private static boolean devBuild = true;
 	private static ParkourBlocks pblocks;
 
-	private final static String ParkourString = Utils.Colour("&0[&bParkour&0] &f");
+	private final static String ParkourString = Utils.colour("&0[&bParkour&0] &f");
 	private static Double version;
 
 	public final static String PATH = Parkour.getPlugin().getDataFolder() + File.separator + "playing.bin";
-	public final static ChatColor Aqua = ChatColor.AQUA;
-	public final static ChatColor Daqua = ChatColor.DARK_AQUA;
-	public final static ChatColor Gray = ChatColor.GRAY;
-	public final static ChatColor White = ChatColor.WHITE;
 	
-	public static void initiate(){
+	public final static void initiate(){
 		version = Double.parseDouble(Parkour.getPlugin().getDescription().getVersion());
 		courseList = Parkour.getParkourConfig().getAllCourses();
 		pblocks = Utils.populateParkourBlocks();
 	}
 
-	public static void populateCourses(List<String> courses){
+	public final static void populateCourses(List<String> courses){
 		courseList = courses;
 	}
 	
-	public static String getParkourString() {
+	public final static String getParkourString() {
 		return ParkourString;
 	}
 
-	public static Double getVersion(){
+	public final static Double getVersion(){
 		return version;
 	}
 	
-	public static List<String> getCourses(){
+	public final static List<String> getCourses(){
 		return courseList;
 	}
 	
-	public static void setCourses(List<String> courses){
+	public final static void setCourses(List<String> courses){
 		courseList = courses;
 		Collections.sort(courses);
 	}
 	
-	public static boolean containsQuestion(String playerName){
+	public final static boolean containsQuestion(String playerName){
 		return questions.containsKey(playerName);
 	}
 	
-	public static void addQuestion(String playerName, int command, String argument){
+	public final static void addQuestion(String playerName, int command, String argument){
 		questions.put(playerName, command + "," + argument);
 	}
 
-	public static String getQuestion(String playerName){
+	public final static String getQuestion(String playerName){
 		return questions.get(playerName);
 	}
 	
-	public static void removeQuestion(String playerName){
+	public final static void removeQuestion(String playerName){
 		questions.remove(playerName);
 	}
 	
-	public static void setEconomy(boolean value){
+	public final static void setEconomy(boolean value){
 		economy = value;
 	}
 	
-	public static boolean getEconomy(){
+	public final static boolean getEconomy(){
 		return economy;
 	}
 	
-	public static boolean getDevBuild(){
+	public final static boolean getDevBuild(){
 		return devBuild;
 	}
 	
-	public static void addQuiet(Player player){
-		Utils.sendActionBar(player, getParkourString() + Utils.Colour("Quiet Mode: &bON"));
+	public final static void addQuiet(Player player){
+		Utils.sendActionBar(player, Utils.colour("Quiet Mode: &bON"));
 		quiet.add(player.getName());
 	}
 	
-	public static void removeQuiet(Player player){
+	public final static void removeQuiet(Player player){
 		quiet.remove(player.getName());
-		Utils.sendActionBar(player, getParkourString() + Utils.Colour("Quiet Mode: &bOFF"));
+		Utils.sendActionBar(player, Utils.colour("Quiet Mode: &bOFF"));
 	}
 	
-	public static boolean containsQuiet(String playerName){
+	public final static boolean containsQuiet(String playerName){
 		return quiet.contains(playerName);
 	}
 	
-	public static ParkourBlocks getParkourBlocks(){
+	public final static ParkourBlocks getParkourBlocks(){
 		return pblocks;
 	}
 	
-	public static void setBarAPI(boolean value){
+	public final static void setBarAPI(boolean value){
 		barAPI = value;
 	}
 	
-	public static boolean getBarAPI(){
+	public final static boolean getBarAPI(){
 		return barAPI;
 	}
 
-	public static boolean containsHidden(String playerName){
+	public final static boolean containsHidden(String playerName){
 		return hidden.contains(playerName);
 	}
 	
-	public static void addHidden(String playerName) {
+	public final static void addHidden(String playerName) {
 		hidden.add(playerName);
 	}
 
-	public static void removeHidden(String playerName) {
+	public final static void removeHidden(String playerName) {
 		hidden.remove(playerName);
+	}
+
+	public static boolean containsCreatePB(String playerName) {
+		return createPB.contains(playerName);
+	}
+	
+	public final static void addCreatePB(String playerName) {
+		createPB.add(playerName);
+	}
+
+	public final static void removeCreatePB(String playerName) {
+		createPB.remove(playerName);
 	}
 }

@@ -1,9 +1,11 @@
 package me.A5H73Y.Parkour.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.Course.Checkpoint;
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
@@ -12,9 +14,10 @@ import me.A5H73Y.Parkour.Utilities.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -39,7 +42,7 @@ public class PlayerMethods {
 		CourseMethods.increaseView(course.getName());
 
 		if (getPlayerInfo(player.getName()) == null){
-			Utils.sendTitle(player, "Joining " + course.getName());
+			Utils.sendTitle(player, Utils.getTranslation("Parkour.Join", false).replace("%COURSE%", course.getName()));
 			addPlayer(player.getName(), new PPlayer(course));
 		}else{
 			removePlayer(player.getName());
@@ -47,7 +50,6 @@ public class PlayerMethods {
 			if (!Static.containsQuiet(player.getName()))
 				player.sendMessage(Static.getParkourString() + "Your time has been restarted!");
 		}
-		player.sendMessage(Utils.getTranslation("Parkour.Join").replace("%COURSE%", course.getName()));
 	}
 
 	/**
@@ -63,9 +65,8 @@ public class PlayerMethods {
 		}
 
 		PPlayer pplayer = getPlayerInfo(player.getName());
-		Utils.sendSubTitle(player, "Leaving " + pplayer.getCourse().getName());
+		Utils.sendSubTitle(player, Utils.getTranslation("Parkour.Leave", false).replace("%COURSE%", pplayer.getCourse().getName()));
 
-		player.sendMessage(Utils.getTranslation("Parkour.Leave").replace("%COURSE%", pplayer.getCourse().getName()));
 		removePlayer(player.getName());
 		preparePlayer(player, Parkour.getParkourConfig().getConfig().getInt("Other.onFinish.Gamemode"));
 		CourseMethods.joinLobby(null, player);
@@ -84,17 +85,21 @@ public class PlayerMethods {
 		PPlayer pplayer = getPlayerInfo(player.getName());
 		pplayer.increaseDeath();
 
-		if (pplayer.getCourse().getMaxDeaths() != null && pplayer.getCourse().getMaxDeaths() <= pplayer.getDeaths()){
-			player.sendMessage(Utils.getTranslation("Parkour.MaxDeaths").replace("%AMOUNT%", pplayer.getCourse().getMaxDeaths().toString()));
-			playerLeave(player);
-			return;
+		if (pplayer.getCourse().getMaxDeaths() != null){
+			if (pplayer.getCourse().getMaxDeaths() > pplayer.getDeaths()){
+				Utils.sendActionBar(player, Utils.getTranslation("Parkour.LifeCount").replace("%AMOUNT%", String.valueOf(pplayer.getCourse().getMaxDeaths() - pplayer.getDeaths())));
+			} else {
+				player.sendMessage(Utils.getTranslation("Parkour.MaxDeaths").replace("%AMOUNT%", pplayer.getCourse().getMaxDeaths().toString()));
+				playerLeave(player);
+				return;
+			}
 		}
 
 		player.teleport(pplayer.getCourse().getCheckpoints().get(pplayer.getCheckpoint()).getLocation());
 
 		//if it's the first checkpoint
 		if (pplayer.getCheckpoint() == 0){
-			if (Parkour.getParkourConfig().getConfig().getBoolean("Other.onDie.ResetTimeOnStart")){
+			if (Parkour.getParkourConfig().getConfig().getBoolean("OnDie.ResetTimeWithNoCheckpoint")){
 				pplayer.resetTimeStarted();
 				if (!Static.containsQuiet(player.getName())) 
 					player.sendMessage(Utils.getTranslation("Parkour.Die1") + " &fTime Restarted.");
@@ -112,8 +117,11 @@ public class PlayerMethods {
 
 		if (Parkour.getParkourConfig().getConfig().getBoolean("Other.Use.Sounds")) //TODO Experiment with sounds
 			player.playSound(player.getLocation(), Sound.ENCHANT_THORNS_HIT, 1L, 1L);
-		
+
 		preparePlayer(player, 0);
+
+		Location loc = player.getLocation().add(0, 0.4, 0);
+		player.getWorld().spawnParticle(Particle.DRAGON_BREATH, loc, 1);
 	}
 
 	/**
@@ -125,33 +133,162 @@ public class PlayerMethods {
 		if (!isPlaying(player.getName()))
 			return;
 
+		if (isPlayerInTestmode(player.getName()))
+			return;
+
 		PPlayer pplayer = getPlayerInfo(player.getName());
-		
-		//TODO Validate - check if they've got all checkpoints
-		if (Parkour.getSettings() != null && pplayer.getCheckpoint() != (pplayer.getCourse().getCheckpoints().size() - 1)){
+		String courseName = pplayer.getCourse().getName();
+
+		if (Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.EnforceCompletion") && pplayer.getCheckpoint() != (pplayer.getCourse().getCheckpoints().size() - 1)){
 			player.sendMessage(Static.getParkourString() + "Please do not cheat.");
-			player.sendMessage(ChatColor.BOLD + "You must achieve all " + (pplayer.getCourse().getCheckpoints().size() - 1) + " points!");
+			player.sendMessage(ChatColor.BOLD + "You must achieve all " + (pplayer.getCourse().getCheckpoints().size() - 1) + " checkpoints!");
 			playerDie(player);
 			return;
 		}	
-		
-		String courseName = pplayer.getCourse().getName();
-		CourseMethods.increaseComplete(courseName);
 
-		//TODO prize
-		//TODO economy
+		preparePlayer(player, Parkour.getParkourConfig().getConfig().getInt("OnFinish.SetGamemode"));
+		loadInventory(player);
 
 		DatabaseMethods.insertTime(courseName, player.getName(), pplayer.getTime(), pplayer.getDeaths());
 
-		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".Lobby")){
-			//TODO, load custom lobby OR linked course
-		} else {
-			CourseMethods.joinLobby(null, player);
+		if (Static.containsHidden(player.getName()))
+			Utils.toggleVisibility(player, false);
+
+		givePrize(player, courseName);
+		giveEconomyPrize(player, courseName);
+		displayFinishMessage(player, pplayer);
+		CourseMethods.increaseComplete(courseName);
+		removePlayer(player.getName());
+
+		if (Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.TeleportToLobby")){
+			if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".Course")){
+				//Link to course
+			} else {
+				if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".Lobby")){
+					String[] args = {null, Parkour.getParkourConfig().getCourseData().getString(courseName + ".Lobby")};
+					CourseMethods.joinLobby(args, player);
+				} else {
+					CourseMethods.joinLobby(null, player);
+				}
+			}
 		}
 
-		preparePlayer(player, Parkour.getParkourConfig().getConfig().getInt("Other.onFinish.Gamemode")); //TODO get leave gamemode
-		loadInventory(player);
-		removePlayer(player.getName());
+		Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".LastPlayed", courseName);
+		Parkour.getParkourConfig().saveUsers();
+		
+		//TODO find the best order to run these.
+		//i.e player can not be playing when joining lobby 
+	}
+
+	private static void displayFinishMessage(Player player, PPlayer pplayer) {
+		String finishBroadcast = Static.getParkourString() + Utils.colour(
+				Parkour.getParkourConfig().getStringData().getString("Parkour.FinishBroadcast")
+				.replace("%PLAYER%", player.getName())
+				.replace("%COURSE%", pplayer.getCourse().getName())
+				.replace("%DEATHS%", String.valueOf(pplayer.getDeaths()))
+				.replace("%TIME%", pplayer.displayTime()));
+
+		switch(Parkour.getParkourConfig().getConfig().getInt("OnFinish.BroadcastLevel")){
+		case 3:
+			for (Player players : Bukkit.getServer().getOnlinePlayers()) {
+				players.sendMessage(finishBroadcast);
+			}
+			return;
+		case 2:
+			for (Player players : Bukkit.getServer().getOnlinePlayers()) {
+				if (PlayerMethods.isPlaying(players.getPlayerListName())){
+					players.sendMessage(finishBroadcast);
+				}
+			}
+			return;
+		case 1:
+		default:
+			player.sendMessage(finishBroadcast);
+		}
+
+	}
+
+	/**
+	 * Reward a player with several forms of prize after course completion.
+	 * @param player
+	 * @param courseName
+	 */
+	private static void givePrize(Player player, String courseName) {
+		//Give player items
+		if (!Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.DefaultPrize.Enabled"))
+			return;
+
+		player.sendMessage("Prizes disabled until fixed.");
+
+		if (true)
+			return;
+
+
+		int amount = 0;
+		Material material;
+
+		//Use Custom prize
+		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".Prize.Material")){
+			material = Material.getMaterial(Parkour.getParkourConfig().getCourseData().getString(courseName + ".Prize.Material"));
+			amount = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Prize.Amount");
+		} else {
+			material = Material.getMaterial(Parkour.getParkourConfig().getConfig().getString("OnFinish.DefaultPrize.Material"));
+			amount = Parkour.getParkourConfig().getConfig().getInt("OnFinish.DefaultPrize.Amount");
+		}
+
+		if (amount < 0)
+			amount = 1;
+
+		player.getInventory().addItem(new ItemStack(material, amount));
+
+		//Give XP to player
+		int xp = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Prize.XP");
+
+		if (xp == 0)
+			xp = Parkour.getParkourConfig().getConfig().getInt("OnFinish.DefaultPrize.XP");
+
+		if (xp > 0)
+			player.giveExp(xp);
+
+		//Level player
+		int rewardLevel = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Level");
+		if (rewardLevel > 0){
+			int current = Parkour.getParkourConfig().getUsersData().getInt("PlayerInfo." + player.getName() + ".Level");
+
+			if (current < rewardLevel){
+				Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Level", rewardLevel);
+				player.sendMessage("Your level has been set to " + rewardLevel + " for completing " + courseName);
+
+				//check if there is a rank upgrade
+				String rewardRank = Parkour.getParkourConfig().getUsersData().getString("ServerInfo.Levels." + rewardLevel + ".Rank");
+				if (rewardRank != null){
+					Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Rank", rewardRank);
+					player.sendMessage("Your rank has been set to " + rewardRank);
+				}
+			}
+		}
+
+		//Execute the command
+		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".Prize.CMD")) {
+			Parkour.getPlugin().getServer().dispatchCommand(
+					Parkour.getPlugin().getServer().getConsoleSender(), 
+					Parkour.getParkourConfig().getCourseData().getString(courseName + ".Prize.CMD").replace("%PLAYER%", player.getName()));
+		}
+
+		player.updateInventory();
+		Parkour.getParkourConfig().saveUsers();
+	}
+
+	private static void giveEconomyPrize(Player player, String courseName) {
+		if (!Static.getEconomy())
+			return;
+
+		int reward = Parkour.getParkourConfig().getEconData().getInt("Price." + courseName + "Reward");
+
+		if (reward > 0){
+			Parkour.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()), reward);
+			player.sendMessage(Utils.getTranslation("Economy.Reward"));
+		}
 	}
 
 	/**
@@ -198,17 +335,23 @@ public class PlayerMethods {
 
 		if (pplayer != null){
 			player.sendMessage(Static.getParkourString() + playerName + "'s information:");
-			player.sendMessage("Course: "+Static.Aqua+pplayer.getCourse().getName());
-			player.sendMessage("Deaths: "+Static.Aqua+pplayer.getDeaths());
-			player.sendMessage("Time: "+Static.Aqua+pplayer.displayTime());
-			player.sendMessage("Checkpoint: "+Static.Aqua+pplayer.getCheckpoint());
+			player.sendMessage("Course: " + ChatColor.AQUA + pplayer.getCourse().getName());
+			player.sendMessage("Deaths: " + ChatColor.AQUA + pplayer.getDeaths());
+			player.sendMessage("Time: " + ChatColor.AQUA + pplayer.displayTime());
+			player.sendMessage("Checkpoint: " + ChatColor.AQUA + pplayer.getCheckpoint());
 		}
-	
-		player.sendMessage("-= Player information =-");
-		/*if (usersData.contains("PlayerInfo." + targetPlayer.getName() + ".Selected")) {
-		if (usersData.contains("PlayerInfo." + targetPlayer.getName() + ".Level")){
-		if (usersData.contains("PlayerInfo." + targetPlayer.getName() + ".Points")){
-		 */
+
+		if (Parkour.getParkourConfig().getUsersData().contains("PlayerInfo." + playerName)){
+			player.sendMessage("-= Player information =-");
+			int level 		= Parkour.getParkourConfig().getUsersData().getInt("PlayerInfo." + playerName + ".Level");
+			String selected = Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + playerName + ".Selected");
+
+			if (level > 0)
+				player.sendMessage("Level: " + level);
+
+			if (selected != null && selected.length() > 0)
+				player.sendMessage("Editing: " + selected);
+		}
 	}
 
 	/**
@@ -224,21 +367,22 @@ public class PlayerMethods {
 		playing.remove(player);
 	}
 
-	private static void savePlayer(String playerName){
-		//Save player info - XP etc
-	}
-
 	/**
 	 * Retrieve the player's selected course for editing.
 	 * @param playerName
 	 * @return selected course
 	 */
 	public static String getSelected(String playerName){
-		String selected = null;
-		try{
-			selected = Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + playerName + ".Selected");
-		}catch(Exception ex){}
-		return selected;
+		return Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + playerName + ".Selected");
+	}
+
+	public static boolean hasSelected(Player player){
+		String selected = getSelected(player.getName());
+		if (selected == null || selected.length() == 0){
+			player.sendMessage(Utils.getTranslation("Error.Selected"));
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -247,7 +391,7 @@ public class PlayerMethods {
 	 */
 	public static void givePlayerKit(Player player){
 		player.getInventory().clear();
-		
+
 		// Speed Block
 		ItemStack s = new ItemStack(Static.getParkourBlocks().getSpeed());
 		ItemMeta m = s.getItemMeta();
@@ -291,9 +435,9 @@ public class PlayerMethods {
 		s.setItemMeta(m);
 		player.getInventory().addItem(s);
 
-		s = new ItemStack(Static.getParkourBlocks().getDoublejump());
+		s = new ItemStack(Static.getParkourBlocks().getDeath());
 		m = s.getItemMeta();
-		m.setDisplayName(Utils.getTranslation("Kit.DoubleJump", false));
+		m.setDisplayName("TEST" ); //TODO
 		s.setItemMeta(m);
 		player.getInventory().addItem(s);
 
@@ -376,13 +520,12 @@ public class PlayerMethods {
 	 * @param player
 	 */
 	private static void prepareJoinPlayer(Player player){
-		FileConfiguration config = Parkour.getParkourConfig().getConfig();
 		saveInventory(player);
 		preparePlayer(player, 0);
 
 		ItemStack item;
 		ItemMeta meta;
-		
+
 		if (Parkour.getSettings().getSuicide() != null) {
 			item = new ItemStack(Parkour.getSettings().getSuicide(), 1);
 			meta = item.getItemMeta();
@@ -390,7 +533,7 @@ public class PlayerMethods {
 			item.setItemMeta(meta);
 			player.getInventory().setItem(0, item);
 		}
-		
+
 		if (Parkour.getSettings().getHideall() != null) {
 			item = new ItemStack(Parkour.getSettings().getHideall(), 1);
 			meta = item.getItemMeta();
@@ -419,41 +562,6 @@ public class PlayerMethods {
 					}
 				}*/
 
-		/*
-
-			if (getConfig().getBoolean("Other.onJoin.GiveStatBook")) {
-				int leadertime1 = leaderData.getInt(course + ".1.time");
-				String leadername1 = leaderData.getString(course + ".1.player");
-				int leadertime2 = leaderData.getInt(course + ".2.time");
-				String leadername2 = leaderData.getString(course + ".2.player");
-				int leadertime3 = leaderData.getInt(course + ".3.time");
-				String leadername3 = leaderData.getString(course + ".3.player");
-
-				ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);
-				BookMeta bm = (BookMeta) book.getItemMeta();
-				bm.setPages(Arrays.asList((ChatColor.RED + course + ChatColor.GRAY + "\n\nStats" + ChatColor.GRAY + "\n-------------------\n" + ChatColor.BLACK + "Views: " + Aqua + viewcount + 
-						ChatColor.BLACK + "\nCheckpoints: " + Aqua + courseData.getInt(course + ".Points") +
-						ChatColor.BLACK + "\nCreator: " + Aqua + courseData.getString(course + ".Creator") +
-						ChatColor.GRAY + "\n\n\nLeaderboards " + ChatColor.GRAY + "\n-------------------" +
-						ChatColor.BLACK + "\n1) " + Time(leadertime1) + Daqua + " " + leadername1 +
-						ChatColor.BLACK + "\n2) " + Time(leadertime2) + Daqua + " " + leadername2 +
-						ChatColor.BLACK + "\n3) " + Time(leadertime3) + Daqua + " " + leadername3))); 
-				bm.setAuthor("A5H73Y");
-				bm.setTitle(Colour(stringData.getString("Other.Item_Book")));
-				book.setItemMeta(bm);
-				player.getInventory().setItem(8, book);
-			}
-			player.updateInventory();
-		 */
-
-		//TODO charge player
-		/*
-		if (elinked) {
-			if (econData.getInt("Price." + course + ".Join") != 0) {
-				economy.withdrawPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()), econData.getInt("Price." + course + ".Join"));
-				player.sendMessage(econData.getInt("Price." + course + ".Join") + " was taken from your account for joining " + course);
-			}
-		}*/
 		player.updateInventory();
 
 	}
@@ -468,11 +576,7 @@ public class PlayerMethods {
 		for (PotionEffect effect : player.getActivePotionEffects()) {
 			player.removePotionEffect(effect.getType());
 		}
-		while (player.getFireTicks() > 0){
-			player.sendMessage(": Waiting... ");
-			player.setFireTicks(0);
-		}
-		
+
 		Damageable damag = player;
 		damag.setHealth(damag.getMaxHealth());
 		player.setGameMode(Utils.getGamemode(gamemode));
@@ -487,7 +591,7 @@ public class PlayerMethods {
 	 * This is because a player can join CourseA then join CourseB and potentially have their inv overwritten.
 	 * @param player
 	 */
-	private static void saveInventory(Player player){
+	public static void saveInventory(Player player){
 		if (!Parkour.getParkourConfig().getConfig().getBoolean("Other.Parkour.InventoryManagement"))
 			return;
 
@@ -496,12 +600,12 @@ public class PlayerMethods {
 
 		Parkour.getParkourConfig().getInvData().set(player.getName() + ".Inventory", player.getInventory().getContents());
 		Parkour.getParkourConfig().getInvData().set(player.getName() + ".Armor", player.getInventory().getArmorContents());
-		Parkour.getParkourConfig().saveInv();
 		player.getInventory().clear();
 		player.getInventory().setHelmet(null);
 		player.getInventory().setChestplate(null);
 		player.getInventory().setLeggings(null);
 		player.getInventory().setBoots(null);
+
 		player.updateInventory();
 	}
 
@@ -509,7 +613,7 @@ public class PlayerMethods {
 	 * This will load the inventory for the player, then delete it from the file.
 	 * @param player
 	 */
-	private static void loadInventory(Player player){
+	public static void loadInventory(Player player){
 		if (!Parkour.getParkourConfig().getConfig().getBoolean("Other.Parkour.InventoryManagement"))
 			return;
 
@@ -563,7 +667,7 @@ public class PlayerMethods {
 	 * @param player
 	 */
 	public static void resetPlayer(String[] args, Player player) {
-		//TODO Delete from players.yml 
+		Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName(), null);
 		DatabaseMethods.deleteAllTimesForPlayer(args[1]);
 		player.sendMessage(Static.getParkourString() + args[1] + " has been removed!");
 	}
@@ -573,16 +677,16 @@ public class PlayerMethods {
 	 * @param player
 	 */
 	public static void toggleTestmode(Player player) {
-		// TODO Change to testmode
 		if (isPlaying(player.getName())){
 			removePlayer(player.getName());
-			Utils.sendActionBar(player, Static.getParkourString() + Utils.Colour("Test Mode: &bOFF"));
+			Utils.sendActionBar(player, Utils.colour("Test Mode: &bOFF"));
 		}else{
-			Course course = new Course("Test Mode", null);
-			addPlayer(player.getName(), new PPlayer(course));
-			Utils.sendActionBar(player, Static.getParkourString() + Utils.Colour("Test Mode: &bON"));
-		}
+			List<Checkpoint> checkpoints = new ArrayList<Checkpoint>();
+			checkpoints.add(new Checkpoint(player.getLocation(), 0, 0, 0));
 
+			addPlayer(player.getName(), new PPlayer(new Course("Test Mode", checkpoints)));
+			Utils.sendActionBar(player, Utils.colour("Test Mode: &bON"));
+		}
 	}
 
 	/**
@@ -597,10 +701,10 @@ public class PlayerMethods {
 		Course course = CourseMethods.findByPlayer(player.getName());
 		Player target = Bukkit.getPlayer(args[1]);
 
-		if (course == null || target == null)
+		if (course == null || target == null || isPlayerInTestmode(player.getName())){
+			player.sendMessage(Static.getParkourString() + "You are unable to invite right now.");
 			return;
-
-		//TODO Check if = player or testmode
+		}
 
 		player.sendMessage(Utils.getTranslation("Parkour.Invite.Send")
 				.replace("%COURSE%", course.getName()
@@ -613,13 +717,19 @@ public class PlayerMethods {
 		target.sendMessage(Utils.getTranslation("Parkour.Invite.Recieve2")
 				.replace("%COURSE%", course.getName()));
 	}
-	
+
+	/**
+	 * Used for validation. 
+	 * Example you can't invite a player to "Test Mode" as it isn't a valid course.
+	 * @param playerName
+	 * @return
+	 */
 	public static boolean isPlayerInTestmode(String playerName){
 		PPlayer pplayer = getPlayerInfo(playerName);
-		
+
 		if (pplayer == null)
 			return false;
-		
+
 		return pplayer.getCourse().getName().equals("Test Mode");
 	}
 }

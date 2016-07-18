@@ -2,9 +2,11 @@ package me.A5H73Y.Parkour;
 
 import me.A5H73Y.Parkour.Course.Checkpoint;
 import me.A5H73Y.Parkour.Course.Course;
+import me.A5H73Y.Parkour.Other.ParkourBlocks;
+import me.A5H73Y.Parkour.Other.SettingsGUI;
+import me.A5H73Y.Parkour.Other.StoreGUI;
 import me.A5H73Y.Parkour.Player.PPlayer;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
-import me.A5H73Y.Parkour.Utilities.SignMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
@@ -23,22 +25,26 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 
 public class ParkourListener implements Listener {
-
-	SignMethods sm = new SignMethods();
 
 	@EventHandler
 	public void onPlayerMoveTrails(PlayerMoveEvent event){
@@ -47,7 +53,7 @@ public class ParkourListener implements Listener {
 
 		if (!Parkour.getSettings().isAllowTrails())
 			return;
-		
+
 		//Redstone - Best
 		//Drip_Lava - Awesome
 		//Drip_Water - Awesome
@@ -55,9 +61,88 @@ public class ParkourListener implements Listener {
 		//Heart - interesting...
 		//Snowball - bit crap
 		//Slime - also a bit crap
-		
+
 		Location loc = event.getPlayer().getLocation().add(0, 0.4, 0);
 		event.getPlayer().getWorld().spawnParticle(Particle.REDSTONE, loc, 1);
+	}
+
+	@EventHandler
+	public void onInventoryClick(InventoryClickEvent event) {
+		if (!(event.getWhoClicked() instanceof Player))
+			return;
+
+		if (event.getInventory().getName().contains(StoreGUI.PARKOUR_TITLE)) {
+			event.setCancelled(true);
+			StoreGUI.processClick((Player) event.getWhoClicked(), event.getCurrentItem().getType());
+
+		} else if (event.getInventory().getName().contains(SettingsGUI.PARKOUR_TITLE)) {
+			event.setCancelled(true);
+			SettingsGUI.processClick((Player) event.getWhoClicked(), event.getCurrentItem().getType());
+		}
+	}
+
+	@EventHandler
+	public void onPlayerMove(PlayerMoveEvent event){
+		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+			return;
+
+		if (event.getPlayer().getFallDistance() > 30){ //TODO get from config
+			PlayerMethods.playerDie(event.getPlayer());
+			return;
+		}
+
+		Material belowMaterial = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
+
+		ParkourBlocks pb = PlayerMethods.getPlayerInfo(event.getPlayer().getName()).getCourse().getParkourBlocks();
+
+		if (belowMaterial.equals(pb.getFinish())){
+			PlayerMethods.playerFinish(event.getPlayer());
+
+		} else if (belowMaterial.equals(pb.getDeath())){
+			PlayerMethods.playerDie(event.getPlayer());
+
+		} else if (belowMaterial.equals(pb.getLaunch())){
+			event.getPlayer().setVelocity(new Vector(0, 1.2, 0));
+
+		} else if (belowMaterial.equals(pb.getDoublejump())){
+			event.getPlayer().setVelocity(new Vector(0, 0.6, 0));
+
+		} else if (belowMaterial.equals(pb.getSpeed())){
+			event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 200, 5));
+
+		} else if (belowMaterial.equals(Material.SPONGE)){
+			event.getPlayer().setFallDistance(0);
+
+		} else if (belowMaterial.equals(pb.getNorun())){
+			event.getPlayer().setSprinting(false);
+
+		} else if (belowMaterial.equals(pb.getNopotion())){
+			for (PotionEffect effect : event.getPlayer().getActivePotionEffects()) 
+				event.getPlayer().removePotionEffect(effect.getType());
+
+			event.getPlayer().setFireTicks(0);
+
+		} else {
+			Material matEast = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.EAST).getType();
+			Material matNorth = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.NORTH).getType();
+			Material matWest = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.WEST).getType();
+			Material matSouth = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.SOUTH).getType();
+
+			if (matEast.equals(pb.getClimb()) || matNorth.equals(pb.getClimb()) || matWest.equals(pb.getClimb()) || matSouth.equals(pb.getClimb())){
+				if (!event.getPlayer().isSneaking())
+					event.getPlayer().setVelocity(new Vector(0, 0.4, 0));
+
+
+			} else if (matNorth.equals(pb.getRepulse())) {
+				event.getPlayer().setVelocity(new Vector(0, 0.1, 0.4));
+			} else if (matSouth.equals(pb.getRepulse())) {
+				event.getPlayer().setVelocity(new Vector(0, 0.1, -0.4));
+			} else if (matEast.equals(pb.getRepulse())) {
+				event.getPlayer().setVelocity(new Vector(-0.4, 0.1, 0));
+			} else if (matWest.equals(pb.getRepulse())) {
+				event.getPlayer().setVelocity(new Vector(0.4, 0.1, 0));
+			}
+		}
 
 	}
 
@@ -69,7 +154,7 @@ public class ParkourListener implements Listener {
 		String rank = Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + event.getPlayer().getName() + ".Rank");
 		rank = rank == null ? "Newbie" : rank;
 
-		event.setFormat(Utils.Colour(Utils.getTranslation("Event.Chat", false)
+		event.setFormat(Utils.colour(Utils.getTranslation("Event.Chat", false)
 				.replace("%RANK%", rank)
 				.replace("%PLAYER%", event.getPlayer().getName())
 				.replace("%MESSAGE%", event.getMessage())));
@@ -96,6 +181,13 @@ public class ParkourListener implements Listener {
 	}
 
 	@EventHandler
+	public void onEntityCombust(EntityCombustEvent event) {
+		if (event.getEntity() instanceof Player)
+			if (PlayerMethods.isPlaying(event.getEntity().getName()))
+				event.setCancelled(true);
+	}
+
+	@EventHandler
 	public void onPlayerDamage(EntityDamageEvent event) {
 		if (!(event.getEntity() instanceof Player))
 			return;
@@ -107,6 +199,9 @@ public class ParkourListener implements Listener {
 			event.setDamage(0);
 			return;
 		}
+		
+		if(event.getCause() == DamageCause.FIRE)
+			event.setCancelled(true);
 
 		Damageable player = (Player) event.getEntity();
 		if (player.getHealth() <= event.getDamage()) {
@@ -122,6 +217,15 @@ public class ParkourListener implements Listener {
 			return;
 
 		if (PlayerMethods.isPlaying(event.getEntity().getName()))
+			event.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onItemDrop(PlayerDropItemEvent event) {
+		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+			return;
+		
+		if (Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.DisableItemDrop"))
 			event.setCancelled(true);
 	}
 
@@ -142,6 +246,7 @@ public class ParkourListener implements Listener {
 			return;
 
 		if (PlayerMethods.isPlaying(event.getPlayer().getName()))
+			//TODO Add them to a list, then leave on join
 			PlayerMethods.playerLeave(event.getPlayer());
 	}
 
@@ -189,8 +294,8 @@ public class ParkourListener implements Listener {
 			return;
 
 		if (player.getInventory().getItemInMainHand().getType() == Parkour.getSettings().getSuicide()) {
-			//pl.getConfig().getInt("SuicideID")){
 			PlayerMethods.playerDie(player);
+			player.getInventory().setHeldItemSlot(4);
 
 		} else if (player.getInventory().getItemInMainHand().getType() == Parkour.getSettings().getHideall()) {
 			Utils.toggleVisibility(player, Static.containsHidden(player.getName()));
@@ -203,45 +308,6 @@ public class ParkourListener implements Listener {
 		}
 	}
 
-	@EventHandler
-	public void onSignCreate(SignChangeEvent event) {
-		if (event.getLine(0).equalsIgnoreCase("[parkour]") || event.getLine(0).equalsIgnoreCase("[pa]")) {
-			Player player = event.getPlayer();
-
-			event.setLine(0, ChatColor.BLACK + "[" + ChatColor.AQUA + "Parkour" + ChatColor.BLACK + "]");
-
-			if (event.getLine(1).equalsIgnoreCase("join") || event.getLine(1).equalsIgnoreCase("j")) {
-				sm.joinCourse(event, player);
-
-			} else if (event.getLine(1).equalsIgnoreCase("finish") || event.getLine(1).equalsIgnoreCase("f")) {
-				sm.createStandardCourseSign(event, player, "Finish");
-
-			} else if (event.getLine(1).equalsIgnoreCase("lobby") || event.getLine(1).equalsIgnoreCase("l")) {
-				sm.joinLobby(event, player);
-
-			} else if (event.getLine(1).equalsIgnoreCase("store") || event.getLine(1).equalsIgnoreCase("s")) {
-				sm.createStandardSign(event, player, "Store");
-
-			} else if (event.getLine(1).equalsIgnoreCase("leave")) {
-				sm.createStandardSign(event, player, "Leave");
-
-			} else if (event.getLine(1).equalsIgnoreCase("joinall") || event.getLine(1).equalsIgnoreCase("ja")) {
-				sm.createStandardSign(event, player, "JoinAll");
-
-			} else if (event.getLine(1).equalsIgnoreCase("effect") || event.getLine(1).equalsIgnoreCase("e")) {
-				sm.createEffectSign(event, player, "Effect");
-
-			} else if (event.getLine(1).equalsIgnoreCase("stats") || event.getLine(1).equalsIgnoreCase("s")) {
-				//TODO - Not sure what to do for this.
-
-			} else {
-				player.sendMessage(Utils.getTranslation("Error.UnknownSignCommand"));
-				event.setLine(1, ChatColor.RED + "Unknown cmd");
-				event.setLine(2, "");
-				event.setLine(3, "");
-			}
-		}
-	}
 
 	@EventHandler
 	public void onCheckpointEvent(PlayerInteractEvent event) {
@@ -287,24 +353,16 @@ public class ParkourListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
+		boolean commandIsPa = event.getMessage().startsWith("/pa");
 		Player player = event.getPlayer();
 
-		boolean commandIsPa = event.getMessage().startsWith("/pa");
-
-		if (commandIsPa && Static.containsQuestion(player.getName())) {
-			if (event.getMessage().startsWith("/pa yes")) {
-				String question[] = Static.getQuestion(player.getName()).split(",");
-				Static.removeQuestion(player.getName());
-
-				Utils.questionConfirm(Integer.parseInt(question[0]), question[1], player);
-			} else if (event.getMessage().startsWith("/pa no")) {
-				player.sendMessage(Static.getParkourString() + "Question cancelled!");
-				Static.removeQuestion(player.getName());
-			} else {
-				player.sendMessage(Static.getParkourString() + ChatColor.RED + "Invalid question answer.");
-				player.sendMessage("Please use either " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " or " + ChatColor.AQUA + "/pa no");
+		if (commandIsPa){
+			if (Static.containsQuestion(player.getName())) {
+				questionPlayer(player, event.getMessage());
+				event.setCancelled(true);
+			} else if (Static.containsCreatePB(player.getName())) {
+				createPB(player);
 			}
-			event.setCancelled(true);
 			return;
 		}
 
@@ -312,19 +370,47 @@ public class ParkourListener implements Listener {
 			if (!Parkour.getSettings().isDisableCommands())
 				return;
 
-			if (!(player.hasPermission("Parkour.Admin") || player.hasPermission("Parkour.*"))) {
-				boolean allowed = false;
-				for (String word : Parkour.getParkourConfig().getConfig().getStringList("Other.Commands.Whitelist")) {
-					if (event.getMessage().startsWith("/" + word)) {
-						allowed = true;
-						break;
-					}
-				}
-				if (allowed == false) {
-					event.setCancelled(true);
-					player.sendMessage(Utils.getTranslation("Error.Command"));
+			if (player.hasPermission("Parkour.Admin") || player.hasPermission("Parkour.*"))
+				return;
+
+			boolean allowed = false;
+			for (String word : Parkour.getParkourConfig().getConfig().getStringList("Other.Commands.Whitelist")) {
+				if (event.getMessage().startsWith("/" + word)) {
+					allowed = true;
+					break;
 				}
 			}
+			if (allowed == false) {
+				event.setCancelled(true);
+				player.sendMessage(Utils.getTranslation("Error.Command"));
+			}
+
+		}
+	}
+
+	private final void questionPlayer(Player player, String message) {
+		if (message.startsWith("/pa yes")) {
+			String question[] = Static.getQuestion(player.getName()).split(",");
+			Utils.questionConfirm(Integer.parseInt(question[0]), question[1], player);
+			Static.removeQuestion(player.getName());
+
+		} else if (message.startsWith("/pa no")) {
+			player.sendMessage(Static.getParkourString() + "Question cancelled!");
+			Static.removeQuestion(player.getName());
+
+		} else {
+			player.sendMessage(Static.getParkourString() + ChatColor.RED + "Invalid question answer.");
+			player.sendMessage("Please use either " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " or " + ChatColor.AQUA + "/pa no");
+		}
+	}
+
+
+	private final void createPB(Player player) {
+		String[] ParkourBlocks = { "a","a","a","a" };   
+		for (String s: ParkourBlocks) {           
+
+			Parkour.getParkourConfig().getUpgData().set("ParkourBlocks.name" , s);
+
 		}
 	}
 }

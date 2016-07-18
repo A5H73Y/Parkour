@@ -51,11 +51,7 @@ public class CheckpointMethods {
 
 	public static void createCheckpoint(String[] args, Player player) {
 		String selected = PlayerMethods.getSelected(player.getName());
-
-		if (selected==null || selected.length() == 0){
-			player.sendMessage(Static.getParkourString() + "You have not selected a course!");
-			return;
-		}
+		
 		if (!CourseMethods.exist(selected)){
 			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", selected));
 			return;
@@ -134,14 +130,13 @@ public class CheckpointMethods {
 		float pitch = courseData.getInt(path + ".Pitch");
 
 		if (x == 0 && y == 0 && z == 0) {
-			player.sendMessage(Static.getParkourString() + ChatColor.RED + "ERROR: " + Static.White + "This checkpoint is invalid or doesn't exist!");
+			player.sendMessage(Static.getParkourString() + ChatColor.RED + "ERROR: " + ChatColor.WHITE+ "This checkpoint is invalid or doesn't exist!");
 			return;
 		}
 
-		Location l = new Location(world, x, y, z, yaw, pitch);
-		player.teleport(l);
-		String message = Utils.getTranslation("Parkour.Teleport");
-		player.sendMessage(checkpoint ? message + Static.White + " (" + Static.Daqua + args[2] + Static.White + ")" : message);
+		player.teleport(new Location(world, x, y, z, yaw, pitch));
+		String message = Utils.getTranslation("Parkour.Teleport").replace("%COURSE%", args[1]);
+		player.sendMessage(checkpoint ? message + Utils.colour(" &f(&3" + args[2] + "&f)") : message);
 	}
 
 }
