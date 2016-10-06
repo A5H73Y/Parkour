@@ -32,7 +32,7 @@ public class Checkpoint implements Serializable {
 		this.nextCheckpointZ = nextCheckpointZ;
 	}
 	
-	double getX() {
+	public double getX() {
 		return x;
 	}
 	public double getY() {
