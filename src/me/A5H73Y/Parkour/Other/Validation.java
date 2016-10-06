@@ -19,13 +19,13 @@ public class Validation {
 			player.sendMessage(Utils.getTranslation("Error.TooLittle"));
 			return false;
 		} else if (args[1].length() > 15) {
-			player.sendMessage("Course name is too long!");
+			player.sendMessage(Static.getParkourString() + "Course name is too long!");
 			return false;
 		} else if (args[1].contains(".")) {
-			player.sendMessage("Course names can not contain '.'");
+			player.sendMessage(Static.getParkourString() + "Course name can not contain '.'");
 			return false;
 		} else if (Utils.isNumber(args[1])){
-			player.sendMessage("Course name can not only be numeric");
+			player.sendMessage(Static.getParkourString() + "Course name can not only be numeric");
 			return false;
 		} else if (CourseMethods.exist(args[1])) {
 			player.sendMessage(Utils.getTranslation("Error.Exist"));
@@ -39,7 +39,7 @@ public class Validation {
 		
 		/* Player in wrong world */
 		if (Parkour.getSettings().isEnforceWorld()){
-			if (!player.getLocation().getWorld().getName().equals(course.getCheckpoints().get(0).getLocation().getWorld().getName())){
+			if (!player.getLocation().getWorld().getName().equals(course.getCheckpoint().getWorld())){
 				player.sendMessage(Utils.getTranslation("Error.WrongWorld"));
 				return false;
 			}

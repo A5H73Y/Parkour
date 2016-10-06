@@ -1,10 +1,6 @@
 package me.A5H73Y.Parkour.Course;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import me.A5H73Y.Parkour.Parkour;
-import me.A5H73Y.Parkour.Other.Configurations;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
@@ -27,26 +23,26 @@ public class CheckpointMethods {
 	 * @param courseName
 	 * @return
 	 */
-	public static List<Checkpoint> getCheckpoints(String courseName){
-		List<Checkpoint> checkpoints = new ArrayList<Checkpoint>();
-		Configurations config = Parkour.getParkourConfig();
-		FileConfiguration checkData = config.getCheckData();
+	public static Checkpoint getNextCheckpoint(String courseName, int currentPoint){
+		FileConfiguration courseData = Parkour.getParkourConfig().getCourseData();
+		FileConfiguration checkData = Parkour.getParkourConfig().getCheckData();
 
-		int current = config.getCourseData().getInt(courseName + ".Points") + 1;
+		String path = courseName + "." + currentPoint + ".";
+		
+		double x = courseData.getDouble(path + "X");
+		double y = courseData.getDouble(path + "Y");
+		double z = courseData.getDouble(path + "Z");
+		float yaw = (float) courseData.getDouble(path + "Yaw");
+		float pitch = (float) courseData.getDouble(path + "Pitch");
+		String world = courseData.getString(courseName + "." + "World");
+		
+		path = courseName + "." + (currentPoint + 1) + ".";
+		
+		double nCheckX = checkData.getDouble(path + "X");
+		double nCheckY = checkData.getDouble(path + "Y");
+		double nCheckZ = checkData.getDouble(path + "Z");
 
-		for (int i=0; i < current; i++){
-			Location location = Utils.getLocation(courseName, "."+i+".");
-
-			if (location == null){
-				Utils.log("Invalid checkpoint: "+courseName+"."+i);
-				Utils.logToFile("Invalid checkpoint: "+courseName+"."+i);
-				break;
-			}
-
-			Checkpoint checkpoint = new Checkpoint(location, checkData.getDouble(courseName + "." + i + ".X"), checkData.getDouble(courseName + "." + i + ".Y"), checkData.getDouble(courseName + "." + i + ".Z"));
-			checkpoints.add(checkpoint);
-		}
-		return checkpoints;
+		return new Checkpoint(x, y, z, yaw, pitch, world, nCheckX, nCheckY, nCheckZ);
 	}
 
 	public static void createCheckpoint(String[] args, Player player) {
@@ -139,4 +135,33 @@ public class CheckpointMethods {
 		player.sendMessage(checkpoint ? message + Utils.colour(" &f(&3" + args[2] + "&f)") : message);
 	}
 
+	public static void deleteCheckpoint(String courseName, Player player) {
+		if (!CourseMethods.exist(courseName))
+			return;
+		
+		courseName = courseName.toLowerCase();
+		int point = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Points");
+		if (point <= 0){
+			player.sendMessage(Static.getParkourString() + courseName + " has no checkpoints!");
+			return;
+		}
+		
+		Parkour.getParkourConfig().getCourseData().set(courseName + "." + point, null);
+		Parkour.getParkourConfig().getCourseData().set(courseName + ".Points", point - 1);
+		Parkour.getParkourConfig().getCheckData().set(courseName + "." + point, null);
+		Parkour.getParkourConfig().saveCourses();
+		Parkour.getParkourConfig().saveCheck();
+
+		player.sendMessage(Utils.getTranslation("Parkour.DeleteCheckpoint")
+				.replace("%CHECKPOINT%", point+"")
+				.replace("%COURSE%", courseName));
+		
+		Utils.logToFile("Checkpoint " + point + " was deleted on " + courseName + " by " + player.getName());
+		
+	}
+
+	public static int getNumberOfCheckpoints(String courseName){
+		Integer number = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Points");
+		return number != null ? number : -1;
+	}
 }

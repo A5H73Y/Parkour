@@ -11,11 +11,15 @@ import java.io.PrintWriter;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.Conversation.Conversation;
+import me.A5H73Y.Parkour.Conversation.Conversation.ConversationType;
+import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Other.ParkourBlocks;
+import me.A5H73Y.Parkour.Other.Question;
+import me.A5H73Y.Parkour.Other.Question.QuestionType;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -31,14 +35,17 @@ import de.bg.derh4nnes.TitleActionBarAPI;
 public final class Utils {
 
 	/**
-	 * The string parameter will be matched to an entry in the Strings.yml.
-	 * The boolean will determine whether or not the String that is returned has the Parkour prefix before it.
+	 * The string parameter will be matched to an entry in the Strings.yml. The
+	 * boolean will determine whether or not the String that is returned has the
+	 * Parkour prefix before it.
 	 * 
-	 * @param string to translate
-	 * @param display prefix?
+	 * @param string
+	 *            to translate
+	 * @param display
+	 *            prefix?
 	 * @return
 	 */
-	public final static String getTranslation(String string, boolean prefix){
+	public final static String getTranslation(String string, boolean prefix) {
 		String translated = Parkour.getParkourConfig().getStringData().getString(string);
 		translated = translated != null ? colour(translated) : "String not found!";
 		return prefix ? Static.getParkourString().concat(translated) : translated;
@@ -46,20 +53,22 @@ public final class Utils {
 
 	/**
 	 * Override above method, but with a default of enabled prefix.
+	 * 
 	 * @param string
 	 * @return
 	 */
-	public final static String getTranslation(String string){
+	public final static String getTranslation(String string) {
 		return getTranslation(string, true);
 	}
 
 	/**
 	 * Check whether or not the player has a specific permission.
+	 * 
 	 * @param player
 	 * @param permission
 	 * @return
 	 */
-	public final static boolean hasPermission(Player player, String permission){
+	public final static boolean hasPermission(Player player, String permission) {
 		if (player.hasPermission(permission) || player.hasPermission("Parkour.*"))
 			return true;
 
@@ -68,14 +77,15 @@ public final class Utils {
 	}
 
 	/**
-	 * Check whether the player has a specific permission OR has the branch permission.
-	 * Example "parkour.basic.join" OR "parkour.basic.*"
+	 * Check whether the player has a specific permission OR has the branch
+	 * permission. Example "parkour.basic.join" OR "parkour.basic.*"
+	 * 
 	 * @param player
 	 * @param permissionBranch
 	 * @param permission
 	 * @return
 	 */
-	public final static boolean hasPermission(Player player, String permissionBranch, String permission){
+	public final static boolean hasPermission(Player player, String permissionBranch, String permission) {
 		if (player.hasPermission(permissionBranch + ".*") || player.hasPermission(permissionBranch + "." + permission) || player.hasPermission("Parkour.*"))
 			return true;
 
@@ -84,8 +94,9 @@ public final class Utils {
 	}
 
 	/**
-	 * Same as above, except it will check if the player has the permission for the course in question. 
-	 * e.g. Did the player create the course in the first place.
+	 * Same as above, except it will check if the player has the permission for
+	 * the course in question. e.g. Did the player create the course in the
+	 * first place.
 	 * 
 	 * @param player
 	 * @param permissionBranch
@@ -93,15 +104,15 @@ public final class Utils {
 	 * @param courseName
 	 * @return
 	 */
-	public final static boolean hasPermissionOrOwnership(Player player, String permissionBranch, String permission, String courseName){
-		if (!(CourseMethods.exist(courseName))){
+	public final static boolean hasPermissionOrOwnership(Player player, String permissionBranch, String permission, String courseName) {
+		if (!(CourseMethods.exist(courseName))) {
 			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", courseName));
 			return false;
 
-		} else if (player.hasPermission(permissionBranch + ".*") || player.hasPermission(permissionBranch + "." + permission) || player.hasPermission("Parkour.*")){
+		} else if (player.hasPermission(permissionBranch + ".*") || player.hasPermission(permissionBranch + "." + permission) || player.hasPermission("Parkour.*")) {
 			return true;
 
-		} else if (player.getName().equals(Parkour.getParkourConfig().getCourseData().getString(courseName + ".Creator"))){
+		} else if (player.getName().equals(Parkour.getParkourConfig().getCourseData().getString(courseName + ".Creator"))) {
 			return true;
 		}
 
@@ -110,17 +121,20 @@ public final class Utils {
 	}
 
 	/**
-	 * Commands that require a certain length of arguments before it becomes processable.
+	 * Commands that require a certain length of arguments before it becomes
+	 * processable.
+	 * 
 	 * @param player
 	 * @param args
 	 * @param desired
 	 * @return
 	 */
-	public final static boolean validateArgs(Player player, String[] args, int desired){
+	public final static boolean validateArgs(Player player, String[] args, int desired) {
 		if (args.length > desired) {
 			player.sendMessage(Utils.getTranslation("Error.TooMany") + " (" + desired + ")");
 			player.sendMessage(Utils.getTranslation("Help.Command").replace("%COMMAND%", Utils.standardizeText(args[0])));
 			return false;
+
 		} else if (args.length < desired) {
 			player.sendMessage(Utils.getTranslation("Error.TooLittle") + " (" + desired + ")");
 			player.sendMessage(Utils.getTranslation("Help.Command").replace("%COMMAND%", Utils.standardizeText(args[0])));
@@ -131,6 +145,7 @@ public final class Utils {
 
 	/**
 	 * Used for displaying text nicely, will turn "hElLO" into "Hello"
+	 * 
 	 * @param text
 	 * @return
 	 */
@@ -142,7 +157,8 @@ public final class Utils {
 	}
 
 	/**
-	 * Checks whether or not a value is numberic "test" will fail for example.
+	 * Checks whether or not a value is numeric "test" will fail for example.
+	 * 
 	 * @param args
 	 * @return
 	 */
@@ -150,7 +166,8 @@ public final class Utils {
 		try {
 			Integer.parseInt(args);
 			return true;
-		} catch (Exception e) {}
+		} catch (Exception e) {
+		}
 		return false;
 	}
 
@@ -159,8 +176,8 @@ public final class Utils {
 	}
 
 	/**
-	 * The input will be broken down into seconds, minutes and hours.
-	 * If the time is not greater than an hour, don't  display hours.
+	 * The input will be broken down into seconds, minutes and hours. If the
+	 * time is not greater than an hour, don't display hours.
 	 * 
 	 * @param milliseconds
 	 * @return the total time
@@ -177,17 +194,18 @@ public final class Utils {
 		String minutesn = minutes < 10 ? "0" + minutes : String.valueOf(minutes);
 		String hoursn = hours < 10 ? "0" + hours : String.valueOf(hours);
 
-		return hours > 0 ? hoursn.concat(":").concat(minutesn).concat(":").concat(secondsn) : 
-			minutesn.concat(":").concat(secondsn);
+		return hours > 0 ? hoursn.concat(":").concat(minutesn).concat(":").concat(secondsn) : minutesn.concat(":").concat(secondsn);
 	}
 
 	/**
-	 * Used for logging plugin events, varying in severity. 0 - Info; 1 - Warn; 2 - Severe.
+	 * Used for logging plugin events, varying in severity. 0 - Info; 1 - Warn;
+	 * 2 - Severe.
+	 * 
 	 * @param message
 	 * @param severity
 	 */
-	public final static void log(String message, int severity){
-		switch (severity){
+	public final static void log(String message, int severity) {
+		switch (severity) {
 		case 0:
 			Parkour.getPlugin().getLogger().info(message);
 			break;
@@ -208,8 +226,10 @@ public final class Utils {
 	}
 
 	/**
-	 * This will write 'incriminating' events to a seperate file that can't be erased.
-	 * Examples: playerA deleted courseB - This means any griefers can easily be caught etc.
+	 * This will write 'incriminating' events to a seperate file that can't be
+	 * erased. Examples: playerA deleted courseB - This means any griefers can
+	 * easily be caught etc.
+	 * 
 	 * @param message
 	 */
 	public final static void logToFile(String message) {
@@ -234,16 +254,18 @@ public final class Utils {
 
 	/**
 	 * Broadcasts messages to everybody and the server (for logging).
+	 * 
 	 * @param message
 	 * @param permission
 	 */
-	public final static void broadcastMessage(String message, String permission){
+	public final static void broadcastMessage(String message, String permission) {
 		Bukkit.broadcast(message, permission);
 		log(message);
 	}
 
 	/**
 	 * This is currently only used for logToFile method.
+	 * 
 	 * @return
 	 */
 	public final static String getDateTime() {
@@ -252,8 +274,9 @@ public final class Utils {
 	}
 
 	/**
-	 * This is currently only used for the backup file names.
-	 * Might make these configurable.
+	 * This is currently only used for the backup file names. Might make these
+	 * configurable.
+	 * 
 	 * @return
 	 */
 	public final static String getDate() {
@@ -263,6 +286,7 @@ public final class Utils {
 
 	/**
 	 * Retrieve the Location saved in the course config file for a course.
+	 * 
 	 * @param courseName
 	 * @param path
 	 * @return
@@ -281,74 +305,24 @@ public final class Utils {
 	}
 
 	/**
-	 * This still needs a lot of work. The purpose is to confirm that player was meant to do certain commands.
-	 * For example if "/pa delete (course)" was used, they would have to enter "/pa yes" to confirm.
-	 * @param command
-	 * @param argument
-	 * @param player
-	 */
-	public final static void questionConfirm(int command, String argument, Player player) {
-		/*
-		 * 1: Delete course
-		 * 2: Delete checkpoint
-		 * 3: Reset course
-		 * 4: Reset player
-		 */
-		switch(command){
-		case 1:	
-			List<String> courselist = Static.getCourses();
-			courselist.remove(argument);
-			Static.setCourses(courselist); //TODO check if this is necessary
-			Parkour.getParkourConfig().getCourseData().set(argument, null);
-			Parkour.getParkourConfig().getCourseData().set("Courses", courselist);
-			Parkour.getParkourConfig().saveCourses();
-			DatabaseMethods.deleteCourseAndReferences(argument);
-
-			player.sendMessage(Utils.getTranslation("Parkour.Delete").replace("%COURSE%", argument));
-			Utils.logToFile(argument + " was deleted by " + player.getName());
-			return;
-
-		case 2:
-			String[] data = argument.split(";");
-			String checkpoint = data[0];
-			String courseName = data[1];
-			int points = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Points");
-
-			Parkour.getParkourConfig().getCourseData().set(courseName + "." + checkpoint, null);
-			Parkour.getParkourConfig().getCourseData().set(courseName + ".Points", points - 1);
-			Parkour.getParkourConfig().getCheckData().set(courseName + "." + checkpoint, null);
-
-			player.sendMessage(Utils.getTranslation("Parkour.DeleteCheckpoint")
-					.replace("%CHECKPOINT%", checkpoint)
-					.replace("%COURSE%", courseName));
-			Utils.logToFile("Checkpoint " + checkpoint + " was deleted on " + courseName + " by " + player.getName());
-			return;
-		
-		case 3:
-			return;
-			
-		case 4:
-			return;
-		}
-		
-	}
-
-	/**
-	 * This needs to be used for all commands, just trying to think of a good way to implement it.
+	 * This needs to be used for all commands, just trying to think of a good
+	 * way to implement it.
+	 * 
 	 * @param command
 	 * @param arguments
 	 * @return
 	 */
-	public final static String invalidSyntax(String command, String arguments){
+	public final static String invalidSyntax(String command, String arguments) {
 		return getTranslation("Error.Syntax").replace("%COMMAND%", command).replace("%ARGUMENTS%", arguments);
 	}
 
 	/**
 	 * Retrieve the GameMode for the integer, survival being default.
+	 * 
 	 * @param gamemode
 	 * @return
 	 */
-	public final static GameMode getGamemode(int gamemode){
+	public final static GameMode getGamemode(int gamemode) {
 		if (gamemode == 0)
 			return GameMode.SURVIVAL;
 		if (gamemode == 1)
@@ -362,74 +336,66 @@ public final class Utils {
 	}
 
 	/**
-	 * This will be executed once during start up to populate the default Parkour blocks.
-	 * The strength and duration will be configurable and stored against the appropriate blocks.
+	 * This will be executed once during start up to populate the default
+	 * Parkour blocks. The strength and duration will be configurable and stored
+	 * against the appropriate blocks.
+	 * 
 	 * @return
 	 */
 	public final static ParkourBlocks populateParkourBlocks() {
+		return populateParkourBlocks("DefaultBlocks");
+	}
+
+	public final static ParkourBlocks populateParkourBlocks(String path) {
+		if (!Parkour.getParkourConfig().getConfig().contains(path)) {
+			return null;
+		}
+
 		FileConfiguration config = Parkour.getParkourConfig().getConfig();
-
-		//TODO duration and strength
-
-		ParkourBlocks pb = new ParkourBlocks(
-				Material.getMaterial(config.getString("DefaultBlocks.Death.Material")),
-				Material.getMaterial(config.getString("DefaultBlocks.Finish.Material")),
-				Material.getMaterial(config.getString("DefaultBlocks.Climb.Material")),
-				Material.getMaterial(config.getString("DefaultBlocks.Launch.Material")),
-				Material.getMaterial(config.getString("DefaultBlocks.Speed.Material")),
-				Material.getMaterial(config.getString("DefaultBlocks.Repulse.Material")),
-				Material.getMaterial(config.getString("DefaultBlocks.NoRun.Material")),
-				Material.getMaterial(config.getString("DefaultBlocks.NoPotion.Material")),
-				Material.getMaterial(config.getString("DefaultBlocks.Bounce.Material"))
-				);
+		ParkourBlocks pb = new ParkourBlocks(Material.getMaterial(config.getString(path + ".Death.Material")), Material.getMaterial(config.getString(path + ".Finish.Material")), Material.getMaterial(config.getString(path + ".Climb.Material")), Material.getMaterial(config.getString(path + ".Launch.Material")), Material.getMaterial(config.getString(path + ".Speed.Material")),
+				Material.getMaterial(config.getString(path + ".Repulse.Material")), Material.getMaterial(config.getString("DefaultBlocks.NoRun.Material")), Material.getMaterial(config.getString("DefaultBlocks.NoPotion.Material")), Material.getMaterial(config.getString("DefaultBlocks.Bounce.Material")));
 
 		return pb;
 	}
-	/*
-	public static void saveAllPlaying(){
-		for (Entry<String, PPlayer> entry : PlayerMethods.getPlaying().entrySet()) {
-			System.out.println("Saving " + entry.getKey());
-		    Parkour.getParkourConfig().getUsersData().set(entry.getKey(), entry.getValue());
-		    Parkour.getParkourConfig().saveUsers();
-		    System.out.println("Saved");
-		}
-	}*/
 
 	/**
-	 * Used for saving the playing players
-	 * Thanks to Tomsik68 for this code.
+	 * Used for saving the playing players Thanks to Tomsik68 for this code.
+	 * 
 	 * @param obj
 	 * @param path
 	 * @throws Exception
 	 */
-	public final static void saveAllPlaying(Object obj,String path){
-		try{
+	public final static void saveAllPlaying(Object obj, String path) {
+		try {
 			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path));
 			oos.writeObject(obj);
 			oos.flush();
 			oos.close();
-		}catch (Exception ex){
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
-	public final static Object loadAllPlaying(String path) throws Exception{
+
+	public final static Object loadAllPlaying(String path) throws Exception {
 		Object result = null;
-		try{
+		try {
 			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
 			result = ois.readObject();
 			ois.close();
-		}catch (Exception ex){
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return result;
 	}
 
 	/**
-	 * Different methods for displaying titles, the fallback option is to just message the player
+	 * Different methods for displaying titles, the fallback option is to just
+	 * message the player
+	 * 
 	 * @param player
 	 * @param title
 	 */
-	public final static void sendTitle(Player player, String title){
+	public final static void sendTitle(Player player, String title) {
 		if (Static.containsQuiet(player.getName()))
 			return;
 		if (Static.getBarAPI())
@@ -437,7 +403,8 @@ public final class Utils {
 		else
 			player.sendMessage(Static.getParkourString() + title);
 	}
-	public final static void sendActionBar(Player player, String title){
+
+	public final static void sendActionBar(Player player, String title) {
 		if (Static.containsQuiet(player.getName()))
 			return;
 		if (Static.getBarAPI())
@@ -445,7 +412,8 @@ public final class Utils {
 		else
 			player.sendMessage(Static.getParkourString() + title);
 	}
-	public final static void sendFullTitle(Player player, String title, String subTitle){
+
+	public final static void sendFullTitle(Player player, String title, String subTitle) {
 		if (Static.containsQuiet(player.getName()))
 			return;
 		if (Static.getBarAPI())
@@ -453,7 +421,8 @@ public final class Utils {
 		else
 			player.sendMessage(Static.getParkourString() + title + " " + subTitle);
 	}
-	public final static void sendSubTitle(Player player, String subTitle){
+
+	public final static void sendSubTitle(Player player, String subTitle) {
 		if (Static.containsQuiet(player.getName()))
 			return;
 		if (Static.getBarAPI())
@@ -462,87 +431,91 @@ public final class Utils {
 			player.sendMessage(Static.getParkourString() + subTitle);
 	}
 
-	//TODO sort this out.
-	public final static void toggleVisibility(Player player, boolean enabled) {
-		for (Player players : Bukkit.getOnlinePlayers()) {
-			if (enabled)
-				player.hidePlayer(players);
-			else
-				player.showPlayer(players);
-		}
-		if (enabled){
-			Static.removeHidden(player.getName());
-			player.sendMessage(Utils.getTranslation("Event.HideAll2"));
-		}else{
-			Static.addHidden(player.getName());
-			player.sendMessage(Utils.getTranslation("Event.HideAll1"));
+	public final static void deleteCommand(String[] args, Player player) {
+		if (args[1].equalsIgnoreCase("course")) {
+			if (!CourseMethods.exist(args[2])) {
+				player.sendMessage(Utils.getTranslation("Error.Unknown"));
+				return;
+			}
+
+			player.sendMessage(Static.getParkourString() + "You are about to delete course " + ChatColor.AQUA + args[2] + ChatColor.WHITE + "...");
+			player.sendMessage(ChatColor.GRAY + "This will remove all information about the course ever existing, which includes all leaderboard data, course statistics and everything else the plugin knows about it.");
+			player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
+			Static.addQuestion(player.getName(), new Question(QuestionType.DELETE_COURSE, args[2].toLowerCase()));
+
+		} else if (args[1].equalsIgnoreCase("checkpoint")) {
+			if (!CourseMethods.exist(args[2])) {
+				player.sendMessage(Utils.getTranslation("Error.Unknown"));
+				return;
+			}
+
+			Course course = CourseMethods.findByName(args[2]);
+			// if it has no checkpoints
+			if ((course.getCheckpoints() - 1) <= 0) {
+				player.sendMessage(Static.getParkourString() + course.getName() + " has no checkpoints!");
+				return;
+			}
+
+			player.sendMessage(Static.getParkourString() + "You are about to delete checkpoint " + ChatColor.AQUA + (course.getCheckpoints() - 1) + ChatColor.WHITE + " for course " + ChatColor.AQUA + course.getName() + ChatColor.WHITE + "...");
+			player.sendMessage(ChatColor.GRAY + "Deleting a checkpoint will impact everybody that is currently playing on " + course.getName() + ". You should not set a course to finished and then continue to make changes.");
+			player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
+			Static.addQuestion(player.getName(), new Question(QuestionType.DELETE_CHECKPOINT, args[2].toLowerCase()));
+
+		} else if (args[1].equalsIgnoreCase("lobby")) {
+			if (!Parkour.getParkourConfig().getConfig().contains(args[2].toLowerCase() + ".World")) {
+				player.sendMessage(Static.getParkourString() + "This lobby does not exist!");
+				return;
+			}
+
+			player.sendMessage(Static.getParkourString() + "You are about to delete lobby " + ChatColor.AQUA + args[2] + ChatColor.WHITE + "...");
+			player.sendMessage(ChatColor.GRAY + "Deleting a lobby will remove all information about it from the server. If any courses are linked to this lobby, they will be broken."); // TODO
+			player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
+			Static.addQuestion(player.getName(), new Question(QuestionType.DELETE_LOBBY, args[2].toLowerCase()));
+
+		} else {
+			invalidSyntax("delete", "(course / checkpoint / lobby) (name)");
 		}
 	}
 
 	public final static void resetCommand(String[] args, Player player) {
-		if (args[1].equalsIgnoreCase("course")){
-			if (!CourseMethods.exist(args[2])){
+		if (args[1].equalsIgnoreCase("course")) {
+			if (!CourseMethods.exist(args[2])) {
 				player.sendMessage(Utils.getTranslation("Error.Unknown"));
 				return;
 			}
-			//TODO move to confirmation
-			resetCourse(args[2]);
-			player.sendMessage(Utils.getTranslation("Parkour.Reset").replace("%COURSE%", args[2]));
-			logToFile(args[2] + " was reset by " + player.getName());
 
-		} else if (args[1].equalsIgnoreCase("player")){
-			if (!Parkour.getParkourConfig().getUsersData().contains("PlayerInfo." + args[2])){
-				player.sendMessage(Static.getParkourString() + "Player does not exist.");
+			player.sendMessage(Static.getParkourString() + "You are about to reset " + ChatColor.AQUA + args[2] + ChatColor.WHITE + "...");
+			player.sendMessage(ChatColor.GRAY + "Resetting a course will delete all the statistics stored, which includes leaderboards and various parkour attributes. This will NOT affect the spawn / checkpoints.");
+			player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
+			Static.addQuestion(player.getName(), new Question(QuestionType.RESET_COURSE, args[2]));
+
+		} else if (args[1].equalsIgnoreCase("player")) {
+			if (Bukkit.getPlayer(args[2]) == null && Parkour.getParkourConfig().getUsersData().contains("PlayerInfo." + args[2])) {
+				player.sendMessage("This player does not exist.");
 				return;
 			}
-			resetPlayer(args[2]);
-			player.sendMessage(Utils.getTranslation("Parkour.Reset").replace("%COURSE%", args[2]));
-			logToFile("player " + args[2] + " was reset by " + player.getName());
+
+			player.sendMessage(Static.getParkourString() + "You are about to reset player " + ChatColor.AQUA + args[2] + ChatColor.WHITE + "...");
+			player.sendMessage(ChatColor.GRAY + "Resetting a player will delete all their times across all courses and delete all various parkour attributes.");
+			player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
+			Static.addQuestion(player.getName(), new Question(QuestionType.RESET_PLAYER, args[2]));
 
 		} else {
-			invalidSyntax("Prize", "(course / player) (courseName / playerName)");
+			invalidSyntax("reset", "(course / player) (courseName / playerName)");
 		}
 	}
 
-	/**
-	 * Resets all the statistics to 0 as if the course was just created.
-	 * None of the structure of the course changes, all checkpoints will remain untouched.
-	 * All times will deleted from the database.
-	 * @param courseName
-	 */
-	public final static void resetCourse(String courseName){
-		courseName = courseName.toLowerCase();
-		Parkour.getParkourConfig().getCourseData().set(courseName + ".Views", 0);
-		Parkour.getParkourConfig().getCourseData().set(courseName + ".Completed", 0);
-		Parkour.getParkourConfig().getCourseData().set(courseName + ".Finished", false);
-		Parkour.getParkourConfig().getCourseData().set(courseName + ".XP", 0);
-		Parkour.getParkourConfig().getCourseData().set(courseName + ".Level", 0);
-		Parkour.getParkourConfig().getCourseData().set(courseName + ".MinimumLevel", 0);
-		Parkour.getParkourConfig().getCourseData().set(courseName + ".MaxDeaths", 0);
-		Parkour.getParkourConfig().saveCourses();
-		DatabaseMethods.deleteCourseTimes(courseName);
+	public static String getStandardHeading(String headingText){
+		return "-- " + ChatColor.BLUE + ChatColor.BOLD + headingText + ChatColor.RESET + " --";
 	}
-
-	/**
-	 * Remove the player from the various config files.
-	 * Delete their times from all courses. (if they cheated all the times etc).
-	 * @param playerName
-	 */
-	public final static void resetPlayer(String playerName){
-		Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + playerName, null);
-		Parkour.getParkourConfig().saveUsers();
-		DatabaseMethods.deleteAllTimesForPlayer(playerName);
-	}
-
 	
-	public final static void createParkourBlocks(String[] args, Player player) {
-		//TODO finish this.
-		if (Parkour.getParkourConfig().getUpgData().contains("ParkourBlocks." + args[1])){
-			player.sendMessage(Static.getParkourString() + "This ParkourBlocks already exists!");
-			return;
-		}
-
-		player.sendMessage(colour("Creating &b" + args[1] + "&f ParkourBlocks..."));
-		Static.addCreatePB(player.getName());
+	
+	/**
+	 * Initiate a conversation using the provided API. 
+	 * @param player
+	 * @param type
+	 */
+	public static void startConversation(Player player, ConversationType type) {
+		new Conversation(player, type);
 	}
 }

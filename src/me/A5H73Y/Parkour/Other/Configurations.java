@@ -94,6 +94,17 @@ public class Configurations {
 				Utils.log("Failed!");
 			}
 		}
+		
+		// upgrades
+		if (!upgFile.exists()) {
+			try {
+				upgFile.createNewFile();
+				Utils.log("Created upgrades.yml");
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				Utils.log("Failed!");
+			}
+		}
 
 		try{
 			courseData.load(courseFile);
@@ -101,6 +112,7 @@ public class Configurations {
 			usersData.load(usersFile);
 			invData.load(invFile);
 			checkData.load(checkFile);
+			upgData.load(upgFile);
 		} catch (Exception ex){
 			Utils.log("Failed loading config: " + ex.getMessage());
 			ex.printStackTrace();
@@ -129,6 +141,7 @@ public class Configurations {
 		usersData = YamlConfiguration.loadConfiguration(usersFile);
 		invData = YamlConfiguration.loadConfiguration(invFile);
 		checkData = YamlConfiguration.loadConfiguration(checkFile);
+		upgData = YamlConfiguration.loadConfiguration(upgFile);
 	}
 
 	public FileConfiguration getCheckData() {
@@ -275,6 +288,7 @@ public class Configurations {
 			stringData.addDefault("Parkour.Lobby", "You have joined the lobby");
 			stringData.addDefault("Parkour.LobbyOther", "You have joined the &b%LOBBY% &flobby");
 			stringData.addDefault("Parkour.Continue", "Continuing Parkour on &b%COURSE%");
+			stringData.addDefault("Parkour.TimeReset", "&fYour time has been restarted!");
 			stringData.addDefault("Parkour.Teleport", "You have teleported to &b%COURSE%");
 			stringData.addDefault("Parkour.Invite.Send", "Invitation to &b%COURSE% &fsent to &b%TARGET%");
 			stringData.addDefault("Parkour.Invite.Recieve1", "&b%PLAYER% &fhas invited you to &b%COURSE%");
@@ -282,7 +296,7 @@ public class Configurations {
 			stringData.addDefault("Parkour.MaxDeaths", "Sorry, you reached the maximum amount of deaths: &b%AMOUNT%");
 			stringData.addDefault("Parkour.Die1", "You died! Going back to the start!");
 			stringData.addDefault("Parkour.Die2", "You died! Going back to checkpoint &b%POINT%");
-			stringData.addDefault("Parkour.LifeCount", "&b%AMOUNT% lives remaining!");
+			stringData.addDefault("Parkour.LifeCount", "&b%AMOUNT% &flives remaining!");
 			stringData.addDefault("Parkour.Playing", " &b%PLAYER% &f- &8C: &7%COURSE% &8D: &7%DEATHS% &8T: &7%TIME%");
 			
 			stringData.addDefault("Error.NotOnCourse", "You are not on this course!");
@@ -295,6 +309,7 @@ public class Configurations {
 			stringData.addDefault("Error.Sign", "Non-Parkour signs have been disabled!");
 			stringData.addDefault("Error.Selected", "You have not selected a course!");
 			stringData.addDefault("Error.WrongWorld", "You are in the wrong world!");
+			stringData.addDefault("Error.WorldTeleport", "Teleporting to a different world has been cancelled");
 			stringData.addDefault("Error.Something", "Something went wrong: &4%ERROR%");
 			stringData.addDefault("Error.RequiredLvl", "You require level &b%LEVEL% &fto join!");
 			stringData.addDefault("Error.Finished1", "This course is not ready for you to play yet!");
@@ -304,8 +319,8 @@ public class Configurations {
 			stringData.addDefault("Error.UnknownSignCommand", "Unknown sign command!");
 			stringData.addDefault("Error.UnknownCommand", "Unknown command!");
 			
-			stringData.addDefault("Help.Command", " /pa help &9%COMMAND% &8: &7To learn more about this command.");
-			stringData.addDefault("Help.Commands", "&3/pa &bcmds [1-3] &8: &fTo display all available commands.");
+			stringData.addDefault("Help.Command", "&7/pa help &9%COMMAND% &0: &7To learn more about this command.");
+			stringData.addDefault("Help.Commands", "&3/pa &bcmds &8: &fTo display the Parkour commands menu.");
 			
 			stringData.addDefault("Other.Item_Suicide", "&7SHIFT + &6Right click to commit suicide");
 			stringData.addDefault("Other.Item_HideAll", "&7SHIFT + &6Right click to toggle visibility");
@@ -353,7 +368,7 @@ public class Configurations {
 		config.options().header("==== Parkour Config ==== #");
 
 		config.addDefault("DefaultBlocks.Enabled", true);
-		config.addDefault("DefaultBlocks.Death.Material", "STONEBRICK");
+		config.addDefault("DefaultBlocks.Death.Material", "SMOOTH_BRICK");
 		config.addDefault("DefaultBlocks.Finish.Material", "HUGE_MUSHROOM_2");
 		config.addDefault("DefaultBlocks.Climb.Material", "BRICK");
 		config.addDefault("DefaultBlocks.Climb.Strength", 0.4);
@@ -371,7 +386,7 @@ public class Configurations {
 
 		config.addDefault("OnJoin.SetGamemode", 0);
 		config.addDefault("OnJoin.DisplayFly", true);
-		config.addDefault("OnJoin.EnforceWorld", true);
+		config.addDefault("OnJoin.EnforceWorld", false);
 		config.addDefault("OnJoin.EnforceFinished", true);
 		config.addDefault("OnJoin.AllowViaCommand", true);
 		config.addDefault("OnJoin.Item.Suicide.Material", "ARROW");
@@ -388,6 +403,7 @@ public class Configurations {
 		config.addDefault("OnCourse.DisableItemDrop", false); 
 		config.addDefault("OnCourse.LiveLeaderboard.Enabled", true);
 		config.addDefault("OnCourse.LiveLeaderboard.Type", 1);
+		config.addDefault("OnCourse.PreventPlateStick", true);
 
 		config.addDefault("OnFinish.EnforceCompletion", true);
 		config.addDefault("OnFinish.TeleportToLobby", true);
@@ -401,7 +417,8 @@ public class Configurations {
 		config.addDefault("OnDie.SetXPBarToDeathCount", false);
 		config.addDefault("OnDie.ResetTimeWithNoCheckpoint", false);
 
-		config.addDefault("OnLeave.ResetPlayer", false);
+		config.addDefault("OnLeaveServer.LeaveCourse", false);
+		config.addDefault("OnLeaveServer.TeleportToLastCheckpoint", true);
 
 		config.addDefault("ParkourModes.CodJumper.Enabled", false);
 		config.addDefault("ParkourModes.CodJumper.ConfirmSet", true);
@@ -426,7 +443,6 @@ public class Configurations {
 		config.addDefault("Other.Display.LevelReward", true);
 		config.addDefault("Other.Display.TitleOnJoin", true);
 
-
 		config.addDefault("MySQL.Use", false);
 		config.addDefault("MySQL.Host", "Host");
 		config.addDefault("MySQL.Port", 3306);
@@ -436,7 +452,7 @@ public class Configurations {
 		config.addDefault("MySQL.Table", "Table");
 
 		config.addDefault("=== Do NOT Edit anything below here ===", null);
-		config.addDefault("Version", 0);
+		config.addDefault("Version", Double.parseDouble(Parkour.getPlugin().getDescription().getVersion()));
 
 		config.addDefault("Lobby.Set", false);
 		config.options().copyDefaults(true);

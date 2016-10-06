@@ -19,23 +19,23 @@ public class DatabaseMethods extends Database{
 			String tableScript =
 					"CREATE TABLE IF NOT EXISTS course ( " +
 
-							"id		INTEGER	NOT NULL PRIMARY KEY AUTO_INCREMENT, " +
-							"name 	VARCHAR(15) NOT NULL UNIQUE, " +
+							"courseId	INTEGER PRIMARY KEY, " +
+							"name 		VARCHAR(15) NOT NULL UNIQUE, " +
 							"author 	VARCHAR(20) NOT NULL, " +
-							"created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL " +
+							"created 	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL " +
 							"); " +
 
 
 					"CREATE TABLE IF NOT EXISTS time ( " +
 
-							"id 			INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, " +
+							"timeId 	INTEGER PRIMARY KEY, " +
 							"courseId 	INTEGER NOT NULL, " +
 							"player	 	VARCHAR(20) NOT NULL, " +
 							"time		DECIMAL(13,0) NOT NULL, " +
 							"deaths		INT(5) NOT NULL, " +
 
 							"FOREIGN KEY (courseId)  " +
-							"REFERENCES course(id) " +
+							"REFERENCES course(courseId) " +
 							"ON DELETE CASCADE ON UPDATE CASCADE  " +
 							"); " +
 
@@ -48,7 +48,7 @@ public class DatabaseMethods extends Database{
 							"PRIMARY KEY (courseId, player), " +
 
 							"FOREIGN KEY (courseId) " +
-							"REFERENCES course(id) " +
+							"REFERENCES course(courseId) " +
 							"ON DELETE CASCADE ON UPDATE CASCADE " +
 							"); " +
 
@@ -88,11 +88,11 @@ public class DatabaseMethods extends Database{
 	 * @throws SQLException
 	 */
 	public static int getCourseId(String courseName) throws SQLException {
-		PreparedStatement ps = Parkour.getDatabaseObj().getConnection().prepareStatement("SELECT id FROM course WHERE name = ?;");
+		PreparedStatement ps = Parkour.getDatabaseObj().getConnection().prepareStatement("SELECT courseId FROM course WHERE name = ?;");
 		ps.setString(1, courseName);
-		
+
 		ResultSet rs = ps.executeQuery();
-		return rs != null ? rs.getInt("id") : 0;
+		return rs != null ? rs.getInt("courseId") : 0;
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class DatabaseMethods extends Database{
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Insert a time into the database for the players course Progress.
 	 * There are no unique constraints on the times table, so the user is able to have many times for many courses
@@ -272,7 +272,7 @@ public class DatabaseMethods extends Database{
 				return times;
 
 			PreparedStatement ps = Parkour.getDatabaseObj().getConnection()
-					.prepareStatement("SELECT player, time, deaths FROM time WHERE courseId=? LIMIT ?;");
+					.prepareStatement("SELECT player, time, deaths FROM time WHERE courseId=? ORDER BY time LIMIT ?;");
 			ps.setInt(1, courseId);
 			ps.setInt(2, limit);
 
@@ -296,7 +296,7 @@ public class DatabaseMethods extends Database{
 				return times;
 
 			PreparedStatement ps = Parkour.getDatabaseObj().getConnection()
-					.prepareStatement("SELECT player, time, deaths FROM time WHERE courseId=? AND player=? LIMIT ?;");
+					.prepareStatement("SELECT player, time, deaths FROM time WHERE courseId=? AND player=? ORDER BY time LIMIT ?;");
 			ps.setInt(1, courseId);
 			ps.setString(2, playerName);
 			ps.setInt(3, limit);
@@ -307,5 +307,27 @@ public class DatabaseMethods extends Database{
 			e.printStackTrace();
 		}
 		return times;
+	}
+	
+	public static boolean hasPlayerCompleted(String playerName, String courseName) {
+		boolean completed = true;
+		try {
+			int courseId = getCourseId(courseName);
+			if (courseId == 0)
+				return completed;
+
+			PreparedStatement ps = Parkour.getDatabaseObj().getConnection()
+					.prepareStatement("SELECT 1 FROM time WHERE courseId=? AND player=? LIMIT 1;");
+			ps.setInt(1, courseId);
+			ps.setString(2, playerName);
+			ResultSet rs = ps.executeQuery();
+			if (!rs.next()){
+				completed = false;
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return completed;
 	}
 }

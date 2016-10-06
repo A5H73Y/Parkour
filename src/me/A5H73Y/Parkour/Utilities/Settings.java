@@ -25,7 +25,7 @@ public class Settings {
 		commandPermission = config.getBoolean("Other.CommandPermissions");
 		chatPrefix = config.getBoolean("Other.Parkour.ChatRankPrefix");
 		disablePlayerDamage = config.getBoolean("OnCourse.DisablePlayerDamage");
-		resetOnLeave = config.getBoolean("OnLeave.ResetPlayer");
+		resetOnLeave = config.getBoolean("OnLeaveServer.LeaveCourse");
 		enforceWorld = config.getBoolean("OnJoin.EnforceWorld");
 		disableCommands = config.getBoolean("OnCourse.EnforceParkourCommands.Enabled");
 		allowTrails = config.getBoolean("OnCourse.AllowTrails");

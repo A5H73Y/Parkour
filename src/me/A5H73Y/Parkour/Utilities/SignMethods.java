@@ -53,7 +53,7 @@ public class SignMethods {
 			sign.setLine(1, sign.getLine(1).toString() + " (C)");
 		}
 
-		if (Parkour.getParkourConfig().getCourseData().contains(sign.getLine(2).toString() + ".MinimumLevel"))
+		if (Parkour.getParkourConfig().getCourseData().contains(sign.getLine(2).toLowerCase() + ".MinimumLevel"))
 			sign.setLine(3, ChatColor.RED + "" + Parkour.getParkourConfig().getCourseData().get(sign.getLine(2).toString() + ".MinimumLevel"));
 
 		player.sendMessage(Static.getParkourString() + "Join for " + ChatColor.AQUA + sign.getLine(2).toString() + ChatColor.WHITE + " created!");

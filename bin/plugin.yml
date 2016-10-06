@@ -4,7 +4,7 @@ description: The original and most powerful Parkour plugin available
 softdepend: [Vault, TitleActionbarAPI]
 author: A5H73Y
 main: me.A5H73Y.Parkour.Parkour
-database: true
+website: http://www.mcparkour.co.uk/
 commands:
   parkour:
     aliases: [pa, pkr]

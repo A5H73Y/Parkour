@@ -1,7 +1,6 @@
 package me.A5H73Y.Parkour;
 
 import me.A5H73Y.Parkour.Course.CourseMethods;
-import me.A5H73Y.Parkour.Other.StoreGUI;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.SignMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
@@ -41,10 +40,7 @@ public class ParkourSignListener implements Listener {
 			} else if (event.getLine(1).equalsIgnoreCase("lobby") || event.getLine(1).equalsIgnoreCase("l")) {
 				sm.joinLobby(event, player);
 
-			} else if (event.getLine(1).equalsIgnoreCase("store") || event.getLine(1).equalsIgnoreCase("s")) {
-				sm.createStandardSign(event, player, "Store");
-
-			} else if (event.getLine(1).equalsIgnoreCase("leave")) {
+			} else if (event.getLine(1).equalsIgnoreCase("leave") || event.getLine(1).equalsIgnoreCase("le")) {
 				sm.createStandardSign(event, player, "Leave");
 
 			} else if (event.getLine(1).equalsIgnoreCase("joinall") || event.getLine(1).equalsIgnoreCase("ja")) {
@@ -56,9 +52,6 @@ public class ParkourSignListener implements Listener {
 			} else if (event.getLine(1).equalsIgnoreCase("stats") || event.getLine(1).equalsIgnoreCase("s")) {
 				sm.createStandardCourseSign(event, player, "Stats");
 				
-			} else if (event.getLine(1).equalsIgnoreCase("store")) {
-				sm.createStandardCourseSign(event, player, "Store");
-			
 			} else {
 				player.sendMessage(Utils.getTranslation("Error.UnknownSignCommand"));
 				event.setLine(1, ChatColor.RED + "Unknown cmd");
@@ -70,8 +63,11 @@ public class ParkourSignListener implements Listener {
 
 	@EventHandler 
 	public void onSignBreak(PlayerInteractEvent event) {
-		if (event.getAction() != Action.LEFT_CLICK_BLOCK) return;
-		if ((event.getClickedBlock().getType() != Material.SIGN) && (event.getClickedBlock().getType() != Material.SIGN_POST) && (event.getClickedBlock().getType() != Material.WALL_SIGN)) return;
+		if (event.getAction() != Action.LEFT_CLICK_BLOCK) 
+			return;
+		
+		if ((event.getClickedBlock().getType() != Material.SIGN) && (event.getClickedBlock().getType() != Material.SIGN_POST) && (event.getClickedBlock().getType() != Material.WALL_SIGN)) 
+			return;
 
 		if (!Parkour.getParkourConfig().getConfig().getBoolean("Other.Parkour.SignProtection"))
 			return;
@@ -93,8 +89,11 @@ public class ParkourSignListener implements Listener {
 
 	@EventHandler
 	public void onSignInteract(PlayerInteractEvent event) {
-		if (event.getAction() != Action.RIGHT_CLICK_BLOCK)  return;
-		if ((event.getClickedBlock().getType() != Material.SIGN) && (event.getClickedBlock().getType() != Material.SIGN_POST) && (event.getClickedBlock().getType() != Material.WALL_SIGN)) return;
+		if (event.getAction() != Action.RIGHT_CLICK_BLOCK)  
+			return;
+		
+		if ((event.getClickedBlock().getType() != Material.SIGN) && (event.getClickedBlock().getType() != Material.SIGN_POST) && (event.getClickedBlock().getType() != Material.WALL_SIGN)) 
+			return;
 
 		Sign sign = (Sign) event.getClickedBlock().getState();
 		String[] lines = sign.getLines();
@@ -132,7 +131,7 @@ public class ParkourSignListener implements Listener {
 				return;
 			}
 				
-			event.getPlayer().sendMessage("");
+			event.getPlayer().sendMessage("Coming soon.");
 			//TODO Not sure what to do for this :/
 
 		} else if (lines[1].equalsIgnoreCase("leave")) {
@@ -145,7 +144,7 @@ public class ParkourSignListener implements Listener {
 			} else if (!PlayerMethods.isPlaying(event.getPlayer().getName())){
 				event.getPlayer().sendMessage(Utils.getTranslation("Error.NotOnCourse"));
 
-			} else if (!PlayerMethods.getPlayerInfo(event.getPlayer().getName()).getCourse().getName().equals(lines[2])) {
+			} else if (!PlayerMethods.getPlayerInfo(event.getPlayer().getName()).getCourse().getName().equals(lines[2].toLowerCase())) {
 				event.getPlayer().sendMessage(Utils.getTranslation("Error.NotOnCourse"));
 
 			} else {
@@ -155,9 +154,6 @@ public class ParkourSignListener implements Listener {
 		} else if (lines[1].equalsIgnoreCase("effect")) {
 			applyEffect(lines, event.getPlayer());
 			
-		} else if (lines[1].equalsIgnoreCase("store")) {
-			StoreGUI.openInventory(event.getPlayer());
-
 		} else {
 			event.getPlayer().sendMessage(Utils.getTranslation("Error.UnknownSignCommand"));
 		}

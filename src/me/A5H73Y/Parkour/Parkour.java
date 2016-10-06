@@ -22,9 +22,10 @@ public class Parkour extends JavaPlugin {
 
 	public void onEnable() {
 		plugin = this;
+		StartPlugin.isFreshInstall();
 		config = new Configurations();
 		StartPlugin.run();
-		
+
 		settings = new Settings();
 		getServer().getPluginManager().registerEvents(new ParkourListener(), this);
 		getServer().getPluginManager().registerEvents(new ParkourSignListener(), this);
@@ -38,20 +39,20 @@ public class Parkour extends JavaPlugin {
 		Utils.log("Disabled Parkour v" + Static.getVersion());
 	}
 
-	public static void setDatabaseObj(Database databaseObj){
+	public static void setDatabaseObj(Database databaseObj) {
 		database = databaseObj;
 	}
 
-	public static void setEconomy(Economy newEconomy){
+	public static void setEconomy(Economy newEconomy) {
 		economy = newEconomy;
 	}
-	
-	public static void setSettings(Settings newSettings){
+
+	public static void setSettings(Settings newSettings) {
 		settings = newSettings;
 	}
 
-	//Getters
-	public static Database getDatabaseObj(){
+	// Getters
+	public static Database getDatabaseObj() {
 		return database;
 	}
 
@@ -59,15 +60,15 @@ public class Parkour extends JavaPlugin {
 		return plugin;
 	}
 
-	public static Configurations getParkourConfig(){
+	public static Configurations getParkourConfig() {
 		return config;
 	}
 
-	public static Economy getEconomy(){
+	public static Economy getEconomy() {
 		return economy;
 	}
-	
-	public static Settings getSettings(){
+
+	public static Settings getSettings() {
 		return settings;
 	}
 }

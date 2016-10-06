@@ -1,48 +1,57 @@
 package me.A5H73Y.Parkour.Course;
 
 import java.io.Serializable;
-import java.util.List;
 
 import me.A5H73Y.Parkour.Other.ParkourBlocks;
 import me.A5H73Y.Parkour.Utilities.Static;
 
-public class Course implements Serializable{	
-	
+public class Course implements Serializable {
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private String name;
-	private List<Checkpoint> checkpoints;
+	private Checkpoint checkpoint;
 	private Integer maxDeaths;
 	private ParkourBlocks parkourBlocks;
-	
-	public Course(String name, List<Checkpoint> checkpoints) {
+	private int checkpoints;
+
+	public Course(String name, Checkpoint checkpoint) {
 		this.name = name;
-		this.checkpoints = checkpoints;
+		this.checkpoint = checkpoint;
 		this.parkourBlocks = Static.getParkourBlocks();
+		this.checkpoints = CheckpointMethods.getNumberOfCheckpoints(name);
 	}
 
 	public String getName() {
 		return name;
 	}
-	
-	public List<Checkpoint> getCheckpoints() {
-		return checkpoints;
+
+	public Checkpoint getCheckpoint() {
+		return checkpoint;
 	}
-	
-	public void setMaxDeaths(Integer maxDeaths){
+
+	public void setMaxDeaths(Integer maxDeaths) {
 		this.maxDeaths = maxDeaths;
 	}
-	
-	public Integer getMaxDeaths(){
+
+	public Integer getMaxDeaths() {
 		return maxDeaths;
 	}
-	
-	public ParkourBlocks getParkourBlocks(){
+
+	public ParkourBlocks getParkourBlocks() {
 		return parkourBlocks;
 	}
-	
-	public void setParkourBlocks(ParkourBlocks parkourBlocks){
+
+	public void setParkourBlocks(ParkourBlocks parkourBlocks) {
 		this.parkourBlocks = parkourBlocks;
+	}
+	
+	public int getCheckpoints(){
+		return checkpoints;
+	}
+
+	public void setCheckpoint(Checkpoint checkpoint){
+		this.checkpoint = checkpoint;
 	}
 	
 }
