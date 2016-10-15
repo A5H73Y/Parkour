@@ -1,7 +1,5 @@
 package me.A5H73Y.Parkour;
 
-import java.sql.SQLException;
-
 import me.A5H73Y.Parkour.Conversation.Conversation.ConversationType;
 import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.CourseMethods;
@@ -106,6 +104,9 @@ public class ParkourCommands implements CommandExecutor {
 
 					} else if (args[0].equalsIgnoreCase("prize")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin", "Prize"))
+							return false;
+						
+						if (!Utils.validateArgs(player, args, 2))
 							return false;
 
 						CourseMethods.setPrize(args, player);
@@ -277,6 +278,12 @@ public class ParkourCommands implements CommandExecutor {
 							return false;
 						
 						Utils.startConversation(player, ConversationType.PARKOURBLOCKS);
+						
+					} else if (args[0].equalsIgnoreCase("challenge")){
+						if (!Utils.validateArgs(player, args, 2))
+							return false;
+						
+						CourseMethods.challengePlayer(args, player);
 
 					} else if (args[0].equalsIgnoreCase("list")) {
 						CourseMethods.displayList(args, player);
@@ -324,18 +331,13 @@ public class ParkourCommands implements CommandExecutor {
 
 					} else if (args[0].equalsIgnoreCase("cmds")) {
 						Help.processCommandsInput(args, player);
+						
+					} else if (args[0].equalsIgnoreCase("accept")) {
+						PlayerMethods.acceptChallenge(player);
 
 					} else if (args[0].equalsIgnoreCase("yes") || args[0].equalsIgnoreCase("no")) {
 						player.sendMessage(Static.getParkourString() + "You have not been asked a question!");
 
-					} else if (args[0].equalsIgnoreCase("fix")){
-						try {
-							Parkour.getDatabaseObj().closeConnection();
-						} catch (SQLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						
 					} else if (args[0].equalsIgnoreCase("reload")){
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
 							return false;

@@ -7,6 +7,7 @@ import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.Checkpoint;
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Course.CourseMethods;
+import me.A5H73Y.Parkour.Other.Challenge;
 import me.A5H73Y.Parkour.Other.ParkourBlocks;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
@@ -25,7 +26,7 @@ import org.bukkit.potion.PotionEffect;
 
 public class PlayerMethods {
 
-	private static HashMap<String, PPlayer> playing = new HashMap<String, PPlayer>();
+	private static HashMap<String, ParkourSession> parkourPlayers = new HashMap<String, ParkourSession>();
 
 	/**
 	 * This method is only called from the CourseMethods after course
@@ -42,10 +43,10 @@ public class PlayerMethods {
 
 		if (getPlayerInfo(player.getName()) == null) {
 			Utils.sendTitle(player, Utils.getTranslation("Parkour.Join", false).replace("%COURSE%", course.getName()));
-			addPlayer(player.getName(), new PPlayer(course));
+			addPlayer(player.getName(), new ParkourSession(course));
 		} else {
 			removePlayer(player.getName());
-			addPlayer(player.getName(), new PPlayer(course));
+			addPlayer(player.getName(), new ParkourSession(course));
 			if (!Static.containsQuiet(player.getName()))
 				player.sendMessage(Utils.getTranslation("Parkour.TimeReset"));
 		}
@@ -58,14 +59,13 @@ public class PlayerMethods {
 	 * @param player
 	 */
 	public static void playerLeave(Player player) {
-		// TODO Add admin forcing other players to leave
 		if (!isPlaying(player.getName())) {
 			player.sendMessage(Static.getParkourString() + "You aren't on a course.");
 			return;
 		}
 
-		PPlayer pplayer = getPlayerInfo(player.getName());
-		Utils.sendSubTitle(player, Utils.getTranslation("Parkour.Leave", false).replace("%COURSE%", pplayer.getCourse().getName()));
+		ParkourSession session = getPlayerInfo(player.getName());
+		Utils.sendSubTitle(player, Utils.getTranslation("Parkour.Leave", false).replace("%COURSE%", session.getCourse().getName()));
 
 		removePlayer(player.getName());
 		preparePlayer(player, Parkour.getParkourConfig().getConfig().getInt("Other.onFinish.Gamemode"));
@@ -83,25 +83,25 @@ public class PlayerMethods {
 		if (!isPlaying(player.getName()))
 			return;
 
-		PPlayer pplayer = getPlayerInfo(player.getName());
-		pplayer.increaseDeath();
+		ParkourSession session = getPlayerInfo(player.getName());
+		session.increaseDeath();
 
-		if (pplayer.getCourse().getMaxDeaths() != null) {
-			if (pplayer.getCourse().getMaxDeaths() > pplayer.getDeaths()) {
-				Utils.sendActionBar(player, Utils.getTranslation("Parkour.LifeCount", false).replace("%AMOUNT%", String.valueOf(pplayer.getCourse().getMaxDeaths() - pplayer.getDeaths())));
+		if (session.getCourse().getMaxDeaths() != null) {
+			if (session.getCourse().getMaxDeaths() > session.getDeaths()) {
+				Utils.sendActionBar(player, Utils.getTranslation("Parkour.LifeCount", false).replace("%AMOUNT%", String.valueOf(session.getCourse().getMaxDeaths() - session.getDeaths())));
 			} else {
-				player.sendMessage(Utils.getTranslation("Parkour.MaxDeaths").replace("%AMOUNT%", pplayer.getCourse().getMaxDeaths().toString()));
+				player.sendMessage(Utils.getTranslation("Parkour.MaxDeaths").replace("%AMOUNT%", session.getCourse().getMaxDeaths().toString()));
 				playerLeave(player);
 				return;
 			}
 		}
 
-		player.teleport(pplayer.getCourse().getCheckpoint().getLocation());
+		player.teleport(session.getCourse().getCheckpoint().getLocation());
 
 		// if it's the first checkpoint
-		if (pplayer.getCheckpoint() == 0) {
+		if (session.getCheckpoint() == 0) {
 			if (Parkour.getParkourConfig().getConfig().getBoolean("OnDie.ResetTimeWithNoCheckpoint")) {
-				pplayer.resetTimeStarted();
+				session.resetTimeStarted();
 				if (!Static.containsQuiet(player.getName()))
 					player.sendMessage(Utils.getTranslation("Parkour.Die1") + Utils.getTranslation("Parkour.TimeReset", false));
 			} else {
@@ -110,16 +110,16 @@ public class PlayerMethods {
 			}
 		} else {
 			if (!Static.containsQuiet(player.getName()))
-				player.sendMessage(Utils.getTranslation("Parkour.Die2").replace("%POINT%", String.valueOf(pplayer.getCheckpoint())));
+				player.sendMessage(Utils.getTranslation("Parkour.Die2").replace("%POINT%", String.valueOf(session.getCheckpoint())));
 		}
 
 		if (Parkour.getParkourConfig().getConfig().getBoolean("Other.onDie.SetAsXPBar"))
-			player.setLevel(pplayer.getDeaths());
+			player.setLevel(session.getDeaths());
 
 		if (Parkour.getParkourConfig().getConfig().getBoolean("Other.Use.Sounds")) // TODO
-																					// Experiment
-																					// with
-																					// sounds
+			// Experiment
+			// with
+			// sounds
 			player.playSound(player.getLocation(), Sound.ENCHANT_THORNS_HIT, 1L, 1L);
 
 		preparePlayer(player, 0);
@@ -138,12 +138,12 @@ public class PlayerMethods {
 		if (isPlayerInTestmode(player.getName()))
 			return;
 
-		PPlayer pplayer = getPlayerInfo(player.getName());
-		String courseName = pplayer.getCourse().getName();
+		ParkourSession session = getPlayerInfo(player.getName());
+		String courseName = session.getCourse().getName();
 
-		if (Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.EnforceCompletion") && pplayer.getCheckpoint() != (pplayer.getCourse().getCheckpoints())) {
+		if (Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.EnforceCompletion") && session.getCheckpoint() != (session.getCourse().getCheckpoints())) {
 			player.sendMessage(Static.getParkourString() + "Please do not cheat.");
-			player.sendMessage(ChatColor.BOLD + "You must achieve all " + pplayer.getCourse().getCheckpoints() + " checkpoints!");
+			player.sendMessage(ChatColor.BOLD + "You must achieve all " + session.getCourse().getCheckpoints() + " checkpoints!");
 			playerDie(player);
 			return;
 		}
@@ -155,11 +155,11 @@ public class PlayerMethods {
 			toggleVisibility(player, true);
 
 		givePrize(player, courseName);
-		displayFinishMessage(player, pplayer);
+		displayFinishMessage(player, session);
 		CourseMethods.increaseComplete(courseName);
 		removePlayer(player.getName());
 
-		DatabaseMethods.insertTime(courseName, player.getName(), pplayer.getTime(), pplayer.getDeaths());
+		DatabaseMethods.insertTime(courseName, player.getName(), session.getTime(), session.getDeaths());
 
 		if (Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.TeleportToLobby")) {
 			if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".LinkedCourse")) {
@@ -189,8 +189,8 @@ public class PlayerMethods {
 		// i.e player can not be playing when joining lobby
 	}
 
-	private static void displayFinishMessage(Player player, PPlayer pplayer) {
-		String finishBroadcast = Static.getParkourString() + Utils.colour(Parkour.getParkourConfig().getStringData().getString("Parkour.FinishBroadcast").replace("%PLAYER%", player.getName()).replace("%COURSE%", pplayer.getCourse().getName()).replace("%DEATHS%", String.valueOf(pplayer.getDeaths())).replace("%TIME%", pplayer.displayTime()));
+	private static void displayFinishMessage(Player player, ParkourSession session) {
+		String finishBroadcast = Static.getParkourString() + Utils.colour(Parkour.getParkourConfig().getStringData().getString("Parkour.FinishBroadcast").replace("%PLAYER%", player.getName()).replace("%COURSE%", session.getCourse().getName()).replace("%DEATHS%", String.valueOf(session.getDeaths())).replace("%TIME%", session.displayTime()));
 
 		switch (Parkour.getParkourConfig().getConfig().getInt("OnFinish.BroadcastLevel")) {
 		case 3:
@@ -282,10 +282,10 @@ public class PlayerMethods {
 		if (parkoins > 0)
 			PlayerMethods.rewardParkoins(player, parkoins);
 
+		giveEconomyPrize(player, courseName);
+		
 		player.updateInventory();
 		Parkour.getParkourConfig().saveUsers();
-
-		giveEconomyPrize(player, courseName);
 	}
 
 	public static void rewardParkoins(Player player, int parkoins) {
@@ -309,45 +309,45 @@ public class PlayerMethods {
 		if (!Static.getEconomy())
 			return;
 
-		int reward = Parkour.getParkourConfig().getEconData().getInt("Price." + courseName + "Reward");
+		int reward = Parkour.getParkourConfig().getEconData().getInt("Price." + courseName + ".Finish");
 
 		if (reward > 0) {
 			Parkour.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()), reward);
-			player.sendMessage(Utils.getTranslation("Economy.Reward"));
+			player.sendMessage(Utils.getTranslation("Economy.Reward").replace("%AMOUNT%", reward + " " + Parkour.getEconomy().currencyNamePlural()).replace("%COURSE%", courseName));
 		}
 	}
 
 	/**
 	 * The following methods are used throughout the plugin. Please see the
-	 * PPlayer object for more information. Will return null if player isn't
+	 * ParkourSession object for more information. Will return null if player isn't
 	 * playing.
 	 * 
 	 * @param playerName
 	 * @return
 	 */
-	public static PPlayer getPlayerInfo(String playerName) {
+	public static ParkourSession getPlayerInfo(String playerName) {
 		if (isPlaying(playerName))
-			return playing.get(playerName);
+			return parkourPlayers.get(playerName);
 
 		return null;
 	}
 
 	public static boolean isPlaying(String playerName) {
-		return playing.get(playerName) != null;
+		return parkourPlayers.get(playerName) != null;
 	}
 
-	public static HashMap<String, PPlayer> getPlaying() {
-		return playing;
+	public static HashMap<String, ParkourSession> getPlaying() {
+		return parkourPlayers;
 	}
 
-	public static void setPlaying(HashMap<String, PPlayer> pplayers) {
-		playing = pplayers;
+	public static void setPlaying(HashMap<String, ParkourSession> players) {
+		parkourPlayers = players;
 	}
 
 	/**
 	 * This is new as of 4.0. Thanks to the new system we can easily see what
 	 * the player (or another player) is doing with the plugin. We lookup their
-	 * PPlayer object and interrogate it. We also check their offline stats from
+	 * ParkourSession object and interrogate it. We also check their offline stats from
 	 * the config. (Their level etc.)
 	 * 
 	 * @param args
@@ -356,20 +356,20 @@ public class PlayerMethods {
 	public static void displayPlayerInfo(String[] args, Player player) {
 		String playerName = args.length <= 1 ? player.getName() : args[1];
 
-		PPlayer pplayer = PlayerMethods.getPlayerInfo(playerName);
+		ParkourSession session = PlayerMethods.getPlayerInfo(playerName);
 
-		if (pplayer == null && !Parkour.getParkourConfig().getUsersData().contains("PlayerInfo." + playerName)) {
+		if (session == null && !Parkour.getParkourConfig().getUsersData().contains("PlayerInfo." + playerName)) {
 			player.sendMessage(Static.getParkourString() + "Player has never played Parkour. What is wrong with them?!");
 			return;
 		}
 
 		player.sendMessage(Utils.getStandardHeading(playerName + "'s information"));
-		
-		if (pplayer != null) {
-			player.sendMessage("Course: " + ChatColor.AQUA + pplayer.getCourse().getName());
-			player.sendMessage("Deaths: " + ChatColor.AQUA + pplayer.getDeaths());
-			player.sendMessage("Time: " + ChatColor.AQUA + pplayer.displayTime());
-			player.sendMessage("Checkpoint: " + ChatColor.AQUA + pplayer.getCheckpoint());
+
+		if (session != null) {
+			player.sendMessage("Course: " + ChatColor.AQUA + session.getCourse().getName());
+			player.sendMessage("Deaths: " + ChatColor.AQUA + session.getDeaths());
+			player.sendMessage("Time: " + ChatColor.AQUA + session.displayTime());
+			player.sendMessage("Checkpoint: " + ChatColor.AQUA + session.getCheckpoint());
 		}
 
 		if (Parkour.getParkourConfig().getUsersData().contains("PlayerInfo." + playerName)) {
@@ -392,12 +392,12 @@ public class PlayerMethods {
 	 * @param playerName
 	 * @param player
 	 */
-	private static void addPlayer(String playerName, PPlayer player) {
-		playing.put(playerName, player);
+	private static void addPlayer(String playerName, ParkourSession player) {
+		parkourPlayers.put(playerName, player);
 	}
 
 	private static void removePlayer(String player) {
-		playing.remove(player);
+		parkourPlayers.remove(player);
 	}
 
 	/**
@@ -409,9 +409,9 @@ public class PlayerMethods {
 	public static String getSelected(String playerName) {
 		return Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + playerName + ".Selected");
 	}
-	
+
 	public static void setSelected(String playerName, String courseName) {
-		Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + playerName + ".Selected", courseName);
+		Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + playerName + ".Selected", courseName.toLowerCase());
 		Parkour.getParkourConfig().saveUsers();
 	}
 
@@ -725,7 +725,7 @@ public class PlayerMethods {
 			player.teleport(new Location(player.getWorld(), location.getX(),location.getY(),location.getZ(),location.getYaw(), location.getPitch()));
 			Checkpoint checkpoint = new Checkpoint(location.getX(),location.getY(),location.getZ(),location.getYaw(),location.getPitch(),player.getWorld().getName(),0,0,0);
 
-			addPlayer(player.getName(), new PPlayer(new Course("Test Mode", checkpoint)));
+			addPlayer(player.getName(), new ParkourSession(new Course("Test Mode", checkpoint)));
 			Utils.sendActionBar(player, Utils.colour("Test Mode: &bON"));
 		}
 	}
@@ -802,12 +802,12 @@ public class PlayerMethods {
 	 * @return
 	 */
 	public static boolean isPlayerInTestmode(String playerName) {
-		PPlayer pplayer = getPlayerInfo(playerName);
+		ParkourSession session = getPlayerInfo(playerName);
 
-		if (pplayer == null)
+		if (session == null)
 			return false;
 
-		return pplayer.getCourse().getName().equals("Test Mode");
+		return session.getCourse().getName().equals("Test Mode");
 	}
 
 	/**
@@ -820,4 +820,63 @@ public class PlayerMethods {
 	public static int getParkoins(String playerName) {
 		return Parkour.getParkourConfig().getUsersData().getInt("PlayerInfo." + playerName + ".Parkoins");
 	}
+
+	public static boolean isPlayerOnline(String playerName) {
+		for (Player player : Bukkit.getOnlinePlayers()){
+			if (player.getName().equalsIgnoreCase(playerName))
+				return true;
+		}
+
+		return false;
+	}
+
+	public static void acceptChallenge(final Player targetPlayer){
+		Challenge challenge = Static.getChallenge(targetPlayer.getName());
+
+		if (challenge == null){
+			targetPlayer.sendMessage("You have not been invited"); //TODO
+			return;
+		}
+		if (!PlayerMethods.isPlayerOnline(challenge.getPlayer())){
+			targetPlayer.sendMessage("Player is not online!"); //TODO
+			return;
+		}
+
+		Static.removeChallenge(challenge);
+		final Player player = Bukkit.getPlayer(challenge.getPlayer());
+
+		player.hidePlayer(targetPlayer);
+		targetPlayer.hidePlayer(player);
+
+		CourseMethods.joinCourse(player, challenge.getCourseName());
+		CourseMethods.joinCourse(targetPlayer, challenge.getCourseName());
+
+		final float playerSpeed = player.getWalkSpeed();
+		final float targetSpeed = targetPlayer.getWalkSpeed();
+
+		player.setWalkSpeed(0f);
+		targetPlayer.setWalkSpeed(0f);
+
+		new Runnable() {
+			public int taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(Parkour.getPlugin(), this, 0L, 20L);
+
+			int count = 6;
+			@Override
+			public void run() {
+				if (count > 1) {
+					count--;
+
+					player.sendMessage("Starting in " + count + " seconds...");
+					targetPlayer.sendMessage("Starting in " + count + " seconds...");
+				} else {
+					Bukkit.getScheduler().cancelTask(taskID);
+					player.sendMessage("Go!");
+					targetPlayer.sendMessage("Go!");
+					player.setWalkSpeed(playerSpeed);
+					targetPlayer.setWalkSpeed(targetSpeed);
+				}
+			}
+		};	
+	}
+
 }

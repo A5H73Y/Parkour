@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import me.A5H73Y.Parkour.Parkour;
-import me.A5H73Y.Parkour.Player.PPlayer;
+import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Settings;
@@ -66,6 +66,7 @@ public class StartPlugin {
 		if (vault != null && vault.isEnabled()) {
 			if (setupEconomy()) {
 				Utils.log("[Vault] Linked with Vault v" + vault.getDescription().getVersion());
+				Parkour.getParkourConfig().initiateEconomy();
 			} else {
 				Utils.log("[Vault] Attempted to link with Vault, but something went wrong.", 2);
 				Parkour.getPlugin().getConfig().set("Other.Economy.Enabled", false);
@@ -134,10 +135,10 @@ public class StartPlugin {
 			return;
 
 		try {
-			HashMap<String, PPlayer> players = (HashMap<String, PPlayer>) Utils.loadAllPlaying(Static.PATH);
+			HashMap<String, ParkourSession> players = (HashMap<String, ParkourSession>) Utils.loadAllPlaying(Static.PATH);
 			PlayerMethods.setPlaying(players);
 
-			for (Entry<String, PPlayer> entry : players.entrySet()) {
+			for (Entry<String, ParkourSession> entry : players.entrySet()) {
 				Player playingp = Parkour.getPlugin().getServer().getPlayer(entry.getKey());
 				if (playingp == null)
 					continue;

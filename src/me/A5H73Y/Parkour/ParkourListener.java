@@ -4,7 +4,7 @@ import me.A5H73Y.Parkour.Course.Checkpoint;
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Other.ParkourBlocks;
 import me.A5H73Y.Parkour.Other.Question;
-import me.A5H73Y.Parkour.Player.PPlayer;
+import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
@@ -228,7 +228,7 @@ public class ParkourListener implements Listener {
 	public void onTeleport(PlayerTeleportEvent event) {
 		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
 			return;
-		
+
 		if (PlayerMethods.isPlayerInTestmode(event.getPlayer().getName()))
 			return;
 
@@ -300,26 +300,26 @@ public class ParkourListener implements Listener {
 
 		if (Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.PreventPlateStick"))
 			event.setCancelled(true);
-		
-		PPlayer pplayer = PlayerMethods.getPlayerInfo(event.getPlayer().getName());
-		Course course = pplayer.getCourse();
 
-		if (pplayer.getCheckpoint() == course.getCheckpoints())
+		ParkourSession session = PlayerMethods.getPlayerInfo(event.getPlayer().getName());
+		Course course = session.getCourse();
+
+		if (session.getCheckpoint() == course.getCheckpoints())
 			return;
-		
+
 		Checkpoint check = course.getCheckpoint();
-		
+
 		if (check == null)
 			return;
 
 		if (check.getNextCheckpointX() == below.getLocation().getBlockX() && check.getNextCheckpointY() == below.getLocation().getBlockY() && check.getNextCheckpointZ() == below.getLocation().getBlockZ()) {
 
-			pplayer.increaseCheckpoint();
+			session.increaseCheckpoint();
 
-			if (course.getCheckpoints() == pplayer.getCheckpoint())
+			if (course.getCheckpoints() == session.getCheckpoint())
 				event.getPlayer().sendMessage(Utils.getTranslation("Event.AllCheckpoints"));
 			else
-				event.getPlayer().sendMessage(Utils.getTranslation("Event.Checkpoint") + pplayer.getCheckpoint() + " / " + course.getCheckpoints());
+				event.getPlayer().sendMessage(Utils.getTranslation("Event.Checkpoint") + session.getCheckpoint() + " / " + course.getCheckpoints());
 		}
 	}
 
@@ -328,14 +328,9 @@ public class ParkourListener implements Listener {
 		boolean commandIsPa = event.getMessage().startsWith("/pa");
 		Player player = event.getPlayer();
 
-		if (commandIsPa) {
-			if (Static.containsQuestion(player.getName())) {
-				questionPlayer(player, event.getMessage());
-				event.setCancelled(true);
-			} else if (Static.containsCreatePB(player.getName())) {
-				createPB(player);
-			}
-			return;
+		if (commandIsPa && Static.containsQuestion(player.getName())) {
+			questionPlayer(player, event.getMessage());
+			event.setCancelled(true);
 		}
 
 		if (!commandIsPa && PlayerMethods.isPlaying(player.getName())) {
@@ -373,15 +368,6 @@ public class ParkourListener implements Listener {
 		} else {
 			player.sendMessage(Static.getParkourString() + ChatColor.RED + "Invalid question answer.");
 			player.sendMessage("Please use either " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " or " + ChatColor.AQUA + "/pa no");
-		}
-	}
-
-	private final void createPB(Player player) {
-		String[] ParkourBlocks = { "a", "a", "a", "a" };
-		for (String s : ParkourBlocks) {
-
-			Parkour.getParkourConfig().getUpgData().set("ParkourBlocks.name", s);
-
 		}
 	}
 }

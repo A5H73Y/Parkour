@@ -3,6 +3,7 @@ package me.A5H73Y.Parkour.Other;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Course.CourseMethods;
+import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
@@ -36,7 +37,6 @@ public class Validation {
 	}
 
 	public static boolean courseJoining(Player player, Course course){
-		
 		/* Player in wrong world */
 		if (Parkour.getSettings().isEnforceWorld()){
 			if (!player.getLocation().getWorld().getName().equals(course.getCheckpoint().getWorld())){
@@ -88,4 +88,80 @@ public class Validation {
 		return true;
 	}
 
+	public static boolean courseJoiningNoMessages(Player player, String course){
+		/* Player in wrong world */
+		if (Parkour.getSettings().isEnforceWorld()){
+			if (!player.getLocation().getWorld().getName().equals(Parkour.getParkourConfig().getCourseData().getString(course + ".World"))){
+				return false;
+			}
+		}
+
+		/* Players level isn't high enough */
+		if (Parkour.getParkourConfig().getCourseData().contains(course + ".MinimumLevel")){
+			if (!player.hasPermission("Parkour.MinBypass")){
+				int minimumLevel = Parkour.getParkourConfig().getCourseData().getInt(course + ".MinimumLevel");
+				int currentLevel = Parkour.getParkourConfig().getUsersData().getInt("PlayerInfo." + player.getName() + ".Level");
+
+				if (currentLevel < minimumLevel){
+					return false;
+				}
+			}
+		}
+
+		/* Course isn't finished */
+		if (!CourseMethods.isReady(course)){
+			if (Parkour.getParkourConfig().getConfig().getBoolean("OnJoin.EnforceFinished")){
+				if (!Utils.hasPermissionOrOwnership(player, "Parkour.Admin", "Bypass", course)){
+					return false;
+				}
+			}
+		}
+		
+		/* Check if player has enough currency to join */
+		if (Static.getEconomy()){
+			int joinFee = Parkour.getParkourConfig().getEconData().getInt("Price." + course + "JoinFee");
+			
+			if (joinFee > 0){
+				if (Parkour.getEconomy().getBalance(Bukkit.getOfflinePlayer(player.getUniqueId())) < joinFee){
+					return false;
+				} 
+			}
+		}
+
+		return true;
+	}
+
+	public static boolean challengePlayer(String[] args, Player player) {
+		String courseName = args[1].toLowerCase();
+		
+		if (!CourseMethods.exist(courseName)){
+			player.sendMessage(Utils.getTranslation("Error.Unknown"));
+			return false;
+		}
+		if (!PlayerMethods.isPlayerOnline(args[2])){
+			player.sendMessage("(TODO) This player is not online"); //TODO
+			return false;
+		}
+		if (PlayerMethods.isPlaying(args[2])){
+			player.sendMessage("(TODO) This player is playing"); //TODO
+			return false;
+		}
+		if (player.getName().equalsIgnoreCase(args[2])){
+			player.sendMessage("(TODO) You can't challenge yourself.");
+			return false;
+		}
+		
+		Player target = Bukkit.getPlayer(args[2]);
+		
+		if (!Validation.courseJoiningNoMessages(player, courseName)){
+			player.sendMessage("(TODO) You are not able to join this course"); //TODO
+			return false;
+		}
+		if (!Validation.courseJoiningNoMessages(target, courseName)){
+			player.sendMessage("(TODO) They are not able to join this course"); //TODO
+			return false;
+		}
+
+		return true;
+	}
 }

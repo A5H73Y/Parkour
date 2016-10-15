@@ -1,7 +1,6 @@
 package me.A5H73Y.Parkour.Conversation;
 
 import me.A5H73Y.Parkour.Parkour;
-import me.A5H73Y.Parkour.Player.PlayerMethods;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -16,7 +15,7 @@ import org.bukkit.conversations.StringPrompt;
 public class CoursePrizeConversation extends FixedSetPrompt {
 
 	CoursePrizeConversation(){
-		super("Material", "Command", "Economy", "Cancel");
+		super("Material", "Command", "Cancel");
 	}
 
 	@Override
@@ -35,9 +34,6 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 		if (choice.equalsIgnoreCase("Command"))
 			return new ChooseCommand();
 
-		if (choice.equalsIgnoreCase("Economy"))
-			return new ChooseEconomy();
-		
 		return null;
 	}
 
@@ -90,8 +86,7 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 	
 	private class MaterialProcessComplete extends MessagePrompt {
 		public String getPromptText(ConversationContext context) {
-			String courseName = PlayerMethods.getSelected(context.getForWhom().toString());
-			return " The Material prize for " + courseName + " was set to " + context.getSessionData("amount") + " " + context.getSessionData("material");
+			return " The Material prize for " + ChatColor.DARK_AQUA + context.getSessionData("courseName") + ChatColor.WHITE + " was set to " + ChatColor.AQUA + context.getSessionData("amount") + " " + context.getSessionData("material");
 		}
 
 		@Override
@@ -130,7 +125,7 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 			if (runNow)
 				Parkour.getPlugin().getServer().dispatchCommand(
 						Parkour.getPlugin().getServer().getConsoleSender(), 
-						context.getSessionData("command").toString().replace("%PLAYER%", context.getForWhom().toString()));
+						context.getSessionData("command").toString().replace("%PLAYER%", context.getSessionData("playerName").toString()));
 			
 			return new CommandProcessComplete();
 		}
@@ -139,8 +134,7 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 	
 	private class CommandProcessComplete extends MessagePrompt {
 		public String getPromptText(ConversationContext context) {
-			String courseName = PlayerMethods.getSelected(context.getForWhom().toString());
-			return " The Command prize for " + courseName + " was set to /" + context.getSessionData("command");
+			return " The Command prize for " + ChatColor.DARK_AQUA + context.getSessionData("courseName") + ChatColor.WHITE + " was set to /" + ChatColor.AQUA + context.getSessionData("command");
 		}
 
 		@Override
@@ -148,45 +142,5 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 			return Prompt.END_OF_CONVERSATION;
 		}
 	}
-	
-	/* BEGIN ECONOMY */
-	private class ChooseEconomy extends NumericPrompt {
-
-		@Override
-		public String getPromptText(ConversationContext context) {
-			return ChatColor.LIGHT_PURPLE + " How much would you like to reward the player with?";
-		}
-
-		@Override
-        protected boolean isNumberValid(ConversationContext context, Number input) {
-            return input.intValue() > 0;
-        }
-		
-		@Override
-        protected String getFailedValidationText(ConversationContext context, Number invalidInput) {
-            return "Amount must be greater than 0";
-        }
-		
-		@Override
-		protected Prompt acceptValidatedInput(ConversationContext context, Number amount) {
-			context.setSessionData("amount", amount.intValue());
-
-			return new EconomyProcessComplete();
-		}
-		
-	}
-	
-	private class EconomyProcessComplete extends MessagePrompt {
-		public String getPromptText(ConversationContext context) {
-			String courseName = PlayerMethods.getSelected(context.getForWhom().toString());
-			return " The Economy amount for " + courseName + " was set to " + context.getSessionData("amount");
-		}
-
-		@Override
-		protected Prompt getNextPrompt(ConversationContext context) {
-			return Prompt.END_OF_CONVERSATION;
-		}
-	}
-	
 	
 }

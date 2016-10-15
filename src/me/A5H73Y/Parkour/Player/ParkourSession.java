@@ -6,7 +6,7 @@ import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
-public class PPlayer implements Serializable {
+public class ParkourSession implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -18,8 +18,8 @@ public class PPlayer implements Serializable {
 	private boolean useTrail;
 
 	/**
-	 * This is the PPlayer, which kind of stands for Parkour Player..? We use
-	 * this object to track all the players information while on a course, how
+	 * This is the ParkourSession object.
+	 * We use this object to track all the players information while on a course, how
 	 * many times they've died etc. When we want to find out what course a
 	 * player is on, we will retrieve it through here, Rather than doing a
 	 * course lookup for a player name. There is also a "Mode" string, this will
@@ -28,7 +28,7 @@ public class PPlayer implements Serializable {
 	 * 
 	 * @param course
 	 */
-	public PPlayer(Course course) {
+	public ParkourSession(Course course) {
 		this.deaths = 0;
 		this.checkpoint = 0;
 		this.timestarted = System.currentTimeMillis();

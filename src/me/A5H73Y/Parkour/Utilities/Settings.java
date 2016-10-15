@@ -29,7 +29,7 @@ public class Settings {
 		enforceWorld = config.getBoolean("OnJoin.EnforceWorld");
 		disableCommands = config.getBoolean("OnCourse.EnforceParkourCommands.Enabled");
 		allowTrails = config.getBoolean("OnCourse.AllowTrails");
-		signPermission = config.getBoolean("Other.SignPermissions");
+		signPermission = config.getBoolean("Other.Parkour.SignPermissions");
 		
 		suicide = Material.getMaterial(config.getString("OnJoin.Item.Suicide.Material"));
 		hideall = Material.getMaterial(config.getString("OnJoin.Item.HideAll.Material"));

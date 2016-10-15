@@ -5,8 +5,9 @@ import java.util.Map;
 
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Conversation.Conversation.ConversationType;
+import me.A5H73Y.Parkour.Other.Challenge;
 import me.A5H73Y.Parkour.Other.Validation;
-import me.A5H73Y.Parkour.Player.PPlayer;
+import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
@@ -62,7 +63,7 @@ public class CourseMethods {
 		Checkpoint checkpoint = CheckpointMethods.getNextCheckpoint(courseName, 0);
 		Course course = new Course(courseName, checkpoint);
 
-		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".ParkourBlocks"))// TODO
+		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".ParkourBlocks"))
 			course.setParkourBlocks(Utils.populateParkourBlocks("ParkourBlocks." + Parkour.getParkourConfig().getCourseData().getString(courseName + ".ParkourBlocks")));
 
 		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".MaxDeaths"))
@@ -139,7 +140,7 @@ public class CourseMethods {
 		Parkour.getParkourConfig().saveCourses();
 
 		PlayerMethods.setSelected(player.getName(), name);
-		
+
 		player.sendMessage(Utils.getTranslation("Parkour.Created").replace("%COURSE%", args[1]));
 		DatabaseMethods.insertCourse(name, player.getName());
 	}
@@ -446,8 +447,8 @@ public class CourseMethods {
 	private static void displayPlaying(Player player) {
 		player.sendMessage(Static.getParkourString() + PlayerMethods.getPlaying().size() + " players using Parkour: ");
 
-		// TODO pages
-		for (Map.Entry<String, PPlayer> entry : PlayerMethods.getPlaying().entrySet()) {
+		// TODO pages - reuse courses page 
+		for (Map.Entry<String, ParkourSession> entry : PlayerMethods.getPlaying().entrySet()) {
 			player.sendMessage(Utils.getTranslation("Parkour.Player").replace("%PLAYER%", entry.getKey()).replace("%COURSE%", entry.getValue().getDeaths() + "").replace("%TIME%", entry.getValue().displayTime()));
 
 		}
@@ -528,7 +529,7 @@ public class CourseMethods {
 			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
 			return;
 		}
-		
+
 		PlayerMethods.setSelected(player.getName(), args[1]);
 		Utils.startConversation(player, ConversationType.COURSEPRIZE);
 	}
@@ -863,5 +864,18 @@ public class CourseMethods {
 		Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".ParkourBlocks", args[2].toLowerCase());
 		Parkour.getParkourConfig().saveCourses();
 		player.sendMessage(Static.getParkourString() + args[1] + " is now linked to ParkourBlocks " + args[2]);
+	}
+
+	public static void challengePlayer(String[] args, Player player) {
+		//(course) (player)
+		if (!Validation.challengePlayer(args, player))
+			return;
+		
+		Player target = Bukkit.getPlayer(args[2]);
+		
+		target.sendMessage(Static.getParkourString() + "You have been challenged by %PLAYER% to beat %COURSE%.");
+		target.sendMessage(ChatColor.GRAY + "Enter " + ChatColor.GREEN + "/pa accept " + ChatColor.GRAY + " to accept.");
+		player.sendMessage(Static.getParkourString() + "You have challenged %PLAYER% to beat %COURSE%!");
+		Static.addChallenge(new Challenge(player.getName(), target.getName(), args[1].toLowerCase()));
 	}
 }

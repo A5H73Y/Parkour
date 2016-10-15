@@ -315,7 +315,7 @@ public class Configurations {
 			stringData.addDefault("Error.Finished1", "This course is not ready for you to play yet!");
 			stringData.addDefault("Error.Finished2", "WARNING: This course is not finished yet.");
 			stringData.addDefault("Error.SignProtected", "This sign is protected!");
-			stringData.addDefault("Error.Syntax", "&4Invalid Syntax: &f/pa %COMMAND% %ARGUMENTS%");
+			stringData.addDefault("Error.Syntax", "&cInvalid Syntax: &f/pa &8%COMMAND% &7%ARGUMENTS%");
 			stringData.addDefault("Error.UnknownSignCommand", "Unknown sign command!");
 			stringData.addDefault("Error.UnknownCommand", "Unknown command!");
 			
@@ -432,10 +432,10 @@ public class Configurations {
 		config.addDefault("Other.SubmitMetrics", true);
 		config.addDefault("Other.LogToFile", true);
 		config.addDefault("Other.DebugMode", false);
-		config.addDefault("Other.SignPermissions", false);
 		config.addDefault("Other.Parkour.ChatRankPrefix", false);
 		config.addDefault("Other.Parkour.SignProtection", true);
 		config.addDefault("Other.Parkour.InventoryManagement", true);
+		config.addDefault("Other.Parkour.SignPermissions", false);
 		config.addDefault("Other.Parkour.CommandPermissions", false);
 		config.addDefault("Other.Display.JoinWelcomeMessage", true);
 		config.addDefault("Other.Display.CreatorJoin", true);

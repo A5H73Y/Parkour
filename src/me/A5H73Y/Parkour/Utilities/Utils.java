@@ -39,20 +39,18 @@ public final class Utils {
 	 * boolean will determine whether or not the String that is returned has the
 	 * Parkour prefix before it.
 	 * 
-	 * @param string
-	 *            to translate
-	 * @param display
-	 *            prefix?
+	 * @param string to translate
+	 * @param display Parkour prefix?
 	 * @return
 	 */
 	public final static String getTranslation(String string, boolean prefix) {
 		String translated = Parkour.getParkourConfig().getStringData().getString(string);
-		translated = translated != null ? colour(translated) : "String not found!";
+		translated = translated != null ? colour(translated) : "String not found: " + string;
 		return prefix ? Static.getParkourString().concat(translated) : translated;
 	}
 
 	/**
-	 * Override above method, but with a default of enabled prefix.
+	 * Override above method, but with a default of an enabled prefix.
 	 * 
 	 * @param string
 	 * @return
@@ -62,7 +60,8 @@ public final class Utils {
 	}
 
 	/**
-	 * Check whether or not the player has a specific permission.
+	 * Return whether or not the player has a specific permission.
+	 * If they don't a message will be sent alerting them.
 	 * 
 	 * @param player
 	 * @param permission
@@ -77,7 +76,7 @@ public final class Utils {
 	}
 
 	/**
-	 * Check whether the player has a specific permission OR has the branch
+	 * Return whether the player has a specific permission OR has the branch
 	 * permission. Example "parkour.basic.join" OR "parkour.basic.*"
 	 * 
 	 * @param player

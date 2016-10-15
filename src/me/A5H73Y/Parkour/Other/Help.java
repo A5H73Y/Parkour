@@ -84,7 +84,7 @@ public final class Help {
 					" ");
 
 		} else{
-			player.sendMessage(Static.getParkourString() + "This is not a valid Parkour command!");
+			player.sendMessage(Static.getParkourString() + "Sorry, I haven't written a help guide for that command yet.");
 		}
 	}
 
@@ -298,11 +298,11 @@ public final class Help {
 			return;
 		}
 		
-		if (args.length < 3){
-			player.sendMessage(Utils.invalidSyntax("prize", "(info / setprize / setfee / recreate)"));
+		if (args.length < 2){
+			player.sendMessage(Utils.invalidSyntax("econ", "(info / recreate / setprize / setfee)"));
 			return;
 		}
-
+		
 		if (args[1].equalsIgnoreCase("info")){
 			player.sendMessage(Static.getParkourString() + "Linked with Vault v" + StartPlugin.vault.getDescription().getVersion());
 
@@ -336,8 +336,8 @@ public final class Help {
 
 		} else if (args[1].equalsIgnoreCase("recreate")) {
 			player.sendMessage(Static.getParkourString() + "Starting Recreation...");
-			recreateEconomy();
-			player.sendMessage(Static.getParkourString() + "Process Complete!");
+			int changed = recreateEconomy();
+			player.sendMessage(Static.getParkourString() + "Process Complete! " + changed + " courses updated.");
 
 		} else {
 			player.sendMessage(Utils.invalidSyntax("econ", "(info / recreate / setprize / setfee)"));
@@ -345,12 +345,14 @@ public final class Help {
 
 	}
 
-	private static void recreateEconomy(){
+	private static int recreateEconomy(){
 		FileConfiguration econ = Parkour.getParkourConfig().getEconData();
 
+		int updated = 0;
 		for (String course : Static.getCourses()) {
 			try {
 				if (!(Parkour.getParkourConfig().getEconData().contains("Price." + course + ".Join"))) {
+					updated++;
 					econ.set("Price." + course + ".Join", 0);
 				}
 				if (!(Parkour.getParkourConfig().getEconData().contains("Price." + course + ".Finish"))) {
@@ -362,6 +364,7 @@ public final class Help {
 		}
 
 		Parkour.getParkourConfig().saveEcon();
+		return updated;
 	}
 
 	public static void displaySQL(String[] args, Player player) {

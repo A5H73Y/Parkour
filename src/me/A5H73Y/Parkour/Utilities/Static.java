@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.Other.Challenge;
 import me.A5H73Y.Parkour.Other.ParkourBlocks;
 import me.A5H73Y.Parkour.Other.Question;
 
@@ -15,11 +16,13 @@ import org.bukkit.entity.Player;
 
 public final class Static {
 
-	private static List<String> courseList = new ArrayList<String>();
 	private static Map<String, Question> questions = new HashMap<String, Question>();
+
+	private static List<String> courseList = new ArrayList<String>();
 	private static List<String> quiet = new ArrayList<String>();
 	private static List<String> hidden = new ArrayList<String>();
-	private static List<String> createPB = new ArrayList<String>();
+	private static List<Challenge> challenges = new ArrayList<Challenge>();
+
 	private static boolean economy = false;
 	private static boolean barAPI = false;
 	private static boolean devBuild = true;
@@ -123,15 +126,18 @@ public final class Static {
 		hidden.remove(playerName);
 	}
 
-	public static boolean containsCreatePB(String playerName) {
-		return createPB.contains(playerName);
+	public final static void addChallenge(Challenge challenge){
+		challenges.add(challenge);
 	}
-
-	public final static void addCreatePB(String playerName) {
-		createPB.add(playerName);
+	public final static void removeChallenge(Challenge challenge){
+		if (challenges.contains(challenge))
+			challenges.remove(challenge);
 	}
-
-	public final static void removeCreatePB(String playerName) {
-		createPB.remove(playerName);
+	public final static Challenge getChallenge(String targetPlayer){
+		for (Challenge challenge : challenges){
+			if (challenge.getTargetPlayer().equals(targetPlayer))
+				return challenge;
+		}
+		return null;
 	}
 }

@@ -108,7 +108,10 @@ public class ParkourSignListener implements Listener {
 			event.getPlayer().sendMessage(Utils.getTranslation("Error.Sign"));
 			return;
 		}
-
+		
+		if (Parkour.getSettings().isSignPermission() && !Utils.hasPermission(event.getPlayer(), "Parkour.Basic", "Signs"))
+			return;
+			
 		if (lines[1].equalsIgnoreCase("Join")) {
 			if (lines[2].isEmpty() || !CourseMethods.exist(lines[2])){
 				event.getPlayer().sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", lines[2]));
