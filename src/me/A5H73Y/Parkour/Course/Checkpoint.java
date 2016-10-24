@@ -31,7 +31,7 @@ public class Checkpoint implements Serializable {
 		this.nextCheckpointY = nextCheckpointY;
 		this.nextCheckpointZ = nextCheckpointZ;
 	}
-	
+
 	public double getX() {
 		return x;
 	}
@@ -59,7 +59,7 @@ public class Checkpoint implements Serializable {
 	public double getNextCheckpointZ() {
 		return nextCheckpointZ;
 	}	
-	
+
 	public Location getLocation(){
 		return new Location(Bukkit.getWorld(world), x, y, z , yaw, pitch);
 	}

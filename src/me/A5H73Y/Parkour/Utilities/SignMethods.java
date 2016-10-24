@@ -9,6 +9,14 @@ import org.bukkit.event.block.SignChangeEvent;
 
 public class SignMethods {
 
+	/**
+	 * Create a standard Parkour sign, no arguments just display the title
+	 * 
+	 * @param sign
+	 * @param player
+	 * @param title
+	 * @return if they have permission
+	 */
 	public boolean createStandardSign(SignChangeEvent sign, Player player, String title){
 		if (!hasPermission(player, sign, title))
 			return false;
@@ -24,6 +32,15 @@ public class SignMethods {
 		createStandardCourseSign(sign, player, title, true);
 	}
 
+	/**
+	 * Create standard Parkour course sign, argument being the course name
+	 * 
+	 * @param sign
+	 * @param player
+	 * @param title
+	 * @param message
+	 * @return
+	 */
 	public boolean createStandardCourseSign(SignChangeEvent sign, Player player, String title, boolean message){
 		if (!hasPermission(player, sign, title))
 			return false;
@@ -125,7 +142,7 @@ public class SignMethods {
 			} else {
 				sign.setLine(3, "Survival");
 			}
-			
+
 		} else {
 			sign.setLine(2, ChatColor.RED + "Unknown Effect");
 			sign.setLine(3, "");

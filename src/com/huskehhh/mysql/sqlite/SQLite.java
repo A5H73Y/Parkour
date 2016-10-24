@@ -1,12 +1,12 @@
 package com.huskehhh.mysql.sqlite;
 
-import com.huskehhh.mysql.Database;
-
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
+import com.huskehhh.mysql.Database;
 
 /**
  * Connects to and uses a SQLite database
@@ -19,31 +19,41 @@ public class SQLite extends Database {
 	/**
 	 * Creates a new SQLite instance
 	 *
-	 * @param dbLocation Location of the Database (Must end in .db)
+	 * @param pluginFolder Location of the Database (Must end in .db)
 	 */
-	public SQLite(String dbLocation) {
-		this.dbLocation = dbLocation;
+	public SQLite(String pluginFolder) {
+		this.dbLocation = pluginFolder;
 	}
 
 	@Override
-	public Connection openConnection() throws SQLException,
-	ClassNotFoundException {
+	public Connection openConnection() {
 		if (checkConnection()) {
 			return connection;
 		}
 
-		File file = new File(dbLocation);
-		if (!(file.exists())) {
+		File dataFolder = new File(dbLocation + File.separator + "sqlite-db/");
+		if (!dataFolder.exists()) {
+			dataFolder.mkdirs();
+		}
+
+		File databaseFile = new File(dataFolder + File.separator + "parkour.db");
+		if (!(databaseFile.exists())) {
 			try {
-				file.createNewFile();
+				databaseFile.createNewFile();
 			} catch (IOException e) {
 				System.out.println("Unable to create database!");
 			}
 		}
-		Class.forName("org.sqlite.JDBC");
-		connection = DriverManager
-				.getConnection("jdbc:sqlite:"
-						+ dbLocation);
+
+		try {
+			Class.forName("org.sqlite.JDBC");
+			connection = DriverManager.getConnection("jdbc:sqlite:" + databaseFile);
+
+		} catch (ClassNotFoundException ex) {
+			ex.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return connection;
 	}
 

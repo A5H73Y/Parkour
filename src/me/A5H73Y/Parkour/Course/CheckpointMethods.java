@@ -28,16 +28,16 @@ public class CheckpointMethods {
 		FileConfiguration checkData = Parkour.getParkourConfig().getCheckData();
 
 		String path = courseName + "." + currentPoint + ".";
-		
+
 		double x = courseData.getDouble(path + "X");
 		double y = courseData.getDouble(path + "Y");
 		double z = courseData.getDouble(path + "Z");
 		float yaw = (float) courseData.getDouble(path + "Yaw");
 		float pitch = (float) courseData.getDouble(path + "Pitch");
 		String world = courseData.getString(courseName + "." + "World");
-		
+
 		path = courseName + "." + (currentPoint + 1) + ".";
-		
+
 		double nCheckX = checkData.getDouble(path + "X");
 		double nCheckY = checkData.getDouble(path + "Y");
 		double nCheckZ = checkData.getDouble(path + "Z");
@@ -47,7 +47,7 @@ public class CheckpointMethods {
 
 	public static void createCheckpoint(String[] args, Player player) {
 		String selected = PlayerMethods.getSelected(player.getName());
-		
+
 		if (!CourseMethods.exist(selected)){
 			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", selected));
 			return;
@@ -68,7 +68,7 @@ public class CheckpointMethods {
 
 			pointcount = Integer.parseInt(args[1]);
 		}
-		
+
 		if (pointcount < 1){
 			player.sendMessage(Static.getParkourString() + "Invalid checkpoint number.");
 			return;
@@ -92,7 +92,7 @@ public class CheckpointMethods {
 
 		int points = courseData.getInt(selected + ".Points");
 		int pointmax = points >= pointcount ? points : pointcount;
-		
+
 		courseData.set(selected + ".Points", pointmax);
 		courseData.set(selected + "." + pointcount + ".X", location.getBlockX() + 0.5);
 		courseData.set(selected + "." + pointcount + ".Y", location.getBlockY() + 0.5);
@@ -113,7 +113,7 @@ public class CheckpointMethods {
 			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
 			return;
 		}
-		
+
 		String arenaname = args[1].toLowerCase();
 		FileConfiguration courseData = Parkour.getParkourConfig().getCourseData();
 		String path = checkpoint ? arenaname + "." + args[2] : arenaname + ".0";
@@ -138,14 +138,14 @@ public class CheckpointMethods {
 	public static void deleteCheckpoint(String courseName, Player player) {
 		if (!CourseMethods.exist(courseName))
 			return;
-		
+
 		courseName = courseName.toLowerCase();
 		int point = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Points");
 		if (point <= 0){
 			player.sendMessage(Static.getParkourString() + courseName + " has no checkpoints!");
 			return;
 		}
-		
+
 		Parkour.getParkourConfig().getCourseData().set(courseName + "." + point, null);
 		Parkour.getParkourConfig().getCourseData().set(courseName + ".Points", point - 1);
 		Parkour.getParkourConfig().getCheckData().set(courseName + "." + point, null);
@@ -155,9 +155,9 @@ public class CheckpointMethods {
 		player.sendMessage(Utils.getTranslation("Parkour.DeleteCheckpoint")
 				.replace("%CHECKPOINT%", point+"")
 				.replace("%COURSE%", courseName));
-		
+
 		Utils.logToFile("Checkpoint " + point + " was deleted on " + courseName + " by " + player.getName());
-		
+
 	}
 
 	public static int getNumberOfCheckpoints(String courseName){

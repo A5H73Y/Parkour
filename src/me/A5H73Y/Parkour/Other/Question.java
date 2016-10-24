@@ -49,7 +49,7 @@ public class Question {
 			CheckpointMethods.deleteCheckpoint(argument, player);
 			Utils.logToFile(argument + "'s checkpoint " + Parkour.getParkourConfig().getCourseData().getInt(argument + ".Points") + " was deleted by " + player.getName());
 			return;
-			
+
 		case DELETE_LOBBY:
 			CourseMethods.deleteLobby(argument, player);
 			player.sendMessage("Lobby " + ChatColor.AQUA + argument + ChatColor.WHITE + " deleted...");

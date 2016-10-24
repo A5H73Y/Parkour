@@ -45,7 +45,7 @@ public class Course implements Serializable {
 	public void setParkourBlocks(ParkourBlocks parkourBlocks) {
 		this.parkourBlocks = parkourBlocks;
 	}
-	
+
 	public int getCheckpoints(){
 		return checkpoints;
 	}
@@ -53,5 +53,5 @@ public class Course implements Serializable {
 	public void setCheckpoint(Checkpoint checkpoint){
 		this.checkpoint = checkpoint;
 	}
-	
+
 }

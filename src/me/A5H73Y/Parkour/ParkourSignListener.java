@@ -51,7 +51,7 @@ public class ParkourSignListener implements Listener {
 
 			} else if (event.getLine(1).equalsIgnoreCase("stats") || event.getLine(1).equalsIgnoreCase("s")) {
 				sm.createStandardCourseSign(event, player, "Stats");
-				
+
 			} else {
 				player.sendMessage(Utils.getTranslation("Error.UnknownSignCommand"));
 				event.setLine(1, ChatColor.RED + "Unknown cmd");
@@ -65,7 +65,7 @@ public class ParkourSignListener implements Listener {
 	public void onSignBreak(PlayerInteractEvent event) {
 		if (event.getAction() != Action.LEFT_CLICK_BLOCK) 
 			return;
-		
+
 		if ((event.getClickedBlock().getType() != Material.SIGN) && (event.getClickedBlock().getType() != Material.SIGN_POST) && (event.getClickedBlock().getType() != Material.WALL_SIGN)) 
 			return;
 
@@ -76,7 +76,7 @@ public class ParkourSignListener implements Listener {
 
 		if (!lines[0].contains(ChatColor.AQUA + "Parkour")) 
 			return;
-		
+
 		if (!Utils.hasPermission(event.getPlayer(), "Parkour.Admin")){
 			event.getPlayer().sendMessage(Utils.getTranslation("Error.SignProtected"));
 			event.setCancelled(true);
@@ -91,7 +91,7 @@ public class ParkourSignListener implements Listener {
 	public void onSignInteract(PlayerInteractEvent event) {
 		if (event.getAction() != Action.RIGHT_CLICK_BLOCK)  
 			return;
-		
+
 		if ((event.getClickedBlock().getType() != Material.SIGN) && (event.getClickedBlock().getType() != Material.SIGN_POST) && (event.getClickedBlock().getType() != Material.WALL_SIGN)) 
 			return;
 
@@ -108,10 +108,10 @@ public class ParkourSignListener implements Listener {
 			event.getPlayer().sendMessage(Utils.getTranslation("Error.Sign"));
 			return;
 		}
-		
+
 		if (Parkour.getSettings().isSignPermission() && !Utils.hasPermission(event.getPlayer(), "Parkour.Basic", "Signs"))
 			return;
-			
+
 		if (lines[1].equalsIgnoreCase("Join")) {
 			if (lines[2].isEmpty() || !CourseMethods.exist(lines[2])){
 				event.getPlayer().sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", lines[2]));
@@ -133,9 +133,8 @@ public class ParkourSignListener implements Listener {
 				event.getPlayer().sendMessage(Utils.getTranslation("Error.Unknown"));
 				return;
 			}
-				
-			event.getPlayer().sendMessage("Coming soon.");
-			//TODO Not sure what to do for this :/
+
+			CourseMethods.displayCourseInfo(lines[2], event.getPlayer());
 
 		} else if (lines[1].equalsIgnoreCase("leave")) {
 			PlayerMethods.playerLeave(event.getPlayer());
@@ -147,7 +146,7 @@ public class ParkourSignListener implements Listener {
 			} else if (!PlayerMethods.isPlaying(event.getPlayer().getName())){
 				event.getPlayer().sendMessage(Utils.getTranslation("Error.NotOnCourse"));
 
-			} else if (!PlayerMethods.getPlayerInfo(event.getPlayer().getName()).getCourse().getName().equals(lines[2].toLowerCase())) {
+			} else if (!PlayerMethods.getParkourSession(event.getPlayer().getName()).getCourse().getName().equals(lines[2].toLowerCase())) {
 				event.getPlayer().sendMessage(Utils.getTranslation("Error.NotOnCourse"));
 
 			} else {
@@ -156,7 +155,7 @@ public class ParkourSignListener implements Listener {
 
 		} else if (lines[1].equalsIgnoreCase("effect")) {
 			applyEffect(lines, event.getPlayer());
-			
+
 		} else {
 			event.getPlayer().sendMessage(Utils.getTranslation("Error.UnknownSignCommand"));
 		}

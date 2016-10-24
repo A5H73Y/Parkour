@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import me.A5H73Y.Parkour.Utilities.Utils;
+
 /**
  * Abstract Database class, serves as a base for any connection method (MySQL,
  * SQLite, etc.)
@@ -16,10 +18,8 @@ public abstract class Database {
 
 	protected Connection connection;
 
-	/**
-	 * @return The database type that's currently being used.
-	 */
 	public abstract String getType();
+
 
 	/**
 	 * Creates a new Database
@@ -38,8 +38,7 @@ public abstract class Database {
 	 * @throws ClassNotFoundException
 	 *             if the driver cannot be found
 	 */
-	public abstract Connection openConnection() throws SQLException,
-	ClassNotFoundException;
+	public abstract Connection openConnection() throws SQLException, ClassNotFoundException;
 
 	/**
 	 * Checks if a connection is open with the database
@@ -48,8 +47,13 @@ public abstract class Database {
 	 * @throws SQLException
 	 *             if the connection cannot be checked
 	 */
-	public boolean checkConnection() throws SQLException {
-		return connection != null && !connection.isClosed();
+	public boolean checkConnection() {
+		try {
+			return connection != null && !connection.isClosed();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	/**
@@ -68,11 +72,15 @@ public abstract class Database {
 	 * @throws SQLException
 	 *             if the connection cannot be closed
 	 */
-	public boolean closeConnection() throws SQLException {
+	public boolean closeConnection() {
 		if (connection == null) {
 			return false;
 		}
-		connection.close();
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			Utils.log("SQL Error: " + e.getMessage(), 2);
+		}
 		return true;
 	}
 
@@ -90,13 +98,17 @@ public abstract class Database {
 	 * @throws ClassNotFoundException
 	 *             If the driver cannot be found; see {@link #openConnection()}
 	 */
-	public ResultSet querySQL(String query) throws SQLException, ClassNotFoundException {
+	public ResultSet querySQL(String query) throws SQLException,
+	ClassNotFoundException {
 		if (!checkConnection()) {
 			openConnection();
 		}
 
 		Statement statement = connection.createStatement();
-		return statement.executeQuery(query);
+
+		ResultSet result = statement.executeQuery(query);
+
+		return result;
 	}
 
 	/**
@@ -119,6 +131,9 @@ public abstract class Database {
 		}
 
 		Statement statement = connection.createStatement();
-		return statement.executeUpdate(query);
+
+		int result = statement.executeUpdate(query);
+
+		return result;
 	}
 }

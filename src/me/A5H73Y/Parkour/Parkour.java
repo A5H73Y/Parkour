@@ -36,6 +36,7 @@ public class Parkour extends JavaPlugin {
 		Utils.saveAllPlaying(PlayerMethods.getPlaying(), Static.PATH);
 		config.saveAll();
 		getParkourConfig().reload();
+		database.closeConnection();
 		Utils.log("Disabled Parkour v" + Static.getVersion());
 	}
 
@@ -52,10 +53,6 @@ public class Parkour extends JavaPlugin {
 	}
 
 	// Getters
-	public static Database getDatabaseObj() {
-		return database;
-	}
-
 	public static JavaPlugin getPlugin() {
 		return plugin;
 	}
@@ -64,11 +61,15 @@ public class Parkour extends JavaPlugin {
 		return config;
 	}
 
-	public static Economy getEconomy() {
-		return economy;
-	}
-
 	public static Settings getSettings() {
 		return settings;
+	}
+
+	public static Database getDatabaseObj() {
+		return database;
+	}
+
+	public static Economy getEconomy() {
+		return economy;
 	}
 }

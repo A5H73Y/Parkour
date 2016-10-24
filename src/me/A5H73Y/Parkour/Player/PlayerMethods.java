@@ -37,12 +37,18 @@ public class PlayerMethods {
 	 * @param course
 	 */
 	public static void playerJoin(Player player, Course course) {
-		prepareJoinPlayer(player);
+		prepareJoinPlayer(player, course.getName());
 		player.teleport(course.getCheckpoint().getLocation());
 		CourseMethods.increaseView(course.getName());
 
-		if (getPlayerInfo(player.getName()) == null) {
-			Utils.sendTitle(player, Utils.getTranslation("Parkour.Join", false).replace("%COURSE%", course.getName()));
+		if (getParkourSession(player.getName()) == null) {
+			if (course.getMaxDeaths() == null){
+				Utils.sendTitle(player, Utils.getTranslation("Parkour.Join", false).replace("%COURSE%", course.getName()));
+			} else {
+				Utils.sendFullTitle(player, Utils.getTranslation("Parkour.Join", false).replace("%COURSE%", course.getName()), 
+						Utils.getTranslation("Parkour.JoinLives", false).replace("%AMOUNT%", course.getMaxDeaths().toString()));
+			}
+
 			addPlayer(player.getName(), new ParkourSession(course));
 		} else {
 			removePlayer(player.getName());
@@ -64,7 +70,7 @@ public class PlayerMethods {
 			return;
 		}
 
-		ParkourSession session = getPlayerInfo(player.getName());
+		ParkourSession session = getParkourSession(player.getName());
 		Utils.sendSubTitle(player, Utils.getTranslation("Parkour.Leave", false).replace("%COURSE%", session.getCourse().getName()));
 
 		removePlayer(player.getName());
@@ -83,7 +89,7 @@ public class PlayerMethods {
 		if (!isPlaying(player.getName()))
 			return;
 
-		ParkourSession session = getPlayerInfo(player.getName());
+		ParkourSession session = getParkourSession(player.getName());
 		session.increaseDeath();
 
 		if (session.getCourse().getMaxDeaths() != null) {
@@ -138,7 +144,7 @@ public class PlayerMethods {
 		if (isPlayerInTestmode(player.getName()))
 			return;
 
-		ParkourSession session = getPlayerInfo(player.getName());
+		ParkourSession session = getParkourSession(player.getName());
 		String courseName = session.getCourse().getName();
 
 		if (Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.EnforceCompletion") && session.getCheckpoint() != (session.getCourse().getCheckpoints())) {
@@ -283,7 +289,7 @@ public class PlayerMethods {
 			PlayerMethods.rewardParkoins(player, parkoins);
 
 		giveEconomyPrize(player, courseName);
-		
+
 		player.updateInventory();
 		Parkour.getParkourConfig().saveUsers();
 	}
@@ -325,7 +331,7 @@ public class PlayerMethods {
 	 * @param playerName
 	 * @return
 	 */
-	public static ParkourSession getPlayerInfo(String playerName) {
+	public static ParkourSession getParkourSession(String playerName) {
 		if (isPlaying(playerName))
 			return parkourPlayers.get(playerName);
 
@@ -356,7 +362,7 @@ public class PlayerMethods {
 	public static void displayPlayerInfo(String[] args, Player player) {
 		String playerName = args.length <= 1 ? player.getName() : args[1];
 
-		ParkourSession session = PlayerMethods.getPlayerInfo(playerName);
+		ParkourSession session = PlayerMethods.getParkourSession(playerName);
 
 		if (session == null && !Parkour.getParkourConfig().getUsersData().contains("PlayerInfo." + playerName)) {
 			player.sendMessage(Static.getParkourString() + "Player has never played Parkour. What is wrong with them?!");
@@ -377,12 +383,12 @@ public class PlayerMethods {
 			String selected = Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + playerName + ".Selected");
 
 			if (level > 0)
-				player.sendMessage("Level: " + level);
+				player.sendMessage("Level: " + ChatColor.AQUA + level);
 
 			if (selected != null && selected.length() > 0)
-				player.sendMessage("Editing: " + selected);
+				player.sendMessage("Editing: " + ChatColor.AQUA + selected);
 
-			player.sendMessage("Parkoins: " + getParkoins(playerName));
+			player.sendMessage("Parkoins: " + ChatColor.AQUA + getParkoins(playerName));
 		}
 	}
 
@@ -496,14 +502,7 @@ public class PlayerMethods {
 		m = s.getItemMeta();
 		m.setDisplayName(Utils.getTranslation("Kit.Sign", false));
 		s.setItemMeta(m);
-		player.getInventory().addItem(s);
-
-		/*
-		 * BRICK - Climb Block HUGE_MUSHROOM_2 - Finish Block - New
-		 * EMERALD_BLOCK - Launch Block MOSSY_COBBLESTONE - Bounch - Change to
-		 * double jump? OBSIDIAN - Run ENDER_STONE - Repulse GOLD_BLOCK - No Run
-		 * HUGE_MUSHROOM_2 - No Potion
-		 */
+		player.getInventory().addItem(s);	
 
 		player.updateInventory();
 		player.sendMessage(Utils.getTranslation("Other.Kit"));
@@ -516,7 +515,7 @@ public class PlayerMethods {
 	 * @param player
 	 */
 	public static void getPermissions(Player player) {
-		player.sendMessage(ChatColor.BLACK + "[" + ChatColor.AQUA + "Parkour Permissions" + ChatColor.BLACK + "]");
+		player.sendMessage(Utils.getStandardHeading("Parkour Permissions"));
 		if (player.hasPermission("Parkour.*") || player.isOp()) {
 			player.sendMessage("- Everything");
 		} else {
@@ -548,7 +547,7 @@ public class PlayerMethods {
 	 * 
 	 * @param player
 	 */
-	private static void prepareJoinPlayer(Player player) {
+	private static void prepareJoinPlayer(Player player, String courseName) {
 		saveInventory(player);
 		preparePlayer(player, 0);
 
@@ -579,16 +578,16 @@ public class PlayerMethods {
 			player.getInventory().setItem(2, item);
 		}
 
+		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".JoinItemMaterial")){
+			Material joinItem = Material.getMaterial(Parkour.getParkourConfig().getCourseData().getString(courseName + ".JoinItemMaterial"));
+			if (joinItem != null){
+				item = new ItemStack(joinItem, Parkour.getParkourConfig().getCourseData().getInt(courseName + ".JoinItemAmount", 1));
+				player.getInventory().setItem(3, item);
+			}
+		}
+
 		// TODO did they join with a mode?
-		/*
-		 * if (usersData.contains("PlayerInfo." + player.getName() + ".Mode")){
-		 * if (usersData.getString("PlayerInfo." + player.getName() +
-		 * ".Mode").toString() == "CJ"){ ItemStack suicide = new ItemStack(76,
-		 * 1); ItemMeta meta = suicide.getItemMeta();
-		 * meta.setDisplayName(ChatColor.RED + "CodJumper Tool");
-		 * suicide.setItemMeta(meta); player.getInventory().setItem(3, suicide);
-		 * } }
-		 */
+		// Make ParkourModes enum (CodJumper, Drunk)
 
 		player.updateInventory();
 
@@ -802,7 +801,7 @@ public class PlayerMethods {
 	 * @return
 	 */
 	public static boolean isPlayerInTestmode(String playerName) {
-		ParkourSession session = getPlayerInfo(playerName);
+		ParkourSession session = getParkourSession(playerName);
 
 		if (session == null)
 			return false;

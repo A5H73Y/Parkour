@@ -5,7 +5,7 @@ public class Challenge {
 	private String player;
 	private String targetPlayer;
 	private String courseName;
-	
+
 	public Challenge(String player, String targetPlayer, String courseName){
 		this.player = player;
 		this.targetPlayer = targetPlayer;

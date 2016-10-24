@@ -40,14 +40,21 @@ public class ParkourBlockConversation extends StringPrompt {
 
 		@Override
 		public Prompt acceptInput(ConversationContext context, String message) {
-			Material material = Material.getMaterial(message.toUpperCase());
-			if (material == null){
-				Conversation.sendErrorMessage(context, "This is not a valid material");
-				return this;
-			}
 
 			int stage = getBlockStage(context);
-			context.setSessionData(stage, material.name());
+
+			if (message.equalsIgnoreCase("default")){
+				context.setSessionData(stage, "DEFAULT");
+			
+			} else {
+				Material material = Material.getMaterial(message.toUpperCase());
+				if (material == null){
+					Conversation.sendErrorMessage(context, "This is not a valid material");
+					return this;
+				}
+
+				context.setSessionData(stage, material.name());
+			}
 
 			if (stage < blockTypes.length - 1){
 				context.setSessionData("stage", stage += 1);
@@ -61,12 +68,12 @@ public class ParkourBlockConversation extends StringPrompt {
 	private class ProcessComplete extends MessagePrompt {
 		public String getPromptText(ConversationContext context) {
 			String name = context.getSessionData("name").toString().toLowerCase();
-			
+
 			for (int i=0; i < blockTypes.length; i++){
 				Parkour.getParkourConfig().getConfig().set("ParkourBlocks." + name + "." + blockTypes[i] + ".Material", context.getSessionData(i));
 			}
 			Parkour.getPlugin().saveConfig();
-			
+
 			return ChatColor.GREEN + " " + name + ChatColor.LIGHT_PURPLE + " was successfully created!";
 		}
 
@@ -79,5 +86,5 @@ public class ParkourBlockConversation extends StringPrompt {
 	private int getBlockStage(ConversationContext context){
 		return context.getSessionData("stage") == null ? 0 : (Integer) context.getSessionData("stage");
 	}
-	
+
 }

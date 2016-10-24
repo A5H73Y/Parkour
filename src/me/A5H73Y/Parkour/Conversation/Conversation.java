@@ -18,11 +18,11 @@ public class Conversation implements ConversationAbandonedListener {
 		PARKOURBLOCKS,
 		COURSEPRIZE
 	}
-	
+
 	private ConversationFactory conversationFactory;
-	
+
 	public Conversation(Player player, ConversationType conversationType){
-		
+
 		conversationFactory = new ConversationFactory(Parkour.getPlugin())
 		.withModality(true)
 		.withEscapeSequence("/quit")
@@ -38,13 +38,13 @@ public class Conversation implements ConversationAbandonedListener {
 		convo.getContext().setSessionData("courseName", PlayerMethods.getSelected(player.getName()));
 		convo.begin();
 	}
-	
+
 	private Prompt getEntryPrompt(ConversationType type){
 		switch (type){
 		case PARKOURBLOCKS:
-				return new ParkourBlockConversation();
+			return new ParkourBlockConversation();
 		case COURSEPRIZE:
-				return new CoursePrizeConversation();
+			return new CoursePrizeConversation();
 		default:
 			return new ParkourBlockConversation();
 		}

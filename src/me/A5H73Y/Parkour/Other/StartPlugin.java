@@ -48,6 +48,11 @@ public class StartPlugin {
 		Utils.log("Enabled Parkour v" + Static.getVersion() + "!");
 	}
 
+	/**
+	 * Unfortunately this has to be run before the configuration can initialize.
+	 * Just makes onEnable look ugly
+	 * @return
+	 */
 	public static boolean isFreshInstall(){
 		if (new File(Parkour.getPlugin().getDataFolder().toString() + File.separator + "config.yml").exists())
 			return false;
@@ -65,15 +70,15 @@ public class StartPlugin {
 		vault = pm.getPlugin("Vault");
 		if (vault != null && vault.isEnabled()) {
 			if (setupEconomy()) {
-				Utils.log("[Vault] Linked with Vault v" + vault.getDescription().getVersion());
+				Utils.log("[Economy] Linked with Vault v" + vault.getDescription().getVersion());
 				Parkour.getParkourConfig().initiateEconomy();
 			} else {
-				Utils.log("[Vault] Attempted to link with Vault, but something went wrong.", 2);
+				Utils.log("[Economy] Attempted to link with Vault, but something went wrong.", 2);
 				Parkour.getPlugin().getConfig().set("Other.Economy.Enabled", false);
 				Parkour.getPlugin().saveConfig();
 			}
 		} else {
-			Utils.log("[Vault] Vault is missing, disabling Economy Use.", 1);
+			Utils.log("[Economy] Vault is missing, disabling Economy Use.", 1);
 			Parkour.getPlugin().getConfig().set("Other.Economy.Enabled", false);
 			Parkour.getPlugin().saveConfig();
 		}
@@ -92,7 +97,7 @@ public class StartPlugin {
 		if (!forceSQLite && config.getBoolean("MySQL.Use") && !config.getString("MySQL.Host").equals("Host") ) {
 			database = new MySQL(config.getString("MySQL.Host"), config.getString("MySQL.Port"), config.getString("MySQL.Database"), config.getString("MySQL.User"), config.getString("MySQL.Password"));
 		} else {
-			database = new SQLite(Parkour.getPlugin().getDataFolder().toString() + File.separator + "parkour.db");
+			database = new SQLite(Parkour.getPlugin().getDataFolder().toString());
 		}
 
 		try {
@@ -158,7 +163,7 @@ public class StartPlugin {
 				Utils.log("[Tab] Linked with TitleActionbarAPI v" + barAPI.getDescription().getVersion());
 				Static.setBarAPI(true);
 			} else {
-				Utils.log("[Tab] Attempted to Link with TitleActionbarAPI, but server version is not supported", 1);
+				Utils.log("[Tab] Attempted to Link with TitleActionbarAPI, but server version is not supported!", 1);
 			}
 		}
 	}
@@ -213,7 +218,6 @@ public class StartPlugin {
 			Parkour.getParkourConfig().setupConfig();
 			Parkour.setSettings(new Settings());
 
-			
 			setLobbyData(lobbyData);
 
 			Static.initiate();

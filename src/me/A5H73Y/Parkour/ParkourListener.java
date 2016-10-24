@@ -75,10 +75,15 @@ public class ParkourListener implements Listener {
 			PlayerMethods.playerDie(event.getPlayer());
 			return;
 		}
-
+/*
+		if (event.getTo().getBlockX() == event.getFrom().getBlockX() && 
+				event.getTo().getBlockY() == event.getFrom().getBlockY() && 
+				event.getTo().getBlockZ() == event.getFrom().getBlockZ())
+			return;
+*/
 		Material belowMaterial = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
 
-		ParkourBlocks pb = PlayerMethods.getPlayerInfo(event.getPlayer().getName()).getCourse().getParkourBlocks();
+		ParkourBlocks pb = PlayerMethods.getParkourSession(event.getPlayer().getName()).getCourse().getParkourBlocks();
 
 		if (belowMaterial.equals(pb.getFinish())) {
 			PlayerMethods.playerFinish(event.getPlayer());
@@ -107,6 +112,9 @@ public class ParkourListener implements Listener {
 
 			event.getPlayer().setFireTicks(0);
 
+		} else if (event.getPlayer().getLocation().getBlock().isLiquid() && Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.DieInLiquid")){
+			PlayerMethods.playerDie(event.getPlayer());
+				
 		} else {
 			Material matEast = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.EAST).getType();
 			Material matNorth = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.NORTH).getType();
@@ -211,7 +219,7 @@ public class ParkourListener implements Listener {
 			event.getPlayer().sendMessage(Utils.getTranslation("Event.Join").replace("%VERSION%", Static.getVersion().toString()));
 
 		if (PlayerMethods.isPlaying(event.getPlayer().getName())) {
-			event.getPlayer().sendMessage(Utils.getTranslation("Parkour.Continue").replace("%COURSE%", PlayerMethods.getPlayerInfo(event.getPlayer().getName()).getCourse().getName()));
+			event.getPlayer().sendMessage(Utils.getTranslation("Parkour.Continue").replace("%COURSE%", PlayerMethods.getParkourSession(event.getPlayer().getName()).getCourse().getName()));
 		}
 
 		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
@@ -301,7 +309,7 @@ public class ParkourListener implements Listener {
 		if (Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.PreventPlateStick"))
 			event.setCancelled(true);
 
-		ParkourSession session = PlayerMethods.getPlayerInfo(event.getPlayer().getName());
+		ParkourSession session = PlayerMethods.getParkourSession(event.getPlayer().getName());
 		Course course = session.getCourse();
 
 		if (session.getCheckpoint() == course.getCheckpoints())

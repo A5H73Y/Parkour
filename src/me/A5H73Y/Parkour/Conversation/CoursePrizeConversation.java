@@ -30,7 +30,7 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 
 		if (choice.equalsIgnoreCase("Material"))
 			return new ChooseBlock();
-		
+
 		if (choice.equalsIgnoreCase("Command"))
 			return new ChooseCommand();
 
@@ -53,7 +53,7 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 			}
 
 			context.setSessionData("material", message.toUpperCase());
-			
+
 			return new ChooseAmount();
 		}		
 	}
@@ -66,24 +66,24 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 		}
 
 		@Override
-        protected boolean isNumberValid(ConversationContext context, Number input) {
-            return input.intValue() > 0 && input.intValue() <= 255;
-        }
-		
+		protected boolean isNumberValid(ConversationContext context, Number input) {
+			return input.intValue() > 0 && input.intValue() <= 255;
+		}
+
 		@Override
-        protected String getFailedValidationText(ConversationContext context, Number invalidInput) {
-            return "Amount must be between 1 and 255.";
-        }
-		
+		protected String getFailedValidationText(ConversationContext context, Number invalidInput) {
+			return "Amount must be between 1 and 255.";
+		}
+
 		@Override
 		protected Prompt acceptValidatedInput(ConversationContext context, Number amount) {
 			context.setSessionData("amount", amount.intValue());
 
 			return new MaterialProcessComplete();
 		}
-		
+
 	}
-	
+
 	private class MaterialProcessComplete extends MessagePrompt {
 		public String getPromptText(ConversationContext context) {
 			return " The Material prize for " + ChatColor.DARK_AQUA + context.getSessionData("courseName") + ChatColor.WHITE + " was set to " + ChatColor.AQUA + context.getSessionData("amount") + " " + context.getSessionData("material");
@@ -108,11 +108,11 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 		public Prompt acceptInput(ConversationContext context, String message) {
 			String command = message.replace("/", "");
 			context.setSessionData("command", command);
-			
+
 			return new ChooseRunNow();
 		}
 	}
-	
+
 	private class ChooseRunNow extends BooleanPrompt {
 
 		@Override
@@ -126,12 +126,12 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 				Parkour.getPlugin().getServer().dispatchCommand(
 						Parkour.getPlugin().getServer().getConsoleSender(), 
 						context.getSessionData("command").toString().replace("%PLAYER%", context.getSessionData("playerName").toString()));
-			
+
 			return new CommandProcessComplete();
 		}
-		
+
 	}
-	
+
 	private class CommandProcessComplete extends MessagePrompt {
 		public String getPromptText(ConversationContext context) {
 			return " The Command prize for " + ChatColor.DARK_AQUA + context.getSessionData("courseName") + ChatColor.WHITE + " was set to /" + ChatColor.AQUA + context.getSessionData("command");
@@ -142,5 +142,5 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 			return Prompt.END_OF_CONVERSATION;
 		}
 	}
-	
+
 }

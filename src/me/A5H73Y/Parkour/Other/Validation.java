@@ -69,11 +69,11 @@ public class Validation {
 				player.sendMessage(Utils.getTranslation("Error.Finished2"));
 			}
 		}
-		
+
 		/* Check if player has enough currency to join */
 		if (Static.getEconomy()){
 			int joinFee = Parkour.getParkourConfig().getEconData().getInt("Price." + course.getName() + "JoinFee");
-			
+
 			if (joinFee > 0){
 				if (Parkour.getEconomy().getBalance(Bukkit.getOfflinePlayer(player.getUniqueId())) < joinFee){
 					player.sendMessage(Utils.getTranslation("Economy.Insufficient"));
@@ -116,11 +116,11 @@ public class Validation {
 				}
 			}
 		}
-		
+
 		/* Check if player has enough currency to join */
 		if (Static.getEconomy()){
 			int joinFee = Parkour.getParkourConfig().getEconData().getInt("Price." + course + "JoinFee");
-			
+
 			if (joinFee > 0){
 				if (Parkour.getEconomy().getBalance(Bukkit.getOfflinePlayer(player.getUniqueId())) < joinFee){
 					return false;
@@ -133,7 +133,7 @@ public class Validation {
 
 	public static boolean challengePlayer(String[] args, Player player) {
 		String courseName = args[1].toLowerCase();
-		
+
 		if (!CourseMethods.exist(courseName)){
 			player.sendMessage(Utils.getTranslation("Error.Unknown"));
 			return false;
@@ -150,9 +150,9 @@ public class Validation {
 			player.sendMessage("(TODO) You can't challenge yourself.");
 			return false;
 		}
-		
+
 		Player target = Bukkit.getPlayer(args[2]);
-		
+
 		if (!Validation.courseJoiningNoMessages(player, courseName)){
 			player.sendMessage("(TODO) You are not able to join this course"); //TODO
 			return false;

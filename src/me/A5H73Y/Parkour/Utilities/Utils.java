@@ -10,7 +10,9 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Conversation.Conversation;
@@ -35,13 +37,12 @@ import de.bg.derh4nnes.TitleActionBarAPI;
 public final class Utils {
 
 	/**
-	 * The string parameter will be matched to an entry in the Strings.yml. The
-	 * boolean will determine whether or not the String that is returned has the
-	 * Parkour prefix before it.
+	 * The string parameter will be matched to an entry in the Strings.yml
+	 * The boolean will decide to display the Parkour prefix
 	 * 
 	 * @param string to translate
 	 * @param display Parkour prefix?
-	 * @return
+	 * @return String of appropriate translation 
 	 */
 	public final static String getTranslation(String string, boolean prefix) {
 		String translated = Parkour.getParkourConfig().getStringData().getString(string);
@@ -50,10 +51,10 @@ public final class Utils {
 	}
 
 	/**
-	 * Override above method, but with a default of an enabled prefix.
+	 * Override method, but with a default of an enabled prefix.
 	 * 
 	 * @param string
-	 * @return
+	 * @return String of appropriate translation 
 	 */
 	public final static String getTranslation(String string) {
 		return getTranslation(string, true);
@@ -76,13 +77,13 @@ public final class Utils {
 	}
 
 	/**
-	 * Return whether the player has a specific permission OR has the branch
-	 * permission. Example "parkour.basic.join" OR "parkour.basic.*"
+	 * Return whether the player has a specific permission OR has the branch permission. 
+	 * Example "parkour.basic.join" OR "parkour.basic.*"
 	 * 
 	 * @param player
 	 * @param permissionBranch
 	 * @param permission
-	 * @return
+	 * @return boolean
 	 */
 	public final static boolean hasPermission(Player player, String permissionBranch, String permission) {
 		if (player.hasPermission(permissionBranch + ".*") || player.hasPermission(permissionBranch + "." + permission) || player.hasPermission("Parkour.*"))
@@ -93,15 +94,14 @@ public final class Utils {
 	}
 
 	/**
-	 * Same as above, except it will check if the player has the permission for
-	 * the course in question. e.g. Did the player create the course in the
-	 * first place.
+	 * Check if the player has the permission, if not were they the creator the course in question. 
+	 * Example, they may not be an admin but they can change the start location of their own course.
 	 * 
 	 * @param player
 	 * @param permissionBranch
 	 * @param permission
 	 * @param courseName
-	 * @return
+	 * @return boolean
 	 */
 	public final static boolean hasPermissionOrOwnership(Player player, String permissionBranch, String permission, String courseName) {
 		if (!(CourseMethods.exist(courseName))) {
@@ -120,13 +120,12 @@ public final class Utils {
 	}
 
 	/**
-	 * Commands that require a certain length of arguments before it becomes
-	 * processable.
+	 * Validate the length of the arguments before allowing it to be processed further.
 	 * 
 	 * @param player
 	 * @param args
 	 * @param desired
-	 * @return
+	 * @return boolean
 	 */
 	public final static boolean validateArgs(Player player, String[] args, int desired) {
 		if (args.length > desired) {
@@ -143,10 +142,11 @@ public final class Utils {
 	}
 
 	/**
-	 * Used for displaying text nicely, will turn "hElLO" into "Hello"
+	 * Format and standardize text to a constant case.
+	 * Will turn "hElLO" into "Hello"
 	 * 
 	 * @param text
-	 * @return
+	 * @return String
 	 */
 	public final static String standardizeText(String text) {
 		if (text == null || text.length() == 0) {
@@ -156,30 +156,38 @@ public final class Utils {
 	}
 
 	/**
-	 * Checks whether or not a value is numeric "test" will fail for example.
+	 * Returns if the argument is numeric
+	 * "1" - true, "Hi" - false
 	 * 
 	 * @param args
-	 * @return
+	 * @return boolean
 	 */
-	public final static boolean isNumber(String args) {
+	public final static boolean isNumber(String text) {
 		try {
-			Integer.parseInt(args);
+			Integer.parseInt(text);
 			return true;
 		} catch (Exception e) {
 		}
 		return false;
 	}
 
-	public final static String colour(String S) {
-		return ChatColor.translateAlternateColorCodes('&', S);
+	/**
+	 * Converts text to the appropriate colours
+	 * "&4Hello" is the same as ChatColor.RED + "Hello"
+	 * 
+	 * @param text
+	 * @return
+	 */
+	public final static String colour(String text) {
+		return ChatColor.translateAlternateColorCodes('&', text);
 	}
 
 	/**
 	 * The input will be broken down into seconds, minutes and hours. If the
-	 * time is not greater than an hour, don't display hours.
+	 * time is not greater than an hour, hours will not be displayed.
 	 * 
 	 * @param milliseconds
-	 * @return the total time
+	 * @return formatted time: HH:MM:SS
 	 */
 	public final static String calculateTime(long ms) {
 		int seconds = (int) (ms / 1000L);
@@ -197,8 +205,8 @@ public final class Utils {
 	}
 
 	/**
-	 * Used for logging plugin events, varying in severity. 0 - Info; 1 - Warn;
-	 * 2 - Severe.
+	 * Used for logging plugin events, varying in severity. 
+	 * 0 - Info; 1 - Warn; 2 - Severe.
 	 * 
 	 * @param message
 	 * @param severity
@@ -220,6 +228,11 @@ public final class Utils {
 		}
 	}
 
+	/**
+	 * Default level of logging (INFO)
+	 * 
+	 * @param message
+	 */
 	public final static void log(String message) {
 		log(message, 0);
 	}
@@ -304,8 +317,8 @@ public final class Utils {
 	}
 
 	/**
-	 * This needs to be used for all commands, just trying to think of a good
-	 * way to implement it.
+	 * If the incorrect command usage is entered, an error message defined in the strings.yml
+	 * will be displayed with the appropriate parameters.
 	 * 
 	 * @param command
 	 * @param arguments
@@ -319,7 +332,7 @@ public final class Utils {
 	 * Retrieve the GameMode for the integer, survival being default.
 	 * 
 	 * @param gamemode
-	 * @return
+	 * @return GameMode
 	 */
 	public final static GameMode getGamemode(int gamemode) {
 		if (gamemode == 0)
@@ -339,22 +352,76 @@ public final class Utils {
 	 * Parkour blocks. The strength and duration will be configurable and stored
 	 * against the appropriate blocks.
 	 * 
-	 * @return
+	 * @return ParkourBlocks
 	 */
 	public final static ParkourBlocks populateParkourBlocks() {
 		return populateParkourBlocks("DefaultBlocks");
 	}
 
-	public final static ParkourBlocks populateParkourBlocks(String path) {
-		if (!Parkour.getParkourConfig().getConfig().contains(path)) {
+	/**
+	 * Retrieve a custom ParkourBlocks set from the config. 
+	 * Some of the items will be set to the default ParkourBlocks.
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public final static ParkourBlocks populateParkourBlocks(String name) {
+		if (!Parkour.getParkourConfig().getConfig().contains(name + ".Death.Material"))
 			return null;
-		}
 
-		FileConfiguration config = Parkour.getParkourConfig().getConfig();
-		ParkourBlocks pb = new ParkourBlocks(Material.getMaterial(config.getString(path + ".Death.Material")), Material.getMaterial(config.getString(path + ".Finish.Material")), Material.getMaterial(config.getString(path + ".Climb.Material")), Material.getMaterial(config.getString(path + ".Launch.Material")), Material.getMaterial(config.getString(path + ".Speed.Material")),
-				Material.getMaterial(config.getString(path + ".Repulse.Material")), Material.getMaterial(config.getString("DefaultBlocks.NoRun.Material")), Material.getMaterial(config.getString("DefaultBlocks.NoPotion.Material")), Material.getMaterial(config.getString("DefaultBlocks.Bounce.Material")));
+		ParkourBlocks pb = new ParkourBlocks(
+				getParkourMaterial(name + ".Death.Material"), 
+				getParkourMaterial(name + ".Finish.Material"), 
+				getParkourMaterial(name + ".Climb.Material"), 
+				getParkourMaterial(name + ".Launch.Material"), 
+				getParkourMaterial(name + ".Speed.Material"),
+				getParkourMaterial(name + ".Repulse.Material"), 
+				getParkourMaterial(name + ".NoRun.Material"), 
+				getParkourMaterial(name + ".NoPotion.Material"), 
+				getParkourMaterial(name + ".Bounce.Material"));
 
 		return pb;
+	}
+
+	/**
+	 * Used for identifying what the problem with the ParkourBlocks is.
+	 * 
+	 * @param name
+	 * @param player
+	 */
+	public final static void validateParkourBlocks(String[] args, Player player){
+		String name = (args.length == 2 ? "ParkourBlocks." + args[1].toLowerCase() : "DefaultBlocks");
+
+		if (!Parkour.getParkourConfig().getConfig().contains(name + ".Death.Material")) {
+			player.sendMessage("ParkourBlocks " + name + " doesn't exist!");
+			return;
+		}
+
+		List<String> invalidTypes = new ArrayList<String>();
+		String[] types = {"Death", "Finish", "Climb", "Launch", "Speed", "Repulse", "NoRun", "NoPotion", "Bounce"};
+
+		for (String type : types){
+			if (getParkourMaterial(args[1].toLowerCase() + "." + type + ".Material") == null)
+				invalidTypes.add(type);
+		}
+
+		player.sendMessage(Static.getParkourString() + invalidTypes.size() + " problems with " + ChatColor.AQUA + name + ChatColor.WHITE + " found.");
+		if (invalidTypes.size() > 0){
+			String message = ChatColor.RED + "";
+			for (String type : invalidTypes){
+				message = message.concat(type + " ");
+			}
+			player.sendMessage(message);
+		}
+	}
+
+	public static Material getParkourMaterial(String path){
+		String materialName = Parkour.getParkourConfig().getConfig().getString(path);
+
+		if (materialName == null || materialName.equals("DEFAULT"))
+			return null;
+
+		return Material.getMaterial(materialName.toUpperCase());
 	}
 
 	/**
@@ -362,7 +429,6 @@ public final class Utils {
 	 * 
 	 * @param obj
 	 * @param path
-	 * @throws Exception
 	 */
 	public final static void saveAllPlaying(Object obj, String path) {
 		try {
@@ -430,6 +496,13 @@ public final class Utils {
 			player.sendMessage(Static.getParkourString() + subTitle);
 	}
 
+	/**
+	 * Delete method, possible arguments are course, checkpoint and lobby
+	 * This will only add a Question object with the relevant data until the player confirms the action later on.
+	 * 
+	 * @param args
+	 * @param player
+	 */
 	public final static void deleteCommand(String[] args, Player player) {
 		if (args[1].equalsIgnoreCase("course")) {
 			if (!CourseMethods.exist(args[2])) {
@@ -476,6 +549,13 @@ public final class Utils {
 		}
 	}
 
+	/**
+	 * Reset method, possible arguments are course and player
+	 * This will only add a Question object with the relevant data until the player confirms the action later on.
+	 * 
+	 * @param args
+	 * @param player
+	 */
 	public final static void resetCommand(String[] args, Player player) {
 		if (args[1].equalsIgnoreCase("course")) {
 			if (!CourseMethods.exist(args[2])) {
@@ -504,11 +584,17 @@ public final class Utils {
 		}
 	}
 
+	/**
+	 * Returned the standardised heading for Parkour
+	 * 
+	 * @param headingText
+	 * @return String
+	 */
 	public static String getStandardHeading(String headingText){
 		return "-- " + ChatColor.BLUE + ChatColor.BOLD + headingText + ChatColor.RESET + " --";
 	}
-	
-	
+
+
 	/**
 	 * Initiate a conversation using the provided API. 
 	 * @param player
@@ -517,4 +603,10 @@ public final class Utils {
 	public static void startConversation(Player player, ConversationType type) {
 		new Conversation(player, type);
 	}
+
+	public static int parseMaterialAmount(String amountString) {
+		int amount = Integer.parseInt(amountString);
+		return amount < 1 ? 1 : amount > 64 ? 64 : amount;
+	}
+
 }

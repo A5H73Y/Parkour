@@ -227,6 +227,7 @@ public final class Help {
 		displayCommandUsage(player, "list", "(players / courses)", "Display appropriate list");
 		displayCommandUsage(player, "quiet", null, "Toggle visibility of Parkour messages");
 		displayCommandUsage(player, "invite", "(player)", "Invite the player to the course");
+		displayCommandUsage(player, "challenge", "(course) (player)", "Challenge player to course");
 		displayCommandUsage(player, "help | contact", null, "To get help or contact me");
 		displayCommandUsage(player, "about | version", null, "Display Parkour information");
 	}
@@ -267,11 +268,12 @@ public final class Help {
 
 	private static void displayAdminCommands(Player player){
 		player.sendMessage(Utils.getStandardHeading("Admin Commands"));
-		
+
 		displayCommandUsage(player, "delete", "", "");
 		displayCommandUsage(player, "reset", "", "");
 		displayCommandUsage(player, "economy", "", "");
 		displayCommandUsage(player, "createPB", "", "");
+		displayCommandUsage(player, "validatePB", "", "");
 		displayCommandUsage(player, "sql", "", "");
 		displayCommandUsage(player, "settings", "", "");
 		displayCommandUsage(player, "request / bug", "", "");
@@ -288,7 +290,7 @@ public final class Help {
 		displaySignCommandUsage(player, "JoinAll", "(ja)", "Displays all courses to join");
 		displaySignCommandUsage(player, "Effect", "(e)", "Apply a Parkour effect");
 		displaySignCommandUsage(player, "Stats", "(s)", "Display course stats");
-		
+
 		player.sendMessage(ChatColor.YELLOW + "() = shortcuts");
 	}
 
@@ -297,12 +299,12 @@ public final class Help {
 			player.sendMessage(Static.getParkourString() + "Vault has not been linked.");
 			return;
 		}
-		
+
 		if (args.length < 2){
 			player.sendMessage(Utils.invalidSyntax("econ", "(info / recreate / setprize / setfee)"));
 			return;
 		}
-		
+
 		if (args[1].equalsIgnoreCase("info")){
 			player.sendMessage(Static.getParkourString() + "Linked with Vault v" + StartPlugin.vault.getDescription().getVersion());
 

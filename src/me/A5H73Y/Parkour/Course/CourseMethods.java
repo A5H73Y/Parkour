@@ -16,6 +16,7 @@ import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -188,29 +189,30 @@ public class CourseMethods {
 	 * @param args
 	 * @param player
 	 */
-	public static void displayCourseInfo(String[] args, Player player) {
-		if (!exist(args[1])) {
+	public static void displayCourseInfo(String courseName, Player player) {
+		if (!exist(courseName)) {
 			player.sendMessage(Utils.getTranslation("Error.Unknown"));
 			return;
 		}
-
+		
+		courseName = courseName.toLowerCase();
 		ChatColor aqua = ChatColor.AQUA;
 
-		int views = Parkour.getParkourConfig().getCourseData().getInt(args[1] + ".Views");
-		int completed = Parkour.getParkourConfig().getCourseData().getInt(args[1] + ".Completed");
-		int checkpoints = Parkour.getParkourConfig().getCourseData().getInt(args[1] + ".Points");
-		int maxDeaths = Parkour.getParkourConfig().getCourseData().getInt(args[1] + ".MaxDeaths");
-		int minLevel = Parkour.getParkourConfig().getCourseData().getInt(args[1] + ".MinimumLevel");
-		int rewardLevel = Parkour.getParkourConfig().getCourseData().getInt(args[1] + ".Level");
-		int XP = Parkour.getParkourConfig().getCourseData().getInt(args[1] + ".XP");
-		int parkoins = Parkour.getParkourConfig().getCourseData().getInt(args[1] + ".Parkoins");
-		String lobby = Parkour.getParkourConfig().getCourseData().getString(args[1] + ".Lobby");
-		String nextCourse = Parkour.getParkourConfig().getCourseData().getString(args[1] + ".Course");
-		String creator = Parkour.getParkourConfig().getCourseData().getString(args[1] + ".Creator");
+		int views = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Views");
+		int completed = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Completed");
+		int checkpoints = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Points");
+		int maxDeaths = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".MaxDeaths");
+		int minLevel = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".MinimumLevel");
+		int rewardLevel = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Level");
+		int XP = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".XP");
+		int parkoins = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Parkoins");
+		String lobby = Parkour.getParkourConfig().getCourseData().getString(courseName + ".Lobby");
+		String nextCourse = Parkour.getParkourConfig().getCourseData().getString(courseName + ".Course");
+		String creator = Parkour.getParkourConfig().getCourseData().getString(courseName + ".Creator");
 
 		double completePercent = Math.round(((completed * 1.0 / views) * 100));
 
-		player.sendMessage(Utils.getStandardHeading(Utils.standardizeText(args[1])));
+		player.sendMessage(Utils.getStandardHeading(Utils.standardizeText(courseName) + " statistics"));
 
 		player.sendMessage("Views: " + aqua + views);
 		player.sendMessage("Completed: " + aqua + completed + " times. (" + completePercent + "%)");
@@ -302,7 +304,7 @@ public class CourseMethods {
 
 			level = getConfig.getInt("Lobby." + args[1] + ".Level");
 
-			if (level > 0 && !player.hasPermission("Parkour.MinBypass")) {
+			if (level > 0 && !player.hasPermission("Parkour.Admin.MinBypass")) {
 				if (Parkour.getParkourConfig().getUsersData().getInt("PlayerInfo." + player.getName() + ".Level") < level) {
 					player.sendMessage(Utils.getTranslation("Error.RequiredLvl").replace("%LEVEL%", String.valueOf(level)));
 					return;
@@ -870,12 +872,34 @@ public class CourseMethods {
 		//(course) (player)
 		if (!Validation.challengePlayer(args, player))
 			return;
-		
+
 		Player target = Bukkit.getPlayer(args[2]);
-		
+
 		target.sendMessage(Static.getParkourString() + "You have been challenged by %PLAYER% to beat %COURSE%.");
 		target.sendMessage(ChatColor.GRAY + "Enter " + ChatColor.GREEN + "/pa accept " + ChatColor.GRAY + " to accept.");
 		player.sendMessage(Static.getParkourString() + "You have challenged %PLAYER% to beat %COURSE%!");
 		Static.addChallenge(new Challenge(player.getName(), target.getName(), args[1].toLowerCase()));
+	}
+
+	public static void setJoinItem(String[] args, Player player) {
+		if (!CourseMethods.exist(args[1])) {
+			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
+			return;
+		}
+		if (Material.getMaterial(args[2].toUpperCase()) == null) {
+			player.sendMessage(Static.getParkourString() + "Invalid material: " + args[2].toUpperCase());
+			return;
+		}
+		if (!Utils.isNumber(args[3])) {
+			player.sendMessage(Static.getParkourString() + "Reward level needs to be numeric.");
+			return;
+		}
+		
+		int amount = Utils.parseMaterialAmount(args[3]);
+		
+		Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".JoinItemMaterial", args[2].toUpperCase());
+		Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".JoinItemAmount", amount);
+		Parkour.getParkourConfig().saveCourses();
+		player.sendMessage(Static.getParkourString() + "Join item for " + args[1] + " set to " + args[2] + " (" + amount + ")");
 	}
 }

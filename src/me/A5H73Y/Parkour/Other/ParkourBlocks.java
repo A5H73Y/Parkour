@@ -7,14 +7,14 @@ import org.bukkit.Material;
 public class ParkourBlocks implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private Material death, finish, climb, launch, speed, repulse, norun, nopotion, doublejump;
-	
+
 	private double str_launch, str_climb, str_repulse, str_doublejump;
-	
+
 	private int str_speed, dur_speed;
-	
-	
+
+
 	/**
 	 * New as of 4.0. I've rethought how I'm going to achieve this. There will be ParkourBlock types, each with an identifier.
 	 * For example if I was going to have different themes throughout the server, each course theme would have it's own set of ParkourBlocks.
@@ -40,11 +40,11 @@ public class ParkourBlocks implements Serializable{
 		this.nopotion = nopotion;
 		this.doublejump = doublejump;
 	}
-	
+
 	public Material getDeath() {
 		return death;
 	}
-	
+
 	public void setDeath(Material death) {
 		this.death = death;
 	}

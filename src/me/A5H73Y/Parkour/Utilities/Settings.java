@@ -10,16 +10,16 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class Settings {
 
 	private boolean commandPermission, chatPrefix, disablePlayerDamage, resetOnLeave, enforceWorld, disableCommands, allowTrails, signPermission;
-	
+
 	//Display
 	private boolean displayWelcome;
-	
+
 	//Materials
 	private Material suicide, hideall, leave;
-	
+
 	//Lists
 	private List<String> cmdWhitelist; 
-	
+
 	public Settings(){
 		FileConfiguration config = Parkour.getParkourConfig().getConfig();
 		commandPermission = config.getBoolean("Other.CommandPermissions");
@@ -30,11 +30,11 @@ public class Settings {
 		disableCommands = config.getBoolean("OnCourse.EnforceParkourCommands.Enabled");
 		allowTrails = config.getBoolean("OnCourse.AllowTrails");
 		signPermission = config.getBoolean("Other.Parkour.SignPermissions");
-		
+
 		suicide = Material.getMaterial(config.getString("OnJoin.Item.Suicide.Material"));
 		hideall = Material.getMaterial(config.getString("OnJoin.Item.HideAll.Material"));
 		leave = Material.getMaterial(config.getString("OnJoin.Item.Leave.Material"));
-		
+
 		displayWelcome = config.getBoolean("Other.Display.JoinWelcomeMessage");
 	}
 

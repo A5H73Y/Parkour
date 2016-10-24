@@ -14,8 +14,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Configurations {
 
-	private File dataFolder, courseFile, stringFile, usersFile, invFile, checkFile, upgFile, econFile;
-	private FileConfiguration courseData, stringData, usersData, invData, checkData, upgData, econData, config;
+	private File dataFolder, courseFile, stringFile, usersFile, invFile, checkFile, econFile;
+	private FileConfiguration courseData, stringData, usersData, invData, checkData, econData, config;
 
 	/**
 	 * This no longer generates the default config.yml to allow the ability of creating a backup of the existing config.
@@ -36,8 +36,6 @@ public class Configurations {
 		invData = new YamlConfiguration();
 		checkFile = new File(dataFolder, "checkpoints.yml");
 		checkData = new YamlConfiguration();
-		upgFile = new File(dataFolder, "upgrades.yml");
-		upgData = new YamlConfiguration();
 
 		// courses
 		if (!courseFile.exists()) {
@@ -94,17 +92,6 @@ public class Configurations {
 				Utils.log("Failed!");
 			}
 		}
-		
-		// upgrades
-		if (!upgFile.exists()) {
-			try {
-				upgFile.createNewFile();
-				Utils.log("Created upgrades.yml");
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				Utils.log("Failed!");
-			}
-		}
 
 		try{
 			courseData.load(courseFile);
@@ -112,7 +99,7 @@ public class Configurations {
 			usersData.load(usersFile);
 			invData.load(invFile);
 			checkData.load(checkFile);
-			upgData.load(upgFile);
+
 		} catch (Exception ex){
 			Utils.log("Failed loading config: " + ex.getMessage());
 			ex.printStackTrace();
@@ -127,7 +114,6 @@ public class Configurations {
 		//saveEcon();
 		saveInv();
 		saveStrings();
-		saveUpgrades();
 		saveUsers();
 		Parkour.getPlugin().saveConfig();
 	}
@@ -141,7 +127,6 @@ public class Configurations {
 		usersData = YamlConfiguration.loadConfiguration(usersFile);
 		invData = YamlConfiguration.loadConfiguration(invFile);
 		checkData = YamlConfiguration.loadConfiguration(checkFile);
-		upgData = YamlConfiguration.loadConfiguration(upgFile);
 	}
 
 	public FileConfiguration getCheckData() {
@@ -162,10 +147,6 @@ public class Configurations {
 
 	public FileConfiguration getInvData() {
 		return invData;
-	}
-
-	public FileConfiguration getUpgData() {
-		return upgData;
 	}
 
 	public FileConfiguration getEconData() {
@@ -214,17 +195,6 @@ public class Configurations {
 		}
 	}
 
-	public void saveUpgrades() {
-		try {
-			upgData.addDefault("XPRankUpAt", 500);
-			upgData.addDefault("XPRankUpMultiplier", 100);
-			upgData.options().copyDefaults(true);
-			upgData.save(upgFile);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
-
 	public void saveEcon() {
 		try {
 			econData.addDefault("Price.Kit", 0);
@@ -234,7 +204,6 @@ public class Configurations {
 			ex.printStackTrace();
 		}
 	}
-
 
 	public List<String> getAllCourses() {
 		return courseData.getStringList("Courses");
@@ -278,6 +247,7 @@ public class Configurations {
 			stringData.addDefault("Event.Chat", "&0[&b%RANK%&0] &f%PLAYER%&0:&f %MESSAGE%");
 
 			stringData.addDefault("Parkour.Join", "Joined &b%COURSE%");
+			stringData.addDefault("Parkour.JoinLives", "&7You have &3%AMOUNT% &7lives on this course!");
 			stringData.addDefault("Parkour.Leave", "You left &b%COURSE%");
 			stringData.addDefault("Parkour.Created", "&b%COURSE% &fhas been created and selected!");
 			stringData.addDefault("Parkour.Delete", "&b%COURSE% &fhas been deleted!");
@@ -298,7 +268,7 @@ public class Configurations {
 			stringData.addDefault("Parkour.Die2", "You died! Going back to checkpoint &b%POINT%");
 			stringData.addDefault("Parkour.LifeCount", "&b%AMOUNT% &flives remaining!");
 			stringData.addDefault("Parkour.Playing", " &b%PLAYER% &f- &8C: &7%COURSE% &8D: &7%DEATHS% &8T: &7%TIME%");
-			
+
 			stringData.addDefault("Error.NotOnCourse", "You are not on this course!");
 			stringData.addDefault("Error.TooMany", "Too many arguments!");
 			stringData.addDefault("Error.TooLittle", "Not enough arguments!");
@@ -318,10 +288,10 @@ public class Configurations {
 			stringData.addDefault("Error.Syntax", "&cInvalid Syntax: &f/pa &8%COMMAND% &7%ARGUMENTS%");
 			stringData.addDefault("Error.UnknownSignCommand", "Unknown sign command!");
 			stringData.addDefault("Error.UnknownCommand", "Unknown command!");
-			
+
 			stringData.addDefault("Help.Command", "&7/pa help &9%COMMAND% &0: &7To learn more about this command.");
 			stringData.addDefault("Help.Commands", "&3/pa &bcmds &8: &fTo display the Parkour commands menu.");
-			
+
 			stringData.addDefault("Other.Item_Suicide", "&7SHIFT + &6Right click to commit suicide");
 			stringData.addDefault("Other.Item_HideAll", "&7SHIFT + &6Right click to toggle visibility");
 			stringData.addDefault("Other.Item_Leave", "&7SHIFT + &6Right click to leave course");
@@ -382,7 +352,7 @@ public class Configurations {
 		config.addDefault("DefaultBlocks.Repulse.Material", "ENDER_STONE");
 		config.addDefault("DefaultBlocks.Repulse.Strength", 0.4);
 		config.addDefault("DefaultBlocks.NoRun.Material", "GOLD_BLOCK");
-		config.addDefault("DefaultBlocks.NoPotion.Material", "HUGE_MUSHROOM_2");
+		config.addDefault("DefaultBlocks.NoPotion.Material", "HUGE_MUSHROOM_1");
 
 		config.addDefault("OnJoin.SetGamemode", 0);
 		config.addDefault("OnJoin.DisplayFly", true);
@@ -393,6 +363,7 @@ public class Configurations {
 		config.addDefault("OnJoin.Item.HideAll.Material", "BONE");
 		config.addDefault("OnJoin.Item.Leave.Material", "SAPLING");
 
+		config.addDefault("OnCourse.DieInLiquid", false);
 		config.addDefault("OnCourse.EnforceParkourCommands.Enabled", true);
 		String[] whitelisted = {"login"};
 		config.addDefault("OnCourse.EnforceParkourCommands.Whitelist", whitelisted);
