@@ -401,7 +401,7 @@ public final class Utils {
 		String[] types = {"Death", "Finish", "Climb", "Launch", "Speed", "Repulse", "NoRun", "NoPotion", "Bounce"};
 
 		for (String type : types){
-			if (getParkourMaterial(args[1].toLowerCase() + "." + type + ".Material") == null)
+			if (getParkourMaterial(name + "." + type + ".Material") == null)
 				invalidTypes.add(type);
 		}
 

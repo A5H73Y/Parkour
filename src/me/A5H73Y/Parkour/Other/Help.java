@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 public final class Help {
 
 	public static void lookupCommandHelp(String[] args, Player player){
-
 		if (args.length == 1){
 			player.sendMessage(Static.getParkourString() + "Find help about any Parkour command:");
 			player.sendMessage("             /pa help " + ChatColor.AQUA + "(command)");
@@ -22,10 +21,6 @@ public final class Help {
 		if (args[1].equalsIgnoreCase("join")){
 			displayHelpMessage(player, "Joining a Course", "/pa join (courseName)", "/pa join Tutorial",
 					" You are able to join a course using its name, no longer having to use the correct case. Each course has a unique numeric identifier (courseID) which can be used to join the course instead of its name. Once you have joined a course, you are in 'Parkour Mode' which allows you to interact with the 'Parkour Blocks' and track your statistics.");
-
-		} else if (args[1].equalsIgnoreCase("create")){
-			displayHelpMessage(player, "Creating a Course", "/pa create (courseName)", "/pa create Tutorial",
-					" Creating a new Parkour course only takes 1 command, all the setup is automatic. Remember that your location and the way you're facing is saved and then loaded once the course is joined. By default the course will be 'unfinished' until set otherwise using '/pa ready'.");
 
 		} else if (args[1].equalsIgnoreCase("leave")){
 			displayHelpMessage(player, "Leaving a Course", "/pa leave", null,
@@ -43,9 +38,73 @@ public final class Help {
 			displayHelpMessage(player, "Teleport to Parkour lobby", "/pa lobby [lobby]", null,
 					" Teleport to the chosen lobby. If you do not specify a lobby it will take you to the default lobby, otherwise it will attempt to join the Lobby specified in the argument. Note that some lobbies can have a Parkour level requirement.");
 
-		} else if (args[1].equalsIgnoreCase("")){	
-			displayHelpMessage(player, "", "", "",
-					" ");
+		} else if (args[1].equalsIgnoreCase("perms")){	
+			displayHelpMessage(player, "Display your Parkour Permissions", "/pa perms", null,
+					" Your Parkour permissions will be displayed based on the group permissions you have. For example if you have 'Parkour.Admin.*', then you are a part of the Admin group, same for 'Parkour.Basic.*' etc. However if you have been given only a selection of permissiosn from that group then it will not display, for example 'Parkour.Admin.Testmode' does not make you an admin. 'Parkour.*' will give you permission for everyhing.");
+
+		} else if (args[1].equalsIgnoreCase("like / dislike")){	
+			displayHelpMessage(player, "Vote whether or not you liked the course", "/pa like", "/pa dislike",
+					" Once you complete a course, you will have the ability to submit your vote on whether you liked the course or not. You only have one for each course. The only purpose of this is statistics, i.e. 70% of people liked this course.");
+
+		} else if (args[1].equalsIgnoreCase("list")){	
+			displayHelpMessage(player, "Display all the courses / Parkour players", "/pa list courses", "/pa list players", 
+					" This command will display either all the courses saved on the server in a page format, ordered by date of creation, each having their own unique numerical ID which can be used to join the course; or display all the players that are currently using the plugin, this includes which course, and how many times they've died.");
+
+		} else if (args[1].equalsIgnoreCase("quiet")){	
+			displayHelpMessage(player, "Toggle Quiet mode", "/pa quiet", null, 
+					" If the Parkour messages are getting annoying i.e. Seeing 'You died! ...' regularly, you can toggle visibility of these messages using this command.");
+
+		} else if (args[1].equalsIgnoreCase("invite")){	
+			displayHelpMessage(player, "Invite a player to the course", "/pa invite (player)", "/pa invite A5H73Y", 
+					" If another player is interested on which course you are on, simply send them an invite and it will instruct them on how to join. If you want to challenge eachother, check out the '/pa challenge' command.");
+
+		} else if (args[1].equalsIgnoreCase("challenge")){	
+			displayHelpMessage(player, "Challenge the player to a course", "/pa challenge (course) (player)", "/pa challenge Tutorial A5H73Y", 
+					" Fancy adding an element of competition? Simply execute the command above to send a challenge to the player, if they accept using '/pa accept' then you'll both be teleported to the beginning of the course and a countdown will initiate, when the counter reaches 0 the race will begin. The visibility of each player is configurable.");
+
+		} else if (args[1].equalsIgnoreCase("create")){
+			displayHelpMessage(player, "Creating a Course", "/pa create (courseName)", "/pa create Tutorial",
+					" Creating a new Parkour course only takes 1 command, all the setup is automatic. Remember that your location and the way you're facing is saved and then loaded once the course is joined. By default the course will be 'unfinished' until set otherwise using '/pa ready'.");
+
+		} else if (args[1].equalsIgnoreCase("checkpoint")){	
+			displayHelpMessage(player, "Create a checkpoint", "/pa checkpoint [number]", "/pa checkpoint 1",
+					" Made to be as automated and easy as possible, all you do is simply select (edit) a course using '/pa select (course)', then stand where you want a checkpoint and enter '/pa checkpoint' and as if by magic it's all done! If you mess up a checkpoint, you can simply override it using '/pa checkpoint (number)'. A pressureplate will be automatically placed.");
+
+		} else if (args[1].equalsIgnoreCase("kit")){	
+			displayHelpMessage(player, "Retrieve the chosen ParkourBlocks", "/pa kit [PB]", "/pa kit jungle",
+					" New in Parkour 4, you can create a set of ParkourBlocks and call it whatever you want. Using this command you can fill your inventory with the blocks you configured, if you don't specify a ParkourBlocks set it will use the Default blocks.");
+
+		} else if (args[1].equalsIgnoreCase("select")){	
+			displayHelpMessage(player, "Start editing a course", "/pa select (course)", "/pa select Tutorial",
+					" Many of the commands don't require a course parameter as they will use the course you are editing to make things a bit easier. For example '/pa checkpoint' will use the course you are editing, if you want to find out which course you are currently editing use '/pa select'. When you create a course, it will automatically select it for editing.");
+
+		} else if (args[1].equalsIgnoreCase("done")){	
+			displayHelpMessage(player, "Stop editing a course", "/pa done", null,
+					" Will finish editing whatever course you were editing.");
+			
+		} else if (args[1].equalsIgnoreCase("setstart")){	
+			displayHelpMessage(player, "Overwrite the start of a course", "/pa setstart (course)", "/pa setstart Tutorial",
+					" The start of the course will be overwritten to your current position, rather than having to delete the course.");
+
+		} else if (args[1].equalsIgnoreCase("setcreator")){	
+			displayHelpMessage(player, "Overwrite the creator of a course", "/pa setcreator (course) (playerName)", "/pa setcreator Tutorial A5H73Y",
+					" The creator of the course will be overwritten to what you've specified. Helpful if an Admin has to setup the course which a non-admin player created. The creator of a course will have certain permissions for that course, regardless of if they are an admin.");
+
+		} else if (args[1].equalsIgnoreCase("setlobby")){	
+			displayHelpMessage(player, "Create or overwrite a Parkour lobby", "/pa setlobby [name] [levelRequired]", "/pa setlobby City 10",
+					" Create a lobby where you are stood, specifying its name and a level requirement to join. You are able to link courses to lobbies after completion.");
+
+		} else if (args[1].equalsIgnoreCase("finish")){	
+			displayHelpMessage(player, "Set the status of the course to finished", "/pa finish", null,
+					" When you first create a course, it will not be joinable until it has been set to finished by its creator (configurable). The command will set the status to ready to join and will place the default finish block to where you are stood.");
+		
+		} else if (args[1].equalsIgnoreCase("prize")){	
+			displayHelpMessage(player, "Start a prize configuration conversation", "/pa prize", null,
+					" A conversation will be started to allow you to setup a course prize exactly how you want, without having to enter long ugly commands.");
+
+		} else if (args[1].equalsIgnoreCase("test")){	
+			displayHelpMessage(player, "Toggle Parkour test mode", "/pa test", null,
+					" When wanting to test your course in 'ParkourMode' to similate how each ParkourBlocks will respond, you can enable TestMode, which will basically fake being on a course to allow you to test it without having to join / leave the course repeatedly.");
 
 		} else if (args[1].equalsIgnoreCase("")){	
 			displayHelpMessage(player, "", "", "",
@@ -55,34 +114,10 @@ public final class Help {
 			displayHelpMessage(player, "", "", "",
 					" ");
 
-		} else if (args[1].equalsIgnoreCase("")){	
-			displayHelpMessage(player, "", "", "",
-					" ");
-
-		} else if (args[1].equalsIgnoreCase("")){	
-			displayHelpMessage(player, "", "", "",
-					" ");
-
-		} else if (args[1].equalsIgnoreCase("")){	
-			displayHelpMessage(player, "", "", "",
-					" ");
-
-		} else if (args[1].equalsIgnoreCase("")){	
-			displayHelpMessage(player, "", "", "",
-					" ");
-
-		} else if (args[1].equalsIgnoreCase("")){	
-			displayHelpMessage(player, "", "", "",
-					" ");
-
-		} else if (args[1].equalsIgnoreCase("")){	
-			displayHelpMessage(player, "", "", "",
-					" ");
-
-		} else if (args[1].equalsIgnoreCase("")){	
-			displayHelpMessage(player, "", "", "",
-					" ");
-
+			displayCommandUsage(player, "leaderboard", "(course)", "Display the course leaderboards");
+			displayCommandUsage(player, "tutorial", null, "Link to the official tutorial page");
+			
+			
 		} else{
 			player.sendMessage(Static.getParkourString() + "Sorry, I haven't written a help guide for that command yet.");
 		}
@@ -132,72 +167,7 @@ public final class Help {
 		} else {
 			player.sendMessage(Static.getParkourString() + "Invalid page!");
 			displayCommandsIndex(player);
-
 		}
-
-		/*
-		if (args.length == 1) {
-				} else if (args.length == 2) {
-			if (args[1].equalsIgnoreCase("1")) {							
-				player.sendMessage("-=- " + Static.getParkourString() + "-=-");
-				player.sendMessage(Daqua + "/pa " + AQUA + "join " + ChatColor.YELLOW + "(course)" + Black + " : " + White + "Join the course");
-				player.sendMessage(Daqua + "/pa " + AQUA + "leave " + ChatColor.YELLOW + "[player]" + Black + " : " + White + "Leave the course");
-				player.sendMessage(Daqua + "/pa " + AQUA + "create " + ChatColor.YELLOW + "(course)" + Black + " : " + White + "Create and select a course");
-				player.sendMessage(Daqua + "/pa " + AQUA + "checkpoint " + ChatColor.YELLOW + "[point]" + Black + " : " + White + "Create a checkpoint");
-				player.sendMessage(Daqua + "/pa " + AQUA + "select " + ChatColor.YELLOW + "(course)" + Black + " : " + White + "Edit a course, " + ChatColor.GRAY + "done" + White + " to stop");
-				player.sendMessage(Daqua + "/pa " + AQUA + "delete " + ChatColor.YELLOW + "(course)" + Black + " : " + White + "Delete the course");
-				player.sendMessage(Daqua + "/pa " + AQUA + "lobby" + Black + " : " + White + "Teleport to the Lobby");
-				player.sendMessage(Daqua + "/pa " + AQUA + "invite " + ChatColor.YELLOW + "(player)" + Black + " : " + White + "Invite a player to the course");
-				player.sendMessage(Daqua + "/pa " + AQUA + "kit" + Black + " : " + White + "Fill hotbar with Parkour blocks");
-				player.sendMessage(Daqua + "/pa " + AQUA + "info " + ChatColor.YELLOW + "[Player]" + Black + " : " + White + "Display your information");
-				player.sendMessage(Daqua + "/pa " + AQUA + "test " + ChatColor.YELLOW + "(on / off)" + Black + " : " + White + "Toggle Test mode");
-				player.sendMessage(Daqua + "/pa " + AQUA + "tp " + ChatColor.YELLOW + "(course)" + Black + " : " + White + "Teleport to the course");
-				player.sendMessage(Daqua + "/pa " + AQUA + "tpc " + ChatColor.YELLOW + "(course) " + ChatColor.BLUE + "(number)" + Black + " : " + White + "Teleport to a specific checkpoint");
-				player.sendMessage(Daqua + "/pa " + AQUA + "prize " + ChatColor.YELLOW + "(course) " + ChatColor.BLUE + "(id) (amount)" + Black + " : " + White + "Set a custom prize");
-				player.sendMessage(Daqua + "/pa " + AQUA + "list " + ChatColor.YELLOW + "(players/courses)" + Black + " : " + White + "List all Parkour players/courses");
-				player.sendMessage(Daqua + "/pa " + AQUA + "cmds [1/3]" + Black + " : " + White + "Display the Parkour commands menu");
-				player.sendMessage("-=- Page " + AQUA + "1" + White + " / " + Daqua + "3" + White + " -=-");
-			} else if (args[1].equalsIgnoreCase("2")) {
-				player.sendMessage("-=- " + Static.getParkourString() + "-=-");
-				player.sendMessage(Daqua + "/pa " + AQUA + "finish " + ChatColor.YELLOW + "(course)" + Black + " : " + White + "Set the course to finished");
-				player.sendMessage(Daqua + "/pa " + AQUA + "add " + ChatColor.YELLOW + "(command/death) (argument)" + Black + " : " + White + "Add command/deathid");
-				player.sendMessage(Daqua + "/pa " + AQUA + "setstart" + Black + " : " + White + "Set the selected courses new start point");
-				player.sendMessage(Daqua + "/pa " + AQUA + "setcreator " + ChatColor.YELLOW + "(course) (name)"+Black + " : " + White + "Set creator of a course");
-				player.sendMessage(Daqua + "/pa " + AQUA + "link " + ChatColor.YELLOW + "(course) (lobby)" + Black + " : " + White + "Link a course with a custom lobby");	
-				player.sendMessage(Daqua + "/pa " + AQUA + "reset " + ChatColor.YELLOW + "(course)" + Black + " : " + White + "Reset the course leaderboards");
-				player.sendMessage(Daqua + "/pa " + AQUA + "resetall" + Black + " : " + White + "Reset all course's leaderboards");
-				player.sendMessage(Daqua + "/pa " + AQUA + "resetcourse " + ChatColor.YELLOW + "(course)" + Black + " : " + White + "Reset all data about the course");
-				player.sendMessage(Daqua + "/pa " + AQUA + "resetplayer " + ChatColor.YELLOW + "(player)" + Black + " : " + White + "Reset all data about the player");
-				player.sendMessage(Daqua + "/pa " + AQUA + "quiet" + Black + " : " + White + "Disable death messages");
-				player.sendMessage(Daqua + "/pa " + AQUA + "econ | economy" + Black + " : " + White + "Display Economy information");
-				player.sendMessage(Daqua + "/pa " + AQUA + "request | bug" + Black + " : " + White + "Request a feature for Parkour");
-				player.sendMessage(Daqua + "/pa " + AQUA + "help | contact" + Black + " : " + White + "To get help or contact me");
-				player.sendMessage(Daqua + "/pa " + AQUA + "tutorial | tut" + Black + " : " + White + "Link to the official tutorial page");
-				player.sendMessage(Daqua + "/pa " + AQUA + "mysql " + ChatColor.YELLOW + "[connect/status/info/recreate]" + Black + " : " + White + "MySQL commands");
-				player.sendMessage(Daqua + "/pa " + AQUA + "reload" + Black + " : " + White + "Reload Parkour config");
-				player.sendMessage("-=- Page " + AQUA + "2" + White + " / " + Daqua + "3" + White + " -=-");
-			} else if (args[1].equalsIgnoreCase("3")) {
-				player.sendMessage("-=- " + Static.getParkourString() + "-=-");
-				player.sendMessage(ChatColor.GRAY + "Please remember these are setting Parkour levels and XP, not minecrafts.");
-				player.sendMessage(Daqua + "/pa " + AQUA + "givexp " + ChatColor.YELLOW + "(amount) [player]" + Black + " : " + White + "Give yourself / player XP");
-				player.sendMessage(Daqua + "/pa " + AQUA + "setxp " + ChatColor.YELLOW + "(amount) [player]" + Black + " : " + White + "Set yours or others XP");
-				player.sendMessage(Daqua + "/pa " + AQUA + "setlevel " + ChatColor.YELLOW + "(amount) [player]" + Black + " : " + White + "Set yours or others Level");
-				player.sendMessage(Daqua + "/pa " + AQUA + "rewardxp " + ChatColor.YELLOW + "(course) (amount)" + Black + " : " + White + "Set the XP reward for a course");
-				player.sendMessage(Daqua + "/pa " + AQUA + "rewardlevel " + ChatColor.YELLOW + "(course) (level)" + Black + " : " + White + "Set the level reward for a course");
-				player.sendMessage(Daqua + "/pa " + AQUA + "rewardrank " + ChatColor.YELLOW + "(course) (rank)" + Black + " : " + White + "Set the rank reward for a course");
-				player.sendMessage(Daqua + "/pa " + AQUA + "setminlevel " + ChatColor.YELLOW + "(course) (level)" + Black + " : " + White + "Set a minimum level requirement for a course");
-				player.sendMessage(Daqua + "/pa " + AQUA + "setmaxdeath " + ChatColor.YELLOW + "(course) (amount)" + Black + " : " + White + "Set a maximum death for a course");
-				player.sendMessage(Daqua + "/pa " + AQUA + "spectate " + ChatColor.YELLOW + "(player) [-alert]" + Black + " : " + ChatColor.RED + "BETA " + White + "Spectate the Player");
-				player.sendMessage(Daqua + "Remember: " + AQUA + "()" + White + " means required" + ChatColor.YELLOW + " : " + AQUA + "[]" + White + " means optional.");
-				player.sendMessage("-=- Page " + AQUA + "3" + White + " / " + Daqua + "3" + White + " -=-");
-			} else {
-				player.sendMessage(Static.getParkourString() + "Page doesn't exist!");
-			}
-		} else if (args.length >= 3) {
-			player.sendMessage(Utils.invalidSyntax("cmds", "[1-3]"));
-		}
-		player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "These commands are out of date. They may have been changed / removed. I will update them when I am happy they will not change.");
-		 */
 	}
 
 
@@ -223,7 +193,7 @@ public final class Help {
 		displayCommandUsage(player, "course", "(course)", "Display the course information");
 		displayCommandUsage(player, "lobby", "[lobby]", "Teleport to the specified lobby");
 		displayCommandUsage(player, "perms", null, "Display your Parkour permissions");
-		displayCommandUsage(player, "like / dislike", null, "Vote if liked the course you finished");
+		displayCommandUsage(player, "like / dislike", null, "Vote for course you finished");
 		displayCommandUsage(player, "list", "(players / courses)", "Display appropriate list");
 		displayCommandUsage(player, "quiet", null, "Toggle visibility of Parkour messages");
 		displayCommandUsage(player, "invite", "(player)", "Invite the player to the course");
@@ -253,30 +223,28 @@ public final class Help {
 	private static void displayConfigureCommands(Player player){
 		player.sendMessage(Utils.getStandardHeading("Configure Commands"));
 
-		displayCommandUsage(player, "tp / tpc", "", "");
-		displayCommandUsage(player, "link", "", "");
-		displayCommandUsage(player, "linkPB", "", "");
-		displayCommandUsage(player, "setminlevel", "", "");
-		displayCommandUsage(player, "setmaxdeath", "", "");
-		displayCommandUsage(player, "firstreward", "", "");
-		displayCommandUsage(player, "rewardlevel", "", "");
-		displayCommandUsage(player, "rewardrank", "", "");
-		displayCommandUsage(player, "rewardparkoins", "", "");
-		displayCommandUsage(player, "", "", "");
-
+		displayCommandUsage(player, "tp / tpc", "(course)", "Teleport to course / checkpoint");
+		displayCommandUsage(player, "link", "(course) (argument)", "Link a course");
+		displayCommandUsage(player, "linkPB", "(course) (PB)", "Link ParkourBlocks");
+		displayCommandUsage(player, "setminlevel", "(course) (level)", "Set course minimum level");
+		displayCommandUsage(player, "setmaxdeath", "(course) (death)", "Set course maximum deaths");
+		displayCommandUsage(player, "firstreward", "(course)", "Toggle if the prize is given once");
+		displayCommandUsage(player, "rewardlevel", "(course) (level)", "Reward level on complete");
+		displayCommandUsage(player, "rewardrank", "(course) (rank)", "Reward rank on complete");
+		displayCommandUsage(player, "rewardparkoins", "(course) (amount)", "Reward Parkoins");
 	}
 
 	private static void displayAdminCommands(Player player){
 		player.sendMessage(Utils.getStandardHeading("Admin Commands"));
 
-		displayCommandUsage(player, "delete", "", "");
-		displayCommandUsage(player, "reset", "", "");
-		displayCommandUsage(player, "economy", "", "");
-		displayCommandUsage(player, "createPB", "", "");
-		displayCommandUsage(player, "validatePB", "", "");
-		displayCommandUsage(player, "sql", "", "");
-		displayCommandUsage(player, "settings", "", "");
-		displayCommandUsage(player, "request / bug", "", "");
+		displayCommandUsage(player, "delete", "(argument)", "Delete course / lobby");
+		displayCommandUsage(player, "reset", "(argument)", "Delete course / player");
+		displayCommandUsage(player, "economy", null, "Display economy menu");
+		displayCommandUsage(player, "createPB", null, "Start ParkourBlocks creation");
+		displayCommandUsage(player, "validatePB", "(PB)", "Validate ParkourBlocks");
+		displayCommandUsage(player, "sql", null, "Display SQL menu");
+		displayCommandUsage(player, "settings", null, "Display Parkour Settings");
+		displayCommandUsage(player, "request / bug", null, "Display relevant info");
 	}
 
 	private static void displaySignCommands(String[] args, Player player) {
@@ -287,7 +255,6 @@ public final class Help {
 		displaySignCommandUsage(player, "Finish", "(f)", "Optional finish sign for a Parkour course");
 		displaySignCommandUsage(player, "Lobby", "(l)", "Teleport to Parkour lobby");
 		displaySignCommandUsage(player, "Leave", "(le)", "Leave the current course");
-		displaySignCommandUsage(player, "JoinAll", "(ja)", "Displays all courses to join");
 		displaySignCommandUsage(player, "Effect", "(e)", "Apply a Parkour effect");
 		displaySignCommandUsage(player, "Stats", "(s)", "Display course stats");
 
@@ -374,8 +341,20 @@ public final class Help {
 		String type = Parkour.getDatabaseObj().getType();
 		player.sendMessage("Type: " + type);
 		player.sendMessage("Connected: " + (Parkour.getDatabaseObj().getConnection() != null));
-
 		//TODO 
+	}
+	
+	public static void displaySettings(Player player){
+		player.sendMessage(Utils.getStandardHeading("Parkour Settings"));
+		
+		player.sendMessage("Version: " + ChatColor.AQUA + Static.getVersion());
+		player.sendMessage("DevBuild: " + ChatColor.AQUA + Static.getDevBuild());
+		player.sendMessage("Economy: " + ChatColor.AQUA + Static.getEconomy());
+		player.sendMessage("BarAPI: " + ChatColor.AQUA + Static.getBarAPI());
+		player.sendMessage("Disable Commands: " + ChatColor.AQUA + Parkour.getSettings().isDisableCommands());
+		player.sendMessage("Enforce world: " + ChatColor.AQUA + Parkour.getSettings().isEnforceWorld());
+		
+		player.sendMessage(ChatColor.GRAY + "If you want more settings displayed, please ask");
 	}
 
 }

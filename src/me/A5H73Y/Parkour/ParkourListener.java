@@ -240,6 +240,13 @@ public class ParkourListener implements Listener {
 		if (PlayerMethods.isPlayerInTestmode(event.getPlayer().getName()))
 			return;
 
+		if (event.getTo().getBlockX() == 0 && event.getTo().getBlockY() == 0 && event.getTo().getBlockZ() == 0){
+			event.getPlayer().sendMessage(Static.getParkourString() + ChatColor.RED + "This checkpoint is invalid. For safety you have been teleported to the lobby.");
+			event.setCancelled(true);
+			PlayerMethods.playerLeave(event.getPlayer());
+			return;
+		}
+		
 		if (!Parkour.getSettings().isEnforceWorld())
 			return;
 
@@ -320,15 +327,8 @@ public class ParkourListener implements Listener {
 		if (check == null)
 			return;
 
-		if (check.getNextCheckpointX() == below.getLocation().getBlockX() && check.getNextCheckpointY() == below.getLocation().getBlockY() && check.getNextCheckpointZ() == below.getLocation().getBlockZ()) {
-
-			session.increaseCheckpoint();
-
-			if (course.getCheckpoints() == session.getCheckpoint())
-				event.getPlayer().sendMessage(Utils.getTranslation("Event.AllCheckpoints"));
-			else
-				event.getPlayer().sendMessage(Utils.getTranslation("Event.Checkpoint") + session.getCheckpoint() + " / " + course.getCheckpoints());
-		}
+		if (check.getNextCheckpointX() == below.getLocation().getBlockX() && check.getNextCheckpointY() == below.getLocation().getBlockY() && check.getNextCheckpointZ() == below.getLocation().getBlockZ())
+			PlayerMethods.increaseCheckpoint(session, event.getPlayer());
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)

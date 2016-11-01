@@ -391,6 +391,7 @@ public class Configurations {
 		config.addDefault("OnLeaveServer.LeaveCourse", false);
 		config.addDefault("OnLeaveServer.TeleportToLastCheckpoint", true);
 
+		config.addDefault("ParkourModes.Challenge.hidePlayers", true);
 		config.addDefault("ParkourModes.CodJumper.Enabled", false);
 		config.addDefault("ParkourModes.CodJumper.ConfirmSet", true);
 		config.addDefault("ParkourModes.Spectate.OnStart.NotifyPlayer", true);

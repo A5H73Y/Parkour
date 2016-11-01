@@ -844,9 +844,11 @@ public class PlayerMethods {
 		Static.removeChallenge(challenge);
 		final Player player = Bukkit.getPlayer(challenge.getPlayer());
 
-		player.hidePlayer(targetPlayer);
-		targetPlayer.hidePlayer(player);
-
+		if (Parkour.getParkourConfig().getConfig().getBoolean("ParkourModes.Challenge.hidePlayers")){
+			player.hidePlayer(targetPlayer);
+			targetPlayer.hidePlayer(player);
+		}
+		
 		CourseMethods.joinCourse(player, challenge.getCourseName());
 		CourseMethods.joinCourse(targetPlayer, challenge.getCourseName());
 
@@ -876,6 +878,15 @@ public class PlayerMethods {
 				}
 			}
 		};	
+	}
+
+	public static void increaseCheckpoint(ParkourSession session, Player player) {
+		session.increaseCheckpoint();
+
+		if (session.getCourse().getCheckpoints() == session.getCheckpoint())
+			player.sendMessage(Utils.getTranslation("Event.AllCheckpoints"));
+		else
+			player.sendMessage(Utils.getTranslation("Event.Checkpoint") + session.getCheckpoint() + " / " + session.getCourse().getCheckpoints());
 	}
 
 }

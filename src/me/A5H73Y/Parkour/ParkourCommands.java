@@ -191,7 +191,7 @@ public class ParkourCommands implements CommandExecutor {
 							return false;
 
 						CourseMethods.setMaxDeaths(args, player);
-					
+
 					} else if (args[0].equalsIgnoreCase("setjoinitem")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
 							return false;
@@ -275,7 +275,7 @@ public class ParkourCommands implements CommandExecutor {
 							return false;
 
 						Utils.startConversation(player, ConversationType.PARKOURBLOCKS);
-						
+
 					} else if (args[0].equalsIgnoreCase("linkpb")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
 							return false;
@@ -288,7 +288,7 @@ public class ParkourCommands implements CommandExecutor {
 					} else if (args[0].equalsIgnoreCase("validatepb")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
 							return false;
-						
+
 						Utils.validateParkourBlocks(args, player);
 
 					} else if (args[0].equalsIgnoreCase("challenge")) {
@@ -339,7 +339,7 @@ public class ParkourCommands implements CommandExecutor {
 						if (!Utils.hasPermission(player, "Parkour.Admin")) 
 							return false;
 
-						player.sendMessage(Static.getParkourString() + "Coming soon.");
+						Help.displaySettings(player);
 
 					} else if (args[0].equalsIgnoreCase("cmds")) {
 						Help.processCommandsInput(args, player);

@@ -1,6 +1,7 @@
 package me.A5H73Y.Parkour;
 
 import me.A5H73Y.Parkour.Course.CourseMethods;
+import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.SignMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
@@ -43,14 +44,15 @@ public class ParkourSignListener implements Listener {
 			} else if (event.getLine(1).equalsIgnoreCase("leave") || event.getLine(1).equalsIgnoreCase("le")) {
 				sm.createStandardSign(event, player, "Leave");
 
-			} else if (event.getLine(1).equalsIgnoreCase("joinall") || event.getLine(1).equalsIgnoreCase("ja")) {
-				sm.createStandardSign(event, player, "JoinAll");
-
 			} else if (event.getLine(1).equalsIgnoreCase("effect") || event.getLine(1).equalsIgnoreCase("e")) {
 				sm.createEffectSign(event, player, "Effect");
 
 			} else if (event.getLine(1).equalsIgnoreCase("stats") || event.getLine(1).equalsIgnoreCase("s")) {
 				sm.createStandardCourseSign(event, player, "Stats");
+				
+			} else if (event.getLine(1).equalsIgnoreCase("setpoint") || event.getLine(1).equalsIgnoreCase("sp")) {
+				//event.getBlock().breakNaturally();
+				event.getPlayer().sendMessage(Static.getParkourString() + "SetPoint signs are no longer supported. Please convert to using the new checkpoint system, to learn more enter '/pa help checkpoint'");
 
 			} else {
 				player.sendMessage(Utils.getTranslation("Error.UnknownSignCommand"));
@@ -112,7 +114,7 @@ public class ParkourSignListener implements Listener {
 		if (Parkour.getSettings().isSignPermission() && !Utils.hasPermission(event.getPlayer(), "Parkour.Basic", "Signs"))
 			return;
 
-		if (lines[1].equalsIgnoreCase("Join")) {
+		if (lines[1].equalsIgnoreCase("join")) {
 			if (lines[2].isEmpty() || !CourseMethods.exist(lines[2])){
 				event.getPlayer().sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", lines[2]));
 				return;
@@ -120,6 +122,29 @@ public class ParkourSignListener implements Listener {
 
 			CourseMethods.joinCourse(event.getPlayer(), lines[2]);
 
+		} else if (lines[1].equalsIgnoreCase("setpoint")) {
+			if (lines[2].isEmpty() || !CourseMethods.exist(lines[2])){
+				event.getPlayer().sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", lines[2]));
+				return;
+				
+			} else if (!PlayerMethods.isPlaying(event.getPlayer().getName())){
+				event.getPlayer().sendMessage(Utils.getTranslation("Error.NotOnCourse"));
+				return;	
+			}
+			
+			ParkourSession session = PlayerMethods.getParkourSession(event.getPlayer().getName());
+			
+			if (session.getCheckpoint() == session.getCourse().getCheckpoints())
+				return;
+			
+			if (session.getCheckpoint() >= Integer.parseInt(lines[3]))
+				return;
+			
+			if (session.getCheckpoint() + 1 < Integer.parseInt(lines[3]))
+				return;
+			
+			PlayerMethods.increaseCheckpoint(session, event.getPlayer());
+			
 		} else if (lines[1].equalsIgnoreCase("lobby")) {
 			if (lines[2].isEmpty()) {
 				CourseMethods.joinLobby(new String[0], event.getPlayer());
