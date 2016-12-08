@@ -16,6 +16,7 @@ import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Settings;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
+import me.A5H73Y.Parkour.Utilities.DatabaseMethods.DatabaseType;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -96,8 +97,10 @@ public class StartPlugin {
 		// forcing SQLite (MySQL failed)
 		if (!forceSQLite && config.getBoolean("MySQL.Use") && !config.getString("MySQL.Host").equals("Host") ) {
 			database = new MySQL(config.getString("MySQL.Host"), config.getString("MySQL.Port"), config.getString("MySQL.Database"), config.getString("MySQL.User"), config.getString("MySQL.Password"));
+			DatabaseMethods.type = DatabaseType.MySQL;
 		} else {
 			database = new SQLite(Parkour.getPlugin().getDataFolder().toString());
+			DatabaseMethods.type = DatabaseType.SQLite;
 		}
 
 		try {

@@ -2,6 +2,7 @@ package me.A5H73Y.Parkour.Other;
 
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.CourseMethods;
+import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
@@ -13,7 +14,7 @@ public final class Help {
 
 	public static void lookupCommandHelp(String[] args, Player player){
 		if (args.length == 1){
-			player.sendMessage(Static.getParkourString() + "Find help about any Parkour command:");
+			player.sendMessage(Static.getParkourString() + "Find helpful information about any Parkour command:");
 			player.sendMessage("             /pa help " + ChatColor.AQUA + "(command)");
 			return;
 		}
@@ -83,8 +84,8 @@ public final class Help {
 					" Will finish editing whatever course you were editing.");
 			
 		} else if (args[1].equalsIgnoreCase("setstart")){	
-			displayHelpMessage(player, "Overwrite the start of a course", "/pa setstart (course)", "/pa setstart Tutorial",
-					" The start of the course will be overwritten to your current position, rather than having to delete the course.");
+			displayHelpMessage(player, "Overwrite the start of a course", "/pa setstart", null,
+					" The start of the selected course will be overwritten to your current position, rather than having to delete the course.");
 
 		} else if (args[1].equalsIgnoreCase("setcreator")){	
 			displayHelpMessage(player, "Overwrite the creator of a course", "/pa setcreator (course) (playerName)", "/pa setcreator Tutorial A5H73Y",
@@ -106,18 +107,53 @@ public final class Help {
 			displayHelpMessage(player, "Toggle Parkour test mode", "/pa test", null,
 					" When wanting to test your course in 'ParkourMode' to similate how each ParkourBlocks will respond, you can enable TestMode, which will basically fake being on a course to allow you to test it without having to join / leave the course repeatedly.");
 
-		} else if (args[1].equalsIgnoreCase("")){	
-			displayHelpMessage(player, "", "", "",
-					" ");
+		} else if (args[1].equalsIgnoreCase("leaderboard")){	
+			displayHelpMessage(player, "Display course leaderboards", "/pa leaderboard", null,
+					" Start the conversation to display the leaderboards you want, whether it's the best global or personal times.");
 
-		} else if (args[1].equalsIgnoreCase("")){	
-			displayHelpMessage(player, "", "", "",
-					" ");
+		} else if (args[1].equalsIgnoreCase("tutorial")){	
+			displayHelpMessage(player, "Display links to tutorials", "/pa leaderboard", null,
+					" If you wish to learn from the offical Parkour tutorials, click the link to be navigated to the tutorial section of the bukkit plugin page.");
 
-			displayCommandUsage(player, "leaderboard", "(course)", "Display the course leaderboards");
-			displayCommandUsage(player, "tutorial", null, "Link to the official tutorial page");
+		} else if (args[1].equalsIgnoreCase("tp")){	
+			displayHelpMessage(player, "Teleport to Course", "/pa tp (course)", "/pa tp Example",
+					" Teleport to the start of the chosen course. This will NOT activate Parkour Mode, but simply move you to the course.");
+
+		} else if (args[1].equalsIgnoreCase("tpc")){	
+			displayHelpMessage(player, "Teleport to Course checkpoint", "/pa tp (course) (point)", "/pa tpc Example 2",
+					" Teleport to the chosen checkpoint on the course. This will NOT activate Parkour Mode, but simply move you to the checkpoint on the course.");
 			
+		} else if (args[1].equalsIgnoreCase("link")){	
+			displayHelpMessage(player, "Link the course after complete", "/pa link (argument) (argument)", "/pa link course Level2",
+					" You are now able to link the selected course to either a custom lobby, or to join a different course straight after you complete the selected course. For example if you selected a course '/pa select Level1', you would be able to make the player join Level2 after they complete Level1 by doing '/pa link course Level2', or if you wish for them to teleport to a custom lobby '/pa link lobby Admin'");
 			
+		} else if (args[1].equalsIgnoreCase("linkPB")){	
+			displayHelpMessage(player, "", "/pa ", "",
+					" ");
+			
+		} else if (args[1].equalsIgnoreCase("")){	
+			displayHelpMessage(player, "", "/pa ", "",
+					" ");
+			
+		} else if (args[1].equalsIgnoreCase("")){	
+			displayHelpMessage(player, "", "/pa ", "",
+					" ");
+			
+		} else if (args[1].equalsIgnoreCase("")){	
+			displayHelpMessage(player, "", "/pa ", "",
+					" ");
+			
+			displayCommandUsage(player, "linkPB", "(course) (PB)", "Link ParkourBlocks");
+			displayCommandUsage(player, "setminlevel", "(course) (level)", "Set course minimum level");
+			displayCommandUsage(player, "setmaxdeath", "(course) (death)", "Set course max deaths");
+			displayCommandUsage(player, "firstreward", "(course)", "Toggle if the prize is given once");
+			displayCommandUsage(player, "rewardlevel", "(course) (level)", "Reward level on complete");
+			displayCommandUsage(player, "rewardrank", "(level) (rank)", "Reward rank on complete");
+			displayCommandUsage(player, "rewardparkoins", "(course) (amount)", "Reward Parkoins");
+			
+		} else if (args[1].equalsIgnoreCase("")){	
+			displayHelpMessage(player, "", "/pa ", "",
+					" ");
 		} else{
 			player.sendMessage(Static.getParkourString() + "Sorry, I haven't written a help guide for that command yet.");
 		}
@@ -210,10 +246,10 @@ public final class Help {
 		displayCommandUsage(player, "kit", "[PB]", "Retrieve relevant Parkour Blocks set");
 		displayCommandUsage(player, "select", "(course)", "Start editing the course");
 		displayCommandUsage(player, "done", null, "Stop editing the course");
-		displayCommandUsage(player, "setstart", "(course)", "Set course start to current position");
+		displayCommandUsage(player, "setstart", null, "Set selected course start to current position");
 		displayCommandUsage(player, "setcreator", "(course) (player)", "Set creator of course");
 		displayCommandUsage(player, "setlobby", "[name] [level]", "Create / overwrite Parkour lobby");
-		displayCommandUsage(player, "finish", "(course)", "Set the status of the course to finished");
+		displayCommandUsage(player, "finish", null, "Set the status of the selected course to finished");
 		displayCommandUsage(player, "prize", null, "Initiate a new prize conversation");
 		displayCommandUsage(player, "test", null, "Toggle Parkour test mode");
 		displayCommandUsage(player, "leaderboard", "(course)", "Display the course leaderboards");
@@ -224,24 +260,25 @@ public final class Help {
 		player.sendMessage(Utils.getStandardHeading("Configure Commands"));
 
 		displayCommandUsage(player, "tp / tpc", "(course)", "Teleport to course / checkpoint");
-		displayCommandUsage(player, "link", "(course) (argument)", "Link a course");
+		displayCommandUsage(player, "link", "(argument) (argument)", "Link a course");
 		displayCommandUsage(player, "linkPB", "(course) (PB)", "Link ParkourBlocks");
 		displayCommandUsage(player, "setminlevel", "(course) (level)", "Set course minimum level");
-		displayCommandUsage(player, "setmaxdeath", "(course) (death)", "Set course maximum deaths");
+		displayCommandUsage(player, "setmaxdeath", "(course) (death)", "Set course max deaths");
 		displayCommandUsage(player, "firstreward", "(course)", "Toggle if the prize is given once");
 		displayCommandUsage(player, "rewardlevel", "(course) (level)", "Reward level on complete");
-		displayCommandUsage(player, "rewardrank", "(course) (rank)", "Reward rank on complete");
+		displayCommandUsage(player, "rewardrank", "(level) (rank)", "Reward rank on complete");
 		displayCommandUsage(player, "rewardparkoins", "(course) (amount)", "Reward Parkoins");
 	}
 
 	private static void displayAdminCommands(Player player){
 		player.sendMessage(Utils.getStandardHeading("Admin Commands"));
 
+		displayCommandUsage(player, "recreate", null, "Fix course database");
 		displayCommandUsage(player, "delete", "(argument)", "Delete course / lobby");
 		displayCommandUsage(player, "reset", "(argument)", "Delete course / player");
 		displayCommandUsage(player, "economy", null, "Display economy menu");
 		displayCommandUsage(player, "createPB", null, "Start ParkourBlocks creation");
-		displayCommandUsage(player, "validatePB", "(PB)", "Validate ParkourBlocks");
+		displayCommandUsage(player, "validatePB", "[PB]", "Validate ParkourBlocks");
 		displayCommandUsage(player, "sql", null, "Display SQL menu");
 		displayCommandUsage(player, "settings", null, "Display Parkour Settings");
 		displayCommandUsage(player, "request / bug", null, "Display relevant info");
@@ -285,7 +322,7 @@ public final class Help {
 				return;
 			}
 
-			Parkour.getParkourConfig().getEconData().set("Price." + args[2] + ".Finish", Integer.parseInt(args[3]));
+			Parkour.getParkourConfig().getEconData().set("Price." + args[2].toLowerCase() + ".Finish", Integer.parseInt(args[3]));
 			Parkour.getParkourConfig().saveEcon();
 			player.sendMessage(Static.getParkourString() + "Prize for " + args[2] + " set to " + args[3]);
 
@@ -299,7 +336,7 @@ public final class Help {
 				return;
 			}
 
-			Parkour.getParkourConfig().getEconData().set("Price." + args[2] + ".Join", Integer.parseInt(args[3]));
+			Parkour.getParkourConfig().getEconData().set("Price." + args[2].toLowerCase() + ".Join", Integer.parseInt(args[3]));
 			Parkour.getParkourConfig().saveEcon();
 			player.sendMessage(Static.getParkourString() + "Fee for " + args[2] + " set to " + args[3]);
 
@@ -338,8 +375,7 @@ public final class Help {
 
 	public static void displaySQL(String[] args, Player player) {
 		player.sendMessage(Utils.getStandardHeading("SQL Details"));
-		String type = Parkour.getDatabaseObj().getType();
-		player.sendMessage("Type: " + type);
+		player.sendMessage("Type: " + DatabaseMethods.type);
 		player.sendMessage("Connected: " + (Parkour.getDatabaseObj().getConnection() != null));
 		//TODO 
 	}

@@ -15,12 +15,13 @@ import java.util.Date;
 import java.util.List;
 
 import me.A5H73Y.Parkour.Parkour;
-import me.A5H73Y.Parkour.Conversation.Conversation;
-import me.A5H73Y.Parkour.Conversation.Conversation.ConversationType;
+import me.A5H73Y.Parkour.Conversation.ParkourConversation;
+import me.A5H73Y.Parkour.Conversation.ParkourConversation.ConversationType;
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Other.ParkourBlocks;
 import me.A5H73Y.Parkour.Other.Question;
+import me.A5H73Y.Parkour.Other.TimeObject;
 import me.A5H73Y.Parkour.Other.Question.QuestionType;
 
 import org.bukkit.Bukkit;
@@ -111,7 +112,7 @@ public final class Utils {
 		} else if (player.hasPermission(permissionBranch + ".*") || player.hasPermission(permissionBranch + "." + permission) || player.hasPermission("Parkour.*")) {
 			return true;
 
-		} else if (player.getName().equals(Parkour.getParkourConfig().getCourseData().getString(courseName + ".Creator"))) {
+		} else if (player.getName().equals(Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".Creator"))) {
 			return true;
 		}
 
@@ -521,7 +522,7 @@ public final class Utils {
 				return;
 			}
 
-			Course course = CourseMethods.findByName(args[2]);
+			Course course = CourseMethods.findByName(args[2]); //TODO get straight from config
 			// if it has no checkpoints
 			if ((course.getCheckpoints() - 1) <= 0) {
 				player.sendMessage(Static.getParkourString() + course.getName() + " has no checkpoints!");
@@ -540,7 +541,7 @@ public final class Utils {
 			}
 
 			player.sendMessage(Static.getParkourString() + "You are about to delete lobby " + ChatColor.AQUA + args[2] + ChatColor.WHITE + "...");
-			player.sendMessage(ChatColor.GRAY + "Deleting a lobby will remove all information about it from the server. If any courses are linked to this lobby, they will be broken."); // TODO
+			player.sendMessage(ChatColor.GRAY + "Deleting a lobby will remove all information about it from the server. If any courses are linked to this lobby, they will be broken."); // TODO check if any courses are linked
 			player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
 			Static.addQuestion(player.getName(), new Question(QuestionType.DELETE_LOBBY, args[2].toLowerCase()));
 
@@ -566,11 +567,11 @@ public final class Utils {
 			player.sendMessage(Static.getParkourString() + "You are about to reset " + ChatColor.AQUA + args[2] + ChatColor.WHITE + "...");
 			player.sendMessage(ChatColor.GRAY + "Resetting a course will delete all the statistics stored, which includes leaderboards and various parkour attributes. This will NOT affect the spawn / checkpoints.");
 			player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
-			Static.addQuestion(player.getName(), new Question(QuestionType.RESET_COURSE, args[2]));
+			Static.addQuestion(player.getName(), new Question(QuestionType.RESET_COURSE, args[2].toLowerCase()));
 
 		} else if (args[1].equalsIgnoreCase("player")) {
 			if (Bukkit.getPlayer(args[2]) == null && Parkour.getParkourConfig().getUsersData().contains("PlayerInfo." + args[2])) {
-				player.sendMessage("This player does not exist.");
+				player.sendMessage(Utils.getTranslation("Error.UnknownPlayer"));
 				return;
 			}
 
@@ -601,7 +602,7 @@ public final class Utils {
 	 * @param type
 	 */
 	public static void startConversation(Player player, ConversationType type) {
-		new Conversation(player, type);
+		new ParkourConversation(player, type);
 	}
 
 	public static int parseMaterialAmount(String amountString) {
@@ -609,4 +610,21 @@ public final class Utils {
 		return amount < 1 ? 1 : amount > 64 ? 64 : amount;
 	}
 
+	public static String displayLeaderboard(List<TimeObject> times, Player player) {
+		if (times.size() == 0)
+			player.sendMessage("Nobody has completed this course yet!");
+		
+		for (int i = 0; i < times.size(); i++) {
+			player.sendMessage(Utils.colour((i + 1) + ") &b" + times.get(i).getPlayer() + "&f in &3" + Utils.calculateTime(times.get(i).getTime()) + "&f, dying &7" + times.get(i).getDeaths() + " &ftimes"));
+		}
+		return "";
+	}
+	
+	public static List<String> getLobbyList(){
+		return new ArrayList<String>(Parkour.getParkourConfig().getConfig().getConfigurationSection("CONFIG-SECTION-HERE").getKeys(false));
+	}
+
+	public static List<String> getParkourBlockList(){
+		return new ArrayList<String>(Parkour.getParkourConfig().getConfig().getConfigurationSection("ParkourBlocks").getKeys(false));
+	}
 }

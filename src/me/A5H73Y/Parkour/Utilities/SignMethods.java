@@ -53,7 +53,7 @@ public class SignMethods {
 		}
 
 		sign.setLine(1, title);
-		sign.setLine(2, sign.getLine(2));
+		sign.setLine(2, sign.getLine(2).toLowerCase());
 
 		if (message)
 			player.sendMessage(Static.getParkourString() + ChatColor.DARK_AQUA + title + ChatColor.WHITE + " sign for " + ChatColor.AQUA + sign.getLine(2) + ChatColor.WHITE + " created!");
@@ -71,7 +71,7 @@ public class SignMethods {
 		}
 
 		if (Parkour.getParkourConfig().getCourseData().contains(sign.getLine(2).toLowerCase() + ".MinimumLevel"))
-			sign.setLine(3, ChatColor.RED + "" + Parkour.getParkourConfig().getCourseData().get(sign.getLine(2).toString() + ".MinimumLevel"));
+			sign.setLine(3, ChatColor.RED + "" + Parkour.getParkourConfig().getCourseData().get(sign.getLine(2).toLowerCase().toString() + ".MinimumLevel"));
 
 		player.sendMessage(Static.getParkourString() + "Join for " + ChatColor.AQUA + sign.getLine(2).toString() + ChatColor.WHITE + " created!");
 	}

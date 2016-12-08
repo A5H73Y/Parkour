@@ -50,18 +50,6 @@ public class ParkourListener implements Listener {
 		if (!Parkour.getSettings().isAllowTrails())
 			return;
 
-		// Redstone - Best
-		// Drip_Lava - Awesome
-		// Drip_Water - Awesome
-		// Note - Not bad
-		// Crit_magic - not bad
-		// Villager_happy - not bad
-		// Heart - interesting...
-		// Spell_mob
-		// Spell_witch
-		// Snowball - bit crap
-		// Slime - also a bit crap
-
 		Location loc = event.getPlayer().getLocation().add(0, 0.4, 0);
 		event.getPlayer().getWorld().spawnParticle(Particle.REDSTONE, loc, 1);
 	}
@@ -71,16 +59,21 @@ public class ParkourListener implements Listener {
 		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
 			return;
 
-		if (event.getPlayer().getFallDistance() > 30) { // TODO get from config
+		//TODO work on extreme sponge height
+		//event.getPlayer().setFallDistance(0);
+
+		if (event.getPlayer().getFallDistance() > Parkour.getSettings().getMaxFallTicks()) {
 			PlayerMethods.playerDie(event.getPlayer());
 			return;
 		}
-/*
-		if (event.getTo().getBlockX() == event.getFrom().getBlockX() && 
-				event.getTo().getBlockY() == event.getFrom().getBlockY() && 
-				event.getTo().getBlockZ() == event.getFrom().getBlockZ())
-			return;
-*/
+
+		if (Parkour.getSettings().isAttemptLessChecks()){
+			if (event.getTo().getBlockX() == event.getFrom().getBlockX() && 
+					event.getTo().getBlockY() == event.getFrom().getBlockY() && 
+					event.getTo().getBlockZ() == event.getFrom().getBlockZ())
+				return;
+		}
+
 		Material belowMaterial = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
 
 		ParkourBlocks pb = PlayerMethods.getParkourSession(event.getPlayer().getName()).getCourse().getParkourBlocks();
@@ -114,7 +107,7 @@ public class ParkourListener implements Listener {
 
 		} else if (event.getPlayer().getLocation().getBlock().isLiquid() && Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.DieInLiquid")){
 			PlayerMethods.playerDie(event.getPlayer());
-				
+
 		} else {
 			Material matEast = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.EAST).getType();
 			Material matNorth = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.NORTH).getType();
@@ -178,8 +171,10 @@ public class ParkourListener implements Listener {
 	public void onPlayerDamage(EntityDamageEvent event) {
 		if (!(event.getEntity() instanceof Player))
 			return;
+		
+		Player player = (Player) event.getEntity();
 
-		if (!PlayerMethods.isPlaying(event.getEntity().getName()))
+		if (!PlayerMethods.isPlaying(player.getName()))
 			return;
 
 		if (Parkour.getSettings().isDisablePlayerDamage()) {
@@ -187,11 +182,11 @@ public class ParkourListener implements Listener {
 			return;
 		}
 
-		Damageable player = (Player) event.getEntity();
-		if (player.getHealth() <= event.getDamage()) {
+		Damageable playerDamage = player;
+		if (playerDamage.getHealth() <= event.getDamage()) {
 			event.setDamage(0);
 			event.setCancelled(true);
-			PlayerMethods.playerDie((Player) event.getEntity());
+			PlayerMethods.playerDie(player);
 		}
 	}
 
@@ -246,7 +241,7 @@ public class ParkourListener implements Listener {
 			PlayerMethods.playerLeave(event.getPlayer());
 			return;
 		}
-		
+
 		if (!Parkour.getSettings().isEnforceWorld())
 			return;
 

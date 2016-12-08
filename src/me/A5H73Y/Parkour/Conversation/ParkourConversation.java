@@ -4,6 +4,7 @@ import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 
 import org.bukkit.ChatColor;
+import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ConversationAbandonedListener;
 import org.bukkit.conversations.ConversationContext;
@@ -12,41 +13,48 @@ import org.bukkit.conversations.NullConversationPrefix;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 
-public class Conversation implements ConversationAbandonedListener {
+public class ParkourConversation implements ConversationAbandonedListener {
 
 	public enum ConversationType {
 		PARKOURBLOCKS,
-		COURSEPRIZE
+		COURSEPRIZE,
+		LEADERBOARD
 	}
 
 	private ConversationFactory conversationFactory;
 
-	public Conversation(Player player, ConversationType conversationType){
+	public ParkourConversation(Player player, ConversationType conversationType){
 
 		conversationFactory = new ConversationFactory(Parkour.getPlugin())
 		.withModality(true)
-		.withEscapeSequence("/quit")
+		.withEscapeSequence("cancel")
 		.withTimeout(30)
 		.withLocalEcho(true)
 		.thatExcludesNonPlayersWithMessage("This is only possible in game, sorry.")
 		.withPrefix(new NullConversationPrefix())
 		.addConversationAbandonedListener(this)
-		.withFirstPrompt(getEntryPrompt(conversationType));
-
-		org.bukkit.conversations.Conversation convo = conversationFactory.buildConversation(player);
+		.withFirstPrompt(getEntryPrompt(conversationType, player));
+		
+		Conversation convo = conversationFactory.buildConversation(player);
 		convo.getContext().setSessionData("playerName", player.getName());
 		convo.getContext().setSessionData("courseName", PlayerMethods.getSelected(player.getName()));
 		convo.begin();
 	}
-
-	private Prompt getEntryPrompt(ConversationType type){
+	
+	private Prompt getEntryPrompt(ConversationType type, Player player){
 		switch (type){
 		case PARKOURBLOCKS:
+			player.sendMessage(ChatColor.GRAY + "Note: Enter 'default' if you want to use the default. Enter 'cancel' to quit the conversation.");
 			return new ParkourBlockConversation();
 		case COURSEPRIZE:
+			player.sendMessage(ChatColor.GRAY + "Note: Enter 'cancel' to quit the conversation.");
 			return new CoursePrizeConversation();
+		case LEADERBOARD:
+			player.sendMessage(ChatColor.GRAY + "Note: Enter 'cancel' to quit the conversation.");
+			return new LeaderboardConversation();
 		default:
-			return new ParkourBlockConversation();
+			player.sendMessage(ChatColor.RED + "Something went wrong.");
+			return null;
 		}
 	}
 

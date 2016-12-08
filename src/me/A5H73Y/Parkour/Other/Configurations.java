@@ -268,6 +268,11 @@ public class Configurations {
 			stringData.addDefault("Parkour.Die2", "You died! Going back to checkpoint &b%POINT%");
 			stringData.addDefault("Parkour.LifeCount", "&b%AMOUNT% &flives remaining!");
 			stringData.addDefault("Parkour.Playing", " &b%PLAYER% &f- &8C: &7%COURSE% &8D: &7%DEATHS% &8T: &7%TIME%");
+			stringData.addDefault("Parkour.ChallengeReceive", "You have been challenged by &b%PLAYER% &fto beat &f%COURSE%.");
+			stringData.addDefault("Parkour.ChallengeSend", "You have challenged %PLAYER% to beat %COURSE%!");
+			stringData.addDefault("Parkour.Accept", "&7Enter &a/pa accept &7to accept.");
+			stringData.addDefault("Parkour.RewardLevel", "Your level has been set to &b%LEVEL% &ffor completing &b%COURSE%&f!");
+			stringData.addDefault("Parkour.RewardRank", "Your rank has been set to %RANK%");
 
 			stringData.addDefault("Error.NotOnCourse", "You are not on this course!");
 			stringData.addDefault("Error.TooMany", "Too many arguments!");
@@ -288,6 +293,9 @@ public class Configurations {
 			stringData.addDefault("Error.Syntax", "&cInvalid Syntax: &f/pa &8%COMMAND% &7%ARGUMENTS%");
 			stringData.addDefault("Error.UnknownSignCommand", "Unknown sign command!");
 			stringData.addDefault("Error.UnknownCommand", "Unknown command!");
+			stringData.addDefault("Error.UnknownPlayer", "This player does not exist!");
+			stringData.addDefault("Error.Cheating1", "Please do not cheat.");
+			stringData.addDefault("Error.Cheating2", "&lYou must achieve all &4%AMOUNT% &fcheckpoints!");
 
 			stringData.addDefault("Help.Command", "&7/pa help &9%COMMAND% &0: &7To learn more about this command.");
 			stringData.addDefault("Help.Commands", "&3/pa &bcmds &8: &fTo display the Parkour commands menu.");
@@ -313,8 +321,6 @@ public class Configurations {
 			stringData.addDefault("Kit.NoPotion", "&bNoPotion Block");
 			stringData.addDefault("Kit.Sign", "&bSign");
 			stringData.addDefault("Kit.Death", "&bDeath Block");
-
-			stringData.addDefault("Kit.DoubleJump", "&bDoubleJump Block");
 
 			stringData.addDefault("Spectate.AlertPlayer", "You are now being spectated by &b%PLAYER%");
 			stringData.addDefault("Spectate.FinishedSpec", "You are no longer being spectated");
@@ -375,12 +381,13 @@ public class Configurations {
 		config.addDefault("OnCourse.LiveLeaderboard.Enabled", true);
 		config.addDefault("OnCourse.LiveLeaderboard.Type", 1);
 		config.addDefault("OnCourse.PreventPlateStick", true);
+		config.addDefault("OnCourse.AttemptLessChecks", false);
 
 		config.addDefault("OnFinish.EnforceCompletion", true);
 		config.addDefault("OnFinish.TeleportToLobby", true);
 		config.addDefault("OnFinish.SetGamemode", 0);
 		config.addDefault("OnFinish.BroadcastLevel", 3);
-		config.addDefault("OnFinish.DefaultPrize.Enabled", true);
+		config.addDefault("OnFinish.Prize.Enabled", true);
 		config.addDefault("OnFinish.DefaultPrize.Material", "DIAMOND");
 		config.addDefault("OnFinish.DefaultPrize.Amount", 1);
 		config.addDefault("OnFinish.DefaultPrize.XP", 0);
@@ -397,6 +404,11 @@ public class Configurations {
 		config.addDefault("ParkourModes.Spectate.OnStart.NotifyPlayer", true);
 		config.addDefault("ParkourModes.Spectate.OnStop.RemainInvisible", false);
 		config.addDefault("ParkourModes.Spectate.OnStop.TeleportToLobby", true);
+		
+		config.addDefault("DisplayTitle.JoinCourse", true);
+		config.addDefault("DisplayTitle.Checkpoint", true);
+		config.addDefault("DisplayTitle.RewardLevel", true);
+		
 
 		config.addDefault("Other.Economy.Enabled", true);
 		config.addDefault("Other.TitleActionBar.Enabled", true);

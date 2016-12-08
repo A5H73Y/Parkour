@@ -52,7 +52,8 @@ public class CheckpointMethods {
 			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", selected));
 			return;
 		}
-
+		
+		selected = selected.toLowerCase();
 		int pointcount = Parkour.getParkourConfig().getCourseData().getInt((selected + "." + "Points")) + 1;
 		Location location = player.getLocation();
 
@@ -114,11 +115,11 @@ public class CheckpointMethods {
 			return;
 		}
 
-		String arenaname = args[1].toLowerCase();
+		String courseName = args[1].toLowerCase();
 		FileConfiguration courseData = Parkour.getParkourConfig().getCourseData();
-		String path = checkpoint ? arenaname + "." + args[2] : arenaname + ".0";
+		String path = checkpoint ? courseName + "." + args[2] : courseName + ".0";
 
-		World world = Bukkit.getWorld(courseData.getString(arenaname + ".World"));
+		World world = Bukkit.getWorld(courseData.getString(courseName + ".World"));
 		double x = courseData.getDouble(path + ".X");
 		double y = courseData.getDouble(path + ".Y");
 		double z = courseData.getDouble(path + ".Z");

@@ -148,8 +148,8 @@ public class PlayerMethods {
 		String courseName = session.getCourse().getName();
 
 		if (Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.EnforceCompletion") && session.getCheckpoint() != (session.getCourse().getCheckpoints())) {
-			player.sendMessage(Static.getParkourString() + "Please do not cheat.");
-			player.sendMessage(ChatColor.BOLD + "You must achieve all " + session.getCourse().getCheckpoints() + " checkpoints!");
+			player.sendMessage(Utils.getTranslation("Error.Cheating1"));
+			player.sendMessage(Utils.getTranslation("Error.Cheating2", false).replace("%AMOUNT%", session.getCourse().getCheckpoints()+""));
 			playerDie(player);
 			return;
 		}
@@ -226,7 +226,7 @@ public class PlayerMethods {
 	 */
 	private static void givePrize(Player player, String courseName) {
 		// Give player items
-		if (!Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.DefaultPrize.Enabled"))
+		if (!Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.Prize.Enabled"))
 			return;
 
 		if (Parkour.getParkourConfig().getCourseData().getBoolean(courseName + ".FirstReward"))
@@ -267,13 +267,13 @@ public class PlayerMethods {
 
 			if (current < rewardLevel) {
 				Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Level", rewardLevel);
-				player.sendMessage(Static.getParkourString() + "Your level has been set to " + rewardLevel + " for completing " + courseName);
-
+				player.sendMessage(Utils.getTranslation("Parkour.RewardLevel").replace("%LEVEL%", rewardLevel+"").replace("%COURSE%", courseName));
+				
 				// check if there is a rank upgrade
 				String rewardRank = Parkour.getParkourConfig().getUsersData().getString("ServerInfo.Levels." + rewardLevel + ".Rank");
 				if (rewardRank != null) {
 					Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Rank", rewardRank);
-					player.sendMessage(Static.getParkourString() + "Your rank has been set to " + rewardRank);
+					player.sendMessage(Utils.getTranslation("Parkour.RewardRank").replace("%RANK%", rewardRank));
 				}
 			}
 		}
@@ -388,7 +388,8 @@ public class PlayerMethods {
 			if (selected != null && selected.length() > 0)
 				player.sendMessage("Editing: " + ChatColor.AQUA + selected);
 
-			player.sendMessage("Parkoins: " + ChatColor.AQUA + getParkoins(playerName));
+			if (getParkoins(playerName) > 0)
+				player.sendMessage("Parkoins: " + ChatColor.AQUA + getParkoins(playerName));
 		}
 	}
 
@@ -517,27 +518,27 @@ public class PlayerMethods {
 	public static void getPermissions(Player player) {
 		player.sendMessage(Utils.getStandardHeading("Parkour Permissions"));
 		if (player.hasPermission("Parkour.*") || player.isOp()) {
-			player.sendMessage("- Everything");
+			player.sendMessage("* Everything");
 		} else {
 			boolean anyPerms = false;
 			if (player.hasPermission("Parkour.Basic.*")) {
-				player.sendMessage("- Basic");
+				player.sendMessage("* Basic");
 				anyPerms = true;
 			}
 			if (player.hasPermission("Parkour.Signs.*")) {
-				player.sendMessage("- Signs");
+				player.sendMessage("* Signs");
 				anyPerms = true;
 			}
 			if (player.hasPermission("Parkour.Testmode.*")) {
-				player.sendMessage("- Testmode");
+				player.sendMessage("* Testmode");
 				anyPerms = true;
 			}
 			if (player.hasPermission("Parkour.Admin.*")) {
-				player.sendMessage("- Admin");
+				player.sendMessage("* Admin");
 				anyPerms = true;
 			}
 			if (!anyPerms)
-				player.sendMessage("- You don't have any Parkour permissions.");
+				player.sendMessage("* You don't have any Parkour permissions.");
 		}
 	}
 

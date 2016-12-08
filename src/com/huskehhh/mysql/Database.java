@@ -18,9 +18,6 @@ public abstract class Database {
 
 	protected Connection connection;
 
-	public abstract String getType();
-
-
 	/**
 	 * Creates a new Database
 	 *

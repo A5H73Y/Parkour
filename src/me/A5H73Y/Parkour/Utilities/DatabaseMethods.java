@@ -7,56 +7,42 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
+
 import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.Other.TimeObject;
 
 import com.huskehhh.mysql.Database;
-import com.huskehhh.mysql.TimeObject;
 
-public class DatabaseMethods extends Database{
+public class DatabaseMethods extends Database {
+	
+	public enum DatabaseType {
+		MySQL,
+		SQLite
+	}
+	
+	public static DatabaseType type;
 
 	public static void setupTables() {
 		try {
-			String tableScript =
-					"CREATE TABLE IF NOT EXISTS course ( " +
+			if (type.equals(DatabaseType.SQLite)) {
+				String tableScript =
+						"CREATE TABLE IF NOT EXISTS course (courseId INTEGER PRIMARY KEY, name VARCHAR(15) NOT NULL UNIQUE, author VARCHAR(20) NOT NULL, created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL); " +
 
-							"courseId	INTEGER PRIMARY KEY, " +
-							"name 		VARCHAR(15) NOT NULL UNIQUE, " +
-							"author 	VARCHAR(20) NOT NULL, " +
-							"created 	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL " +
-							"); " +
+						"CREATE TABLE IF NOT EXISTS time (timeId INTEGER PRIMARY KEY, courseId INTEGER NOT NULL, player VARCHAR(20) NOT NULL, time DECIMAL(13,0) NOT NULL, deaths INT(5) NOT NULL, FOREIGN KEY (courseId) REFERENCES course(courseId) ON DELETE CASCADE ON UPDATE CASCADE); " +
 
+						"CREATE TABLE IF NOT EXISTS vote (courseId INTEGER NOT NULL, player VARCHAR(20) NOT NULL, liked BIT NOT NULL, PRIMARY KEY (courseId, player), FOREIGN KEY (courseId) REFERENCES course(courseId) ON DELETE CASCADE ON UPDATE CASCADE); ";
 
-					"CREATE TABLE IF NOT EXISTS time ( " +
-
-							"timeId 	INTEGER PRIMARY KEY, " +
-							"courseId 	INTEGER NOT NULL, " +
-							"player	 	VARCHAR(20) NOT NULL, " +
-							"time		DECIMAL(13,0) NOT NULL, " +
-							"deaths		INT(5) NOT NULL, " +
-
-							"FOREIGN KEY (courseId)  " +
-							"REFERENCES course(courseId) " +
-							"ON DELETE CASCADE ON UPDATE CASCADE  " +
-							"); " +
-
-					"CREATE TABLE IF NOT EXISTS vote ( " +
-
-							"courseId 	INTEGER NOT NULL, " +
-							"player	 	VARCHAR(20) NOT NULL, " +
-							"liked		BIT NOT NULL, " +
-
-							"PRIMARY KEY (courseId, player), " +
-
-							"FOREIGN KEY (courseId) " +
-							"REFERENCES course(courseId) " +
-							"ON DELETE CASCADE ON UPDATE CASCADE " +
-							"); ";
-
-			//Only syntax difference between MySQL and SQLite
-			if (Parkour.getDatabaseObj().getType().equals("SQLite"))
-				tableScript = tableScript.replace("AUTO_INCREMENT", "AUTOINCREMENT");
-
-			Parkour.getDatabaseObj().updateSQL(tableScript);
+				Parkour.getDatabaseObj().updateSQL(tableScript);
+				
+			} else if (type.equals(DatabaseType.MySQL)) {
+				String tableScript = "CREATE TABLE IF NOT EXISTS course (courseId INTEGER PRIMARY KEY AUTO_INCREMENT, name VARCHAR(15) NOT NULL UNIQUE, author VARCHAR(20) NOT NULL, created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL); ";
+				Parkour.getDatabaseObj().updateSQL(tableScript);
+				tableScript = "CREATE TABLE IF NOT EXISTS time (timeId INTEGER PRIMARY KEY AUTO_INCREMENT, courseId INTEGER NOT NULL, player VARCHAR(20) NOT NULL, time DECIMAL(13,0) NOT NULL, deaths INT(5) NOT NULL, FOREIGN KEY (courseId) REFERENCES course(courseId) ON DELETE CASCADE ON UPDATE CASCADE); ";
+				Parkour.getDatabaseObj().updateSQL(tableScript);
+				tableScript = "CREATE TABLE IF NOT EXISTS vote (courseId INTEGER NOT NULL, player VARCHAR(20) NOT NULL, liked BIT NOT NULL, PRIMARY KEY (courseId, player), FOREIGN KEY (courseId) REFERENCES course(courseId) ON DELETE CASCADE ON UPDATE CASCADE); ";
+				Parkour.getDatabaseObj().updateSQL(tableScript);
+			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -71,11 +57,6 @@ public class DatabaseMethods extends Database{
 		return null;
 	}
 
-	@Override
-	public String getType() {
-		return Parkour.getDatabaseObj().getType();
-	}
-
 	/**
 	 * Return the course's unique ID based on its name in the database.
 	 * @param courseName
@@ -84,13 +65,15 @@ public class DatabaseMethods extends Database{
 	 */
 	public static int getCourseId(String courseName) throws SQLException {
 		int courseId = 0;
-		
+
 		try{
 			PreparedStatement ps = Parkour.getDatabaseObj().openConnection().prepareStatement("SELECT courseId FROM course WHERE name = ?;");
 			ps.setString(1, courseName);
 
 			ResultSet rs = ps.executeQuery();
-			courseId =  rs.getInt("courseId");
+			if (rs.next()){
+				courseId =  rs.getInt("courseId");
+			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -99,6 +82,10 @@ public class DatabaseMethods extends Database{
 		} finally {
 			Parkour.getDatabaseObj().closeConnection();
 		}
+
+		if (courseId == 0)
+			Utils.log("Course '" + courseName + "' was not found in the database. Run command '/pa recreate' to fix.", 1);
+
 		return courseId;
 	}
 
@@ -230,6 +217,32 @@ public class DatabaseMethods extends Database{
 			Parkour.getDatabaseObj().closeConnection();
 		}
 		return percentage;
+	}
+
+	public static boolean hasVoted(String courseName, String playerName){
+		boolean voted = true;
+		try {
+			int courseId = getCourseId(courseName);
+			if (courseId == 0)
+				return voted;
+
+			PreparedStatement ps = Parkour.getDatabaseObj().openConnection()
+					.prepareStatement("SELECT 1 FROM vote WHERE courseId=? AND player=? LIMIT 1;");
+			ps.setInt(1, courseId);
+			ps.setString(2, playerName);
+			ResultSet rs = ps.executeQuery();
+			if (!rs.next()){
+				voted = false;
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			Parkour.getDatabaseObj().closeConnection();
+		}
+		return voted;
 	}
 
 	/**
@@ -376,5 +389,27 @@ public class DatabaseMethods extends Database{
 			Parkour.getDatabaseObj().closeConnection();
 		}
 		return completed;
+	}
+
+	public static void recreateAllCourses() {
+		Bukkit.getScheduler().runTaskLaterAsynchronously(Parkour.getPlugin(), new Runnable() {
+			@Override
+			public void run() {
+				Utils.logToFile("Started courses recreation.");
+				Utils.log("Starting recreation of courses process...");
+				int changes = 0;
+				for (String courseName : Static.getCourses()){
+					try {
+						if (getCourseId(courseName) == 0){
+							insertCourse(courseName, Parkour.getParkourConfig().getCourseData().getString(courseName + ".Creator"));
+							changes++;
+						}
+					} catch (SQLException e) {
+						Utils.log("Error occurred while entering " + courseName + " into the database. Error: " + e.getMessage(), 2);
+					}	
+				}
+				Utils.log("Process complete. Courses recreated: " + changes);
+			}
+		}, 1);
 	}
 }

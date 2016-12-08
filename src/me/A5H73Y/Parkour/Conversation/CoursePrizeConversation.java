@@ -15,23 +15,23 @@ import org.bukkit.conversations.StringPrompt;
 public class CoursePrizeConversation extends FixedSetPrompt {
 
 	CoursePrizeConversation(){
-		super("Material", "Command", "Cancel");
+		super("material", "command", "cancel");
 	}
 
 	@Override
 	public String getPromptText(ConversationContext context) {
-		return ChatColor.LIGHT_PURPLE + " What type of prize would you like to set? " + formatFixedSet();
+		return ChatColor.LIGHT_PURPLE + " What type of prize would you like to set?                   " + formatFixedSet();
 	}
 
 	@Override
 	protected Prompt acceptValidatedInput(ConversationContext context, String choice) {
-		if (choice.equals("Cancel"))
+		if (choice.equals("cancel"))
 			return Prompt.END_OF_CONVERSATION;
 
-		if (choice.equalsIgnoreCase("Material"))
+		if (choice.equalsIgnoreCase("material"))
 			return new ChooseBlock();
 
-		if (choice.equalsIgnoreCase("Command"))
+		if (choice.equalsIgnoreCase("command"))
 			return new ChooseCommand();
 
 		return null;
@@ -48,7 +48,7 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 		public Prompt acceptInput(ConversationContext context, String message) {
 			Material material = Material.getMaterial(message.toUpperCase());
 			if (material == null){
-				Conversation.sendErrorMessage(context, "This is not a valid material");
+				ParkourConversation.sendErrorMessage(context, "This is not a valid material");
 				return this;
 			}
 
@@ -86,6 +86,10 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 
 	private class MaterialProcessComplete extends MessagePrompt {
 		public String getPromptText(ConversationContext context) {
+			Parkour.getParkourConfig().getCourseData().set(context.getSessionData("courseName") + ".Prize.Material", context.getSessionData("material"));
+			Parkour.getParkourConfig().getCourseData().set(context.getSessionData("courseName") + ".Prize.Amount", context.getSessionData("amount"));
+			Parkour.getParkourConfig().saveCourses();
+
 			return " The Material prize for " + ChatColor.DARK_AQUA + context.getSessionData("courseName") + ChatColor.WHITE + " was set to " + ChatColor.AQUA + context.getSessionData("amount") + " " + context.getSessionData("material");
 		}
 
@@ -100,7 +104,7 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 
 		@Override
 		public String getPromptText(ConversationContext context) {
-			context.getForWhom().sendRawMessage("Remember you can include %PLAYER% to apply it to that player. Example '/pa kick %PLAYER%'");
+			context.getForWhom().sendRawMessage("Remember you can include %PLAYER% to apply it to that player. Example 'kick %PLAYER%'");
 			return ChatColor.LIGHT_PURPLE + " What would you like the Command prize to be?";
 		}
 
@@ -117,7 +121,7 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 
 		@Override
 		public String getPromptText(ConversationContext arg0) {
-			return ChatColor.LIGHT_PURPLE + " Would you like to run this command now? (to test)";
+			return ChatColor.LIGHT_PURPLE + " Would you like to run this command now? (to test) Yes / No";
 		}
 
 		@Override
@@ -134,6 +138,9 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 
 	private class CommandProcessComplete extends MessagePrompt {
 		public String getPromptText(ConversationContext context) {
+			Parkour.getParkourConfig().getCourseData().set(context.getSessionData("courseName") + ".Prize.CMD", context.getSessionData("command"));
+			Parkour.getParkourConfig().saveCourses();
+
 			return " The Command prize for " + ChatColor.DARK_AQUA + context.getSessionData("courseName") + ChatColor.WHITE + " was set to /" + ChatColor.AQUA + context.getSessionData("command");
 		}
 

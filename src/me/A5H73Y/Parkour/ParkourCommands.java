@@ -1,11 +1,12 @@
 package me.A5H73Y.Parkour;
 
-import me.A5H73Y.Parkour.Conversation.Conversation.ConversationType;
+import me.A5H73Y.Parkour.Conversation.ParkourConversation.ConversationType;
 import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Other.Backup;
 import me.A5H73Y.Parkour.Other.Help;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
+import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Settings;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
@@ -55,7 +56,7 @@ public class ParkourCommands implements CommandExecutor {
 						if (!Utils.validateArgs(player, args, 2))
 							return false;
 
-						CourseMethods.displayCourseInfo(args[0], player);
+						CourseMethods.displayCourseInfo(args[1], player);
 
 					} else if (args[0].equalsIgnoreCase("lobby")) {
 						CourseMethods.joinLobby(args, player);
@@ -104,6 +105,9 @@ public class ParkourCommands implements CommandExecutor {
 
 					} else if (args[0].equalsIgnoreCase("prize")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin", "Prize"))
+							return false;
+						
+						if (!Utils.validateArgs(player, args, 2))
 							return false;
 
 						CourseMethods.setPrize(args, player);
@@ -292,7 +296,7 @@ public class ParkourCommands implements CommandExecutor {
 						Utils.validateParkourBlocks(args, player);
 
 					} else if (args[0].equalsIgnoreCase("challenge")) {
-						if (!Utils.validateArgs(player, args, 2))
+						if (!Utils.validateArgs(player, args, 3))
 							return false;
 
 						CourseMethods.challengePlayer(args, player);
@@ -307,16 +311,20 @@ public class ParkourCommands implements CommandExecutor {
 						if (!Utils.hasPermission(player, "Parkour.Basic", "Leaderboard"))
 							return false;
 
-						if (!Utils.validateArgs(player, args, 2))
-							return false;
-
-						CourseMethods.displayLeaderboard(args, player);
-
+						Utils.startConversation(player, ConversationType.LEADERBOARD);
+						
 					} else if (args[0].equalsIgnoreCase("sql")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
 							return false;
 
 						Help.displaySQL(args, player);
+						
+					} else if (args[0].equalsIgnoreCase("recreate")) {
+						if (!Utils.hasPermission(player, "Parkour.Admin"))
+							return false;
+						
+						player.sendMessage(Static.getParkourString() + "Recreating courses...");
+						DatabaseMethods.recreateAllCourses();
 
 						//Other commands//	
 					} else if (args[0].equalsIgnoreCase("about")) {
@@ -334,6 +342,9 @@ public class ParkourCommands implements CommandExecutor {
 					} else if (args[0].equalsIgnoreCase("request") || args[0].equalsIgnoreCase("bug")) {
 						player.sendMessage(Static.getParkourString() + "To Request a feature or to Report a bug...");
 						player.sendMessage("Click here: " + ChatColor.DARK_AQUA + "http://dev.bukkit.org/server-mods/parkour/forum/");
+					
+					} else if (args[0].equalsIgnoreCase("tutorial")) {
+						player.sendMessage(Static.getParkourString() + "Coming soon...");
 
 					} else if (args[0].equalsIgnoreCase("settings")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin")) 
@@ -389,7 +400,10 @@ public class ParkourCommands implements CommandExecutor {
 						Utils.log("pa setlevel (player) (level) : Set a players Parkour Level");
 						Utils.log("pa backup : Create a backup zip of the Parkour config folder");
 						Utils.log("pa reload : Reload the Parkour config");
-
+						
+					} else if (args[0].equalsIgnoreCase("recreate")) {
+						DatabaseMethods.recreateAllCourses();
+						
 					} else {
 						Utils.log("Unknown Command. Enter 'pa cmds' to display all commands.");
 					}

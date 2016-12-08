@@ -23,7 +23,7 @@ public class ParkourBlockConversation extends StringPrompt {
 		}
 
 		if (Parkour.getParkourConfig().getConfig().contains("ParkourBlocks." + message)){
-			Conversation.sendErrorMessage(context, "This ParkourBlock already exists");
+			ParkourConversation.sendErrorMessage(context, "This ParkourBlock already exists");
 			return this;
 		}
 
@@ -42,19 +42,23 @@ public class ParkourBlockConversation extends StringPrompt {
 		public Prompt acceptInput(ConversationContext context, String message) {
 
 			int stage = getBlockStage(context);
+			Material material;
 
 			if (message.equalsIgnoreCase("default")){
-				context.setSessionData(stage, "DEFAULT");
-			
-			} else {
-				Material material = Material.getMaterial(message.toUpperCase());
-				if (material == null){
-					Conversation.sendErrorMessage(context, "This is not a valid material");
-					return this;
-				}
+				String blockType = blockTypes[stage];
+				material = Material.getMaterial(
+						Parkour.getParkourConfig().getConfig().getString("DefaultBlocks." + blockType + ".Material").toUpperCase());
 
-				context.setSessionData(stage, material.name());
+			} else {
+				material = Material.getMaterial(message.toUpperCase());
 			}
+			
+			if (material == null){
+				ParkourConversation.sendErrorMessage(context, "This is not a valid material");
+				return this;
+			}
+
+			context.setSessionData(stage, material.name());
 
 			if (stage < blockTypes.length - 1){
 				context.setSessionData("stage", stage += 1);

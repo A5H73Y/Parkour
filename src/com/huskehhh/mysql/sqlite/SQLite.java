@@ -31,11 +31,11 @@ public class SQLite extends Database {
 			return connection;
 		}
 
-		File dataFolder = new File(dbLocation + File.separator + "sqlite-db/");
+		File dataFolder = new File(dbLocation + File.separator + "sqlite-db");
 		if (!dataFolder.exists()) {
 			dataFolder.mkdirs();
 		}
-
+		
 		File databaseFile = new File(dataFolder + File.separator + "parkour.db");
 		if (!(databaseFile.exists())) {
 			try {
@@ -55,10 +55,5 @@ public class SQLite extends Database {
 			e.printStackTrace();
 		}
 		return connection;
-	}
-
-	@Override
-	public String getType(){
-		return "SQLite";
 	}
 }

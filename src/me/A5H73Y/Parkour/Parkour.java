@@ -38,6 +38,7 @@ public class Parkour extends JavaPlugin {
 		getParkourConfig().reload();
 		database.closeConnection();
 		Utils.log("Disabled Parkour v" + Static.getVersion());
+		plugin = null;
 	}
 
 	public static void setDatabaseObj(Database databaseObj) {

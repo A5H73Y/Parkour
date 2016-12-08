@@ -80,9 +80,4 @@ public class MySQL extends Database {
 		}
 		return connection;
 	}
-
-	@Override
-	public String getType(){
-		return "MySQL";
-	}
 }

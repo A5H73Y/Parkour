@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import me.A5H73Y.Parkour.Parkour;
-import me.A5H73Y.Parkour.Conversation.Conversation.ConversationType;
+import me.A5H73Y.Parkour.Conversation.ParkourConversation.ConversationType;
 import me.A5H73Y.Parkour.Other.Challenge;
 import me.A5H73Y.Parkour.Other.Validation;
 import me.A5H73Y.Parkour.Player.ParkourSession;
@@ -21,8 +21,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-
-import com.huskehhh.mysql.TimeObject;
 
 public class CourseMethods {
 
@@ -215,7 +213,7 @@ public class CourseMethods {
 		player.sendMessage(Utils.getStandardHeading(Utils.standardizeText(courseName) + " statistics"));
 
 		player.sendMessage("Views: " + aqua + views);
-		player.sendMessage("Completed: " + aqua + completed + " times. (" + completePercent + "%)");
+		player.sendMessage("Completed: " + aqua + completed + " times (" + completePercent + "%)");
 		player.sendMessage("Checkpoints: " + aqua + checkpoints);
 		player.sendMessage("Creator: " + aqua + creator);
 
@@ -451,8 +449,11 @@ public class CourseMethods {
 
 		// TODO pages - reuse courses page 
 		for (Map.Entry<String, ParkourSession> entry : PlayerMethods.getPlaying().entrySet()) {
-			player.sendMessage(Utils.getTranslation("Parkour.Player").replace("%PLAYER%", entry.getKey()).replace("%COURSE%", entry.getValue().getDeaths() + "").replace("%TIME%", entry.getValue().displayTime()));
-
+			player.sendMessage(Utils.getTranslation("Parkour.Playing")
+					.replace("%PLAYER%", entry.getKey())
+					.replace("%COURSE%", entry.getValue().getCourse().getName())
+					.replace("%DEATHS%", entry.getValue().getDeaths() + "")
+					.replace("%TIME%", entry.getValue().displayTime()));
 		}
 	}
 
@@ -493,11 +494,11 @@ public class CourseMethods {
 			return;
 		}
 
-		String arenaname = args[1].trim().toLowerCase();
+		String courseName = args[1].trim().toLowerCase();
 		player.sendMessage(Static.getParkourString() + "Now Editing: " + ChatColor.AQUA + args[1]);
-		Integer pointcount = Parkour.getParkourConfig().getCourseData().getInt((arenaname + "." + "Points"));
+		Integer pointcount = Parkour.getParkourConfig().getCourseData().getInt((courseName + "." + "Points"));
 		player.sendMessage(Static.getParkourString() + "Checkpoints: " + ChatColor.AQUA + pointcount);
-		Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Selected", arenaname);
+		Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Selected", courseName);
 		Parkour.getParkourConfig().saveUsers();
 	}
 
@@ -515,7 +516,7 @@ public class CourseMethods {
 			Parkour.getParkourConfig().saveUsers();
 			player.sendMessage(Static.getParkourString() + "Finished editing.");
 		} else {
-			player.sendMessage(Static.getParkourString() + "You are not editing a course.");
+			player.sendMessage(Utils.getTranslation("Error.Selected"));
 		}
 	}
 
@@ -568,6 +569,7 @@ public class CourseMethods {
 			return;
 		}
 
+		selected = selected.toLowerCase();
 		Parkour.getParkourConfig().getCourseData().set(selected + ".0.X", player.getLocation().getX());
 		Parkour.getParkourConfig().getCourseData().set(selected + ".0.Y", player.getLocation().getY());
 		Parkour.getParkourConfig().getCourseData().set(selected + ".0.Z", player.getLocation().getZ());
@@ -591,7 +593,7 @@ public class CourseMethods {
 
 		Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".Creator", args[2]);
 		Parkour.getParkourConfig().saveCourses();
-		player.sendMessage(Static.getParkourString() + "Creator of " + args[1] + " was set to " + ChatColor.AQUA + args[2]);
+		player.sendMessage(Static.getParkourString() + "Creator of " + ChatColor.DARK_AQUA + args[1] + ChatColor.WHITE + " was set to " + ChatColor.AQUA + args[2]);
 	}
 
 	/**
@@ -671,7 +673,7 @@ public class CourseMethods {
 			return;
 		}
 
-		if (Parkour.getParkourConfig().getCourseData().getBoolean(args[1] + ".FirstReward")) {
+		if (Parkour.getParkourConfig().getCourseData().getBoolean(args[1].toLowerCase() + ".FirstReward")) {
 			Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".FirstReward", false);
 			player.sendMessage(Static.getParkourString() + args[1] + "'s reward one time was set to " + ChatColor.AQUA + "false");
 		} else {
@@ -752,24 +754,6 @@ public class CourseMethods {
 		Utils.logToFile(courseName + " was set to finished by " + player.getName());
 	}
 
-	public static void displayLeaderboard(String[] args, Player player) {
-		if (!CourseMethods.exist(args[1]))
-			return;
-
-		List<TimeObject> times = DatabaseMethods.getTopCourseResults(args[1]);
-
-		if (times.size() == 0) {
-			player.sendMessage(Static.getParkourString() + "Nobody has completed " + args[1] + " yet!");
-			return;
-		}
-
-		player.sendMessage(Static.getParkourString() + args[1] + " leaderboard:");
-
-		for (int i = 0; i < times.size(); i++) {
-			player.sendMessage(Utils.colour((i + 1) + ") &b" + times.get(i).getPlayer() + "&f in &3" + Utils.calculateTime(times.get(i).getTime()) + "&f, dying &7" + times.get(i).getDeaths() + " &ftimes"));
-		}
-	}
-
 	public static void linkCourse(String[] args, Player player) {
 		String selected = PlayerMethods.getSelected(player.getName());
 
@@ -804,7 +788,7 @@ public class CourseMethods {
 			player.sendMessage(Static.getParkourString() + ChatColor.DARK_AQUA + selected + ChatColor.WHITE + " is now linked to " + ChatColor.AQUA + args[2]);
 
 		} else {
-			Utils.invalidSyntax("Link", "(course / lobby) (courseName / lobbyName)");
+			player.sendMessage(Utils.invalidSyntax("Link", "(course / lobby) (courseName / lobbyName)"));
 		}
 
 	}
@@ -835,18 +819,24 @@ public class CourseMethods {
 	public static void rateCourse(String[] args, Player player) {
 		String courseName = Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + player.getName() + ".LastPlayed");
 
-		if (courseName == null || !CourseMethods.exist(courseName)) {
+		if (!CourseMethods.exist(courseName)) {
 			player.sendMessage(Static.getParkourString() + "Invalid course.");
+			return;
+		}
+		
+		if (DatabaseMethods.hasVoted(courseName, player.getName())){
+			player.sendMessage(Static.getParkourString() + "You have already voted for " + ChatColor.AQUA + courseName);
 			return;
 		}
 
 		if (args[0].equalsIgnoreCase("like")) {
 			DatabaseMethods.insertVote(courseName, player.getName(), true);
-			return;
-		}
-		if (args[0].equalsIgnoreCase("dislike")) {
+			player.sendMessage(Static.getParkourString() + "You " + ChatColor.GREEN + "liked " + ChatColor.WHITE + courseName); 
+			
+		} else if (args[0].equalsIgnoreCase("dislike")) {
 			DatabaseMethods.insertVote(courseName, player.getName(), false);
-			return;
+			player.sendMessage(Static.getParkourString() + "You " + ChatColor.RED + "disliked " + ChatColor.WHITE + courseName); 
+			
 		}
 	}
 
@@ -859,7 +849,7 @@ public class CourseMethods {
 			player.sendMessage(Static.getParkourString() + "ParkourBlocks doesn't exist!");
 			return;
 		}
-		if (Parkour.getParkourConfig().getCourseData().contains(args[1] + ".ParkourBlocks")) {
+		if (Parkour.getParkourConfig().getCourseData().contains(args[1].toLowerCase() + ".ParkourBlocks")) {
 			player.sendMessage(Static.getParkourString() + "This course is already linked to a ParkourBlocks, continuing anyway...");
 		}
 
@@ -874,11 +864,12 @@ public class CourseMethods {
 			return;
 
 		Player target = Bukkit.getPlayer(args[2]);
+		String courseName = args[1].toLowerCase();
 
-		target.sendMessage(Static.getParkourString() + "You have been challenged by %PLAYER% to beat %COURSE%.");
-		target.sendMessage(ChatColor.GRAY + "Enter " + ChatColor.GREEN + "/pa accept " + ChatColor.GRAY + " to accept.");
-		player.sendMessage(Static.getParkourString() + "You have challenged %PLAYER% to beat %COURSE%!");
-		Static.addChallenge(new Challenge(player.getName(), target.getName(), args[1].toLowerCase()));
+		target.sendMessage(Utils.getTranslation("Parkour.ChallengeReceive").replace("%PLAYER%", player.getName()).replace("%COURSE%", courseName));
+		target.sendMessage(Utils.getTranslation("Parkour.Accept", false));
+		player.sendMessage(Utils.getTranslation("Parkour.ChallengeSend").replace("%PLAYER%", target.getName()).replace("%COURSE%", courseName));
+		Static.addChallenge(new Challenge(player.getName(), target.getName(), courseName));
 	}
 
 	public static void setJoinItem(String[] args, Player player) {

@@ -1,4 +1,4 @@
-package com.huskehhh.mysql;
+package me.A5H73Y.Parkour.Other;
 
 public class TimeObject {
 

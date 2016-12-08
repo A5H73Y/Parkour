@@ -9,7 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public class Settings {
 
-	private boolean commandPermission, chatPrefix, disablePlayerDamage, resetOnLeave, enforceWorld, disableCommands, allowTrails, signPermission;
+	private boolean commandPermission, chatPrefix, disablePlayerDamage, resetOnLeave, enforceWorld, disableCommands, allowTrails, signPermission, attemptLessChecks;
 
 	//Display
 	private boolean displayWelcome;
@@ -19,6 +19,9 @@ public class Settings {
 
 	//Lists
 	private List<String> cmdWhitelist; 
+	
+	//int
+	private int maxFallTicks;
 
 	public Settings(){
 		FileConfiguration config = Parkour.getParkourConfig().getConfig();
@@ -30,12 +33,15 @@ public class Settings {
 		disableCommands = config.getBoolean("OnCourse.EnforceParkourCommands.Enabled");
 		allowTrails = config.getBoolean("OnCourse.AllowTrails");
 		signPermission = config.getBoolean("Other.Parkour.SignPermissions");
+		attemptLessChecks = config.getBoolean("OnCourse.AttemptLessChecks");
 
 		suicide = Material.getMaterial(config.getString("OnJoin.Item.Suicide.Material"));
 		hideall = Material.getMaterial(config.getString("OnJoin.Item.HideAll.Material"));
 		leave = Material.getMaterial(config.getString("OnJoin.Item.Leave.Material"));
 
 		displayWelcome = config.getBoolean("Other.Display.JoinWelcomeMessage");
+		
+		maxFallTicks = config.getInt("OnCourse.MaxFallTicks");
 	}
 
 	public boolean isCommandPermission() {
@@ -89,4 +95,12 @@ public class Settings {
 	public List<String> getCmdWhitelist() {
 		return cmdWhitelist;
 	}	
+	
+	public int getMaxFallTicks(){
+		return maxFallTicks;
+	}
+	
+	public boolean isAttemptLessChecks(){
+		return attemptLessChecks;
+	}
 }
