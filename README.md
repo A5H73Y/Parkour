@@ -4,6 +4,8 @@
 Things remaining:
 * Test, test, test and fix, fix, fix.
 
-Supported plugins:
+#####Supported plugins:
+
 Economy [Vault](https://dev.bukkit.org/projects/vault)
+
 Titles [TitleActionBarAPI](https://dev.bukkit.org/projects/titleactionbarapi)
