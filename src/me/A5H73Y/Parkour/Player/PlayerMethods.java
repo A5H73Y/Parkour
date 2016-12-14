@@ -203,19 +203,23 @@ public class PlayerMethods {
 			for (Player players : Bukkit.getServer().getOnlinePlayers()) {
 				players.sendMessage(finishBroadcast);
 			}
-			return;
+			break;
 		case 2:
 			for (Player players : Bukkit.getServer().getOnlinePlayers()) {
 				if (PlayerMethods.isPlaying(players.getPlayerListName())) {
 					players.sendMessage(finishBroadcast);
 				}
 			}
-			return;
+			break;
 		case 1:
 		default:
 			player.sendMessage(finishBroadcast);
 		}
-
+		if (Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.TeleportToLobby")) {
+			player.sendMessage("Teleporting to lobby....");
+			/** Allow player to bask in the glory of completing course before teleport to lobby **/
+			Utils.sleep(3500);
+		}
 	}
 
 	/**

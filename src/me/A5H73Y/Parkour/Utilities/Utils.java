@@ -627,4 +627,9 @@ public final class Utils {
 	public static List<String> getParkourBlockList(){
 		return new ArrayList<String>(Parkour.getParkourConfig().getConfig().getConfigurationSection("ParkourBlocks").getKeys(false));
 	}
+	public static void sleep (int time) {
+		try {
+			Thread.sleep(time);
+		} catch (Exception e) {}
+	}
 }
