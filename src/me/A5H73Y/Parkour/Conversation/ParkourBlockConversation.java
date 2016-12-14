@@ -35,7 +35,11 @@ public class ParkourBlockConversation extends StringPrompt {
 		@Override
 		public String getPromptText(ConversationContext context) {
 			int stage = getBlockStage(context);
-			return ChatColor.LIGHT_PURPLE + " What material do you want for the " + ChatColor.WHITE + blockTypes[stage] + ChatColor.LIGHT_PURPLE + " block?";
+			String blockType = blockTypes[stage];
+			Material material = Material.getMaterial(
+					Parkour.getParkourConfig().getConfig().getString("DefaultBlocks." + blockType + ".Material").toUpperCase());
+			
+			return ChatColor.LIGHT_PURPLE + " What material do you want for the " + ChatColor.WHITE + blockTypes[stage] + ChatColor.LIGHT_PURPLE + " block?\n [default = " + ChatColor.GOLD + material + ChatColor.LIGHT_PURPLE + "]";
 		}
 
 		@Override
