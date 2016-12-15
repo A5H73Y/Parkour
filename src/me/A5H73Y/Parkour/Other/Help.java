@@ -131,29 +131,66 @@ public final class Help {
 			displayHelpMessage(player, "", "/pa ", "",
 					" ");
 			
-		} else if (args[1].equalsIgnoreCase("")){	
+		} else if (args[1].equalsIgnoreCase("setminlevel")){	
 			displayHelpMessage(player, "", "/pa ", "",
 					" ");
 			
-		} else if (args[1].equalsIgnoreCase("")){	
+		} else if (args[1].equalsIgnoreCase("setmaxdeath")){	
 			displayHelpMessage(player, "", "/pa ", "",
 					" ");
 			
-		} else if (args[1].equalsIgnoreCase("")){	
+		} else if (args[1].equalsIgnoreCase("firstreward")){	
 			displayHelpMessage(player, "", "/pa ", "",
 					" ");
 			
-			displayCommandUsage(player, "linkPB", "(course) (PB)", "Link ParkourBlocks");
-			displayCommandUsage(player, "setminlevel", "(course) (level)", "Set course minimum level");
-			displayCommandUsage(player, "setmaxdeath", "(course) (death)", "Set course max deaths");
-			displayCommandUsage(player, "firstreward", "(course)", "Toggle if the prize is given once");
-			displayCommandUsage(player, "rewardlevel", "(course) (level)", "Reward level on complete");
-			displayCommandUsage(player, "rewardrank", "(level) (rank)", "Reward rank on complete");
-			displayCommandUsage(player, "rewardparkoins", "(course) (amount)", "Reward Parkoins");
-			
-		} else if (args[1].equalsIgnoreCase("")){	
+		} else if (args[1].equalsIgnoreCase("rewardlevel")){	
 			displayHelpMessage(player, "", "/pa ", "",
 					" ");
+			
+		} else if (args[1].equalsIgnoreCase("rewardrank")){	
+			displayHelpMessage(player, "", "/pa ", "",
+					" ");
+			
+		} else if (args[1].equalsIgnoreCase("rewardparkoins")){	
+			displayHelpMessage(player, "", "/pa ", "",
+					" ");
+			
+		} else if (args[1].equalsIgnoreCase("recreate")){	
+			displayHelpMessage(player, "", "/pa ", "",
+					" ");
+			
+		} else if (args[1].equalsIgnoreCase("delete")){	
+			displayHelpMessage(player, "", "/pa ", "",
+					" ");
+			
+		} else if (args[1].equalsIgnoreCase("reset")){	
+			displayHelpMessage(player, "", "/pa ", "",
+					" ");
+			
+		} else if (args[1].equalsIgnoreCase("economy")){	
+			displayHelpMessage(player, "", "/pa ", "",
+					" ");
+			
+		} else if (args[1].equalsIgnoreCase("createPB")){	
+			displayHelpMessage(player, "", "/pa ", "",
+					" ");
+			
+		} else if (args[1].equalsIgnoreCase("validatePB")){	
+			displayHelpMessage(player, "", "/pa ", "",
+					" ");
+			
+		} else if (args[1].equalsIgnoreCase("sql")){	
+			displayHelpMessage(player, "", "/pa ", "",
+					" ");
+			
+		} else if (args[1].equalsIgnoreCase("settings")){	
+			displayHelpMessage(player, "", "/pa ", "",
+					" ");
+			
+		} else if (args[1].equalsIgnoreCase("request")){	
+			displayHelpMessage(player, "", "/pa ", "",
+					" ");
+			
 		} else{
 			player.sendMessage(Static.getParkourString() + "Sorry, I haven't written a help guide for that command yet.");
 		}

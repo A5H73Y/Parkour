@@ -87,7 +87,7 @@ public class ParkourListener implements Listener {
 		} else if (belowMaterial.equals(pb.getLaunch())) {
 			event.getPlayer().setVelocity(new Vector(0, 1.2, 0));
 
-		} else if (belowMaterial.equals(pb.getDoublejump())) {
+		} else if (belowMaterial.equals(pb.getBounce())) {
 			event.getPlayer().setVelocity(new Vector(0, 0.6, 0));
 
 		} else if (belowMaterial.equals(pb.getSpeed())) {

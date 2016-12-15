@@ -8,7 +8,7 @@ public class ParkourBlocks implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	private Material death, finish, climb, launch, speed, repulse, norun, nopotion, doublejump;
+	private Material death, finish, climb, launch, speed, repulse, norun, nopotion, bounce;
 
 	private double str_launch, str_climb, str_repulse, str_doublejump;
 
@@ -27,9 +27,9 @@ public class ParkourBlocks implements Serializable{
 	 * @param repulse
 	 * @param norun
 	 * @param nopotion
-	 * @param doublejump
+	 * @param bounce
 	 */
-	public ParkourBlocks(Material death, Material finish, Material climb, Material launch, Material speed, Material repulse, Material norun, Material nopotion, Material doublejump){
+	public ParkourBlocks(Material death, Material finish, Material climb, Material launch, Material speed, Material repulse, Material norun, Material nopotion, Material bounce){
 		this.death = death;
 		this.finish = finish;
 		this.climb = climb;
@@ -38,7 +38,7 @@ public class ParkourBlocks implements Serializable{
 		this.repulse = repulse;
 		this.norun = norun;
 		this.nopotion = nopotion;
-		this.doublejump = doublejump;
+		this.bounce = bounce;
 	}
 
 	public Material getDeath() {
@@ -105,12 +105,12 @@ public class ParkourBlocks implements Serializable{
 		this.nopotion = nopotion;
 	}
 
-	public Material getDoublejump() {
-		return doublejump;
+	public Material getBounce() {
+		return bounce;
 	}
 
-	public void setDoublejump(Material doublejump) {
-		this.doublejump = doublejump;
+	public void setBounce(Material bounce) {
+		this.bounce = bounce;
 	}
 
 	public double getStr_launch() {

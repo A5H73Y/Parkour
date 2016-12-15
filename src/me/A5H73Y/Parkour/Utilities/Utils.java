@@ -355,8 +355,19 @@ public final class Utils {
 	 * 
 	 * @return ParkourBlocks
 	 */
-	public final static ParkourBlocks populateParkourBlocks() {
-		return populateParkourBlocks("DefaultBlocks");
+	public final static ParkourBlocks populateDefaultParkourBlocks() {
+		ParkourBlocks parkourBlocks = new ParkourBlocks(
+				getParkourMaterial("DefaultBlocks.Death.Material"), 
+				getParkourMaterial("DefaultBlocks.Finish.Material"), 
+				getParkourMaterial("DefaultBlocks.Climb.Material"), 
+				getParkourMaterial("DefaultBlocks.Launch.Material"), 
+				getParkourMaterial("DefaultBlocks.Speed.Material"),
+				getParkourMaterial("DefaultBlocks.Repulse.Material"), 
+				getParkourMaterial("DefaultBlocks.NoRun.Material"), 
+				getParkourMaterial("DefaultBlocks.NoPotion.Material"), 
+				getParkourMaterial("DefaultBlocks.Bounce.Material"));
+
+		return parkourBlocks;
 	}
 
 	/**
@@ -370,18 +381,18 @@ public final class Utils {
 		if (!Parkour.getParkourConfig().getConfig().contains(name + ".Death.Material"))
 			return null;
 
-		ParkourBlocks pb = new ParkourBlocks(
+		ParkourBlocks parkourBlocks = new ParkourBlocks(
 				getParkourMaterial(name + ".Death.Material"), 
 				getParkourMaterial(name + ".Finish.Material"), 
 				getParkourMaterial(name + ".Climb.Material"), 
 				getParkourMaterial(name + ".Launch.Material"), 
 				getParkourMaterial(name + ".Speed.Material"),
 				getParkourMaterial(name + ".Repulse.Material"), 
-				getParkourMaterial(name + ".NoRun.Material"), 
-				getParkourMaterial(name + ".NoPotion.Material"), 
-				getParkourMaterial(name + ".Bounce.Material"));
+				Static.getParkourBlocks().getNorun(), 
+				Static.getParkourBlocks().getNopotion(), 
+				Static.getParkourBlocks().getBounce());
 
-		return pb;
+		return parkourBlocks;
 	}
 
 	/**
@@ -620,11 +631,11 @@ public final class Utils {
 		return "";
 	}
 	
-	public static List<String> getLobbyList(){
+	public static List<String> getLobbyList() {
 		return new ArrayList<String>(Parkour.getParkourConfig().getConfig().getConfigurationSection("CONFIG-SECTION-HERE").getKeys(false));
 	}
 
-	public static List<String> getParkourBlockList(){
+	public static List<String> getParkourBlockList() {
 		return new ArrayList<String>(Parkour.getParkourConfig().getConfig().getConfigurationSection("ParkourBlocks").getKeys(false));
 	}
 }

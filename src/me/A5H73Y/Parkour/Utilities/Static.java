@@ -26,7 +26,7 @@ public final class Static {
 	private static boolean economy = false;
 	private static boolean barAPI = false;
 	private static boolean devBuild = true;
-	private static ParkourBlocks pblocks;
+	private static ParkourBlocks parkourBlocks;
 
 	private final static String ParkourString = Utils.colour("&0[&bParkour&0] &f");
 	private static Double version;
@@ -36,7 +36,7 @@ public final class Static {
 	public final static void initiate() {
 		version = Double.parseDouble(Parkour.getPlugin().getDescription().getVersion());
 		courseList = Parkour.getParkourConfig().getAllCourses();
-		pblocks = Utils.populateParkourBlocks();
+		parkourBlocks = Utils.populateDefaultParkourBlocks();
 	}
 
 	public final static void populateCourses(List<String> courses) {
@@ -103,7 +103,7 @@ public final class Static {
 	}
 
 	public final static ParkourBlocks getParkourBlocks() {
-		return pblocks;
+		return parkourBlocks;
 	}
 
 	public final static void setBarAPI(boolean value) {

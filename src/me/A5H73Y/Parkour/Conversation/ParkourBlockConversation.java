@@ -35,7 +35,13 @@ public class ParkourBlockConversation extends StringPrompt {
 		@Override
 		public String getPromptText(ConversationContext context) {
 			int stage = getBlockStage(context);
-			return ChatColor.LIGHT_PURPLE + " What material do you want for the " + ChatColor.WHITE + blockTypes[stage] + ChatColor.LIGHT_PURPLE + " block?";
+			
+			String blockType = blockTypes[stage];
+			
+			String material = Parkour.getParkourConfig().getConfig().getString("DefaultBlocks." + blockType + ".Material").toUpperCase();
+
+			return ChatColor.LIGHT_PURPLE + " What material do you want for the " + ChatColor.WHITE + blockType + ChatColor.LIGHT_PURPLE + " block?\n "
+					+ ChatColor.DARK_GRAY + "Default: " + ChatColor.GRAY + material;
 		}
 
 		@Override
@@ -52,7 +58,7 @@ public class ParkourBlockConversation extends StringPrompt {
 			} else {
 				material = Material.getMaterial(message.toUpperCase());
 			}
-			
+
 			if (material == null){
 				ParkourConversation.sendErrorMessage(context, "This is not a valid material");
 				return this;

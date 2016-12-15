@@ -137,7 +137,7 @@ public class PlayerMethods {
 	 * 
 	 * @param player
 	 */
-	public static void playerFinish(Player player) {
+	public static void playerFinish(final Player player) {
 		if (!isPlaying(player.getName()))
 			return;
 
@@ -145,7 +145,7 @@ public class PlayerMethods {
 			return;
 
 		ParkourSession session = getParkourSession(player.getName());
-		String courseName = session.getCourse().getName();
+		final String courseName = session.getCourse().getName();
 
 		if (Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.EnforceCompletion") && session.getCheckpoint() != (session.getCourse().getCheckpoints())) {
 			player.sendMessage(Utils.getTranslation("Error.Cheating1"));
@@ -163,36 +163,49 @@ public class PlayerMethods {
 		givePrize(player, courseName);
 		displayFinishMessage(player, session);
 		CourseMethods.increaseComplete(courseName);
-		removePlayer(player.getName());
-
-		DatabaseMethods.insertTime(courseName, player.getName(), session.getTime(), session.getDeaths());
 
 		if (Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.TeleportToLobby")) {
-			if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".LinkedCourse")) {
-				String linkedCourseName = Parkour.getParkourConfig().getCourseData().getString(courseName + ".LinkedCourse").toLowerCase();
-
-				if (CourseMethods.exist(linkedCourseName)) {
-					CourseMethods.joinCourse(player, linkedCourseName);
-					return;
-				}
-			} else if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".LinkedLobby")) {
-				String lobbyName = Parkour.getParkourConfig().getCourseData().getString(courseName + ".LinkedLobby");
-
-				if (Parkour.getParkourConfig().getConfig().contains("Lobby." + lobbyName + ".World")) {
-					String[] args = { null, lobbyName };
-					CourseMethods.joinLobby(args, player);
-					return;
-				}
+			Long delay = Parkour.getParkourConfig().getConfig().getLong("OnFinish.TeleportDelay");
+			
+			if (delay > 0) {
+				Bukkit.getScheduler().scheduleSyncDelayedTask(Parkour.getPlugin(), new Runnable() {
+				    public void run() {
+				    	courseCompleteLocation(player, courseName);
+				    }
+				}, delay);
+				
+			} else {
+				courseCompleteLocation(player, courseName);
 			}
-
-			CourseMethods.joinLobby(null, player);
 		}
+		
+		DatabaseMethods.insertTime(courseName, player.getName(), session.getTime(), session.getDeaths());
 
 		Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".LastPlayed", courseName);
 		Parkour.getParkourConfig().saveUsers();
+	}
+	
+	private static void courseCompleteLocation(Player player, String courseName) {
+		removePlayer(player.getName());
+		
+		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".LinkedCourse")) {
+			String linkedCourseName = Parkour.getParkourConfig().getCourseData().getString(courseName + ".LinkedCourse").toLowerCase();
 
-		// TODO find the best order to run these.
-		// i.e player can not be playing when joining lobby
+			if (CourseMethods.exist(linkedCourseName)) {
+				CourseMethods.joinCourse(player, linkedCourseName);
+				return;
+			}
+		} else if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".LinkedLobby")) {
+			String lobbyName = Parkour.getParkourConfig().getCourseData().getString(courseName + ".LinkedLobby");
+
+			if (Parkour.getParkourConfig().getConfig().contains("Lobby." + lobbyName + ".World")) {
+				String[] args = { null, lobbyName };
+				CourseMethods.joinLobby(args, player);
+				return;
+			}
+		}
+
+		CourseMethods.joinLobby(null, player);
 	}
 
 	private static void displayFinishMessage(Player player, ParkourSession session) {
@@ -447,7 +460,7 @@ public class PlayerMethods {
 				player.sendMessage(Static.getParkourString() + "Invalid ParkourBlocks: " + ChatColor.RED + args[1]);
 		}
 		if (pb == null) {
-			pb = Utils.populateParkourBlocks();
+			pb = Utils.populateDefaultParkourBlocks();
 		}
 
 		// Speed Block

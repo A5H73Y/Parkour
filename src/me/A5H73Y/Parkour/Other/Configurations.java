@@ -119,8 +119,8 @@ public class Configurations {
 	}
 
 	public void reload(){
-		//TODO finish me - test reload without overwrite
 		Parkour.getPlugin().reloadConfig();
+		config = Parkour.getPlugin().getConfig();
 
 		courseData = YamlConfiguration.loadConfiguration(courseFile);
 		stringData = YamlConfiguration.loadConfiguration(stringFile);
@@ -391,6 +391,7 @@ public class Configurations {
 		config.addDefault("OnFinish.DefaultPrize.Material", "DIAMOND");
 		config.addDefault("OnFinish.DefaultPrize.Amount", 1);
 		config.addDefault("OnFinish.DefaultPrize.XP", 0);
+		config.addDefault("OnFinish.TeleportDelay", 0);
 
 		config.addDefault("OnDie.SetXPBarToDeathCount", false);
 		config.addDefault("OnDie.ResetTimeWithNoCheckpoint", false);

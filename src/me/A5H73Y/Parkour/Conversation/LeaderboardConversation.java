@@ -36,7 +36,7 @@ public class LeaderboardConversation extends StringPrompt {
 	private class ChooseType extends FixedSetPrompt {
 
 		ChooseType(){
-			super("Personal", "Global", "Cancel");
+			super("personal", "global");
 		}
 
 		@Override
@@ -46,9 +46,6 @@ public class LeaderboardConversation extends StringPrompt {
 
 		@Override
 		protected Prompt acceptValidatedInput(ConversationContext context, String choice) {
-			if (choice.equals("Cancel"))
-				return Prompt.END_OF_CONVERSATION;
-
 			context.setSessionData("type", choice);
 
 			return new ChooseAmount();
@@ -64,7 +61,7 @@ public class LeaderboardConversation extends StringPrompt {
 
 		@Override
 		protected boolean isNumberValid(ConversationContext context, Number input) {
-			return input.intValue() > 0 && input.intValue() < 20;
+			return input.intValue() > 0 && input.intValue() <= 20;
 		}
 
 		@Override
@@ -90,9 +87,9 @@ public class LeaderboardConversation extends StringPrompt {
 			Bukkit.getScheduler().runTaskLaterAsynchronously(Parkour.getPlugin(), new Runnable() {
 				@Override
 				public void run() {
-					if (leaderboardType.equals("Personal")) {
+					if (leaderboardType.equals("personal")) {
 						Utils.displayLeaderboard(DatabaseMethods.getTopPlayerCourseResults(player.getName(), courseName, amount), player);
-					} else if (leaderboardType.equals("Global")) {
+					} else if (leaderboardType.equals("global")) {
 						Utils.displayLeaderboard(DatabaseMethods.getTopCourseResults(courseName, amount), player);
 					}
 				}
