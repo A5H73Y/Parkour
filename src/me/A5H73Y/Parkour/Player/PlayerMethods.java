@@ -74,9 +74,12 @@ public class PlayerMethods {
 		Utils.sendSubTitle(player, Utils.getTranslation("Parkour.Leave", false).replace("%COURSE%", session.getCourse().getName()));
 
 		removePlayer(player.getName());
-		preparePlayer(player, Parkour.getParkourConfig().getConfig().getInt("Other.onFinish.Gamemode"));
+		preparePlayer(player, Parkour.getParkourConfig().getConfig().getInt("OnFinish.SetGamemode"));
 		CourseMethods.joinLobby(null, player);
 		loadInventory(player);
+		
+		if (Static.containsHidden(player.getName()))
+			toggleVisibility(player, true);
 	}
 
 	/**
@@ -163,6 +166,7 @@ public class PlayerMethods {
 		givePrize(player, courseName);
 		displayFinishMessage(player, session);
 		CourseMethods.increaseComplete(courseName);
+		removePlayer(player.getName());
 
 		if (Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.TeleportToLobby")) {
 			Long delay = Parkour.getParkourConfig().getConfig().getLong("OnFinish.TeleportDelay");
@@ -186,8 +190,6 @@ public class PlayerMethods {
 	}
 	
 	private static void courseCompleteLocation(Player player, String courseName) {
-		removePlayer(player.getName());
-		
 		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".LinkedCourse")) {
 			String linkedCourseName = Parkour.getParkourConfig().getCourseData().getString(courseName + ".LinkedCourse").toLowerCase();
 

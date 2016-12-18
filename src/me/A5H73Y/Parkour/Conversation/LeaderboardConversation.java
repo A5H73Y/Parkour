@@ -41,7 +41,8 @@ public class LeaderboardConversation extends StringPrompt {
 
 		@Override
 		public String getPromptText(ConversationContext context) {
-			return ChatColor.LIGHT_PURPLE + " What type of leaderboards would you like to see?            " + formatFixedSet();
+			return ChatColor.LIGHT_PURPLE + " What type of leaderboards would you like to see?\n" +
+					ChatColor.GREEN + formatFixedSet();
 		}
 
 		@Override
