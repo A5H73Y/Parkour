@@ -1,7 +1,7 @@
 name: Parkour
 version: 4.0
 description: The original and most powerful Parkour plugin available
-softdepend: [Vault, TitleActionbarAPI]
+softdepend: [Vault, BountifulAPI]
 author: A5H73Y
 main: me.A5H73Y.Parkour.Parkour
 website: http://www.mcparkour.co.uk/

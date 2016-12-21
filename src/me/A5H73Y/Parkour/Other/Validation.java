@@ -139,26 +139,26 @@ public class Validation {
 			return false;
 		}
 		if (!PlayerMethods.isPlayerOnline(args[2])){
-			player.sendMessage("(TODO) This player is not online"); //TODO
+			player.sendMessage(Static.getParkourString() + "This player is not online!");
 			return false;
 		}
 		if (PlayerMethods.isPlaying(args[2])){
-			player.sendMessage("(TODO) This player is playing"); //TODO
+			player.sendMessage(Static.getParkourString() + "This player is already playing!");
 			return false;
 		}
 		if (player.getName().equalsIgnoreCase(args[2])){
-			player.sendMessage("(TODO) You can't challenge yourself.");
+			player.sendMessage(Static.getParkourString() + "You can't challenge yourself!");
 			return false;
 		}
 
 		Player target = Bukkit.getPlayer(args[2]);
 
 		if (!Validation.courseJoiningNoMessages(player, courseName)){
-			player.sendMessage("(TODO) You are not able to join this course"); //TODO
+			player.sendMessage(Static.getParkourString() + "You are not able to join this course!");
 			return false;
 		}
 		if (!Validation.courseJoiningNoMessages(target, courseName)){
-			player.sendMessage("(TODO) They are not able to join this course"); //TODO
+			player.sendMessage(Static.getParkourString() + "They are not able to join this course!");
 			return false;
 		}
 

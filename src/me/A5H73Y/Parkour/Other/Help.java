@@ -33,7 +33,7 @@ public final class Help {
 
 		} else if (args[1].equalsIgnoreCase("course")){
 			displayHelpMessage(player, "Display course information", "/pa course (course)", "/pa course Tutorial",
-					" Display all course information, ");
+					" Display all the course information, including the requirements to join and the rewards given on completion.");
 
 		} else if (args[1].equalsIgnoreCase("lobby")){	
 			displayHelpMessage(player, "Teleport to Parkour lobby", "/pa lobby [lobby]", null,
@@ -41,7 +41,7 @@ public final class Help {
 
 		} else if (args[1].equalsIgnoreCase("perms")){	
 			displayHelpMessage(player, "Display your Parkour Permissions", "/pa perms", null,
-					" Your Parkour permissions will be displayed based on the group permissions you have. For example if you have 'Parkour.Admin.*', then you are a part of the Admin group, same for 'Parkour.Basic.*' etc. However if you have been given only a selection of permissiosn from that group then it will not display, for example 'Parkour.Admin.Testmode' does not make you an admin. 'Parkour.*' will give you permission for everyhing.");
+					" Your Parkour permissions will be displayed based on the group permissions you have. For example if you have 'Parkour.Admin.*', then you are a part of the Admin group, same for 'Parkour.Basic.*' etc. However if you have been given only a selection of permissiosn from that group then it will not display, for example 'Parkour.Admin.Testmode' does not make you an admin. 'Parkour.*' will give you permission for everything.");
 
 		} else if (args[1].equalsIgnoreCase("like / dislike")){	
 			displayHelpMessage(player, "Vote whether or not you liked the course", "/pa like", "/pa dislike",
@@ -125,26 +125,26 @@ public final class Help {
 			
 		} else if (args[1].equalsIgnoreCase("link")){	
 			displayHelpMessage(player, "Link the course after complete", "/pa link (argument) (argument)", "/pa link course Level2",
-					" You are now able to link the selected course to either a custom lobby, or to join a different course straight after you complete the selected course. For example if you selected a course '/pa select Level1', you would be able to make the player join Level2 after they complete Level1 by doing '/pa link course Level2', or if you wish for them to teleport to a custom lobby '/pa link lobby Admin'");
+					" You are now able to link the selected course to either a custom lobby, or to join a different course straight after you complete the selected course. For example if you selected a course '/pa select Level1', you would be able to make the player join Level2 after they complete Level1 by doing '/pa link course Level2', or if you wish for them to teleport to a custom lobby '/pa link lobby Admin'.");
 			
 		} else if (args[1].equalsIgnoreCase("linkPB")){	
-			displayHelpMessage(player, "", "/pa ", "",
-					" ");
+			displayHelpMessage(player, "Link a course to a set of ParkourBlocks", "/pa linkPB (course) (PB)", "/pa link Example FireKit",
+					" Each course has the ability to have a unique set of ParkourBlocks, created using the '/pa createPB' command. Once linked, each type of ParkourBlock for that course will be configured to what you set.");
 			
 		} else if (args[1].equalsIgnoreCase("setminlevel")){	
-			displayHelpMessage(player, "", "/pa ", "",
-					" ");
+			displayHelpMessage(player, "Set the minimum required level for a course", "/pa setminlevel (course) (level)", "/pa setminlevel Example 5",
+					" By default, a course does not have a minimum level requirement to join. However, if you want to enforce the progression of Parkour courses, you can require the player to have a Parkour level greater than or equal to the minimum level specified.");
 			
 		} else if (args[1].equalsIgnoreCase("setmaxdeath")){	
-			displayHelpMessage(player, "", "/pa ", "",
-					" ");
+			displayHelpMessage(player, "Set the maximum amount of deaths for a course", "/pa setmaxdeath (course) (amount)", "/pa setmaxdeath Example 5",
+					" By default, a course does not have a maximum amount of deaths. However, you can enforce a limit on the amount of deaths the player can accumulate before being forced to leave the course.");
 			
-		} else if (args[1].equalsIgnoreCase("firstreward")){	
-			displayHelpMessage(player, "", "/pa ", "",
-					" ");
+		} else if (args[1].equalsIgnoreCase("rewardonce")){	
+			displayHelpMessage(player, "Reward only once for that course", "/pa rewardonce (course)", "/pa rewardonce Example",
+					" Prevent a player from rewarding themselves multiple times for completing a course, by only allowing them to claim the reward the first time they complete the course.");
 			
 		} else if (args[1].equalsIgnoreCase("rewardlevel")){	
-			displayHelpMessage(player, "", "/pa ", "",
+			displayHelpMessage(player, "Reward a Parkour Level", "/pa rewardlevel (course) (level)", "/pa rewardlevel Example 5",
 					" ");
 			
 		} else if (args[1].equalsIgnoreCase("rewardrank")){	
@@ -192,7 +192,7 @@ public final class Help {
 					" ");
 			
 		} else{
-			player.sendMessage(Static.getParkourString() + "Sorry, I haven't written a help guide for that command yet.");
+			player.sendMessage(Static.getParkourString() + "This is an unrecognised command, please see all available commands using '/pa cmds'");
 		}
 	}
 
@@ -289,7 +289,7 @@ public final class Help {
 		displayCommandUsage(player, "finish", null, "Set the status of the selected course to finished");
 		displayCommandUsage(player, "prize", null, "Initiate a new prize conversation");
 		displayCommandUsage(player, "test", null, "Toggle Parkour test mode");
-		displayCommandUsage(player, "leaderboard", "(course)", "Display the course leaderboards");
+		displayCommandUsage(player, "leaderboard", "[course] [amount] [type]", "Show leaderboards");
 		displayCommandUsage(player, "tutorial", null, "Link to the official tutorial page");
 	}
 
@@ -301,7 +301,7 @@ public final class Help {
 		displayCommandUsage(player, "linkPB", "(course) (PB)", "Link ParkourBlocks");
 		displayCommandUsage(player, "setminlevel", "(course) (level)", "Set course minimum level");
 		displayCommandUsage(player, "setmaxdeath", "(course) (death)", "Set course max deaths");
-		displayCommandUsage(player, "firstreward", "(course)", "Toggle if the prize is given once");
+		displayCommandUsage(player, "rewardonce", "(course)", "Toggle if the prize is given once");
 		displayCommandUsage(player, "rewardlevel", "(course) (level)", "Reward level on complete");
 		displayCommandUsage(player, "rewardrank", "(level) (rank)", "Reward rank on complete");
 		displayCommandUsage(player, "rewardparkoins", "(course) (amount)", "Reward Parkoins");
@@ -423,7 +423,7 @@ public final class Help {
 		player.sendMessage("Version: " + ChatColor.AQUA + Static.getVersion());
 		player.sendMessage("DevBuild: " + ChatColor.AQUA + Static.getDevBuild());
 		player.sendMessage("Economy: " + ChatColor.AQUA + Static.getEconomy());
-		player.sendMessage("BarAPI: " + ChatColor.AQUA + Static.getBarAPI());
+		player.sendMessage("BountifulAPI: " + ChatColor.AQUA + Static.getBountifulAPI());
 		player.sendMessage("Disable Commands: " + ChatColor.AQUA + Parkour.getSettings().isDisableCommands());
 		player.sendMessage("Enforce world: " + ChatColor.AQUA + Parkour.getSettings().isEnforceWorld());
 		

@@ -192,7 +192,7 @@ public class CourseMethods {
 			player.sendMessage(Utils.getTranslation("Error.Unknown"));
 			return;
 		}
-		
+
 		courseName = courseName.toLowerCase();
 		ChatColor aqua = ChatColor.AQUA;
 
@@ -386,11 +386,9 @@ public class CourseMethods {
 		}
 
 		courseName = courseName.toLowerCase();
-		List<String> courselist = Static.getCourses();
-		courselist.remove(courseName);
-		Static.setCourses(courselist); // TODO check if this is necessary
+		Static.getCourses().remove(courseName);
 		Parkour.getParkourConfig().getCourseData().set(courseName, null);
-		Parkour.getParkourConfig().getCourseData().set("Courses", courselist);
+		Parkour.getParkourConfig().getCourseData().set("Courses", Static.getCourses());
 		Parkour.getParkourConfig().saveCourses();
 		DatabaseMethods.deleteCourseAndReferences(courseName);
 
@@ -667,17 +665,17 @@ public class CourseMethods {
 	 * @param args
 	 * @param player
 	 */
-	public static void setFirstReward(String[] args, Player player) {
+	public static void setRewardOnce(String[] args, Player player) {
 		if (!CourseMethods.exist(args[1])) {
 			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
 			return;
 		}
 
-		if (Parkour.getParkourConfig().getCourseData().getBoolean(args[1].toLowerCase() + ".FirstReward")) {
-			Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".FirstReward", false);
+		if (Parkour.getParkourConfig().getCourseData().getBoolean(args[1].toLowerCase() + ".RewardOnce")) {
+			Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".RewardOnce", false);
 			player.sendMessage(Static.getParkourString() + args[1] + "'s reward one time was set to " + ChatColor.AQUA + "false");
 		} else {
-			Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".FirstReward", true);
+			Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".RewardOnce", true);
 			player.sendMessage(Static.getParkourString() + args[1] + "'s reward one time was set to " + ChatColor.AQUA + "true");
 		}
 		Parkour.getParkourConfig().saveCourses();
@@ -823,7 +821,7 @@ public class CourseMethods {
 			player.sendMessage(Static.getParkourString() + "Invalid course.");
 			return;
 		}
-		
+
 		if (DatabaseMethods.hasVoted(courseName, player.getName())){
 			player.sendMessage(Static.getParkourString() + "You have already voted for " + ChatColor.AQUA + courseName);
 			return;
@@ -832,11 +830,11 @@ public class CourseMethods {
 		if (args[0].equalsIgnoreCase("like")) {
 			DatabaseMethods.insertVote(courseName, player.getName(), true);
 			player.sendMessage(Static.getParkourString() + "You " + ChatColor.GREEN + "liked " + ChatColor.WHITE + courseName); 
-			
+
 		} else if (args[0].equalsIgnoreCase("dislike")) {
 			DatabaseMethods.insertVote(courseName, player.getName(), false);
 			player.sendMessage(Static.getParkourString() + "You " + ChatColor.RED + "disliked " + ChatColor.WHITE + courseName); 
-			
+
 		}
 	}
 
@@ -885,12 +883,48 @@ public class CourseMethods {
 			player.sendMessage(Static.getParkourString() + "Reward level needs to be numeric.");
 			return;
 		}
-		
+
 		int amount = Utils.parseMaterialAmount(args[3]);
-		
+
 		Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".JoinItemMaterial", args[2].toUpperCase());
 		Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".JoinItemAmount", amount);
 		Parkour.getParkourConfig().saveCourses();
 		player.sendMessage(Static.getParkourString() + "Join item for " + args[1] + " set to " + args[2] + " (" + amount + ")");
+	}
+
+	public static void getLeaderboards(String[] args, Player player) {
+		if (args.length == 1) {
+			Utils.startConversation(player, ConversationType.LEADERBOARD);
+			return;
+		}
+		if (!CourseMethods.exist(args[1])) {
+			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
+			return;
+		}
+		
+		int limit = 5;
+		boolean personal = true;
+		
+		if (args.length >= 4) {
+			if (args[3].equalsIgnoreCase("global")){
+				personal = false;
+			} else {
+				player.sendMessage(Static.getParkourString() + "Defaulting to 'personal', alternative option: 'global'");
+			}
+		}
+		
+		if (args.length >= 3) {
+			if (!Utils.isNumber(args[2])) {
+				player.sendMessage(Static.getParkourString() + "Amount of results needs to be numeric.");
+				return;
+			}
+			limit = Integer.parseInt(args[2]);
+		}
+		
+		if (personal) {
+			Utils.displayLeaderboard(DatabaseMethods.getTopPlayerCourseResults(player.getName(), args[1], limit), player);
+		} else {
+			Utils.displayLeaderboard(DatabaseMethods.getTopCourseResults(args[1], limit), player);
+		}
 	}
 }

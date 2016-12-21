@@ -295,7 +295,7 @@ public class Configurations {
 			stringData.addDefault("Error.UnknownCommand", "Unknown command!");
 			stringData.addDefault("Error.UnknownPlayer", "This player does not exist!");
 			stringData.addDefault("Error.Cheating1", "Please do not cheat.");
-			stringData.addDefault("Error.Cheating2", "&lYou must achieve all &4%AMOUNT% &fcheckpoints!");
+			stringData.addDefault("Error.Cheating2", "&lYou must achieve all &4%AMOUNT% &f&lcheckpoints!");
 
 			stringData.addDefault("Help.Command", "&7/pa help &9%COMMAND% &0: &7To learn more about this command.");
 			stringData.addDefault("Help.Commands", "&3/pa &bcmds &8: &fTo display the Parkour commands menu.");
@@ -412,7 +412,7 @@ public class Configurations {
 		
 
 		config.addDefault("Other.Economy.Enabled", true);
-		config.addDefault("Other.TitleActionBar.Enabled", true);
+		config.addDefault("Other.BountifulAPI.Enabled", true);
 		config.addDefault("Other.CheckForUpdates", true);
 		config.addDefault("Other.SubmitMetrics", true);
 		config.addDefault("Other.LogToFile", true);

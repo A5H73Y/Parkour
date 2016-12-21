@@ -205,14 +205,14 @@ public class ParkourCommands implements CommandExecutor {
 
 						CourseMethods.setJoinItem(args, player);
 
-					} else if (args[0].equalsIgnoreCase("firstreward")) {
+					} else if (args[0].equalsIgnoreCase("rewardonce")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
 							return false;
 
 						if (!Utils.validateArgs(player, args, 2))
 							return false;
 
-						CourseMethods.setFirstReward(args, player);
+						CourseMethods.setRewardOnce(args, player);
 
 					} else if (args[0].equalsIgnoreCase("rewardlevel")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
@@ -311,7 +311,7 @@ public class ParkourCommands implements CommandExecutor {
 						if (!Utils.hasPermission(player, "Parkour.Basic", "Leaderboard"))
 							return false;
 
-						Utils.startConversation(player, ConversationType.LEADERBOARD);
+						CourseMethods.getLeaderboards(args, player);
 						
 					} else if (args[0].equalsIgnoreCase("sql")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))

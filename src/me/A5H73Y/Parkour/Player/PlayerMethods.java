@@ -244,7 +244,7 @@ public class PlayerMethods {
 		if (!Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.Prize.Enabled"))
 			return;
 
-		if (Parkour.getParkourConfig().getCourseData().getBoolean(courseName + ".FirstReward"))
+		if (Parkour.getParkourConfig().getCourseData().getBoolean(courseName + ".RewardOnce"))
 			if (DatabaseMethods.hasPlayerCompleted(player.getName(), courseName))
 				return;
 
@@ -602,11 +602,7 @@ public class PlayerMethods {
 			}
 		}
 
-		// TODO did they join with a mode?
-		// Make ParkourModes enum (CodJumper, Drunk)
-
 		player.updateInventory();
-
 	}
 
 	/**
@@ -849,11 +845,11 @@ public class PlayerMethods {
 		Challenge challenge = Static.getChallenge(targetPlayer.getName());
 
 		if (challenge == null){
-			targetPlayer.sendMessage("You have not been invited"); //TODO
+			targetPlayer.sendMessage(Static.getParkourString() + "You have not been invited!");
 			return;
 		}
 		if (!PlayerMethods.isPlayerOnline(challenge.getPlayer())){
-			targetPlayer.sendMessage("Player is not online!"); //TODO
+			targetPlayer.sendMessage(Static.getParkourString() + "Player is not online!");
 			return;
 		}
 

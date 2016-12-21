@@ -29,11 +29,9 @@ import com.huskehhh.mysql.Database;
 import com.huskehhh.mysql.mysql.MySQL;
 import com.huskehhh.mysql.sqlite.SQLite;
 
-import de.bg.derh4nnes.TitleActionBarAPI;
-
 public class StartPlugin {
 
-	static Plugin vault, barAPI;
+	static Plugin vault, bountifulAPI;
 	static boolean freshInstall = false;
 	static boolean updateExisting = false;
 
@@ -43,7 +41,7 @@ public class StartPlugin {
 		Static.initiate();
 		initiateSQL();
 		setupVault();
-		setupBarAPI();
+		setupBountifulAPI();
 		populatePlayers();
 		// Updater
 		Utils.log("Enabled Parkour v" + Static.getVersion() + "!");
@@ -137,12 +135,12 @@ public class StartPlugin {
 		return (Parkour.getEconomy() != null);
 	}
 
-	@SuppressWarnings("unchecked")
 	private static void populatePlayers() {
 		if (!new File(Static.PATH).exists())
 			return;
 
 		try {
+			@SuppressWarnings("unchecked")
 			HashMap<String, ParkourSession> players = (HashMap<String, ParkourSession>) Utils.loadAllPlaying(Static.PATH);
 			PlayerMethods.setPlaying(players);
 
@@ -158,16 +156,15 @@ public class StartPlugin {
 		}
 	}
 
-	private static void setupBarAPI() {
+	private static void setupBountifulAPI() {
+		if (!Parkour.getParkourConfig().getConfig().getBoolean("Other.BountifulAPI.Enabled"))
+			return;
+		
 		PluginManager pm = Parkour.getPlugin().getServer().getPluginManager();
-		barAPI = pm.getPlugin("TitleActionbarAPI");
-		if (barAPI != null && barAPI.isEnabled()) {
-			if (TitleActionBarAPI.isValidVersion()) { // TitleActionBarAPI.getValid()
-				Utils.log("[Tab] Linked with TitleActionbarAPI v" + barAPI.getDescription().getVersion());
-				Static.setBarAPI(true);
-			} else {
-				Utils.log("[Tab] Attempted to Link with TitleActionbarAPI, but server version is not supported!", 1);
-			}
+		bountifulAPI = pm.getPlugin("BountifulAPI");
+		if (bountifulAPI != null && bountifulAPI.isEnabled()) {
+			Utils.log("[Bountiful] Linked with BountifulAPI v" + bountifulAPI.getDescription().getVersion());
+			Static.setBountifulAPI(true);
 		}
 	}
 

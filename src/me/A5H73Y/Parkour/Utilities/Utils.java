@@ -33,7 +33,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import de.bg.derh4nnes.TitleActionBarAPI;
+import com.connorlinfoot.bountifulapi.BountifulAPI;
 
 public final class Utils {
 
@@ -475,8 +475,8 @@ public final class Utils {
 	public final static void sendTitle(Player player, String title) {
 		if (Static.containsQuiet(player.getName()))
 			return;
-		if (Static.getBarAPI())
-			TitleActionBarAPI.sendPlayerTitle(player, 5, 20, 5, title);
+		if (Static.getBountifulAPI())
+			BountifulAPI.sendTitle(player, 5, 20, 5, title, "");
 		else
 			player.sendMessage(Static.getParkourString() + title);
 	}
@@ -484,8 +484,8 @@ public final class Utils {
 	public final static void sendActionBar(Player player, String title) {
 		if (Static.containsQuiet(player.getName()))
 			return;
-		if (Static.getBarAPI())
-			TitleActionBarAPI.sendPlayerActionbar(player, title);
+		if (Static.getBountifulAPI())
+			BountifulAPI.sendActionBar(player, title);
 		else
 			player.sendMessage(Static.getParkourString() + title);
 	}
@@ -493,8 +493,8 @@ public final class Utils {
 	public final static void sendFullTitle(Player player, String title, String subTitle) {
 		if (Static.containsQuiet(player.getName()))
 			return;
-		if (Static.getBarAPI())
-			TitleActionBarAPI.sendFullTitle(player, 5, 20, 5, title, subTitle);
+		if (Static.getBountifulAPI())
+			BountifulAPI.sendTitle(player, 5, 20, 5, title, subTitle);
 		else
 			player.sendMessage(Static.getParkourString() + title + " " + subTitle);
 	}
@@ -502,8 +502,8 @@ public final class Utils {
 	public final static void sendSubTitle(Player player, String subTitle) {
 		if (Static.containsQuiet(player.getName()))
 			return;
-		if (Static.getBarAPI())
-			TitleActionBarAPI.sendPlayerSubTitle(player, 5, 20, 5, subTitle);
+		if (Static.getBountifulAPI())
+			BountifulAPI.sendTitle(player, 5, 20, 5, "", subTitle);
 		else
 			player.sendMessage(Static.getParkourString() + subTitle);
 	}
@@ -621,14 +621,14 @@ public final class Utils {
 		return amount < 1 ? 1 : amount > 64 ? 64 : amount;
 	}
 
-	public static String displayLeaderboard(List<TimeObject> times, Player player) {
+	public static void displayLeaderboard(List<TimeObject> times, Player player) {
 		if (times.size() == 0)
-			player.sendMessage("Nobody has completed this course yet!");
+			player.sendMessage(Static.getParkourString() + "No results were found!");
 		
+		player.sendMessage(Utils.getStandardHeading(times.size() + " results"));
 		for (int i = 0; i < times.size(); i++) {
 			player.sendMessage(Utils.colour((i + 1) + ") &b" + times.get(i).getPlayer() + "&f in &3" + Utils.calculateTime(times.get(i).getTime()) + "&f, dying &7" + times.get(i).getDeaths() + " &ftimes"));
 		}
-		return "";
 	}
 	
 	public static List<String> getLobbyList() {

@@ -59,9 +59,6 @@ public class ParkourListener implements Listener {
 		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
 			return;
 
-		//TODO work on extreme sponge height
-		//event.getPlayer().setFallDistance(0);
-
 		if (event.getPlayer().getFallDistance() > Parkour.getSettings().getMaxFallTicks()) {
 			PlayerMethods.playerDie(event.getPlayer());
 			return;
@@ -75,7 +72,6 @@ public class ParkourListener implements Listener {
 		}
 
 		Material belowMaterial = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
-
 		ParkourBlocks pb = PlayerMethods.getParkourSession(event.getPlayer().getName()).getCourse().getParkourBlocks();
 
 		if (belowMaterial.equals(pb.getFinish())) {
@@ -83,6 +79,9 @@ public class ParkourListener implements Listener {
 
 		} else if (belowMaterial.equals(pb.getDeath())) {
 			PlayerMethods.playerDie(event.getPlayer());
+
+		} else if (belowMaterial.equals(Material.SPONGE)) {
+			event.getPlayer().setFallDistance(0);
 
 		} else if (belowMaterial.equals(pb.getLaunch())) {
 			event.getPlayer().setVelocity(new Vector(0, 1.2, 0));
@@ -92,9 +91,6 @@ public class ParkourListener implements Listener {
 
 		} else if (belowMaterial.equals(pb.getSpeed())) {
 			event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 200, 5));
-
-		} else if (belowMaterial.equals(Material.SPONGE)) {
-			event.getPlayer().setFallDistance(0);
 
 		} else if (belowMaterial.equals(pb.getNorun())) {
 			event.getPlayer().setSprinting(false);
@@ -171,7 +167,7 @@ public class ParkourListener implements Listener {
 	public void onPlayerDamage(EntityDamageEvent event) {
 		if (!(event.getEntity() instanceof Player))
 			return;
-		
+
 		Player player = (Player) event.getEntity();
 
 		if (!PlayerMethods.isPlaying(player.getName()))
@@ -286,12 +282,34 @@ public class ParkourListener implements Listener {
 
 		} else if (player.getInventory().getItemInMainHand().getType() == Parkour.getSettings().getHideall()) {
 			PlayerMethods.toggleVisibility(player);
+			player.getInventory().setHeldItemSlot(4);
 
 		} else if (player.getInventory().getItemInMainHand().getType() == Parkour.getSettings().getLeave()) {
 			PlayerMethods.playerLeave(player);
+		}
+	}
+	
+	@EventHandler
+	public void onInventoryInteractFreedom(PlayerInteractEvent event) {
+		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+			return;
 
-		} else if (player.getInventory().getItemInMainHand().getType() == Material.REDSTONE_TORCH_ON) {
-			// TODO CodJumper
+		Player player = event.getPlayer();
+
+		if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.getAction().equals(Action.RIGHT_CLICK_AIR) 
+				&& !event.getAction().equals(Action.LEFT_CLICK_AIR) && !event.getAction().equals(Action.LEFT_CLICK_BLOCK))
+			return;
+
+		if (PlayerMethods.isPlayerInTestmode(player.getName()))
+			return;
+
+		event.setCancelled(true);
+		if (player.getInventory().getItemInMainHand().getType() == Material.REDSTONE_TORCH_ON) {
+			if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR)){
+				player.sendMessage("Set position");
+			} else {
+				player.sendMessage("Load position");
+			}
 		}
 	}
 

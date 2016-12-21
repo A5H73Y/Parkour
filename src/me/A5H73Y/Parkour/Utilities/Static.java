@@ -24,7 +24,7 @@ public final class Static {
 	private static List<Challenge> challenges = new ArrayList<Challenge>();
 
 	private static boolean economy = false;
-	private static boolean barAPI = false;
+	private static boolean bountifulAPI = false;
 	private static boolean devBuild = true;
 	private static ParkourBlocks parkourBlocks;
 
@@ -106,12 +106,12 @@ public final class Static {
 		return parkourBlocks;
 	}
 
-	public final static void setBarAPI(boolean value) {
-		barAPI = value;
+	public final static void setBountifulAPI(boolean value) {
+		bountifulAPI = value;
 	}
 
-	public final static boolean getBarAPI() {
-		return barAPI;
+	public final static boolean getBountifulAPI() {
+		return bountifulAPI;
 	}
 
 	public final static boolean containsHidden(String playerName) {
