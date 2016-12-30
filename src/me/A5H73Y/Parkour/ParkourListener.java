@@ -3,6 +3,7 @@ package me.A5H73Y.Parkour;
 import me.A5H73Y.Parkour.Course.Checkpoint;
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Other.ParkourBlocks;
+import me.A5H73Y.Parkour.Other.ParkourMode;
 import me.A5H73Y.Parkour.Other.Question;
 import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
@@ -87,7 +88,7 @@ public class ParkourListener implements Listener {
 			event.getPlayer().setVelocity(new Vector(0, 1.2, 0));
 
 		} else if (belowMaterial.equals(pb.getBounce())) {
-			event.getPlayer().setVelocity(new Vector(0, 0.6, 0));
+			event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 200, 3));
 
 		} else if (belowMaterial.equals(pb.getSpeed())) {
 			event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 200, 5));
@@ -293,22 +294,27 @@ public class ParkourListener implements Listener {
 	public void onInventoryInteractFreedom(PlayerInteractEvent event) {
 		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
 			return;
-
-		Player player = event.getPlayer();
-
+		
 		if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.getAction().equals(Action.RIGHT_CLICK_AIR) 
 				&& !event.getAction().equals(Action.LEFT_CLICK_AIR) && !event.getAction().equals(Action.LEFT_CLICK_BLOCK))
 			return;
+		
+		if (PlayerMethods.getParkourSession(event.getPlayer().getName()).getMode() != ParkourMode.FREEDOM)
+			return;
+
+		Player player = event.getPlayer();
 
 		if (PlayerMethods.isPlayerInTestmode(player.getName()))
 			return;
 
 		event.setCancelled(true);
 		if (player.getInventory().getItemInMainHand().getType() == Material.REDSTONE_TORCH_ON) {
-			if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR)){
-				player.sendMessage("Set position");
+			if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
+				PlayerMethods.getParkourSession(player.getName()).getCourse().setCheckpoint(Utils.getCheckpointOfCurrentPosition(player));
+				player.sendMessage(Utils.getTranslation("Parkour.Freedom.Save"));
 			} else {
-				player.sendMessage("Load position");
+				player.teleport(PlayerMethods.getParkourSession(player.getName()).getCourse().getCheckpoint().getLocation());
+				player.sendMessage(Utils.getTranslation("Parkour.Freedom.Load"));
 			}
 		}
 	}

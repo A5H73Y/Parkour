@@ -273,7 +273,16 @@ public class ParkourCommands implements CommandExecutor {
 							return false;
 
 						PlayerMethods.invitePlayer(args, player);
+						
+					} else if (args[0].equalsIgnoreCase("setmode")) {
+						if (!Utils.hasPermission(player, "Parkour.Admin"))
+							return false;
+						
+						if (!Utils.validateArgs(player, args, 3))
+							return false;
 
+						CourseMethods.setCourseMode(args, player);
+						
 					} else if (args[0].equalsIgnoreCase("createparkourblocks") || args[0].equalsIgnoreCase("createpb")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
 							return false;

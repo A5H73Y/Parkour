@@ -6,6 +6,7 @@ import java.util.Map;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Conversation.ParkourConversation.ConversationType;
 import me.A5H73Y.Parkour.Other.Challenge;
+import me.A5H73Y.Parkour.Other.ParkourMode;
 import me.A5H73Y.Parkour.Other.Validation;
 import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
@@ -926,5 +927,30 @@ public class CourseMethods {
 		} else {
 			Utils.displayLeaderboard(DatabaseMethods.getTopCourseResults(args[1], limit), player);
 		}
+	}
+
+	public static void setCourseMode(String[] args, Player player) {
+		if (!CourseMethods.exist(args[1])) {
+			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
+			return;
+		}
+		
+		if (args[2].equalsIgnoreCase("freedom")){
+			Parkour.getParkourConfig().getCourseData().set(args[1] + ".Mode", "freedom");
+			Parkour.getParkourConfig().saveCourses();
+			player.sendMessage(Static.getParkourString() + "Mode for " + args[1] + " set to Freedom");
+		} else {
+			player.sendMessage(Utils.invalidSyntax("setmode", "(course) freedom"));
+		}
+	}
+	
+	public static ParkourMode getCourseMode(String courseName) {
+		String mode = Parkour.getParkourConfig().getCourseData().getString(courseName + ".Mode");
+		
+		if ("freedom".equalsIgnoreCase(mode)) {
+			return ParkourMode.FREEDOM;
+		}
+		
+		return ParkourMode.NONE;
 	}
 }

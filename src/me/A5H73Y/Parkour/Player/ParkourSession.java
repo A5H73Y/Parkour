@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.Course;
+import me.A5H73Y.Parkour.Course.CourseMethods;
+import me.A5H73Y.Parkour.Other.ParkourMode;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
 public class ParkourSession implements Serializable {
@@ -14,7 +16,7 @@ public class ParkourSession implements Serializable {
 	private int checkpoint;
 	private long timestarted;
 	private Course course;
-	private String mode;
+	private ParkourMode mode;
 	private boolean useTrail;
 
 	/**
@@ -33,6 +35,7 @@ public class ParkourSession implements Serializable {
 		this.checkpoint = 0;
 		this.timestarted = System.currentTimeMillis();
 		this.course = course;
+		this.mode = CourseMethods.getCourseMode(course.getName());
 	}
 
 	public int getDeaths() {
@@ -68,11 +71,11 @@ public class ParkourSession implements Serializable {
 		return Utils.calculateTime(getTime());
 	}
 
-	public void setMode(String mode) {
+	public void setMode(ParkourMode mode) {
 		this.mode = mode;
 	}
 
-	public String getMode() {
+	public ParkourMode getMode() {
 		return mode;
 	}
 

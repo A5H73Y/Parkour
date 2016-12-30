@@ -17,6 +17,7 @@ import java.util.List;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Conversation.ParkourConversation;
 import me.A5H73Y.Parkour.Conversation.ParkourConversation.ConversationType;
+import me.A5H73Y.Parkour.Course.Checkpoint;
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Other.ParkourBlocks;
@@ -637,5 +638,9 @@ public final class Utils {
 
 	public static List<String> getParkourBlockList() {
 		return new ArrayList<String>(Parkour.getParkourConfig().getConfig().getConfigurationSection("ParkourBlocks").getKeys(false));
+	}
+	
+	public static Checkpoint getCheckpointOfCurrentPosition(Player player) {
+		return new Checkpoint(player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(), player.getLocation().getYaw(), player.getLocation().getPitch(), player.getLocation().getWorld().getName(), 0, 0, 0);
 	}
 }

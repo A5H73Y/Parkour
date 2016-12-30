@@ -273,6 +273,8 @@ public class Configurations {
 			stringData.addDefault("Parkour.Accept", "&7Enter &a/pa accept &7to accept.");
 			stringData.addDefault("Parkour.RewardLevel", "Your level has been set to &b%LEVEL% &ffor completing &b%COURSE%&f!");
 			stringData.addDefault("Parkour.RewardRank", "Your rank has been set to %RANK%");
+			stringData.addDefault("Parkour.Freedom.Save", "Position saved");
+			stringData.addDefault("Parkour.Freedom.Load", "Position loaded");
 
 			stringData.addDefault("Error.NotOnCourse", "You are not on this course!");
 			stringData.addDefault("Error.TooMany", "Too many arguments!");
