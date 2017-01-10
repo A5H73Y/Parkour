@@ -26,7 +26,7 @@ public class ParkourSession implements Serializable {
 	 * player is on, we will retrieve it through here, Rather than doing a
 	 * course lookup for a player name. There is also a "Mode" string, this will
 	 * be used to remember different gametypes (in potential updates), one
-	 * example is CodJumper mode (Which allows you to set checkpoints whereever)
+	 * example is Freedom mode (Which allows you to set checkpoints whereever)
 	 * 
 	 * @param course
 	 */

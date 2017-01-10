@@ -9,6 +9,7 @@ import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Other.Challenge;
 import me.A5H73Y.Parkour.Other.ParkourBlocks;
+import me.A5H73Y.Parkour.Other.ParkourMode;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
@@ -50,9 +51,11 @@ public class PlayerMethods {
 			}
 
 			addPlayer(player.getName(), new ParkourSession(course));
+			setupPlayerMode(player);
 		} else {
 			removePlayer(player.getName());
 			addPlayer(player.getName(), new ParkourSession(course));
+			setupPlayerMode(player);
 			if (!Static.containsQuiet(player.getName()))
 				player.sendMessage(Utils.getTranslation("Parkour.TimeReset"));
 		}
@@ -567,38 +570,20 @@ public class PlayerMethods {
 		saveInventory(player);
 		preparePlayer(player, 0);
 
-		ItemStack item;
-		ItemMeta meta;
+		if (Parkour.getSettings().getSuicide() != null)
+			player.getInventory().addItem(Utils.getItemStack("Other.Item_Suicide", Parkour.getSettings().getSuicide()));
+		
+		if (Parkour.getSettings().getHideall() != null)
+			player.getInventory().addItem(Utils.getItemStack("Other.Item_HideAll", Parkour.getSettings().getHideall()));
 
-		if (Parkour.getSettings().getSuicide() != null) {
-			item = new ItemStack(Parkour.getSettings().getSuicide(), 1);
-			meta = item.getItemMeta();
-			meta.setDisplayName(Utils.getTranslation("Other.Item_Suicide", false));
-			item.setItemMeta(meta);
-			player.getInventory().setItem(0, item);
-		}
-
-		if (Parkour.getSettings().getHideall() != null) {
-			item = new ItemStack(Parkour.getSettings().getHideall(), 1);
-			meta = item.getItemMeta();
-			meta.setDisplayName(Utils.getTranslation("Other.Item_HideAll", false));
-			item.setItemMeta(meta);
-			player.getInventory().setItem(1, item);
-		}
-
-		if (Parkour.getSettings().getLeave() != null) {
-			item = new ItemStack(Parkour.getSettings().getLeave(), 1);
-			meta = item.getItemMeta();
-			meta.setDisplayName(Utils.getTranslation("Other.Item_Leave", false));
-			item.setItemMeta(meta);
-			player.getInventory().setItem(2, item);
-		}
+		if (Parkour.getSettings().getLeave() != null)
+			player.getInventory().addItem(Utils.getItemStack("Other.Item_Leave", Parkour.getSettings().getLeave()));
 
 		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".JoinItemMaterial")){
 			Material joinItem = Material.getMaterial(Parkour.getParkourConfig().getCourseData().getString(courseName + ".JoinItemMaterial"));
 			if (joinItem != null){
-				item = new ItemStack(joinItem, Parkour.getParkourConfig().getCourseData().getInt(courseName + ".JoinItemAmount", 1));
-				player.getInventory().setItem(3, item);
+				ItemStack item = new ItemStack(joinItem, Parkour.getParkourConfig().getCourseData().getInt(courseName + ".JoinItemAmount", 1));
+				player.getInventory().addItem(item);
 			}
 		}
 
@@ -839,6 +824,25 @@ public class PlayerMethods {
 		}
 
 		return false;
+	}
+	
+
+	private static void setupPlayerMode(Player player) {
+		ParkourSession session = getParkourSession(player.getName());
+		
+		if (session.getMode() == ParkourMode.NONE)
+			return;
+		
+		if (session.getMode() == ParkourMode.FREEDOM) {
+			player.sendMessage(Utils.getTranslation("Mode.Freedom.JoinText"));
+			Utils.getItemStack("Mode.Freedom.ItemName", Material.REDSTONE_TORCH_ON);
+			
+		} else if (session.getMode() == ParkourMode.DRUNK) {
+			player.sendMessage(Utils.getTranslation("Mode.Drunk.JoinText"));
+			
+		} else if (session.getMode() == ParkourMode.DARKNESS) {
+			player.sendMessage(Utils.getTranslation("Mode.Darkness.JoinText"));
+		}
 	}
 
 	public static void acceptChallenge(final Player targetPlayer){

@@ -33,6 +33,8 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import com.connorlinfoot.bountifulapi.BountifulAPI;
 
@@ -642,5 +644,13 @@ public final class Utils {
 	
 	public static Checkpoint getCheckpointOfCurrentPosition(Player player) {
 		return new Checkpoint(player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(), player.getLocation().getYaw(), player.getLocation().getPitch(), player.getLocation().getWorld().getName(), 0, 0, 0);
+	}
+	
+	public static ItemStack getItemStack(String translation, Material material) {
+		ItemStack item = new ItemStack(material, 1);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(Utils.getTranslation(translation, false));
+		item.setItemMeta(meta);
+		return item;
 	}
 }

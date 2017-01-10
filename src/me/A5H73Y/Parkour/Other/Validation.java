@@ -47,8 +47,9 @@ public class Validation {
 
 		/* Players level isn't high enough */
 		if (Parkour.getParkourConfig().getCourseData().contains(course.getName() + ".MinimumLevel")){
-			if (!player.hasPermission("Parkour.MinBypass")){
-				int minimumLevel = Parkour.getParkourConfig().getCourseData().getInt(course.getName() + ".MinimumLevel");
+			int minimumLevel = Parkour.getParkourConfig().getCourseData().getInt(course.getName() + ".MinimumLevel");
+			
+			if (!player.hasPermission("Parkour.MinBypass") && !player.hasPermission("Parkour.Level." + minimumLevel)){
 				int currentLevel = Parkour.getParkourConfig().getUsersData().getInt("PlayerInfo." + player.getName() + ".Level");
 
 				if (currentLevel < minimumLevel){

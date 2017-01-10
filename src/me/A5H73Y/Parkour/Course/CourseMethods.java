@@ -935,13 +935,24 @@ public class CourseMethods {
 			return;
 		}
 		
-		if (args[2].equalsIgnoreCase("freedom")){
-			Parkour.getParkourConfig().getCourseData().set(args[1] + ".Mode", "freedom");
-			Parkour.getParkourConfig().saveCourses();
-			player.sendMessage(Static.getParkourString() + "Mode for " + args[1] + " set to Freedom");
+		if (args[2].equalsIgnoreCase("freedom")) {
+			setCourseMode(args[1], "freedom", player);
+			
+		} else if (args[2].equalsIgnoreCase("drunk")) {
+			setCourseMode(args[1], "drunk", player);
+			
+		} else if (args[2].equalsIgnoreCase("darkness")) {
+			setCourseMode(args[1], "darkness", player);
+			
 		} else {
-			player.sendMessage(Utils.invalidSyntax("setmode", "(course) freedom"));
+			player.sendMessage(Utils.invalidSyntax("setmode", "(course) (freedom / drunk / darkness)"));
 		}
+	}
+
+	private static void setCourseMode(String courseName, String mode, Player player) {
+		Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Mode", mode);
+		Parkour.getParkourConfig().saveCourses();
+		player.sendMessage(Utils.getTranslation("Parkour.SetMode").replace("%COURSE%", courseName).replace("%MODE%", mode));
 	}
 	
 	public static ParkourMode getCourseMode(String courseName) {
@@ -949,7 +960,12 @@ public class CourseMethods {
 		
 		if ("freedom".equalsIgnoreCase(mode)) {
 			return ParkourMode.FREEDOM;
-		}
+			
+		} else if ("drunk".equalsIgnoreCase(mode)) {
+			return ParkourMode.DRUNK;
+			
+		} else if ("darkness".equalsIgnoreCase(mode))
+			return ParkourMode.DARKNESS;
 		
 		return ParkourMode.NONE;
 	}

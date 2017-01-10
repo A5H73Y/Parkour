@@ -245,6 +245,7 @@ public class Configurations {
 			stringData.addDefault("Event.HideAll1", "All players have magically reappeared!");
 			stringData.addDefault("Event.HideAll2", "All players have magically disappeared!");
 			stringData.addDefault("Event.Chat", "&0[&b%RANK%&0] &f%PLAYER%&0:&f %MESSAGE%");
+			stringData.addDefault("Event.DefaultRank", "Newbie");
 
 			stringData.addDefault("Parkour.Join", "Joined &b%COURSE%");
 			stringData.addDefault("Parkour.JoinLives", "&7You have &3%AMOUNT% &7lives on this course!");
@@ -275,7 +276,8 @@ public class Configurations {
 			stringData.addDefault("Parkour.RewardRank", "Your rank has been set to %RANK%");
 			stringData.addDefault("Parkour.Freedom.Save", "Position saved");
 			stringData.addDefault("Parkour.Freedom.Load", "Position loaded");
-
+			stringData.addDefault("Parkour.SetMode", "Mode for %COURSE% set to %MODE%");
+			
 			stringData.addDefault("Error.NotOnCourse", "You are not on this course!");
 			stringData.addDefault("Error.TooMany", "Too many arguments!");
 			stringData.addDefault("Error.TooLittle", "Not enough arguments!");
@@ -324,8 +326,12 @@ public class Configurations {
 			stringData.addDefault("Kit.Sign", "&bSign");
 			stringData.addDefault("Kit.Death", "&bDeath Block");
 
-			stringData.addDefault("Spectate.AlertPlayer", "You are now being spectated by &b%PLAYER%");
-			stringData.addDefault("Spectate.FinishedSpec", "You are no longer being spectated");
+			stringData.addDefault("Mode.Spectate.AlertPlayer", "You are now being spectated by &b%PLAYER%");
+			stringData.addDefault("Mode.Spectate.FinishedSpec", "You are no longer being spectated");
+			stringData.addDefault("Mode.Freedom.ItemName", "&6Freedom Tool");
+			stringData.addDefault("Mode.Freedom.JoinText", "Freedom Mode: Right click = save, Left click = load");
+			stringData.addDefault("Mode.Drunk.JoinText", "You feel strange...");
+			stringData.addDefault("Mode.Darkness.JoinText", "It suddenly becomes dark...");
 
 			stringData.addDefault("Title.Joining", "Joining");
 			stringData.addDefault("Title.Checkpoint", "checkpoint");
@@ -353,7 +359,8 @@ public class Configurations {
 		config.addDefault("DefaultBlocks.Launch.Material", "EMERALD_BLOCK");
 		config.addDefault("DefaultBlocks.Launch.Strength", 1.2);
 		config.addDefault("DefaultBlocks.Bounce.Material", "MOSSY_COBBLESTONE");
-		config.addDefault("DefaultBlocks.Bounce.Strength", 0.6);
+		config.addDefault("DefaultBlocks.Bounce.Strength", 3);
+		config.addDefault("DefaultBlocks.Bounce.Duration", 200);
 		config.addDefault("DefaultBlocks.Speed.Material", "OBSIDIAN");
 		config.addDefault("DefaultBlocks.Speed.Strength", 5);
 		config.addDefault("DefaultBlocks.Speed.Duration", 200);
@@ -402,8 +409,7 @@ public class Configurations {
 		config.addDefault("OnLeaveServer.TeleportToLastCheckpoint", true);
 
 		config.addDefault("ParkourModes.Challenge.hidePlayers", true);
-		config.addDefault("ParkourModes.CodJumper.Enabled", false);
-		config.addDefault("ParkourModes.CodJumper.ConfirmSet", true);
+		config.addDefault("ParkourModes.Freedom.ConfirmSet", true);
 		config.addDefault("ParkourModes.Spectate.OnStart.NotifyPlayer", true);
 		config.addDefault("ParkourModes.Spectate.OnStop.RemainInvisible", false);
 		config.addDefault("ParkourModes.Spectate.OnStop.TeleportToLobby", true);
@@ -412,7 +418,6 @@ public class Configurations {
 		config.addDefault("DisplayTitle.Checkpoint", true);
 		config.addDefault("DisplayTitle.RewardLevel", true);
 		
-
 		config.addDefault("Other.Economy.Enabled", true);
 		config.addDefault("Other.BountifulAPI.Enabled", true);
 		config.addDefault("Other.CheckForUpdates", true);
@@ -438,7 +443,7 @@ public class Configurations {
 		config.addDefault("MySQL.Database", "Database");
 		config.addDefault("MySQL.Table", "Table");
 
-		config.addDefault("=== Do NOT Edit anything below here ===", null);
+		config.addDefault("=== Do NOT edit anything below here ===", null);
 		config.addDefault("Version", Double.parseDouble(Parkour.getPlugin().getDescription().getVersion()));
 
 		config.addDefault("Lobby.Set", false);

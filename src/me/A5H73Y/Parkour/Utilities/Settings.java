@@ -19,9 +19,15 @@ public class Settings {
 
 	//Lists
 	private List<String> cmdWhitelist; 
-	
+
 	//int
-	private int maxFallTicks;
+	private int maxFallTicks, bounceStrength, bounceDuration, speedStrength, speedDuration;
+
+	//Strings
+	private String defaultRank;
+
+	//decimals
+	private double climbStrength, launchStrength, repulseStrength;
 
 	public Settings(){
 		FileConfiguration config = Parkour.getParkourConfig().getConfig();
@@ -40,8 +46,18 @@ public class Settings {
 		leave = Material.getMaterial(config.getString("OnJoin.Item.Leave.Material"));
 
 		displayWelcome = config.getBoolean("Other.Display.JoinWelcomeMessage");
-		
+
 		maxFallTicks = config.getInt("OnCourse.MaxFallTicks");
+
+		defaultRank = config.getString("Event.DefaultRank");
+
+		climbStrength = config.getDouble("DefaultBlocks.Climb.Strength");
+		launchStrength = config.getDouble("DefaultBlocks.Launch.Strength");
+		bounceStrength = config.getInt("DefaultBlocks.Bounce.Strength");
+		bounceDuration = config.getInt("DefaultBlocks.Bounce.Duration");
+		speedStrength = config.getInt("DefaultBlocks.Speed.Strength");
+		speedDuration = config.getInt("DefaultBlocks.Speed.Duration");
+		repulseStrength = config.getDouble("DefaultBlocks.Repulse.Strength");
 	}
 
 	public boolean isCommandPermission() {
@@ -95,12 +111,44 @@ public class Settings {
 	public List<String> getCmdWhitelist() {
 		return cmdWhitelist;
 	}	
-	
+
 	public int getMaxFallTicks(){
 		return maxFallTicks;
 	}
-	
+
 	public boolean isAttemptLessChecks(){
 		return attemptLessChecks;
+	}
+
+	public String getDefaultRank() {
+		return defaultRank;
+	}
+
+	public int getBounceStrength() {
+		return bounceStrength;
+	}
+
+	public int getBounceDuration() {
+		return bounceDuration;
+	}
+
+	public int getSpeedStrength() {
+		return speedStrength;
+	}
+
+	public int getSpeedDuration() {
+		return speedDuration;
+	}
+
+	public double getClimbStrength() {
+		return climbStrength;
+	}
+
+	public double getLaunchStrength() {
+		return launchStrength;
+	}
+
+	public double getRepulseStrength() {
+		return repulseStrength;
 	}
 }
