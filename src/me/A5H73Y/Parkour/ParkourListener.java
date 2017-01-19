@@ -376,7 +376,7 @@ public class ParkourListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
-		boolean commandIsPa = event.getMessage().startsWith("/pa");
+		boolean commandIsPa = (event.getMessage().startsWith("/pa ") || event.getMessage().startsWith("/parkour") || event.getMessage().equals("/pa"));
 		Player player = event.getPlayer();
 
 		if (commandIsPa && Static.containsQuestion(player.getName())) {
@@ -392,7 +392,7 @@ public class ParkourListener implements Listener {
 				return;
 
 			boolean allowed = false;
-			for (String word : Parkour.getParkourConfig().getConfig().getStringList("Other.Commands.Whitelist")) {
+			for (String word : Parkour.getParkourConfig().getConfig().getStringList("OnCourse.EnforceParkourCommands.Whitelist")) {
 				if (event.getMessage().startsWith("/" + word)) {
 					allowed = true;
 					break;
