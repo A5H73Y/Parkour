@@ -60,15 +60,15 @@ public class SignMethods {
 		return true;
 	}
 
+	/**
+	 * Create Course Join Sign
+	 * A minimum level requirement will be displayed on the join sign.
+	 * @param sign
+	 * @param player
+	 */
 	public void joinCourse(SignChangeEvent sign, Player player){
 		if (!createStandardCourseSign(sign, player, "Join", false))
 			return;
-
-		if (sign.getLine(3).equalsIgnoreCase("cj")){
-			sign.setLine(1, sign.getLine(1).toString() + " (CJ)");
-		} else if (sign.getLine(3).equalsIgnoreCase("c")){
-			sign.setLine(1, sign.getLine(1).toString() + " (C)");
-		}
 
 		if (Parkour.getParkourConfig().getCourseData().contains(sign.getLine(2).toLowerCase() + ".MinimumLevel"))
 			sign.setLine(3, ChatColor.RED + "" + Parkour.getParkourConfig().getCourseData().get(sign.getLine(2).toLowerCase().toString() + ".MinimumLevel"));
@@ -76,6 +76,11 @@ public class SignMethods {
 		player.sendMessage(Static.getParkourString() + "Join for " + ChatColor.AQUA + sign.getLine(2).toString() + ChatColor.WHITE + " created!");
 	}
 
+	/**
+	 * Create Lobby join Sign
+	 * @param sign
+	 * @param player
+	 */
 	public void joinLobby(SignChangeEvent sign, Player player){
 		if (!hasPermission(player, sign, "Lobby"))
 			return;
@@ -88,8 +93,8 @@ public class SignMethods {
 
 		} else {
 			if (Parkour.getParkourConfig().getConfig().contains("Lobby." + sign.getLine(2))) {
-				if (Parkour.getParkourConfig().getConfig().contains("Lobby." + sign.getLine(2).toString() + ".Level")) {
-					sign.setLine(3, ChatColor.RED + Parkour.getParkourConfig().getConfig().getString("Lobby." + sign.getLine(2).toString() + ".Level"));
+				if (Parkour.getParkourConfig().getConfig().contains("Lobby." + sign.getLine(2) + ".Level")) {
+					sign.setLine(3, ChatColor.RED + Parkour.getParkourConfig().getConfig().getString("Lobby." + sign.getLine(2) + ".Level"));
 				}
 				player.sendMessage(Static.getParkourString() + "Lobby " + sign.getLine(2) + " shortcut created!");
 			} else {

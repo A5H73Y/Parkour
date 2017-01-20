@@ -7,19 +7,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Bukkit;
-
 import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.Enums.DatabaseType;
 import me.A5H73Y.Parkour.Other.TimeObject;
+
+import org.bukkit.Bukkit;
 
 import com.huskehhh.mysql.Database;
 
 public class DatabaseMethods extends Database {
-	
-	public enum DatabaseType {
-		MySQL,
-		SQLite
-	}
 	
 	public static DatabaseType type;
 

@@ -10,13 +10,13 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.Enums.DatabaseType;
 import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Settings;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
-import me.A5H73Y.Parkour.Utilities.DatabaseMethods.DatabaseType;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.configuration.file.FileConfiguration;

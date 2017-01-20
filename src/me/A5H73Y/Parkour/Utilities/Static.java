@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Other.Challenge;
@@ -22,6 +23,9 @@ public final class Static {
 	private static List<String> quiet = new ArrayList<String>();
 	private static List<String> hidden = new ArrayList<String>();
 	private static List<Challenge> challenges = new ArrayList<Challenge>();
+	private static Map<String, Long> delay = new HashMap<String, Long>();
+	
+	private static List<String> lobbyList;
 
 	private static boolean economy = false;
 	private static boolean bountifulAPI = false;
@@ -133,11 +137,58 @@ public final class Static {
 		if (challenges.contains(challenge))
 			challenges.remove(challenge);
 	}
+	
+	/**
+	 * Find the challenge the recipient player has recieved.
+	 * @param targetPlayer
+	 * @return
+	 */
 	public final static Challenge getChallenge(String targetPlayer){
 		for (Challenge challenge : challenges){
 			if (challenge.getTargetPlayer().equals(targetPlayer))
 				return challenge;
 		}
 		return null;
+	}
+	
+	/**
+	 * Get the current delay map
+	 * @return
+	 */
+	public final static Map<String, Long> getDelay(){
+		return delay;
+	}
+	
+	/**
+	 * Get list of Lobbys
+	 * I'm aware this looks like shit, but it's the best solution.
+	 * @return List<String>
+	 */
+	public static List<String> getLobbyList() {
+		if (lobbyList != null)
+			return lobbyList;
+		
+		Set<String> lobbyListSet = Parkour.getParkourConfig().getConfig().getConfigurationSection("Lobby").getKeys(false);
+
+		lobbyListSet.remove("Set");
+		lobbyListSet.remove("World");
+		lobbyListSet.remove("X");
+		lobbyListSet.remove("Y");
+		lobbyListSet.remove("Z");
+		lobbyListSet.remove("Pitch");
+		lobbyListSet.remove("Yaw");
+		lobbyList = new ArrayList<String>(lobbyListSet);
+
+		return lobbyList;
+	}
+
+	public static List<String> getWhitelistedCommands() {
+		return new ArrayList<String>(Parkour.getParkourConfig().getConfig().getStringList("OnCourse.EnforceParkourCommands.Whitelist"));
+	}
+	
+	public static void addWhitelistedCommand(String command) {
+		List<String> commands = getWhitelistedCommands();
+		commands.add(command);
+		Parkour.getParkourConfig().getConfig().set("OnCourse.EnforceParkourCommands.Whitelist", commands);	
 	}
 }

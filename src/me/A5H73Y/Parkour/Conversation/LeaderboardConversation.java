@@ -89,9 +89,9 @@ public class LeaderboardConversation extends StringPrompt {
 				@Override
 				public void run() {
 					if (leaderboardType.equals("personal")) {
-						Utils.displayLeaderboard(DatabaseMethods.getTopPlayerCourseResults(player.getName(), courseName, amount), player);
+						Utils.displayLeaderboard(player, DatabaseMethods.getTopPlayerCourseResults(player.getName(), courseName, amount));
 					} else if (leaderboardType.equals("global")) {
-						Utils.displayLeaderboard(DatabaseMethods.getTopCourseResults(courseName, amount), player);
+						Utils.displayLeaderboard(player, DatabaseMethods.getTopCourseResults(courseName, amount));
 					}
 				}
 			}, 3);

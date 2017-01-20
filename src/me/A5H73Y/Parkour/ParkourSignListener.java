@@ -8,18 +8,14 @@ import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 public class ParkourSignListener implements Listener {
 
@@ -179,55 +175,12 @@ public class ParkourSignListener implements Listener {
 			}
 
 		} else if (lines[1].equalsIgnoreCase("effect")) {
-			applyEffect(lines, event.getPlayer());
+			PlayerMethods.applyEffect(lines, event.getPlayer());
 
 		} else {
 			event.getPlayer().sendMessage(Utils.getTranslation("Error.UnknownSignCommand"));
 		}
 		event.setCancelled(true);
-	}
-
-
-	private void applyEffect(String[] lines, Player player){
-		if (lines[2].equalsIgnoreCase("heal")) {
-			Damageable damag = player;
-			damag.setHealth(damag.getMaxHealth());
-			player.sendMessage(Static.getParkourString() + "Healed!");
-
-		} else if (lines[2].equalsIgnoreCase("jump")) {
-			if (Utils.isNumber(lines[3])) {
-				player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 300, Integer.parseInt(lines[3])));
-				player.sendMessage(Static.getParkourString() + "Jump Effect Applied!");
-			} else {
-				player.sendMessage(Static.getParkourString() + "Invalid Number");
-			}
-		} else if (lines[2].equalsIgnoreCase("speed")) {
-			player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 300, 6));
-			player.sendMessage(Static.getParkourString() + "Speed Effect Applied!");
-
-		} else if (lines[2].equalsIgnoreCase("fire")) {
-			player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 500, 6));
-			player.sendMessage(Static.getParkourString() + "Fire Resistance Applied!");
-
-		} else if (lines[2].equalsIgnoreCase("pain")) {
-			player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 500, 10));
-			player.sendMessage(Static.getParkourString() + "Pain Resistance Applied!");
-
-		} else if (lines[2].equalsIgnoreCase("gamemode")) {
-			if (lines[3].equalsIgnoreCase("creative")) {
-				if (!(player.getGameMode().equals(GameMode.CREATIVE))) {
-					player.setGameMode(GameMode.CREATIVE);
-					player.sendMessage(Static.getParkourString() + "GameMode set to Creative!");
-				}
-			} else {
-				if (!(player.getGameMode().equals(GameMode.SURVIVAL))) {
-					player.setGameMode(GameMode.SURVIVAL);
-					player.sendMessage(Static.getParkourString() + "GameMode set to Survival!");
-				}
-			}
-		} else {
-			player.sendMessage(Static.getParkourString() + "Unknown Effect!");
-		}
 	}
 
 }

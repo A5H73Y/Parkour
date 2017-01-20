@@ -3,6 +3,7 @@ package me.A5H73Y.Parkour.Other;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.CourseMethods;
+import me.A5H73Y.Parkour.Enums.QuestionType;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
@@ -11,15 +12,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class Question {
-
-	public enum QuestionType {
-		DELETE_COURSE,
-		DELETE_CHECKPOINT,
-		DELETE_LOBBY,
-		RESET_COURSE,
-		RESET_PLAYER
-	}
-
 
 	private QuestionType type;
 	private String argument;

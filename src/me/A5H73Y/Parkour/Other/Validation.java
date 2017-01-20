@@ -8,10 +8,17 @@ import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class Validation {
 
+	/**
+	 * Validate course creation
+	 * @param args
+	 * @param player
+	 * @return
+	 */
 	public static boolean courseCreation(String[] args, Player player){
 		if (args.length > 2) {
 			player.sendMessage(Utils.getTranslation("Error.TooMany"));
@@ -36,6 +43,12 @@ public class Validation {
 		return true;
 	}
 
+	/**
+	 * Validate player join course
+	 * @param player
+	 * @param course
+	 * @return
+	 */
 	public static boolean courseJoining(Player player, Course course){
 		/* Player in wrong world */
 		if (Parkour.getSettings().isEnforceWorld()){
@@ -48,7 +61,7 @@ public class Validation {
 		/* Players level isn't high enough */
 		if (Parkour.getParkourConfig().getCourseData().contains(course.getName() + ".MinimumLevel")){
 			int minimumLevel = Parkour.getParkourConfig().getCourseData().getInt(course.getName() + ".MinimumLevel");
-			
+
 			if (!player.hasPermission("Parkour.MinBypass") && !player.hasPermission("Parkour.Level." + minimumLevel)){
 				int currentLevel = Parkour.getParkourConfig().getUsersData().getInt("PlayerInfo." + player.getName() + ".Level");
 
@@ -62,7 +75,7 @@ public class Validation {
 		/* Course isn't finished */
 		if (!CourseMethods.isReady(course.getName())){
 			if (Parkour.getParkourConfig().getConfig().getBoolean("OnJoin.EnforceFinished")){
-				if (!Utils.hasPermissionOrOwnership(player, "Parkour.Admin", "Bypass", course.getName())){
+				if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Bypass", course.getName())){
 					player.sendMessage(Utils.getTranslation("Error.Finished1"));
 					return false;
 				}
@@ -89,6 +102,12 @@ public class Validation {
 		return true;
 	}
 
+	/**
+	 * Validate player joining course, without sending messages
+	 * @param player
+	 * @param course
+	 * @return
+	 */
 	public static boolean courseJoiningNoMessages(Player player, String course){
 		/* Player in wrong world */
 		if (Parkour.getSettings().isEnforceWorld()){
@@ -112,7 +131,7 @@ public class Validation {
 		/* Course isn't finished */
 		if (!CourseMethods.isReady(course)){
 			if (Parkour.getParkourConfig().getConfig().getBoolean("OnJoin.EnforceFinished")){
-				if (!Utils.hasPermissionOrOwnership(player, "Parkour.Admin", "Bypass", course)){
+				if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Bypass", course)){
 					return false;
 				}
 			}
@@ -132,6 +151,12 @@ public class Validation {
 		return true;
 	}
 
+	/**
+	 * Validate challenging a player
+	 * @param args
+	 * @param player
+	 * @return
+	 */
 	public static boolean challengePlayer(String[] args, Player player) {
 		String courseName = args[1].toLowerCase();
 
@@ -163,6 +188,84 @@ public class Validation {
 			return false;
 		}
 
+		return true;
+	}
+
+	/**
+	 * Validate joining a lobby
+	 * @param player
+	 * @return boolean
+	 */
+	public static boolean lobbyJoiningSet(Player player) {
+		if (Parkour.getParkourConfig().getConfig().getBoolean("Lobby.Set"))
+			return true;
+
+		if (Utils.hasPermission(player, "Parkour.Admin")) {
+			player.sendMessage(Static.getParkourString() + ChatColor.RED + "Lobby has not been set!");
+			player.sendMessage(Utils.colour("Type &b'/pa setlobby'&f where you want the lobby to be set."));
+		} else {
+			player.sendMessage(Static.getParkourString() + ChatColor.RED + "Lobby has not been set! Please tell the Owner!");
+		}
+		return false;
+	}
+
+	/**
+	 * Validate joining a custom lobby
+	 * @param player
+	 * @param lobby
+	 * @return
+	 */
+	public static boolean lobbyJoiningCustom(Player player, String lobby) {
+		if (!Parkour.getParkourConfig().getConfig().contains("Lobby." + lobby + ".World")) {
+			player.sendMessage(Static.getParkourString() + "Lobby does not exist!");
+			return false;
+		}
+
+		int level = Parkour.getParkourConfig().getConfig().getInt("Lobby." + lobby + ".Level");
+
+		if (level > 0 && !player.hasPermission("Parkour.Admin.MinBypass")) {
+			if (Parkour.getParkourConfig().getUsersData().getInt("PlayerInfo." + player.getName() + ".Level") < level) {
+				player.sendMessage(Utils.getTranslation("Error.RequiredLvl").replace("%LEVEL%", String.valueOf(level)));
+				return false;
+			}
+
+		}
+		return true;
+	}
+
+	/**
+	 * Validate creating a course checkpoint
+	 * @param args
+	 * @param player
+	 * @return
+	 */
+	public static boolean createCheckpoint(String[] args, Player player) {
+		String selected = PlayerMethods.getSelected(player.getName()).toLowerCase();
+
+		if (!CourseMethods.exist(selected)) {
+			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", selected));
+			return false;
+		}
+		
+		int pointcount = Parkour.getParkourConfig().getCourseData().getInt((selected + ".Points")) + 1;
+	
+		if (!(args.length <= 1)) {
+			if (!Utils.isNumber(args[1])) {
+				player.sendMessage(Static.getParkourString() + "Checkpoint specified is not numeric!");
+				return false; 
+			}
+			if (pointcount < Integer.parseInt(args[1])){
+				player.sendMessage(Static.getParkourString() + "This checkpoint does not exist! " + ChatColor.RED + "Creation cancelled.");
+				return false;
+			}
+
+			pointcount = Integer.parseInt(args[1]);
+		}
+
+		if (pointcount < 1){
+			player.sendMessage(Static.getParkourString() + "Invalid checkpoint number.");
+			return false;
+		}
 		return true;
 	}
 }

@@ -232,7 +232,10 @@ public class Configurations {
 	}
 
 
-	//AllStrings
+	/**
+	 * Default Translations 
+	 * Seperated and organised into sections of the plugins
+	 */
 	private void saveStrings() {
 		try{
 			stringData.addDefault("Parkour.PrefixColour", "b");
@@ -274,9 +277,7 @@ public class Configurations {
 			stringData.addDefault("Parkour.Accept", "&7Enter &a/pa accept &7to accept.");
 			stringData.addDefault("Parkour.RewardLevel", "Your level has been set to &b%LEVEL% &ffor completing &b%COURSE%&f!");
 			stringData.addDefault("Parkour.RewardRank", "Your rank has been set to %RANK%");
-			stringData.addDefault("Parkour.Freedom.Save", "Position saved");
-			stringData.addDefault("Parkour.Freedom.Load", "Position loaded");
-			stringData.addDefault("Parkour.SetMode", "Mode for %COURSE% set to %MODE%");
+			stringData.addDefault("Parkour.SetMode", "Mode for &b%COURSE%&f set to &b%MODE%");
 			
 			stringData.addDefault("Error.NotOnCourse", "You are not on this course!");
 			stringData.addDefault("Error.TooMany", "Too many arguments!");
@@ -300,6 +301,7 @@ public class Configurations {
 			stringData.addDefault("Error.UnknownPlayer", "This player does not exist!");
 			stringData.addDefault("Error.Cheating1", "Please do not cheat.");
 			stringData.addDefault("Error.Cheating2", "&lYou must achieve all &4%AMOUNT% &f&lcheckpoints!");
+			stringData.addDefault("Error.Cooldown", "Slow down! Please wait &b%AMOUNT% &fmore seconds.");
 
 			stringData.addDefault("Help.Command", "&7/pa help &9%COMMAND% &0: &7To learn more about this command.");
 			stringData.addDefault("Help.Commands", "&3/pa &bcmds &8: &fTo display the Parkour commands menu.");
@@ -329,7 +331,10 @@ public class Configurations {
 			stringData.addDefault("Mode.Spectate.AlertPlayer", "You are now being spectated by &b%PLAYER%");
 			stringData.addDefault("Mode.Spectate.FinishedSpec", "You are no longer being spectated");
 			stringData.addDefault("Mode.Freedom.ItemName", "&6Freedom Tool");
-			stringData.addDefault("Mode.Freedom.JoinText", "Freedom Mode: Right click = save, Left click = load");
+			stringData.addDefault("Mode.Freedom.JoinText", "&6Freedom Mode &f- Right click: &2Save&f, Left click: &5Load");
+			stringData.addDefault("Mode.Freedom.Save", "Position saved");
+			stringData.addDefault("Mode.Freedom.Load", "Position loaded");
+			
 			stringData.addDefault("Mode.Drunk.JoinText", "You feel strange...");
 			stringData.addDefault("Mode.Darkness.JoinText", "It suddenly becomes dark...");
 
@@ -345,7 +350,9 @@ public class Configurations {
 		}
 	}
 
-
+	/**
+	 * Default configuration options
+	 */
 	public void setupConfig(){
 		config = Parkour.getPlugin().getConfig();
 
@@ -374,6 +381,7 @@ public class Configurations {
 		config.addDefault("OnJoin.EnforceWorld", false);
 		config.addDefault("OnJoin.EnforceFinished", true);
 		config.addDefault("OnJoin.AllowViaCommand", true);
+		config.addDefault("OnJoin.FillHealth", true);
 		config.addDefault("OnJoin.Item.Suicide.Material", "ARROW");
 		config.addDefault("OnJoin.Item.HideAll.Material", "BONE");
 		config.addDefault("OnJoin.Item.Leave.Material", "SAPLING");

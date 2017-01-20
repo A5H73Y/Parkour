@@ -22,6 +22,11 @@ public class Backup {
 		backupNow(true);
 	}
 
+	/**
+	 * Create a backup of all the configuration files
+	 * A new zip will be generated with the current date containing all parkour files
+	 * @param message
+	 */
 	public static void backupNow(boolean message){
 		if (message)
 			Utils.log("Beginning backup...");

@@ -5,7 +5,7 @@ import java.io.Serializable;
 import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Course.CourseMethods;
-import me.A5H73Y.Parkour.Other.ParkourMode;
+import me.A5H73Y.Parkour.Enums.ParkourMode;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
 public class ParkourSession implements Serializable {

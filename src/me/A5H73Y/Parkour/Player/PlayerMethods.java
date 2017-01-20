@@ -7,15 +7,17 @@ import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.Checkpoint;
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Course.CourseMethods;
+import me.A5H73Y.Parkour.Enums.ParkourMode;
 import me.A5H73Y.Parkour.Other.Challenge;
+import me.A5H73Y.Parkour.Other.Constants;
 import me.A5H73Y.Parkour.Other.ParkourBlocks;
-import me.A5H73Y.Parkour.Other.ParkourMode;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -24,6 +26,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class PlayerMethods {
 
@@ -62,8 +65,8 @@ public class PlayerMethods {
 	}
 
 	/**
-	 * Called when the player requests to leave a course. Will remove the player
-	 * from the players which will also dispose of their course session.
+	 * Leave a course
+	 * Will remove the player from the players, which will also dispose of their course session.
 	 * 
 	 * @param player
 	 */
@@ -80,12 +83,13 @@ public class PlayerMethods {
 		preparePlayer(player, Parkour.getParkourConfig().getConfig().getInt("OnFinish.SetGamemode"));
 		CourseMethods.joinLobby(null, player);
 		loadInventory(player);
-		
+
 		if (Static.containsHidden(player.getName()))
 			toggleVisibility(player, true);
 	}
 
 	/**
+	 * Player dies while on a ocurse
 	 * Called when the player 'dies' this can be from real events (Like falling
 	 * from too high), or native Parkour deaths (walking on a deathblock)
 	 * 
@@ -138,8 +142,9 @@ public class PlayerMethods {
 	}
 
 	/**
-	 * This will be called when the player completes the course. Their reward
-	 * will be given here.
+	 * Player finishes a course
+	 * This will be called when the player completes the course. 
+	 * Their reward will be given here, as well as a time entry to the database.
 	 * 
 	 * @param player
 	 */
@@ -155,7 +160,7 @@ public class PlayerMethods {
 
 		if (Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.EnforceCompletion") && session.getCheckpoint() != (session.getCourse().getCheckpoints())) {
 			player.sendMessage(Utils.getTranslation("Error.Cheating1"));
-			player.sendMessage(Utils.getTranslation("Error.Cheating2", false).replace("%AMOUNT%", session.getCourse().getCheckpoints()+""));
+			player.sendMessage(Utils.getTranslation("Error.Cheating2", false).replace("%AMOUNT%", String.valueOf(session.getCourse().getCheckpoints())));
 			playerDie(player);
 			return;
 		}
@@ -173,25 +178,31 @@ public class PlayerMethods {
 
 		if (Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.TeleportToLobby")) {
 			Long delay = Parkour.getParkourConfig().getConfig().getLong("OnFinish.TeleportDelay");
-			
+
 			if (delay > 0) {
 				Bukkit.getScheduler().scheduleSyncDelayedTask(Parkour.getPlugin(), new Runnable() {
-				    public void run() {
-				    	courseCompleteLocation(player, courseName);
-				    }
+					public void run() {
+						courseCompleteLocation(player, courseName);
+					}
 				}, delay);
-				
+
 			} else {
 				courseCompleteLocation(player, courseName);
 			}
 		}
-		
+
 		DatabaseMethods.insertTime(courseName, player.getName(), session.getTime(), session.getDeaths());
 
 		Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".LastPlayed", courseName);
 		Parkour.getParkourConfig().saveUsers();
 	}
-	
+
+	/**
+	 * Teleport player after course completion
+	 * Based on the linked course or lobby
+	 * @param player
+	 * @param courseName
+	 */
 	private static void courseCompleteLocation(Player player, String courseName) {
 		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".LinkedCourse")) {
 			String linkedCourseName = Parkour.getParkourConfig().getCourseData().getString(courseName + ".LinkedCourse").toLowerCase();
@@ -213,6 +224,12 @@ public class PlayerMethods {
 		CourseMethods.joinLobby(null, player);
 	}
 
+	/**
+	 * Display the course finish information
+	 * Will send to the chosen amount of players
+	 * @param player
+	 * @param session
+	 */
 	private static void displayFinishMessage(Player player, ParkourSession session) {
 		String finishBroadcast = Static.getParkourString() + Utils.colour(Parkour.getParkourConfig().getStringData().getString("Parkour.FinishBroadcast").replace("%PLAYER%", player.getName()).replace("%COURSE%", session.getCourse().getName()).replace("%DEATHS%", String.valueOf(session.getDeaths())).replace("%TIME%", session.displayTime()));
 
@@ -285,8 +302,8 @@ public class PlayerMethods {
 
 			if (current < rewardLevel) {
 				Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Level", rewardLevel);
-				player.sendMessage(Utils.getTranslation("Parkour.RewardLevel").replace("%LEVEL%", rewardLevel+"").replace("%COURSE%", courseName));
-				
+				player.sendMessage(Utils.getTranslation("Parkour.RewardLevel").replace("%LEVEL%", String.valueOf(rewardLevel)).replace("%COURSE%", courseName));
+
 				// check if there is a rank upgrade
 				String rewardRank = Parkour.getParkourConfig().getUsersData().getString("ServerInfo.Levels." + rewardLevel + ".Rank");
 				if (rewardRank != null) {
@@ -312,12 +329,25 @@ public class PlayerMethods {
 		Parkour.getParkourConfig().saveUsers();
 	}
 
+	/**
+	 * Increase the amount of Parkoins the player has by the parameter value.
+	 * @param player
+	 * @param parkoins
+	 */
 	public static void rewardParkoins(Player player, int parkoins) {
+		if (parkoins <= 0)
+			return;
+
 		int total = parkoins + Parkour.getParkourConfig().getUsersData().getInt("PlayerInfo." + player.getName() + ".Parkoins");
 		Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Parkoins", total);
 		player.sendMessage(Static.getParkourString() + parkoins + " Parkoins rewarded! New total: " + ChatColor.AQUA + total);
 	}
 
+	/**
+	 * Decrease the amount of Parkoins the player has by the parameter value.
+	 * @param player
+	 * @param parkoins
+	 */
 	public static void deductParkoins(Player player, int parkoins) {
 		if (parkoins <= 0)
 			return;
@@ -329,6 +359,11 @@ public class PlayerMethods {
 		player.sendMessage(Static.getParkourString() + parkoins + " Parkoins deducted! New total: " + ChatColor.AQUA + current);
 	}
 
+	/**
+	 * Give the player the economy prize for the course.
+	 * @param player
+	 * @param courseName
+	 */
 	private static void giveEconomyPrize(Player player, String courseName) {
 		if (!Static.getEconomy())
 			return;
@@ -342,12 +377,9 @@ public class PlayerMethods {
 	}
 
 	/**
-	 * The following methods are used throughout the plugin. Please see the
-	 * ParkourSession object for more information. Will return null if player isn't
-	 * playing.
-	 * 
+	 * Retrieve ParkourSession for player based on their name.
 	 * @param playerName
-	 * @return
+	 * @return ParkourSession
 	 */
 	public static ParkourSession getParkourSession(String playerName) {
 		if (isPlaying(playerName))
@@ -356,23 +388,34 @@ public class PlayerMethods {
 		return null;
 	}
 
+	/**
+	 * Return if a player is on a course
+	 * @param playerName
+	 * @return boolean
+	 */
 	public static boolean isPlaying(String playerName) {
 		return parkourPlayers.get(playerName) != null;
 	}
 
+	/**
+	 * Get the Map of players using the plugin
+	 * @return HashMap<playerName, ParkourSession>
+	 */
 	public static HashMap<String, ParkourSession> getPlaying() {
 		return parkourPlayers;
 	}
 
+	/**
+	 * Overwrite the playing players, done when the plugin starts
+	 * @param players
+	 */
 	public static void setPlaying(HashMap<String, ParkourSession> players) {
 		parkourPlayers = players;
 	}
 
 	/**
-	 * This is new as of 4.0. Thanks to the new system we can easily see what
-	 * the player (or another player) is doing with the plugin. We lookup their
-	 * ParkourSession object and interrogate it. We also check their offline stats from
-	 * the config. (Their level etc.)
+	 * Lookup and display the Player's Parkour information.
+	 * Will display their stored statistics as well as their current information if they're on a course.
 	 * 
 	 * @param args
 	 * @param player
@@ -412,8 +455,7 @@ public class PlayerMethods {
 	}
 
 	/**
-	 * Private methods, these will only be used by the PlayerMethods class
-	 * 
+	 * Add a player and their session to the playing players.
 	 * @param playerName
 	 * @param player
 	 */
@@ -421,13 +463,17 @@ public class PlayerMethods {
 		parkourPlayers.put(playerName, player);
 	}
 
+	/**
+	 * Remove a player and their session from the playing players.
+	 * @param playerName
+	 * @param player
+	 */
 	private static void removePlayer(String player) {
 		parkourPlayers.remove(player);
 	}
 
 	/**
-	 * Retrieve the player's selected course for editing.
-	 * 
+	 * Retrieve the player's selected course.
 	 * @param playerName
 	 * @return selected course
 	 */
@@ -435,11 +481,21 @@ public class PlayerMethods {
 		return Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + playerName + ".Selected");
 	}
 
+	/**
+	 * Set the player's selected course.
+	 * @param playerName
+	 * @param courseName
+	 */
 	public static void setSelected(String playerName, String courseName) {
 		Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + playerName + ".Selected", courseName.toLowerCase());
 		Parkour.getParkourConfig().saveUsers();
 	}
 
+	/**
+	 * Returns if the player has selected a course.
+	 * @param player
+	 * @return boolean
+	 */
 	public static boolean hasSelected(Player player) {
 		String selected = getSelected(player.getName());
 		if (selected == null || selected.length() == 0) {
@@ -529,8 +585,7 @@ public class PlayerMethods {
 	}
 
 	/**
-	 * Display the players Parkour permissions
-	 * 
+	 * Display the players Parkour permissions.
 	 * @param player
 	 */
 	public static void getPermissions(Player player) {
@@ -561,18 +616,22 @@ public class PlayerMethods {
 	}
 
 	/**
-	 * This method is only used on the course join, whereas the
-	 * preparePlayer(player, int) can be called anytime.
-	 * 
+	 * Prepare a player for joining a course
+	 * Will save and clear the inventory of the player, 
+	 * then populate their inventory with appropriate Parkour tools.
 	 * @param player
+	 * @param courseName
 	 */
 	private static void prepareJoinPlayer(Player player, String courseName) {
 		saveInventory(player);
 		preparePlayer(player, 0);
 
+		if (Parkour.getParkourConfig().getConfig().getBoolean("OnJoin.FillHealth"))
+			player.setFoodLevel(20);
+
 		if (Parkour.getSettings().getSuicide() != null)
 			player.getInventory().addItem(Utils.getItemStack("Other.Item_Suicide", Parkour.getSettings().getSuicide()));
-		
+
 		if (Parkour.getSettings().getHideall() != null)
 			player.getInventory().addItem(Utils.getItemStack("Other.Item_HideAll", Parkour.getSettings().getHideall()));
 
@@ -591,9 +650,8 @@ public class PlayerMethods {
 	}
 
 	/**
-	 * This is called often during the course, for example when the player dies
-	 * we fully prepare them to resume the course from the last checkpoint.
-	 * 
+	 * Prepare the player for Parkour
+	 * Executed when the player dies, will reset them to a normal state so they can continue.
 	 * @param player
 	 * @param gamemode
 	 */
@@ -605,17 +663,14 @@ public class PlayerMethods {
 		Damageable damag = player;
 		damag.setHealth(damag.getMaxHealth());
 		player.setGameMode(Utils.getGamemode(gamemode));
-		player.setFoodLevel(20);
 		player.setFallDistance(0);
 		player.setFireTicks(0);
 	}
 
 	/**
-	 * This is called when the player joins a course. Based on the config, this
-	 * can be disabled. I've now done a check to see if the inv is already
-	 * saved, if it is then don't overwrite it. This is because a player can
-	 * join CourseA then join CourseB and potentially have their inv
-	 * overwritten.
+	 * Save the player Inventory and Armour
+	 * Once saved, the players inventory and armour is cleared.
+	 * Will not overwrite the inventory if one is already saved. Can be disabled.
 	 * 
 	 * @param player
 	 */
@@ -638,8 +693,9 @@ public class PlayerMethods {
 	}
 
 	/**
-	 * This will load the inventory for the player, then delete it from the
-	 * file.
+	 * Load the players original inventory
+	 * When they leave or finish a course, their inventory and armour will be restored to them.
+	 * Will delete the inventory from the config once loaded.
 	 * 
 	 * @param player
 	 */
@@ -680,8 +736,9 @@ public class PlayerMethods {
 	}
 
 	/**
-	 * This will enable / disable Parkour notifications for the the player when
-	 * they are using the plugin.
+	 * Toggle quiet mode
+	 * Will add / remove the player from the list of quiet players.
+	 * If enabled, will limit the amount of Parkour messages displayed to the player.
 	 * 
 	 * @param player
 	 */
@@ -692,21 +749,9 @@ public class PlayerMethods {
 			Static.addQuiet(player);
 	}
 
-	/**
-	 * This will remove all trace of the player from the plugin. All SQL time
-	 * entries from the player will be removed, and their parkour stats will be
-	 * deleted from the config.
-	 * 
-	 * @param args
-	 * @param player
-	 */
-	public static void resetPlayer(String[] args, Player player) {
-		Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName(), null);
-		DatabaseMethods.deleteAllTimesForPlayer(args[1]);
-		player.sendMessage(Static.getParkourString() + args[1] + " has been removed!");
-	}
 
 	/**
+	 * Toggle Test Mode
 	 * This will enable / disable the testmode functionality, by creating a
 	 * dummy "Test Mode" course for the player.
 	 * 
@@ -721,20 +766,22 @@ public class PlayerMethods {
 			player.teleport(new Location(player.getWorld(), location.getX(),location.getY(),location.getZ(),location.getYaw(), location.getPitch()));
 			Checkpoint checkpoint = new Checkpoint(location.getX(),location.getY(),location.getZ(),location.getYaw(),location.getPitch(),player.getWorld().getName(),0,0,0);
 
-			addPlayer(player.getName(), new ParkourSession(new Course("Test Mode", checkpoint)));
+			addPlayer(player.getName(), new ParkourSession(new Course(Constants.TEST_MODE, checkpoint)));
 			Utils.sendActionBar(player, Utils.colour("Test Mode: &bON"));
 		}
 	}
 
-	/**
-	 * This will enable / disable the HideAll functionality.
-	 * 
-	 * @param player
-	 */
+
 	public static void toggleVisibility(Player player) {
 		toggleVisibility(player, false);
 	}
 
+	/**
+	 * Toggle Visibility of all players for the player
+	 * Can be overwritten to force the reappearance of all players (i.e. when a player leaves / finishes a course)
+	 * @param player
+	 * @param override
+	 */
 	public static void toggleVisibility(Player player, boolean override) {
 		boolean enabled = override ? true : Static.containsHidden(player.getName());
 
@@ -754,8 +801,7 @@ public class PlayerMethods {
 	}
 
 	/**
-	 * This allows the player to invite another onto the course they are using.
-	 * 
+	 * Invite a player to the current course
 	 * @param args
 	 * @param player
 	 */
@@ -779,10 +825,12 @@ public class PlayerMethods {
 	}
 
 	/**
-	 * Remove the player from the various config files. Delete their times from
-	 * all courses. (if they cheated all the times etc).
+	 * Reset player's Parkour information.
+	 * This will remove all trace of the player from the plugin. 
+	 * All SQL time entries from the player will be removed, and their parkour stats will be deleted from the config.
 	 * 
-	 * @param playerName
+	 * @param args
+	 * @param player
 	 */
 	public final static void resetPlayer(String playerName) {
 		Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + playerName, null);
@@ -791,11 +839,10 @@ public class PlayerMethods {
 	}
 
 	/**
-	 * Used for validation. Example you can't invite a player to "Test Mode" as
-	 * it isn't a valid course.
-	 * 
+	 * Returns whether the player is in Test Mode.
+	 * Used for validation, not to be treated as a normal Parkour course.
 	 * @param playerName
-	 * @return
+	 * @return boolean
 	 */
 	public static boolean isPlayerInTestmode(String playerName) {
 		ParkourSession session = getParkourSession(playerName);
@@ -803,20 +850,26 @@ public class PlayerMethods {
 		if (session == null)
 			return false;
 
-		return session.getCourse().getName().equals("Test Mode");
+		return session.getCourse().getName().equals(Constants.TEST_MODE);
 	}
 
 	/**
-	 * New for Parkour 4.0, Parkoins allow you to interact with the new store,
-	 * making purchases etc. Points will be rewarded on course completion etc.
+	 * Returns the amount of Parkoins a player has accumulated
+	 * Parkoins allow you to interact with the new store, making purchases etc. 
+	 * Points will be rewarded on course completion etc.
 	 * 
 	 * @param playerName
-	 * @return
+	 * @return int
 	 */
 	public static int getParkoins(String playerName) {
 		return Parkour.getParkourConfig().getUsersData().getInt("PlayerInfo." + playerName + ".Parkoins");
 	}
 
+	/**
+	 * Check if the player is currently online
+	 * @param playerName
+	 * @return boolean
+	 */
 	public static boolean isPlayerOnline(String playerName) {
 		for (Player player : Bukkit.getOnlinePlayers()){
 			if (player.getName().equalsIgnoreCase(playerName))
@@ -825,26 +878,36 @@ public class PlayerMethods {
 
 		return false;
 	}
-	
 
+	/**
+	 * Setup the outcome of having a Parkour Mode
+	 * @param player
+	 */
 	private static void setupPlayerMode(Player player) {
 		ParkourSession session = getParkourSession(player.getName());
-		
+
 		if (session.getMode() == ParkourMode.NONE)
 			return;
-		
+
 		if (session.getMode() == ParkourMode.FREEDOM) {
 			player.sendMessage(Utils.getTranslation("Mode.Freedom.JoinText"));
-			Utils.getItemStack("Mode.Freedom.ItemName", Material.REDSTONE_TORCH_ON);
-			
+			player.getInventory().addItem(Utils.getItemStack("Mode.Freedom.ItemName", Material.REDSTONE_TORCH_ON));
+
 		} else if (session.getMode() == ParkourMode.DRUNK) {
 			player.sendMessage(Utils.getTranslation("Mode.Drunk.JoinText"));
-			
+
 		} else if (session.getMode() == ParkourMode.DARKNESS) {
 			player.sendMessage(Utils.getTranslation("Mode.Darkness.JoinText"));
 		}
 	}
 
+	/**
+	 * Accept a challenge
+	 * Executed by the recipient of a challenge invite.
+	 * Will prepare each player for the challenge.
+	 * 
+	 * @param targetPlayer
+	 */
 	public static void acceptChallenge(final Player targetPlayer){
 		Challenge challenge = Static.getChallenge(targetPlayer.getName());
 
@@ -864,7 +927,7 @@ public class PlayerMethods {
 			player.hidePlayer(targetPlayer);
 			targetPlayer.hidePlayer(player);
 		}
-		
+
 		CourseMethods.joinCourse(player, challenge.getCourseName());
 		CourseMethods.joinCourse(targetPlayer, challenge.getCourseName());
 
@@ -896,6 +959,14 @@ public class PlayerMethods {
 		};	
 	}
 
+	/**
+	 * Increase the ParkourSession checkpoint number
+	 * Once a player activates a new checkpoint, it will setup the next checkpoint ready.
+	 * A message will be sent to the player notifying them of their progression.
+	 * 
+	 * @param session
+	 * @param player
+	 */
 	public static void increaseCheckpoint(ParkourSession session, Player player) {
 		session.increaseCheckpoint();
 
@@ -905,4 +976,50 @@ public class PlayerMethods {
 			player.sendMessage(Utils.getTranslation("Event.Checkpoint") + session.getCheckpoint() + " / " + session.getCourse().getCheckpoints());
 	}
 
+	/**
+	 * Apply an effect to the player
+	 * @param lines
+	 * @param player
+	 */
+	public static void applyEffect(String[] lines, Player player) {
+		if (lines[2].equalsIgnoreCase("heal")) {
+			Damageable damag = player;
+			damag.setHealth(damag.getMaxHealth());
+			player.sendMessage(Static.getParkourString() + "Healed!");
+
+		} else if (lines[2].equalsIgnoreCase("jump")) {
+			if (Utils.isNumber(lines[3])) {
+				player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 300, Integer.parseInt(lines[3])));
+				player.sendMessage(Static.getParkourString() + "Jump Effect Applied!");
+			} else {
+				player.sendMessage(Static.getParkourString() + "Invalid Number");
+			}
+		} else if (lines[2].equalsIgnoreCase("speed")) {
+			player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 300, 6));
+			player.sendMessage(Static.getParkourString() + "Speed Effect Applied!");
+
+		} else if (lines[2].equalsIgnoreCase("fire")) {
+			player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 500, 6));
+			player.sendMessage(Static.getParkourString() + "Fire Resistance Applied!");
+
+		} else if (lines[2].equalsIgnoreCase("pain")) {
+			player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 500, 10));
+			player.sendMessage(Static.getParkourString() + "Pain Resistance Applied!");
+
+		} else if (lines[2].equalsIgnoreCase("gamemode")) {
+			if (lines[3].equalsIgnoreCase("creative")) {
+				if (!(player.getGameMode().equals(GameMode.CREATIVE))) {
+					player.setGameMode(GameMode.CREATIVE);
+					player.sendMessage(Static.getParkourString() + "GameMode set to Creative!");
+				}
+			} else {
+				if (!(player.getGameMode().equals(GameMode.SURVIVAL))) {
+					player.setGameMode(GameMode.SURVIVAL);
+					player.sendMessage(Static.getParkourString() + "GameMode set to Survival!");
+				}
+			}
+		} else {
+			player.sendMessage(Static.getParkourString() + "Unknown Effect!");
+		}
+	}
 }

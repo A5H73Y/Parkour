@@ -15,15 +15,13 @@ import java.util.Date;
 import java.util.List;
 
 import me.A5H73Y.Parkour.Parkour;
-import me.A5H73Y.Parkour.Conversation.ParkourConversation;
-import me.A5H73Y.Parkour.Conversation.ParkourConversation.ConversationType;
 import me.A5H73Y.Parkour.Course.Checkpoint;
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Course.CourseMethods;
+import me.A5H73Y.Parkour.Enums.QuestionType;
 import me.A5H73Y.Parkour.Other.ParkourBlocks;
 import me.A5H73Y.Parkour.Other.Question;
 import me.A5H73Y.Parkour.Other.TimeObject;
-import me.A5H73Y.Parkour.Other.Question.QuestionType;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -55,7 +53,7 @@ public final class Utils {
 	}
 
 	/**
-	 * Override method, but with a default of an enabled prefix.
+	 * Override method, but with a default of an enabled Parkour prefix.
 	 * 
 	 * @param string
 	 * @return String of appropriate translation 
@@ -70,7 +68,7 @@ public final class Utils {
 	 * 
 	 * @param player
 	 * @param permission
-	 * @return
+	 * @return boolean
 	 */
 	public final static boolean hasPermission(Player player, String permission) {
 		if (player.hasPermission(permission) || player.hasPermission("Parkour.*"))
@@ -107,7 +105,7 @@ public final class Utils {
 	 * @param courseName
 	 * @return boolean
 	 */
-	public final static boolean hasPermissionOrOwnership(Player player, String permissionBranch, String permission, String courseName) {
+	public final static boolean hasPermissionOrCourseOwnership(Player player, String permissionBranch, String permission, String courseName) {
 		if (!(CourseMethods.exist(courseName))) {
 			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", courseName));
 			return false;
@@ -600,8 +598,7 @@ public final class Utils {
 	}
 
 	/**
-	 * Returned the standardised heading for Parkour
-	 * 
+	 * Return the standardised heading for Parkour
 	 * @param headingText
 	 * @return String
 	 */
@@ -609,48 +606,106 @@ public final class Utils {
 		return "-- " + ChatColor.BLUE + ChatColor.BOLD + headingText + ChatColor.RESET + " --";
 	}
 
-
 	/**
-	 * Initiate a conversation using the provided API. 
-	 * @param player
-	 * @param type
+	 * Validate amount of Material
+	 * Must be between 1 and 64.
+	 * @param amountString
+	 * @return int
 	 */
-	public static void startConversation(Player player, ConversationType type) {
-		new ParkourConversation(player, type);
-	}
-
 	public static int parseMaterialAmount(String amountString) {
 		int amount = Integer.parseInt(amountString);
 		return amount < 1 ? 1 : amount > 64 ? 64 : amount;
 	}
 
-	public static void displayLeaderboard(List<TimeObject> times, Player player) {
+	/**
+	 * Display Leaderboards
+	 * Present the course times to the player.
+	 * @param times
+	 * @param player
+	 */
+	public static void displayLeaderboard(Player player, List<TimeObject> times) {
 		if (times.size() == 0)
 			player.sendMessage(Static.getParkourString() + "No results were found!");
-		
+
 		player.sendMessage(Utils.getStandardHeading(times.size() + " results"));
 		for (int i = 0; i < times.size(); i++) {
 			player.sendMessage(Utils.colour((i + 1) + ") &b" + times.get(i).getPlayer() + "&f in &3" + Utils.calculateTime(times.get(i).getTime()) + "&f, dying &7" + times.get(i).getDeaths() + " &ftimes"));
 		}
 	}
-	
-	public static List<String> getLobbyList() {
-		return new ArrayList<String>(Parkour.getParkourConfig().getConfig().getConfigurationSection("CONFIG-SECTION-HERE").getKeys(false));
-	}
 
+	/**
+	 * Get a list of possible ParkourKits
+	 * @return
+	 */
 	public static List<String> getParkourBlockList() {
 		return new ArrayList<String>(Parkour.getParkourConfig().getConfig().getConfigurationSection("ParkourBlocks").getKeys(false));
 	}
-	
+
+	/**
+	 * Create a new checkpoint based on the players current location.
+	 * @param player
+	 * @return
+	 */
 	public static Checkpoint getCheckpointOfCurrentPosition(Player player) {
 		return new Checkpoint(player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(), player.getLocation().getYaw(), player.getLocation().getPitch(), player.getLocation().getWorld().getName(), 0, 0, 0);
 	}
-	
+
+	/**
+	 * Get an ItemStack for the material with a display name of a translated message
+	 * @param translation
+	 * @param material
+	 * @return ItemStack
+	 */
 	public static ItemStack getItemStack(String translation, Material material) {
 		ItemStack item = new ItemStack(material, 1);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(Utils.getTranslation(translation, false));
 		item.setItemMeta(meta);
 		return item;
+	}
+
+	/**
+	 * Delay certain actions 
+	 * @param player
+	 * @param secondsToWait
+	 * @param displayMessage
+	 * @return
+	 */
+	public static boolean delayPlayer(Player player, int secondsToWait, boolean displayMessage) {
+		if (player.isOp())
+			return true;
+
+		if (!Static.getDelay().containsKey(player.getName())) {
+			Static.getDelay().put(player.getName(), System.currentTimeMillis());
+			return true;
+		} 
+
+		long lastAction = Static.getDelay().get(player.getName());
+		int secondsElapsed = (int) ((System.currentTimeMillis() - lastAction) / 1000);
+
+		if (secondsElapsed >= secondsToWait) {
+			Static.getDelay().put(player.getName(), System.currentTimeMillis());
+			return true;
+		}
+
+		if (displayMessage && !Static.containsQuiet(player.getName()))
+			player.sendMessage(Utils.getTranslation("Error.Cooldown").replace("%AMOUNT%", String.valueOf(secondsToWait - secondsElapsed)));
+
+		return false;
+	}
+
+	/**
+	 * Add a whitelisted command
+	 * @param args
+	 * @param player
+	 */
+	public static void addWhitelistedCommand(String[] args, Player player) {
+		if (Static.getWhitelistedCommands().contains(args[1].toLowerCase())) {
+			player.sendMessage(Static.getParkourString() + "This command is already whitelisted!");
+			return;
+		}
+		
+		Static.addWhitelistedCommand(args[1].toLowerCase());
+		player.sendMessage(Static.getParkourString() + "Command " + ChatColor.AQUA + args[1] + ChatColor.WHITE + " added to the whitelisted commands!");
 	}
 }

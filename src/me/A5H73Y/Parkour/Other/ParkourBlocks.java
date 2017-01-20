@@ -16,9 +16,10 @@ public class ParkourBlocks implements Serializable{
 
 
 	/**
-	 * New as of 4.0. I've rethought how I'm going to achieve this. There will be ParkourBlock types, each with an identifier.
-	 * For example if I was going to have different themes throughout the server, each course theme would have it's own set of ParkourBlocks.
-	 * The course then gets linked to a parkourBlock set and not the other way around.
+	 * ParkourBlocks
+	 * Each ParkourBlocks set has a unique name associated to it, for lookup.
+	 * Each course can have a ParkourBlocks set to use; meaning there could be a different material for each type per course.
+	 * The NoRun, NoPotion and Bounce all use the default blocks specified.
 	 * 
 	 * @param finish
 	 * @param climb

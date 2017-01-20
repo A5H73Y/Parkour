@@ -2,8 +2,8 @@ package me.A5H73Y.Parkour;
 
 import me.A5H73Y.Parkour.Course.Checkpoint;
 import me.A5H73Y.Parkour.Course.Course;
+import me.A5H73Y.Parkour.Enums.ParkourMode;
 import me.A5H73Y.Parkour.Other.ParkourBlocks;
-import me.A5H73Y.Parkour.Other.ParkourMode;
 import me.A5H73Y.Parkour.Other.Question;
 import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
@@ -302,12 +302,12 @@ public class ParkourListener implements Listener {
 			return;
 
 		if (player.getInventory().getItemInMainHand().getType() == Parkour.getSettings().getSuicide()) {
-			PlayerMethods.playerDie(player);
-			player.getInventory().setHeldItemSlot(4);
+			if (Utils.delayPlayer(player, 2, false))
+				PlayerMethods.playerDie(player);
 
 		} else if (player.getInventory().getItemInMainHand().getType() == Parkour.getSettings().getHideall()) {
-			PlayerMethods.toggleVisibility(player);
-			player.getInventory().setHeldItemSlot(4);
+			if (Utils.delayPlayer(player, 2, false))
+				PlayerMethods.toggleVisibility(player);
 
 		} else if (player.getInventory().getItemInMainHand().getType() == Parkour.getSettings().getLeave()) {
 			PlayerMethods.playerLeave(player);
@@ -335,10 +335,10 @@ public class ParkourListener implements Listener {
 		if (player.getInventory().getItemInMainHand().getType() == Material.REDSTONE_TORCH_ON) {
 			if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
 				PlayerMethods.getParkourSession(player.getName()).getCourse().setCheckpoint(Utils.getCheckpointOfCurrentPosition(player));
-				player.sendMessage(Utils.getTranslation("Parkour.Freedom.Save"));
+				player.sendMessage(Utils.getTranslation("Mode.Freedom.Save"));
 			} else {
 				player.teleport(PlayerMethods.getParkourSession(player.getName()).getCourse().getCheckpoint().getLocation());
-				player.sendMessage(Utils.getTranslation("Parkour.Freedom.Load"));
+				player.sendMessage(Utils.getTranslation("Mode.Freedom.Load"));
 			}
 		}
 	}
@@ -376,7 +376,7 @@ public class ParkourListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
-		boolean commandIsPa = event.getMessage().startsWith("/pa");
+		boolean commandIsPa = event.getMessage().startsWith("/pa ") || event.getMessage().startsWith("/parkour ");
 		Player player = event.getPlayer();
 
 		if (commandIsPa && Static.containsQuestion(player.getName())) {
@@ -392,7 +392,7 @@ public class ParkourListener implements Listener {
 				return;
 
 			boolean allowed = false;
-			for (String word : Parkour.getParkourConfig().getConfig().getStringList("Other.Commands.Whitelist")) {
+			for (String word : Static.getWhitelistedCommands()) {
 				if (event.getMessage().startsWith("/" + word)) {
 					allowed = true;
 					break;

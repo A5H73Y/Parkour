@@ -1,8 +1,9 @@
 package me.A5H73Y.Parkour;
 
-import me.A5H73Y.Parkour.Conversation.ParkourConversation.ConversationType;
+import me.A5H73Y.Parkour.Conversation.ParkourConversation;
 import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.CourseMethods;
+import me.A5H73Y.Parkour.Enums.ConversationType;
 import me.A5H73Y.Parkour.Other.Backup;
 import me.A5H73Y.Parkour.Other.Help;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
@@ -48,7 +49,7 @@ public class ParkourCommands implements CommandExecutor {
 
 					} else if (args[0].equalsIgnoreCase("leave")) {
 						PlayerMethods.playerLeave(player);
-
+					
 					} else if (args[0].equalsIgnoreCase("info")) {
 						PlayerMethods.displayPlayerInfo(args, player);
 
@@ -80,7 +81,7 @@ public class ParkourCommands implements CommandExecutor {
 						if (!PlayerMethods.hasSelected(player))
 							return false;
 
-						if (!Utils.hasPermissionOrOwnership(player, "Parkour.Admin", "Course", PlayerMethods.getSelected(player.getName())))
+						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerMethods.getSelected(player.getName())))
 							return false;
 
 						CheckpointMethods.createCheckpoint(args, player);
@@ -89,7 +90,7 @@ public class ParkourCommands implements CommandExecutor {
 						if (!PlayerMethods.hasSelected(player))
 							return false;
 
-						if (!Utils.hasPermissionOrOwnership(player, "Parkour.Admin", "Course", PlayerMethods.getSelected(player.getName())))
+						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerMethods.getSelected(player.getName())))
 							return false;
 
 						CourseMethods.setFinish(args, player);
@@ -98,7 +99,7 @@ public class ParkourCommands implements CommandExecutor {
 						if (!PlayerMethods.hasSelected(player))
 							return false;
 
-						if (!Utils.hasPermissionOrOwnership(player, "Parkour.Admin", "Course", PlayerMethods.getSelected(player.getName())))
+						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerMethods.getSelected(player.getName())))
 							return false;
 
 						CourseMethods.setStart(args, player);
@@ -137,7 +138,7 @@ public class ParkourCommands implements CommandExecutor {
 						if (!Utils.validateArgs(player, args, 2))
 							return false;
 
-						if (!Utils.hasPermissionOrOwnership(player, "Parkour.Admin", "Select", args[1]))
+						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Select", args[1]))
 							return false;
 
 						CourseMethods.selectCourse(args, player);
@@ -170,7 +171,7 @@ public class ParkourCommands implements CommandExecutor {
 						if (!PlayerMethods.hasSelected(player))
 							return false;
 
-						if (!Utils.hasPermissionOrOwnership(player, "Parkour.Admin", "Course", PlayerMethods.getSelected(player.getName())))
+						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerMethods.getSelected(player.getName())))
 							return false;
 
 						if (!Utils.validateArgs(player, args, 3))
@@ -278,7 +279,7 @@ public class ParkourCommands implements CommandExecutor {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
 							return false;
 						
-						if (!Utils.validateArgs(player, args, 3))
+						if (!Utils.validateArgs(player, args, 2))
 							return false;
 
 						CourseMethods.setCourseMode(args, player);
@@ -287,7 +288,7 @@ public class ParkourCommands implements CommandExecutor {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
 							return false;
 
-						Utils.startConversation(player, ConversationType.PARKOURBLOCKS);
+						new ParkourConversation(player, ConversationType.PARKOURBLOCKS).begin();
 
 					} else if (args[0].equalsIgnoreCase("linkpb")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
@@ -334,6 +335,15 @@ public class ParkourCommands implements CommandExecutor {
 						
 						player.sendMessage(Static.getParkourString() + "Recreating courses...");
 						DatabaseMethods.recreateAllCourses();
+						
+					} else if (args[0].equalsIgnoreCase("whitelist")) {
+						if (!Utils.hasPermission(player, "Parkour.Admin"))
+							return false;
+						
+						if (!Utils.validateArgs(player, args, 2))
+							return false;
+						
+						Utils.addWhitelistedCommand(args, player);
 
 						//Other commands//	
 					} else if (args[0].equalsIgnoreCase("about")) {

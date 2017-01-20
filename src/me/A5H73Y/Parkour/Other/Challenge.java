@@ -6,6 +6,14 @@ public class Challenge {
 	private String targetPlayer;
 	private String courseName;
 
+	/**
+	 * Challenge player
+	 * Created to manage who started the challenge, who's the recipient and which on course.
+	 * 
+	 * @param player
+	 * @param targetPlayer
+	 * @param courseName
+	 */
 	public Challenge(String player, String targetPlayer, String courseName){
 		this.player = player;
 		this.targetPlayer = targetPlayer;
