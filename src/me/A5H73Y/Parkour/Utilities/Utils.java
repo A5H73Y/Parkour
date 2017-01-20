@@ -538,15 +538,15 @@ public final class Utils {
 				return;
 			}
 			
-			Course course = CourseMethods.findByName(args[2]); //TODO get straight from config
+			int checkpoints = Parkour.getParkourConfig().getCourseData().getInt(args[2].toLowerCase() + ".Points");
 			// if it has no checkpoints
-			if ((course.getCheckpoints() - 1) <= 0) {
-				player.sendMessage(Static.getParkourString() + course.getName() + " has no checkpoints!");
+			if (checkpoints <= 0) {
+				player.sendMessage(Static.getParkourString() + args[2] + " has no checkpoints!");
 				return;
 			}
 
-			player.sendMessage(Static.getParkourString() + "You are about to delete checkpoint " + ChatColor.AQUA + (course.getCheckpoints() - 1) + ChatColor.WHITE + " for course " + ChatColor.AQUA + course.getName() + ChatColor.WHITE + "...");
-			player.sendMessage(ChatColor.GRAY + "Deleting a checkpoint will impact everybody that is currently playing on " + course.getName() + ". You should not set a course to finished and then continue to make changes.");
+			player.sendMessage(Static.getParkourString() + "You are about to delete checkpoint " + ChatColor.AQUA + checkpoints + ChatColor.WHITE + " for course " + ChatColor.AQUA + args[2] + ChatColor.WHITE + "...");
+			player.sendMessage(ChatColor.GRAY + "Deleting a checkpoint will impact everybody that is currently playing on " + args[2] + ". You should not set a course to finished and then continue to make changes.");
 			player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
 			Static.addQuestion(player.getName(), new Question(QuestionType.DELETE_CHECKPOINT, args[2].toLowerCase()));
 
