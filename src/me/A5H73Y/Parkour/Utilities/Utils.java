@@ -22,6 +22,7 @@ import me.A5H73Y.Parkour.Enums.QuestionType;
 import me.A5H73Y.Parkour.Other.ParkourBlocks;
 import me.A5H73Y.Parkour.Other.Question;
 import me.A5H73Y.Parkour.Other.TimeObject;
+import me.A5H73Y.Parkour.Other.Validation;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -522,6 +523,9 @@ public final class Utils {
 				player.sendMessage(Utils.getTranslation("Error.Unknown"));
 				return;
 			}
+			
+			if (!Validation.deleteCourse(args[2], player))
+				return;
 
 			player.sendMessage(Static.getParkourString() + "You are about to delete course " + ChatColor.AQUA + args[2] + ChatColor.WHITE + "...");
 			player.sendMessage(ChatColor.GRAY + "This will remove all information about the course ever existing, which includes all leaderboard data, course statistics and everything else the plugin knows about it.");
@@ -533,7 +537,7 @@ public final class Utils {
 				player.sendMessage(Utils.getTranslation("Error.Unknown"));
 				return;
 			}
-
+			
 			Course course = CourseMethods.findByName(args[2]); //TODO get straight from config
 			// if it has no checkpoints
 			if ((course.getCheckpoints() - 1) <= 0) {
@@ -547,10 +551,13 @@ public final class Utils {
 			Static.addQuestion(player.getName(), new Question(QuestionType.DELETE_CHECKPOINT, args[2].toLowerCase()));
 
 		} else if (args[1].equalsIgnoreCase("lobby")) {
-			if (!Parkour.getParkourConfig().getConfig().contains(args[2].toLowerCase() + ".World")) {
+			if (!Parkour.getParkourConfig().getConfig().contains("Lobby." + args[2].toLowerCase() + ".World")) {
 				player.sendMessage(Static.getParkourString() + "This lobby does not exist!");
 				return;
 			}
+			
+			if (!Validation.deleteLobby(args[2], player))
+				return;
 
 			player.sendMessage(Static.getParkourString() + "You are about to delete lobby " + ChatColor.AQUA + args[2] + ChatColor.WHITE + "...");
 			player.sendMessage(ChatColor.GRAY + "Deleting a lobby will remove all information about it from the server. If any courses are linked to this lobby, they will be broken."); // TODO check if any courses are linked

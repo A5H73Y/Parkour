@@ -1,5 +1,8 @@
 package me.A5H73Y.Parkour.Other;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Course.CourseMethods;
@@ -9,6 +12,7 @@ import me.A5H73Y.Parkour.Utilities.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class Validation {
@@ -266,6 +270,60 @@ public class Validation {
 			player.sendMessage(Static.getParkourString() + "Invalid checkpoint number.");
 			return false;
 		}
+		return true;
+	}
+
+	/**
+	 * Validate a course before deleting it
+	 * @param string
+	 * @param player
+	 * @return
+	 */
+	public static boolean deleteCourse(String courseName, Player player) {
+		courseName = courseName.toLowerCase();
+		FileConfiguration courseConfig = Parkour.getParkourConfig().getCourseData();
+		List<String> dependantCourses = new ArrayList<String>();
+		
+		for (String course : Static.getCourses()){
+			String linkedCourse = courseConfig.getString(course + ".LinkedCourse");
+			
+			if (linkedCourse != null && courseName.equals(linkedCourse)) {
+				dependantCourses.add(course);
+			}
+		}
+		
+		if (dependantCourses.size() > 0) {
+			player.sendMessage(Static.getParkourString() + "This course can not be deleted as there are dependant courses: " + dependantCourses);
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Validate a lobby before deleting it
+	 * @param string
+	 * @param player
+	 * @return
+	 */
+	public static boolean deleteLobby(String courseName, Player player) {
+		courseName = courseName.toLowerCase();
+		FileConfiguration courseConfig = Parkour.getParkourConfig().getCourseData();
+		List<String> dependantCourses = new ArrayList<String>();
+		
+		for (String course : Static.getCourses()){
+			String linkedCourse = courseConfig.getString(course + ".LinkedLobby");
+			
+			if (linkedCourse != null && courseName.equals(linkedCourse)) {
+				dependantCourses.add(course);
+			}
+		}
+		
+		if (dependantCourses.size() > 0) {
+			player.sendMessage(Static.getParkourString() + "This lobby can not be deleted as there are dependant courses: " + dependantCourses);
+			return false;
+		}
+		
 		return true;
 	}
 }
