@@ -2,6 +2,7 @@ package me.A5H73Y.Parkour;
 
 import me.A5H73Y.Parkour.Other.Configurations;
 import me.A5H73Y.Parkour.Other.StartPlugin;
+import me.A5H73Y.Parkour.Other.Updater;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Settings;
 import me.A5H73Y.Parkour.Utilities.Static;
@@ -25,8 +26,9 @@ public class Parkour extends JavaPlugin {
 		StartPlugin.isFreshInstall();
 		config = new Configurations();
 		StartPlugin.run();
-
+		updatePlugin();
 		settings = new Settings();
+
 		getServer().getPluginManager().registerEvents(new ParkourListener(), this);
 		getServer().getPluginManager().registerEvents(new ParkourSignListener(), this);
 		getCommand("parkour").setExecutor(new ParkourCommands());
@@ -72,5 +74,10 @@ public class Parkour extends JavaPlugin {
 
 	public static Economy getEconomy() {
 		return economy;
+	}
+
+	private void updatePlugin() {
+		if (Parkour.getParkourConfig().getConfig().getBoolean("Other.CheckForUpdates"))
+			new Updater(this, 42615, this.getFile(), Updater.UpdateType.DEFAULT, true);
 	}
 }

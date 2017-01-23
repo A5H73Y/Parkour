@@ -43,7 +43,6 @@ public class StartPlugin {
 		setupVault();
 		setupBountifulAPI();
 		populatePlayers();
-		// Updater
 		Utils.log("Enabled Parkour v" + Static.getVersion() + "!");
 	}
 

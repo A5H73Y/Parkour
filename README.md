@@ -1,11 +1,11 @@
-# Parkour 4.0
+![alt text](https://i.imgur.com/RCoFDJv.png "Parkour 4.0")
+
 *Development builds for the Bukkit Parkour plugin.*
 
-Things remaining:
-* Test, test, test and fix, fix, fix.
+---
 
-#####Supported plugins:
+####Supported plugins
 
-Economy [Vault](https://dev.bukkit.org/projects/vault)
+[Vault](https://dev.bukkit.org/projects/vault)
 
-Titles [TitleActionBarAPI](https://dev.bukkit.org/projects/titleactionbarapi)
+[BountifulAPI](https://www.spigotmc.org/resources/bountifulapi-1-8-1-9-1-10.1394/)
