@@ -152,6 +152,7 @@ public class StartPlugin {
 			}
 		} catch (Exception e) {
 			Utils.log("Failed to load players: " + e.getMessage(), 2);
+			PlayerMethods.setPlaying(new HashMap<String, ParkourSession>());
 		}
 	}
 

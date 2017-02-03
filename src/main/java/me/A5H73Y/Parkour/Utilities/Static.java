@@ -32,7 +32,7 @@ public final class Static {
 	private static boolean devBuild = true;
 	private static ParkourBlocks parkourBlocks;
 
-	private final static String ParkourString = Utils.colour("&0[&bParkour&0] &f");
+	private static String parkourString;
 	private static Double version;
 
 	public final static String PATH = Parkour.getPlugin().getDataFolder() + File.separator + "playing.bin";
@@ -41,6 +41,7 @@ public final class Static {
 		version = Double.parseDouble(Parkour.getPlugin().getDescription().getVersion());
 		courseList = Parkour.getParkourConfig().getAllCourses();
 		parkourBlocks = Utils.populateDefaultParkourBlocks();
+		parkourString = Utils.getTranslation("Parkour.Prefix", false);
 	}
 
 	public final static void populateCourses(List<String> courses) {
@@ -48,7 +49,7 @@ public final class Static {
 	}
 
 	public final static String getParkourString() {
-		return ParkourString;
+		return parkourString;
 	}
 
 	public final static Double getVersion() {

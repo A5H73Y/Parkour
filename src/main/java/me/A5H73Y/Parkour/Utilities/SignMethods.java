@@ -18,7 +18,7 @@ public class SignMethods {
 	 * @return if they have permission
 	 */
 	public boolean createStandardSign(SignChangeEvent sign, Player player, String title){
-		if (!hasPermission(player, sign, title))
+		if (!Utils.hasSignPermission(player, sign, title))
 			return false;
 
 		sign.setLine(1, title);
@@ -42,7 +42,7 @@ public class SignMethods {
 	 * @return
 	 */
 	public boolean createStandardCourseSign(SignChangeEvent sign, Player player, String title, boolean message){
-		if (!hasPermission(player, sign, title))
+		if (!Utils.hasSignPermission(player, sign, title))
 			return false;
 
 		if (!CourseMethods.exist(sign.getLine(2))){
@@ -66,7 +66,7 @@ public class SignMethods {
 	 * @param sign
 	 * @param player
 	 */
-	public void joinCourse(SignChangeEvent sign, Player player){
+	public void createJoinCourseSign(SignChangeEvent sign, Player player){
 		if (!createStandardCourseSign(sign, player, "Join", false))
 			return;
 
@@ -81,8 +81,8 @@ public class SignMethods {
 	 * @param sign
 	 * @param player
 	 */
-	public void joinLobby(SignChangeEvent sign, Player player){
-		if (!hasPermission(player, sign, "Lobby"))
+	public void createLobbyJoinSign(SignChangeEvent sign, Player player){
+		if (!Utils.hasSignPermission(player, sign, "Lobby"))
 			return;
 
 		sign.setLine(1, "Lobby");
@@ -103,11 +103,10 @@ public class SignMethods {
 				sign.setLine(3, "-----");
 			}
 		}
-
 	}
 
 	public void createEffectSign(SignChangeEvent sign, Player player, String title) {
-		if (!hasPermission(player, sign, title))
+		if (!Utils.hasSignPermission(player, sign, title))
 			return;
 
 		sign.setLine(1, "Effect");
@@ -153,14 +152,5 @@ public class SignMethods {
 			sign.setLine(3, "");
 			player.sendMessage(Static.getParkourString() + "Unknown Effect");
 		}
-	}
-
-	private boolean hasPermission(Player player, SignChangeEvent sign, String permission){
-		if (!Utils.hasPermission(player, "Parkour.Sign", permission)){
-			sign.setCancelled(true);
-			sign.getBlock().breakNaturally();
-			return false;
-		}
-		return true;
 	}
 }

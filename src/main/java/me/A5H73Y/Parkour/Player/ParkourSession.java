@@ -45,6 +45,10 @@ public class ParkourSession implements Serializable {
 	public int getCheckpoint() {
 		return checkpoint;
 	}
+	
+	public void setCheckpoint(int checkpoint) {
+		this.checkpoint = checkpoint;
+	}
 
 	public Course getCourse() {
 		return course;

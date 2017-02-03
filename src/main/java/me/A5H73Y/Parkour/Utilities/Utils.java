@@ -16,7 +16,6 @@ import java.util.List;
 
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.Checkpoint;
-import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Enums.QuestionType;
 import me.A5H73Y.Parkour.Other.ParkourBlocks;
@@ -30,8 +29,10 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -65,7 +66,7 @@ public final class Utils {
 
 	/**
 	 * Return whether or not the player has a specific permission.
-	 * If they don't a message will be sent alerting them.
+	 * If they don't, a message will be sent alerting them.
 	 * 
 	 * @param player
 	 * @param permission
@@ -121,24 +122,41 @@ public final class Utils {
 		player.sendMessage(Utils.getTranslation("NoPermission").replace("%PERMISSION%", permissionBranch + "." + permission));
 		return false;
 	}
+	
+	/**
+	 * Return whether or not the player has a specific sign permission.
+	 * The sign will be broken if they don't have permission.
+	 * 
+	 * @param player
+	 * @param permission
+	 * @return boolean
+	 */
+	public static boolean hasSignPermission(Player player, SignChangeEvent sign, String permission){
+		if (!Utils.hasPermission(player, "Parkour.Sign", permission)){
+			sign.setCancelled(true);
+			sign.getBlock().breakNaturally();
+			return false;
+		}
+		return true;
+	}
 
 	/**
 	 * Validate the length of the arguments before allowing it to be processed further.
 	 * 
-	 * @param player
+	 * @param sender
 	 * @param args
 	 * @param desired
 	 * @return boolean
 	 */
-	public final static boolean validateArgs(Player player, String[] args, int desired) {
+	public final static boolean validateArgs(CommandSender sender, String[] args, int desired) {
 		if (args.length > desired) {
-			player.sendMessage(Utils.getTranslation("Error.TooMany") + " (" + desired + ")");
-			player.sendMessage(Utils.getTranslation("Help.Command").replace("%COMMAND%", Utils.standardizeText(args[0])));
+			sender.sendMessage(Utils.getTranslation("Error.TooMany") + " (" + desired + ")");
+			sender.sendMessage(Utils.getTranslation("Help.Command").replace("%COMMAND%", Utils.standardizeText(args[0])));
 			return false;
 
 		} else if (args.length < desired) {
-			player.sendMessage(Utils.getTranslation("Error.TooLittle") + " (" + desired + ")");
-			player.sendMessage(Utils.getTranslation("Help.Command").replace("%COMMAND%", Utils.standardizeText(args[0])));
+			sender.sendMessage(Utils.getTranslation("Error.TooLittle") + " (" + desired + ")");
+			sender.sendMessage(Utils.getTranslation("Help.Command").replace("%COMMAND%", Utils.standardizeText(args[0])));
 			return false;
 		}
 		return true;
@@ -560,7 +578,7 @@ public final class Utils {
 				return;
 
 			player.sendMessage(Static.getParkourString() + "You are about to delete lobby " + ChatColor.AQUA + args[2] + ChatColor.WHITE + "...");
-			player.sendMessage(ChatColor.GRAY + "Deleting a lobby will remove all information about it from the server. If any courses are linked to this lobby, they will be broken."); // TODO check if any courses are linked
+			player.sendMessage(ChatColor.GRAY + "Deleting a lobby will remove all information about it from the server. If any courses are linked to this lobby, they will be broken.");
 			player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
 			Static.addQuestion(player.getName(), new Question(QuestionType.DELETE_LOBBY, args[2].toLowerCase()));
 
@@ -631,8 +649,10 @@ public final class Utils {
 	 * @param player
 	 */
 	public static void displayLeaderboard(Player player, List<TimeObject> times) {
-		if (times.size() == 0)
+		if (times.size() == 0) {
 			player.sendMessage(Static.getParkourString() + "No results were found!");
+			return;
+		}
 
 		player.sendMessage(Utils.getStandardHeading(times.size() + " results"));
 		for (int i = 0; i < times.size(); i++) {
@@ -676,7 +696,7 @@ public final class Utils {
 	 * @param player
 	 * @param secondsToWait
 	 * @param displayMessage
-	 * @return
+	 * @return boolean (wait expired)
 	 */
 	public static boolean delayPlayer(Player player, int secondsToWait, boolean displayMessage) {
 		if (player.isOp())

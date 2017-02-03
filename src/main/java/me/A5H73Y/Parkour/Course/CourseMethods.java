@@ -21,6 +21,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -389,23 +390,23 @@ public class CourseMethods {
 	 * Displays all the Parkour courses or all the players using the plugin.
 	 * 
 	 * @param args
-	 * @param player
+	 * @param sender
 	 */
-	public static void displayList(String[] args, Player player) {
+	public static void displayList(String[] args, CommandSender sender) {
 		if (args.length < 2) {
-			player.sendMessage(Utils.invalidSyntax("list", "(players / courses)"));
+			sender.sendMessage(Utils.invalidSyntax("list", "(players / courses)"));
 			return;
 		}
 
 		if (args[1].equalsIgnoreCase("players")) {
-			displayPlaying(player);
+			displayPlaying(sender);
 
 		} else if (args[1].equalsIgnoreCase("courses")) {
 			int page = (args.length == 3 && args[2] != null ? Integer.parseInt(args[2]) : 1);
-			displayCourses(player, page);
+			displayCourses(sender, page);
 
 		} else {
-			player.sendMessage(Utils.invalidSyntax("list", "(players / courses)"));
+			sender.sendMessage(Utils.invalidSyntax("list", "(players / courses)"));
 		}
 	}
 
@@ -413,19 +414,19 @@ public class CourseMethods {
 	 * Display a list of all the players using the Parkour plugin
 	 * Will show the course they are on, the amount of times they've died, as well as how long they've been on the course.
 	 * 
-	 * @param player
+	 * @param sender
 	 */
-	private static void displayPlaying(Player player) {
+	private static void displayPlaying(CommandSender sender) {
 		if (PlayerMethods.getPlaying().size() == 0) {
-			player.sendMessage(Static.getParkourString() + "Nobody is playing Parkour!");
+			sender.sendMessage(Static.getParkourString() + "Nobody is playing Parkour!");
 			return;
 		}
 
-		player.sendMessage(Static.getParkourString() + PlayerMethods.getPlaying().size() + " players using Parkour: ");
+		sender.sendMessage(Static.getParkourString() + PlayerMethods.getPlaying().size() + " players using Parkour: ");
 
 		// TODO pages - reuse courses page 
 		for (Map.Entry<String, ParkourSession> entry : PlayerMethods.getPlaying().entrySet()) {
-			player.sendMessage(Utils.getTranslation("Parkour.Playing")
+			sender.sendMessage(Utils.getTranslation("Parkour.Playing")
 					.replace("%PLAYER%", entry.getKey())
 					.replace("%COURSE%", entry.getValue().getCourse().getName())
 					.replace("%DEATHS%", String.valueOf(entry.getValue().getDeaths()))
@@ -437,35 +438,35 @@ public class CourseMethods {
 	 * Display a list of all the Parkour courses on the server
 	 * Prints the name and unique course ID, seperated into pages of 8 results.
 	 * 
-	 * @param player
+	 * @param sender
 	 * @param page
 	 */
-	private static void displayCourses(Player player, int page) {
+	private static void displayCourses(CommandSender sender, int page) {
 		if (Static.getCourses().size() == 0) {
-			player.sendMessage(Static.getParkourString() + "There are no Parkour courses!");
+			sender.sendMessage(Static.getParkourString() + "There are no Parkour courses!");
 			return;
 		}
 
 		List<String> courseList = Static.getCourses();
 		if (page <= 0) {
-			player.sendMessage(Static.getParkourString() + "Please enter a valid page number.");
+			sender.sendMessage(Static.getParkourString() + "Please enter a valid page number.");
 			return;
 		}
 
 		int fromIndex = (page - 1) * 8;
 		if (courseList.size() < fromIndex) {
-			player.sendMessage(Static.getParkourString() + "This page doesn't exist.");
+			sender.sendMessage(Static.getParkourString() + "This page doesn't exist.");
 			return;
 		}
 
-		player.sendMessage(Static.getParkourString() + courseList.size() + " courses available:");
+		sender.sendMessage(Static.getParkourString() + courseList.size() + " courses available:");
 		List<String> limited = courseList.subList(fromIndex, Math.min(fromIndex + 8, courseList.size()));
 
 		for (int i = 0; i < limited.size(); i++) {
-			player.sendMessage(((fromIndex) + (i + 1)) + ") " + ChatColor.AQUA + limited.get(i));
+			sender.sendMessage(((fromIndex) + (i + 1)) + ") " + ChatColor.AQUA + limited.get(i));
 		}
 
-		player.sendMessage("== " + page + " / " + ((courseList.size() / 8) + 1) + " ==");
+		sender.sendMessage("== " + page + " / " + ((courseList.size() / 8) + 1) + " ==");
 	}
 
 	/**
@@ -589,19 +590,19 @@ public class CourseMethods {
 	 * Set the maximum amount of deaths a player can accumulate before failing the course.
 	 * 
 	 * @param args
-	 * @param player
+	 * @param sender
 	 */
-	public static void setMaxDeaths(String[] args, Player player) {
+	public static void setMaxDeaths(String[] args, CommandSender sender) {
 		if (!CourseMethods.exist(args[1])) {
-			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
+			sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
 			return;
 		}
 		if (!Utils.isNumber(args[2])) {
-			player.sendMessage(Static.getParkourString() + "Amount of deaths is not valid.");
+			sender.sendMessage(Static.getParkourString() + "Amount of deaths is not valid.");
 			return;
 		}
 
-		player.sendMessage(Static.getParkourString() + ChatColor.AQUA + args[1] + ChatColor.WHITE + " maximum deaths was set to " + ChatColor.AQUA + args[2]);
+		sender.sendMessage(Static.getParkourString() + ChatColor.AQUA + args[1] + ChatColor.WHITE + " maximum deaths was set to " + ChatColor.AQUA + args[2]);
 		Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".MaxDeaths", Integer.parseInt(args[2]));
 		Parkour.getParkourConfig().saveCourses();
 	}
@@ -610,19 +611,19 @@ public class CourseMethods {
 	 * Set the mimimum Parkour level required to join the course.
 	 * 
 	 * @param args
-	 * @param player
+	 * @param sender
 	 */
-	public static void setMinLevel(String[] args, Player player) {
+	public static void setMinLevel(String[] args, CommandSender sender) {
 		if (!CourseMethods.exist(args[1])) {
-			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
+			sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
 			return;
 		}
 		if (!Utils.isNumber(args[2])) {
-			player.sendMessage(Static.getParkourString() + "Minimum level is not valid.");
+			sender.sendMessage(Static.getParkourString() + "Minimum level is not valid.");
 			return;
 		}
 
-		player.sendMessage(Static.getParkourString() + ChatColor.AQUA + args[1] + ChatColor.WHITE + " minimum level requirement was set to " + ChatColor.AQUA + args[2]);
+		sender.sendMessage(Static.getParkourString() + ChatColor.AQUA + args[1] + ChatColor.WHITE + " minimum level requirement was set to " + ChatColor.AQUA + args[2]);
 		Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".MinimumLevel", Integer.parseInt(args[2]));
 		Parkour.getParkourConfig().saveCourses();
 	}
@@ -633,41 +634,41 @@ public class CourseMethods {
 	 * The original value will not be overwritten if the reward level is smaller.
 	 * 
 	 * @param args
-	 * @param player
+	 * @param sender
 	 */
-	public static void setRewardLevel(String[] args, Player player) {
+	public static void setRewardLevel(String[] args, CommandSender sender) {
 		if (!CourseMethods.exist(args[1])) {
-			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
+			sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
 			return;
 		}
 		if (!Utils.isNumber(args[2])) {
-			player.sendMessage(Static.getParkourString() + "Reward level needs to be numeric.");
+			sender.sendMessage(Static.getParkourString() + "Reward level needs to be numeric.");
 			return;
 		}
 
 		Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".Level", Integer.parseInt(args[2]));
 		Parkour.getParkourConfig().saveCourses();
-		player.sendMessage(Static.getParkourString() + args[1] + "'s reward level was set to " + ChatColor.AQUA + args[2]);
+		sender.sendMessage(Static.getParkourString() + args[1] + "'s reward level was set to " + ChatColor.AQUA + args[2]);
 	}
 
 	/**
 	 * Set whether the player only gets the prize for the first time they complete the course.
 	 * 
 	 * @param args
-	 * @param player
+	 * @param sender
 	 */
-	public static void setRewardOnce(String[] args, Player player) {
+	public static void setRewardOnce(String[] args, CommandSender sender) {
 		if (!CourseMethods.exist(args[1])) {
-			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
+			sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
 			return;
 		}
 
 		if (Parkour.getParkourConfig().getCourseData().getBoolean(args[1].toLowerCase() + ".RewardOnce")) {
 			Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".RewardOnce", false);
-			player.sendMessage(Static.getParkourString() + args[1] + "'s reward one time was set to " + ChatColor.AQUA + "false");
+			sender.sendMessage(Static.getParkourString() + args[1] + "'s reward one time was set to " + ChatColor.AQUA + "false");
 		} else {
 			Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".RewardOnce", true);
-			player.sendMessage(Static.getParkourString() + args[1] + "'s reward one time was set to " + ChatColor.AQUA + "true");
+			sender.sendMessage(Static.getParkourString() + args[1] + "'s reward one time was set to " + ChatColor.AQUA + "true");
 		}
 		Parkour.getParkourConfig().saveCourses();
 	}
@@ -679,22 +680,22 @@ public class CourseMethods {
 	 * Level 10: Pro; Level 99: God
 	 * 
 	 * @param args
-	 * @param player
+	 * @param sender
 	 */
-	public static void setRewardRank(String[] args, Player player) {
+	public static void setRewardRank(String[] args, CommandSender sender) {
 		if (!Utils.isNumber(args[1])) {
-			player.sendMessage(Static.getParkourString() + "Reward level needs to be numeric.");
+			sender.sendMessage(Static.getParkourString() + "Reward level needs to be numeric.");
 			return;
 		}
 
 		if (args[2] == null || args[2].trim().length() == 0) {
-			player.sendMessage(Static.getParkourString() + "Rank is not valid");
+			sender.sendMessage(Static.getParkourString() + "Rank is not valid");
 			return;
 		}
 
 		Parkour.getParkourConfig().getUsersData().set("ServerInfo.Levels." + args[1] + ".Rank", args[2]);
 		Parkour.getParkourConfig().saveUsers();
-		player.sendMessage(Static.getParkourString() + "Level " + args[1] + "'s rank was set to " + Utils.colour(args[2]));
+		sender.sendMessage(Static.getParkourString() + "Level " + args[1] + "'s rank was set to " + Utils.colour(args[2]));
 	}
 
 	/**
@@ -702,21 +703,21 @@ public class CourseMethods {
 	 * Parkoins are then spent in the store for unlockables.
 	 *
 	 * @param args
-	 * @param player
+	 * @param sender
 	 */
-	public static void setRewardParkoins(String[] args, Player player) {
+	public static void setRewardParkoins(String[] args, CommandSender sender) {
 		if (!CourseMethods.exist(args[1])) {
-			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
+			sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
 			return;
 		}
 		if (!Utils.isNumber(args[2])) {
-			player.sendMessage(Static.getParkourString() + "Parkoins reward needs to be numeric.");
+			sender.sendMessage(Static.getParkourString() + "Parkoins reward needs to be numeric.");
 			return;
 		}
 
 		Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".Parkoins", Integer.parseInt(args[2]));
 		Parkour.getParkourConfig().saveCourses();
-		player.sendMessage(Static.getParkourString() + args[1] + "'s parkoins reward was set to " + ChatColor.AQUA + args[2]);
+		sender.sendMessage(Static.getParkourString() + args[1] + "'s parkoins reward was set to " + ChatColor.AQUA + args[2]);
 	}
 
 	/**
@@ -900,19 +901,19 @@ public class CourseMethods {
 	 * Specify the material and the amount for the course, which will then be given to the player once they join.
 	 * 
 	 * @param args
-	 * @param player
+	 * @param sender
 	 */
-	public static void setJoinItem(String[] args, Player player) {
+	public static void setJoinItem(String[] args, CommandSender sender) {
 		if (!CourseMethods.exist(args[1])) {
-			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
+			sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
 			return;
 		}
 		if (Material.getMaterial(args[2].toUpperCase()) == null) {
-			player.sendMessage(Static.getParkourString() + "Invalid material: " + args[2].toUpperCase());
+			sender.sendMessage(Static.getParkourString() + "Invalid material: " + args[2].toUpperCase());
 			return;
 		}
 		if (!Utils.isNumber(args[3])) {
-			player.sendMessage(Static.getParkourString() + "Reward level needs to be numeric.");
+			sender.sendMessage(Static.getParkourString() + "Reward level needs to be numeric.");
 			return;
 		}
 
@@ -921,7 +922,7 @@ public class CourseMethods {
 		Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".JoinItemMaterial", args[2].toUpperCase());
 		Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".JoinItemAmount", amount);
 		Parkour.getParkourConfig().saveCourses();
-		player.sendMessage(Static.getParkourString() + "Join item for " + args[1] + " set to " + args[2] + " (" + amount + ")");
+		sender.sendMessage(Static.getParkourString() + "Join item for " + args[1] + " set to " + args[2] + " (" + amount + ")");
 	}
 
 	/**
@@ -983,7 +984,6 @@ public class CourseMethods {
 			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
 			return;
 		}
-		player.sendMessage(">> " + args[1]);
 		new ParkourConversation(player, ConversationType.PARKOURMODE).withCourseName(args[1].toLowerCase()).begin();
 	}
 

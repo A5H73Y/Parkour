@@ -4,7 +4,6 @@ import me.A5H73Y.Parkour.Conversation.ParkourConversation;
 import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Enums.ConversationType;
-import me.A5H73Y.Parkour.Other.Backup;
 import me.A5H73Y.Parkour.Other.Help;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
@@ -344,7 +343,7 @@ public class ParkourCommands implements CommandExecutor {
 							return false;
 						
 						Utils.addWhitelistedCommand(args, player);
-
+							
 						//Other commands//	
 					} else if (args[0].equalsIgnoreCase("about")) {
 						player.sendMessage(Static.getParkourString() + "Server is running Parkour " + ChatColor.GRAY + Static.getVersion());
@@ -404,24 +403,19 @@ public class ParkourCommands implements CommandExecutor {
 			}else if(sender instanceof ConsoleCommandSender){
 				if (args.length >= 1) {
 					if (args[0].equalsIgnoreCase("backup")) {
-						Backup.backupNow();
+						ParkourConsoleCommands.startBackup();
 
 					} else if (args[0].equalsIgnoreCase("setlevel")) {
 						ParkourConsoleCommands.setLevel(args);
 
 					} else if (args[0].equalsIgnoreCase("reload")) {
-						Parkour.getParkourConfig().reload();
-						Parkour.setSettings(new Settings());
-						Static.initiate();
-						Utils.log("Config reloaded!");
-
-					} else if (args[0].equalsIgnoreCase("cmds")) {
-						Utils.log("pa setlevel (player) (level) : Set a players Parkour Level");
-						Utils.log("pa backup : Create a backup zip of the Parkour config folder");
-						Utils.log("pa reload : Reload the Parkour config");
+						ParkourConsoleCommands.reloadConfig();
 						
 					} else if (args[0].equalsIgnoreCase("recreate")) {
-						DatabaseMethods.recreateAllCourses();
+						ParkourConsoleCommands.recreateCourses();
+
+					} else if (args[0].equalsIgnoreCase("cmds")) {
+						ParkourConsoleCommands.displayCommands();
 						
 					} else {
 						Utils.log("Unknown Command. Enter 'pa cmds' to display all commands.");

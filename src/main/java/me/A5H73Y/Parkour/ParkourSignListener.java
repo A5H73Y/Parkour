@@ -3,6 +3,7 @@ package me.A5H73Y.Parkour;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
+import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.SignMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
@@ -29,13 +30,13 @@ public class ParkourSignListener implements Listener {
 			event.setLine(0, ChatColor.BLACK + "[" + ChatColor.AQUA + "Parkour" + ChatColor.BLACK + "]");
 
 			if (event.getLine(1).equalsIgnoreCase("join") || event.getLine(1).equalsIgnoreCase("j")) {
-				sm.joinCourse(event, player);
+				sm.createJoinCourseSign(event, player);
 
 			} else if (event.getLine(1).equalsIgnoreCase("finish") || event.getLine(1).equalsIgnoreCase("f")) {
 				sm.createStandardCourseSign(event, player, "Finish");
 
 			} else if (event.getLine(1).equalsIgnoreCase("lobby") || event.getLine(1).equalsIgnoreCase("l")) {
-				sm.joinLobby(event, player);
+				sm.createLobbyJoinSign(event, player);
 
 			} else if (event.getLine(1).equalsIgnoreCase("leave") || event.getLine(1).equalsIgnoreCase("le")) {
 				sm.createStandardSign(event, player, "Leave");
@@ -45,6 +46,9 @@ public class ParkourSignListener implements Listener {
 
 			} else if (event.getLine(1).equalsIgnoreCase("stats") || event.getLine(1).equalsIgnoreCase("s")) {
 				sm.createStandardCourseSign(event, player, "Stats");
+				
+			} else if (event.getLine(1).equalsIgnoreCase("leaderboards") || event.getLine(1).equalsIgnoreCase("lb")) {
+				sm.createStandardCourseSign(event, player, "Leaderboards");
 				
 			} else if (event.getLine(1).equalsIgnoreCase("setpoint") || event.getLine(1).equalsIgnoreCase("sp")) {
 				//event.getBlock().breakNaturally();
@@ -177,6 +181,17 @@ public class ParkourSignListener implements Listener {
 		} else if (lines[1].equalsIgnoreCase("effect")) {
 			PlayerMethods.applyEffect(lines, event.getPlayer());
 
+		} else if (lines[1].equalsIgnoreCase("leaderboards")) {
+			if (lines[2].isEmpty() || !CourseMethods.exist(lines[2])){
+				event.getPlayer().sendMessage(Utils.getTranslation("Error.Unknown"));
+				
+			} else if (!Utils.delayPlayer(event.getPlayer(), 4, true)) {
+				
+			} else {
+				Utils.displayLeaderboard(event.getPlayer(), 
+						DatabaseMethods.getTopCourseResults(lines[2]));
+			}
+			
 		} else {
 			event.getPlayer().sendMessage(Utils.getTranslation("Error.UnknownSignCommand"));
 		}

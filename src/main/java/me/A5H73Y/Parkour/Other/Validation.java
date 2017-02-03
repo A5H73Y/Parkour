@@ -54,6 +54,7 @@ public class Validation {
 	 * @return
 	 */
 	public static boolean courseJoining(Player player, Course course){
+		
 		/* Player in wrong world */
 		if (Parkour.getSettings().isEnforceWorld()){
 			if (!player.getLocation().getWorld().getName().equals(course.getCheckpoint().getWorld())){

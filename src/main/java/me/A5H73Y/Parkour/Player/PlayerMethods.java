@@ -52,16 +52,14 @@ public class PlayerMethods {
 				Utils.sendFullTitle(player, Utils.getTranslation("Parkour.Join", false).replace("%COURSE%", course.getName()), 
 						Utils.getTranslation("Parkour.JoinLives", false).replace("%AMOUNT%", course.getMaxDeaths().toString()));
 			}
-
-			addPlayer(player.getName(), new ParkourSession(course));
-			setupPlayerMode(player);
 		} else {
 			removePlayer(player.getName());
-			addPlayer(player.getName(), new ParkourSession(course));
-			setupPlayerMode(player);
 			if (!Static.containsQuiet(player.getName()))
 				player.sendMessage(Utils.getTranslation("Parkour.TimeReset"));
 		}
+
+		addPlayer(player.getName(), new ParkourSession(course));
+		setupPlayerMode(player);
 	}
 
 	/**

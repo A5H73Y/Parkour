@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>me.A5H73Y</groupId>
+	<artifactId>Parkour</artifactId>
+	<version>4.0</version>
+	<name>Parkour</name>
+	<url>http://www.mcparkour.co.uk/</url>
+
+	<packaging>jar</packaging>
+
+	<repositories>
+		<repository>
+			<id>spigot-repo</id>
+			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+		</repository>
+		<repository>
+			<id>vault-repo</id>
+			<url>http://nexus.hc.to/content/repositories/pub_releases</url>
+		</repository>
+		<repository>
+			<id>horgeon-repo</id>
+			<url>https://repo.horgeon.fr/repository/maven-releases/</url>
+		</repository>
+	</repositories>
+	
+	<dependencies>
+		<!--Spigot API-->
+		<dependency>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot-api</artifactId>
+			<version>1.11.2-R0.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+		<!--Bukkit API-->
+		<dependency>
+			<groupId>org.bukkit</groupId>
+			<artifactId>bukkit</artifactId>
+			<version>1.11.2-R0.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+		<!--Vault API-->
+		<dependency>
+			<groupId>net.milkbowl.vault</groupId>
+			<artifactId>VaultAPI</artifactId>
+			<version>1.6</version>
+			<scope>provided</scope>
+		</dependency>
+		<!--Bountiful API-->
+		<dependency>
+			<groupId>com.connorlinfoot</groupId>
+			<artifactId>BountifulAPI</artifactId>
+			<version>1.6.1</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<!-- Unit Tests -->
+		<dependency>
+		  <groupId>junit</groupId>
+		  <artifactId>junit</artifactId>
+		  <version>4.11</version>
+		  <scope>test</scope>
+		</dependency>
+	  	<dependency>
+		    <groupId>org.powermock</groupId>
+		    <artifactId>powermock-module-junit4</artifactId>
+		    <version>1.6.6</version>
+	  		<type>jar</type>
+	  		<scope>test</scope>
+	  	</dependency>
+	  	<dependency>
+		    <groupId>org.mockito</groupId>
+		    <artifactId>mockito-all</artifactId>
+		    <version>1.10.19</version>
+		    <type>jar</type>
+	  		<scope>test</scope>
+	  	</dependency>
+	  	<dependency>
+		    <groupId>org.powermock</groupId>
+		    <artifactId>powermock-api-mockito</artifactId>
+		    <version>1.6.6</version>
+	  		<type>jar</type>
+	  		<scope>test</scope>
+	  	</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		<defaultGoal>clean compile resources:resources assembly:single</defaultGoal>
+
+		<resources>
+			<resource>
+				<targetPath>.</targetPath>
+				<filtering>true</filtering>
+				<directory>${basedir}/src/</directory>
+				<includes>
+					<include>plugin.yml</include>
+				</includes>
+			</resource>
+		</resources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.6.0</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
