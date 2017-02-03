@@ -22,5 +22,4 @@ Add a whole new element of fun to any server, highly competitive gameplay with r
 | [Vault](https://dev.bukkit.org/projects/vault) | Add economy support to the plugin, reward or penalise the player. |
 | [BountifulAPI](https://www.spigotmc.org/resources/bountifulapi-1-8-1-9-1-10.1394/) | Add title and actionbar support to the plugin. Works very nicely with the plugin. |
 
-
-
+[![Creative Commons License](https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-nc-sa/4.0/)
