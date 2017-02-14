@@ -1,9 +1,11 @@
 ![alt text](https://i.imgur.com/RCoFDJv.png "Parkour 4.0")
 
-# Parkour ![travis-ci](https://travis-ci.org/A5H73Y/Parkour.svg?branch=master)
+# Parkour 
 
 Parkour is the original, most powerful Parkour based plugin available! First released in November 2012 and has been updated since. Parkour 4.0 is now open source, allowing you to contribute ideas and enhancements or make your own spin on the plugin. <p />
-Add a whole new element of fun to any server, highly competitive gameplay with rewards and leaderboards.
+Add a whole new element of fun to any server, highly competitive gameplay with rewards and leaderboards.<p />
+[![travis-ci](https://travis-ci.org/A5H73Y/Parkour.svg?branch=master)](https://travis-ci.org/A5H73Y/Parkour/branches)
+[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Installation
 * Install [CraftBukkit](http://wiki.bukkit.org/Setting_up_a_server) or [Spigot](https://www.spigotmc.org/threads/buildtools-updates-information.42865/).
