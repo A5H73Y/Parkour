@@ -15,6 +15,13 @@ import me.A5H73Y.Parkour.Other.Question;
 
 import org.bukkit.entity.Player;
 
+/**
+ * This work is licensed under a Creative Commons 
+ * Attribution-NonCommercial-ShareAlike 4.0 International License. 
+ * https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ * @author A5H73Y
+ */
 public final class Static {
 
 	private static Map<String, Question> questions = new HashMap<String, Question>();
@@ -24,7 +31,7 @@ public final class Static {
 	private static List<String> hidden = new ArrayList<String>();
 	private static List<Challenge> challenges = new ArrayList<Challenge>();
 	private static Map<String, Long> delay = new HashMap<String, Long>();
-	
+
 	private static List<String> lobbyList;
 
 	private static boolean economy = false;
@@ -138,7 +145,7 @@ public final class Static {
 		if (challenges.contains(challenge))
 			challenges.remove(challenge);
 	}
-	
+
 	/**
 	 * Find the challenge the recipient player has recieved.
 	 * @param targetPlayer
@@ -151,7 +158,7 @@ public final class Static {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Get the current delay map
 	 * @return
@@ -159,7 +166,7 @@ public final class Static {
 	public final static Map<String, Long> getDelay(){
 		return delay;
 	}
-	
+
 	/**
 	 * Get list of Lobbys
 	 * I'm aware this looks like shit, but it's the best solution.
@@ -168,7 +175,7 @@ public final class Static {
 	public static List<String> getLobbyList() {
 		if (lobbyList != null)
 			return lobbyList;
-		
+
 		Set<String> lobbyListSet = Parkour.getParkourConfig().getConfig().getConfigurationSection("Lobby").getKeys(false);
 
 		lobbyListSet.remove("Set");
@@ -186,7 +193,7 @@ public final class Static {
 	public static List<String> getWhitelistedCommands() {
 		return new ArrayList<String>(Parkour.getParkourConfig().getConfig().getStringList("OnCourse.EnforceParkourCommands.Whitelist"));
 	}
-	
+
 	public static void addWhitelistedCommand(String command) {
 		List<String> commands = getWhitelistedCommands();
 		commands.add(command);

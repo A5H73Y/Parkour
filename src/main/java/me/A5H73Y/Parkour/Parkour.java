@@ -13,16 +13,23 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.huskehhh.mysql.Database;
 
+/**
+ * This work is licensed under a Creative Commons 
+ * Attribution-NonCommercial-ShareAlike 4.0 International License. 
+ * https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ * @author A5H73Y
+ */
 public class Parkour extends JavaPlugin {
 
-	private static JavaPlugin plugin;
+	private static Parkour instance;
 	private static Configurations config;
 	private static Database database;
 	private static Economy economy;
 	private static Settings settings;
 
 	public void onEnable() {
-		plugin = this;
+		instance = this;
 		StartPlugin.isFreshInstall();
 		config = new Configurations();
 		StartPlugin.run();
@@ -40,7 +47,7 @@ public class Parkour extends JavaPlugin {
 		getParkourConfig().reload();
 		database.closeConnection();
 		Utils.log("Disabled Parkour v" + Static.getVersion());
-		plugin = null;
+		instance = null;
 	}
 
 	public static void setDatabaseObj(Database databaseObj) {
@@ -56,8 +63,8 @@ public class Parkour extends JavaPlugin {
 	}
 
 	// Getters
-	public static JavaPlugin getPlugin() {
-		return plugin;
+	public static Parkour getPlugin() {
+		return instance;
 	}
 
 	public static Configurations getParkourConfig() {

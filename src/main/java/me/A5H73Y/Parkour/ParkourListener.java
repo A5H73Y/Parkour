@@ -41,6 +41,13 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
+/**
+ * This work is licensed under a Creative Commons 
+ * Attribution-NonCommercial-ShareAlike 4.0 International License. 
+ * https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ * @author A5H73Y
+ */
 public class ParkourListener implements Listener {
 
 	@EventHandler
@@ -61,20 +68,20 @@ public class ParkourListener implements Listener {
 			return;
 
 		ParkourSession session = PlayerMethods.getParkourSession(event.getPlayer().getName());
-		
+
 		if (session.getMode() == ParkourMode.NONE)
 			return;
 
 		if (session.getMode() == ParkourMode.DRUNK) {
 			if (event.getPlayer().hasPotionEffect(PotionEffectType.CONFUSION))
 				return;
-			
+
 			event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 10000, 1));
-		
+
 		} else if (session.getMode() == ParkourMode.DARKNESS) {
 			if (event.getPlayer().hasPotionEffect(PotionEffectType.BLINDNESS))
 				return;
-			
+
 			event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 10000, 1));
 		}
 	}
@@ -159,7 +166,7 @@ public class ParkourListener implements Listener {
 		String rank = Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + event.getPlayer().getName() + ".Rank");
 		rank = rank == null ? Utils.getTranslation("Event.DefaultRank") : rank;
 
-		event.setFormat(Utils.colour(Utils.getTranslation("Event.Chat", false).replace("%RANK%", rank).replace("%PLAYER%", event.getPlayer().getName()).replace("%MESSAGE%", event.getMessage())));
+		event.setFormat(Utils.colour(Utils.getTranslation("Event.Chat", false).replace("%RANK%", rank).replace("%PLAYER%", event.getPlayer().getDisplayName()).replace("%MESSAGE%", event.getMessage())));
 	}
 
 	@EventHandler
@@ -301,7 +308,7 @@ public class ParkourListener implements Listener {
 		if (PlayerMethods.isPlayerInTestmode(player.getName()))
 			return;
 
-		if (player.getInventory().getItemInMainHand().getType() == Parkour.getSettings().getSuicide()) {
+		if (player.getInventory().getItemInMainHand().getType() == Parkour.getSettings().getLastCheckpoint()) {
 			if (Utils.delayPlayer(player, 2, false))
 				PlayerMethods.playerDie(player);
 

@@ -9,6 +9,13 @@ import org.bukkit.conversations.MessagePrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 
+/**
+ * This work is licensed under a Creative Commons 
+ * Attribution-NonCommercial-ShareAlike 4.0 International License. 
+ * https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ * @author A5H73Y
+ */
 public class ParkourBlockConversation extends StringPrompt {
 
 	private String[] blockTypes = {"Death", "Finish", "Climb", "Launch", "Speed", "Repulse"};
@@ -35,13 +42,13 @@ public class ParkourBlockConversation extends StringPrompt {
 		@Override
 		public String getPromptText(ConversationContext context) {
 			int stage = getBlockStage(context);
-			
+
 			String blockType = blockTypes[stage];
-			
+
 			String material = Parkour.getParkourConfig().getConfig().getString("DefaultBlocks." + blockType + ".Material").toUpperCase();
 
 			return ChatColor.LIGHT_PURPLE + " What material do you want for the " + ChatColor.WHITE + blockType + ChatColor.LIGHT_PURPLE + " block?\n "
-					+ ChatColor.DARK_GRAY + "Default: " + ChatColor.GRAY + material;
+			+ ChatColor.DARK_GRAY + "Default: " + ChatColor.GRAY + material;
 		}
 
 		@Override

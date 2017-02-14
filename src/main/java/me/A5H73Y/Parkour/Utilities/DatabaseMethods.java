@@ -15,8 +15,15 @@ import org.bukkit.Bukkit;
 
 import com.huskehhh.mysql.Database;
 
+/**
+ * This work is licensed under a Creative Commons 
+ * Attribution-NonCommercial-ShareAlike 4.0 International License. 
+ * https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ * @author A5H73Y
+ */
 public class DatabaseMethods extends Database {
-	
+
 	public static DatabaseType type;
 
 	public static void setupTables() {
@@ -30,7 +37,7 @@ public class DatabaseMethods extends Database {
 						"CREATE TABLE IF NOT EXISTS vote (courseId INTEGER NOT NULL, player VARCHAR(20) NOT NULL, liked BIT NOT NULL, PRIMARY KEY (courseId, player), FOREIGN KEY (courseId) REFERENCES course(courseId) ON DELETE CASCADE ON UPDATE CASCADE); ";
 
 				Parkour.getDatabaseObj().updateSQL(tableScript);
-				
+
 			} else if (type.equals(DatabaseType.MySQL)) {
 				String tableScript = "CREATE TABLE IF NOT EXISTS course (courseId INTEGER PRIMARY KEY AUTO_INCREMENT, name VARCHAR(15) NOT NULL UNIQUE, author VARCHAR(20) NOT NULL, created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL); ";
 				Parkour.getDatabaseObj().updateSQL(tableScript);
@@ -310,7 +317,7 @@ public class DatabaseMethods extends Database {
 
 	public static List<TimeObject> getTopCourseResults(String courseName, int limit){
 		limit = limit < 1 ? 1 : limit > 20 ? 20 : limit;
-		
+
 		List<TimeObject> times = new ArrayList<TimeObject>();
 		try {
 			int courseId = getCourseId(courseName);
@@ -340,7 +347,7 @@ public class DatabaseMethods extends Database {
 
 	public static List<TimeObject> getTopPlayerCourseResults(String playerName, String courseName, int limit){
 		limit = limit < 1 ? 1 : limit > 20 ? 20 : limit;
-		
+
 		List<TimeObject> times = new ArrayList<TimeObject>();
 		try {
 			int courseId = getCourseId(courseName);

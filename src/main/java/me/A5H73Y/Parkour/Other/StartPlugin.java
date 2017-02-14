@@ -29,6 +29,13 @@ import com.huskehhh.mysql.Database;
 import com.huskehhh.mysql.mysql.MySQL;
 import com.huskehhh.mysql.sqlite.SQLite;
 
+/**
+ * This work is licensed under a Creative Commons 
+ * Attribution-NonCommercial-ShareAlike 4.0 International License. 
+ * https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ * @author A5H73Y
+ */
 public class StartPlugin {
 
 	static Plugin vault, bountifulAPI;
@@ -110,16 +117,13 @@ public class StartPlugin {
 					DatabaseMethods.insertCourse(courseName, Parkour.getParkourConfig().getCourseData().getString(courseName + ".Creator"));
 				}
 			}
-
-		} catch (ClassNotFoundException e) {
-			failedSQL(e);
-		} catch (SQLException e) {
-			failedSQL(e);
+		} catch (Exception ex) {
+			failedSQL(ex);
 		}
 	}
 
-	private static void failedSQL(Exception e) {
-		Utils.log("[SQL] Connection problem: " + e.getMessage(), 2);
+	private static void failedSQL(Exception ex) {
+		Utils.log("[SQL] Connection problem: " + ex.getMessage(), 2);
 		Utils.log("[SQL] Defaulting to SQLite...", 1);
 		Parkour.getParkourConfig().getConfig().set("MySQL.Use", false);
 		Parkour.getPlugin().saveConfig();
@@ -159,7 +163,7 @@ public class StartPlugin {
 	private static void setupBountifulAPI() {
 		if (!Parkour.getParkourConfig().getConfig().getBoolean("Other.BountifulAPI.Enabled"))
 			return;
-		
+
 		PluginManager pm = Parkour.getPlugin().getServer().getPluginManager();
 		bountifulAPI = pm.getPlugin("BountifulAPI");
 		if (bountifulAPI != null && bountifulAPI.isEnabled()) {

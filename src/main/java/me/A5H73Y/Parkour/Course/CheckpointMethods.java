@@ -15,6 +15,13 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+/**
+ * This work is licensed under a Creative Commons 
+ * Attribution-NonCommercial-ShareAlike 4.0 International License. 
+ * https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ * @author A5H73Y
+ */
 public class CheckpointMethods {
 
 	/**
@@ -61,8 +68,8 @@ public class CheckpointMethods {
 		String selected = PlayerMethods.getSelected(player.getName());
 		Location location = player.getLocation();
 		int checkpoint = args.length == 2 ? Integer.parseInt(args[1]) :
-				Parkour.getParkourConfig().getCourseData().getInt((selected + ".Points")) + 1;
-		
+			Parkour.getParkourConfig().getCourseData().getInt(selected + ".Points") + 1;
+
 		createCheckpointData(selected, location, checkpoint);
 
 		Block block = location.getBlock();

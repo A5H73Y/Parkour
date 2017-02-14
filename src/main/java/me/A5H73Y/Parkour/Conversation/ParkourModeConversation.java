@@ -8,10 +8,17 @@ import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.FixedSetPrompt;
 import org.bukkit.conversations.Prompt;
 
+/**
+ * This work is licensed under a Creative Commons 
+ * Attribution-NonCommercial-ShareAlike 4.0 International License. 
+ * https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ * @author A5H73Y
+ */
 public class ParkourModeConversation extends FixedSetPrompt {
 
 	ParkourModeConversation(){
-		super("freedom", "darkness", "drunk");
+		super("freedom", "darkness", "drunk", "none");
 	}
 
 	@Override
@@ -23,12 +30,12 @@ public class ParkourModeConversation extends FixedSetPrompt {
 	@Override
 	protected Prompt acceptValidatedInput(ConversationContext context, String choice) {
 		String courseName = (String) context.getSessionData("courseName");
-		
+
 		Parkour.getParkourConfig().getCourseData().set(courseName + ".Mode", choice);
 		Parkour.getParkourConfig().saveCourses();
-		
+
 		context.getForWhom().sendRawMessage(Utils.getTranslation("Parkour.SetMode").replace("%COURSE%", courseName).replace("%MODE%", choice));
-		
+
 		return Prompt.END_OF_CONVERSATION;
 	}
 }

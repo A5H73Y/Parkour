@@ -15,6 +15,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+/**
+ * This work is licensed under a Creative Commons 
+ * Attribution-NonCommercial-ShareAlike 4.0 International License. 
+ * https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ * @author A5H73Y
+ */
 public class Validation {
 
 	/**
@@ -54,7 +61,7 @@ public class Validation {
 	 * @return
 	 */
 	public static boolean courseJoining(Player player, Course course){
-		
+
 		/* Player in wrong world */
 		if (Parkour.getSettings().isEnforceWorld()){
 			if (!player.getLocation().getWorld().getName().equals(course.getCheckpoint().getWorld())){
@@ -251,9 +258,9 @@ public class Validation {
 			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", selected));
 			return false;
 		}
-		
+
 		int pointcount = Parkour.getParkourConfig().getCourseData().getInt((selected + ".Points")) + 1;
-	
+
 		if (!(args.length <= 1)) {
 			if (!Utils.isNumber(args[1])) {
 				player.sendMessage(Static.getParkourString() + "Checkpoint specified is not numeric!");
@@ -284,23 +291,23 @@ public class Validation {
 		courseName = courseName.toLowerCase();
 		FileConfiguration courseConfig = Parkour.getParkourConfig().getCourseData();
 		List<String> dependantCourses = new ArrayList<String>();
-		
+
 		for (String course : Static.getCourses()){
 			String linkedCourse = courseConfig.getString(course + ".LinkedCourse");
-			
+
 			if (linkedCourse != null && courseName.equals(linkedCourse)) {
 				dependantCourses.add(course);
 			}
 		}
-		
+
 		if (dependantCourses.size() > 0) {
 			player.sendMessage(Static.getParkourString() + "This course can not be deleted as there are dependant courses: " + dependantCourses);
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Validate a lobby before deleting it
 	 * @param string
@@ -311,20 +318,20 @@ public class Validation {
 		courseName = courseName.toLowerCase();
 		FileConfiguration courseConfig = Parkour.getParkourConfig().getCourseData();
 		List<String> dependantCourses = new ArrayList<String>();
-		
+
 		for (String course : Static.getCourses()){
 			String linkedCourse = courseConfig.getString(course + ".LinkedLobby");
-			
+
 			if (linkedCourse != null && courseName.equals(linkedCourse)) {
 				dependantCourses.add(course);
 			}
 		}
-		
+
 		if (dependantCourses.size() > 0) {
 			player.sendMessage(Static.getParkourString() + "This lobby can not be deleted as there are dependant courses: " + dependantCourses);
 			return false;
 		}
-		
+
 		return true;
 	}
 }

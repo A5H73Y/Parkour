@@ -13,15 +13,19 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.Checkpoint;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Enums.QuestionType;
+import me.A5H73Y.Parkour.Other.Constants;
 import me.A5H73Y.Parkour.Other.ParkourBlocks;
 import me.A5H73Y.Parkour.Other.Question;
 import me.A5H73Y.Parkour.Other.TimeObject;
 import me.A5H73Y.Parkour.Other.Validation;
+import me.A5H73Y.Parkour.Player.ParkourSession;
+import me.A5H73Y.Parkour.Player.PlayerMethods;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,9 +39,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import com.connorlinfoot.bountifulapi.BountifulAPI;
 
+
+/**
+ * This work is licensed under a Creative Commons 
+ * Attribution-NonCommercial-ShareAlike 4.0 International License. 
+ * https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ * @author A5H73Y
+ */
 public final class Utils {
 
 	/**
@@ -49,6 +63,9 @@ public final class Utils {
 	 * @return String of appropriate translation 
 	 */
 	public final static String getTranslation(String string, boolean prefix) {
+		if (string == null || string.isEmpty())
+			return "Invalid translation.";
+
 		String translated = Parkour.getParkourConfig().getStringData().getString(string);
 		translated = translated != null ? colour(translated) : "String not found: " + string;
 		return prefix ? Static.getParkourString().concat(translated) : translated;
@@ -122,7 +139,7 @@ public final class Utils {
 		player.sendMessage(Utils.getTranslation("NoPermission").replace("%PERMISSION%", permissionBranch + "." + permission));
 		return false;
 	}
-	
+
 	/**
 	 * Return whether or not the player has a specific sign permission.
 	 * The sign will be broken if they don't have permission.
@@ -541,7 +558,7 @@ public final class Utils {
 				player.sendMessage(Utils.getTranslation("Error.Unknown"));
 				return;
 			}
-			
+
 			if (!Validation.deleteCourse(args[2], player))
 				return;
 
@@ -555,7 +572,7 @@ public final class Utils {
 				player.sendMessage(Utils.getTranslation("Error.Unknown"));
 				return;
 			}
-			
+
 			int checkpoints = Parkour.getParkourConfig().getCourseData().getInt(args[2].toLowerCase() + ".Points");
 			// if it has no checkpoints
 			if (checkpoints <= 0) {
@@ -573,7 +590,7 @@ public final class Utils {
 				player.sendMessage(Static.getParkourString() + "This lobby does not exist!");
 				return;
 			}
-			
+
 			if (!Validation.deleteLobby(args[2], player))
 				return;
 
@@ -661,7 +678,7 @@ public final class Utils {
 	}
 
 	/**
-	 * Get a list of possible ParkourKits
+	 * Get a list of possible ParkourBlocks
 	 * @return
 	 */
 	public static List<String> getParkourBlockList() {
@@ -731,8 +748,59 @@ public final class Utils {
 			player.sendMessage(Static.getParkourString() + "This command is already whitelisted!");
 			return;
 		}
-		
+
 		Static.addWhitelistedCommand(args[1].toLowerCase());
 		player.sendMessage(Static.getParkourString() + "Command " + ChatColor.AQUA + args[1] + ChatColor.WHITE + " added to the whitelisted commands!");
+	}
+
+	/**
+	 * Convert the total number of seconds to a HH:MM:SS format.
+	 * This is used for the live time display on a course.
+	 * @param totalSeconds
+	 * @return String
+	 */
+	public static String convertSecondsToTime(int totalSeconds) {
+		int hours = totalSeconds / 3600;
+		int minutes = (totalSeconds % 3600) / 60;
+		int seconds = totalSeconds % 60;
+
+		return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+	}
+
+	/**
+	 * Display ParkourBlocks
+	 * Can either display all the ParkourBlocks available
+	 * Or specify which ParkourBlocks you want to see and which blocks are used
+	 * @param args
+	 * @param sender
+	 */
+	public static void listParkourBlocks(String[] args, CommandSender sender) {
+		if (!Parkour.getParkourConfig().getConfig().contains("ParkourBlocks.")) {
+			sender.sendMessage(Static.getParkourString() + "No ParkourBlocks created.");
+			return;
+		}
+		
+		List<String> parkourBlocks = getParkourBlockList();
+		
+		if (args.length == 2) {
+			if (!parkourBlocks.contains(args[1])) {
+				sender.sendMessage(Static.getParkourString() + "This ParkourBlocks set does not exist!");
+				return;
+			}
+			
+			sender.sendMessage(Utils.getStandardHeading("ParkourBlock: " + args[1]));
+			Set<String> types = Parkour.getParkourConfig().getConfig().getConfigurationSection("ParkourBlocks." + args[1]).getKeys(false);
+			
+			for (String type : types) {
+				String material = Parkour.getParkourConfig().getConfig().getString("ParkourBlocks." + args[1] + "." + type + ".Material");
+				sender.sendMessage(type + ": " + ChatColor.GRAY + material);
+			}
+			
+		} else {
+			sender.sendMessage(Utils.getStandardHeading(parkourBlocks.size() + " ParkourBlocks found"));
+			for (String parkourBlock : parkourBlocks) {
+				sender.sendMessage("* " + parkourBlock);
+			}
+		}
 	}
 }

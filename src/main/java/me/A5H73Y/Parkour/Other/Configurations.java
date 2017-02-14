@@ -12,6 +12,13 @@ import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+/**
+ * This work is licensed under a Creative Commons 
+ * Attribution-NonCommercial-ShareAlike 4.0 International License. 
+ * https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ * @author A5H73Y
+ */
 public class Configurations {
 
 	private File dataFolder, courseFile, stringFile, usersFile, invFile, checkFile, econFile;
@@ -239,7 +246,7 @@ public class Configurations {
 	private void saveStrings() {
 		try{
 			stringData.addDefault("Parkour.Prefix", "&0[&bParkour&0] &f");
-			
+
 			stringData.addDefault("Event.Join", "This server uses &bParkour &3%VERSION%");
 			stringData.addDefault("Event.Checkpoint", "Checkpoint set to: ");
 			stringData.addDefault("Event.AllCheckpoints", "All checkpoints achieved!");
@@ -276,7 +283,7 @@ public class Configurations {
 			stringData.addDefault("Parkour.RewardLevel", "Your level has been set to &b%LEVEL% &ffor completing &b%COURSE%&f!");
 			stringData.addDefault("Parkour.RewardRank", "Your rank has been set to %RANK%");
 			stringData.addDefault("Parkour.SetMode", "Mode for &b%COURSE%&f set to &b%MODE%");
-			
+
 			stringData.addDefault("Error.NotOnCourse", "You are not on this course!");
 			stringData.addDefault("Error.TooMany", "Too many arguments!");
 			stringData.addDefault("Error.TooLittle", "Not enough arguments!");
@@ -304,7 +311,7 @@ public class Configurations {
 			stringData.addDefault("Help.Command", "&7/pa help &9%COMMAND% &0: &7To learn more about this command.");
 			stringData.addDefault("Help.Commands", "&3/pa &bcmds &8: &fTo display the Parkour commands menu.");
 
-			stringData.addDefault("Other.Item_Suicide", "&7SHIFT + &6Right click to commit suicide");
+			stringData.addDefault("Other.Item_LastCheckpoint", "&7SHIFT + &6Right click to go back to last checkpoint");
 			stringData.addDefault("Other.Item_HideAll", "&7SHIFT + &6Right click to toggle visibility");
 			stringData.addDefault("Other.Item_Leave", "&7SHIFT + &6Right click to leave course");
 			stringData.addDefault("Other.Item_Book", "&6View course stats");
@@ -332,7 +339,7 @@ public class Configurations {
 			stringData.addDefault("Mode.Freedom.JoinText", "&6Freedom Mode &f- Right click: &2Save&f, Left click: &5Load");
 			stringData.addDefault("Mode.Freedom.Save", "Position saved");
 			stringData.addDefault("Mode.Freedom.Load", "Position loaded");
-			
+
 			stringData.addDefault("Mode.Drunk.JoinText", "You feel strange...");
 			stringData.addDefault("Mode.Darkness.JoinText", "It suddenly becomes dark...");
 
@@ -380,7 +387,7 @@ public class Configurations {
 		config.addDefault("OnJoin.EnforceFinished", true);
 		config.addDefault("OnJoin.AllowViaCommand", true);
 		config.addDefault("OnJoin.FillHealth", true);
-		config.addDefault("OnJoin.Item.Suicide.Material", "ARROW");
+		config.addDefault("OnJoin.Item.LastCheckpoint.Material", "ARROW");
 		config.addDefault("OnJoin.Item.HideAll.Material", "BONE");
 		config.addDefault("OnJoin.Item.Leave.Material", "SAPLING");
 
@@ -391,12 +398,11 @@ public class Configurations {
 		config.addDefault("OnCourse.EnforceParkourSigns", true);
 		config.addDefault("OnCourse.DisablePlayerDamage", false);
 		config.addDefault("OnCourse.MaxFallTicks", 80);
-		config.addDefault("OnCourse.AllowTrails", true);
+		config.addDefault("OnCourse.AllowTrails", false);
 		config.addDefault("OnCourse.DisableItemDrop", false); 
-		config.addDefault("OnCourse.LiveLeaderboard.Enabled", true);
-		config.addDefault("OnCourse.LiveLeaderboard.Type", 1);
 		config.addDefault("OnCourse.PreventPlateStick", true);
 		config.addDefault("OnCourse.AttemptLessChecks", false);
+		config.addDefault("OnCourse.DisplayLiveTime", false);
 
 		config.addDefault("OnFinish.EnforceCompletion", true);
 		config.addDefault("OnFinish.TeleportToLobby", true);
@@ -419,11 +425,11 @@ public class Configurations {
 		config.addDefault("ParkourModes.Spectate.OnStart.NotifyPlayer", true);
 		config.addDefault("ParkourModes.Spectate.OnStop.RemainInvisible", false);
 		config.addDefault("ParkourModes.Spectate.OnStop.TeleportToLobby", true);
-		
+
 		config.addDefault("DisplayTitle.JoinCourse", true);
 		config.addDefault("DisplayTitle.Checkpoint", true);
 		config.addDefault("DisplayTitle.RewardLevel", true);
-		
+
 		config.addDefault("Other.Economy.Enabled", true);
 		config.addDefault("Other.BountifulAPI.Enabled", true);
 		config.addDefault("Other.CheckForUpdates", true);

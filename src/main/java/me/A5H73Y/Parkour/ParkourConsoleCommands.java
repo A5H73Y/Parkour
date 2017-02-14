@@ -9,6 +9,13 @@ import me.A5H73Y.Parkour.Utilities.Settings;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
+/**
+ * This work is licensed under a Creative Commons 
+ * Attribution-NonCommercial-ShareAlike 4.0 International License. 
+ * https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ * @author A5H73Y
+ */
 public class ParkourConsoleCommands {
 
 	public static void setLevel(String[] args){
@@ -81,6 +88,10 @@ public class ParkourConsoleCommands {
 
 	public static void displayList(String[] args, CommandSender sender) {
 		CourseMethods.displayList(args, sender);
+	}
+	
+	public static void displayParkourBlocks(String[] args, CommandSender sender) {
+		Utils.listParkourBlocks(args, sender);
 	}
 
 	public static void displayCommands() {

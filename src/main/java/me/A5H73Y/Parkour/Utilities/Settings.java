@@ -7,6 +7,13 @@ import me.A5H73Y.Parkour.Parkour;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
+/**
+ * This work is licensed under a Creative Commons 
+ * Attribution-NonCommercial-ShareAlike 4.0 International License. 
+ * https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ * @author A5H73Y
+ */
 public class Settings {
 
 	private boolean commandPermission, chatPrefix, disablePlayerDamage, resetOnLeave, enforceWorld, disableCommands, allowTrails, signPermission, attemptLessChecks;
@@ -15,7 +22,7 @@ public class Settings {
 	private boolean displayWelcome;
 
 	//Materials
-	private Material suicide, hideall, leave;
+	private Material lastCheckpoint, hideall, leave;
 
 	//Lists
 	private List<String> cmdWhitelist; 
@@ -41,7 +48,7 @@ public class Settings {
 		signPermission = config.getBoolean("Other.Parkour.SignPermissions");
 		attemptLessChecks = config.getBoolean("OnCourse.AttemptLessChecks");
 
-		suicide = Material.getMaterial(config.getString("OnJoin.Item.Suicide.Material"));
+		lastCheckpoint = Material.getMaterial(config.getString("OnJoin.Item.LastCheckpoint.Material"));
 		hideall = Material.getMaterial(config.getString("OnJoin.Item.HideAll.Material"));
 		leave = Material.getMaterial(config.getString("OnJoin.Item.Leave.Material"));
 
@@ -96,8 +103,8 @@ public class Settings {
 		return displayWelcome;
 	}
 
-	public Material getSuicide() {
-		return suicide;
+	public Material getLastCheckpoint() {
+		return lastCheckpoint;
 	}
 
 	public Material getHideall() {

@@ -14,16 +14,23 @@ import org.bukkit.conversations.NullConversationPrefix;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 
+/**
+ * This work is licensed under a Creative Commons 
+ * Attribution-NonCommercial-ShareAlike 4.0 International License. 
+ * https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ * @author A5H73Y
+ */
 public class ParkourConversation implements ConversationAbandonedListener {
 
 	private ConversationFactory conversationFactory;
-	
+
 	private String courseName;
 	private Player player;
 
 	public ParkourConversation(Player player, ConversationType conversationType){
 		this.player = player;
-		
+
 		conversationFactory = new ConversationFactory(Parkour.getPlugin())
 		.withModality(true)
 		.withEscapeSequence("cancel")
@@ -34,7 +41,7 @@ public class ParkourConversation implements ConversationAbandonedListener {
 		.addConversationAbandonedListener(this)
 		.withFirstPrompt(getEntryPrompt(conversationType, player));
 	}
-	
+
 	private Prompt getEntryPrompt(ConversationType type, Player player){
 		switch (type){
 		case PARKOURBLOCKS:
@@ -64,18 +71,18 @@ public class ParkourConversation implements ConversationAbandonedListener {
 	public static void sendErrorMessage(ConversationContext context, String message) {
 		context.getForWhom().sendRawMessage(ChatColor.RED + message + ". Please try again...");
 	}
-	
+
 	public ParkourConversation withCourseName(String courseName) {
 		this.courseName = courseName;
 		return this;
 	}
-	
+
 	public void begin() {
 		Conversation convo = conversationFactory.buildConversation(player);
 		convo.getContext().setSessionData("playerName", player.getName());
 		if (courseName != null)
 			convo.getContext().setSessionData("courseName", courseName);
-		
+
 		convo.begin();
 	}
 }

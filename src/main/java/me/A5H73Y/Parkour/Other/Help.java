@@ -10,6 +10,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+/**
+ * This work is licensed under a Creative Commons 
+ * Attribution-NonCommercial-ShareAlike 4.0 International License. 
+ * https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ * @author A5H73Y
+ */
 public final class Help {
 
 	/**
@@ -88,7 +95,7 @@ public final class Help {
 		} else if (args[1].equalsIgnoreCase("done")){	
 			displayHelpMessage(player, "Finish editing a course", "/pa done", null,
 					" Finish editing the course you have selected.");
-			
+
 		} else if (args[1].equalsIgnoreCase("setstart")){	
 			displayHelpMessage(player, "Set start of a course", "/pa setstart", null,
 					" The start of the selected course will be overwritten to your current position, rather than having to recreate the course.");
@@ -104,7 +111,7 @@ public final class Help {
 		} else if (args[1].equalsIgnoreCase("finish")){	
 			displayHelpMessage(player, "Set Course status to Finish", "/pa finish", null,
 					" When you first create a course, it will not be joinable until it has been set to finished by its creator (configurable). The command will set the status to 'ready' to join and will place the default finish block to where you are stood.");
-		
+
 		} else if (args[1].equalsIgnoreCase("prize")){	
 			displayHelpMessage(player, "Configure course prize", "/pa prize (course)", "/pa prize Example",
 					" A conversation will be started to allow you to setup a course prize exactly how you want, without having to enter long ugly commands.");
@@ -128,87 +135,91 @@ public final class Help {
 		} else if (args[1].equalsIgnoreCase("tpc")){	
 			displayHelpMessage(player, "Teleport to Course checkpoint", "/pa tp (course) (point)", "/pa tpc Example 2",
 					" Teleport to the chosen checkpoint on the course. This will NOT activate 'Parkour Mode', but simply move you to the chosen checkpoint on the course.");
-			
+
 		} else if (args[1].equalsIgnoreCase("link")){	
 			displayHelpMessage(player, "Link the course after completion", "/pa link (argument) (argument)", "/pa link course Level2",
 					" You are now able to link the selected course to either a custom lobby, or to join a different course straight after you complete the selected course. For example if you selected a course '/pa select Level1', you would be able to make the player join Level2 after they complete Level1 by doing '/pa link course Level2', or if you wish for them to teleport to a custom lobby '/pa link lobby Admin'.");
-			
+
 		} else if (args[1].equalsIgnoreCase("linkPB")){	
 			displayHelpMessage(player, "Link a course to ParkourBlocks", "/pa linkPB (course) (PB)", "/pa link Example FireKit",
 					" Each course has the ability to have a unique set of ParkourBlocks, created using the '/pa createPB' command. Once linked, each type of ParkourBlock for that course will be configured to what you set.");
-			
+
+		} else if (args[1].equalsIgnoreCase("listPB")){
+			displayHelpMessage(player, "List ParkourBlock information", "/pa listPB [PB]", "/pa listPB FireKit",
+					" Display all the ParkourBlocks available by using the command without the parameter. If you want to see what each ParkourBlocks is, you can specify its name and each type of block will be displayed.");
+
 		} else if (args[1].equalsIgnoreCase("setmode")){
 			displayHelpMessage(player, "Set Mode for course", "/pa setmode (course) (mode)", "/pa setmode Example Freedom",
 					" By default, a course does not have a Parkour Mode attached. Each mode can affect the interaction with the course, an example being the 'Freedom' mode allows you to create and load your own checkpoints.");
-			
+
 		} else if (args[1].equalsIgnoreCase("setjoinitem")){
 			displayHelpMessage(player, "Set Join Item for course", "/pa setjoinitem (course) (material) (amount)", "/pa setjoinitem Elytra 1",
 					" By default, a course will give you the default join items (configurable). You can provide the player with an additional specified item when they join a course, such as Elytra or Ender pearls for a certain types of courses etc.");
-			
+
 		} else if (args[1].equalsIgnoreCase("setminlevel")){	
 			displayHelpMessage(player, "Set minimum required level for course", "/pa setminlevel (course) (level)", "/pa setminlevel Example 5",
 					" By default, a course does not have a minimum level requirement to join. However, if you want to enforce the progression of Parkour courses, you can require the player to have a Parkour level greater than or equal to the minimum level specified.");
-			
+
 		} else if (args[1].equalsIgnoreCase("setmaxdeath")){	
 			displayHelpMessage(player, "Set maximum amount of deaths for course", "/pa setmaxdeath (course) (amount)", "/pa setmaxdeath Example 5",
 					" By default, a course does not have a maximum amount of deaths. However, you can enforce a limit on the amount of deaths the player can accumulate before being forced to leave the course.");
-			
+
 		} else if (args[1].equalsIgnoreCase("rewardonce")){	
 			displayHelpMessage(player, "Reward only once for that course", "/pa rewardonce (course)", "/pa rewardonce Example",
 					" Prevent a player from rewarding themselves multiple times for completing a course, by only allowing them to claim the reward the first time they complete the course.");
-			
+
 		} else if (args[1].equalsIgnoreCase("rewardlevel")){	
 			displayHelpMessage(player, "Reward a Parkour Level", "/pa rewardlevel (course) (level)", "/pa rewardlevel Example 5",
 					" You can reward a player with a Parkour level on the completion of a course, which will allow them to unlock new courses which would have a minimum level requirement to join. Their level is not overwritten if their current level is higher than the reward level.");
-			
+
 		} else if (args[1].equalsIgnoreCase("rewardrank")){	
 			displayHelpMessage(player, "Reward a Parkour Rank", "/pa rewardrank (level) (rank)", "/pa rewardrank 4 &4Pro",
 					" You can link a Parkour level to a rank, which would display beside their name if you enable the Parkour Chat Prefix setting. This would allow you to differentiate each Parkour level a player is, based on their rank. ");
-			
+
 		} else if (args[1].equalsIgnoreCase("rewardparkoins")){	
 			displayHelpMessage(player, "Reward Parkoins", "/pa rewardparkoins (course) (amount)", "/pa rewardparkoins Example 10",
 					" You can reward a player with Parkoins for completing a course. These can be spent in the store to unlock additional content which would be unobtainable without the minimum amount of Parkoins required.");
-			
+
 		} else if (args[1].equalsIgnoreCase("recreate")){	
 			displayHelpMessage(player, "Recreate course database", "/pa recreate", null,
 					" Used to fix the database if there are missing courses that haven't been synchronised with the server.");
-			
+
 		} else if (args[1].equalsIgnoreCase("delete")){	
 			displayHelpMessage(player, "Delete a course / lobby", "/pa delete (course / lobby) (argument)", "/pa delete course Example",
 					" You can delete a course, which will remove all information stored on the server about the course, as well as remove all references from the database. You can delete a lobby from the server. The operation will have to be confirmed or cancelled before the change is made.");
-			
+
 		} else if (args[1].equalsIgnoreCase("reset")){	
 			displayHelpMessage(player, "Reset a course / player", "/pa reset (course / player) (argument)", "/pa reset player A5H73Y",
 					" Resetting a course will delete all the statistics stored, which includes leaderboards and various parkour attributes. This will NOT affect the spawn / checkpoints. Resetting a player will delete all their times across all courses and delete all various parkour attributes. The operation will have to be confirmed or cancelled before the change is made.");
-		
+
 		} else if (args[1].equalsIgnoreCase("whitelist")){	
 			displayHelpMessage(player, "Whitelist a command", "/pa whitelist (command)", "/pa whitelist help",
 					" Be default, non-Parkour commands are disabled during the course unless you whitelist a command that the players are allowed to use.");
-			
+
 		} else if (args[1].equalsIgnoreCase("economy")){	
 			displayHelpMessage(player, "Display Economy information", "/pa economy (info / recreate / setprize / setfee)", "/pa economy info",
 					" If you have linked Parkour to a compatible Economy plugin, you can perform commands to set the fee to join courses, the prize for completing courses and recreate all the courses to synchronise with the config.");
-			
+
 		} else if (args[1].equalsIgnoreCase("createPB")){	
 			displayHelpMessage(player, "Create Parkour Blocks", "/pa createPB", null,
 					" A conversation will be started to allow you to create a new set of Parkour Blocks, which can be linked to a course to override the default blocks. Each block must be a valid material and you are limited to 1 of each type. You can use 'Default' to use the material from the Default Parkour blocks.");
-			
+
 		} else if (args[1].equalsIgnoreCase("validatePB")){	
 			displayHelpMessage(player, "Validate Parkour Blocks", "/pa validatePB [kit]", "/pa validatePB FireKit",
 					" If you have manually created Parkour Blocks, or something has gone wrong. You can validate a set of Parkour blocks to find out where the problem has originated.");
-			
+
 		} else if (args[1].equalsIgnoreCase("sql")){	
 			displayHelpMessage(player, "Display SQL information", "/pa SQL", null,
 					" Display the SQL information of the server connected to the database.");
-			
+
 		} else if (args[1].equalsIgnoreCase("settings")){	
 			displayHelpMessage(player, "Display Parkour Settings", "/pa settings", null,
 					" Display the main Parkour settings for the server.");
-			
+
 		} else if (args[1].equalsIgnoreCase("request")){	
 			displayHelpMessage(player, "Request a Feature / Report a Bug", "/pa request", null,
 					" Have an idea for the plugin or found a bug you want to report? Click the link provided to navigate to the Parkour forums section.");
-			
+
 		} else {
 			player.sendMessage(Static.getParkourString() + "Unrecognised command. Please find all available commands using '/pa cmds'");
 		}
@@ -366,6 +377,7 @@ public final class Help {
 		displayCommandUsage(player, "tp / tpc", "(course)", "Teleport to course / checkpoint");
 		displayCommandUsage(player, "link", "(argument) (argument)", "Link a course");
 		displayCommandUsage(player, "linkPB", "(course) (PB)", "Link ParkourBlocks");
+		displayCommandUsage(player, "listPB", "[PB]", "Display ParkourBlocks info");
 		displayCommandUsage(player, "setmode", "(course) (mode)", "Set Parkour Mode");
 		displayCommandUsage(player, "setjoinitem", "(course) (material) (amount)", "Join item");
 		displayCommandUsage(player, "setminlevel", "(course) (level)", "Set course minimum level");
@@ -507,21 +519,21 @@ public final class Help {
 		player.sendMessage("Connected: " + (Parkour.getDatabaseObj().getConnection() != null));
 		//TODO show path to SQLite.
 	}
-	
+
 	/**
 	 * Display all relevant Parkour settings
 	 * @param player
 	 */
 	public static void displaySettings(Player player){
 		player.sendMessage(Utils.getStandardHeading("Parkour Settings"));
-		
+
 		player.sendMessage("Version: " + ChatColor.AQUA + Static.getVersion());
 		player.sendMessage("DevBuild: " + ChatColor.AQUA + Static.getDevBuild());
 		player.sendMessage("Economy: " + ChatColor.AQUA + Static.getEconomy());
 		player.sendMessage("BountifulAPI: " + ChatColor.AQUA + Static.getBountifulAPI());
 		player.sendMessage("Disable Commands: " + ChatColor.AQUA + Parkour.getSettings().isDisableCommands());
 		player.sendMessage("Enforce world: " + ChatColor.AQUA + Parkour.getSettings().isEnforceWorld());
-		
+
 		player.sendMessage(ChatColor.GRAY + "If you want more settings displayed, please ask");
 	}
 

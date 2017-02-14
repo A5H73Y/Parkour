@@ -1,8 +1,13 @@
 package me.A5H73Y.Parkour.Listeners;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.ParkourListener;
+import me.A5H73Y.Parkour.Player.PlayerMethods;
+import me.A5H73Y.Parkour.Utilities.Settings;
+import me.A5H73Y.Parkour.Utilities.Static;
+import me.A5H73Y.Parkour.Utilities.Utils;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -13,7 +18,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(PlayerJoinEvent.class)
+@PrepareForTest({PlayerJoinEvent.class, ParkourListener.class, Parkour.class, Settings.class, Utils.class, Static.class, PlayerMethods.class})
 public class OnPlayerJoinTest {
 	
 	Player mockPlayer;
@@ -21,7 +26,6 @@ public class OnPlayerJoinTest {
 	
 	@Before
 	public void setup() {
-		
 		mockPlayer = mock(Player.class);
 		when(mockPlayer.getName()).thenReturn(PLAYER_NAME);
 	}
@@ -49,8 +53,6 @@ public class OnPlayerJoinTest {
 	
 	@Test
     public void onPlayerJoin_NoWelcomeMessage_NotPlaying() {
-		assertEquals("Player name", mockPlayer.getName(), PLAYER_NAME);
-		
 		/*
 		PlayerJoinEvent event = mock(PlayerJoinEvent.class);
 		ParkourListener listener = new ParkourListener();
@@ -58,12 +60,9 @@ public class OnPlayerJoinTest {
 		when(event.getPlayer()).thenReturn(mockPlayer);
 		when(Parkour.getSettings().isDisplayWelcome()).thenReturn(false);
 		when(PlayerMethods.isPlaying(PLAYER_NAME)).thenReturn(false);
-		when(Utils.getTranslation(anyString())).thenReturn(anyString());
 		
 		listener.onPlayerJoin(event);
-		
-		
-		assertEquals("player name", mockPlayer.getName(), "A5H73Y");	
 		*/
+		
 	}
 }

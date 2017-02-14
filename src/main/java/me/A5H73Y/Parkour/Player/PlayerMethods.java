@@ -28,6 +28,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+/**
+ * This work is licensed under a Creative Commons 
+ * Attribution-NonCommercial-ShareAlike 4.0 International License. 
+ * https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ * @author A5H73Y
+ */
 public class PlayerMethods {
 
 	private static HashMap<String, ParkourSession> parkourPlayers = new HashMap<String, ParkourSession>();
@@ -60,6 +67,7 @@ public class PlayerMethods {
 
 		addPlayer(player.getName(), new ParkourSession(course));
 		setupPlayerMode(player);
+		getParkourSession(player.getName()).startVisualTimer(player);
 	}
 
 	/**
@@ -79,8 +87,8 @@ public class PlayerMethods {
 
 		removePlayer(player.getName());
 		preparePlayer(player, Parkour.getParkourConfig().getConfig().getInt("OnFinish.SetGamemode"));
-		CourseMethods.joinLobby(null, player);
 		loadInventory(player);
+		CourseMethods.joinLobby(null, player);
 
 		if (Static.containsHidden(player.getName()))
 			toggleVisibility(player, true);
@@ -178,11 +186,12 @@ public class PlayerMethods {
 			Long delay = Parkour.getParkourConfig().getConfig().getLong("OnFinish.TeleportDelay");
 
 			if (delay > 0) {
-				Bukkit.getScheduler().scheduleSyncDelayedTask(Parkour.getPlugin(), new Runnable() {
+				int taskId = Bukkit.getScheduler().scheduleSyncDelayedTask(Parkour.getPlugin(), new Runnable() {
 					public void run() {
 						courseCompleteLocation(player, courseName);
 					}
 				}, delay);
+				Bukkit.getScheduler().cancelTask(taskId);
 
 			} else {
 				courseCompleteLocation(player, courseName);
@@ -229,7 +238,11 @@ public class PlayerMethods {
 	 * @param session
 	 */
 	private static void displayFinishMessage(Player player, ParkourSession session) {
-		String finishBroadcast = Static.getParkourString() + Utils.colour(Parkour.getParkourConfig().getStringData().getString("Parkour.FinishBroadcast").replace("%PLAYER%", player.getName()).replace("%COURSE%", session.getCourse().getName()).replace("%DEATHS%", String.valueOf(session.getDeaths())).replace("%TIME%", session.displayTime()));
+		String finishBroadcast = Utils.getTranslation("Parkour.FinishBroadcast")
+				.replace("%PLAYER%", player.getName())
+				.replace("%COURSE%", session.getCourse().getName())
+				.replace("%DEATHS%", String.valueOf(session.getDeaths()))
+				.replace("%TIME%", session.displayTime());
 
 		switch (Parkour.getParkourConfig().getConfig().getInt("OnFinish.BroadcastLevel")) {
 		case 3:
@@ -627,8 +640,8 @@ public class PlayerMethods {
 		if (Parkour.getParkourConfig().getConfig().getBoolean("OnJoin.FillHealth"))
 			player.setFoodLevel(20);
 
-		if (Parkour.getSettings().getSuicide() != null)
-			player.getInventory().addItem(Utils.getItemStack("Other.Item_Suicide", Parkour.getSettings().getSuicide()));
+		if (Parkour.getSettings().getLastCheckpoint() != null)
+			player.getInventory().addItem(Utils.getItemStack("Other.Item_LastCheckpoint", Parkour.getSettings().getLastCheckpoint()));
 
 		if (Parkour.getSettings().getHideall() != null)
 			player.getInventory().addItem(Utils.getItemStack("Other.Item_HideAll", Parkour.getSettings().getHideall()));

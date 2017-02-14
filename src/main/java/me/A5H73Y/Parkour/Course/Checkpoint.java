@@ -5,6 +5,13 @@ import java.io.Serializable;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
+/**
+ * This work is licensed under a Creative Commons 
+ * Attribution-NonCommercial-ShareAlike 4.0 International License. 
+ * https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ * @author A5H73Y
+ */
 public class Checkpoint implements Serializable {
 
 	private static final long serialVersionUID = 1L;

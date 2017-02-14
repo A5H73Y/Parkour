@@ -25,6 +25,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+/**
+ * This work is licensed under a Creative Commons 
+ * Attribution-NonCommercial-ShareAlike 4.0 International License. 
+ * https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ * @author A5H73Y
+ */
 public class CourseMethods {
 
 	/**
@@ -275,7 +282,6 @@ public class CourseMethods {
 		if (!Validation.lobbyJoiningSet(player))
 			return;
 
-
 		boolean customLobby = (args != null && args.length > 1);
 
 		// variables
@@ -301,7 +307,7 @@ public class CourseMethods {
 		player.teleport(lobby);
 
 		// Only continue if player intentionally joined the lobby e.g /pa lobby
-		if (args == null || args[0] == null)
+		if (args == null)
 			return;
 
 		if (customLobby) {
@@ -425,8 +431,9 @@ public class CourseMethods {
 		sender.sendMessage(Static.getParkourString() + PlayerMethods.getPlaying().size() + " players using Parkour: ");
 
 		// TODO pages - reuse courses page 
+		String playingTemplate = Utils.getTranslation("Parkour.Playing", false);
 		for (Map.Entry<String, ParkourSession> entry : PlayerMethods.getPlaying().entrySet()) {
-			sender.sendMessage(Utils.getTranslation("Parkour.Playing")
+			sender.sendMessage(playingTemplate
 					.replace("%PLAYER%", entry.getKey())
 					.replace("%COURSE%", entry.getValue().getCourse().getName())
 					.replace("%DEATHS%", String.valueOf(entry.getValue().getDeaths()))
