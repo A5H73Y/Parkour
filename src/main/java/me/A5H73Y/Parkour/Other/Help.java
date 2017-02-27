@@ -149,7 +149,7 @@ public final class Help {
 					" Display all the ParkourBlocks available by using the command without the parameter. If you want to see what each ParkourBlocks is, you can specify its name and each type of block will be displayed.");
 
 		} else if (args[1].equalsIgnoreCase("setmode")){
-			displayHelpMessage(player, "Set Mode for course", "/pa setmode (course) (mode)", "/pa setmode Example Freedom",
+			displayHelpMessage(player, "Set Mode for course", "/pa setmode (course)", "/pa setmode Example",
 					" By default, a course does not have a Parkour Mode attached. Each mode can affect the interaction with the course, an example being the 'Freedom' mode allows you to create and load your own checkpoints.");
 
 		} else if (args[1].equalsIgnoreCase("setjoinitem")){
@@ -378,7 +378,7 @@ public final class Help {
 		displayCommandUsage(player, "link", "(argument) (argument)", "Link a course");
 		displayCommandUsage(player, "linkPB", "(course) (PB)", "Link ParkourBlocks");
 		displayCommandUsage(player, "listPB", "[PB]", "Display ParkourBlocks info");
-		displayCommandUsage(player, "setmode", "(course) (mode)", "Set Parkour Mode");
+		displayCommandUsage(player, "setmode", "(course)", "Set Parkour Mode");
 		displayCommandUsage(player, "setjoinitem", "(course) (material) (amount)", "Join item");
 		displayCommandUsage(player, "setminlevel", "(course) (level)", "Set course minimum level");
 		displayCommandUsage(player, "setmaxdeath", "(course) (death)", "Set course max deaths");

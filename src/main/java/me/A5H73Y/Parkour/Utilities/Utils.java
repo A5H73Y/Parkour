@@ -19,13 +19,10 @@ import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.Checkpoint;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Enums.QuestionType;
-import me.A5H73Y.Parkour.Other.Constants;
 import me.A5H73Y.Parkour.Other.ParkourBlocks;
 import me.A5H73Y.Parkour.Other.Question;
 import me.A5H73Y.Parkour.Other.TimeObject;
 import me.A5H73Y.Parkour.Other.Validation;
-import me.A5H73Y.Parkour.Player.ParkourSession;
-import me.A5H73Y.Parkour.Player.PlayerMethods;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -39,8 +36,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 import com.connorlinfoot.bountifulapi.BountifulAPI;
 
@@ -204,8 +199,7 @@ public final class Utils {
 		try {
 			Integer.parseInt(text);
 			return true;
-		} catch (Exception e) {
-		}
+		} catch (Exception e) {}
 		return false;
 	}
 
@@ -251,15 +245,14 @@ public final class Utils {
 	 */
 	public final static void log(String message, int severity) {
 		switch (severity) {
-		case 0:
-			Parkour.getPlugin().getLogger().info(message);
-			break;
+		
 		case 1:
 			Parkour.getPlugin().getLogger().warning(message);
 			break;
 		case 2:
 			Parkour.getPlugin().getLogger().severe("! " + message);
 			break;
+		case 0:
 		default:
 			Parkour.getPlugin().getLogger().info(message);
 			break;
@@ -373,16 +366,17 @@ public final class Utils {
 	 * @return GameMode
 	 */
 	public final static GameMode getGamemode(int gamemode) {
-		if (gamemode == 0)
-			return GameMode.SURVIVAL;
-		if (gamemode == 1)
+		switch (gamemode) {
+		case 1:
 			return GameMode.CREATIVE;
-		if (gamemode == 2)
+		case 2:
 			return GameMode.ADVENTURE;
-		if (gamemode == 3)
+		case 3:
 			return GameMode.SPECTATOR;
-
-		return GameMode.SURVIVAL;
+		case 0:
+		default:
+			return GameMode.SURVIVAL;
+		} 
 	}
 
 	/**

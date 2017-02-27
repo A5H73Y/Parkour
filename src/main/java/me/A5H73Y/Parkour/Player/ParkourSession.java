@@ -2,17 +2,16 @@ package me.A5H73Y.Parkour.Player;
 
 import java.io.Serializable;
 
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Enums.ParkourMode;
-import me.A5H73Y.Parkour.Other.Constants;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
+
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * This work is licensed under a Creative Commons 

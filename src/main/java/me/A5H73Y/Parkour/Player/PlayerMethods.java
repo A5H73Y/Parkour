@@ -186,12 +186,11 @@ public class PlayerMethods {
 			Long delay = Parkour.getParkourConfig().getConfig().getLong("OnFinish.TeleportDelay");
 
 			if (delay > 0) {
-				int taskId = Bukkit.getScheduler().scheduleSyncDelayedTask(Parkour.getPlugin(), new Runnable() {
+				Bukkit.getScheduler().scheduleSyncDelayedTask(Parkour.getPlugin(), new Runnable() {
 					public void run() {
 						courseCompleteLocation(player, courseName);
 					}
 				}, delay);
-				Bukkit.getScheduler().cancelTask(taskId);
 
 			} else {
 				courseCompleteLocation(player, courseName);
