@@ -67,7 +67,7 @@ public class ParkourSession implements Serializable {
             		Utils.sendActionBar(player, Utils.convertSecondsToTime(++seconds));
             	}
             }
-        }.runTaskTimer(Parkour.getPlugin(), 0, 20);
+        }.runTaskTimer(Parkour.getPlugin(), 20, 20);
 	}
 
 	public int getDeaths() {
