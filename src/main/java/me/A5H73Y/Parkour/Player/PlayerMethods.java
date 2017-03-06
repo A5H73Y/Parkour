@@ -53,11 +53,18 @@ public class PlayerMethods {
 		CourseMethods.increaseView(course.getName());
 
 		if (getParkourSession(player.getName()) == null) {
+			boolean displayTitle = Parkour.getParkourConfig().getConfig().getBoolean("DisplayTitle.JoinCourse");
+
 			if (course.getMaxDeaths() == null){
-				Utils.sendTitle(player, Utils.getTranslation("Parkour.Join", false).replace("%COURSE%", course.getName()));
+				Utils.sendTitle(player, Utils.getTranslation("Parkour.Join", false)
+						.replace("%COURSE%", course.getName()),
+						displayTitle);
 			} else {
-				Utils.sendFullTitle(player, Utils.getTranslation("Parkour.Join", false).replace("%COURSE%", course.getName()), 
-						Utils.getTranslation("Parkour.JoinLives", false).replace("%AMOUNT%", course.getMaxDeaths().toString()));
+				Utils.sendFullTitle(player, Utils.getTranslation("Parkour.Join", false)
+						.replace("%COURSE%", course.getName()), 
+						Utils.getTranslation("Parkour.JoinLives", false)
+						.replace("%AMOUNT%", course.getMaxDeaths().toString()),
+						displayTitle);
 			}
 		} else {
 			removePlayer(player.getName());
@@ -83,7 +90,9 @@ public class PlayerMethods {
 		}
 
 		ParkourSession session = getParkourSession(player.getName());
-		Utils.sendSubTitle(player, Utils.getTranslation("Parkour.Leave", false).replace("%COURSE%", session.getCourse().getName()));
+		Utils.sendSubTitle(player, Utils.getTranslation("Parkour.Leave", false)
+				.replace("%COURSE%", session.getCourse().getName()),
+				Parkour.getParkourConfig().getConfig().getBoolean("DisplayTitle.Leave"));
 
 		removePlayer(player.getName());
 		preparePlayer(player, Parkour.getParkourConfig().getConfig().getInt("OnFinish.SetGamemode"));
@@ -110,9 +119,12 @@ public class PlayerMethods {
 
 		if (session.getCourse().getMaxDeaths() != null) {
 			if (session.getCourse().getMaxDeaths() > session.getDeaths()) {
-				Utils.sendActionBar(player, Utils.getTranslation("Parkour.LifeCount", false).replace("%AMOUNT%", String.valueOf(session.getCourse().getMaxDeaths() - session.getDeaths())));
+				Utils.sendSubTitle(player, Utils.getTranslation("Parkour.LifeCount", false)
+						.replace("%AMOUNT%", String.valueOf(session.getCourse().getMaxDeaths() - session.getDeaths())),
+						Parkour.getParkourConfig().getConfig().getBoolean("DisplayTitle.Death"));
 			} else {
-				player.sendMessage(Utils.getTranslation("Parkour.MaxDeaths").replace("%AMOUNT%", session.getCourse().getMaxDeaths().toString()));
+				player.sendMessage(Utils.getTranslation("Parkour.MaxDeaths")
+						.replace("%AMOUNT%", session.getCourse().getMaxDeaths().toString()));
 				playerLeave(player);
 				return;
 			}
@@ -132,10 +144,11 @@ public class PlayerMethods {
 			}
 		} else {
 			if (!Static.containsQuiet(player.getName()))
-				player.sendMessage(Utils.getTranslation("Parkour.Die2").replace("%POINT%", String.valueOf(session.getCheckpoint())));
+				player.sendMessage(Utils.getTranslation("Parkour.Die2")
+						.replace("%POINT%", String.valueOf(session.getCheckpoint())));
 		}
 
-		if (Parkour.getParkourConfig().getConfig().getBoolean("Other.onDie.SetAsXPBar"))
+		if (Parkour.getParkourConfig().getConfig().getBoolean("OnDie.SetXPBarToDeathCount"))
 			player.setLevel(session.getDeaths());
 
 		if (Parkour.getParkourConfig().getConfig().getBoolean("Other.Use.Sounds")) // TODO
@@ -166,7 +179,8 @@ public class PlayerMethods {
 
 		if (Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.EnforceCompletion") && session.getCheckpoint() != (session.getCourse().getCheckpoints())) {
 			player.sendMessage(Utils.getTranslation("Error.Cheating1"));
-			player.sendMessage(Utils.getTranslation("Error.Cheating2", false).replace("%AMOUNT%", String.valueOf(session.getCourse().getCheckpoints())));
+			player.sendMessage(Utils.getTranslation("Error.Cheating2", false)
+					.replace("%AMOUNT%", String.valueOf(session.getCourse().getCheckpoints())));
 			playerDie(player);
 			return;
 		}
@@ -237,6 +251,16 @@ public class PlayerMethods {
 	 * @param session
 	 */
 	private static void displayFinishMessage(Player player, ParkourSession session) {
+		if (Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.DisplayStats")) {
+			Utils.sendFullTitle(player, 
+				Utils.getTranslation("Parkour.FinishCourse1", false)
+					.replace("%COURSE%", session.getCourse().getName()), 
+				Utils.getTranslation("Parkour.FinishCourse2", false)
+					.replace("%DEATHS%", String.valueOf(session.getDeaths()))
+					.replace("%TIME%", session.displayTime()), 
+				Parkour.getParkourConfig().getConfig().getBoolean("DisplayTitle.Finish"));
+		}
+
 		String finishBroadcast = Utils.getTranslation("Parkour.FinishBroadcast")
 				.replace("%PLAYER%", player.getName())
 				.replace("%COURSE%", session.getCourse().getName())
@@ -312,20 +336,25 @@ public class PlayerMethods {
 
 			if (current < rewardLevel) {
 				Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Level", rewardLevel);
-				player.sendMessage(Utils.getTranslation("Parkour.RewardLevel").replace("%LEVEL%", String.valueOf(rewardLevel)).replace("%COURSE%", courseName));
+				player.sendMessage(Utils.getTranslation("Parkour.RewardLevel")
+						.replace("%LEVEL%", String.valueOf(rewardLevel))
+						.replace("%COURSE%", courseName));
 
 				// check if there is a rank upgrade
 				String rewardRank = Parkour.getParkourConfig().getUsersData().getString("ServerInfo.Levels." + rewardLevel + ".Rank");
 				if (rewardRank != null) {
 					Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Rank", rewardRank);
-					player.sendMessage(Utils.getTranslation("Parkour.RewardRank").replace("%RANK%", rewardRank));
+					player.sendMessage(Utils.colour(Utils.getTranslation("Parkour.RewardRank").replace("%RANK%", rewardRank)));
 				}
 			}
 		}
 
 		// Execute the command
 		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".Prize.CMD")) {
-			Parkour.getPlugin().getServer().dispatchCommand(Parkour.getPlugin().getServer().getConsoleSender(), Parkour.getParkourConfig().getCourseData().getString(courseName + ".Prize.CMD").replace("%PLAYER%", player.getName()));
+			Parkour.getPlugin().getServer().dispatchCommand(
+					Parkour.getPlugin().getServer().getConsoleSender(),
+					Parkour.getParkourConfig().getCourseData().getString(courseName + ".Prize.CMD")
+					.replace("%PLAYER%", player.getName()));
 		}
 
 		// Give player Parkoins
@@ -382,7 +411,9 @@ public class PlayerMethods {
 
 		if (reward > 0) {
 			Parkour.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()), reward);
-			player.sendMessage(Utils.getTranslation("Economy.Reward").replace("%AMOUNT%", reward + " " + Parkour.getEconomy().currencyNamePlural()).replace("%COURSE%", courseName));
+			player.sendMessage(Utils.getTranslation("Economy.Reward")
+					.replace("%AMOUNT%", reward + " " + Parkour.getEconomy().currencyNamePlural())
+					.replace("%COURSE%", courseName));
 		}
 	}
 
@@ -640,19 +671,25 @@ public class PlayerMethods {
 			player.setFoodLevel(20);
 
 		if (Parkour.getSettings().getLastCheckpoint() != null)
-			player.getInventory().addItem(Utils.getItemStack("Other.Item_LastCheckpoint", Parkour.getSettings().getLastCheckpoint()));
+			player.getInventory().addItem(Utils.getItemStack(
+					Parkour.getSettings().getLastCheckpoint(), Utils.getTranslation("Other.Item_LastCheckpoint", false)));
 
 		if (Parkour.getSettings().getHideall() != null)
-			player.getInventory().addItem(Utils.getItemStack("Other.Item_HideAll", Parkour.getSettings().getHideall()));
+			player.getInventory().addItem(Utils.getItemStack(
+					Parkour.getSettings().getHideall(), Utils.getTranslation("Other.Item_HideAll", false)));
 
 		if (Parkour.getSettings().getLeave() != null)
-			player.getInventory().addItem(Utils.getItemStack("Other.Item_Leave", Parkour.getSettings().getLeave()));
+			player.getInventory().addItem(Utils.getItemStack(
+					Parkour.getSettings().getLeave(), Utils.getTranslation("Other.Item_Leave", false)));
 
 		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".JoinItemMaterial")){
 			Material joinItem = Material.getMaterial(Parkour.getParkourConfig().getCourseData().getString(courseName + ".JoinItemMaterial"));
-			if (joinItem != null){
-				ItemStack item = new ItemStack(joinItem, Parkour.getParkourConfig().getCourseData().getInt(courseName + ".JoinItemAmount", 1));
-				player.getInventory().addItem(item);
+			if (joinItem != null) {
+				String label = Parkour.getParkourConfig().getCourseData().getString(courseName + ".JoinItemLabel");
+				Integer amount = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".JoinItemAmount", 1);
+				
+				ItemStack joinItemStack = Utils.getItemStack(joinItem, label, amount);
+				player.getInventory().addItem(joinItemStack);
 			}
 		}
 
@@ -770,14 +807,14 @@ public class PlayerMethods {
 	public static void toggleTestmode(Player player) {
 		if (isPlaying(player.getName())) {
 			removePlayer(player.getName());
-			Utils.sendActionBar(player, Utils.colour("Test Mode: &bOFF"));
+			Utils.sendActionBar(player, Utils.colour("Test Mode: &bOFF"), true);
 		} else {
 			Location location = player.getLocation();
 			player.teleport(new Location(player.getWorld(), location.getX(),location.getY(),location.getZ(),location.getYaw(), location.getPitch()));
 			Checkpoint checkpoint = new Checkpoint(location.getX(),location.getY(),location.getZ(),location.getYaw(),location.getPitch(),player.getWorld().getName(),0,0,0);
 
 			addPlayer(player.getName(), new ParkourSession(new Course(Constants.TEST_MODE, checkpoint)));
-			Utils.sendActionBar(player, Utils.colour("Test Mode: &bON"));
+			Utils.sendActionBar(player, Utils.colour("Test Mode: &bON"), true);
 		}
 	}
 
@@ -829,9 +866,14 @@ public class PlayerMethods {
 			return;
 		}
 
-		player.sendMessage(Utils.getTranslation("Parkour.Invite.Send").replace("%COURSE%", course.getName()).replace("%TARGET%", target.getName()));
-		target.sendMessage(Utils.getTranslation("Parkour.Invite.Recieve1").replace("%COURSE%", course.getName()).replace("%PLAYER%", player.getName()));
-		target.sendMessage(Utils.getTranslation("Parkour.Invite.Recieve2").replace("%COURSE%", course.getName()));
+		player.sendMessage(Utils.getTranslation("Parkour.Invite.Send")
+				.replace("%COURSE%", course.getName())
+				.replace("%TARGET%", target.getName()));
+		target.sendMessage(Utils.getTranslation("Parkour.Invite.Recieve1")
+				.replace("%COURSE%", course.getName())
+				.replace("%PLAYER%", player.getName()));
+		target.sendMessage(Utils.getTranslation("Parkour.Invite.Recieve2")
+				.replace("%COURSE%", course.getName()));
 	}
 
 	/**
@@ -901,7 +943,8 @@ public class PlayerMethods {
 
 		if (session.getMode() == ParkourMode.FREEDOM) {
 			player.sendMessage(Utils.getTranslation("Mode.Freedom.JoinText"));
-			player.getInventory().addItem(Utils.getItemStack("Mode.Freedom.ItemName", Material.REDSTONE_TORCH_ON));
+			player.getInventory().addItem(Utils.getItemStack(
+					Material.REDSTONE_TORCH_ON, Utils.getTranslation("Mode.Freedom.ItemName", false)));
 
 		} else if (session.getMode() == ParkourMode.DRUNK) {
 			player.sendMessage(Utils.getTranslation("Mode.Drunk.JoinText"));
@@ -980,10 +1023,15 @@ public class PlayerMethods {
 	public static void increaseCheckpoint(ParkourSession session, Player player) {
 		session.increaseCheckpoint();
 
-		if (session.getCourse().getCheckpoints() == session.getCheckpoint())
-			player.sendMessage(Utils.getTranslation("Event.AllCheckpoints"));
-		else
-			player.sendMessage(Utils.getTranslation("Event.Checkpoint") + session.getCheckpoint() + " / " + session.getCourse().getCheckpoints());
+		boolean showTitle = Parkour.getParkourConfig().getConfig().getBoolean("DisplayTitle.Checkpoint");
+		if (session.getCourse().getCheckpoints() == session.getCheckpoint()) {
+			Utils.sendSubTitle(player, Utils.getTranslation("Event.AllCheckpoints", false),
+					showTitle);
+		} else {
+			Utils.sendSubTitle(player, Utils.getTranslation("Event.Checkpoint", false) + 
+					session.getCheckpoint() + " / " + session.getCourse().getCheckpoints(),
+					showTitle);
+		}
 	}
 
 	/**

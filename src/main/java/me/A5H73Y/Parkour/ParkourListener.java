@@ -133,7 +133,7 @@ public class ParkourListener implements Listener {
 
 			event.getPlayer().setFireTicks(0);
 
-		} else if (event.getPlayer().getLocation().getBlock().isLiquid() && Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.DieInLiquid")){
+		} else if (event.getPlayer().getLocation().getBlock().isLiquid() && Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.DieInLiquid")) {
 			PlayerMethods.playerDie(event.getPlayer());
 
 		} else {
@@ -164,9 +164,12 @@ public class ParkourListener implements Listener {
 			return;
 
 		String rank = Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + event.getPlayer().getName() + ".Rank");
-		rank = rank == null ? Utils.getTranslation("Event.DefaultRank") : rank;
+		rank = rank == null ? Utils.getTranslation("Event.DefaultRank", false) : rank;
 
-		event.setFormat(Utils.colour(Utils.getTranslation("Event.Chat", false).replace("%RANK%", rank).replace("%PLAYER%", event.getPlayer().getDisplayName()).replace("%MESSAGE%", event.getMessage())));
+		event.setFormat(Utils.colour(Utils.getTranslation("Event.Chat", false)
+				.replace("%RANK%", rank)
+				.replace("%PLAYER%", event.getPlayer().getDisplayName())
+				.replace("%MESSAGE%", event.getMessage())));
 	}
 
 	@EventHandler
@@ -239,10 +242,12 @@ public class ParkourListener implements Listener {
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		if (Parkour.getSettings().isDisplayWelcome())
-			event.getPlayer().sendMessage(Utils.getTranslation("Event.Join").replace("%VERSION%", Static.getVersion().toString()));
+			event.getPlayer().sendMessage(Utils.getTranslation("Event.Join")
+					.replace("%VERSION%", Static.getVersion().toString()));
 
 		if (PlayerMethods.isPlaying(event.getPlayer().getName())) {
-			event.getPlayer().sendMessage(Utils.getTranslation("Parkour.Continue").replace("%COURSE%", PlayerMethods.getParkourSession(event.getPlayer().getName()).getCourse().getName()));
+			event.getPlayer().sendMessage(Utils.getTranslation("Parkour.Continue")
+					.replace("%COURSE%", PlayerMethods.getParkourSession(event.getPlayer().getName()).getCourse().getName()));
 		}
 
 		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
@@ -285,10 +290,13 @@ public class ParkourListener implements Listener {
 		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
 			return;
 
+		if (!Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.DisableFly"))
+			return;
+		
 		if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
+			event.setCancelled(true);
 			event.getPlayer().setAllowFlight(false);
 			event.getPlayer().setFlying(false);
-			event.setCancelled(true);
 		}
 	}
 

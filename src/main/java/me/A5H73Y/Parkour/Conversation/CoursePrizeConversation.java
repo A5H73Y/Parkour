@@ -136,7 +136,8 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 			if (runNow)
 				Parkour.getPlugin().getServer().dispatchCommand(
 						Parkour.getPlugin().getServer().getConsoleSender(), 
-						context.getSessionData("command").toString().replace("%PLAYER%", context.getSessionData("playerName").toString()));
+						context.getSessionData("command").toString()
+						.replace("%PLAYER%", context.getSessionData("playerName").toString()));
 
 			return new CommandProcessComplete();
 		}

@@ -34,7 +34,9 @@ public class ParkourModeConversation extends FixedSetPrompt {
 		Parkour.getParkourConfig().getCourseData().set(courseName + ".Mode", choice);
 		Parkour.getParkourConfig().saveCourses();
 
-		context.getForWhom().sendRawMessage(Utils.getTranslation("Parkour.SetMode").replace("%COURSE%", courseName).replace("%MODE%", choice));
+		context.getForWhom().sendRawMessage(Utils.getTranslation("Parkour.SetMode")
+				.replace("%COURSE%", courseName)
+				.replace("%MODE%", choice));
 
 		return Prompt.END_OF_CONVERSATION;
 	}

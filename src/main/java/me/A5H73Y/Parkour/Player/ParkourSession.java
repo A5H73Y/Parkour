@@ -61,10 +61,10 @@ public class ParkourSession implements Serializable {
             @Override
             public void run() {
             	if (!PlayerMethods.isPlaying(player.getName())) {
-            		Utils.sendActionBar(player, "");
+            		Utils.sendActionBar(player, "", true);
             		cancel();
             	} else {
-            		Utils.sendActionBar(player, Utils.convertSecondsToTime(++seconds));
+            		Utils.sendActionBar(player, Utils.convertSecondsToTime(++seconds), true);
             	}
             }
         }.runTaskTimer(Parkour.getPlugin(), 20, 20);

@@ -101,13 +101,13 @@ public final class Static {
 	}
 
 	public final static void addQuiet(Player player) {
-		Utils.sendActionBar(player, Utils.colour("Quiet Mode: &bON"));
+		Utils.sendActionBar(player, Utils.colour("Quiet Mode: &bON"), true);
 		quiet.add(player.getName());
 	}
 
 	public final static void removeQuiet(Player player) {
 		quiet.remove(player.getName());
-		Utils.sendActionBar(player, Utils.colour("Quiet Mode: &bOFF"));
+		Utils.sendActionBar(player, Utils.colour("Quiet Mode: &bOFF"), true);
 	}
 
 	public final static boolean containsQuiet(String playerName) {

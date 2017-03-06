@@ -248,7 +248,7 @@ public class Configurations {
 			stringData.addDefault("Parkour.Prefix", "&0[&bParkour&0] &f");
 
 			stringData.addDefault("Event.Join", "This server uses &bParkour &3%VERSION%");
-			stringData.addDefault("Event.Checkpoint", "Checkpoint set to: ");
+			stringData.addDefault("Event.Checkpoint", "Checkpoint set to ");
 			stringData.addDefault("Event.AllCheckpoints", "All checkpoints achieved!");
 			stringData.addDefault("Event.HideAll1", "All players have magically reappeared!");
 			stringData.addDefault("Event.HideAll2", "All players have magically disappeared!");
@@ -264,6 +264,8 @@ public class Configurations {
 			stringData.addDefault("Parkour.Reset", "&b%COURSE% &fhas been reset!");
 			stringData.addDefault("Parkour.Finish", "&b%COURSE% &fhas been set to finished!");
 			stringData.addDefault("Parkour.FinishBroadcast", "&3%PLAYER% &ffinished &b%COURSE% &fwith &b%DEATHS% &fdeaths, in &b%TIME%&f!");
+			stringData.addDefault("Parkour.FinishCourse1", "Finished &b%COURSE%&f!");
+			stringData.addDefault("Parkour.FinishCourse2", "In %TIME%, dying %DEATHS% times");
 			stringData.addDefault("Parkour.Lobby", "You have joined the lobby");
 			stringData.addDefault("Parkour.LobbyOther", "You have joined the &b%LOBBY% &flobby");
 			stringData.addDefault("Parkour.Continue", "Continuing Parkour on &b%COURSE%");
@@ -343,10 +345,6 @@ public class Configurations {
 			stringData.addDefault("Mode.Drunk.JoinText", "You feel strange...");
 			stringData.addDefault("Mode.Darkness.JoinText", "It suddenly becomes dark...");
 
-			stringData.addDefault("Title.Joining", "Joining");
-			stringData.addDefault("Title.Checkpoint", "checkpoint");
-			stringData.addDefault("Title.Checkpoints", "checkpoints");
-
 			stringData.addDefault("NoPermission", "You do not have Permission: &b%PERMISSION%");
 			stringData.options().copyDefaults(true);
 			stringData.save(stringFile);
@@ -382,7 +380,6 @@ public class Configurations {
 		config.addDefault("DefaultBlocks.NoPotion.Material", "HUGE_MUSHROOM_1");
 
 		config.addDefault("OnJoin.SetGamemode", 0);
-		config.addDefault("OnJoin.DisplayFly", true);
 		config.addDefault("OnJoin.EnforceWorld", false);
 		config.addDefault("OnJoin.EnforceFinished", true);
 		config.addDefault("OnJoin.AllowViaCommand", true);
@@ -403,6 +400,7 @@ public class Configurations {
 		config.addDefault("OnCourse.PreventPlateStick", true);
 		config.addDefault("OnCourse.AttemptLessChecks", false);
 		config.addDefault("OnCourse.DisplayLiveTime", false);
+		config.addDefault("OnCourse.DisableFly", true);
 
 		config.addDefault("OnFinish.EnforceCompletion", true);
 		config.addDefault("OnFinish.TeleportToLobby", true);
@@ -413,36 +411,39 @@ public class Configurations {
 		config.addDefault("OnFinish.DefaultPrize.Amount", 1);
 		config.addDefault("OnFinish.DefaultPrize.XP", 0);
 		config.addDefault("OnFinish.TeleportDelay", 0);
+		config.addDefault("OnFinish.DisplayStats", true);
 
 		config.addDefault("OnDie.SetXPBarToDeathCount", false);
 		config.addDefault("OnDie.ResetTimeWithNoCheckpoint", false);
 
 		config.addDefault("OnLeaveServer.LeaveCourse", false);
-		config.addDefault("OnLeaveServer.TeleportToLastCheckpoint", true);
+		config.addDefault("OnLeaveServer.TeleportToLastCheckpoint", false);
 
-		config.addDefault("ParkourModes.Challenge.hidePlayers", true);
+		config.addDefault("ParkourModes.Challenge.HidePlayers", true);
+		/*
 		config.addDefault("ParkourModes.Freedom.ConfirmSet", true);
 		config.addDefault("ParkourModes.Spectate.OnStart.NotifyPlayer", true);
 		config.addDefault("ParkourModes.Spectate.OnStop.RemainInvisible", false);
 		config.addDefault("ParkourModes.Spectate.OnStop.TeleportToLobby", true);
+		*/
 
 		config.addDefault("DisplayTitle.JoinCourse", true);
 		config.addDefault("DisplayTitle.Checkpoint", true);
 		config.addDefault("DisplayTitle.RewardLevel", true);
+		config.addDefault("DisplayTitle.Death", true);
+		config.addDefault("DisplayTitle.Leave", true);
+		config.addDefault("DisplayTitle.Finish", true);
 
 		config.addDefault("Other.Economy.Enabled", true);
 		config.addDefault("Other.BountifulAPI.Enabled", true);
 		config.addDefault("Other.CheckForUpdates", true);
-		config.addDefault("Other.SubmitMetrics", true);
 		config.addDefault("Other.LogToFile", true);
-		config.addDefault("Other.DebugMode", false);
 		config.addDefault("Other.Parkour.ChatRankPrefix", false);
 		config.addDefault("Other.Parkour.SignProtection", true);
 		config.addDefault("Other.Parkour.InventoryManagement", true);
 		config.addDefault("Other.Parkour.SignPermissions", false);
 		config.addDefault("Other.Parkour.CommandPermissions", false);
 		config.addDefault("Other.Display.JoinWelcomeMessage", true);
-		config.addDefault("Other.Display.CreatorJoin", true);
 		config.addDefault("Other.Display.CourseNotFinished", true);
 		config.addDefault("Other.Display.LevelReward", true);
 		config.addDefault("Other.Display.TitleOnJoin", true);

@@ -151,7 +151,8 @@ public class StartPlugin {
 				if (playingp == null)
 					continue;
 
-				playingp.sendMessage(Utils.getTranslation("Parkour.Continue").replace("%COURSE%", entry.getValue().getCourse().getName()));
+				playingp.sendMessage(Utils.getTranslation("Parkour.Continue")
+						.replace("%COURSE%", entry.getValue().getCourse().getName()));
 			}
 		} catch (Exception e) {
 			Utils.log("Failed to load players: " + e.getMessage(), 2);

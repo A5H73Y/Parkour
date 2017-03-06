@@ -74,8 +74,9 @@ public class CourseMethods {
 		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".ParkourBlocks"))
 			course.setParkourBlocks(Utils.populateParkourBlocks("ParkourBlocks." + Parkour.getParkourConfig().getCourseData().getString(courseName + ".ParkourBlocks")));
 
-		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".MaxDeaths"))
-			course.setMaxDeaths(Parkour.getParkourConfig().getCourseData().getInt(courseName + ".MaxDeaths"));
+		int maxDeaths = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".MaxDeaths", 0);
+		if (maxDeaths > 0)
+			course.setMaxDeaths(maxDeaths);
 
 		return course;
 	}
@@ -814,10 +815,10 @@ public class CourseMethods {
 		Parkour.getParkourConfig().getCourseData().set(courseName + ".Views", 0);
 		Parkour.getParkourConfig().getCourseData().set(courseName + ".Completed", 0);
 		Parkour.getParkourConfig().getCourseData().set(courseName + ".Finished", false);
-		Parkour.getParkourConfig().getCourseData().set(courseName + ".XP", 0);
-		Parkour.getParkourConfig().getCourseData().set(courseName + ".Level", 0);
-		Parkour.getParkourConfig().getCourseData().set(courseName + ".MinimumLevel", 0);
-		Parkour.getParkourConfig().getCourseData().set(courseName + ".MaxDeaths", 0);
+		Parkour.getParkourConfig().getCourseData().set(courseName + ".XP", null);
+		Parkour.getParkourConfig().getCourseData().set(courseName + ".Level", null);
+		Parkour.getParkourConfig().getCourseData().set(courseName + ".MinimumLevel", null);
+		Parkour.getParkourConfig().getCourseData().set(courseName + ".MaxDeaths", null);
 		Parkour.getParkourConfig().saveCourses();
 		DatabaseMethods.deleteCourseTimes(courseName);
 	}
@@ -897,9 +898,13 @@ public class CourseMethods {
 		Player target = Bukkit.getPlayer(args[2]);
 		String courseName = args[1].toLowerCase();
 
-		target.sendMessage(Utils.getTranslation("Parkour.ChallengeReceive").replace("%PLAYER%", player.getName()).replace("%COURSE%", courseName));
+		target.sendMessage(Utils.getTranslation("Parkour.ChallengeReceive")
+				.replace("%PLAYER%", player.getName())
+				.replace("%COURSE%", courseName));
 		target.sendMessage(Utils.getTranslation("Parkour.Accept", false));
-		player.sendMessage(Utils.getTranslation("Parkour.ChallengeSend").replace("%PLAYER%", target.getName()).replace("%COURSE%", courseName));
+		player.sendMessage(Utils.getTranslation("Parkour.ChallengeSend")
+				.replace("%PLAYER%", target.getName())
+				.replace("%COURSE%", courseName));
 		Static.addChallenge(new Challenge(player.getName(), target.getName(), courseName));
 	}
 

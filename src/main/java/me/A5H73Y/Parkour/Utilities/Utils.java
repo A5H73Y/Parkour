@@ -245,7 +245,7 @@ public final class Utils {
 	 */
 	public final static void log(String message, int severity) {
 		switch (severity) {
-		
+
 		case 1:
 			Parkour.getPlugin().getLogger().warning(message);
 			break;
@@ -356,7 +356,9 @@ public final class Utils {
 	 * @return
 	 */
 	public final static String invalidSyntax(String command, String arguments) {
-		return getTranslation("Error.Syntax").replace("%COMMAND%", command).replace("%ARGUMENTS%", arguments);
+		return getTranslation("Error.Syntax")
+				.replace("%COMMAND%", command)
+				.replace("%ARGUMENTS%", arguments);
 	}
 
 	/**
@@ -503,40 +505,48 @@ public final class Utils {
 	 * @param player
 	 * @param title
 	 */
-	public final static void sendTitle(Player player, String title) {
+	public final static void sendTitle(Player player, String title, boolean attemptTitle) {
 		if (Static.containsQuiet(player.getName()))
 			return;
-		if (Static.getBountifulAPI())
+
+		if (Static.getBountifulAPI() && attemptTitle) {
 			BountifulAPI.sendTitle(player, 5, 20, 5, title, "");
-		else
+		} else {
 			player.sendMessage(Static.getParkourString() + title);
+		}
 	}
 
-	public final static void sendActionBar(Player player, String title) {
+	public final static void sendActionBar(Player player, String title, boolean attemptTitle) {
 		if (Static.containsQuiet(player.getName()))
 			return;
-		if (Static.getBountifulAPI())
+
+		if (Static.getBountifulAPI() && attemptTitle) {
 			BountifulAPI.sendActionBar(player, title);
-		else
+		} else {
 			player.sendMessage(Static.getParkourString() + title);
+		}
 	}
 
-	public final static void sendFullTitle(Player player, String title, String subTitle) {
+	public final static void sendFullTitle(Player player, String title, String subTitle, boolean attemptTitle) {
 		if (Static.containsQuiet(player.getName()))
 			return;
-		if (Static.getBountifulAPI())
+
+		if (Static.getBountifulAPI() && attemptTitle) {
 			BountifulAPI.sendTitle(player, 5, 20, 5, title, subTitle);
-		else
+		} else {
 			player.sendMessage(Static.getParkourString() + title + " " + subTitle);
+		}
 	}
 
-	public final static void sendSubTitle(Player player, String subTitle) {
+	public final static void sendSubTitle(Player player, String subTitle, boolean attemptTitle) {
 		if (Static.containsQuiet(player.getName()))
 			return;
-		if (Static.getBountifulAPI())
+
+		if (Static.getBountifulAPI() && attemptTitle) {
 			BountifulAPI.sendTitle(player, 5, 20, 5, "", subTitle);
-		else
+		} else {
 			player.sendMessage(Static.getParkourString() + subTitle);
+		}
 	}
 
 	/**
@@ -694,11 +704,17 @@ public final class Utils {
 	 * @param material
 	 * @return ItemStack
 	 */
-	public static ItemStack getItemStack(String translation, Material material) {
-		ItemStack item = new ItemStack(material, 1);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(Utils.getTranslation(translation, false));
-		item.setItemMeta(meta);
+	public static ItemStack getItemStack(Material material, String itemLabel) {
+		return getItemStack(material, itemLabel, 1);
+	}
+	
+	public static ItemStack getItemStack(Material material, String itemLabel, Integer amount) {
+		ItemStack item = new ItemStack(material, amount);
+		if (itemLabel != null) {
+			ItemMeta meta = item.getItemMeta();
+			meta.setDisplayName(itemLabel);
+			item.setItemMeta(meta);
+		}
 		return item;
 	}
 
@@ -773,23 +789,23 @@ public final class Utils {
 			sender.sendMessage(Static.getParkourString() + "No ParkourBlocks created.");
 			return;
 		}
-		
+
 		List<String> parkourBlocks = getParkourBlockList();
-		
+
 		if (args.length == 2) {
 			if (!parkourBlocks.contains(args[1])) {
 				sender.sendMessage(Static.getParkourString() + "This ParkourBlocks set does not exist!");
 				return;
 			}
-			
+
 			sender.sendMessage(Utils.getStandardHeading("ParkourBlock: " + args[1]));
 			Set<String> types = Parkour.getParkourConfig().getConfig().getConfigurationSection("ParkourBlocks." + args[1]).getKeys(false);
-			
+
 			for (String type : types) {
 				String material = Parkour.getParkourConfig().getConfig().getString("ParkourBlocks." + args[1] + "." + type + ".Material");
 				sender.sendMessage(type + ": " + ChatColor.GRAY + material);
 			}
-			
+
 		} else {
 			sender.sendMessage(Utils.getStandardHeading(parkourBlocks.size() + " ParkourBlocks found"));
 			for (String parkourBlock : parkourBlocks) {
