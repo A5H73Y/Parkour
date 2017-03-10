@@ -279,11 +279,6 @@ public final class Help {
 	 * @param player
 	 */
 	public static final void processCommandsInput(String[] args, Player player) {
-		if (args.length > 1 && args[1].equalsIgnoreCase("signs")){
-			displaySignCommands(args, player);
-			return;
-		}
-
 		if (args.length == 1){
 			displayCommandsIndex(player);	
 
@@ -298,6 +293,9 @@ public final class Help {
 
 		} else if (args[1].equals("4")){
 			displayAdminCommands(player);
+			
+		} else if (args[1].equalsIgnoreCase("signs")) {
+			displaySignCommands(player);
 
 		} else {
 			player.sendMessage(Static.getParkourString() + "Invalid page!");
@@ -318,6 +316,7 @@ public final class Help {
 		player.sendMessage(" 2" + ChatColor.DARK_GRAY + " : " + ChatColor.GRAY + "Creating a course");
 		player.sendMessage(" 3" + ChatColor.DARK_GRAY + " : " + ChatColor.GRAY + "Configuring a course");
 		player.sendMessage(" 4" + ChatColor.DARK_GRAY + " : " + ChatColor.GRAY + "Admin");
+		player.sendMessage(" signs" + ChatColor.DARK_GRAY + " : " + ChatColor.GRAY + "Sign commands");
 		player.sendMessage("");
 		player.sendMessage(ChatColor.DARK_GRAY + "Example: " + ChatColor.GRAY + "/pa cmds 1");
 		player.sendMessage(ChatColor.DARK_GRAY + "Remember: " + ChatColor.AQUA + "()" + ChatColor.GRAY + " means required, " + ChatColor.AQUA + "[]" + ChatColor.GRAY + " means optional.");
@@ -412,7 +411,7 @@ public final class Help {
 	 * @param args
 	 * @param player
 	 */
-	private static void displaySignCommands(String[] args, Player player) {
+	private static void displaySignCommands(Player player) {
 		player.sendMessage(Utils.getStandardHeading("Parkour Sign Commands"));
 
 		player.sendMessage(ChatColor.DARK_AQUA + "[pa]");
@@ -422,6 +421,7 @@ public final class Help {
 		displaySignCommandUsage(player, "Leave", "(le)", "Leave the current course");
 		displaySignCommandUsage(player, "Effect", "(e)", "Apply a Parkour effect");
 		displaySignCommandUsage(player, "Stats", "(s)", "Display course stats");
+		displaySignCommandUsage(player, "Leaderboards", "(lb)", "Display course leaderboards");
 
 		player.sendMessage(ChatColor.YELLOW + "() = shortcuts");
 	}

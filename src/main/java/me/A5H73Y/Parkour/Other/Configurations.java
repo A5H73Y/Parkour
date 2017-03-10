@@ -312,6 +312,7 @@ public class Configurations {
 
 			stringData.addDefault("Help.Command", "&7/pa help &9%COMMAND% &0: &7To learn more about this command.");
 			stringData.addDefault("Help.Commands", "&3/pa &bcmds &8: &fTo display the Parkour commands menu.");
+			stringData.addDefault("Help.SignCommands", "&3/pa &bcmds signs &8: &fTo display the Parkour sign commands menu.");
 
 			stringData.addDefault("Other.Item_LastCheckpoint", "&7SHIFT + &6Right click to go back to last checkpoint");
 			stringData.addDefault("Other.Item_HideAll", "&7SHIFT + &6Right click to toggle visibility");

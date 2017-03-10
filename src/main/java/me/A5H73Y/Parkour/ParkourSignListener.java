@@ -63,6 +63,7 @@ public class ParkourSignListener implements Listener {
 
 			} else {
 				player.sendMessage(Utils.getTranslation("Error.UnknownSignCommand"));
+				player.sendMessage(Utils.getTranslation("Help.SignCommands"));
 				event.setLine(1, ChatColor.RED + "Unknown cmd");
 				event.setLine(2, "");
 				event.setLine(3, "");
