@@ -88,6 +88,7 @@ public class ParkourSession implements Serializable {
 
 	public void resetTimeStarted() {
 		this.timestarted = System.currentTimeMillis();
+		seconds = 0;
 	}
 
 	public void increaseCheckpoint() {
