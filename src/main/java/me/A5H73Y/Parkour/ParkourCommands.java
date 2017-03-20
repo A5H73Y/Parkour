@@ -32,8 +32,8 @@ public class ParkourCommands implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (command.getName().equalsIgnoreCase("parkour")) {
 			// Player commands ============================================
-			if (sender instanceof Player){
-				Player player = (Player)sender;
+			if (sender instanceof Player) {
+				Player player = (Player) sender;
 
 				if (Parkour.getSettings().isCommandPermission() && !Utils.hasPermission(player, "Parkour.Basic", "Commands"))
 					return false;
@@ -390,7 +390,7 @@ public class ParkourCommands implements CommandExecutor {
 					} else if (args[0].equalsIgnoreCase("yes") || args[0].equalsIgnoreCase("no")) {
 						player.sendMessage(Static.getParkourString() + "You have not been asked a question!");
 
-					} else if (args[0].equalsIgnoreCase("reload")){
+					} else if (args[0].equalsIgnoreCase("reload")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
 							return false;
 
@@ -411,31 +411,57 @@ public class ParkourCommands implements CommandExecutor {
 				}
 
 				// Console Commands ==========================================
-			}else if(sender instanceof ConsoleCommandSender){
+			} else if (sender instanceof ConsoleCommandSender) {
 				if (args.length >= 1) {
-					if (args[0].equalsIgnoreCase("backup")) {
-						ParkourConsoleCommands.startBackup();
-
-					} else if (args[0].equalsIgnoreCase("setlevel")) {
-						ParkourConsoleCommands.setLevel(args);
-
-					} else if (args[0].equalsIgnoreCase("reload")) {
+					
+					if (args[0].equalsIgnoreCase("reload")) {
 						ParkourConsoleCommands.reloadConfig();
 
 					} else if (args[0].equalsIgnoreCase("recreate")) {
 						ParkourConsoleCommands.recreateCourses();
 						
+					} else if (args[0].equalsIgnoreCase("setminlevel")) {
+						ParkourConsoleCommands.setCourseMinimumlevel(args, sender);
+						
+					} else if (args[0].equalsIgnoreCase("setmaxdeath")) {
+						ParkourConsoleCommands.setCourseMaximumDeath(args, sender);
+						
+					} else if (args[0].equalsIgnoreCase("setjoinitem")) {
+						ParkourConsoleCommands.setCourseJoinItem(args, sender);
+					
+					} else if (args[0].equalsIgnoreCase("rewardonce")) {
+						ParkourConsoleCommands.setCourseToRewardOnce(args, sender);
+						
+					} else if (args[0].equalsIgnoreCase("rewardlevel")) {
+						ParkourConsoleCommands.setRewardLevel(args, sender);
+						
+					} else if (args[0].equalsIgnoreCase("rewardrank")) {
+						ParkourConsoleCommands.setRewardRank(args, sender);
+						
+					} else if (args[0].equalsIgnoreCase("rewardparkoins")) {
+						ParkourConsoleCommands.setRewardParkoins(args, sender);
+						
+					} else if (args[0].equalsIgnoreCase("list")) {
+						ParkourConsoleCommands.displayList(args, sender);
+						
 					} else if (args[0].equalsIgnoreCase("listpb")) {
 						ParkourConsoleCommands.displayParkourBlocks(args, sender);
+						
+					} else if (args[0].equalsIgnoreCase("help")) {
+						ParkourConsoleCommands.displayHelp(args, sender);
 
 					} else if (args[0].equalsIgnoreCase("cmds")) {
 						ParkourConsoleCommands.displayCommands();
+						
+					} else if (args[0].equalsIgnoreCase("backup")) {
+						ParkourConsoleCommands.startBackup();
 
 					} else {
-						Utils.log("Unknown Command. Enter 'pa cmds' to display all commands.");
+						Utils.log("Unknown Command. Enter 'pa cmds' to display all console commands.");
 					}
-				}else{
+				} else {
 					Utils.log("v" + Static.getVersion() + " installed. Plugin created by A5H73Y.");
+					Utils.log("Enter 'pa cmds' to display all console commands.");
 				}
 			} else {
 				sender.sendMessage(Static.getParkourString() + "Unsupported sender.");

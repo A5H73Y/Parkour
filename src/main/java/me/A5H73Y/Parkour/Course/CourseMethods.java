@@ -925,7 +925,7 @@ public class CourseMethods {
 			return;
 		}
 		if (!Utils.isNumber(args[3])) {
-			sender.sendMessage(Static.getParkourString() + "Reward level needs to be numeric.");
+			sender.sendMessage(Static.getParkourString() + "Amount needs to be numeric.");
 			return;
 		}
 

@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Other.Backup;
+import me.A5H73Y.Parkour.Other.Help;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Settings;
 import me.A5H73Y.Parkour.Utilities.Static;
@@ -17,10 +18,6 @@ import me.A5H73Y.Parkour.Utilities.Utils;
  * @author A5H73Y
  */
 public class ParkourConsoleCommands {
-
-	public static void setLevel(String[] args){
-
-	}
 
 	public static void startBackup() {
 		Backup.backupNow(true);
@@ -93,11 +90,24 @@ public class ParkourConsoleCommands {
 	public static void displayParkourBlocks(String[] args, CommandSender sender) {
 		Utils.listParkourBlocks(args, sender);
 	}
-
-	public static void displayCommands() {
-		Utils.log("pa setlevel (player) (level) : Set a players Parkour Level");
-		Utils.log("pa backup : Create a backup zip of the Parkour config folder");
-		Utils.log("pa reload : Reload the Parkour config");
+	
+	public static void displayHelp(String[] args, CommandSender sender) {
+		Help.lookupCommandHelp(args, sender);
 	}
 
+	public static void displayCommands() {
+		Utils.log("pa reload");
+		Utils.log("pa recreate");
+		Utils.log("pa setminlevel (course) (level)");
+		Utils.log("pa setmaxdeath (course) (amount)");
+		Utils.log("pa setjoinitem (course) (item) (amount)"); 
+		Utils.log("pa rewardonce (course)");
+		Utils.log("pa rewardlevel (course) (level)");
+		Utils.log("pa rewardrank (level) (rank)");
+		Utils.log("pa rewardparkoins (course) (amount)");
+		Utils.log("pa list (courses / players)");
+		Utils.log("pa listpb (course)");
+		Utils.log("pa help (command)");
+		Utils.log("pa backup : Create a backup zip of the Parkour config folder");	
+	}
 }
