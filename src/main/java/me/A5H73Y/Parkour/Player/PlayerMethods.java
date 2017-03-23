@@ -186,12 +186,10 @@ public class PlayerMethods {
 		}
 
 		preparePlayer(player, Parkour.getParkourConfig().getConfig().getInt("OnFinish.SetGamemode"));
-		loadInventory(player);
-
+		
 		if (Static.containsHidden(player.getName()))
 			toggleVisibility(player, true);
 
-		givePrize(player, courseName);
 		displayFinishMessage(player, session);
 		CourseMethods.increaseComplete(courseName);
 		removePlayer(player.getName());
@@ -210,6 +208,8 @@ public class PlayerMethods {
 				courseCompleteLocation(player, courseName);
 			}
 		}
+		loadInventory(player);
+		givePrize(player, courseName);
 
 		DatabaseMethods.insertTime(courseName, player.getName(), session.getTime(), session.getDeaths());
 
@@ -253,12 +253,12 @@ public class PlayerMethods {
 	private static void displayFinishMessage(Player player, ParkourSession session) {
 		if (Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.DisplayStats")) {
 			Utils.sendFullTitle(player, 
-				Utils.getTranslation("Parkour.FinishCourse1", false)
+					Utils.getTranslation("Parkour.FinishCourse1", false)
 					.replace("%COURSE%", session.getCourse().getName()), 
-				Utils.getTranslation("Parkour.FinishCourse2", false)
+					Utils.getTranslation("Parkour.FinishCourse2", false)
 					.replace("%DEATHS%", String.valueOf(session.getDeaths()))
 					.replace("%TIME%", session.displayTime()), 
-				Parkour.getParkourConfig().getConfig().getBoolean("DisplayTitle.Finish"));
+					Parkour.getParkourConfig().getConfig().getBoolean("DisplayTitle.Finish"));
 		}
 
 		String finishBroadcast = Utils.getTranslation("Parkour.FinishBroadcast")
@@ -670,15 +670,15 @@ public class PlayerMethods {
 		if (Parkour.getParkourConfig().getConfig().getBoolean("OnJoin.FillHealth"))
 			player.setFoodLevel(20);
 
-		if (Parkour.getSettings().getLastCheckpoint() != null)
+		if (Parkour.getSettings().getLastCheckpoint() != null && !player.getInventory().contains(Parkour.getSettings().getLastCheckpoint()))
 			player.getInventory().addItem(Utils.getItemStack(
 					Parkour.getSettings().getLastCheckpoint(), Utils.getTranslation("Other.Item_LastCheckpoint", false)));
 
-		if (Parkour.getSettings().getHideall() != null)
+		if (Parkour.getSettings().getHideall() != null && !player.getInventory().contains(Parkour.getSettings().getHideall()))
 			player.getInventory().addItem(Utils.getItemStack(
 					Parkour.getSettings().getHideall(), Utils.getTranslation("Other.Item_HideAll", false)));
 
-		if (Parkour.getSettings().getLeave() != null)
+		if (Parkour.getSettings().getLeave() != null && !player.getInventory().contains(Parkour.getSettings().getLeave()))
 			player.getInventory().addItem(Utils.getItemStack(
 					Parkour.getSettings().getLeave(), Utils.getTranslation("Other.Item_Leave", false)));
 
@@ -687,7 +687,7 @@ public class PlayerMethods {
 			if (joinItem != null) {
 				String label = Parkour.getParkourConfig().getCourseData().getString(courseName + ".JoinItemLabel");
 				Integer amount = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".JoinItemAmount", 1);
-				
+
 				ItemStack joinItemStack = Utils.getItemStack(joinItem, label, amount);
 				player.getInventory().addItem(joinItemStack);
 			}
