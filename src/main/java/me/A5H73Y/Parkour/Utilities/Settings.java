@@ -38,7 +38,7 @@ public class Settings {
 
 	public Settings(){
 		FileConfiguration config = Parkour.getParkourConfig().getConfig();
-		commandPermission = config.getBoolean("Other.CommandPermissions");
+		commandPermission = config.getBoolean("Other.Parkour.CommandPermissions");
 		chatPrefix = config.getBoolean("Other.Parkour.ChatRankPrefix");
 		disablePlayerDamage = config.getBoolean("OnCourse.DisablePlayerDamage");
 		resetOnLeave = config.getBoolean("OnLeaveServer.LeaveCourse");

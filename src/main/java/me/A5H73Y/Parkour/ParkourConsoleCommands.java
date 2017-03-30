@@ -91,6 +91,10 @@ public class ParkourConsoleCommands {
 		Utils.listParkourBlocks(args, sender);
 	}
 	
+	public static void displaySettings(String[] args, CommandSender sender) {
+		Help.displaySettings(sender);
+	}
+	
 	public static void displayHelp(String[] args, CommandSender sender) {
 		Help.lookupCommandHelp(args, sender);
 	}
@@ -107,6 +111,7 @@ public class ParkourConsoleCommands {
 		Utils.log("pa rewardparkoins (course) (amount)");
 		Utils.log("pa list (courses / players)");
 		Utils.log("pa listpb (course)");
+		Utils.log("pa settings");
 		Utils.log("pa help (command)");
 		Utils.log("pa backup : Create a backup zip of the Parkour config folder");	
 	}

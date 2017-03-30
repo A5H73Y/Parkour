@@ -48,9 +48,9 @@ public final class Help {
 			displayHelpMessage(sender, "Display Parkour information", "/pa info [player]", null,
 					" Display all your Parkour statistics, which can include your current progress through a course as well as the saved information, such as your Parkour level. Using the extra argument will allow you to display the information of a different player.");
 
-		} else if (args[1].equalsIgnoreCase("course")){
-			displayHelpMessage(sender, "Display course information", "/pa course (course)", "/pa course Tutorial",
-					" Display all the course information, including the requirements to join and the rewards given on completion.");
+		} else if (args[1].equalsIgnoreCase("stats")){
+			displayHelpMessage(sender, "Display course statistics", "/pa stats (course)", "/pa stats Tutorial",
+					" Display all the course information and statistics, including the requirements to join and the rewards given on completion.");
 
 		} else if (args[1].equalsIgnoreCase("lobby")){	
 			displayHelpMessage(sender, "Teleport to Parkour lobby", "/pa lobby [lobby]", null,
@@ -528,20 +528,20 @@ public final class Help {
 
 	/**
 	 * Display all relevant Parkour settings
-	 * @param player
+	 * @param sender
 	 */
-	public static void displaySettings(Player player){
-		player.sendMessage(Utils.getStandardHeading("Parkour Settings"));
+	public static void displaySettings(CommandSender sender){
+		sender.sendMessage(Utils.getStandardHeading("Parkour Settings"));
 
-		player.sendMessage("Version: " + ChatColor.AQUA + Static.getVersion());
-		player.sendMessage("DevBuild: " + ChatColor.AQUA + Static.getDevBuild());
-		player.sendMessage("Economy: " + ChatColor.AQUA + Static.getEconomy());
-		player.sendMessage("BountifulAPI: " + ChatColor.AQUA + Static.getBountifulAPI());
-		player.sendMessage("Disable Commands: " + ChatColor.AQUA + Parkour.getSettings().isDisableCommands());
-		player.sendMessage("Enforce world: " + ChatColor.AQUA + Parkour.getSettings().isEnforceWorld());
-		player.sendMessage("Less checks: " + Parkour.getSettings().isAttemptLessChecks());
+		sender.sendMessage("Version: " + ChatColor.AQUA + Static.getVersion());
+		sender.sendMessage("DevBuild: " + ChatColor.AQUA + Static.getDevBuild());
+		sender.sendMessage("Economy: " + ChatColor.AQUA + Static.getEconomy());
+		sender.sendMessage("BountifulAPI: " + ChatColor.AQUA + Static.getBountifulAPI());
+		sender.sendMessage("Disable Commands: " + ChatColor.AQUA + Parkour.getSettings().isDisableCommands());
+		sender.sendMessage("Enforce world: " + ChatColor.AQUA + Parkour.getSettings().isEnforceWorld());
+		sender.sendMessage("Less checks: " + ChatColor.AQUA + Parkour.getSettings().isAttemptLessChecks());
 
-		player.sendMessage(ChatColor.GRAY + "If you want more settings displayed, please ask");
+		sender.sendMessage(ChatColor.GRAY + "If you want more settings displayed, please ask");
 	}
 
 }

@@ -315,7 +315,7 @@ public class PlayerMethods {
 		}
 
 		if (amount < 0)
-			amount = 1;
+			amount = 0;
 
 		if (material != null)
 			player.getInventory().addItem(new ItemStack(material, amount));

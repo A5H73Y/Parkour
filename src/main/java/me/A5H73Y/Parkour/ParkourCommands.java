@@ -60,7 +60,7 @@ public class ParkourCommands implements CommandExecutor {
 					} else if (args[0].equalsIgnoreCase("info")) {
 						PlayerMethods.displayPlayerInfo(args, player);
 
-					} else if (args[0].equalsIgnoreCase("course")) {
+					} else if (args[0].equalsIgnoreCase("stats")) {
 						if (!Utils.validateArgs(player, args, 2))
 							return false;
 
@@ -145,7 +145,7 @@ public class ParkourCommands implements CommandExecutor {
 						if (!Utils.validateArgs(player, args, 2))
 							return false;
 
-						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Select", args[1]))
+						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", args[1]))
 							return false;
 
 						CourseMethods.selectCourse(args, player);
@@ -316,6 +316,9 @@ public class ParkourCommands implements CommandExecutor {
 						Utils.validateParkourBlocks(args, player);
 
 					} else if (args[0].equalsIgnoreCase("challenge")) {
+						if (!Utils.hasPermission(player, "Parkour.Basic", "Challenge"))
+							return false;
+						
 						if (!Utils.validateArgs(player, args, 3))
 							return false;
 
@@ -446,6 +449,9 @@ public class ParkourCommands implements CommandExecutor {
 						
 					} else if (args[0].equalsIgnoreCase("listpb")) {
 						ParkourConsoleCommands.displayParkourBlocks(args, sender);
+						
+					} else if (args[0].equalsIgnoreCase("settings")) {
+						ParkourConsoleCommands.displaySettings(args, sender);
 						
 					} else if (args[0].equalsIgnoreCase("help")) {
 						ParkourConsoleCommands.displayHelp(args, sender);

@@ -74,7 +74,7 @@ public class Validation {
 		if (Parkour.getParkourConfig().getCourseData().contains(course.getName() + ".MinimumLevel")){
 			int minimumLevel = Parkour.getParkourConfig().getCourseData().getInt(course.getName() + ".MinimumLevel");
 
-			if (!player.hasPermission("Parkour.MinBypass") && !player.hasPermission("Parkour.Level." + minimumLevel)){
+			if (!player.hasPermission("Parkour.Admin.MinBypass") && !player.hasPermission("Parkour.Level." + minimumLevel)){
 				int currentLevel = Parkour.getParkourConfig().getUsersData().getInt("PlayerInfo." + player.getName() + ".Level");
 
 				if (currentLevel < minimumLevel){
@@ -117,21 +117,22 @@ public class Validation {
 	/**
 	 * Validate player joining course, without sending messages
 	 * @param player
-	 * @param course
+	 * @param courseName
 	 * @return
 	 */
-	public static boolean courseJoiningNoMessages(Player player, String course){
+	public static boolean courseJoiningNoMessages(Player player, String courseName){
 		/* Player in wrong world */
 		if (Parkour.getSettings().isEnforceWorld()){
-			if (!player.getLocation().getWorld().getName().equals(Parkour.getParkourConfig().getCourseData().getString(course + ".World"))){
+			if (!player.getLocation().getWorld().getName().equals(Parkour.getParkourConfig().getCourseData().getString(courseName + ".World"))){
 				return false;
 			}
 		}
 
 		/* Players level isn't high enough */
-		if (Parkour.getParkourConfig().getCourseData().contains(course + ".MinimumLevel")){
-			if (!player.hasPermission("Parkour.MinBypass")){
-				int minimumLevel = Parkour.getParkourConfig().getCourseData().getInt(course + ".MinimumLevel");
+		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".MinimumLevel")){
+			int minimumLevel = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".MinimumLevel");
+
+			if (!player.hasPermission("Parkour.Admin.MinBypass") && !player.hasPermission("Parkour.Level." + minimumLevel)){
 				int currentLevel = Parkour.getParkourConfig().getUsersData().getInt("PlayerInfo." + player.getName() + ".Level");
 
 				if (currentLevel < minimumLevel){
@@ -141,9 +142,9 @@ public class Validation {
 		}
 
 		/* Course isn't finished */
-		if (!CourseMethods.isReady(course)){
+		if (!CourseMethods.isReady(courseName)){
 			if (Parkour.getParkourConfig().getConfig().getBoolean("OnJoin.EnforceFinished")){
-				if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Bypass", course)){
+				if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Bypass", courseName)){
 					return false;
 				}
 			}
@@ -151,7 +152,7 @@ public class Validation {
 
 		/* Check if player has enough currency to join */
 		if (Static.getEconomy()){
-			int joinFee = Parkour.getParkourConfig().getEconData().getInt("Price." + course + "JoinFee");
+			int joinFee = Parkour.getParkourConfig().getEconData().getInt("Price." + courseName + "JoinFee");
 
 			if (joinFee > 0){
 				if (Parkour.getEconomy().getBalance(Bukkit.getOfflinePlayer(player.getUniqueId())) < joinFee){
