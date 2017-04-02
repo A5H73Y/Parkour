@@ -5,6 +5,7 @@ import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Enums.QuestionType;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
+import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
@@ -34,6 +35,22 @@ public class Question {
 
 	public String getArgument() {
 		return argument;
+	}
+	
+	public void questionPlayer(Player player, String message) {
+		if (message.startsWith("/pa yes")) {
+			Question question = Static.getQuestion(player.getName());
+			question.confirm(player, question.getType(), question.getArgument());
+			Static.removeQuestion(player.getName());
+
+		} else if (message.startsWith("/pa no")) {
+			player.sendMessage(Static.getParkourString() + "Question cancelled!");
+			Static.removeQuestion(player.getName());
+
+		} else {
+			player.sendMessage(Static.getParkourString() + ChatColor.RED + "Invalid question answer.");
+			player.sendMessage("Please use either " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " or " + ChatColor.AQUA + "/pa no");
+		}
 	}
 
 	public void confirm(Player player, QuestionType type, String argument) {
@@ -65,6 +82,13 @@ public class Question {
 			player.sendMessage(Static.getParkourString() + ChatColor.AQUA + argument + ChatColor.WHITE + " has been reset.");
 			Utils.logToFile("player " + argument + " was reset by " + player.getName());
 			return;
+			
+		case RESET_LEADERBOARD:
+			DatabaseMethods.deleteCourseTimes(argument);
+			player.sendMessage(Static.getParkourString() + ChatColor.AQUA + argument + ChatColor.WHITE + " leaderboards have been reset.");
+			Utils.logToFile(argument + " leaderboards were reset by " + player.getName());
+			return;
+			
 		}
 	}
 }

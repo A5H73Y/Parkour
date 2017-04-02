@@ -395,7 +395,7 @@ public class ParkourListener implements Listener {
 		Player player = event.getPlayer();
 
 		if (commandIsPa && Static.containsQuestion(player.getName())) {
-			questionPlayer(player, event.getMessage());
+			Static.getQuestion(player.getName()).questionPlayer(player, event.getMessage());
 			event.setCancelled(true);
 		}
 
@@ -418,22 +418,6 @@ public class ParkourListener implements Listener {
 				player.sendMessage(Utils.getTranslation("Error.Command"));
 			}
 
-		}
-	}
-
-	private final void questionPlayer(Player player, String message) {
-		if (message.startsWith("/pa yes")) {
-			Question question = Static.getQuestion(player.getName());
-			question.confirm(player, question.getType(), question.getArgument());
-			Static.removeQuestion(player.getName());
-
-		} else if (message.startsWith("/pa no")) {
-			player.sendMessage(Static.getParkourString() + "Question cancelled!");
-			Static.removeQuestion(player.getName());
-
-		} else {
-			player.sendMessage(Static.getParkourString() + ChatColor.RED + "Invalid question answer.");
-			player.sendMessage("Please use either " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " or " + ChatColor.AQUA + "/pa no");
 		}
 	}
 }

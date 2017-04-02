@@ -638,6 +638,18 @@ public final class Utils {
 			player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
 			Static.addQuestion(player.getName(), new Question(QuestionType.RESET_PLAYER, args[2]));
 
+		} else if (args[1].equalsIgnoreCase("leaderboard")) {
+			if (!CourseMethods.exist(args[2])) {
+				player.sendMessage(Utils.getTranslation("Error.Unknown"));
+				return;
+			}
+			
+			player.sendMessage(Static.getParkourString() + "You are about to reset " + ChatColor.AQUA + args[2] + ChatColor.WHITE + " leaderboards...");
+			player.sendMessage(ChatColor.GRAY + "Resetting the leaderboards will remove all times from the database for this course. This will NOT affect the course in any other way.");
+			player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
+			Static.addQuestion(player.getName(), new Question(QuestionType.RESET_LEADERBOARD, args[2].toLowerCase()));
+
+			
 		} else {
 			invalidSyntax("reset", "(course / player) (courseName / playerName)");
 		}
