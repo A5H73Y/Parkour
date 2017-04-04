@@ -939,7 +939,7 @@ public class CourseMethods {
 
 	/**
 	 * Retrieve and display Leaderboard for a course
-	 * Can be specifed direction using appropriate commands,
+	 * Can be specified direction using appropriate commands,
 	 * or the Leaderboard conversation can be started, to specify what you want to view based on the options
 	 * 
 	 * @param args
@@ -978,9 +978,9 @@ public class CourseMethods {
 		}
 
 		if (personal) {
-			Utils.displayLeaderboard(player, DatabaseMethods.getTopPlayerCourseResults(player.getName(), args[1], limit));
+			Utils.displayLeaderboard(player, DatabaseMethods.getTopPlayerCourseResults(player.getName(), args[1], limit), args[1]);
 		} else {
-			Utils.displayLeaderboard(player, DatabaseMethods.getTopCourseResults(args[1], limit));
+			Utils.displayLeaderboard(player, DatabaseMethods.getTopCourseResults(args[1], limit), args[1]);
 		}
 	}
 
