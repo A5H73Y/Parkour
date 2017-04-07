@@ -187,7 +187,7 @@ public class CourseMethods {
 
 	/**
 	 * Displays all the information stored about a course. 
-	 * Accessed via "/pa course (course)", will only display applicable information.
+	 * Accessed via "/pa stats (course)", will only display applicable information.
 	 * 
 	 * @param args
 	 * @param player
@@ -223,7 +223,7 @@ public class CourseMethods {
 		player.sendMessage("Creator: " + aqua + creator);
 
 		if (minLevel > 0)
-			player.sendMessage("Required level: " + aqua + maxDeaths);
+			player.sendMessage("Required level: " + aqua + minLevel);
 
 		if (maxDeaths > 0)
 			player.sendMessage("Max Deaths: " + aqua + maxDeaths);
