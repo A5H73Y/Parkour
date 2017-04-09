@@ -336,7 +336,7 @@ public final class Help {
 		displayCommandUsage(player, "join", "(course / courseId)", "Join the course");
 		displayCommandUsage(player, "leave", null, "Leave the course");
 		displayCommandUsage(player, "info", "[Player]", "Display your players Parkour information");
-		displayCommandUsage(player, "course", "(course)", "Display the course information");
+		displayCommandUsage(player, "stats", "(course)", "Display the course information");
 		displayCommandUsage(player, "lobby", "[lobby]", "Teleport to the specified lobby");
 		displayCommandUsage(player, "perms", null, "Display your Parkour permissions");
 		displayCommandUsage(player, "like / dislike", null, "Vote for course you finished");
