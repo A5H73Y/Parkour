@@ -172,6 +172,9 @@ public class StartPlugin {
 		}
 	}
 
+	/**
+	 * We only want to update completely, if the config version (previous version) is less than 4.0 (new system)
+	 */
 	private static void checkConvertToLatest() {
 		if (freshInstall)
 			return;
@@ -179,16 +182,20 @@ public class StartPlugin {
 		double configVersion = Parkour.getPlugin().getConfig().getDouble("Version");
 		double currentVersion = Double.parseDouble(Parkour.getPlugin().getDescription().getVersion());
 
-		if (configVersion < currentVersion) {
-			updateExisting = true;
-			Utils.log("[Backup] Updating config to " + currentVersion + "...");
-			// We backup all their files first before touching them
-			Backup.backupNow(false);
-			Utils.broadcastMessage("[Backup] Your existing config has been backed up. We have generated a new config, please reapply the settings you want.", "Parkour.Admin");
-			convertToLatest();
-			Parkour.getParkourConfig().getConfig().set("Version", currentVersion);
-			Parkour.getPlugin().saveConfig();
-		}
+		if (configVersion >= currentVersion)
+			return;
+
+		if (configVersion >= 4.0)
+			return;
+
+		updateExisting = true;
+		Utils.log("[Backup] Updating config to " + currentVersion + "...");
+		// We backup all their files first before touching them
+		Backup.backupNow(false);
+		Utils.broadcastMessage("[Backup] Your existing config has been backed up. We have generated a new config, please reapply the settings you want.", "Parkour.Admin");
+		convertToLatest();
+		Parkour.getParkourConfig().getConfig().set("Version", currentVersion);
+		Parkour.getPlugin().saveConfig();
 	}
 
 	private static void convertToLatest() {
