@@ -421,12 +421,6 @@ public class Configurations {
 		config.addDefault("OnLeaveServer.TeleportToLastCheckpoint", false);
 
 		config.addDefault("ParkourModes.Challenge.HidePlayers", true);
-		/*
-		config.addDefault("ParkourModes.Freedom.ConfirmSet", true);
-		config.addDefault("ParkourModes.Spectate.OnStart.NotifyPlayer", true);
-		config.addDefault("ParkourModes.Spectate.OnStop.RemainInvisible", false);
-		config.addDefault("ParkourModes.Spectate.OnStop.TeleportToLobby", true);
-		*/
 
 		config.addDefault("DisplayTitle.JoinCourse", true);
 		config.addDefault("DisplayTitle.Checkpoint", true);

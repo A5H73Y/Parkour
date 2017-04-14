@@ -4,7 +4,6 @@ import me.A5H73Y.Parkour.Course.Checkpoint;
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Enums.ParkourMode;
 import me.A5H73Y.Parkour.Other.ParkourBlocks;
-import me.A5H73Y.Parkour.Other.Question;
 import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
@@ -316,15 +315,15 @@ public class ParkourListener implements Listener {
 		if (PlayerMethods.isPlayerInTestmode(player.getName()))
 			return;
 
-		if (player.getInventory().getItemInMainHand().getType() == Parkour.getSettings().getLastCheckpoint()) {
+		if (Utils.getMaterialInPlayersHand(player) == Parkour.getSettings().getLastCheckpoint()) {
 			if (Utils.delayPlayer(player, 2, false))
 				PlayerMethods.playerDie(player);
 
-		} else if (player.getInventory().getItemInMainHand().getType() == Parkour.getSettings().getHideall()) {
+		} else if (Utils.getMaterialInPlayersHand(player) == Parkour.getSettings().getHideall()) {
 			if (Utils.delayPlayer(player, 2, false))
 				PlayerMethods.toggleVisibility(player);
 
-		} else if (player.getInventory().getItemInMainHand().getType() == Parkour.getSettings().getLeave()) {
+		} else if (Utils.getMaterialInPlayersHand(player) == Parkour.getSettings().getLeave()) {
 			PlayerMethods.playerLeave(player);
 		}
 	}
@@ -347,7 +346,7 @@ public class ParkourListener implements Listener {
 			return;
 
 		event.setCancelled(true);
-		if (player.getInventory().getItemInMainHand().getType() == Material.REDSTONE_TORCH_ON) {
+		if (Utils.getMaterialInPlayersHand(player) == Material.REDSTONE_TORCH_ON) {
 			if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
 				PlayerMethods.getParkourSession(player.getName()).getCourse().setCheckpoint(Utils.getCheckpointOfCurrentPosition(player));
 				player.sendMessage(Utils.getTranslation("Mode.Freedom.Save"));
@@ -403,7 +402,7 @@ public class ParkourListener implements Listener {
 			if (!Parkour.getSettings().isDisableCommands())
 				return;
 
-			if (player.hasPermission("Parkour.Admin") || player.hasPermission("Parkour.*"))
+			if (player.hasPermission("Parkour.Admin.*") || player.hasPermission("Parkour.*"))
 				return;
 
 			boolean allowed = false;

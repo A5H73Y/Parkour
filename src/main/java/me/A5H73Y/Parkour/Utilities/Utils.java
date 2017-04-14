@@ -825,4 +825,22 @@ public final class Utils {
 			}
 		}
 	}
+	
+	/**
+	 * Made because < 1.8 
+	 * @param player
+	 * @return
+	 */
+	@SuppressWarnings("deprecation")
+	public static Material getMaterialInPlayersHand(Player player) {
+		ItemStack stack;
+		
+		try {
+			stack = player.getInventory().getItemInMainHand();
+		} catch (NoSuchMethodError ex) { 
+			stack = player.getItemInHand();
+		}
+		
+		return stack.getType();
+	}
 }

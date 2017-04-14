@@ -762,9 +762,14 @@ public class CourseMethods {
 	 * @param player
 	 */
 	public static void linkCourse(String[] args, Player player) {
+		if (args.length < 2) { 
+			player.sendMessage(Utils.invalidSyntax("Link", "(course / lobby / reset) (courseName / lobbyName)"));
+			return;
+		}
+		
 		String selected = PlayerMethods.getSelected(player.getName());
 
-		if (args[1].equalsIgnoreCase("course")) {
+		if (args.length >= 3 && args[1].equalsIgnoreCase("course")) {
 			if (!CourseMethods.exist(args[2])) {
 				player.sendMessage(Utils.getTranslation("Error.Unknown"));
 				return;
@@ -779,7 +784,7 @@ public class CourseMethods {
 			Parkour.getParkourConfig().saveCourses();
 			player.sendMessage(Static.getParkourString() + ChatColor.DARK_AQUA + selected + ChatColor.WHITE + " is now linked to " + ChatColor.AQUA + args[2]);
 
-		} else if (args[1].equalsIgnoreCase("lobby")) {
+		} else if (args.length >= 3 && args[1].equalsIgnoreCase("lobby")) {
 			if (!Parkour.getParkourConfig().getConfig().contains("Lobby." + args[2] + ".World")) { // TODO
 				player.sendMessage(Static.getParkourString() + "Lobby " + args[2] + " does not exist.");
 				return;
@@ -794,8 +799,13 @@ public class CourseMethods {
 			Parkour.getParkourConfig().saveCourses();
 			player.sendMessage(Static.getParkourString() + ChatColor.DARK_AQUA + selected + ChatColor.WHITE + " is now linked to " + ChatColor.AQUA + args[2]);
 
+		} else if (args[1].equalsIgnoreCase("reset")) {	
+			Parkour.getParkourConfig().getCourseData().set(selected + ".LinkedLobby", null);
+			Parkour.getParkourConfig().getCourseData().set(selected + ".LinkedCourse", null);
+			player.sendMessage(Static.getParkourString() + ChatColor.DARK_AQUA + selected + ChatColor.WHITE + " is no longer linked.");
+
 		} else {
-			player.sendMessage(Utils.invalidSyntax("Link", "(course / lobby) (courseName / lobbyName)"));
+			player.sendMessage(Utils.invalidSyntax("Link", "(course / lobby / reset) (courseName / lobbyName)"));
 		}
 
 	}

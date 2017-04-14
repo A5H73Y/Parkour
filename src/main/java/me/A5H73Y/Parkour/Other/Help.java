@@ -142,7 +142,7 @@ public final class Help {
 
 		} else if (args[1].equalsIgnoreCase("link")){	
 			displayHelpMessage(sender, "Link the course after completion", "/pa link (argument) (argument)", "/pa link course Level2",
-					" You are now able to link the selected course to either a custom lobby, or to join a different course straight after you complete the selected course. For example if you selected a course '/pa select Level1', you would be able to make the player join Level2 after they complete Level1 by doing '/pa link course Level2', or if you wish for them to teleport to a custom lobby '/pa link lobby Admin'.");
+					" You are now able to link the selected course to either a custom lobby, or to join a different course straight after you complete the selected course. For example if you selected a course '/pa select Level1', you would be able to make the player join Level2 after they complete Level1 by doing '/pa link course Level2', or if you wish for them to teleport to a custom lobby '/pa link lobby Admin'. If you want to remove the link enter '/pa link reset'");
 
 		} else if (args[1].equalsIgnoreCase("linkPB")){	
 			displayHelpMessage(sender, "Link a course to ParkourBlocks", "/pa linkPB (course) (PB)", "/pa linkPB Example FireKit",
@@ -453,7 +453,7 @@ public final class Help {
 
 		} else if (args[1].equalsIgnoreCase("setprize")) {
 			if (!(args.length > 2)){
-				player.sendMessage(Utils.invalidSyntax("setprize", "(course) (amount)"));
+				player.sendMessage(Utils.invalidSyntax("econ", "setprize (course) (amount)"));
 				return;
 			}
 			if (!(CourseMethods.exist(args[2]) && Utils.isNumber(args[3]))){
@@ -467,7 +467,7 @@ public final class Help {
 
 		} else if (args[1].equalsIgnoreCase("setfee")) {
 			if (!(args.length > 2)){
-				player.sendMessage(Utils.invalidSyntax("setfee", "(course) (amount)"));
+				player.sendMessage(Utils.invalidSyntax("econ", "setfee (course) (amount)"));
 				return;
 			}
 			if (!(CourseMethods.exist(args[2]) && Utils.isNumber(args[3]))){

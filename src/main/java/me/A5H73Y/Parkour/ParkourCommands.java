@@ -178,9 +178,6 @@ public class ParkourCommands implements CommandExecutor {
 						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerMethods.getSelected(player.getName())))
 							return false;
 
-						if (!Utils.validateArgs(player, args, 3))
-							return false;
-
 						CourseMethods.linkCourse(args, player);
 
 					} else if (args[0].equalsIgnoreCase("setminlevel")) {
@@ -359,7 +356,7 @@ public class ParkourCommands implements CommandExecutor {
 						Utils.addWhitelistedCommand(args, player);
 
 						//Other commands//	
-					} else if (args[0].equalsIgnoreCase("about")) {
+					} else if (args[0].equalsIgnoreCase("about") || args[0].equalsIgnoreCase("version")) {
 						player.sendMessage(Static.getParkourString() + "Server is running Parkour " + ChatColor.GRAY + Static.getVersion());
 						if (Static.getDevBuild())
 							player.sendMessage(ChatColor.RED + "- You are running a development build -");
@@ -367,16 +364,18 @@ public class ParkourCommands implements CommandExecutor {
 
 					} else if (args[0].equalsIgnoreCase("contact")) {
 						player.sendMessage(Static.getParkourString() + "For information or help please contact me:");
-						player.sendMessage(" DevBukkit: " + ChatColor.AQUA + "A5H73Y");
-						player.sendMessage(" Skype: " + ChatColor.AQUA + "iA5H73Y");
-						player.sendMessage(" Parkour URL: " + ChatColor.AQUA + "http://dev.bukkit.org/server-mods/parkour/");
+						player.sendMessage("Bukkit: " + ChatColor.AQUA + "A5H73Y");
+						player.sendMessage("Spigot: " + ChatColor.AQUA + "A5H73Y");
+						player.sendMessage("Skype: " + ChatColor.AQUA + "iA5H73Y");
+						player.sendMessage("Parkour URL: " + ChatColor.AQUA + "http://dev.bukkit.org/projects/parkour/");
 
 					} else if (args[0].equalsIgnoreCase("request") || args[0].equalsIgnoreCase("bug")) {
 						player.sendMessage(Static.getParkourString() + "To Request a feature or to Report a bug...");
-						player.sendMessage("Click here: " + ChatColor.DARK_AQUA + "http://dev.bukkit.org/server-mods/parkour/forum/");
+						player.sendMessage("Click here: " + ChatColor.DARK_AQUA + "https://github.com/A5H73Y/Parkour/issues");
 
 					} else if (args[0].equalsIgnoreCase("tutorial")) {
-						player.sendMessage(Static.getParkourString() + "Coming soon...");
+						player.sendMessage(Static.getParkourString() + "To follow the official Parkour tutorials...");
+						player.sendMessage("Click here: " + ChatColor.DARK_AQUA + "https://dev.bukkit.org/projects/parkour/pages/tutorial");
 
 					} else if (args[0].equalsIgnoreCase("settings")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin")) 

@@ -20,7 +20,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -151,11 +150,7 @@ public class PlayerMethods {
 		if (Parkour.getParkourConfig().getConfig().getBoolean("OnDie.SetXPBarToDeathCount"))
 			player.setLevel(session.getDeaths());
 
-		if (Parkour.getParkourConfig().getConfig().getBoolean("Other.Use.Sounds")) // TODO
-			// Experiment
-			// with
-			// sounds
-			player.playSound(player.getLocation(), Sound.ENCHANT_THORNS_HIT, 1L, 1L);
+		//TODO sounds
 
 		preparePlayer(player, 0);
 	}
@@ -177,7 +172,9 @@ public class PlayerMethods {
 		ParkourSession session = getParkourSession(player.getName());
 		final String courseName = session.getCourse().getName();
 
-		if (Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.EnforceCompletion") && session.getCheckpoint() != (session.getCourse().getCheckpoints())) {
+		if (Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.EnforceCompletion") 
+				&& session.getCheckpoint() != (session.getCourse().getCheckpoints())) {
+			
 			player.sendMessage(Utils.getTranslation("Error.Cheating1"));
 			player.sendMessage(Utils.getTranslation("Error.Cheating2", false)
 					.replace("%AMOUNT%", String.valueOf(session.getCourse().getCheckpoints())));
@@ -194,6 +191,9 @@ public class PlayerMethods {
 		CourseMethods.increaseComplete(courseName);
 		removePlayer(player.getName());
 
+		loadInventory(player);
+		givePrize(player, courseName);
+		
 		if (Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.TeleportToLobby")) {
 			Long delay = Parkour.getParkourConfig().getConfig().getLong("OnFinish.TeleportDelay");
 
@@ -208,8 +208,6 @@ public class PlayerMethods {
 				courseCompleteLocation(player, courseName);
 			}
 		}
-		loadInventory(player);
-		givePrize(player, courseName);
 
 		DatabaseMethods.insertTime(courseName, player.getName(), session.getTime(), session.getDeaths());
 
@@ -541,6 +539,7 @@ public class PlayerMethods {
 		String selected = getSelected(player.getName());
 		if (selected == null || selected.length() == 0) {
 			player.sendMessage(Utils.getTranslation("Error.Selected"));
+			player.sendMessage(ChatColor.GRAY + "Usage: " + ChatColor.WHITE + "/pa select " + ChatColor.AQUA + "(course)");
 			return false;
 		}
 		return true;
@@ -702,6 +701,7 @@ public class PlayerMethods {
 	 * @param player
 	 * @param gamemode
 	 */
+	@SuppressWarnings("deprecation")
 	public static void preparePlayer(Player player, int gamemode) {
 		for (PotionEffect effect : player.getActivePotionEffects()) {
 			player.removePotionEffect(effect.getType());
@@ -730,6 +730,7 @@ public class PlayerMethods {
 
 		Parkour.getParkourConfig().getInvData().set(player.getName() + ".Inventory", player.getInventory().getContents());
 		Parkour.getParkourConfig().getInvData().set(player.getName() + ".Armor", player.getInventory().getArmorContents());
+		Parkour.getParkourConfig().saveInv();
 		player.getInventory().clear();
 		player.getInventory().setHelmet(null);
 		player.getInventory().setChestplate(null);
@@ -1039,6 +1040,7 @@ public class PlayerMethods {
 	 * @param lines
 	 * @param player
 	 */
+	@SuppressWarnings("deprecation")
 	public static void applyEffect(String[] lines, Player player) {
 		if (lines[2].equalsIgnoreCase("heal")) {
 			Damageable damag = player;
