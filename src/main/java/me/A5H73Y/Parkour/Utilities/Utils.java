@@ -731,6 +731,23 @@ public final class Utils {
 		return item;
 	}
 
+	public static boolean delayPlayerEvent(Player player, int secondsToWait) {
+		if (!Static.getDelay().containsKey(player.getName())) {
+			Static.getDelay().put(player.getName(), System.currentTimeMillis());
+			return true;
+		} 
+
+		long lastAction = Static.getDelay().get(player.getName());
+		int secondsElapsed = (int) ((System.currentTimeMillis() - lastAction) / 1000);
+
+		if (secondsElapsed >= secondsToWait) {
+			Static.getDelay().put(player.getName(), System.currentTimeMillis());
+			return true;
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * Delay certain actions 
 	 * @param player

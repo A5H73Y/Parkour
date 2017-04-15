@@ -292,7 +292,6 @@ public class PlayerMethods {
 	 * @param courseName
 	 */
 	private static void givePrize(Player player, String courseName) {
-		// Give player items
 		if (!Parkour.getParkourConfig().getConfig().getBoolean("OnFinish.Prize.Enabled"))
 			return;
 
@@ -409,8 +408,11 @@ public class PlayerMethods {
 
 		if (reward > 0) {
 			Parkour.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()), reward);
+			String currencyName = Parkour.getEconomy().currencyNamePlural() == null ? 
+					"" : " " + Parkour.getEconomy().currencyNamePlural();
+			
 			player.sendMessage(Utils.getTranslation("Economy.Reward")
-					.replace("%AMOUNT%", reward + " " + Parkour.getEconomy().currencyNamePlural())
+					.replace("%AMOUNT%", reward + currencyName)
 					.replace("%COURSE%", courseName));
 		}
 	}
@@ -668,6 +670,9 @@ public class PlayerMethods {
 
 		if (Parkour.getParkourConfig().getConfig().getBoolean("OnJoin.FillHealth"))
 			player.setFoodLevel(20);
+		
+		if (Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.DisableFly"))
+			player.setFlying(false);
 
 		if (Parkour.getSettings().getLastCheckpoint() != null && !player.getInventory().contains(Parkour.getSettings().getLastCheckpoint()))
 			player.getInventory().addItem(Utils.getItemStack(

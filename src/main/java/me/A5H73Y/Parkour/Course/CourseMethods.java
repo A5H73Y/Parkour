@@ -8,6 +8,7 @@ import me.A5H73Y.Parkour.Conversation.ParkourConversation;
 import me.A5H73Y.Parkour.Enums.ConversationType;
 import me.A5H73Y.Parkour.Enums.ParkourMode;
 import me.A5H73Y.Parkour.Other.Challenge;
+import me.A5H73Y.Parkour.Other.ParkourBlocks;
 import me.A5H73Y.Parkour.Other.Validation;
 import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
@@ -71,9 +72,13 @@ public class CourseMethods {
 		Checkpoint checkpoint = CheckpointMethods.getNextCheckpoint(courseName, 0);
 		Course course = new Course(courseName, checkpoint);
 
-		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".ParkourBlocks"))
-			course.setParkourBlocks(Utils.populateParkourBlocks("ParkourBlocks." + Parkour.getParkourConfig().getCourseData().getString(courseName + ".ParkourBlocks")));
-
+		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".ParkourBlocks")) {
+			String name = Parkour.getParkourConfig().getCourseData().getString(courseName + ".ParkourBlocks");
+			ParkourBlocks pb = Utils.populateParkourBlocks("ParkourBlocks." + name);
+			if (pb != null)
+				course.setParkourBlocks(pb);
+		}
+			
 		int maxDeaths = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".MaxDeaths", 0);
 		if (maxDeaths > 0)
 			course.setMaxDeaths(maxDeaths);
@@ -199,19 +204,22 @@ public class CourseMethods {
 		}
 
 		courseName = courseName.toLowerCase();
+		FileConfiguration config = Parkour.getParkourConfig().getCourseData();
 		ChatColor aqua = ChatColor.AQUA;
 
-		int views = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Views");
-		int completed = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Completed");
-		int checkpoints = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Points");
-		int maxDeaths = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".MaxDeaths");
-		int minLevel = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".MinimumLevel");
-		int rewardLevel = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Level");
-		int XP = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".XP");
-		int parkoins = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Parkoins");
-		String lobby = Parkour.getParkourConfig().getCourseData().getString(courseName + ".Lobby");
-		String nextCourse = Parkour.getParkourConfig().getCourseData().getString(courseName + ".Course");
-		String creator = Parkour.getParkourConfig().getCourseData().getString(courseName + ".Creator");
+		int views = config.getInt(courseName + ".Views");
+		int completed = config.getInt(courseName + ".Completed");
+		int checkpoints = config.getInt(courseName + ".Points");
+		int maxDeaths = config.getInt(courseName + ".MaxDeaths");
+		int minLevel = config.getInt(courseName + ".MinimumLevel");
+		int rewardLevel = config.getInt(courseName + ".Level");
+		int XP = config.getInt(courseName + ".XP");
+		int parkoins = config.getInt(courseName + ".Parkoins");
+		String linkedLobby = config.getString(courseName + ".LinkedLobby");
+		String linkedCourse = config.getString(courseName + ".LinkedCourse");
+		String creator = config.getString(courseName + ".Creator");
+		boolean finished = config.getBoolean(courseName + ".Finished");
+		String parkourBlocks = config.getString(courseName + ".ParkourBlocks");
 
 		double completePercent = Math.round(((completed * 1.0 / views) * 100));
 
@@ -221,6 +229,7 @@ public class CourseMethods {
 		player.sendMessage("Completed: " + aqua + completed + " times (" + completePercent + "%)");
 		player.sendMessage("Checkpoints: " + aqua + checkpoints);
 		player.sendMessage("Creator: " + aqua + creator);
+		player.sendMessage("Finished: " + aqua + finished);
 
 		if (minLevel > 0)
 			player.sendMessage("Required level: " + aqua + minLevel);
@@ -228,11 +237,11 @@ public class CourseMethods {
 		if (maxDeaths > 0)
 			player.sendMessage("Max Deaths: " + aqua + maxDeaths);
 
-		if (lobby != null && lobby.length() > 0)
-			player.sendMessage("Lobby: " + aqua + lobby);
+		if (linkedLobby != null && linkedLobby.length() > 0)
+			player.sendMessage("Linked Lobby: " + aqua + linkedLobby);
 
-		if (nextCourse != null && nextCourse.length() > 0)
-			player.sendMessage("Next course: " + aqua + nextCourse);
+		if (linkedCourse != null && linkedCourse.length() > 0)
+			player.sendMessage("Linked Course: " + aqua + linkedCourse);
 
 		if (rewardLevel > 0)
 			player.sendMessage("Level Reward: " + aqua + rewardLevel);
@@ -242,6 +251,9 @@ public class CourseMethods {
 
 		if (parkoins > 0)
 			player.sendMessage("Parkoins Reward: " + aqua + parkoins);
+		
+		if (parkourBlocks != null && parkourBlocks.length() > 0)
+			player.sendMessage("ParkourBlocks: " + aqua + parkourBlocks);
 	}
 
 	/**

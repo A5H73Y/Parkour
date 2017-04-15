@@ -306,7 +306,7 @@ public class ParkourListener implements Listener {
 
 		Player player = event.getPlayer();
 
-		if (!player.isSneaking())
+		if (!player.isSneaking() && Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.SneakToInteractItems"))
 			return;
 
 		if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.getAction().equals(Action.RIGHT_CLICK_AIR))
@@ -316,15 +316,16 @@ public class ParkourListener implements Listener {
 			return;
 
 		if (Utils.getMaterialInPlayersHand(player) == Parkour.getSettings().getLastCheckpoint()) {
-			if (Utils.delayPlayer(player, 2, false))
+			if (Utils.delayPlayerEvent(player, 1))
 				PlayerMethods.playerDie(player);
 
 		} else if (Utils.getMaterialInPlayersHand(player) == Parkour.getSettings().getHideall()) {
-			if (Utils.delayPlayer(player, 2, false))
+			if (Utils.delayPlayerEvent(player, 1))
 				PlayerMethods.toggleVisibility(player);
 
 		} else if (Utils.getMaterialInPlayersHand(player) == Parkour.getSettings().getLeave()) {
-			PlayerMethods.playerLeave(player);
+			if (Utils.delayPlayerEvent(player, 1))
+				PlayerMethods.playerLeave(player);
 		}
 	}
 
@@ -390,7 +391,10 @@ public class ParkourListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
-		boolean commandIsPa = event.getMessage().startsWith("/pa ") || event.getMessage().startsWith("/parkour ");
+		boolean commandIsPa = event.getMessage().startsWith("/pa ") 
+				|| event.getMessage().startsWith("/parkour ") 
+				|| event.getMessage().startsWith("/pkr ");
+		
 		Player player = event.getPlayer();
 
 		if (commandIsPa && Static.containsQuestion(player.getName())) {

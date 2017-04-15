@@ -134,6 +134,8 @@ public class Configurations {
 		usersData = YamlConfiguration.loadConfiguration(usersFile);
 		invData = YamlConfiguration.loadConfiguration(invFile);
 		checkData = YamlConfiguration.loadConfiguration(checkFile);
+		if (Static.getEconomy())
+			econData = YamlConfiguration.loadConfiguration(econFile);
 	}
 
 	public FileConfiguration getCheckData() {
@@ -402,6 +404,7 @@ public class Configurations {
 		config.addDefault("OnCourse.AttemptLessChecks", false);
 		config.addDefault("OnCourse.DisplayLiveTime", false);
 		config.addDefault("OnCourse.DisableFly", true);
+		config.addDefault("OnCourse.SneakToInteractItems", true);
 
 		config.addDefault("OnFinish.EnforceCompletion", true);
 		config.addDefault("OnFinish.TeleportToLobby", true);

@@ -184,7 +184,7 @@ public class StartPlugin {
 
 		if (configVersion >= currentVersion)
 			return;
-
+		
 		if (configVersion >= 4.0)
 			return;
 

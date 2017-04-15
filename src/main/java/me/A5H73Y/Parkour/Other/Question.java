@@ -38,12 +38,12 @@ public class Question {
 	}
 	
 	public void questionPlayer(Player player, String message) {
-		if (message.startsWith("/pa yes")) {
+		if (message.startsWith("/pa yes") || message.startsWith("/parkour yes") || message.startsWith("/pkr yes")) {
 			Question question = Static.getQuestion(player.getName());
 			question.confirm(player, question.getType(), question.getArgument());
 			Static.removeQuestion(player.getName());
 
-		} else if (message.startsWith("/pa no")) {
+		} else if (message.startsWith("/pa no") || message.startsWith("/parkour no") || message.startsWith("/pkr no")) {
 			player.sendMessage(Static.getParkourString() + "Question cancelled!");
 			Static.removeQuestion(player.getName());
 
