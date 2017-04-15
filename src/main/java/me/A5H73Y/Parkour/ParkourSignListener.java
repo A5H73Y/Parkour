@@ -197,7 +197,7 @@ public class ParkourSignListener implements Listener {
 
 			} else {
 				Utils.displayLeaderboard(event.getPlayer(), 
-						DatabaseMethods.getTopCourseResults(lines[2]));
+						DatabaseMethods.getTopCourseResults(lines[2]), lines[2]);
 			}
 
 		} else {

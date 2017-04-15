@@ -680,14 +680,15 @@ public final class Utils {
 	 * Present the course times to the player.
 	 * @param times
 	 * @param player
+	 * @param course
 	 */
-	public static void displayLeaderboard(Player player, List<TimeObject> times) {
+	public static void displayLeaderboard(Player player, List<TimeObject> times, String courseName) {
 		if (times.size() == 0) {
 			player.sendMessage(Static.getParkourString() + "No results were found!");
 			return;
 		}
-
-		player.sendMessage(Utils.getStandardHeading(times.size() + " results"));
+		
+		player.sendMessage(Utils.getStandardHeading(courseName + " : Top " + times.size() + " results"));
 		for (int i = 0; i < times.size(); i++) {
 			player.sendMessage(Utils.colour((i + 1) + ") &b" + times.get(i).getPlayer() + "&f in &3" + Utils.calculateTime(times.get(i).getTime()) + "&f, dying &7" + times.get(i).getDeaths() + " &ftimes"));
 		}
