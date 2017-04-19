@@ -222,6 +222,8 @@ public class CourseMethods {
 		String parkourBlocks = config.getString(courseName + ".ParkourBlocks");
 
 		double completePercent = Math.round(((completed * 1.0 / views) * 100));
+		
+		double likePercent = Math.round(DatabaseMethods.getVotePercent(courseName));
 
 		player.sendMessage(Utils.getStandardHeading(Utils.standardizeText(courseName) + " statistics"));
 
@@ -230,6 +232,9 @@ public class CourseMethods {
 		player.sendMessage("Checkpoints: " + aqua + checkpoints);
 		player.sendMessage("Creator: " + aqua + creator);
 		player.sendMessage("Finished: " + aqua + finished);
+		
+		if (likePercent > 0)
+			player.sendMessage("Likes: " + aqua + likePercent + "%");
 
 		if (minLevel > 0)
 			player.sendMessage("Required level: " + aqua + minLevel);
@@ -257,7 +262,7 @@ public class CourseMethods {
 	}
 
 	/**
-	 * Creating or overwritting a Parkour lobby.
+	 * Creating or overwriting a Parkour lobby.
 	 * Optional parameters include a name for a custom lobby, as well as a minimum level requirement.
 	 * 
 	 * @param args
@@ -860,7 +865,12 @@ public class CourseMethods {
 			player.sendMessage(Static.getParkourString() + "Invalid course.");
 			return;
 		}
-
+		
+		if (args.length > 1 && !args[1].equalsIgnoreCase(courseName)) {
+			player.sendMessage(Static.getParkourString() + "You can only vote for the last course successfully completed : " + ChatColor.AQUA + courseName);
+			return;
+		}
+		
 		if (DatabaseMethods.hasVoted(courseName, player.getName())){
 			player.sendMessage(Static.getParkourString() + "You have already voted for " + ChatColor.AQUA + courseName);
 			return;

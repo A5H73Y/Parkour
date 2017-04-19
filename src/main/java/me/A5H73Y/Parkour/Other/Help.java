@@ -60,7 +60,7 @@ public final class Help {
 			displayHelpMessage(sender, "Display Parkour Permissions", "/pa perms", null,
 					" Your Parkour permissions will be displayed based on the group permissions you have. For example, if you have 'Parkour.Admin.*', then you are a part of the Admin group, same for 'Parkour.Basic.*' etc. However, if you have been given only a selection of permissions from that group, it will not display, for example 'Parkour.Admin.Testmode' does not make you an admin. 'Parkour.*' will give you all Parkour permissions.");
 
-		} else if (args[1].equalsIgnoreCase("like / dislike")){	
+		} else if (args[1].equalsIgnoreCase("like") || args[1].equalsIgnoreCase("dislike")){	
 			displayHelpMessage(sender, "Vote opinion of course", "/pa [like / dislike]", null,
 					" Once you complete a course, you will have the ability to submit your vote on whether or not you liked the course. You only have one vote for each course. The sole purpose of this is for statistics, i.e. 70% of people liked this course.");
 
