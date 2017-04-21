@@ -34,7 +34,7 @@ public class ParkourSignListener implements Listener {
 		if (event.getLine(0).equalsIgnoreCase("[parkour]") || event.getLine(0).equalsIgnoreCase("[pa]")) {
 			Player player = event.getPlayer();
 
-			event.setLine(0, ChatColor.BLACK + "[" + ChatColor.AQUA + "Parkour" + ChatColor.BLACK + "]");
+			event.setLine(0, Static.getParkourSignString());
 
 			if (event.getLine(1).equalsIgnoreCase("join") || event.getLine(1).equalsIgnoreCase("j")) {
 				sm.createJoinCourseSign(event, player);
@@ -84,7 +84,7 @@ public class ParkourSignListener implements Listener {
 
 		String[] lines = ((Sign) event.getClickedBlock().getState()).getLines();
 
-		if (!lines[0].contains(ChatColor.AQUA + "Parkour")) 
+		if (!ChatColor.stripColor(lines[0]).contains(ChatColor.stripColor(Static.getParkourSignString())))
 			return;
 
 		if (!Utils.hasPermission(event.getPlayer(), "Parkour.Admin")){
@@ -108,7 +108,7 @@ public class ParkourSignListener implements Listener {
 		Sign sign = (Sign) event.getClickedBlock().getState();
 		String[] lines = sign.getLines();
 
-		if (!lines[0].contains(ChatColor.AQUA + "Parkour")){
+		if (!ChatColor.stripColor(lines[0]).contains(ChatColor.stripColor(Static.getParkourSignString()))){
 			if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
 				return;
 

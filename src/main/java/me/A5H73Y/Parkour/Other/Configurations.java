@@ -248,7 +248,7 @@ public class Configurations {
 	private void saveStrings() {
 		try{
 			stringData.addDefault("Parkour.Prefix", "&0[&bParkour&0] &f");
-
+			stringData.addDefault("Parkour.SignHeading", "&0[&bParkour&0]");
 			stringData.addDefault("Event.Join", "This server uses &bParkour &3%VERSION%");
 			stringData.addDefault("Event.Checkpoint", "Checkpoint set to ");
 			stringData.addDefault("Event.AllCheckpoints", "All checkpoints achieved!");

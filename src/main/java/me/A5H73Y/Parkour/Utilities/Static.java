@@ -40,6 +40,7 @@ public final class Static {
 	private static ParkourBlocks parkourBlocks;
 
 	private static String parkourString;
+	private static String parkourSignString;
 	private static Double version;
 
 	public final static String PATH = Parkour.getPlugin().getDataFolder() + File.separator + "playing.bin";
@@ -49,6 +50,7 @@ public final class Static {
 		courseList = Parkour.getParkourConfig().getAllCourses();
 		parkourBlocks = Utils.populateDefaultParkourBlocks();
 		parkourString = Utils.getTranslation("Parkour.Prefix", false);
+		parkourSignString = Utils.getTranslation("Parkour.SignHeading", false);
 	}
 
 	public final static void populateCourses(List<String> courses) {
@@ -58,6 +60,8 @@ public final class Static {
 	public final static String getParkourString() {
 		return parkourString;
 	}
+
+	public final static String getParkourSignString() { return parkourSignString; }
 
 	public final static Double getVersion() {
 		return version;
