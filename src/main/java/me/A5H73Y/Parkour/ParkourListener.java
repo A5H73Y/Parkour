@@ -306,8 +306,10 @@ public class ParkourListener implements Listener {
 
 		Player player = event.getPlayer();
 
-		if (!player.isSneaking() && Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.SneakToInteractItems"))
+		if (!player.isSneaking() && Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.SneakToInteractItems")) {
+			event.setCancelled(true);
 			return;
+		}
 
 		if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.getAction().equals(Action.RIGHT_CLICK_AIR))
 			return;
@@ -315,7 +317,7 @@ public class ParkourListener implements Listener {
 		if (PlayerMethods.isPlayerInTestmode(player.getName()))
 			return;
 		
-        event.setCancelled(true);
+		event.setCancelled(true);
         
 		if (Utils.getMaterialInPlayersHand(player) == Parkour.getSettings().getLastCheckpoint()) {
 			if (Utils.delayPlayerEvent(player, 1))
