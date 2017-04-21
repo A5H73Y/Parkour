@@ -1022,7 +1022,7 @@ public class CourseMethods {
 	}
 
 	/**
-	 * Set the mode of a Parkour course
+	 * Set the ParkourMode of a course
 	 * Starts a Conversation to set the mode of the course.
 	 * 
 	 * @param args
@@ -1038,10 +1038,10 @@ public class CourseMethods {
 
 	/**
 	 * Retrieves the ParkourMode of a course
-	 * Will default to NONE if a mode hasn't been configured.
+	 * Will default to NONE if a mode hasn't been specified.
 	 * 
 	 * @param courseName
-	 * @return
+	 * @return ParkourMode
 	 */
 	public static ParkourMode getCourseMode(String courseName) {
 		String mode = Parkour.getParkourConfig().getCourseData().getString(courseName + ".Mode");
@@ -1063,5 +1063,35 @@ public class CourseMethods {
 		}
 
 		return ParkourMode.NONE;
+	}
+
+	/**
+	 * Return the linked course of the specified course
+	 * Will validate it's a valid course before returning
+	 * @param courseName
+	 * @return linkedCourse
+	 */
+	public static String getLinkedCourse(String courseName) {
+		String linkedCourse = Parkour.getParkourConfig().getCourseData().getString(courseName + ".LinkedCourse");
+
+		if (linkedCourse != null && CourseMethods.exist(linkedCourse))
+			return linkedCourse;
+
+		return null;
+	}
+
+	/**
+	 * Return the linked course of the specified lobby
+	 * Will validate it's a valid lobby before returning
+	 * @param courseName
+	 * @return linkedLobby
+	 */
+	public static String getLinkedLobby(String courseName) {
+		String linkedLobby = Parkour.getParkourConfig().getCourseData().getString(courseName + ".LinkedLobby");
+
+		if (linkedLobby != null && Static.getLobbyList().contains(linkedLobby))
+			return linkedLobby;
+
+		return null;
 	}
 }

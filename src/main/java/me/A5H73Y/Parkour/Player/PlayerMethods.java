@@ -98,11 +98,14 @@ public class PlayerMethods {
 		removePlayer(player.getName());
 		preparePlayer(player, Parkour.getParkourConfig().getConfig().getInt("OnFinish.SetGamemode"));
 		loadInventory(player);
-		if (!Parkour.getParkourConfig().getConfig().getBoolean("OnLeave.TeleportToCustomLobby")) {
-			CourseMethods.joinLobby(null, player);
-		} else {
-			//TODO
+		String[] args = null;
+
+		if (Parkour.getParkourConfig().getConfig().getBoolean("OnLeave.TeleportToCustomLobby")) {
+			String linkedLobby = CourseMethods.getLinkedLobby(session.getCourse().getName());
+			args = new String[]{null, linkedLobby};
 		}
+
+		CourseMethods.joinLobby(args, player);
 
 		if (Static.containsHidden(player.getName()))
 			Utils.toggleVisibility(player, true);
