@@ -389,6 +389,7 @@ public class Configurations {
 		config.addDefault("OnJoin.FillHealth", true);
 		config.addDefault("OnJoin.Item.LastCheckpoint.Material", "ARROW");
 		config.addDefault("OnJoin.Item.HideAll.Material", "BONE");
+		config.addDefault("OnJoin.Item.HideAll.Global", true);
 		config.addDefault("OnJoin.Item.Leave.Material", "SAPLING");
 
 		config.addDefault("OnCourse.DieInLiquid", false);

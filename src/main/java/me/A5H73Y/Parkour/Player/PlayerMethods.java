@@ -1,5 +1,6 @@
 package me.A5H73Y.Parkour.Player;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -99,7 +100,7 @@ public class PlayerMethods {
 		CourseMethods.joinLobby(null, player);
 
 		if (Static.containsHidden(player.getName()))
-			toggleVisibility(player, true);
+			Utils.toggleVisibility(player, true);
 	}
 
 	/**
@@ -185,7 +186,7 @@ public class PlayerMethods {
 		preparePlayer(player, Parkour.getParkourConfig().getConfig().getInt("OnFinish.SetGamemode"));
 		
 		if (Static.containsHidden(player.getName()))
-			toggleVisibility(player, true);
+			Utils.toggleVisibility(player, true);
 
 		displayFinishMessage(player, session);
 		CourseMethods.increaseComplete(courseName);
@@ -821,35 +822,6 @@ public class PlayerMethods {
 
 			addPlayer(player.getName(), new ParkourSession(new Course(Constants.TEST_MODE, checkpoint)));
 			Utils.sendActionBar(player, Utils.colour("Test Mode: &bON"), true);
-		}
-	}
-
-
-	public static void toggleVisibility(Player player) {
-		toggleVisibility(player, false);
-	}
-
-	/**
-	 * Toggle Visibility of all players for the player
-	 * Can be overwritten to force the reappearance of all players (i.e. when a player leaves / finishes a course)
-	 * @param player
-	 * @param override
-	 */
-	public static void toggleVisibility(Player player, boolean override) {
-		boolean enabled = override ? true : Static.containsHidden(player.getName());
-
-		for (Player players : Bukkit.getOnlinePlayers()) {
-			if (enabled)
-				player.showPlayer(players);
-			else
-				player.hidePlayer(players);
-		}
-		if (enabled) {
-			Static.removeHidden(player.getName());
-			player.sendMessage(Utils.getTranslation("Event.HideAll1"));
-		} else {
-			Static.addHidden(player.getName());
-			player.sendMessage(Utils.getTranslation("Event.HideAll2"));
 		}
 	}
 

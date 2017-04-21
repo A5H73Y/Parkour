@@ -323,7 +323,7 @@ public class ParkourListener implements Listener {
 
 		} else if (Utils.getMaterialInPlayersHand(player) == Parkour.getSettings().getHideall()) {
 			if (Utils.delayPlayerEvent(player, 1))
-				PlayerMethods.toggleVisibility(player);
+				Utils.toggleVisibility(player);
 
 		} else if (Utils.getMaterialInPlayersHand(player) == Parkour.getSettings().getLeave()) {
 			if (Utils.delayPlayerEvent(player, 1))
