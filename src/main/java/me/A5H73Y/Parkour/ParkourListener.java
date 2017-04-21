@@ -314,7 +314,9 @@ public class ParkourListener implements Listener {
 
 		if (PlayerMethods.isPlayerInTestmode(player.getName()))
 			return;
-
+		
+        event.setCancelled(true);
+        
 		if (Utils.getMaterialInPlayersHand(player) == Parkour.getSettings().getLastCheckpoint()) {
 			if (Utils.delayPlayerEvent(player, 1))
 				PlayerMethods.playerDie(player);
