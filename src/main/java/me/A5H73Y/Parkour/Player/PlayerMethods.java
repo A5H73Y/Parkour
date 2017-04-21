@@ -94,10 +94,15 @@ public class PlayerMethods {
 				.replace("%COURSE%", session.getCourse().getName()),
 				Parkour.getParkourConfig().getConfig().getBoolean("DisplayTitle.Leave"));
 
+		teardownPlayerMode(player);
 		removePlayer(player.getName());
 		preparePlayer(player, Parkour.getParkourConfig().getConfig().getInt("OnFinish.SetGamemode"));
 		loadInventory(player);
-		CourseMethods.joinLobby(null, player);
+		if (!Parkour.getParkourConfig().getConfig().getBoolean("OnLeave.TeleportToCustomLobby")) {
+			CourseMethods.joinLobby(null, player);
+		} else {
+			//TODO
+		}
 
 		if (Static.containsHidden(player.getName()))
 			Utils.toggleVisibility(player, true);
@@ -190,6 +195,7 @@ public class PlayerMethods {
 
 		displayFinishMessage(player, session);
 		CourseMethods.increaseComplete(courseName);
+		teardownPlayerMode(player);
 		removePlayer(player.getName());
 
 		loadInventory(player);
@@ -929,6 +935,22 @@ public class PlayerMethods {
 
 		} else if (session.getMode() == ParkourMode.DARKNESS) {
 			player.sendMessage(Utils.getTranslation("Mode.Darkness.JoinText"));
+
+		} else if (session.getMode() == ParkourMode.SPEEDY) {
+			float speed = Float.valueOf(Parkour.getParkourConfig().getConfig().getString("ParkourModes.Speedy.SetSpeed"));
+			player.setWalkSpeed(speed);
+		}
+	}
+
+	private static void teardownPlayerMode(Player player) {
+		ParkourSession session = getParkourSession(player.getName());
+
+		if (session.getMode() == ParkourMode.NONE)
+			return;
+
+		if (session.getMode() == ParkourMode.SPEEDY) {
+			float speed = Float.valueOf(Parkour.getParkourConfig().getConfig().getString("ParkourModes.Speedy.ResetSpeed"));
+			player.setWalkSpeed(speed);
 		}
 	}
 

@@ -222,8 +222,6 @@ public class CourseMethods {
 		String parkourBlocks = config.getString(courseName + ".ParkourBlocks");
 
 		double completePercent = Math.round(((completed * 1.0 / views) * 100));
-		
-		double likePercent = Math.round(DatabaseMethods.getVotePercent(courseName));
 
 		player.sendMessage(Utils.getStandardHeading(Utils.standardizeText(courseName) + " statistics"));
 
@@ -232,9 +230,6 @@ public class CourseMethods {
 		player.sendMessage("Checkpoints: " + aqua + checkpoints);
 		player.sendMessage("Creator: " + aqua + creator);
 		player.sendMessage("Finished: " + aqua + finished);
-		
-		if (likePercent > 0)
-			player.sendMessage("Likes: " + aqua + likePercent + "%");
 
 		if (minLevel > 0)
 			player.sendMessage("Required level: " + aqua + minLevel);
@@ -259,6 +254,11 @@ public class CourseMethods {
 		
 		if (parkourBlocks != null && parkourBlocks.length() > 0)
 			player.sendMessage("ParkourBlocks: " + aqua + parkourBlocks);
+
+		double likePercent = Math.round(DatabaseMethods.getVotePercent(courseName));
+
+		if (likePercent > 0)
+			player.sendMessage("Liked: " + aqua + likePercent + "%");
 	}
 
 	/**
@@ -859,31 +859,36 @@ public class CourseMethods {
 	 * @param player
 	 */
 	public static void rateCourse(String[] args, Player player) {
-		String courseName = Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + player.getName() + ".LastPlayed");
+		String courseName;
+
+		if (args.length > 1) {
+			courseName = args[1].toLowerCase();
+		} else {
+			courseName = Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + player.getName() + ".LastPlayed");
+		}
 
 		if (!CourseMethods.exist(courseName)) {
-			player.sendMessage(Static.getParkourString() + "Invalid course.");
-			return;
-		}
-		
-		if (args.length > 1 && !args[1].equalsIgnoreCase(courseName)) {
-			player.sendMessage(Static.getParkourString() + "You can only vote for the last course successfully completed : " + ChatColor.AQUA + courseName);
-			return;
-		}
-		
-		if (DatabaseMethods.hasVoted(courseName, player.getName())){
-			player.sendMessage(Static.getParkourString() + "You have already voted for " + ChatColor.AQUA + courseName);
+			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", courseName));
 			return;
 		}
 
-		if (args[0].equalsIgnoreCase("like")) {
-			DatabaseMethods.insertVote(courseName, player.getName(), true);
-			player.sendMessage(Static.getParkourString() + "You " + ChatColor.GREEN + "liked " + ChatColor.WHITE + courseName); 
+		if (!DatabaseMethods.hasPlayerCompleted(player.getName(), courseName)) {
+			player.sendMessage(Utils.getTranslation("Error.NotCompleted").replace("%COURSE%", courseName));
+			return;
+		}
 
-		} else if (args[0].equalsIgnoreCase("dislike")) {
-			DatabaseMethods.insertVote(courseName, player.getName(), false);
-			player.sendMessage(Static.getParkourString() + "You " + ChatColor.RED + "disliked " + ChatColor.WHITE + courseName); 
+		if (DatabaseMethods.hasVoted(courseName, player.getName())) {
+			player.sendMessage(Utils.getTranslation("Error.AlreadyVoted").replace("%COURSE%", courseName));
+			return;
+		}
 
+		boolean liked = args[0].equalsIgnoreCase("like");
+		DatabaseMethods.insertVote(courseName, player.getName(), liked);
+
+		if (liked) {
+			player.sendMessage(Static.getParkourString() + "You " + ChatColor.GREEN + "liked " + ChatColor.WHITE + courseName);
+		} else {
+			player.sendMessage(Static.getParkourString() + "You " + ChatColor.RED + "disliked " + ChatColor.WHITE + courseName);
 		}
 	}
 
@@ -1047,8 +1052,15 @@ public class CourseMethods {
 		} else if ("drunk".equalsIgnoreCase(mode)) {
 			return ParkourMode.DRUNK;
 
-		} else if ("darkness".equalsIgnoreCase(mode))
+		} else if ("darkness".equalsIgnoreCase(mode)) {
 			return ParkourMode.DARKNESS;
+
+		} else if ("speedy".equalsIgnoreCase(mode)) {
+			return ParkourMode.SPEEDY;
+
+		} else if ("moon".equalsIgnoreCase(mode)) {
+			return ParkourMode.MOON;
+		}
 
 		return ParkourMode.NONE;
 	}
