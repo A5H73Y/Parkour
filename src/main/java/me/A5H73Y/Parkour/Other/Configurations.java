@@ -408,6 +408,7 @@ public class Configurations {
 		config.addDefault("OnCourse.DisplayLiveTime", false);
 		config.addDefault("OnCourse.DisableFly", true);
 		config.addDefault("OnCourse.SneakToInteractItems", true);
+		config.addDefault("OnCourse.AdminPlaceBreakBlocks", true);
 
 		config.addDefault("OnFinish.EnforceCompletion", true);
 		config.addDefault("OnFinish.TeleportToLobby", true);

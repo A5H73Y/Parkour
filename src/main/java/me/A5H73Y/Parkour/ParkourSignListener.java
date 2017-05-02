@@ -1,6 +1,7 @@
 package me.A5H73Y.Parkour;
 
 import me.A5H73Y.Parkour.Course.CourseMethods;
+import me.A5H73Y.Parkour.Course.LobbyMethods;
 import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
@@ -155,10 +156,10 @@ public class ParkourSignListener implements Listener {
 
 		} else if (lines[1].equalsIgnoreCase("lobby")) {
 			if (lines[2].isEmpty()) {
-				CourseMethods.joinLobby(new String[0], event.getPlayer());
+				LobbyMethods.joinLobby(new String[0], event.getPlayer());
 			} else {
 				String[] args = {"", lines[2]};
-				CourseMethods.joinLobby(args, event.getPlayer());
+				LobbyMethods.joinLobby(args, event.getPlayer());
 			}
 
 		} else if (lines[1].equalsIgnoreCase("stats")) {

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import me.A5H73Y.Parkour.Course.LobbyMethods;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.Checkpoint;
 import me.A5H73Y.Parkour.Course.Course;
@@ -98,14 +99,7 @@ public class PlayerMethods {
 		removePlayer(player.getName());
 		preparePlayer(player, Parkour.getParkourConfig().getConfig().getInt("OnFinish.SetGamemode"));
 		loadInventory(player);
-		String[] args = null;
-
-		if (Parkour.getParkourConfig().getConfig().getBoolean("OnLeave.TeleportToCustomLobby")) {
-			String linkedLobby = CourseMethods.getLinkedLobby(session.getCourse().getName());
-			args = new String[]{null, linkedLobby};
-		}
-
-		CourseMethods.joinLobby(args, player);
+		LobbyMethods.leaveCourse(player, session);
 
 		if (Static.containsHidden(player.getName()))
 			Utils.toggleVisibility(player, true);
@@ -244,12 +238,12 @@ public class PlayerMethods {
 
 			if (Parkour.getParkourConfig().getConfig().contains("Lobby." + lobbyName + ".World")) {
 				String[] args = { null, lobbyName };
-				CourseMethods.joinLobby(args, player);
+				LobbyMethods.joinLobby(args, player);
 				return;
 			}
 		}
 
-		CourseMethods.joinLobby(null, player);
+		LobbyMethods.joinLobby(null, player);
 	}
 
 	/**
@@ -681,8 +675,10 @@ public class PlayerMethods {
 		if (Parkour.getParkourConfig().getConfig().getBoolean("OnJoin.FillHealth"))
 			player.setFoodLevel(20);
 		
-		if (Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.DisableFly"))
+		if (Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.DisableFly")) {
+			player.setAllowFlight(false);
 			player.setFlying(false);
+		}
 
 		if (Parkour.getSettings().getLastCheckpoint() != null && !player.getInventory().contains(Parkour.getSettings().getLastCheckpoint()))
 			player.getInventory().addItem(Utils.getItemStack(

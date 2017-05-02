@@ -1,5 +1,6 @@
 package me.A5H73Y.Parkour.Other;
 
+import me.A5H73Y.Parkour.Course.LobbyMethods;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.CourseMethods;
@@ -53,8 +54,8 @@ public class Question {
 		}
 	}
 
-	public void confirm(Player player, QuestionType type, String argument) {
-		switch(type){
+	private void confirm(Player player, QuestionType type, String argument) {
+		switch(type) {
 
 		case DELETE_COURSE:	
 			CourseMethods.deleteCourse(argument, player);
@@ -67,7 +68,7 @@ public class Question {
 			return;
 
 		case DELETE_LOBBY:
-			CourseMethods.deleteLobby(argument, player);
+			LobbyMethods.deleteLobby(argument, player);
 			player.sendMessage("Lobby " + ChatColor.AQUA + argument + ChatColor.WHITE + " deleted...");
 			Utils.logToFile("lobby " + argument + " was deleted by " + player.getName());
 

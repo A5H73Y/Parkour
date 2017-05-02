@@ -182,13 +182,15 @@ public class ParkourListener implements Listener {
 
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
-		if (PlayerMethods.isPlaying(event.getPlayer().getName()) && !Utils.hasPermission(event.getPlayer(), "Parkour.Admin"))
+		if (PlayerMethods.isPlaying(event.getPlayer().getName()) && !Utils.hasPermission(event.getPlayer(), "Parkour.Admin")
+				|| (!Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks")))
 			event.setCancelled(true);
 	}
 
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
-		if (PlayerMethods.isPlaying(event.getPlayer().getName()) && !Utils.hasPermission(event.getPlayer(), "Parkour.Admin"))
+		if (PlayerMethods.isPlaying(event.getPlayer().getName()) && !Utils.hasPermission(event.getPlayer(), "Parkour.Admin")
+				|| (!Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks")))
 			event.setCancelled(true);
 	}
 
@@ -290,7 +292,6 @@ public class ParkourListener implements Listener {
 			event.setCancelled(true);
 			event.getPlayer().sendMessage(Utils.getTranslation("Error.WorldTeleport"));
 		}
-
 	}
 
 	@EventHandler

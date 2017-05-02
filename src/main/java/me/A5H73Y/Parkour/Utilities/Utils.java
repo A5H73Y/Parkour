@@ -648,9 +648,8 @@ public final class Utils {
 			player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
 			Static.addQuestion(player.getName(), new Question(QuestionType.RESET_LEADERBOARD, args[2].toLowerCase()));
 
-			
 		} else {
-			invalidSyntax("reset", "(course / player) (courseName / playerName)");
+			invalidSyntax("reset", "(course / player / leaderboard) (argument)");
 		}
 	}
 
