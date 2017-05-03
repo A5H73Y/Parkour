@@ -28,6 +28,8 @@ import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -182,14 +184,20 @@ public class ParkourListener implements Listener {
 
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
-		if (PlayerMethods.isPlaying(event.getPlayer().getName()) && !Utils.hasPermission(event.getPlayer(), "Parkour.Admin")
+		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+			return;
+
+		if (!Utils.hasPermission(event.getPlayer(), "Parkour.Admin")
 				|| (!Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks")))
 			event.setCancelled(true);
 	}
 
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
-		if (PlayerMethods.isPlaying(event.getPlayer().getName()) && !Utils.hasPermission(event.getPlayer(), "Parkour.Admin")
+		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+			return;
+
+		if (!Utils.hasPermission(event.getPlayer(), "Parkour.Admin")
 				|| (!Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks")))
 			event.setCancelled(true);
 	}
@@ -359,6 +367,7 @@ public class ParkourListener implements Listener {
 			return;
 
 		event.setCancelled(true);
+
 		if (Utils.getMaterialInPlayersHand(player) == Material.REDSTONE_TORCH_ON) {
 			if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
 				PlayerMethods.getParkourSession(player.getName()).getCourse().setCheckpoint(Utils.getCheckpointOfCurrentPosition(player));
@@ -401,6 +410,18 @@ public class ParkourListener implements Listener {
 			PlayerMethods.increaseCheckpoint(session, event.getPlayer());
 	}
 
+	@EventHandler
+	public void onInventoryOpen(InventoryOpenEvent event) {
+		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+			return;
+
+		if (!Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.PreventOpeningCraftingInventory"))
+			return;
+
+		if (event.getInventory().getType() != InventoryType.PLAYER)
+			event.setCancelled(true);
+	}
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		boolean commandIsPa = event.getMessage().startsWith("/pa ") 
@@ -432,7 +453,6 @@ public class ParkourListener implements Listener {
 				event.setCancelled(true);
 				player.sendMessage(Utils.getTranslation("Error.Command"));
 			}
-
 		}
 	}
 }

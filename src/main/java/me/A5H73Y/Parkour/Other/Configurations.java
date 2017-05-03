@@ -409,6 +409,7 @@ public class Configurations {
 		config.addDefault("OnCourse.DisableFly", true);
 		config.addDefault("OnCourse.SneakToInteractItems", true);
 		config.addDefault("OnCourse.AdminPlaceBreakBlocks", true);
+		config.addDefault("OnCourse.PreventOpeningCraftingInventory", false);
 
 		config.addDefault("OnFinish.EnforceCompletion", true);
 		config.addDefault("OnFinish.TeleportToLobby", true);
