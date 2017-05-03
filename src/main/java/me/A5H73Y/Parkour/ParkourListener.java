@@ -38,6 +38,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
@@ -324,17 +325,26 @@ public class ParkourListener implements Listener {
 
 		Player player = event.getPlayer();
 
-		if (!player.isSneaking() && Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.SneakToInteractItems"))
-			return;
-
 		if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.getAction().equals(Action.RIGHT_CLICK_AIR))
 			return;
 
 		if (PlayerMethods.isPlayerInTestmode(player.getName()))
 			return;
 		
-        event.setCancelled(true);
-        
+		Block block = event.getClickedBlock();
+		if (block != null) {
+			if (block.getState() instanceof InventoryHolder || block.getType() == Material.WORKBENCH)
+				event.setCancelled(true);
+		}
+		
+		if (!player.isSneaking() && Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.SneakToInteractItems"))
+			return;
+		
+		if (Utils.getMaterialInPlayersHand(player) == Material.AIR) 
+			return;
+		
+		event.setCancelled(true);
+		
 		if (Utils.getMaterialInPlayersHand(player) == Parkour.getSettings().getLastCheckpoint()) {
 			if (Utils.delayPlayerEvent(player, 1))
 				PlayerMethods.playerDie(player);
