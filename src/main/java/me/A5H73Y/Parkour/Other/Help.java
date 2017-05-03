@@ -193,8 +193,8 @@ public final class Help {
 					" You can delete a course, which will remove all information stored on the server about the course, as well as remove all references from the database. You can delete a lobby from the server. The operation will have to be confirmed or cancelled before the change is made.");
 
 		} else if (args[1].equalsIgnoreCase("reset")){	
-			displayHelpMessage(sender, "Reset a course / player", "/pa reset (course / player) (argument)", "/pa reset player A5H73Y",
-					" Resetting a course will delete all the statistics stored, which includes leaderboards and various parkour attributes. This will NOT affect the spawn / checkpoints. Resetting a player will delete all their times across all courses and delete all various parkour attributes. The operation will have to be confirmed or cancelled before the change is made.");
+			displayHelpMessage(sender, "Reset a course / player", "/pa reset (course / player / leaderboard) (argument)", "/pa reset player A5H73Y",
+					" Resetting a course will delete all the statistics stored, which includes leaderboards and various Parkour attributes. This will NOT affect the spawn / checkpoints. Resetting a player will delete all their times across all courses and delete all various Parkour attributes. The operation will have to be confirmed or cancelled before the change is made.");
 
 		} else if (args[1].equalsIgnoreCase("whitelist")){	
 			displayHelpMessage(sender, "Whitelist a command", "/pa whitelist (command)", "/pa whitelist help",

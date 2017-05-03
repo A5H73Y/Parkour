@@ -1,6 +1,7 @@
 package me.A5H73Y.Parkour;
 
 import me.A5H73Y.Parkour.Course.CourseMethods;
+import me.A5H73Y.Parkour.Course.LobbyMethods;
 import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
@@ -34,7 +35,7 @@ public class ParkourSignListener implements Listener {
 		if (event.getLine(0).equalsIgnoreCase("[parkour]") || event.getLine(0).equalsIgnoreCase("[pa]")) {
 			Player player = event.getPlayer();
 
-			event.setLine(0, ChatColor.BLACK + "[" + ChatColor.AQUA + "Parkour" + ChatColor.BLACK + "]");
+			event.setLine(0, Static.getParkourSignString());
 
 			if (event.getLine(1).equalsIgnoreCase("join") || event.getLine(1).equalsIgnoreCase("j")) {
 				sm.createJoinCourseSign(event, player);
@@ -84,7 +85,7 @@ public class ParkourSignListener implements Listener {
 
 		String[] lines = ((Sign) event.getClickedBlock().getState()).getLines();
 
-		if (!lines[0].contains(ChatColor.AQUA + "Parkour")) 
+		if (!ChatColor.stripColor(lines[0]).contains(ChatColor.stripColor(Static.getParkourSignString())))
 			return;
 
 		if (!Utils.hasPermission(event.getPlayer(), "Parkour.Admin")){
@@ -108,7 +109,7 @@ public class ParkourSignListener implements Listener {
 		Sign sign = (Sign) event.getClickedBlock().getState();
 		String[] lines = sign.getLines();
 
-		if (!lines[0].contains(ChatColor.AQUA + "Parkour")){
+		if (!ChatColor.stripColor(lines[0]).contains(ChatColor.stripColor(Static.getParkourSignString()))){
 			if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
 				return;
 
@@ -155,10 +156,10 @@ public class ParkourSignListener implements Listener {
 
 		} else if (lines[1].equalsIgnoreCase("lobby")) {
 			if (lines[2].isEmpty()) {
-				CourseMethods.joinLobby(new String[0], event.getPlayer());
+				LobbyMethods.joinLobby(new String[0], event.getPlayer());
 			} else {
 				String[] args = {"", lines[2]};
-				CourseMethods.joinLobby(args, event.getPlayer());
+				LobbyMethods.joinLobby(args, event.getPlayer());
 			}
 
 		} else if (lines[1].equalsIgnoreCase("stats")) {

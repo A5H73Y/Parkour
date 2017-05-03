@@ -83,6 +83,12 @@ public class ParkourListener implements Listener {
 				return;
 
 			event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 10000, 1));
+
+		} else if (session.getMode() == ParkourMode.MOON) {
+			if (event.getPlayer().hasPotionEffect(PotionEffectType.JUMP))
+				return;
+
+			event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 10000, Parkour.getSettings().getBounceStrength()));
 		}
 	}
 
@@ -105,55 +111,58 @@ public class ParkourListener implements Listener {
 
 		Material belowMaterial = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
 		ParkourBlocks pb = PlayerMethods.getParkourSession(event.getPlayer().getName()).getCourse().getParkourBlocks();
+		Player player = event.getPlayer();
 
 		if (belowMaterial.equals(pb.getFinish())) {
-			PlayerMethods.playerFinish(event.getPlayer());
+			PlayerMethods.playerFinish(player);
 
 		} else if (belowMaterial.equals(pb.getDeath())) {
-			PlayerMethods.playerDie(event.getPlayer());
+			PlayerMethods.playerDie(player);
 
 		} else if (belowMaterial.equals(Material.SPONGE)) {
-			event.getPlayer().setFallDistance(0);
+			player.setFallDistance(0);
 
 		} else if (belowMaterial.equals(pb.getLaunch())) {
-			event.getPlayer().setVelocity(new Vector(0, Parkour.getSettings().getLaunchStrength(), 0));
+			player.setVelocity(new Vector(0, Parkour.getSettings().getLaunchStrength(), 0));
 
 		} else if (belowMaterial.equals(pb.getBounce())) {
-			event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Parkour.getSettings().getBounceDuration(), Parkour.getSettings().getBounceStrength()));
+			if (!player.hasPotionEffect(PotionEffectType.JUMP))
+				player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Parkour.getSettings().getBounceDuration(), Parkour.getSettings().getBounceStrength()));
 
 		} else if (belowMaterial.equals(pb.getSpeed())) {
-			event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Parkour.getSettings().getSpeedDuration(), Parkour.getSettings().getSpeedStrength()));
+			if (!player.hasPotionEffect(PotionEffectType.SPEED))
+				player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Parkour.getSettings().getSpeedDuration(), Parkour.getSettings().getSpeedStrength()));
 
 		} else if (belowMaterial.equals(pb.getNorun())) {
-			event.getPlayer().setSprinting(false);
+			player.setSprinting(false);
 
 		} else if (belowMaterial.equals(pb.getNopotion())) {
-			for (PotionEffect effect : event.getPlayer().getActivePotionEffects())
-				event.getPlayer().removePotionEffect(effect.getType());
+			for (PotionEffect effect : player.getActivePotionEffects())
+				player.removePotionEffect(effect.getType());
 
-			event.getPlayer().setFireTicks(0);
+			player.setFireTicks(0);
 
-		} else if (event.getPlayer().getLocation().getBlock().isLiquid() && Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.DieInLiquid")) {
-			PlayerMethods.playerDie(event.getPlayer());
+		} else if (player.getLocation().getBlock().isLiquid() && Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.DieInLiquid")) {
+			PlayerMethods.playerDie(player);
 
 		} else {
-			Material matEast = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.EAST).getType();
-			Material matNorth = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.NORTH).getType();
-			Material matWest = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.WEST).getType();
-			Material matSouth = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.SOUTH).getType();
+			Material matEast = player.getLocation().getBlock().getRelative(BlockFace.EAST).getType();
+			Material matNorth = player.getLocation().getBlock().getRelative(BlockFace.NORTH).getType();
+			Material matWest = player.getLocation().getBlock().getRelative(BlockFace.WEST).getType();
+			Material matSouth = player.getLocation().getBlock().getRelative(BlockFace.SOUTH).getType();
 
 			if (matEast.equals(pb.getClimb()) || matNorth.equals(pb.getClimb()) || matWest.equals(pb.getClimb()) || matSouth.equals(pb.getClimb())) {
-				if (!event.getPlayer().isSneaking())
-					event.getPlayer().setVelocity(new Vector(0, Parkour.getSettings().getClimbStrength(), 0));
+				if (!player.isSneaking())
+					player.setVelocity(new Vector(0, Parkour.getSettings().getClimbStrength(), 0));
 
 			} else if (matNorth.equals(pb.getRepulse())) {
-				event.getPlayer().setVelocity(new Vector(0, 0.1, Parkour.getSettings().getRepulseStrength()));
+				player.setVelocity(new Vector(0, 0.1, Parkour.getSettings().getRepulseStrength()));
 			} else if (matSouth.equals(pb.getRepulse())) {
-				event.getPlayer().setVelocity(new Vector(0, 0.1, -Parkour.getSettings().getRepulseStrength()));
+				player.setVelocity(new Vector(0, 0.1, -Parkour.getSettings().getRepulseStrength()));
 			} else if (matEast.equals(pb.getRepulse())) {
-				event.getPlayer().setVelocity(new Vector(-Parkour.getSettings().getRepulseStrength(), 0.1, 0));
+				player.setVelocity(new Vector(-Parkour.getSettings().getRepulseStrength(), 0.1, 0));
 			} else if (matWest.equals(pb.getRepulse())) {
-				event.getPlayer().setVelocity(new Vector(Parkour.getSettings().getRepulseStrength(), 0.1, 0));
+				player.setVelocity(new Vector(Parkour.getSettings().getRepulseStrength(), 0.1, 0));
 			}
 		}
 	}
@@ -174,13 +183,15 @@ public class ParkourListener implements Listener {
 
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
-		if (PlayerMethods.isPlaying(event.getPlayer().getName()) && !Utils.hasPermission(event.getPlayer(), "Parkour.Admin"))
+		if (PlayerMethods.isPlaying(event.getPlayer().getName()) && !Utils.hasPermission(event.getPlayer(), "Parkour.Admin")
+				|| (!Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks")))
 			event.setCancelled(true);
 	}
 
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
-		if (PlayerMethods.isPlaying(event.getPlayer().getName()) && !Utils.hasPermission(event.getPlayer(), "Parkour.Admin"))
+		if (PlayerMethods.isPlaying(event.getPlayer().getName()) && !Utils.hasPermission(event.getPlayer(), "Parkour.Admin")
+				|| (!Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks")))
 			event.setCancelled(true);
 	}
 
@@ -282,7 +293,6 @@ public class ParkourListener implements Listener {
 			event.setCancelled(true);
 			event.getPlayer().sendMessage(Utils.getTranslation("Error.WorldTeleport"));
 		}
-
 	}
 
 	@EventHandler
@@ -333,7 +343,7 @@ public class ParkourListener implements Listener {
 
 		} else if (Utils.getMaterialInPlayersHand(player) == Parkour.getSettings().getHideall()) {
 			if (Utils.delayPlayerEvent(player, 1))
-				PlayerMethods.toggleVisibility(player);
+				Utils.toggleVisibility(player);
 
 		} else if (Utils.getMaterialInPlayersHand(player) == Parkour.getSettings().getLeave()) {
 			if (Utils.delayPlayerEvent(player, 1))

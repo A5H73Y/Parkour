@@ -10,10 +10,7 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.Checkpoint;
@@ -24,6 +21,8 @@ import me.A5H73Y.Parkour.Other.Question;
 import me.A5H73Y.Parkour.Other.TimeObject;
 import me.A5H73Y.Parkour.Other.Validation;
 
+import me.A5H73Y.Parkour.Player.ParkourSession;
+import me.A5H73Y.Parkour.Player.PlayerMethods;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -649,9 +648,8 @@ public final class Utils {
 			player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
 			Static.addQuestion(player.getName(), new Question(QuestionType.RESET_LEADERBOARD, args[2].toLowerCase()));
 
-			
 		} else {
-			invalidSyntax("reset", "(course / player) (courseName / playerName)");
+			invalidSyntax("reset", "(course / player / leaderboard) (argument)");
 		}
 	}
 
@@ -860,5 +858,52 @@ public final class Utils {
 		}
 		
 		return stack.getType();
+	}
+
+	public static List<Player> getOnlineParkourPlayers() {
+		List<Player> onlineParkourPlayers = new ArrayList<Player>();
+
+		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+			if (PlayerMethods.isPlaying(player.getPlayerListName())) {
+				onlineParkourPlayers.add(player);
+			}
+		}
+
+		return onlineParkourPlayers;
+	}
+
+	public static void toggleVisibility(Player player) {
+		toggleVisibility(player, false);
+	}
+
+	/**
+	 * Toggle Visibility of all players for the player
+	 * Can be overwritten to force the reappearance of all players (i.e. when a player leaves / finishes a course)
+	 * @param player
+	 * @param override
+	 */
+	public static void toggleVisibility(Player player, boolean override) {
+		boolean enabled = override ? true : Static.containsHidden(player.getName());
+		List<Player> playerScope;
+
+		if (Parkour.getParkourConfig().getConfig().getBoolean("OnJoin.Item.HideAll.Global")) {
+			playerScope = (List<Player>) Bukkit.getOnlinePlayers();
+		} else {
+			playerScope = Utils.getOnlineParkourPlayers();
+		}
+
+		for (Player players : playerScope) {
+			if (enabled)
+				player.showPlayer(players);
+			else
+				player.hidePlayer(players);
+		}
+		if (enabled) {
+			Static.removeHidden(player.getName());
+			player.sendMessage(Utils.getTranslation("Event.HideAll1"));
+		} else {
+			Static.addHidden(player.getName());
+			player.sendMessage(Utils.getTranslation("Event.HideAll2"));
+		}
 	}
 }

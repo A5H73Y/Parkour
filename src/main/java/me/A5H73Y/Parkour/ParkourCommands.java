@@ -4,6 +4,7 @@ import me.A5H73Y.Parkour.Conversation.ParkourConversation;
 
 import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.CourseMethods;
+import me.A5H73Y.Parkour.Course.LobbyMethods;
 import me.A5H73Y.Parkour.Enums.ConversationType;
 import me.A5H73Y.Parkour.Other.Help;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
@@ -67,13 +68,13 @@ public class ParkourCommands implements CommandExecutor {
 						CourseMethods.displayCourseInfo(args[1], player);
 
 					} else if (args[0].equalsIgnoreCase("lobby")) {
-						CourseMethods.joinLobby(args, player);
+						LobbyMethods.joinLobby(args, player);
 
 					} else if (args[0].equalsIgnoreCase("setlobby")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
 							return false;
 
-						CourseMethods.createLobby(args, player);
+						LobbyMethods.createLobby(args, player);
 
 					} else if (args[0].equalsIgnoreCase("setcreator")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))

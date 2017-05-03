@@ -222,8 +222,6 @@ public class CourseMethods {
 		String parkourBlocks = config.getString(courseName + ".ParkourBlocks");
 
 		double completePercent = Math.round(((completed * 1.0 / views) * 100));
-		
-		double likePercent = Math.round(DatabaseMethods.getVotePercent(courseName));
 
 		player.sendMessage(Utils.getStandardHeading(Utils.standardizeText(courseName) + " statistics"));
 
@@ -232,9 +230,6 @@ public class CourseMethods {
 		player.sendMessage("Checkpoints: " + aqua + checkpoints);
 		player.sendMessage("Creator: " + aqua + creator);
 		player.sendMessage("Finished: " + aqua + finished);
-		
-		if (likePercent > 0)
-			player.sendMessage("Likes: " + aqua + likePercent + "%");
 
 		if (minLevel > 0)
 			player.sendMessage("Required level: " + aqua + minLevel);
@@ -259,114 +254,11 @@ public class CourseMethods {
 		
 		if (parkourBlocks != null && parkourBlocks.length() > 0)
 			player.sendMessage("ParkourBlocks: " + aqua + parkourBlocks);
-	}
 
-	/**
-	 * Creating or overwriting a Parkour lobby.
-	 * Optional parameters include a name for a custom lobby, as well as a minimum level requirement.
-	 * 
-	 * @param args
-	 * @param player
-	 */
-	public static void createLobby(String[] args, Player player) {
-		String created = "Lobby ";
-		setLobby(args, player);
+		double likePercent = Math.round(DatabaseMethods.getVotePercent(courseName));
 
-		if (args.length > 1) {
-			if (args.length > 2 && Utils.isNumber(args[2])) {
-				created = created.concat(ChatColor.AQUA + args[1] + ChatColor.WHITE + " created, with a required rank of " + ChatColor.DARK_AQUA + Integer.parseInt(args[2]));
-				Parkour.getParkourConfig().getConfig().set("Lobby." + args[1] + ".Level", Integer.parseInt(args[2]));
-			} else {
-				created = created.concat(ChatColor.AQUA + args[1] + ChatColor.WHITE + " created");
-			}
-		} else {
-			Parkour.getParkourConfig().getConfig().set("Lobby.Set", true);
-			created = created.concat("was successfully created!");
-		}
-		Parkour.getPlugin().saveConfig();
-		player.sendMessage(Static.getParkourString() + created);
-	}
-
-	/**
-	 * Joining the Parkour lobby. 
-	 * Can be accessed from the commands, and from the framework. 
-	 * The arguments will be null if its from the framework, if this is
-	 * the case we don't send them a message. (Finishing a course etc)
-	 * 
-	 * @param args
-	 * @param player
-	 */
-	public static void joinLobby(String[] args, Player player) {
-		if (!Validation.lobbyJoiningSet(player))
-			return;
-
-		boolean customLobby = (args != null && args.length > 1);
-
-		// variables
-		Location lobby;
-
-		if (customLobby) {
-			if (!Validation.lobbyJoiningCustom(player, args[1]))
-				return;
-
-			lobby = getLobby("Lobby." + args[1]);
-		} else {
-			lobby = getLobby("Lobby");
-		}
-
-		if (lobby == null) {
-			player.sendMessage(Static.getParkourString() + "Lobby is corrupt, please investigate.");
-			return;
-		}
-		if (PlayerMethods.isPlaying(player.getName())) {
-			PlayerMethods.playerLeave(player);
-		}
-
-		player.teleport(lobby);
-
-		// Only continue if player intentionally joined the lobby e.g /pa lobby
-		if (args == null)
-			return;
-
-		if (customLobby) {
-			player.sendMessage(Utils.getTranslation("Parkour.LobbyOther").replace("%LOBBY%", args[1]));
-		} else {
-			player.sendMessage(Utils.getTranslation("Parkour.Lobby"));
-		}
-	}
-
-	/**
-	 * Get the lobby Location based on the path.
-	 * 
-	 * @param path
-	 * @return Location
-	 */
-	private final static Location getLobby(String path) {
-		World world = Bukkit.getWorld(Parkour.getParkourConfig().getConfig().getString(path + ".World"));
-		double x = Parkour.getParkourConfig().getConfig().getDouble(path + ".X");
-		double y = Parkour.getParkourConfig().getConfig().getDouble(path + ".Y");
-		double z = Parkour.getParkourConfig().getConfig().getDouble(path + ".Z");
-		float yaw = Parkour.getParkourConfig().getConfig().getInt(path + ".Yaw");
-		float pitch = Parkour.getParkourConfig().getConfig().getInt(path + ".Pitch");
-		return new Location(world, x, y, z, yaw, pitch);
-	}
-
-	/**
-	 * Set the lobby, will determine if it's a custom lobby.
-	 * 
-	 * @param args
-	 * @param player
-	 */
-	private final static void setLobby(String[] args, Player player) {
-		Location loc = player.getLocation();
-		String path = args.length > 1 ? "Lobby." + args[1] : "Lobby";
-		Parkour.getParkourConfig().getConfig().set(path + ".World", loc.getWorld().getName());
-		Parkour.getParkourConfig().getConfig().set(path + ".X", loc.getX());
-		Parkour.getParkourConfig().getConfig().set(path + ".Y", loc.getY());
-		Parkour.getParkourConfig().getConfig().set(path + ".Z", loc.getZ());
-		Parkour.getParkourConfig().getConfig().set(path + ".Pitch", loc.getPitch());
-		Parkour.getParkourConfig().getConfig().set(path + ".Yaw", loc.getYaw());
-		Utils.logToFile(path + " was set by " + player.getName());
+		if (likePercent > 0)
+			player.sendMessage("Liked: " + aqua + likePercent + "%");
 	}
 
 	/**
@@ -390,24 +282,6 @@ public class CourseMethods {
 		DatabaseMethods.deleteCourseAndReferences(courseName);
 
 		player.sendMessage(Utils.getTranslation("Parkour.Delete").replace("%COURSE%", courseName));
-	}
-
-	/**
-	 * Delete a Parkour lobby
-	 * 
-	 * @param lobby
-	 * @param player
-	 */
-	public static void deleteLobby(String lobby, Player player) {
-		if (!Parkour.getParkourConfig().getConfig().contains(lobby + ".World")) {
-			player.sendMessage(Static.getParkourString() + "This lobby does not exist!");
-			return;
-		}
-
-		Parkour.getParkourConfig().getConfig().set(lobby, null);
-		Parkour.getPlugin().saveConfig();
-
-		player.sendMessage(Static.getParkourString() + "Lobby " + lobby + " was deleted successfully.");
 	}
 
 	/**
@@ -839,13 +713,19 @@ public class CourseMethods {
 			return;
 
 		courseName = courseName.toLowerCase();
-		Parkour.getParkourConfig().getCourseData().set(courseName + ".Views", 0);
-		Parkour.getParkourConfig().getCourseData().set(courseName + ".Completed", 0);
-		Parkour.getParkourConfig().getCourseData().set(courseName + ".Finished", false);
-		Parkour.getParkourConfig().getCourseData().set(courseName + ".XP", null);
-		Parkour.getParkourConfig().getCourseData().set(courseName + ".Level", null);
-		Parkour.getParkourConfig().getCourseData().set(courseName + ".MinimumLevel", null);
-		Parkour.getParkourConfig().getCourseData().set(courseName + ".MaxDeaths", null);
+		FileConfiguration config = Parkour.getParkourConfig().getCourseData();
+
+		config.set(courseName + ".Views", 0);
+		config.set(courseName + ".Completed", 0);
+		config.set(courseName + ".Finished", false);
+		config.set(courseName + ".XP", null);
+		config.set(courseName + ".Level", null);
+		config.set(courseName + ".MinimumLevel", null);
+		config.set(courseName + ".MaxDeaths", null);
+		config.set(courseName + ".Parkoins", null);
+		config.set(courseName + ".LinkedLobby", null);
+		config.set(courseName + ".LinkedCourse", null);
+		config.set(courseName + ".ParkourBlocks", null);
 		Parkour.getParkourConfig().saveCourses();
 		DatabaseMethods.deleteCourseTimes(courseName);
 	}
@@ -859,31 +739,36 @@ public class CourseMethods {
 	 * @param player
 	 */
 	public static void rateCourse(String[] args, Player player) {
-		String courseName = Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + player.getName() + ".LastPlayed");
+		String courseName;
+
+		if (args.length > 1) {
+			courseName = args[1].toLowerCase();
+		} else {
+			courseName = Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + player.getName() + ".LastPlayed");
+		}
 
 		if (!CourseMethods.exist(courseName)) {
-			player.sendMessage(Static.getParkourString() + "Invalid course.");
-			return;
-		}
-		
-		if (args.length > 1 && !args[1].equalsIgnoreCase(courseName)) {
-			player.sendMessage(Static.getParkourString() + "You can only vote for the last course successfully completed : " + ChatColor.AQUA + courseName);
-			return;
-		}
-		
-		if (DatabaseMethods.hasVoted(courseName, player.getName())){
-			player.sendMessage(Static.getParkourString() + "You have already voted for " + ChatColor.AQUA + courseName);
+			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", courseName));
 			return;
 		}
 
-		if (args[0].equalsIgnoreCase("like")) {
-			DatabaseMethods.insertVote(courseName, player.getName(), true);
-			player.sendMessage(Static.getParkourString() + "You " + ChatColor.GREEN + "liked " + ChatColor.WHITE + courseName); 
+		if (!DatabaseMethods.hasPlayerCompleted(player.getName(), courseName)) {
+			player.sendMessage(Utils.getTranslation("Error.NotCompleted").replace("%COURSE%", courseName));
+			return;
+		}
 
-		} else if (args[0].equalsIgnoreCase("dislike")) {
-			DatabaseMethods.insertVote(courseName, player.getName(), false);
-			player.sendMessage(Static.getParkourString() + "You " + ChatColor.RED + "disliked " + ChatColor.WHITE + courseName); 
+		if (DatabaseMethods.hasVoted(courseName, player.getName())) {
+			player.sendMessage(Utils.getTranslation("Error.AlreadyVoted").replace("%COURSE%", courseName));
+			return;
+		}
 
+		boolean liked = args[0].equalsIgnoreCase("like");
+		DatabaseMethods.insertVote(courseName, player.getName(), liked);
+
+		if (liked) {
+			player.sendMessage(Static.getParkourString() + "You " + ChatColor.GREEN + "liked " + ChatColor.WHITE + courseName);
+		} else {
+			player.sendMessage(Static.getParkourString() + "You " + ChatColor.RED + "disliked " + ChatColor.WHITE + courseName);
 		}
 	}
 
@@ -1017,7 +902,7 @@ public class CourseMethods {
 	}
 
 	/**
-	 * Set the mode of a Parkour course
+	 * Set the ParkourMode of a course
 	 * Starts a Conversation to set the mode of the course.
 	 * 
 	 * @param args
@@ -1033,10 +918,10 @@ public class CourseMethods {
 
 	/**
 	 * Retrieves the ParkourMode of a course
-	 * Will default to NONE if a mode hasn't been configured.
+	 * Will default to NONE if a mode hasn't been specified.
 	 * 
 	 * @param courseName
-	 * @return
+	 * @return ParkourMode
 	 */
 	public static ParkourMode getCourseMode(String courseName) {
 		String mode = Parkour.getParkourConfig().getCourseData().getString(courseName + ".Mode");
@@ -1047,9 +932,46 @@ public class CourseMethods {
 		} else if ("drunk".equalsIgnoreCase(mode)) {
 			return ParkourMode.DRUNK;
 
-		} else if ("darkness".equalsIgnoreCase(mode))
+		} else if ("darkness".equalsIgnoreCase(mode)) {
 			return ParkourMode.DARKNESS;
 
+		} else if ("speedy".equalsIgnoreCase(mode)) {
+			return ParkourMode.SPEEDY;
+
+		} else if ("moon".equalsIgnoreCase(mode)) {
+			return ParkourMode.MOON;
+		}
+
 		return ParkourMode.NONE;
+	}
+
+	/**
+	 * Return the linked course of the specified course
+	 * Will validate it's a valid course before returning
+	 * @param courseName
+	 * @return linkedCourse
+	 */
+	public static String getLinkedCourse(String courseName) {
+		String linkedCourse = Parkour.getParkourConfig().getCourseData().getString(courseName + ".LinkedCourse");
+
+		if (linkedCourse != null && CourseMethods.exist(linkedCourse))
+			return linkedCourse;
+
+		return null;
+	}
+
+	/**
+	 * Return the linked course of the specified lobby
+	 * Will validate it's a valid lobby before returning
+	 * @param courseName
+	 * @return linkedLobby
+	 */
+	public static String getLinkedLobby(String courseName) {
+		String linkedLobby = Parkour.getParkourConfig().getCourseData().getString(courseName + ".LinkedLobby");
+
+		if (linkedLobby != null && Static.getLobbyList().contains(linkedLobby))
+			return linkedLobby;
+
+		return null;
 	}
 }

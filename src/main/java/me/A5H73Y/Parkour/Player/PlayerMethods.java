@@ -1,8 +1,10 @@
 package me.A5H73Y.Parkour.Player;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import me.A5H73Y.Parkour.Course.LobbyMethods;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.Checkpoint;
 import me.A5H73Y.Parkour.Course.Course;
@@ -93,13 +95,14 @@ public class PlayerMethods {
 				.replace("%COURSE%", session.getCourse().getName()),
 				Parkour.getParkourConfig().getConfig().getBoolean("DisplayTitle.Leave"));
 
+		teardownPlayerMode(player);
 		removePlayer(player.getName());
 		preparePlayer(player, Parkour.getParkourConfig().getConfig().getInt("OnFinish.SetGamemode"));
 		loadInventory(player);
-		CourseMethods.joinLobby(null, player);
+		LobbyMethods.leaveCourse(player, session);
 
 		if (Static.containsHidden(player.getName()))
-			toggleVisibility(player, true);
+			Utils.toggleVisibility(player, true);
 	}
 
 	/**
@@ -185,10 +188,11 @@ public class PlayerMethods {
 		preparePlayer(player, Parkour.getParkourConfig().getConfig().getInt("OnFinish.SetGamemode"));
 		
 		if (Static.containsHidden(player.getName()))
-			toggleVisibility(player, true);
+			Utils.toggleVisibility(player, true);
 
 		displayFinishMessage(player, session);
 		CourseMethods.increaseComplete(courseName);
+		teardownPlayerMode(player);
 		removePlayer(player.getName());
 
 		loadInventory(player);
@@ -234,12 +238,12 @@ public class PlayerMethods {
 
 			if (Parkour.getParkourConfig().getConfig().contains("Lobby." + lobbyName + ".World")) {
 				String[] args = { null, lobbyName };
-				CourseMethods.joinLobby(args, player);
+				LobbyMethods.joinLobby(args, player);
 				return;
 			}
 		}
 
-		CourseMethods.joinLobby(null, player);
+		LobbyMethods.joinLobby(null, player);
 	}
 
 	/**
@@ -671,8 +675,10 @@ public class PlayerMethods {
 		if (Parkour.getParkourConfig().getConfig().getBoolean("OnJoin.FillHealth"))
 			player.setFoodLevel(20);
 		
-		if (Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.DisableFly"))
+		if (Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.DisableFly")) {
+			player.setAllowFlight(false);
 			player.setFlying(false);
+		}
 
 		if (Parkour.getSettings().getLastCheckpoint() != null && !player.getInventory().contains(Parkour.getSettings().getLastCheckpoint()))
 			player.getInventory().addItem(Utils.getItemStack(
@@ -824,35 +830,6 @@ public class PlayerMethods {
 		}
 	}
 
-
-	public static void toggleVisibility(Player player) {
-		toggleVisibility(player, false);
-	}
-
-	/**
-	 * Toggle Visibility of all players for the player
-	 * Can be overwritten to force the reappearance of all players (i.e. when a player leaves / finishes a course)
-	 * @param player
-	 * @param override
-	 */
-	public static void toggleVisibility(Player player, boolean override) {
-		boolean enabled = override ? true : Static.containsHidden(player.getName());
-
-		for (Player players : Bukkit.getOnlinePlayers()) {
-			if (enabled)
-				player.showPlayer(players);
-			else
-				player.hidePlayer(players);
-		}
-		if (enabled) {
-			Static.removeHidden(player.getName());
-			player.sendMessage(Utils.getTranslation("Event.HideAll1"));
-		} else {
-			Static.addHidden(player.getName());
-			player.sendMessage(Utils.getTranslation("Event.HideAll2"));
-		}
-	}
-
 	/**
 	 * Invite a player to the current course
 	 * @param args
@@ -957,6 +934,22 @@ public class PlayerMethods {
 
 		} else if (session.getMode() == ParkourMode.DARKNESS) {
 			player.sendMessage(Utils.getTranslation("Mode.Darkness.JoinText"));
+
+		} else if (session.getMode() == ParkourMode.SPEEDY) {
+			float speed = Float.valueOf(Parkour.getParkourConfig().getConfig().getString("ParkourModes.Speedy.SetSpeed"));
+			player.setWalkSpeed(speed);
+		}
+	}
+
+	private static void teardownPlayerMode(Player player) {
+		ParkourSession session = getParkourSession(player.getName());
+
+		if (session.getMode() == ParkourMode.NONE)
+			return;
+
+		if (session.getMode() == ParkourMode.SPEEDY) {
+			float speed = Float.valueOf(Parkour.getParkourConfig().getConfig().getString("ParkourModes.Speedy.ResetSpeed"));
+			player.setWalkSpeed(speed);
 		}
 	}
 

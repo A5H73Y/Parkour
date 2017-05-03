@@ -248,7 +248,7 @@ public class Configurations {
 	private void saveStrings() {
 		try{
 			stringData.addDefault("Parkour.Prefix", "&0[&bParkour&0] &f");
-
+			stringData.addDefault("Parkour.SignHeading", "&0[&bParkour&0]");
 			stringData.addDefault("Event.Join", "This server uses &bParkour &3%VERSION%");
 			stringData.addDefault("Event.Checkpoint", "Checkpoint set to ");
 			stringData.addDefault("Event.AllCheckpoints", "All checkpoints achieved!");
@@ -311,6 +311,8 @@ public class Configurations {
 			stringData.addDefault("Error.Cheating1", "Please do not cheat.");
 			stringData.addDefault("Error.Cheating2", "&lYou must achieve all &4%AMOUNT% &f&lcheckpoints!");
 			stringData.addDefault("Error.Cooldown", "Slow down! Please wait &b%AMOUNT% &fmore seconds.");
+            stringData.addDefault("Error.NotCompleted", "You have not yet completed &b%COURSE%&f!");
+            stringData.addDefault("Error.AlreadyVoted", "You have already voted for &b%COURSE%&f!");
 
 			stringData.addDefault("Help.Command", "&7/pa help &9%COMMAND% &0: &7To learn more about this command.");
 			stringData.addDefault("Help.Commands", "&3/pa &bcmds &8: &fTo display the Parkour commands menu.");
@@ -389,6 +391,7 @@ public class Configurations {
 		config.addDefault("OnJoin.FillHealth", true);
 		config.addDefault("OnJoin.Item.LastCheckpoint.Material", "ARROW");
 		config.addDefault("OnJoin.Item.HideAll.Material", "BONE");
+		config.addDefault("OnJoin.Item.HideAll.Global", true);
 		config.addDefault("OnJoin.Item.Leave.Material", "SAPLING");
 
 		config.addDefault("OnCourse.DieInLiquid", false);
@@ -405,6 +408,7 @@ public class Configurations {
 		config.addDefault("OnCourse.DisplayLiveTime", false);
 		config.addDefault("OnCourse.DisableFly", true);
 		config.addDefault("OnCourse.SneakToInteractItems", true);
+		config.addDefault("OnCourse.AdminPlaceBreakBlocks", true);
 
 		config.addDefault("OnFinish.EnforceCompletion", true);
 		config.addDefault("OnFinish.TeleportToLobby", true);
@@ -417,6 +421,8 @@ public class Configurations {
 		config.addDefault("OnFinish.TeleportDelay", 0);
 		config.addDefault("OnFinish.DisplayStats", true);
 
+		config.addDefault("OnLeave.TeleportToCustomLobby", false);
+
 		config.addDefault("OnDie.SetXPBarToDeathCount", false);
 		config.addDefault("OnDie.ResetTimeWithNoCheckpoint", false);
 
@@ -424,6 +430,8 @@ public class Configurations {
 		config.addDefault("OnLeaveServer.TeleportToLastCheckpoint", false);
 
 		config.addDefault("ParkourModes.Challenge.HidePlayers", true);
+		config.addDefault("ParkourModes.Speedy.SetSpeed", 0.8);
+		config.addDefault("ParkourModes.Speedy.ResetSpeed", 0.2);
 
 		config.addDefault("DisplayTitle.JoinCourse", true);
 		config.addDefault("DisplayTitle.Checkpoint", true);
@@ -454,7 +462,6 @@ public class Configurations {
 		config.addDefault("MySQL.Database", "Database");
 		config.addDefault("MySQL.Table", "Table");
 
-		config.addDefault("=== Do NOT edit anything below here ===", null);
 		config.addDefault("Version", Double.parseDouble(Parkour.getPlugin().getDescription().getVersion()));
 
 		config.addDefault("Lobby.Set", false);

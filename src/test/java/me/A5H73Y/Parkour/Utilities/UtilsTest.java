@@ -5,15 +5,16 @@ import static org.junit.Assert.*;
 import org.bukkit.GameMode;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(Utils.class)
-public class UtilitiesTest {
+public class UtilsTest {
 
 	@Test
-	public void utils_getTranslation() {
+	public void getTranslation() {
 		String expected = "Invalid translation.";
 		
 		String actual = Utils.getTranslation(null);
@@ -24,7 +25,7 @@ public class UtilitiesTest {
 	}
 	
 	@Test
-	public void utils_standardizeText() {
+	public void standardizeText() {
 		String expected = "Hello";
 		
 		String invalid = Utils.standardizeText(null);
@@ -41,8 +42,11 @@ public class UtilitiesTest {
 	}
 	
 	@Test
-	public void utils_isString() {
-		boolean isNumber = Utils.isNumber("");
+	public void isString() {
+		boolean isNumber = Utils.isNumber(null);
+		assertEquals(false, isNumber);
+
+		isNumber = Utils.isNumber("");
 		assertEquals(false, isNumber);
 		
 		isNumber = Utils.isNumber("test");
@@ -56,7 +60,7 @@ public class UtilitiesTest {
 	}
 	
 	@Test
-	public void utils_getGamemode() {
+	public void getGamemode() {
 		GameMode gamemode = Utils.getGamemode(0);
 		assertEquals(gamemode, GameMode.SURVIVAL);
 		
