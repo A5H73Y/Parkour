@@ -509,9 +509,43 @@ public final class Utils {
 			return;
 
 		if (Static.getBountifulAPI() && attemptTitle) {
-			BountifulAPI.sendTitle(player, 5, 20, 5, title, "");
+			BountifulAPI.sendTitle(player,
+					Parkour.getSettings().getTitleIn(),
+					Parkour.getSettings().getTitleStay(),
+					Parkour.getSettings().getTitleOut(),
+					title, "");
 		} else {
 			player.sendMessage(Static.getParkourString() + title);
+		}
+	}
+
+	public final static void sendFullTitle(Player player, String title, String subTitle, boolean attemptTitle) {
+		if (Static.containsQuiet(player.getName()))
+			return;
+
+		if (Static.getBountifulAPI() && attemptTitle) {
+			BountifulAPI.sendTitle(player,
+					Parkour.getSettings().getTitleIn(),
+					Parkour.getSettings().getTitleStay(),
+					Parkour.getSettings().getTitleOut(),
+					title, subTitle);
+		} else {
+			player.sendMessage(Static.getParkourString() + title + " " + subTitle);
+		}
+	}
+
+	public final static void sendSubTitle(Player player, String subTitle, boolean attemptTitle) {
+		if (Static.containsQuiet(player.getName()))
+			return;
+
+		if (Static.getBountifulAPI() && attemptTitle) {
+			BountifulAPI.sendTitle(player,
+					Parkour.getSettings().getTitleIn(),
+					Parkour.getSettings().getTitleStay(),
+					Parkour.getSettings().getTitleOut(),
+					"", subTitle);
+		} else {
+			player.sendMessage(Static.getParkourString() + subTitle);
 		}
 	}
 
@@ -523,28 +557,6 @@ public final class Utils {
 			BountifulAPI.sendActionBar(player, title);
 		} else {
 			player.sendMessage(Static.getParkourString() + title);
-		}
-	}
-
-	public final static void sendFullTitle(Player player, String title, String subTitle, boolean attemptTitle) {
-		if (Static.containsQuiet(player.getName()))
-			return;
-
-		if (Static.getBountifulAPI() && attemptTitle) {
-			BountifulAPI.sendTitle(player, 5, 20, 5, title, subTitle);
-		} else {
-			player.sendMessage(Static.getParkourString() + title + " " + subTitle);
-		}
-	}
-
-	public final static void sendSubTitle(Player player, String subTitle, boolean attemptTitle) {
-		if (Static.containsQuiet(player.getName()))
-			return;
-
-		if (Static.getBountifulAPI() && attemptTitle) {
-			BountifulAPI.sendTitle(player, 5, 20, 5, "", subTitle);
-		} else {
-			player.sendMessage(Static.getParkourString() + subTitle);
 		}
 	}
 

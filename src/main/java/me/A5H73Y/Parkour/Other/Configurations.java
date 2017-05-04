@@ -409,7 +409,7 @@ public class Configurations {
 		config.addDefault("OnCourse.DisableFly", true);
 		config.addDefault("OnCourse.SneakToInteractItems", true);
 		config.addDefault("OnCourse.AdminPlaceBreakBlocks", true);
-		config.addDefault("OnCourse.PreventOpeningCraftingInventory", false);
+		config.addDefault("OnCourse.PreventOpeningOtherInventories", false);
 
 		config.addDefault("OnFinish.EnforceCompletion", true);
 		config.addDefault("OnFinish.TeleportToLobby", true);
@@ -434,6 +434,9 @@ public class Configurations {
 		config.addDefault("ParkourModes.Speedy.SetSpeed", 0.8);
 		config.addDefault("ParkourModes.Speedy.ResetSpeed", 0.2);
 
+		config.addDefault("DisplayTitle.FadeIn", 5);
+		config.addDefault("DisplayTitle.Stay", 20);
+		config.addDefault("DisplayTitle.FadeOut", 5);
 		config.addDefault("DisplayTitle.JoinCourse", true);
 		config.addDefault("DisplayTitle.Checkpoint", true);
 		config.addDefault("DisplayTitle.RewardLevel", true);

@@ -28,7 +28,7 @@ public class Settings {
 	private List<String> cmdWhitelist; 
 
 	//int
-	private int maxFallTicks, bounceStrength, bounceDuration, speedStrength, speedDuration;
+	private int maxFallTicks, bounceStrength, bounceDuration, speedStrength, speedDuration, titleIn, titleStay, titleOut;
 
 	//Strings
 	private String defaultRank;
@@ -65,6 +65,10 @@ public class Settings {
 		speedStrength = config.getInt("DefaultBlocks.Speed.Strength");
 		speedDuration = config.getInt("DefaultBlocks.Speed.Duration");
 		repulseStrength = config.getDouble("DefaultBlocks.Repulse.Strength");
+
+		titleIn = config.getInt("DisplayTitle.FadeIn");
+		titleStay = config.getInt("DisplayTitle.Stay");
+		titleOut = config.getInt("DisplayTitle.FadeOut");
 	}
 
 	public boolean isCommandPermission() {
@@ -157,5 +161,17 @@ public class Settings {
 
 	public double getRepulseStrength() {
 		return repulseStrength;
+	}
+
+	public int getTitleIn() {
+		return titleIn;
+	}
+
+	public int getTitleStay() {
+		return titleStay;
+	}
+
+	public int getTitleOut() {
+		return titleOut;
 	}
 }
