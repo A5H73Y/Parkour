@@ -20,7 +20,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -633,7 +632,6 @@ public class CourseMethods {
 	public static void setFinish(String[] args, Player player) {
 		String courseName = PlayerMethods.getSelected(player.getName());
 
-		//if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".Finished")) {
 		if (isReady(courseName)){
 			player.sendMessage(Static.getParkourString() + ChatColor.AQUA + courseName + ChatColor.WHITE + " has already been set to finished!");
 			return;
