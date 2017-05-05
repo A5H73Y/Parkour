@@ -220,6 +220,7 @@ public class CourseMethods {
 		String creator = config.getString(courseName + ".Creator");
 		boolean finished = config.getBoolean(courseName + ".Finished");
 		String parkourBlocks = config.getString(courseName + ".ParkourBlocks");
+		String mode = config.getString(courseName + ".Mode");
 
 		double completePercent = Math.round(((completed * 1.0 / views) * 100));
 
@@ -254,6 +255,9 @@ public class CourseMethods {
 		
 		if (parkourBlocks != null && parkourBlocks.length() > 0)
 			player.sendMessage("ParkourBlocks: " + aqua + parkourBlocks);
+		
+		if (mode != null && !"none".equalsIgnoreCase(mode))
+			player.sendMessage("Mode: " + aqua + mode);
 
 		double likePercent = Math.round(DatabaseMethods.getVotePercent(courseName));
 
@@ -629,7 +633,8 @@ public class CourseMethods {
 	public static void setFinish(String[] args, Player player) {
 		String courseName = PlayerMethods.getSelected(player.getName());
 
-		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".Finished")) {
+		//if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".Finished")) {
+		if (isReady(courseName)){
 			player.sendMessage(Static.getParkourString() + ChatColor.AQUA + courseName + ChatColor.WHITE + " has already been set to finished!");
 			return;
 		}
@@ -726,6 +731,7 @@ public class CourseMethods {
 		config.set(courseName + ".LinkedLobby", null);
 		config.set(courseName + ".LinkedCourse", null);
 		config.set(courseName + ".ParkourBlocks", null);
+		config.set(courseName + ".Mode", null);
 		Parkour.getParkourConfig().saveCourses();
 		DatabaseMethods.deleteCourseTimes(courseName);
 	}
