@@ -334,16 +334,22 @@ public class ParkourListener implements Listener {
 			return;
         
 		if (Utils.getMaterialInPlayersHand(player) == Parkour.getSettings().getLastCheckpoint()) {
-			if (Utils.delayPlayerEvent(player, 1))
+			if (Utils.delayPlayerEvent(player, 1)) {
+				event.setCancelled(true);
 				PlayerMethods.playerDie(player);
+			}
 
 		} else if (Utils.getMaterialInPlayersHand(player) == Parkour.getSettings().getHideall()) {
-			if (Utils.delayPlayerEvent(player, 1))
+			if (Utils.delayPlayerEvent(player, 1)) {
+				event.setCancelled(true);
 				Utils.toggleVisibility(player);
+			}
 
 		} else if (Utils.getMaterialInPlayersHand(player) == Parkour.getSettings().getLeave()) {
-			if (Utils.delayPlayerEvent(player, 1))
+			if (Utils.delayPlayerEvent(player, 1)) {
+				event.setCancelled(true);
 				PlayerMethods.playerLeave(player);
+			}
 		}
 	}
 
