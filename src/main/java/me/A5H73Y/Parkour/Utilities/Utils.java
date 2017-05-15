@@ -275,7 +275,7 @@ public final class Utils {
 	 * @param message
 	 */
 	public final static void logToFile(String message) {
-		if (!Parkour.getParkourConfig().getConfig().getBoolean("Other.LogToFile"))
+		if (!Parkour.getPlugin().getConfig().getBoolean("Other.LogToFile"))
 			return;
 
 		try {
@@ -410,7 +410,7 @@ public final class Utils {
 	 * @return
 	 */
 	public final static ParkourBlocks populateParkourBlocks(String name) {
-		if (!Parkour.getParkourConfig().getConfig().contains(name + ".Death.Material"))
+		if (!Parkour.getPlugin().getConfig().contains(name + ".Death.Material"))
 			return null;
 
 		ParkourBlocks parkourBlocks = new ParkourBlocks(
@@ -436,7 +436,7 @@ public final class Utils {
 	public final static void validateParkourBlocks(String[] args, Player player){
 		String name = (args.length == 2 ? "ParkourBlocks." + args[1].toLowerCase() : "DefaultBlocks");
 
-		if (!Parkour.getParkourConfig().getConfig().contains(name + ".Death.Material")) {
+		if (!Parkour.getPlugin().getConfig().contains(name + ".Death.Material")) {
 			player.sendMessage("ParkourBlocks " + name + " doesn't exist!");
 			return;
 		}
@@ -460,7 +460,7 @@ public final class Utils {
 	}
 
 	public static Material getParkourMaterial(String path){
-		String materialName = Parkour.getParkourConfig().getConfig().getString(path);
+		String materialName = Parkour.getPlugin().getConfig().getString(path);
 
 		if (materialName == null || materialName.equals("DEFAULT"))
 			return null;
@@ -601,7 +601,7 @@ public final class Utils {
 			Static.addQuestion(player.getName(), new Question(QuestionType.DELETE_CHECKPOINT, args[2].toLowerCase()));
 
 		} else if (args[1].equalsIgnoreCase("lobby")) {
-			if (!Parkour.getParkourConfig().getConfig().contains("Lobby." + args[2].toLowerCase() + ".World")) {
+			if (!Parkour.getPlugin().getConfig().contains("Lobby." + args[2].toLowerCase() + ".World")) {
 				player.sendMessage(Static.getParkourString() + "This lobby does not exist!");
 				return;
 			}
@@ -615,7 +615,7 @@ public final class Utils {
 			Static.addQuestion(player.getName(), new Question(QuestionType.DELETE_LOBBY, args[2].toLowerCase()));
 
 		} else {
-			invalidSyntax("delete", "(course / checkpoint / lobby) (name)");
+			player.sendMessage(invalidSyntax("delete", "(course / checkpoint / lobby) (name)"));
 		}
 	}
 
@@ -709,7 +709,7 @@ public final class Utils {
 	 * @return
 	 */
 	public static List<String> getParkourBlockList() {
-		return new ArrayList<String>(Parkour.getParkourConfig().getConfig().getConfigurationSection("ParkourBlocks").getKeys(false));
+		return new ArrayList<String>(Parkour.getPlugin().getConfig().getConfigurationSection("ParkourBlocks").getKeys(false));
 	}
 
 	/**
@@ -825,7 +825,7 @@ public final class Utils {
 	 * @param sender
 	 */
 	public static void listParkourBlocks(String[] args, CommandSender sender) {
-		if (!Parkour.getParkourConfig().getConfig().contains("ParkourBlocks.")) {
+		if (!Parkour.getPlugin().getConfig().contains("ParkourBlocks.")) {
 			sender.sendMessage(Static.getParkourString() + "No ParkourBlocks created.");
 			return;
 		}
@@ -839,10 +839,10 @@ public final class Utils {
 			}
 
 			sender.sendMessage(Utils.getStandardHeading("ParkourBlock: " + args[1]));
-			Set<String> types = Parkour.getParkourConfig().getConfig().getConfigurationSection("ParkourBlocks." + args[1]).getKeys(false);
+			Set<String> types = Parkour.getPlugin().getConfig().getConfigurationSection("ParkourBlocks." + args[1]).getKeys(false);
 
 			for (String type : types) {
-				String material = Parkour.getParkourConfig().getConfig().getString("ParkourBlocks." + args[1] + "." + type + ".Material");
+				String material = Parkour.getPlugin().getConfig().getString("ParkourBlocks." + args[1] + "." + type + ".Material");
 				sender.sendMessage(type + ": " + ChatColor.GRAY + material);
 			}
 
@@ -898,7 +898,7 @@ public final class Utils {
 		boolean enabled = override ? true : Static.containsHidden(player.getName());
 		List<Player> playerScope;
 
-		if (Parkour.getParkourConfig().getConfig().getBoolean("OnJoin.Item.HideAll.Global")) {
+		if (Parkour.getPlugin().getConfig().getBoolean("OnJoin.Item.HideAll.Global")) {
 			playerScope = (List<Player>) Bukkit.getOnlinePlayers();
 		} else {
 			playerScope = Utils.getOnlineParkourPlayers();

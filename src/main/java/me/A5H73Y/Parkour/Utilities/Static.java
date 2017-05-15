@@ -36,6 +36,7 @@ public final class Static {
 
 	private static boolean economy = false;
 	private static boolean bountifulAPI = false;
+	private static boolean placeholderAPI = false;
 	private static boolean devBuild = true;
 	private static ParkourBlocks parkourBlocks;
 
@@ -130,6 +131,14 @@ public final class Static {
 		return bountifulAPI;
 	}
 
+	public static boolean isPlaceholderAPI() {
+		return placeholderAPI;
+	}
+
+	public static void setPlaceholderAPI(boolean placeholderAPI) {
+		Static.placeholderAPI = placeholderAPI;
+	}
+
 	public final static boolean containsHidden(String playerName) {
 		return hidden.contains(playerName);
 	}
@@ -145,6 +154,7 @@ public final class Static {
 	public final static void addChallenge(Challenge challenge){
 		challenges.add(challenge);
 	}
+
 	public final static void removeChallenge(Challenge challenge){
 		if (challenges.contains(challenge))
 			challenges.remove(challenge);
@@ -180,7 +190,7 @@ public final class Static {
 		if (lobbyList != null)
 			return lobbyList;
 
-		Set<String> lobbyListSet = Parkour.getParkourConfig().getConfig().getConfigurationSection("Lobby").getKeys(false);
+		Set<String> lobbyListSet = Parkour.getPlugin().getConfig().getConfigurationSection("Lobby").getKeys(false);
 
 		lobbyListSet.remove("Set");
 		lobbyListSet.remove("World");
@@ -195,12 +205,12 @@ public final class Static {
 	}
 
 	public static List<String> getWhitelistedCommands() {
-		return new ArrayList<String>(Parkour.getParkourConfig().getConfig().getStringList("OnCourse.EnforceParkourCommands.Whitelist"));
+		return new ArrayList<String>(Parkour.getPlugin().getConfig().getStringList("OnCourse.EnforceParkourCommands.Whitelist"));
 	}
 
 	public static void addWhitelistedCommand(String command) {
 		List<String> commands = getWhitelistedCommands();
 		commands.add(command);
-		Parkour.getParkourConfig().getConfig().set("OnCourse.EnforceParkourCommands.Whitelist", commands);	
+		Parkour.getPlugin().getConfig().set("OnCourse.EnforceParkourCommands.Whitelist", commands);
 	}
 }

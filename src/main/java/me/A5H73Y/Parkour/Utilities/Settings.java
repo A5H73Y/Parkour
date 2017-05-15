@@ -37,7 +37,7 @@ public class Settings {
 	private double climbStrength, launchStrength, repulseStrength;
 
 	public Settings(){
-		FileConfiguration config = Parkour.getParkourConfig().getConfig();
+		FileConfiguration config = Parkour.getPlugin().getConfig();
 		commandPermission = config.getBoolean("Other.Parkour.CommandPermissions");
 		chatPrefix = config.getBoolean("Other.Parkour.ChatRankPrefix");
 		disablePlayerDamage = config.getBoolean("OnCourse.DisablePlayerDamage");

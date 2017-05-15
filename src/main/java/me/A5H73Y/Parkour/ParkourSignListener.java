@@ -80,7 +80,7 @@ public class ParkourSignListener implements Listener {
 		if ((event.getClickedBlock().getType() != Material.SIGN) && (event.getClickedBlock().getType() != Material.SIGN_POST) && (event.getClickedBlock().getType() != Material.WALL_SIGN)) 
 			return;
 
-		if (!Parkour.getParkourConfig().getConfig().getBoolean("Other.Parkour.SignProtection"))
+		if (!Parkour.getPlugin().getConfig().getBoolean("Other.Parkour.SignProtection"))
 			return;
 
 		String[] lines = ((Sign) event.getClickedBlock().getState()).getLines();
@@ -113,7 +113,7 @@ public class ParkourSignListener implements Listener {
 			if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
 				return;
 
-			if (!Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.EnforceParkourSigns"))
+			if (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.EnforceParkourSigns"))
 				return;
 
 			event.getPlayer().sendMessage(Utils.getTranslation("Error.Sign"));

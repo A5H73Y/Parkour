@@ -22,7 +22,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class Configurations {
 
 	private File dataFolder, courseFile, stringFile, usersFile, invFile, checkFile, econFile;
-	private FileConfiguration courseData, stringData, usersData, invData, checkData, econData, config;
+	private FileConfiguration courseData, stringData, usersData, invData, checkData, econData;
 
 	/**
 	 * This no longer generates the default config.yml to allow the ability of creating a backup of the existing config.
@@ -127,7 +127,6 @@ public class Configurations {
 
 	public void reload(){
 		Parkour.getPlugin().reloadConfig();
-		config = Parkour.getPlugin().getConfig();
 
 		courseData = YamlConfiguration.loadConfiguration(courseFile);
 		stringData = YamlConfiguration.loadConfiguration(stringFile);
@@ -160,10 +159,6 @@ public class Configurations {
 
 	public FileConfiguration getEconData() {
 		return econData;
-	}
-
-	public FileConfiguration getConfig() {
-		return config;
 	}
 
 	public File getDataFolder(){
@@ -362,7 +357,7 @@ public class Configurations {
 	 * Default configuration options
 	 */
 	public void setupConfig(){
-		config = Parkour.getPlugin().getConfig();
+		FileConfiguration config = Parkour.getPlugin().getConfig();
 
 		config.options().header("==== Parkour Config ==== #");
 
@@ -446,6 +441,7 @@ public class Configurations {
 
 		config.addDefault("Other.Economy.Enabled", true);
 		config.addDefault("Other.BountifulAPI.Enabled", true);
+		config.addDefault("Other.PlaceholderAPI.Enabled", true);
 		config.addDefault("Other.CheckForUpdates", true);
 		config.addDefault("Other.LogToFile", true);
 		config.addDefault("Other.Parkour.ChatRankPrefix", false);

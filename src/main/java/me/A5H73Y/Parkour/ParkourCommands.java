@@ -44,7 +44,7 @@ public class ParkourCommands implements CommandExecutor {
 						if (!Utils.validateArgs(player, args, 2))
 							return false;
 
-						if (!Parkour.getParkourConfig().getConfig().getBoolean("OnJoin.AllowViaCommand"))
+						if (!Parkour.getPlugin().getConfig().getBoolean("OnJoin.AllowViaCommand"))
 							return false;
 
 						CourseMethods.joinCourse(player, args[1]);

@@ -34,12 +34,12 @@ public class LobbyMethods {
         if (args.length > 1) {
             if (args.length > 2 && Utils.isNumber(args[2])) {
                 created = created.concat(ChatColor.AQUA + args[1] + ChatColor.WHITE + " created, with a required rank of " + ChatColor.DARK_AQUA + Integer.parseInt(args[2]));
-                Parkour.getParkourConfig().getConfig().set("Lobby." + args[1] + ".Level", Integer.parseInt(args[2]));
+                Parkour.getPlugin().getConfig().set("Lobby." + args[1] + ".Level", Integer.parseInt(args[2]));
             } else {
                 created = created.concat(ChatColor.AQUA + args[1] + ChatColor.WHITE + " created");
             }
         } else {
-            Parkour.getParkourConfig().getConfig().set("Lobby.Set", true);
+            Parkour.getPlugin().getConfig().set("Lobby.Set", true);
             created = created.concat("was successfully created!");
         }
         Parkour.getPlugin().saveConfig();
@@ -101,12 +101,12 @@ public class LobbyMethods {
      * @return Location
      */
     private final static Location getLobby(String path) {
-        World world = Bukkit.getWorld(Parkour.getParkourConfig().getConfig().getString(path + ".World"));
-        double x = Parkour.getParkourConfig().getConfig().getDouble(path + ".X");
-        double y = Parkour.getParkourConfig().getConfig().getDouble(path + ".Y");
-        double z = Parkour.getParkourConfig().getConfig().getDouble(path + ".Z");
-        float yaw = Parkour.getParkourConfig().getConfig().getInt(path + ".Yaw");
-        float pitch = Parkour.getParkourConfig().getConfig().getInt(path + ".Pitch");
+        World world = Bukkit.getWorld(Parkour.getPlugin().getConfig().getString(path + ".World"));
+        double x = Parkour.getPlugin().getConfig().getDouble(path + ".X");
+        double y = Parkour.getPlugin().getConfig().getDouble(path + ".Y");
+        double z = Parkour.getPlugin().getConfig().getDouble(path + ".Z");
+        float yaw = Parkour.getPlugin().getConfig().getInt(path + ".Yaw");
+        float pitch = Parkour.getPlugin().getConfig().getInt(path + ".Pitch");
         return new Location(world, x, y, z, yaw, pitch);
     }
 
@@ -119,12 +119,12 @@ public class LobbyMethods {
     private final static void setLobby(String[] args, Player player) {
         Location loc = player.getLocation();
         String path = args.length > 1 ? "Lobby." + args[1] : "Lobby";
-        Parkour.getParkourConfig().getConfig().set(path + ".World", loc.getWorld().getName());
-        Parkour.getParkourConfig().getConfig().set(path + ".X", loc.getX());
-        Parkour.getParkourConfig().getConfig().set(path + ".Y", loc.getY());
-        Parkour.getParkourConfig().getConfig().set(path + ".Z", loc.getZ());
-        Parkour.getParkourConfig().getConfig().set(path + ".Pitch", loc.getPitch());
-        Parkour.getParkourConfig().getConfig().set(path + ".Yaw", loc.getYaw());
+        Parkour.getPlugin().getConfig().set(path + ".World", loc.getWorld().getName());
+        Parkour.getPlugin().getConfig().set(path + ".X", loc.getX());
+        Parkour.getPlugin().getConfig().set(path + ".Y", loc.getY());
+        Parkour.getPlugin().getConfig().set(path + ".Z", loc.getZ());
+        Parkour.getPlugin().getConfig().set(path + ".Pitch", loc.getPitch());
+        Parkour.getPlugin().getConfig().set(path + ".Yaw", loc.getYaw());
         Utils.logToFile(path + " was set by " + player.getName());
     }
 
@@ -135,12 +135,12 @@ public class LobbyMethods {
      * @param player
      */
     public static void deleteLobby(String lobby, Player player) {
-        if (!Parkour.getParkourConfig().getConfig().contains(lobby + ".World")) {
+        if (!Parkour.getPlugin().getConfig().contains(lobby + ".World")) {
             player.sendMessage(Static.getParkourString() + "This lobby does not exist!");
             return;
         }
 
-        Parkour.getParkourConfig().getConfig().set(lobby, null);
+        Parkour.getPlugin().getConfig().set(lobby, null);
         Parkour.getPlugin().saveConfig();
 
         player.sendMessage(Static.getParkourString() + "Lobby " + lobby + " was deleted successfully.");
@@ -156,7 +156,7 @@ public class LobbyMethods {
         String[] args = null;
         String lobbyName = null;
 
-        if (Parkour.getParkourConfig().getConfig().getBoolean("OnLeave.TeleportToCustomLobby")) {
+        if (Parkour.getPlugin().getConfig().getBoolean("OnLeave.TeleportToCustomLobby")) {
             lobbyName = CourseMethods.getLinkedLobby(session.getCourse().getName());
         }
         args = new String[]{null, lobbyName};

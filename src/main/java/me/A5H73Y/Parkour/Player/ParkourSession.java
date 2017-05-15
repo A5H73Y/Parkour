@@ -53,7 +53,7 @@ public class ParkourSession implements Serializable {
 	
 	public void startVisualTimer(final Player player) {
 		if (!Static.getBountifulAPI() ||
-				!Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.DisplayLiveTime") || 
+				!Parkour.getPlugin().getConfig().getBoolean("OnCourse.DisplayLiveTime") ||
 				Static.containsQuiet(player.getName()))
 			return;
 		

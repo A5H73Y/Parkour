@@ -29,7 +29,7 @@ public class ParkourBlockConversation extends StringPrompt {
 			return Prompt.END_OF_CONVERSATION;
 		}
 
-		if (Parkour.getParkourConfig().getConfig().contains("ParkourBlocks." + message)){
+		if (Parkour.getPlugin().getConfig().contains("ParkourBlocks." + message)){
 			ParkourConversation.sendErrorMessage(context, "This ParkourBlock already exists");
 			return this;
 		}
@@ -45,7 +45,7 @@ public class ParkourBlockConversation extends StringPrompt {
 
 			String blockType = blockTypes[stage];
 
-			String material = Parkour.getParkourConfig().getConfig().getString("DefaultBlocks." + blockType + ".Material").toUpperCase();
+			String material = Parkour.getPlugin().getConfig().getString("DefaultBlocks." + blockType + ".Material").toUpperCase();
 
 			return ChatColor.LIGHT_PURPLE + " What material do you want for the " + ChatColor.WHITE + blockType + ChatColor.LIGHT_PURPLE + " block?\n "
 			+ ChatColor.DARK_GRAY + "Default: " + ChatColor.GRAY + material;
@@ -60,7 +60,7 @@ public class ParkourBlockConversation extends StringPrompt {
 			if (message.equalsIgnoreCase("default")){
 				String blockType = blockTypes[stage];
 				material = Material.getMaterial(
-						Parkour.getParkourConfig().getConfig().getString("DefaultBlocks." + blockType + ".Material").toUpperCase());
+						Parkour.getPlugin().getConfig().getString("DefaultBlocks." + blockType + ".Material").toUpperCase());
 
 			} else {
 				material = Material.getMaterial(message.toUpperCase());
@@ -87,7 +87,7 @@ public class ParkourBlockConversation extends StringPrompt {
 			String name = context.getSessionData("name").toString().toLowerCase();
 
 			for (int i=0; i < blockTypes.length; i++){
-				Parkour.getParkourConfig().getConfig().set("ParkourBlocks." + name + "." + blockTypes[i] + ".Material", context.getSessionData(i));
+				Parkour.getPlugin().getConfig().set("ParkourBlocks." + name + "." + blockTypes[i] + ".Material", context.getSessionData(i));
 			}
 			Parkour.getPlugin().saveConfig();
 

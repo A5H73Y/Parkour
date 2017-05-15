@@ -61,11 +61,11 @@ public final class Help {
 					" Your Parkour permissions will be displayed based on the group permissions you have. For example, if you have 'Parkour.Admin.*', then you are a part of the Admin group, same for 'Parkour.Basic.*' etc. However, if you have been given only a selection of permissions from that group, it will not display, for example 'Parkour.Admin.Testmode' does not make you an admin. 'Parkour.*' will give you all Parkour permissions.");
 
 		} else if (args[1].equalsIgnoreCase("like") || args[1].equalsIgnoreCase("dislike")){	
-			displayHelpMessage(sender, "Vote opinion of course", "/pa [like / dislike] [course]", null,
+			displayHelpMessage(sender, "Vote opinion of course", "/pa (like / dislike) [course]", null,
 					" Once you complete a course, you will have the ability to submit your vote on whether or not you liked the course. If you do not specify a course then the last course completed is selected. You only have one vote for each course. The sole purpose of this is for statistics, i.e. 70% of people liked this course.");
 
 		} else if (args[1].equalsIgnoreCase("list")){	
-			displayHelpMessage(sender, "Display Courses / Parkour players", "/pa list [courses / players]", null, 
+			displayHelpMessage(sender, "Display Courses / Parkour players", "/pa list (courses / players)", null,
 					" This command will display either all the courses saved on the server in a page format, ordered by date of creation, each having their own unique numerical ID which can be used to join the course; or display all the players that are currently using the plugin, this includes which course, and how many times they've died.");
 
 		} else if (args[1].equalsIgnoreCase("quiet")){	
@@ -141,7 +141,7 @@ public final class Help {
 					" Teleport to the chosen checkpoint on the course. This will NOT activate 'Parkour Mode', but simply move you to the chosen checkpoint on the course.");
 
 		} else if (args[1].equalsIgnoreCase("link")){	
-			displayHelpMessage(sender, "Link the course after completion", "/pa link (argument) (argument)", "/pa link course Level2",
+			displayHelpMessage(sender, "Link the course after completion", "/pa link (course / lobby) (argument)", "/pa link course Level2",
 					" You are now able to link the selected course to either a custom lobby, or to join a different course straight after you complete the selected course. For example if you selected a course '/pa select Level1', you would be able to make the player join Level2 after they complete Level1 by doing '/pa link course Level2', or if you wish for them to teleport to a custom lobby '/pa link lobby Admin'. If you want to remove the link enter '/pa link reset'");
 
 		} else if (args[1].equalsIgnoreCase("linkPB")){	
@@ -189,7 +189,7 @@ public final class Help {
 					" Used to fix the database if there are missing courses that haven't been synchronised with the server.");
 
 		} else if (args[1].equalsIgnoreCase("delete")){	
-			displayHelpMessage(sender, "Delete a course / lobby", "/pa delete (course / lobby) (argument)", "/pa delete course Example",
+			displayHelpMessage(sender, "Delete a course / lobby", "/pa delete (course / checkpoint / lobby) (argument)", "/pa delete course Example",
 					" You can delete a course, which will remove all information stored on the server about the course, as well as remove all references from the database. You can delete a lobby from the server. The operation will have to be confirmed or cancelled before the change is made.");
 
 		} else if (args[1].equalsIgnoreCase("reset")){	
@@ -438,7 +438,7 @@ public final class Help {
 	 * @param player
 	 */
 	public static void displayEconomy(String[] args, Player player) {
-		if (StartPlugin.vault == null){
+		if (!Static.getEconomy()){
 			player.sendMessage(Static.getParkourString() + "Vault has not been linked.");
 			return;
 		}
@@ -449,7 +449,7 @@ public final class Help {
 		}
 
 		if (args[1].equalsIgnoreCase("info")){
-			player.sendMessage(Static.getParkourString() + "Linked with Vault v" + StartPlugin.vault.getDescription().getVersion());
+			player.sendMessage(Static.getParkourString() + "Successfully linked with Vault.");
 
 		} else if (args[1].equalsIgnoreCase("setprize")) {
 			if (!(args.length > 2)){

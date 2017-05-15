@@ -679,7 +679,7 @@ public class CourseMethods {
 			player.sendMessage(Static.getParkourString() + ChatColor.DARK_AQUA + selected + ChatColor.WHITE + " is now linked to " + ChatColor.AQUA + args[2]);
 
 		} else if (args.length >= 3 && args[1].equalsIgnoreCase("lobby")) {
-			if (!Parkour.getParkourConfig().getConfig().contains("Lobby." + args[2] + ".World")) { // TODO
+			if (!Parkour.getPlugin().getConfig().contains("Lobby." + args[2] + ".World")) { // TODO
 				player.sendMessage(Static.getParkourString() + "Lobby " + args[2] + " does not exist.");
 				return;
 			}
@@ -748,7 +748,7 @@ public class CourseMethods {
 		if (args.length > 1) {
 			courseName = args[1].toLowerCase();
 		} else {
-			courseName = Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + player.getName() + ".LastPlayed");
+			courseName = PlayerMethods.getLastCompletedCourse(player.getName());
 		}
 
 		if (!CourseMethods.exist(courseName)) {
@@ -789,7 +789,7 @@ public class CourseMethods {
 			player.sendMessage(Utils.getTranslation("Error.Unknown"));
 			return;
 		}
-		if (!Parkour.getParkourConfig().getConfig().contains("ParkourBlocks." + args[2].toLowerCase())) {
+		if (!Parkour.getPlugin().getConfig().contains("ParkourBlocks." + args[2].toLowerCase())) {
 			player.sendMessage(Static.getParkourString() + "ParkourBlocks doesn't exist!");
 			return;
 		}

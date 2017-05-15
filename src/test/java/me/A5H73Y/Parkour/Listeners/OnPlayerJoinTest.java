@@ -43,7 +43,7 @@ public class OnPlayerJoinTest {
 		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
 			return;
 
-		if (Parkour.getParkourConfig().getConfig().getBoolean("OnLeaveServer.TeleportToLastCheckpoint"))
+		if (Parkour.getPlugin().getConfig().getBoolean("OnLeaveServer.TeleportToLastCheckpoint"))
 			PlayerMethods.playerDie(event.getPlayer());
 
 		if (Parkour.getSettings().isResetOnLeave())

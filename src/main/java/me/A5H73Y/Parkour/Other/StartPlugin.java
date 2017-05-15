@@ -37,17 +37,15 @@ import com.huskehhh.mysql.sqlite.SQLite;
  */
 public class StartPlugin {
 
-	static Plugin vault, bountifulAPI;
-	static boolean freshInstall = false;
-	static boolean updateExisting = false;
+	private static boolean freshInstall = false;
+	private static boolean updateExisting = false;
 
 	public static void run() {
 		checkConvertToLatest();
 		Parkour.getParkourConfig().setupConfig();
 		Static.initiate();
 		initiateSQL();
-		setupVault();
-		setupBountifulAPI();
+		setupExternalPlugins();
 		populatePlayers();
 		Utils.log("Enabled Parkour v" + Static.getVersion() + "!");
 	}
@@ -66,23 +64,29 @@ public class StartPlugin {
 		return true;
 	}
 
+	private static void setupExternalPlugins() {
+		setupVault();
+		setupBountifulAPI();
+		setupPlaceholderAPI();
+	}
+
 	private static void setupVault() {
-		if (!Parkour.getParkourConfig().getConfig().getBoolean("Other.Economy.Enabled"))
+		if (!Parkour.getPlugin().getConfig().getBoolean("Other.Economy.Enabled"))
 			return;
 
 		PluginManager pm = Parkour.getPlugin().getServer().getPluginManager();
-		vault = pm.getPlugin("Vault");
+		Plugin vault = pm.getPlugin("Vault");
 		if (vault != null && vault.isEnabled()) {
 			if (setupEconomy()) {
-				Utils.log("[Economy] Linked with Vault v" + vault.getDescription().getVersion());
+				Utils.log("[Vault] Successfully linked. Version: " + vault.getDescription().getVersion());
 				Parkour.getParkourConfig().initiateEconomy();
 			} else {
-				Utils.log("[Economy] Attempted to link with Vault, but something went wrong.", 2);
+				Utils.log("[Vault] Attempted to link with Vault, but something went wrong.", 2);
 				Parkour.getPlugin().getConfig().set("Other.Economy.Enabled", false);
 				Parkour.getPlugin().saveConfig();
 			}
 		} else {
-			Utils.log("[Economy] Vault is missing, disabling Economy Use.", 1);
+			Utils.log("[Vault] Plugin is missing, disabling Economy Use.", 1);
 			Parkour.getPlugin().getConfig().set("Other.Economy.Enabled", false);
 			Parkour.getPlugin().saveConfig();
 		}
@@ -94,7 +98,7 @@ public class StartPlugin {
 
 	private static void initiateSQL(boolean forceSQLite) {
 		Database database;
-		FileConfiguration config = Parkour.getParkourConfig().getConfig();
+		FileConfiguration config = Parkour.getPlugin().getConfig();
 
 		// Only use MySQL if they have enabled it, configured it, and we aren't
 		// forcing SQLite (MySQL failed)
@@ -124,7 +128,7 @@ public class StartPlugin {
 	private static void failedSQL(Exception ex) {
 		Utils.log("[SQL] Connection problem: " + ex.getMessage(), 2);
 		Utils.log("[SQL] Defaulting to SQLite...", 1);
-		Parkour.getParkourConfig().getConfig().set("MySQL.Use", false);
+		Parkour.getPlugin().getConfig().set("MySQL.Use", false);
 		Parkour.getPlugin().saveConfig();
 		initiateSQL(true);
 	}
@@ -135,6 +139,40 @@ public class StartPlugin {
 			Parkour.setEconomy(economyProvider.getProvider());
 		}
 		return (Parkour.getEconomy() != null);
+	}
+
+	private static void setupBountifulAPI() {
+		if (!Parkour.getPlugin().getConfig().getBoolean("Other.BountifulAPI.Enabled"))
+			return;
+
+		Plugin bountifulAPI = Parkour.getPlugin().getServer().getPluginManager()
+				.getPlugin("BountifulAPI");
+
+		if (bountifulAPI != null && bountifulAPI.isEnabled()) {
+			Utils.log("[BountifulAPI] Successfully linked. Version: " + bountifulAPI.getDescription().getVersion());
+			Static.setBountifulAPI(true);
+		} else {
+			Utils.log("[BountifulAPI] Plugin is missing, disabling config option.", 1);
+			Parkour.getPlugin().getConfig().set("Other.BountifulAPI.Enabled", false);
+			Parkour.getPlugin().saveConfig();
+		}
+	}
+
+	private static void setupPlaceholderAPI() {
+		if (!Parkour.getPlugin().getConfig().getBoolean("Other.PlaceholderAPI.Enabled"))
+			return;
+
+		Plugin placeholderAPI = Parkour.getPlugin().getServer().getPluginManager()
+				.getPlugin("PlaceholderAPI");
+
+		if (placeholderAPI != null && placeholderAPI.isEnabled()) {
+			Utils.log("[PlaceholderAPI] Successfully linked. Version: " + placeholderAPI.getDescription().getVersion());
+			Static.setPlaceholderAPI(true);
+		} else {
+			Utils.log("[PlaceholderAPI] Plugin is missing, disabling config option.", 1);
+			Parkour.getPlugin().getConfig().set("Other.PlaceholderAPI.Enabled", false);
+			Parkour.getPlugin().saveConfig();
+		}
 	}
 
 	private static void populatePlayers() {
@@ -160,18 +198,6 @@ public class StartPlugin {
 		}
 	}
 
-	private static void setupBountifulAPI() {
-		if (!Parkour.getParkourConfig().getConfig().getBoolean("Other.BountifulAPI.Enabled"))
-			return;
-
-		PluginManager pm = Parkour.getPlugin().getServer().getPluginManager();
-		bountifulAPI = pm.getPlugin("BountifulAPI");
-		if (bountifulAPI != null && bountifulAPI.isEnabled()) {
-			Utils.log("[Bountiful] Linked with BountifulAPI v" + bountifulAPI.getDescription().getVersion());
-			Static.setBountifulAPI(true);
-		}
-	}
-
 	/**
 	 * We only want to update completely, if the config version (previous version) is less than 4.0 (new system)
 	 */
@@ -194,7 +220,7 @@ public class StartPlugin {
 		Backup.backupNow(false);
 		Utils.broadcastMessage("[Backup] Your existing config has been backed up. We have generated a new config, please reapply the settings you want.", "Parkour.Admin");
 		convertToLatest();
-		Parkour.getParkourConfig().getConfig().set("Version", currentVersion);
+		Parkour.getPlugin().getConfig().set("Version", currentVersion);
 		Parkour.getPlugin().saveConfig();
 	}
 

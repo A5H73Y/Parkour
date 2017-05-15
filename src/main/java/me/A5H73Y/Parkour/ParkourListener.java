@@ -143,7 +143,8 @@ public class ParkourListener implements Listener {
 
 			player.setFireTicks(0);
 
-		} else if (player.getLocation().getBlock().isLiquid() && Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.DieInLiquid")) {
+		} else if (player.getLocation().getBlock().isLiquid() &&
+				Parkour.getPlugin().getConfig().getBoolean("OnCourse.DieInLiquid")) {
 			PlayerMethods.playerDie(player);
 
 		} else {
@@ -188,7 +189,7 @@ public class ParkourListener implements Listener {
 			return;
 
 		if (!Utils.hasPermission(event.getPlayer(), "Parkour.Admin")
-				|| (!Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks")))
+				|| (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks")))
 			event.setCancelled(true);
 	}
 
@@ -198,7 +199,7 @@ public class ParkourListener implements Listener {
 			return;
 
 		if (!Utils.hasPermission(event.getPlayer(), "Parkour.Admin")
-				|| (!Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks")))
+				|| (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks")))
 			event.setCancelled(true);
 	}
 
@@ -253,7 +254,7 @@ public class ParkourListener implements Listener {
 		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
 			return;
 
-		if (Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.DisableItemDrop"))
+		if (Parkour.getPlugin().getConfig().getBoolean("OnCourse.DisableItemDrop"))
 			event.setCancelled(true);
 	}
 
@@ -271,7 +272,7 @@ public class ParkourListener implements Listener {
 		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
 			return;
 
-		if (Parkour.getParkourConfig().getConfig().getBoolean("OnLeaveServer.TeleportToLastCheckpoint"))
+		if (Parkour.getPlugin().getConfig().getBoolean("OnLeaveServer.TeleportToLastCheckpoint"))
 			PlayerMethods.playerDie(event.getPlayer());
 
 		if (Parkour.getSettings().isResetOnLeave())
@@ -307,7 +308,7 @@ public class ParkourListener implements Listener {
 		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
 			return;
 
-		if (!Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.DisableFly"))
+		if (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.DisableFly"))
 			return;
 		
 		if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
@@ -324,7 +325,7 @@ public class ParkourListener implements Listener {
 
 		Player player = event.getPlayer();
 
-		if (!player.isSneaking() && Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.SneakToInteractItems"))
+		if (!player.isSneaking() && Parkour.getPlugin().getConfig().getBoolean("OnCourse.SneakToInteractItems"))
 			return;
 
 		if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.getAction().equals(Action.RIGHT_CLICK_AIR))
@@ -396,7 +397,7 @@ public class ParkourListener implements Listener {
 		if (below == null)
 			return;
 
-		if (Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.PreventPlateStick"))
+		if (Parkour.getPlugin().getConfig().getBoolean("OnCourse.PreventPlateStick"))
 			event.setCancelled(true);
 
 		ParkourSession session = PlayerMethods.getParkourSession(event.getPlayer().getName());
@@ -419,7 +420,7 @@ public class ParkourListener implements Listener {
 		if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
 			return;
 
-		if (!Parkour.getParkourConfig().getConfig().getBoolean("OnCourse.PreventOpeningOtherInventories"))
+		if (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.PreventOpeningOtherInventories"))
 			return;
 
 		if (event.getInventory().getType() != InventoryType.PLAYER)

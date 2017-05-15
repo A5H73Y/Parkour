@@ -86,7 +86,7 @@ public class Validation {
 
 		/* Course isn't finished */
 		if (!CourseMethods.isReady(course.getName())){
-			if (Parkour.getParkourConfig().getConfig().getBoolean("OnJoin.EnforceFinished")){
+			if (Parkour.getPlugin().getConfig().getBoolean("OnJoin.EnforceFinished")){
 				if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Bypass", course.getName())){
 					player.sendMessage(Utils.getTranslation("Error.Finished1"));
 					return false;
@@ -143,7 +143,7 @@ public class Validation {
 
 		/* Course isn't finished */
 		if (!CourseMethods.isReady(courseName)){
-			if (Parkour.getParkourConfig().getConfig().getBoolean("OnJoin.EnforceFinished")){
+			if (Parkour.getPlugin().getConfig().getBoolean("OnJoin.EnforceFinished")){
 				if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Bypass", courseName)){
 					return false;
 				}
@@ -210,7 +210,7 @@ public class Validation {
 	 * @return boolean
 	 */
 	public static boolean lobbyJoiningSet(Player player) {
-		if (Parkour.getParkourConfig().getConfig().getBoolean("Lobby.Set"))
+		if (Parkour.getPlugin().getConfig().getBoolean("Lobby.Set"))
 			return true;
 
 		if (Utils.hasPermission(player, "Parkour.Admin")) {
@@ -229,12 +229,12 @@ public class Validation {
 	 * @return
 	 */
 	public static boolean lobbyJoiningCustom(Player player, String lobby) {
-		if (!Parkour.getParkourConfig().getConfig().contains("Lobby." + lobby + ".World")) {
+		if (!Parkour.getPlugin().getConfig().contains("Lobby." + lobby + ".World")) {
 			player.sendMessage(Static.getParkourString() + "Lobby does not exist!");
 			return false;
 		}
 
-		int level = Parkour.getParkourConfig().getConfig().getInt("Lobby." + lobby + ".Level");
+		int level = Parkour.getPlugin().getConfig().getInt("Lobby." + lobby + ".Level");
 
 		if (level > 0 && !player.hasPermission("Parkour.Admin.MinBypass")) {
 			if (Parkour.getParkourConfig().getUsersData().getInt("PlayerInfo." + player.getName() + ".Level") < level) {

@@ -84,7 +84,7 @@ public class Parkour extends JavaPlugin {
 	}
 
 	private void updatePlugin() {
-		if (Parkour.getParkourConfig().getConfig().getBoolean("Other.CheckForUpdates"))
+		if (Parkour.getPlugin().getConfig().getBoolean("Other.CheckForUpdates"))
 			new Updater(this, 42615, this.getFile(), Updater.UpdateType.DEFAULT, true);
 	}
 }
