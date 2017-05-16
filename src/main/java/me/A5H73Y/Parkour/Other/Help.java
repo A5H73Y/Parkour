@@ -452,12 +452,16 @@ public final class Help {
 			player.sendMessage(Static.getParkourString() + "Successfully linked with Vault.");
 
 		} else if (args[1].equalsIgnoreCase("setprize")) {
-			if (!(args.length > 2)){
+			if (!(args.length == 4)){
 				player.sendMessage(Utils.invalidSyntax("econ", "setprize (course) (amount)"));
 				return;
 			}
-			if (!(CourseMethods.exist(args[2]) && Utils.isNumber(args[3]))){
+			if (!(CourseMethods.exist(args[2]))) {
 				player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[2]));
+				return;
+			}
+			if (!(Utils.isNumber(args[3]))) {
+				player.sendMessage(Static.getParkourString() + "Amount needs to be numeric.");
 				return;
 			}
 
@@ -466,16 +470,20 @@ public final class Help {
 			player.sendMessage(Static.getParkourString() + "Prize for " + args[2] + " set to " + args[3]);
 
 		} else if (args[1].equalsIgnoreCase("setfee")) {
-			if (!(args.length > 2)){
+			if (!(args.length == 4)){
 				player.sendMessage(Utils.invalidSyntax("econ", "setfee (course) (amount)"));
 				return;
 			}
-			if (!(CourseMethods.exist(args[2]) && Utils.isNumber(args[3]))){
+			if (!(CourseMethods.exist(args[2]))){
 				player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[2]));
 				return;
 			}
+			if (!(Utils.isNumber(args[3]))) {
+				player.sendMessage(Static.getParkourString() + "Amount needs to be numeric.");
+				return;
+			}
 
-			Parkour.getParkourConfig().getEconData().set("Price." + args[2].toLowerCase() + ".Join", Integer.parseInt(args[3]));
+			Parkour.getParkourConfig().getEconData().set("Price." + args[2].toLowerCase() + ".JoinFee", Integer.parseInt(args[3]));
 			Parkour.getParkourConfig().saveEcon();
 			player.sendMessage(Static.getParkourString() + "Fee for " + args[2] + " set to " + args[3]);
 
@@ -487,7 +495,6 @@ public final class Help {
 		} else {
 			player.sendMessage(Utils.invalidSyntax("econ", "(info / recreate / setprize / setfee)"));
 		}
-
 	}
 
 	/**
@@ -501,9 +508,9 @@ public final class Help {
 		int updated = 0;
 		for (String course : Static.getCourses()) {
 			try {
-				if (!(Parkour.getParkourConfig().getEconData().contains("Price." + course + ".Join"))) {
+				if (!(Parkour.getParkourConfig().getEconData().contains("Price." + course + ".JoinFee"))) {
 					updated++;
-					econ.set("Price." + course + ".Join", 0);
+					econ.set("Price." + course + ".JoinFee", 0);
 				}
 				if (!(Parkour.getParkourConfig().getEconData().contains("Price." + course + ".Finish"))) {
 					econ.set("Price." + course + ".Finish", 0);
