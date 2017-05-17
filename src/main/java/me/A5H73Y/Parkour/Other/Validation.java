@@ -98,15 +98,21 @@ public class Validation {
 
 		/* Check if player has enough currency to join */
 		if (Static.getEconomy()){
-			int joinFee = Parkour.getParkourConfig().getEconData().getInt("Price." + course.getName() + "JoinFee");
-
+			int joinFee = Parkour.getParkourConfig().getEconData().getInt("Price." + course.getName() + ".JoinFee");
+			String currencyName = Parkour.getEconomy().currencyNamePlural() == null ? 
+					"" : " " + Parkour.getEconomy().currencyNamePlural();
+			
 			if (joinFee > 0){
 				if (Parkour.getEconomy().getBalance(Bukkit.getOfflinePlayer(player.getUniqueId())) < joinFee){
-					player.sendMessage(Utils.getTranslation("Economy.Insufficient"));
+					player.sendMessage(Utils.getTranslation("Economy.Insufficient")
+							.replace("%AMOUNT%", joinFee + currencyName)
+							.replace("%COURSE%", course.getName()));
 					return false;
 				} else {
 					Parkour.getEconomy().withdrawPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()), joinFee);
-					player.sendMessage(Utils.getTranslation("Economy.Fee"));
+					player.sendMessage(Utils.getTranslation("Economy.Fee")
+							.replace("%AMOUNT%", joinFee + currencyName)
+							.replace("%COURSE%", course.getName()));
 				}
 			}
 		}
