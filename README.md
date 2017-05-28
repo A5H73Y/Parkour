@@ -27,17 +27,17 @@ Add a whole new element of fun to any server, highly competitive gameplay with r
 ## Maven
 ```
 <repository>
-	  <id>a5h73y-repo</id>
-	  <url>https://dl.bintray.com/a5h73y/repo/</url>
+    <id>a5h73y-repo</id>
+    <url>https://dl.bintray.com/a5h73y/repo/</url>
 </repository>
 ```
 
 ```
 <dependency>
-  <groupId>me.A5H73Y</groupId>
-  <artifactId>Parkour</artifactId>
-  <version>4.0</version>
-  <type>pom</type>
+    <groupId>me.A5H73Y</groupId>
+    <artifactId>Parkour</artifactId>
+    <version>4.0</version>
+    <type>pom</type>
 </dependency>
 ```
 

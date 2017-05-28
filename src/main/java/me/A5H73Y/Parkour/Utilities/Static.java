@@ -37,7 +37,7 @@ public final class Static {
 	private static boolean economy = false;
 	private static boolean bountifulAPI = false;
 	private static boolean placeholderAPI = false;
-	private static boolean devBuild = true;
+	private static boolean devBuild = false;
 	private static ParkourBlocks parkourBlocks;
 
 	private static String parkourString;
