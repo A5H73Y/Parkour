@@ -35,6 +35,9 @@ public class Parkour extends JavaPlugin {
 		StartPlugin.run();
 		updatePlugin();
 		settings = new Settings();
+		if (Static.isPlaceholderAPI()) {
+			new ParkourPlaceholders(this).hook();
+		}
 
 		getServer().getPluginManager().registerEvents(new ParkourListener(), this);
 		getServer().getPluginManager().registerEvents(new ParkourSignListener(), this);

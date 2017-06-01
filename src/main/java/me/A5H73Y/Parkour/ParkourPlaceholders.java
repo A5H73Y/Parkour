@@ -2,34 +2,17 @@ package me.A5H73Y.Parkour;
 
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
-import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.clip.placeholderapi.external.EZPlaceholderHook;
+
 import org.bukkit.entity.Player;
 
-public class ParkourPlaceholders extends PlaceholderExpansion {
+public class ParkourPlaceholders extends EZPlaceholderHook {
 
-    @Override
-    public String getIdentifier() {
-        return "parkour";
-    }
-
-    @Override
-    public String getPlugin() {
-        return "Parkour";
-    }
-
-    @Override
-    public String getAuthor() {
-        return "A5H73Y";
-    }
-
-    @Override
-    public String getVersion() {
-        return "1.0.0";
-    }
-
-    @Override
-    public boolean canRegister() {
-        return true;
+    Parkour plugin;
+	
+    public ParkourPlaceholders(Parkour passplugin){
+    	super(passplugin, "parkour");
+    	this.plugin = passplugin;
     }
 
     @Override
@@ -54,7 +37,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
         } else if (message.equalsIgnoreCase("parkoins")) {
             return String.valueOf(PlayerMethods.getParkoins(player.getName()));
 
-        } else if (message.equalsIgnoreCase("parkour_level")) {
+        } else if (message.equalsIgnoreCase("level")) {
             return String.valueOf(PlayerMethods.getParkourLevel(player.getName()));
         }
 

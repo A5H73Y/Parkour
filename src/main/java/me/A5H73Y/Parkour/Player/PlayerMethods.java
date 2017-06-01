@@ -1,6 +1,5 @@
 package me.A5H73Y.Parkour.Player;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
