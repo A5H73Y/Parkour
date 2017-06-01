@@ -97,6 +97,7 @@ public class PlayerMethods {
 		teardownPlayerMode(player);
 		removePlayer(player.getName());
 		preparePlayer(player, Parkour.getPlugin().getConfig().getInt("OnFinish.SetGamemode"));
+		Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".LastPlayed", session.getCourse().getName());
 		loadInventory(player);
 		LobbyMethods.leaveCourse(player, session);
 
@@ -105,7 +106,7 @@ public class PlayerMethods {
 	}
 
 	/**
-	 * Player dies while on a ocurse
+	 * Player dies while on a course
 	 * Called when the player 'dies' this can be from real events (Like falling
 	 * from too high), or native Parkour deaths (walking on a deathblock)
 	 * 
@@ -215,6 +216,7 @@ public class PlayerMethods {
 		DatabaseMethods.insertTime(courseName, player.getName(), session.getTime(), session.getDeaths());
 
 		Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".LastCompleted", courseName);
+		Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".LastPlayed", courseName);
 		Parkour.getParkourConfig().saveUsers();
 	}
 
@@ -1084,6 +1086,10 @@ public class PlayerMethods {
 
 	public static String getLastCompletedCourse(String playerName) {
 		return Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + playerName + ".LastCompleted");
+	}
+	
+	public static String getLastPlayedCourse(String playerName) {
+		return Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + playerName + ".LastPlayed");
 	}
 
 	public static int getParkourLevel(String playerName) {

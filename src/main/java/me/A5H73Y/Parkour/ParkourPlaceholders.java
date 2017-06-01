@@ -34,6 +34,9 @@ public class ParkourPlaceholders extends EZPlaceholderHook {
         if (message.equalsIgnoreCase("last_completed")) {
             return PlayerMethods.getLastCompletedCourse(player.getName());
 
+        } else if (message.equalsIgnoreCase("last_played")) {
+            return PlayerMethods.getLastPlayedCourse(player.getName());
+            
         } else if (message.equalsIgnoreCase("parkoins")) {
             return String.valueOf(PlayerMethods.getParkoins(player.getName()));
 
