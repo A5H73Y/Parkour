@@ -73,6 +73,7 @@ public class PlayerMethods {
 		}
 
 		addPlayer(player.getName(), new ParkourSession(course));
+		Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".LastPlayed", course.getName());
 		setupPlayerMode(player);
 		getParkourSession(player.getName()).startVisualTimer(player);
 	}
@@ -97,7 +98,6 @@ public class PlayerMethods {
 		teardownPlayerMode(player);
 		removePlayer(player.getName());
 		preparePlayer(player, Parkour.getPlugin().getConfig().getInt("OnFinish.SetGamemode"));
-		Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".LastPlayed", session.getCourse().getName());
 		loadInventory(player);
 		LobbyMethods.leaveCourse(player, session);
 
@@ -216,7 +216,6 @@ public class PlayerMethods {
 		DatabaseMethods.insertTime(courseName, player.getName(), session.getTime(), session.getDeaths());
 
 		Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".LastCompleted", courseName);
-		Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".LastPlayed", courseName);
 		Parkour.getParkourConfig().saveUsers();
 	}
 
