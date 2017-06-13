@@ -206,14 +206,14 @@ public class ParkourListener implements Listener {
 	@EventHandler
 	public void onEntityDamageEntity(EntityDamageByEntityEvent event) {
 		if (event.getEntity() instanceof Player)
-			if (PlayerMethods.isPlaying(event.getEntity().getName()))
+			if (PlayerMethods.isPlaying(((Player)event.getEntity()).getName()))
 				event.setCancelled(true);
 	}
 
 	@EventHandler
 	public void onEntityCombust(EntityCombustEvent event) {
 		if (event.getEntity() instanceof Player)
-			if (PlayerMethods.isPlaying(event.getEntity().getName()))
+			if (PlayerMethods.isPlaying(((Player)event.getEntity()).getName()))
 				event.setCancelled(true);
 	}
 
