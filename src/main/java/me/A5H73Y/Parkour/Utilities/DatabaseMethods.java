@@ -206,13 +206,16 @@ public class DatabaseMethods extends Database {
 					.prepareStatement("SELECT count(*) AS votes, (SELECT count(*) FROM vote WHERE liked = 1 AND courseId=?) AS likes FROM vote WHERE courseId=?;");
 			ps.setInt(1, courseId);
 			ps.setInt(2, courseId);
-			ResultSet rs = ps.executeQuery();
 			
-			int total = rs.getInt("votes");
-			int likes = rs.getInt("likes");
+			final ResultSet rs = ps.executeQuery();
 			
-			if (total > 0) {
-				percentage = ((likes * 1.0 / total) * 100);
+			if (rs.next()) {
+				int total = rs.getInt("votes");
+				int likes = rs.getInt("likes");
+				
+				if (total > 0) {
+					percentage = ((likes * 1.0 / total) * 100);
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
