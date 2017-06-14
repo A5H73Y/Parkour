@@ -226,6 +226,15 @@ public class ParkourCommands implements CommandExecutor {
 
 						CourseMethods.setRewardLevel(args, player);
 
+					} else if (args[0].equalsIgnoreCase("rewardleveladd")) {
+						if (!Utils.hasPermission(player, "Parkour.Admin"))
+							return false;
+
+						if (!Utils.validateArgs(player, args, 3))
+							return false;
+
+						CourseMethods.setRewardLevelAdd(args, player);
+
 					} else if (args[0].equalsIgnoreCase("rewardrank")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
 							return false;
@@ -437,6 +446,9 @@ public class ParkourCommands implements CommandExecutor {
 						
 					} else if (args[0].equalsIgnoreCase("rewardlevel")) {
 						ParkourConsoleCommands.setRewardLevel(args, sender);
+						
+					} else if (args[0].equalsIgnoreCase("rewardleveladd")) {
+						ParkourConsoleCommands.setRewardLevelAdd(args, sender);
 						
 					} else if (args[0].equalsIgnoreCase("rewardrank")) {
 						ParkourConsoleCommands.setRewardRank(args, sender);

@@ -340,14 +340,25 @@ public class PlayerMethods {
 				player.sendMessage(Utils.getTranslation("Parkour.RewardLevel")
 						.replace("%LEVEL%", String.valueOf(rewardLevel))
 						.replace("%COURSE%", courseName));
-
-				// check if there is a rank upgrade
-				String rewardRank = Parkour.getParkourConfig().getUsersData().getString("ServerInfo.Levels." + rewardLevel + ".Rank");
-				if (rewardRank != null) {
-					Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Rank", rewardRank);
-					player.sendMessage(Utils.colour(Utils.getTranslation("Parkour.RewardRank").replace("%RANK%", rewardRank)));
-				}
 			}
+		}
+		// Level increment
+		int addLevel = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".LevelAdd");
+		if (addLevel > 0) {
+			int newLevel = getParkourLevel(player.getName()) + addLevel;
+			
+			Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Level", newLevel);
+			player.sendMessage(Utils.getTranslation("Parkour.RewardLevel")
+					.replace("%LEVEL%", String.valueOf(newLevel))
+					.replace("%COURSE%", courseName));			
+		}
+		
+		// check if there is a rank upgrade
+		int currentLevel = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Level");
+		String rewardRank = Parkour.getParkourConfig().getUsersData().getString("ServerInfo.Levels." + currentLevel + ".Rank");
+		if (rewardRank != null) {
+			Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Rank", rewardRank);
+			player.sendMessage(Utils.colour(Utils.getTranslation("Parkour.RewardRank").replace("%RANK%", rewardRank)));
 		}
 
 		// Execute the command
