@@ -419,9 +419,9 @@ public final class Utils {
 				getParkourMaterial(name + ".Launch.Material"), 
 				getParkourMaterial(name + ".Speed.Material"),
 				getParkourMaterial(name + ".Repulse.Material"), 
-				Static.getParkourBlocks().getNorun(), 
-				Static.getParkourBlocks().getNopotion(), 
-				Static.getParkourBlocks().getBounce());
+				getParkourMaterial(name + ".NoRun.Material"), 
+				getParkourMaterial(name + ".NoPotion.Material"), 
+				getParkourMaterial(name + ".Bounce.Material"));
 
 		return parkourBlocks;
 	}
