@@ -21,7 +21,6 @@ import me.A5H73Y.Parkour.Other.Question;
 import me.A5H73Y.Parkour.Other.TimeObject;
 import me.A5H73Y.Parkour.Other.Validation;
 
-import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -420,9 +419,9 @@ public final class Utils {
 				getParkourMaterial(name + ".Launch.Material"), 
 				getParkourMaterial(name + ".Speed.Material"),
 				getParkourMaterial(name + ".Repulse.Material"), 
-				Static.getParkourBlocks().getNorun(), 
-				Static.getParkourBlocks().getNopotion(), 
-				Static.getParkourBlocks().getBounce());
+				getParkourMaterial(name + ".NoRun.Material"), 
+				getParkourMaterial(name + ".NoPotion.Material"), 
+				getParkourMaterial(name + ".Bounce.Material"));
 
 		return parkourBlocks;
 	}

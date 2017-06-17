@@ -68,6 +68,13 @@ public class ParkourConsoleCommands {
 
 		CourseMethods.setRewardLevel(args, sender);
 	}
+	
+	public static void setRewardLevelAdd(String[] args, CommandSender sender) {
+		if (!Utils.validateArgs(sender, args, 3))
+			return;
+
+		CourseMethods.setRewardLevelAdd(args, sender);
+	}
 
 	public static void setRewardRank(String[] args, CommandSender sender) {
 		if (!Utils.validateArgs(sender, args, 3))

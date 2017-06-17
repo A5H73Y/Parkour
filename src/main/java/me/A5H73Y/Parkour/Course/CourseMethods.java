@@ -559,6 +559,27 @@ public class CourseMethods {
 	}
 
 	/**
+	 * Add reward level
+	 * Add value to the player Parkour level on course completion.
+	 * 
+	 * @param args
+	 * @param sender
+	 */
+	public static void setRewardLevelAdd(String[] args, CommandSender sender) {
+		if (!CourseMethods.exist(args[1])) {
+			sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
+			return;
+		}
+		if (!Utils.isNumber(args[2])) {
+			sender.sendMessage(Static.getParkourString() + "Reward level addon needs to be numeric.");
+			return;
+		}
+
+		Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".LevelAdd", Integer.parseInt(args[2]));
+		Parkour.getParkourConfig().saveCourses();
+		sender.sendMessage(Static.getParkourString() + args[1] + "'s reward level addon was set to " + ChatColor.AQUA + args[2]);
+	}
+	/**
 	 * Set whether the player only gets the prize for the first time they complete the course.
 	 * 
 	 * @param args

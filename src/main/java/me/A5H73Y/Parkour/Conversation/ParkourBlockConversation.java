@@ -18,7 +18,7 @@ import org.bukkit.conversations.StringPrompt;
  */
 public class ParkourBlockConversation extends StringPrompt {
 
-	private String[] blockTypes = {"Death", "Finish", "Climb", "Launch", "Speed", "Repulse"};
+	private String[] blockTypes = {"Death", "Finish", "Climb", "Launch", "Bounce", "Speed", "Repulse", "NoRun", "NoPotion"};
 
 	public String getPromptText(ConversationContext context) {
 		return ChatColor.LIGHT_PURPLE + " What would you like to name your ParkourBlocks?";
