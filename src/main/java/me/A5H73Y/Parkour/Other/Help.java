@@ -176,6 +176,10 @@ public final class Help {
 			displayHelpMessage(sender, "Reward a Parkour Level", "/pa rewardlevel (course) (level)", "/pa rewardlevel Example 5",
 					" You can reward a player with a Parkour level on the completion of a course, which will allow them to unlock new courses which would have a minimum level requirement to join. Their level is not overwritten if their current level is higher than the reward level.");
 
+		} else if (args[1].equalsIgnoreCase("rewardleveladd")){	
+			displayHelpMessage(sender, "Reward an increase to current Parkour Level", "/pa rewardleveladd (course) (amount)", "/pa rewardleveladd Example 2",
+					" You can reward a player with an increase to their Parkour level on the completion of a course, which will allow them to unlock new courses which would have a minimum level requirement to join. The amount is added to their current level.");
+
 		} else if (args[1].equalsIgnoreCase("rewardrank")){	
 			displayHelpMessage(sender, "Reward a Parkour Rank", "/pa rewardrank (level) (rank)", "/pa rewardrank 4 &4Pro",
 					" You can link a Parkour level to a rank, which would display beside their name if you enable the Parkour Chat Prefix setting. This would allow you to differentiate each Parkour level a player is, based on their rank. ");
@@ -387,6 +391,7 @@ public final class Help {
 		displayCommandUsage(player, "setmaxdeath", "(course) (death)", "Set course max deaths");
 		displayCommandUsage(player, "rewardonce", "(course)", "Toggle if the prize is given once");
 		displayCommandUsage(player, "rewardlevel", "(course) (level)", "Reward level on complete");
+		displayCommandUsage(player, "rewardleveladd", "(course) (amount)", "Reward level addon");
 		displayCommandUsage(player, "rewardrank", "(level) (rank)", "Reward rank on complete");
 		displayCommandUsage(player, "rewardparkoins", "(course) (amount)", "Reward Parkoins");
 	}
