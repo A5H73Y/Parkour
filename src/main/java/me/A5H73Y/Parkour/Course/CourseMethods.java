@@ -213,6 +213,7 @@ public class CourseMethods {
 		int maxDeaths = config.getInt(courseName + ".MaxDeaths");
 		int minLevel = config.getInt(courseName + ".MinimumLevel");
 		int rewardLevel = config.getInt(courseName + ".Level");
+		int rewardLevelAdd = config.getInt(courseName + ".LevelAdd");
 		int XP = config.getInt(courseName + ".XP");
 		int parkoins = config.getInt(courseName + ".Parkoins");
 		int joinFee = econ.getInt("Price." + courseName + ".JoinFee");
@@ -247,6 +248,9 @@ public class CourseMethods {
 
 		if (rewardLevel > 0)
 			player.sendMessage("Level Reward: " + aqua + rewardLevel);
+		
+		if (rewardLevelAdd > 0)
+			player.sendMessage("Level Reward Addon: " + aqua + rewardLevelAdd);
 
 		if (XP > 0)
 			player.sendMessage("XP Reward: " + aqua + XP);
@@ -750,6 +754,7 @@ public class CourseMethods {
 		config.set(courseName + ".XP", null);
 		config.set(courseName + ".Level", null);
 		config.set(courseName + ".MinimumLevel", null);
+		config.set(courseName + ".LevelAdd", null);
 		config.set(courseName + ".MaxDeaths", null);
 		config.set(courseName + ".Parkoins", null);
 		config.set(courseName + ".LinkedLobby", null);
