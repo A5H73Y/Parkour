@@ -4,10 +4,7 @@ import me.A5H73Y.Parkour.Parkour;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.MessagePrompt;
-import org.bukkit.conversations.Prompt;
-import org.bukkit.conversations.StringPrompt;
+import org.bukkit.conversations.*;
 
 /**
  * This work is licensed under a Creative Commons 
@@ -18,7 +15,7 @@ import org.bukkit.conversations.StringPrompt;
  */
 public class ParkourBlockConversation extends StringPrompt {
 
-	private String[] blockTypes = {"Death", "Finish", "Climb", "Launch", "Bounce", "Speed", "Repulse", "NoRun", "NoPotion"};
+	private String[] actionTypes = {"death", "finish", "climb", "launch", "bounce", "speed", "norun", "nopotion"};
 
 	public String getPromptText(ConversationContext context) {
 		return ChatColor.LIGHT_PURPLE + " What would you like to name your ParkourBlocks?";
@@ -29,79 +26,78 @@ public class ParkourBlockConversation extends StringPrompt {
 			return Prompt.END_OF_CONVERSATION;
 		}
 
-		if (Parkour.getPlugin().getConfig().contains("ParkourBlocks." + message)){
+		message = message.toLowerCase();
+
+		if (Parkour.getParkourConfig().getParkourBlocksData().contains("ParkourBlocks." + message)){
 			ParkourConversation.sendErrorMessage(context, "This ParkourBlock already exists");
 			return this;
 		}
 
 		context.setSessionData("name", message);
-		return new chooseBlock();
+		return new chooseMaterial();
 	}
 
-	private class chooseBlock extends StringPrompt {
+	private class chooseMaterial extends StringPrompt {
 		@Override
 		public String getPromptText(ConversationContext context) {
-			int stage = getBlockStage(context);
-
-			String blockType = blockTypes[stage];
-
-			String material = Parkour.getPlugin().getConfig().getString("DefaultBlocks." + blockType + ".Material").toUpperCase();
-
-			return ChatColor.LIGHT_PURPLE + " What material do you want for the " + ChatColor.WHITE + blockType + ChatColor.LIGHT_PURPLE + " block?\n "
-			+ ChatColor.DARK_GRAY + "Default: " + ChatColor.GRAY + material;
+            return ChatColor.LIGHT_PURPLE + " What Material do you want to choose?";
 		}
 
 		@Override
 		public Prompt acceptInput(ConversationContext context, String message) {
-
-			int stage = getBlockStage(context);
-			Material material;
-
-			if (message.equalsIgnoreCase("default")){
-				String blockType = blockTypes[stage];
-				material = Material.getMaterial(
-						Parkour.getPlugin().getConfig().getString("DefaultBlocks." + blockType + ".Material").toUpperCase());
-
-			} else {
-				material = Material.getMaterial(message.toUpperCase());
-			}
+            Material material = Material.getMaterial(message.toUpperCase());
 
 			if (material == null){
-				ParkourConversation.sendErrorMessage(context, "This is not a valid material");
+				ParkourConversation.sendErrorMessage(context, message.toUpperCase() + " is not a valid Material");
 				return this;
 			}
 
-			context.setSessionData(stage, material.name());
-
-			if (stage < blockTypes.length - 1){
-				context.setSessionData("stage", stage += 1);
-				return this;
-			}
-
-			return new ProcessComplete();
+			context.setSessionData("material", material.name());
+			return new chooseAction();
 		}		
 	}
 
-	private class ProcessComplete extends MessagePrompt {
-		public String getPromptText(ConversationContext context) {
-			String name = context.getSessionData("name").toString().toLowerCase();
+    private class chooseAction extends FixedSetPrompt {
 
-			for (int i=0; i < blockTypes.length; i++){
-				Parkour.getPlugin().getConfig().set("ParkourBlocks." + name + "." + blockTypes[i] + ".Material", context.getSessionData(i));
-			}
-			Parkour.getPlugin().saveConfig();
+        chooseAction(){
+            super(actionTypes);
+        }
 
-			return ChatColor.GREEN + " " + name + ChatColor.LIGHT_PURPLE + " was successfully created!";
-		}
+        @Override
+        public String getPromptText(ConversationContext context) {
+            return ChatColor.LIGHT_PURPLE + " What Action should " + context.getSessionData("material") + " do?\n" +
+                    ChatColor.GREEN + formatFixedSet();
+        }
 
-		@Override
-		protected Prompt getNextPrompt(ConversationContext context) {
-			return Prompt.END_OF_CONVERSATION;
-		}
-	}
+        @Override
+        protected Prompt acceptValidatedInput(ConversationContext context, String choice) {
+            context.setSessionData("action", choice);
+            return new ProcessComplete();
+        }
+    }
 
-	private int getBlockStage(ConversationContext context){
-		return context.getSessionData("stage") == null ? 0 : (Integer) context.getSessionData("stage");
-	}
+	private class ProcessComplete extends BooleanPrompt {
 
+        public String getPromptText(ConversationContext context) {
+            return ChatColor.LIGHT_PURPLE + " ParkourKit saved! Would you like to add another Material?\n" +
+            ChatColor.GREEN + "[yes, no]";
+        }
+
+        @Override
+        protected Prompt acceptValidatedInput(ConversationContext context, boolean input) {
+            String name = context.getSessionData("name").toString();
+            String material = context.getSessionData("material").toString();
+            String action = context.getSessionData("action").toString();
+
+            Parkour.getParkourConfig().getParkourBlocksData()
+                    .set("ParkourBlocks." + name + "." + material + ".Action", action);
+            Parkour.getParkourConfig().saveParkourBlocks();
+
+            if (!input) {
+                return Prompt.END_OF_CONVERSATION;
+            }
+
+            return new chooseMaterial();
+        }
+    }
 }

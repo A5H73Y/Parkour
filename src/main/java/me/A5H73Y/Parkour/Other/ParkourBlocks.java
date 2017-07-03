@@ -1,7 +1,10 @@
 package me.A5H73Y.Parkour.Other;
 
 import java.io.Serializable;
+import java.util.*;
 
+import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.Material;
 
 /**
@@ -11,162 +14,96 @@ import org.bukkit.Material;
  *
  * @author A5H73Y
  */
-public class ParkourBlocks implements Serializable{
+public class ParkourBlocks implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private Material death, finish, climb, launch, speed, repulse, norun, nopotion, bounce;
+    private static List<String> validActions =
+            Arrays.asList("death", "finish", "climb", "launch", "speed", "norun", "nopotion", "bounce");
 
-	private double str_launch, str_climb, str_repulse, str_doublejump;
+    private static Map<String, ParkourBlocks> loaded = new HashMap<>();
 
-	private int str_speed, dur_speed;
+    // object attributes
+    private String name;
+    private List<Material> materials = new ArrayList<Material>();
 
+    /**
+     * ParkourBlocks
+     * Each ParkourBlocks set has a unique name to refer to it, apart from the default set.
+     * The format being ParkourBlock.MATERIAL.Action = "action"
+     * If the Material provided is invalid, then it won't be added to our list of materials
+     * Also if the Action provided is invalid, then it won't be added to our list of materials.
+     * This is so ParkourBlocks remain safe while in use on a course.
+     *
+     * @param name
+     */
+    private ParkourBlocks(String name) {
+        this.name = name;
 
-	/**
-	 * ParkourBlocks
-	 * Each ParkourBlocks set has a unique name associated to it, for lookup.
-	 * Each course can have a ParkourBlocks set to use; meaning there could be a different material for each type per course.
-	 * The NoRun, NoPotion and Bounce all use the default blocks specified.
-	 * 
-	 * @param finish
-	 * @param climb
-	 * @param launch
-	 * @param speed
-	 * @param repulse
-	 * @param norun
-	 * @param nopotion
-	 * @param bounce
-	 */
-	public ParkourBlocks(Material death, Material finish, Material climb, Material launch, Material speed, Material repulse, Material norun, Material nopotion, Material bounce){
-		this.death = death;
-		this.finish = finish;
-		this.climb = climb;
-		this.launch = launch;
-		this.speed = speed;
-		this.repulse = repulse;
-		this.norun = norun;
-		this.nopotion = nopotion;
-		this.bounce = bounce;
-	}
+        Set<String> rawMaterials = Parkour.getParkourConfig().getParkourBlocksData()
+                .getConfigurationSection("ParkourBlocks." + name).getKeys(false);
 
-	public Material getDeath() {
-		return death;
-	}
+        for (String rawMaterial : rawMaterials) {
+            Material material = Material.getMaterial(rawMaterial);
 
-	public void setDeath(Material death) {
-		this.death = death;
-	}
+            if (material == null) {
+                Utils.log("Material " + rawMaterial + " is invalid.", 1);
+                continue;
+            }
 
-	public Material getFinish() {
-		return finish;
-	}
+            String action = Parkour.getParkourConfig().getParkourBlocksData()
+                    .getString("ParkourBlocks." + name + "." + material.name() + ".Action").toLowerCase();
 
-	public void setFinish(Material finish) {
-		this.finish = finish;
-	}
+            if (!validActions.contains(action)) {
+                Utils.log("Action " + action + " is invalid.", 1);
+                continue;
+            }
 
-	public Material getClimb() {
-		return climb;
-	}
+            // we only add the material once we know it's valid
+            materials.add(material);
+        }
+    }
 
-	public void setClimb(Material climb) {
-		this.climb = climb;
-	}
+    /**
+     * Get the materials that this ParkourBlocks is made up of
+     * @return List<Material>
+     */
+    public List<Material> getMaterials() {
+        return materials;
+    }
 
-	public Material getLaunch() {
-		return launch;
-	}
+    /**
+     * Get the corresponding action for the material
+     * @param material
+     * @return
+     */
+    public String getAction(Material material) {
+        if (!materials.contains(material)) {
+            return null;
+        }
 
-	public void setLaunch(Material launch) {
-		this.launch = launch;
-	}
+        return Parkour.getParkourConfig().getParkourBlocksData()
+                .getString("ParkourBlocks." + name + "." + material.name() + ".Action").toLowerCase();
+    }
 
-	public Material getSpeed() {
-		return speed;
-	}
+    /**
+     * New point of accessing ParkourBlocks
+     * If it's already loaded, then just return that, otherwise create the set and load it.
+     * Hopefully this is better for performance
+     * @param name
+     * @return ParkourBlocks
+     */
+    public static ParkourBlocks getParkourBlocks(String name) {
+        if (loaded.containsKey(name)) {
+            return loaded.get(name);
+        }
 
-	public void setSpeed(Material speed) {
-		this.speed = speed;
-	}
+        if (!Parkour.getParkourConfig().getParkourBlocksData().contains("ParkourBlocks." + name)) {
+            return null;
+        }
 
-	public Material getRepulse() {
-		return repulse;
-	}
-
-	public void setRepulse(Material repulse) {
-		this.repulse = repulse;
-	}
-
-	public Material getNorun() {
-		return norun;
-	}
-
-	public void setNorun(Material norun) {
-		this.norun = norun;
-	}
-
-	public Material getNopotion() {
-		return nopotion;
-	}
-
-	public void setNopotion(Material nopotion) {
-		this.nopotion = nopotion;
-	}
-
-	public Material getBounce() {
-		return bounce;
-	}
-
-	public void setBounce(Material bounce) {
-		this.bounce = bounce;
-	}
-
-	public double getStr_launch() {
-		return str_launch;
-	}
-
-	public void setStr_launch(double str_launch) {
-		this.str_launch = str_launch;
-	}
-
-	public double getStr_climb() {
-		return str_climb;
-	}
-
-	public void setStr_climb(double str_climb) {
-		this.str_climb = str_climb;
-	}
-
-	public int getStr_speed() {
-		return str_speed;
-	}
-
-	public void setStr_speed(int str_speed) {
-		this.str_speed = str_speed;
-	}
-
-	public double getStr_repulse() {
-		return str_repulse;
-	}
-
-	public void setStr_repulse(double str_repulse) {
-		this.str_repulse = str_repulse;
-	}
-
-	public double getStr_doublejump() {
-		return str_doublejump;
-	}
-
-	public void setStr_doublejump(double str_doublejump) {
-		this.str_doublejump = str_doublejump;
-	}
-
-	public int getDur_speed() {
-		return dur_speed;
-	}
-
-	public void setDur_speed(int dur_speed) {
-		this.dur_speed = dur_speed;
-	}
-
+        ParkourBlocks pb = new ParkourBlocks(name);
+        loaded.put(name, pb);
+        return pb;
+    }
 }

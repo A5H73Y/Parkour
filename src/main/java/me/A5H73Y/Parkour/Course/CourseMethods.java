@@ -73,7 +73,7 @@ public class CourseMethods {
 
 		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".ParkourBlocks")) {
 			String name = Parkour.getParkourConfig().getCourseData().getString(courseName + ".ParkourBlocks");
-			ParkourBlocks pb = Utils.populateParkourBlocks("ParkourBlocks." + name);
+			ParkourBlocks pb = ParkourBlocks.getParkourBlocks(name);
 			if (pb != null)
 				course.setParkourBlocks(pb);
 		}
@@ -667,11 +667,6 @@ public class CourseMethods {
 			return;
 		}
 
-		Location location = player.getLocation();
-		location.setY(location.getBlockY() - 1);
-		Block block = location.getBlock();
-		block.setType(Static.getParkourBlocks().getFinish());
-
 		Parkour.getParkourConfig().getCourseData().set(courseName + ".Finished", true);
 		Parkour.getParkourConfig().saveCourses();
 
@@ -857,7 +852,7 @@ public class CourseMethods {
 		player.sendMessage(Utils.getTranslation("Parkour.ChallengeSend")
 				.replace("%PLAYER%", target.getName())
 				.replace("%COURSE%", courseName));
-		Static.addChallenge(new Challenge(player.getName(), target.getName(), courseName));
+		Challenge.challengePlayer(player.getName(), target.getName(), courseName);
 	}
 
 	/**

@@ -99,6 +99,10 @@ public class PlayerMethods {
 		removePlayer(player.getName());
 		preparePlayer(player, Parkour.getPlugin().getConfig().getInt("OnFinish.SetGamemode"));
 		loadInventory(player);
+
+        if (Parkour.getPlugin().getConfig().getBoolean("OnDie.SetXPBarToDeathCount"))
+            player.setLevel(0);
+
 		LobbyMethods.leaveCourse(player, session);
 
 		if (Static.containsHidden(player.getName()))
@@ -194,6 +198,9 @@ public class PlayerMethods {
 		CourseMethods.increaseComplete(courseName);
 		teardownPlayerMode(player);
 		removePlayer(player.getName());
+
+        if (Parkour.getPlugin().getConfig().getBoolean("OnDie.SetXPBarToDeathCount"))
+            player.setLevel(0);
 
 		if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.TeleportToLobby")) {
 			Long delay = Parkour.getPlugin().getConfig().getLong("OnFinish.TeleportDelay");
@@ -513,19 +520,18 @@ public class PlayerMethods {
 	/**
 	 * Add a player and their session to the playing players.
 	 * @param playerName
-	 * @param player
+	 * @param session
 	 */
-	private static void addPlayer(String playerName, ParkourSession player) {
-		parkourPlayers.put(playerName, player);
+	private static void addPlayer(String playerName, ParkourSession session) {
+		parkourPlayers.put(playerName, session);
 	}
 
 	/**
 	 * Remove a player and their session from the playing players.
 	 * @param playerName
-	 * @param player
 	 */
-	private static void removePlayer(String player) {
-		parkourPlayers.remove(player);
+	private static void removePlayer(String playerName) {
+		parkourPlayers.remove(playerName);
 	}
 
 	/**
@@ -573,65 +579,31 @@ public class PlayerMethods {
 		ParkourBlocks pb = null;
 
 		if (args != null && args.length == 2) {
-			pb = Utils.populateParkourBlocks("ParkourBlocks." + args[1]);
+			pb = ParkourBlocks.getParkourBlocks(args[1]);
 			if (pb == null)
 				player.sendMessage(Static.getParkourString() + "Invalid ParkourBlocks: " + ChatColor.RED + args[1]);
 		}
 		if (pb == null) {
-			pb = Utils.populateDefaultParkourBlocks();
+			pb = ParkourBlocks.getParkourBlocks("default");
 		}
 
-		// Speed Block
-		ItemStack s = new ItemStack(pb.getSpeed());
-		ItemMeta m = s.getItemMeta();
-		m.setDisplayName(Utils.getTranslation("Kit.Speed", false));
-		s.setItemMeta(m);
-		player.getInventory().addItem(s);
+		for (Material material : pb.getMaterials()) {
+		    String action = pb.getAction(material);
 
-		s = new ItemStack(pb.getClimb());
-		m = s.getItemMeta();
-		m.setDisplayName(Utils.getTranslation("Kit.Climb", false));
-		s.setItemMeta(m);
-		player.getInventory().addItem(s);
+		    if (action == null)
+		        continue;
 
-		s = new ItemStack(pb.getLaunch());
-		m = s.getItemMeta();
-		m.setDisplayName(Utils.getTranslation("Kit.Launch", false));
-		s.setItemMeta(m);
-		player.getInventory().addItem(s);
+		    action = Utils.standardizeText(action);
 
-		s = new ItemStack(pb.getFinish());
-		m = s.getItemMeta();
-		m.setDisplayName(Utils.getTranslation("Kit.Finish", false));
-		s.setItemMeta(m);
-		player.getInventory().addItem(s);
+            ItemStack s = new ItemStack(material);
+            ItemMeta m = s.getItemMeta();
+            m.setDisplayName(Utils.getTranslation("Kit." + action, false));
+            s.setItemMeta(m);
+            player.getInventory().addItem(s);
+        }
 
-		s = new ItemStack(pb.getRepulse());
-		m = s.getItemMeta();
-		m.setDisplayName(Utils.getTranslation("Kit.Repulse", false));
-		s.setItemMeta(m);
-		player.getInventory().addItem(s);
-
-		s = new ItemStack(pb.getNorun());
-		m = s.getItemMeta();
-		m.setDisplayName(Utils.getTranslation("Kit.NoRun", false));
-		s.setItemMeta(m);
-		player.getInventory().addItem(s);
-
-		s = new ItemStack(pb.getNopotion());
-		m = s.getItemMeta();
-		m.setDisplayName(Utils.getTranslation("Kit.NoPotion", false));
-		s.setItemMeta(m);
-		player.getInventory().addItem(s);
-
-		s = new ItemStack(pb.getDeath());
-		m = s.getItemMeta();
-		m.setDisplayName(Utils.getTranslation("Kit.Death", false));
-		s.setItemMeta(m);
-		player.getInventory().addItem(s);
-
-		s = new ItemStack(Material.SIGN);
-		m = s.getItemMeta();
+        ItemStack s = new ItemStack(Material.SIGN);
+        ItemMeta m = s.getItemMeta();
 		m.setDisplayName(Utils.getTranslation("Kit.Sign", false));
 		s.setItemMeta(m);
 		player.getInventory().addItem(s);	
@@ -877,8 +849,7 @@ public class PlayerMethods {
 	 * This will remove all trace of the player from the plugin. 
 	 * All SQL time entries from the player will be removed, and their parkour stats will be deleted from the config.
 	 * 
-	 * @param args
-	 * @param player
+	 * @param playerName
 	 */
 	public final static void resetPlayer(String playerName) {
 		Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + playerName, null);

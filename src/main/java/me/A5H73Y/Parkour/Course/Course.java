@@ -25,7 +25,7 @@ public class Course implements Serializable {
 	public Course(String name, Checkpoint checkpoint) {
 		this.name = name;
 		this.checkpoint = checkpoint;
-		this.parkourBlocks = Static.getParkourBlocks();
+		this.parkourBlocks = ParkourBlocks.getParkourBlocks("default");
 		this.checkpoints = CheckpointMethods.getNumberOfCheckpoints(name);
 	}
 

@@ -16,7 +16,8 @@ import org.bukkit.configuration.file.FileConfiguration;
  */
 public class Settings {
 
-	private boolean commandPermission, chatPrefix, disablePlayerDamage, resetOnLeave, enforceWorld, disableCommands, allowTrails, signPermission, attemptLessChecks;
+	private boolean commandPermission, chatPrefix, disablePlayerDamage, resetOnLeave, enforceWorld, disableCommands,
+            allowTrails, signPermission, attemptLessChecks, useParkourBlocks;
 
 	//Display
 	private boolean displayWelcome;
@@ -34,7 +35,7 @@ public class Settings {
 	private String defaultRank;
 
 	//decimals
-	private double climbStrength, launchStrength, repulseStrength;
+	private double climbStrength, launchStrength;
 
 	public Settings(){
 		FileConfiguration config = Parkour.getPlugin().getConfig();
@@ -47,6 +48,7 @@ public class Settings {
 		allowTrails = config.getBoolean("OnCourse.AllowTrails");
 		signPermission = config.getBoolean("Other.Parkour.SignPermissions");
 		attemptLessChecks = config.getBoolean("OnCourse.AttemptLessChecks");
+        useParkourBlocks = config.getBoolean("OnCourse.UseParkourBlocks");
 
 		lastCheckpoint = Material.getMaterial(config.getString("OnJoin.Item.LastCheckpoint.Material"));
 		hideall = Material.getMaterial(config.getString("OnJoin.Item.HideAll.Material"));
@@ -64,7 +66,6 @@ public class Settings {
 		bounceDuration = config.getInt("DefaultBlocks.Bounce.Duration");
 		speedStrength = config.getInt("DefaultBlocks.Speed.Strength");
 		speedDuration = config.getInt("DefaultBlocks.Speed.Duration");
-		repulseStrength = config.getDouble("DefaultBlocks.Repulse.Strength");
 
 		titleIn = config.getInt("DisplayTitle.FadeIn");
 		titleStay = config.getInt("DisplayTitle.Stay");
@@ -159,10 +160,6 @@ public class Settings {
 		return launchStrength;
 	}
 
-	public double getRepulseStrength() {
-		return repulseStrength;
-	}
-
 	public int getTitleIn() {
 		return titleIn;
 	}
@@ -174,4 +171,8 @@ public class Settings {
 	public int getTitleOut() {
 		return titleOut;
 	}
+
+    public boolean isUseParkourBlocks() {
+        return useParkourBlocks;
+    }
 }

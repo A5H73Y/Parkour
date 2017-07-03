@@ -39,6 +39,7 @@ public class StartPlugin {
 
 	private static boolean freshInstall = false;
 	private static boolean updateExisting = false;
+	private static boolean fromBeforeVersion4 = false;
 
 	public static void run() {
 		checkConvertToLatest();
@@ -210,15 +211,14 @@ public class StartPlugin {
 
 		if (configVersion >= currentVersion)
 			return;
-		
+
 		if (configVersion >= 4.0)
-			return;
+		    fromBeforeVersion4 = true;
 
 		updateExisting = true;
 		Utils.log("[Backup] Updating config to " + currentVersion + "...");
 		// We backup all their files first before touching them
 		Backup.backupNow(false);
-		Utils.broadcastMessage("[Backup] Your existing config has been backed up. We have generated a new config, please reapply the settings you want.", "Parkour.Admin");
 		convertToLatest();
 		Parkour.getPlugin().getConfig().set("Version", currentVersion);
 		Parkour.getPlugin().saveConfig();
@@ -244,10 +244,13 @@ public class StartPlugin {
 
 			String[] lobbyData = getLobbyData();
 
-			// Reset current config
-			for (String key : Parkour.getPlugin().getConfig().getKeys(false)) {
-				Parkour.getPlugin().getConfig().set(key, null);
-			}
+			if (fromBeforeVersion4) {
+                // Reset current config
+                for (String key : Parkour.getPlugin().getConfig().getKeys(false)) {
+                    Parkour.getPlugin().getConfig().set(key, null);
+                }
+                Utils.broadcastMessage("[Backup] Your existing config has been backed up. We have generated a new config, please reapply the settings you want.", "Parkour.Admin");
+            }
 
 			Parkour.getPlugin().saveConfig();
 			Parkour.getParkourConfig().reload();

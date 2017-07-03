@@ -42,19 +42,16 @@ public class ParkourConversation implements ConversationAbandonedListener {
 		.withFirstPrompt(getEntryPrompt(conversationType, player));
 	}
 
-	private Prompt getEntryPrompt(ConversationType type, Player player){
+	private Prompt getEntryPrompt(ConversationType type, Player player) {
+        player.sendMessage(ChatColor.GRAY + "Nope: Enter 'cancel' to quit the conversation.");
 		switch (type){
 		case PARKOURBLOCKS:
-			player.sendMessage(ChatColor.GRAY + "Note: Enter 'default' if you want to use the default. Enter 'cancel' to quit the conversation.");
 			return new ParkourBlockConversation();
 		case COURSEPRIZE:
-			player.sendMessage(ChatColor.GRAY + "Note: Enter 'cancel' to quit the conversation.");
 			return new CoursePrizeConversation();
 		case LEADERBOARD:
-			player.sendMessage(ChatColor.GRAY + "Note: Enter 'cancel' to quit the conversation.");
 			return new LeaderboardConversation();
 		case PARKOURMODE:
-			player.sendMessage(ChatColor.GRAY + "Note: Enter 'cancel' to quit the conversation.");
 			return new ParkourModeConversation();
 		default:
 			player.sendMessage(ChatColor.RED + "Something went wrong.");

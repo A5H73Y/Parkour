@@ -1,5 +1,8 @@
 package me.A5H73Y.Parkour.Other;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This work is licensed under a Creative Commons 
  * Attribution-NonCommercial-ShareAlike 4.0 International License. 
@@ -8,6 +11,8 @@ package me.A5H73Y.Parkour.Other;
  * @author A5H73Y
  */
 public class Challenge {
+
+    private static List<Challenge> challenges = new ArrayList<>();
 
 	private String player;
 	private String targetPlayer;
@@ -21,7 +26,7 @@ public class Challenge {
 	 * @param targetPlayer
 	 * @param courseName
 	 */
-	public Challenge(String player, String targetPlayer, String courseName){
+	private Challenge(String player, String targetPlayer, String courseName){
 		this.player = player;
 		this.targetPlayer = targetPlayer;
 		this.courseName = courseName;
@@ -31,23 +36,18 @@ public class Challenge {
 		return player;
 	}
 
-	public void setPlayer(String player) {
-		this.player = player;
-	}
-
 	public String getTargetPlayer() {
 		return targetPlayer;
-	}
-
-	public void setTargetPlayer(String targetPlayer) {
-		this.targetPlayer = targetPlayer;
 	}
 
 	public String getCourseName() {
 		return courseName;
 	}
 
-	public void setCourseName(String courseName) {
-		this.courseName = courseName;
-	}
+	public static Challenge challengePlayer(String player1, String player2, String courseName) {
+	    Challenge challenge = new Challenge(player1, player2, courseName);
+	    challenges.add(challenge);
+	    return challenge;
+    }
+
 }

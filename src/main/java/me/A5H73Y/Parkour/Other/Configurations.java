@@ -21,8 +21,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public class Configurations {
 
-	private File dataFolder, courseFile, stringFile, usersFile, invFile, checkFile, econFile;
-	private FileConfiguration courseData, stringData, usersData, invData, checkData, econData;
+	private File dataFolder, courseFile, stringFile, usersFile, invFile, checkFile, econFile, pbFile;
+	private FileConfiguration courseData, stringData, usersData, invData, checkData, econData, pbData;
 
 	/**
 	 * This no longer generates the default config.yml to allow the ability of creating a backup of the existing config.
@@ -43,6 +43,8 @@ public class Configurations {
 		invData = new YamlConfiguration();
 		checkFile = new File(dataFolder, "checkpoints.yml");
 		checkData = new YamlConfiguration();
+		pbFile = new File(dataFolder, "parkourblocks.yml");
+		pbData = new YamlConfiguration();
 
 		// courses
 		if (!courseFile.exists()) {
@@ -100,12 +102,24 @@ public class Configurations {
 			}
 		}
 
+        // parkourblocks
+        if (!pbFile.exists()) {
+            try {
+                pbFile.createNewFile();
+                Utils.log("Created parkourblocks.yml");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Utils.log("Failed!");
+            }
+        }
+
 		try{
 			courseData.load(courseFile);
 			stringData.load(stringFile);
 			usersData.load(usersFile);
 			invData.load(invFile);
 			checkData.load(checkFile);
+			pbData.load(pbFile);
 
 		} catch (Exception ex){
 			Utils.log("Failed loading config: " + ex.getMessage());
@@ -122,6 +136,7 @@ public class Configurations {
 		saveInv();
 		saveStrings();
 		saveUsers();
+		saveParkourBlocks();
 		Parkour.getPlugin().saveConfig();
 	}
 
@@ -133,6 +148,7 @@ public class Configurations {
 		usersData = YamlConfiguration.loadConfiguration(usersFile);
 		invData = YamlConfiguration.loadConfiguration(invFile);
 		checkData = YamlConfiguration.loadConfiguration(checkFile);
+		pbData = YamlConfiguration.loadConfiguration(pbFile);
 		if (Static.getEconomy())
 			econData = YamlConfiguration.loadConfiguration(econFile);
 	}
@@ -159,6 +175,10 @@ public class Configurations {
 
 	public FileConfiguration getEconData() {
 		return econData;
+	}
+
+	public FileConfiguration getParkourBlocksData() {
+	    return pbData;
 	}
 
 	public File getDataFolder(){
@@ -208,6 +228,16 @@ public class Configurations {
 			ex.printStackTrace();
 		}
 	}
+
+	public void saveParkourBlocks() {
+	    try {
+            pbData.addDefault("ParkourBlocks.default.HUGE_MUSHROOM_2.Action", "finish");
+            pbData.options().copyDefaults(true);
+            pbData.save(pbFile);
+        } catch (IOException ex) {
+	        ex.printStackTrace();
+        }
+    }
 
 	public List<String> getAllCourses() {
 		return courseData.getStringList("Courses");
@@ -328,12 +358,12 @@ public class Configurations {
 			stringData.addDefault("Kit.Climb", "&bClimb Block");
 			stringData.addDefault("Kit.Launch", "&bLaunch Block");
 			stringData.addDefault("Kit.Finish", "&bFinish Block");
-			stringData.addDefault("Kit.Repulse", "&bRepulse Block");
-			stringData.addDefault("Kit.NoRun", "&bNoRun Block");
-			stringData.addDefault("Kit.NoFall", "&bNoFall Block");
-			stringData.addDefault("Kit.NoPotion", "&bNoPotion Block");
+			stringData.addDefault("Kit.Norun", "&bNoRun Block");
+			stringData.addDefault("Kit.Nofall", "&bNoFall Block");
+			stringData.addDefault("Kit.Nopotion", "&bNoPotion Block");
 			stringData.addDefault("Kit.Sign", "&bSign");
 			stringData.addDefault("Kit.Death", "&bDeath Block");
+			stringData.addDefault("Kit.Bounce", "&bBounce Block");
 
 			stringData.addDefault("Mode.Spectate.AlertPlayer", "You are now being spectated by &b%PLAYER%");
 			stringData.addDefault("Mode.Spectate.FinishedSpec", "You are no longer being spectated");
@@ -361,23 +391,22 @@ public class Configurations {
 
 		config.options().header("==== Parkour Config ==== #");
 
-		config.addDefault("DefaultBlocks.Enabled", true);
-		config.addDefault("DefaultBlocks.Death.Material", "SMOOTH_BRICK");
-		config.addDefault("DefaultBlocks.Finish.Material", "HUGE_MUSHROOM_2");
-		config.addDefault("DefaultBlocks.Climb.Material", "BRICK");
-		config.addDefault("DefaultBlocks.Climb.Strength", 0.4);
-		config.addDefault("DefaultBlocks.Launch.Material", "EMERALD_BLOCK");
-		config.addDefault("DefaultBlocks.Launch.Strength", 1.2);
-		config.addDefault("DefaultBlocks.Bounce.Material", "MOSSY_COBBLESTONE");
-		config.addDefault("DefaultBlocks.Bounce.Strength", 3);
-		config.addDefault("DefaultBlocks.Bounce.Duration", 200);
-		config.addDefault("DefaultBlocks.Speed.Material", "OBSIDIAN");
-		config.addDefault("DefaultBlocks.Speed.Strength", 5);
-		config.addDefault("DefaultBlocks.Speed.Duration", 200);
-		config.addDefault("DefaultBlocks.Repulse.Material", "ENDER_STONE");
-		config.addDefault("DefaultBlocks.Repulse.Strength", 0.4);
-		config.addDefault("DefaultBlocks.NoRun.Material", "GOLD_BLOCK");
-		config.addDefault("DefaultBlocks.NoPotion.Material", "HUGE_MUSHROOM_1");
+		/* new config
+		config.addDefault("ParkourBlock.SMOOTH_BRICK.Action", "death");
+        config.addDefault("ParkourBlock.HUGE_MUSHROOM_2.Action", "finish");
+        config.addDefault("ParkourBlock.BRICK.Action", "climb");
+        config.addDefault("ParkourBlock.BRICK.Strength", 0.4);
+        config.addDefault("ParkourBlock.EMERALD_BLOCK.Action", "launch");
+        config.addDefault("ParkourBlock.EMERALD_BLOCK.Strength", "1.2");
+        config.addDefault("ParkourBlock.MOSSY_COBBLESTONE.Action", "bounce");
+        config.addDefault("ParkourBlock.MOSSY_COBBLESTONE.Strength", 5);
+        config.addDefault("ParkourBlock.MOSSY_COBBLESTONE.Duration", 200);
+        config.addDefault("ParkourBlock.OBSIDIAN.Action", "speed");
+        config.addDefault("ParkourBlock.OBSIDIAN.Strength", 5);
+        config.addDefault("ParkourBlock.OBSIDIAN.Duration", 200);
+        config.addDefault("ParkourBlock.GOLD_BLOCK.Action", "norun");
+        config.addDefault("ParkourBlock.HUGE_MUSHROOM_1.Action", "nopotion");
+        */
 
 		config.addDefault("OnJoin.SetGamemode", 0);
 		config.addDefault("OnJoin.EnforceWorld", false);
@@ -389,6 +418,7 @@ public class Configurations {
 		config.addDefault("OnJoin.Item.HideAll.Global", true);
 		config.addDefault("OnJoin.Item.Leave.Material", "SAPLING");
 
+		config.addDefault("OnCourse.UseParkourBlocks", true);
 		config.addDefault("OnCourse.DieInLiquid", false);
 		config.addDefault("OnCourse.EnforceParkourCommands.Enabled", true);
 		String[] whitelisted = {"login"};

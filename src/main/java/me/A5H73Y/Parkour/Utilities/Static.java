@@ -38,7 +38,6 @@ public final class Static {
 	private static boolean bountifulAPI = false;
 	private static boolean placeholderAPI = false;
 	private static boolean devBuild = false;
-	private static ParkourBlocks parkourBlocks;
 
 	private static String parkourString;
 	private static String parkourSignString;
@@ -49,7 +48,6 @@ public final class Static {
 	public final static void initiate() {
 		version = Double.parseDouble(Parkour.getPlugin().getDescription().getVersion());
 		courseList = Parkour.getParkourConfig().getAllCourses();
-		parkourBlocks = Utils.populateDefaultParkourBlocks();
 		parkourString = Utils.getTranslation("Parkour.Prefix", false);
 		parkourSignString = Utils.getTranslation("Parkour.SignHeading", false);
 	}
@@ -117,10 +115,6 @@ public final class Static {
 
 	public final static boolean containsQuiet(String playerName) {
 		return quiet.contains(playerName);
-	}
-
-	public final static ParkourBlocks getParkourBlocks() {
-		return parkourBlocks;
 	}
 
 	public final static void setBountifulAPI(boolean value) {
