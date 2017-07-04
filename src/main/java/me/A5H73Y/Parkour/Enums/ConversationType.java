@@ -8,7 +8,7 @@ package me.A5H73Y.Parkour.Enums;
  * @author A5H73Y
  */
 public enum ConversationType {
-	PARKOURBLOCKS,
+	PARKOURKIT,
 	COURSEPRIZE,
 	LEADERBOARD, 
 	PARKOURMODE

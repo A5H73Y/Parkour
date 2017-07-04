@@ -1,6 +1,6 @@
 package me.A5H73Y.Parkour.Course;
 
-import me.A5H73Y.Parkour.Other.Validation;
+import me.A5H73Y.Parkour.Other.ValidationMethods;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
@@ -56,7 +56,7 @@ public class LobbyMethods {
      * @param player
      */
     public static void joinLobby(String[] args, Player player) {
-        if (!Validation.lobbyJoiningSet(player))
+        if (!ValidationMethods.lobbyJoiningSet(player))
             return;
 
         boolean customLobby = (args != null && args.length > 1 && args[1] != null);
@@ -65,7 +65,7 @@ public class LobbyMethods {
         Location lobby;
 
         if (customLobby) {
-            if (!Validation.lobbyJoiningCustom(player, args[1]))
+            if (!ValidationMethods.lobbyJoiningCustom(player, args[1]))
                 return;
 
             lobby = getLobby("Lobby." + args[1]);

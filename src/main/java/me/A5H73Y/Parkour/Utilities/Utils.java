@@ -13,22 +13,18 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import me.A5H73Y.Parkour.Parkour;
-import me.A5H73Y.Parkour.Course.Checkpoint;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Enums.QuestionType;
 import me.A5H73Y.Parkour.Other.Question;
 import me.A5H73Y.Parkour.Other.TimeObject;
-import me.A5H73Y.Parkour.Other.Validation;
+import me.A5H73Y.Parkour.Other.ValidationMethods;
 
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
@@ -350,20 +346,20 @@ public final class Utils {
     }
 
     /**
-     * Validate ParkourBlocks set
-     * Used for identifying what the problem with the ParkourBlocks is.
+     * Validate ParkourKit set
+     * Used for identifying what the problem with the ParkourKit is.
      *
      * @param args
      * @param player
      */
-    public final static void validateParkourBlocks(String[] args, Player player) {
+    public final static void validateParkourKit(String[] args, Player player) {
 
         /*TODO - update me
 
-        String name = (args.length == 2 ? "ParkourBlocks." + args[1].toLowerCase() : "DefaultBlocks");
+        String name = (args.length == 2 ? "ParkourKit." + args[1].toLowerCase() : "DefaultBlocks");
 
         if (!Parkour.getPlugin().getConfig().contains(name + ".Death.Material")) {
-            player.sendMessage("ParkourBlocks " + name + " doesn't exist!");
+            player.sendMessage("ParkourKit " + name + " doesn't exist!");
             return;
         }
 
@@ -503,7 +499,7 @@ public final class Utils {
                 return;
             }
 
-            if (!Validation.deleteCourse(args[2], player))
+            if (!ValidationMethods.deleteCourse(args[2], player))
                 return;
 
             player.sendMessage(Static.getParkourString() + "You are about to delete course " + ChatColor.AQUA + args[2] + ChatColor.WHITE + "...");
@@ -535,7 +531,7 @@ public final class Utils {
                 return;
             }
 
-            if (!Validation.deleteLobby(args[2], player))
+            if (!ValidationMethods.deleteLobby(args[2], player))
                 return;
 
             player.sendMessage(Static.getParkourString() + "You are about to delete lobby " + ChatColor.AQUA + args[2] + ChatColor.WHITE + "...");
@@ -638,27 +634,11 @@ public final class Utils {
     }
 
     /**
-     * Get a list of possible ParkourBlocks
-     * @return Set<String> of ParkourBlocks names
+     * Get a list of possible ParkourKit
+     * @return Set<String> of ParkourKit names
      */
-    public static Set<String> getParkourBlockList() {
-        return Parkour.getParkourConfig().getParkourBlocksData().getConfigurationSection("ParkourBlocks").getKeys(false);
-    }
-
-    /**
-     * Create a new checkpoint based on the players current location.
-     * @param player
-     * @return
-     */
-    public static Checkpoint getCheckpointOfCurrentPosition(Player player) {
-        return new Checkpoint(
-                player.getLocation().getX(),
-                player.getLocation().getY(),
-                player.getLocation().getZ(),
-                player.getLocation().getYaw(),
-                player.getLocation().getPitch(),
-                player.getLocation().getWorld().getName(),
-                0, 0, 0);
+    public static Set<String> getParkourKitList() {
+        return Parkour.getParkourConfig().getParkourKitData().getConfigurationSection("ParkourKit").getKeys(false);
     }
 
     /**
@@ -771,40 +751,40 @@ public final class Utils {
     }
 
     /**
-     * Display ParkourBlocks
-     * Can either display all the ParkourBlocks available
-     * Or specify which ParkourBlocks you want to see and which materials are used and their corresponding action
+     * Display ParkourKit
+     * Can either display all the ParkourKit available
+     * Or specify which ParkourKit you want to see and which materials are used and their corresponding action
      *
      * @param args
      * @param sender
      */
-    public static void listParkourBlocks(String[] args, CommandSender sender) {
-        Set<String> parkourBlocks = getParkourBlockList();
+    public static void listParkourKit(String[] args, CommandSender sender) {
+        Set<String> parkourKit = getParkourKitList();
 
         // specifying a kit
         if (args.length == 2) {
-            String pb = args[1].toLowerCase();
-            if (!parkourBlocks.contains(pb)) {
-                sender.sendMessage(Static.getParkourString() + "This ParkourBlocks set does not exist!");
+            String kitName = args[1].toLowerCase();
+            if (!parkourKit.contains(kitName)) {
+                sender.sendMessage(Static.getParkourString() + "This ParkourKit set does not exist!");
                 return;
             }
 
-            sender.sendMessage(Utils.getStandardHeading("ParkourBlock: " + pb));
-            Set<String> materials = Parkour.getParkourConfig().getParkourBlocksData()
-                    .getConfigurationSection("ParkourBlocks." + pb).getKeys(false);
+            sender.sendMessage(Utils.getStandardHeading("ParkourKit: " + kitName));
+            Set<String> materials = Parkour.getParkourConfig().getParkourKitData()
+                    .getConfigurationSection("ParkourKit." + kitName).getKeys(false);
 
             for (String material : materials) {
-                String action = Parkour.getParkourConfig().getParkourBlocksData()
-                        .getString("ParkourBlocks." + pb + "." + material + ".Action");
+                String action = Parkour.getParkourConfig().getParkourKitData()
+                        .getString("ParkourKit." + kitName + "." + material + ".Action");
 
                 sender.sendMessage(material + ": " + ChatColor.GRAY + action);
             }
 
         } else {
             //displaying all available kits
-            sender.sendMessage(Utils.getStandardHeading(parkourBlocks.size() + " ParkourBlocks found"));
-            for (String parkourBlock : parkourBlocks) {
-                sender.sendMessage("* " + parkourBlock);
+            sender.sendMessage(Utils.getStandardHeading(parkourKit.size() + " ParkourKit found"));
+            for (String kit : parkourKit) {
+                sender.sendMessage("* " + kit);
             }
         }
     }
@@ -859,7 +839,7 @@ public final class Utils {
         boolean enabled = override ? true : Static.containsHidden(player.getName());
         List<Player> playerScope;
 
-        if (Parkour.getPlugin().getConfig().getBoolean("OnJoin.Item.HideAll.Global")) {
+        if (Parkour.getPlugin().getConfig().getBoolean("OnJoin.Item.HideAll.Global") || override) {
             playerScope = (List<Player>) Bukkit.getOnlinePlayers();
         } else {
             playerScope = Utils.getOnlineParkourPlayers();

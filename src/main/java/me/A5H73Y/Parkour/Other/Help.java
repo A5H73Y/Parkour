@@ -38,7 +38,7 @@ public final class Help {
 
 		if (args[1].equalsIgnoreCase("join")){
 			displayHelpMessage(sender, "Join a Course", "/pa join (courseName)", "/pa join Tutorial",
-					" You are able to join a course using its name, without having to use the correct case. Each course has a unique numeric identifier (courseID) which can be used to join the course instead of its name. Once you have joined a course, you are in 'Parkour Mode', which allows you to interact with the 'Parkour Blocks' and track your statistics.");
+					" You are able to join a course using its name, without having to use the correct case. Each course has a unique numeric identifier (courseID) which can be used to join the course instead of its name. Once you have joined a course, you are in 'Parkour Mode', which allows you to interact with the ParkourKit and track your statistics.");
 
 		} else if (args[1].equalsIgnoreCase("leave")){
 			displayHelpMessage(sender, "Leave a Course", "/pa leave", null,
@@ -89,8 +89,8 @@ public final class Help {
 					" Made to be as automated and easy as possible. All you do is simply select (edit) a course using '/pa select (course)', then stand where you want a checkpoint to be and enter '/pa checkpoint'. As if by magic it's all done! If you mess up a checkpoint, you can simply override it using '/pa checkpoint (number)'. A pressureplate will be placed automatically.");
 
 		} else if (args[1].equalsIgnoreCase("kit")){	
-			displayHelpMessage(sender, "Retrieve ParkourBlocks", "/pa kit [PB]", "/pa kit FireKit",
-					" You can create a set of ParkourBlocks and name it whatever you want. Using this command you can fill your inventory with the blocks you configured. If you don't specify a ParkourBlocks set, it will use the Default blocks.");
+			displayHelpMessage(sender, "Retrieve ParkourKit", "/pa kit [Kit]", "/pa kit FireKit",
+					" You can create a set of ParkourKit and name it whatever you want. Using this command you can fill your inventory with the blocks you configured. If you don't specify a ParkourKit set, it will use the Default blocks.");
 
 		} else if (args[1].equalsIgnoreCase("select")){	
 			displayHelpMessage(sender, "Edit a course", "/pa select (course)", "/pa select Tutorial",
@@ -122,7 +122,7 @@ public final class Help {
 
 		} else if (args[1].equalsIgnoreCase("test")){	
 			displayHelpMessage(sender, "Toggle Parkour Test Mode", "/pa test", null,
-					" When wanting to test your course in 'ParkourMode' to similate how each set of ParkourBlocks will respond, you can enable TestMode, which will basically fake being on a course to allow you to test it without having to join / leave the course repeatedly.");
+					" When wanting to test your course in 'ParkourMode' to similate how each set of ParkourKit will respond, you can enable TestMode, which will basically fake being on a course to allow you to test it without having to join / leave the course repeatedly.");
 
 		} else if (args[1].equalsIgnoreCase("leaderboard")){	
 			displayHelpMessage(sender, "Display course leaderboards", "/pa leaderboard [[course] [amount] [scope]]", "/pa leaderboard Example 10 global",
@@ -144,13 +144,13 @@ public final class Help {
 			displayHelpMessage(sender, "Link the course after completion", "/pa link (course / lobby) (argument)", "/pa link course Level2",
 					" You are now able to link the selected course to either a custom lobby, or to join a different course straight after you complete the selected course. For example if you selected a course '/pa select Level1', you would be able to make the player join Level2 after they complete Level1 by doing '/pa link course Level2', or if you wish for them to teleport to a custom lobby '/pa link lobby Admin'. If you want to remove the link enter '/pa link reset'");
 
-		} else if (args[1].equalsIgnoreCase("linkPB")){	
-			displayHelpMessage(sender, "Link a course to ParkourBlocks", "/pa linkPB (course) (PB)", "/pa linkPB Example FireKit",
-					" Each course has the ability to have a unique set of ParkourBlocks, created using the '/pa createPB' command. Once linked, each type of ParkourBlock for that course will be configured to what you set.");
+		} else if (args[1].equalsIgnoreCase("linkKit")){
+			displayHelpMessage(sender, "Link a course to ParkourKit", "/pa linkKit (course) (Kit)", "/pa linkKit Example FireKit",
+					" Each course has the ability to have a unique set of ParkourKit, created using the '/pa createKit' command. Once linked, each type of ParkourKit for that course will be configured to what you set.");
 
-		} else if (args[1].equalsIgnoreCase("listPB")){
-			displayHelpMessage(sender, "List ParkourBlock information", "/pa listPB [PB]", "/pa listPB FireKit",
-					" Display all the ParkourBlocks available by using the command without the parameter. If you want to see what each ParkourBlocks is, you can specify its name and each type of block will be displayed.");
+		} else if (args[1].equalsIgnoreCase("listKit")){
+			displayHelpMessage(sender, "List ParkourKit information", "/pa listKit [Kit]", "/pa listKit firekit",
+					" Display all the ParkourKit available by using the command without the parameter. If you want to see what each ParkourKit is, you can specify its name and each type of block will be displayed.");
 
 		} else if (args[1].equalsIgnoreCase("setmode")){
 			displayHelpMessage(sender, "Set Mode for course", "/pa setmode (course)", "/pa setmode Example",
@@ -208,13 +208,13 @@ public final class Help {
 			displayHelpMessage(sender, "Display Economy information", "/pa economy (info / recreate / setprize / setfee)", "/pa economy info",
 					" If you have linked Parkour to a compatible Economy plugin, you can perform commands to set the fee to join courses, the prize for completing courses and recreate all the courses to synchronise with the config.");
 
-		} else if (args[1].equalsIgnoreCase("createPB")){	
-			displayHelpMessage(sender, "Create Parkour Blocks", "/pa createPB", null,
-					" A conversation will be started to allow you to create a new set of Parkour Blocks, which can be linked to a course to override the default blocks. Each block must be a valid material and you are limited to 1 of each type. You can use 'Default' to use the material from the Default Parkour blocks.");
+		} else if (args[1].equalsIgnoreCase("createKit")){
+			displayHelpMessage(sender, "Create ParkourKit", "/pa createKit", null,
+					" A conversation will be started to allow you to create a new ParkourKit, which can be linked to a course to override the default blocks. Each block must be a valid material and you are limited to 1 of each type.");
 
-		} else if (args[1].equalsIgnoreCase("validatePB")){	
-			displayHelpMessage(sender, "Validate Parkour Blocks", "/pa validatePB [kit]", "/pa validatePB FireKit",
-					" If you have manually created Parkour Blocks, or something has gone wrong. You can validate a set of Parkour blocks to find out where the problem has originated.");
+		} else if (args[1].equalsIgnoreCase("validateKit")){
+			displayHelpMessage(sender, "Validate ParkourKit", "/pa validateKit [Kit]", "/pa validateKit firekit",
+					" If you have manually created a ParkourKit, or something has gone wrong. You can validate a ParkourKit to find out where the problem has originated.");
 
 		} else if (args[1].equalsIgnoreCase("sql")){	
 			displayHelpMessage(sender, "Display SQL information", "/pa SQL", null,
@@ -361,7 +361,7 @@ public final class Help {
 
 		displayCommandUsage(player, "create", "(course)", "Create and select a course");
 		displayCommandUsage(player, "checkpoint", "[point]", "Create (or overwrite) a checkpoint");
-		displayCommandUsage(player, "kit", "[PB]", "Retrieve relevant Parkour Blocks set");
+		displayCommandUsage(player, "kit", "[Kit]", "Retrieve relevant ParkourKit");
 		displayCommandUsage(player, "select", "(course)", "Start editing the course");
 		displayCommandUsage(player, "done", null, "Stop editing the course");
 		displayCommandUsage(player, "setstart", null, "Set selected course start to current position");
@@ -383,8 +383,8 @@ public final class Help {
 
 		displayCommandUsage(player, "tp / tpc", "(course)", "Teleport to course / checkpoint");
 		displayCommandUsage(player, "link", "(argument) (argument)", "Link a course");
-		displayCommandUsage(player, "linkPB", "(course) (PB)", "Link ParkourBlocks");
-		displayCommandUsage(player, "listPB", "[PB]", "Display ParkourBlocks info");
+		displayCommandUsage(player, "linkKit", "(course) (Kit)", "Link ParkourKit");
+		displayCommandUsage(player, "listKit", "[Kit]", "Display ParkourKit info");
 		displayCommandUsage(player, "setmode", "(course)", "Set Parkour Mode");
 		displayCommandUsage(player, "setjoinitem", "(course) (material) (amount)", "Join item");
 		displayCommandUsage(player, "setminlevel", "(course) (level)", "Set course minimum level");
@@ -408,8 +408,8 @@ public final class Help {
 		displayCommandUsage(player, "reset", "(argument)", "Delete course / player");
 		displayCommandUsage(player, "whitelist", "(command)", "Whitelist a command");
 		displayCommandUsage(player, "economy", null, "Display economy menu");
-		displayCommandUsage(player, "createPB", null, "Start ParkourBlocks creation");
-		displayCommandUsage(player, "validatePB", "[PB]", "Validate ParkourBlocks");
+		displayCommandUsage(player, "createKit", null, "Start ParkourKit creation");
+		displayCommandUsage(player, "validateKit", "[Kit]", "Validate ParkourKit");
 		displayCommandUsage(player, "sql", null, "Display SQL menu");
 		displayCommandUsage(player, "settings", null, "Display Parkour Settings");
 		displayCommandUsage(player, "request / bug", null, "Display relevant info");

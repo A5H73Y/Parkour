@@ -1,7 +1,7 @@
 package me.A5H73Y.Parkour.Course;
 
 import me.A5H73Y.Parkour.Parkour;
-import me.A5H73Y.Parkour.Other.Validation;
+import me.A5H73Y.Parkour.Other.ValidationMethods;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
@@ -42,7 +42,8 @@ public class CheckpointMethods {
 		double z = courseData.getDouble(path + "Z");
 		float yaw = (float) courseData.getDouble(path + "Yaw");
 		float pitch = (float) courseData.getDouble(path + "Pitch");
-		String world = courseData.getString(courseName + "." + "World");
+		World world = Bukkit.getWorld(courseData.getString(courseName + "." + "World"));
+		Location location = new Location(world, x, y, z, yaw, pitch);
 
 		path = courseName + "." + (currentPoint + 1) + ".";
 
@@ -50,7 +51,7 @@ public class CheckpointMethods {
 		double nCheckY = checkData.getDouble(path + "Y");
 		double nCheckZ = checkData.getDouble(path + "Z");
 
-		return new Checkpoint(x, y, z, yaw, pitch, world, nCheckX, nCheckY, nCheckZ);
+		return new Checkpoint(location, nCheckX, nCheckY, nCheckZ);
 	}
 
 	/**
@@ -62,7 +63,7 @@ public class CheckpointMethods {
 	 * @param player
 	 */
 	public static void createCheckpoint(String[] args, Player player) {
-		if (!Validation.createCheckpoint(args, player))
+		if (!ValidationMethods.createCheckpoint(args, player))
 			return;
 
 		String selected = PlayerMethods.getSelected(player.getName());
@@ -177,7 +178,6 @@ public class CheckpointMethods {
 				.replace("%COURSE%", courseName));
 
 		Utils.logToFile("Checkpoint " + point + " was deleted on " + courseName + " by " + player.getName());
-
 	}
 
 	/**
@@ -187,7 +187,15 @@ public class CheckpointMethods {
 	 * @return int
 	 */
 	public static int getNumberOfCheckpoints(String courseName) {
-		Integer number = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Points");
-		return number != null ? number : 0;
+		return Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Points", 0);
 	}
+
+    /**
+     * Create a new checkpoint based on the players current location.
+     * @param player
+     * @return
+     */
+    public static Checkpoint createCheckpointFromPlayerLocation(Player player) {
+        return new Checkpoint(player.getLocation(),0, 0, 0);
+    }
 }

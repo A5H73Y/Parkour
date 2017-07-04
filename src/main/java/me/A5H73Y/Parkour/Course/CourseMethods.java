@@ -8,8 +8,8 @@ import me.A5H73Y.Parkour.Conversation.ParkourConversation;
 import me.A5H73Y.Parkour.Enums.ConversationType;
 import me.A5H73Y.Parkour.Enums.ParkourMode;
 import me.A5H73Y.Parkour.Other.Challenge;
-import me.A5H73Y.Parkour.Other.ParkourBlocks;
-import me.A5H73Y.Parkour.Other.Validation;
+import me.A5H73Y.Parkour.Other.ParkourKit;
+import me.A5H73Y.Parkour.Other.ValidationMethods;
 import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
@@ -20,7 +20,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -71,11 +70,11 @@ public class CourseMethods {
 		Checkpoint checkpoint = CheckpointMethods.getNextCheckpoint(courseName, 0);
 		Course course = new Course(courseName, checkpoint);
 
-		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".ParkourBlocks")) {
-			String name = Parkour.getParkourConfig().getCourseData().getString(courseName + ".ParkourBlocks");
-			ParkourBlocks pb = ParkourBlocks.getParkourBlocks(name);
-			if (pb != null)
-				course.setParkourBlocks(pb);
+		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".ParkourKit")) {
+			String name = Parkour.getParkourConfig().getCourseData().getString(courseName + ".ParkourKit");
+			ParkourKit kit = ParkourKit.getParkourKit(name);
+			if (kit != null)
+				course.setParkourKit(kit);
 		}
 			
 		int maxDeaths = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".MaxDeaths", 0);
@@ -125,7 +124,7 @@ public class CourseMethods {
 	 * @param player
 	 */
 	public static void createCourse(String[] args, Player player) {
-		if (!Validation.courseCreation(args, player))
+		if (!ValidationMethods.courseCreation(args, player))
 			return;
 
 		String name = args[1].toLowerCase();
@@ -173,7 +172,7 @@ public class CourseMethods {
 			return;
 		}
 
-		if (!Validation.courseJoining(player, course))
+		if (!ValidationMethods.courseJoining(player, course))
 			return;
 
 		PlayerMethods.playerJoin(player, course);
@@ -221,7 +220,7 @@ public class CourseMethods {
 		String linkedCourse = config.getString(courseName + ".LinkedCourse");
 		String creator = config.getString(courseName + ".Creator");
 		boolean finished = config.getBoolean(courseName + ".Finished");
-		String parkourBlocks = config.getString(courseName + ".ParkourBlocks");
+		String parkourKit = config.getString(courseName + ".ParkourKit");
 		String mode = config.getString(courseName + ".Mode");
 
 		double completePercent = Math.round(((completed * 1.0 / views) * 100));
@@ -258,8 +257,8 @@ public class CourseMethods {
 		if (parkoins > 0)
 			player.sendMessage("Parkoins Reward: " + aqua + parkoins);
 		
-		if (parkourBlocks != null && parkourBlocks.length() > 0)
-			player.sendMessage("ParkourBlocks: " + aqua + parkourBlocks);
+		if (parkourKit != null && parkourKit.length() > 0)
+			player.sendMessage("ParkourKit: " + aqua + parkourKit);
 		
 		if (mode != null && !"none".equalsIgnoreCase(mode))
 			player.sendMessage("Mode: " + aqua + mode);
@@ -754,7 +753,7 @@ public class CourseMethods {
 		config.set(courseName + ".Parkoins", null);
 		config.set(courseName + ".LinkedLobby", null);
 		config.set(courseName + ".LinkedCourse", null);
-		config.set(courseName + ".ParkourBlocks", null);
+		config.set(courseName + ".ParkourKit", null);
 		config.set(courseName + ".Mode", null);
 		Parkour.getParkourConfig().saveCourses();
 		DatabaseMethods.deleteCourseTimes(courseName);
@@ -803,29 +802,29 @@ public class CourseMethods {
 	}
 
 	/**
-	 * Link ParkourBlocks to a course
-	 * Each course can have a different set of ParkourBlocks.
-	 * The name of the ParkourBlocks set must be specified, then will be applied when a player joins the course.
+	 * Link ParkourKit to a course
+	 * Each course can have a different set of ParkourKit.
+	 * The name of the ParkourKit set must be specified, then will be applied when a player joins the course.
 	 * 
 	 * @param args
 	 * @param player
 	 */
-	public static void linkParkourBlocks(String[] args, Player player) {
+	public static void linkParkourKit(String[] args, Player player) {
 		if (!CourseMethods.exist(args[1])) {
 			player.sendMessage(Utils.getTranslation("Error.Unknown"));
 			return;
 		}
-		if (!Parkour.getPlugin().getConfig().contains("ParkourBlocks." + args[2].toLowerCase())) {
-			player.sendMessage(Static.getParkourString() + "ParkourBlocks doesn't exist!");
+		if (!Parkour.getPlugin().getConfig().contains("ParkourKit." + args[2].toLowerCase())) {
+			player.sendMessage(Static.getParkourString() + "ParkourKit doesn't exist!");
 			return;
 		}
-		if (Parkour.getParkourConfig().getCourseData().contains(args[1].toLowerCase() + ".ParkourBlocks")) {
-			player.sendMessage(Static.getParkourString() + "This course is already linked to a ParkourBlocks, continuing anyway...");
+		if (Parkour.getParkourConfig().getCourseData().contains(args[1].toLowerCase() + ".ParkourKit")) {
+			player.sendMessage(Static.getParkourString() + "This course is already linked to a ParkourKit, continuing anyway...");
 		}
 
-		Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".ParkourBlocks", args[2].toLowerCase());
+		Parkour.getParkourConfig().getCourseData().set(args[1].toLowerCase() + ".ParkourKit", args[2].toLowerCase());
 		Parkour.getParkourConfig().saveCourses();
-		player.sendMessage(Static.getParkourString() + args[1] + " is now linked to ParkourBlocks " + args[2]);
+		player.sendMessage(Static.getParkourString() + args[1] + " is now linked to ParkourKit " + args[2]);
 	}
 
 	/**
@@ -836,7 +835,7 @@ public class CourseMethods {
 	 * @param player
 	 */
 	public static void challengePlayer(String[] args, Player player) {
-		if (!Validation.challengePlayer(args, player))
+		if (!ValidationMethods.challengePlayer(args, player))
 			return;
 
 		if (!Utils.delayPlayer(player, 10, true))

@@ -1,9 +1,10 @@
 package me.A5H73Y.Parkour;
 
 import me.A5H73Y.Parkour.Course.Checkpoint;
+import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Enums.ParkourMode;
-import me.A5H73Y.Parkour.Other.ParkourBlocks;
+import me.A5H73Y.Parkour.Other.ParkourKit;
 import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
@@ -100,7 +101,7 @@ public class ParkourListener implements Listener {
         if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
             return;
 
-        if (!Parkour.getSettings().isUseParkourBlocks())
+        if (!Parkour.getSettings().isUseParkourKit())
             return;
 
         if (Parkour.getSettings().isAttemptLessChecks()) {
@@ -116,11 +117,11 @@ public class ParkourListener implements Listener {
         }
 
         Material belowMaterial = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
-        ParkourBlocks pb = PlayerMethods.getParkourSession(event.getPlayer().getName()).getCourse().getParkourBlocks();
+        ParkourKit kit = PlayerMethods.getParkourSession(event.getPlayer().getName()).getCourse().getParkourKit();
         Player player = event.getPlayer();
 
-        if (pb.getMaterials().contains(belowMaterial)) {
-            String action = pb.getAction(belowMaterial);
+        if (kit.getMaterials().contains(belowMaterial)) {
+            String action = kit.getAction(belowMaterial);
 
             if (action.equals("finish")) {
                 PlayerMethods.playerFinish(player);
@@ -151,9 +152,9 @@ public class ParkourListener implements Listener {
         } else {
             Block climb = player.getTargetBlock((Set<Material>) null, 1);
 
-            if (pb.getMaterials().contains(climb.getType())
+            if (kit.getMaterials().contains(climb.getType())
                     && climb.getLocation().getBlockY() > player.getLocation().getBlockY()) {
-                String action = pb.getAction(climb.getType());
+                String action = kit.getAction(climb.getType());
 
                 if (action.equals("climb")) {
                     player.setVelocity(new Vector(0, Parkour.getSettings().getClimbStrength(), 0));
@@ -376,10 +377,10 @@ public class ParkourListener implements Listener {
 
         if (Utils.getMaterialInPlayersHand(player) == Material.REDSTONE_TORCH_ON) {
             if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
-                PlayerMethods.getParkourSession(player.getName()).getCourse().setCheckpoint(Utils.getCheckpointOfCurrentPosition(player));
+                PlayerMethods.getParkourSession(player.getName()).getCourse().setCheckpoint(CheckpointMethods.createCheckpointFromPlayerLocation(player));
                 player.sendMessage(Utils.getTranslation("Mode.Freedom.Save"));
             } else {
-                player.teleport(PlayerMethods.getParkourSession(player.getName()).getCourse().getCheckpoint().getLocation());
+                player.teleport(PlayerMethods.getParkourSession(player.getName()).getCourse().getCurrentCheckpoint().getLocation());
                 player.sendMessage(Utils.getTranslation("Mode.Freedom.Load"));
             }
         }
@@ -407,7 +408,7 @@ public class ParkourListener implements Listener {
         if (session.getCheckpoint() == course.getCheckpoints())
             return;
 
-        Checkpoint check = course.getCheckpoint();
+        Checkpoint check = course.getCurrentCheckpoint();
 
         if (check == null)
             return;

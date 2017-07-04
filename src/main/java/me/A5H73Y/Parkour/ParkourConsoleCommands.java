@@ -94,8 +94,8 @@ public class ParkourConsoleCommands {
 		CourseMethods.displayList(args, sender);
 	}
 	
-	public static void displayParkourBlocks(String[] args, CommandSender sender) {
-		Utils.listParkourBlocks(args, sender);
+	public static void displayParkourKit(String[] args, CommandSender sender) {
+		Utils.listParkourKit(args, sender);
 	}
 	
 	public static void displaySettings(String[] args, CommandSender sender) {
@@ -117,7 +117,7 @@ public class ParkourConsoleCommands {
 		Utils.log("pa rewardrank (level) (rank)");
 		Utils.log("pa rewardparkoins (course) (amount)");
 		Utils.log("pa list (courses / players)");
-		Utils.log("pa listpb (course)");
+		Utils.log("pa listkit (course)");
 		Utils.log("pa settings");
 		Utils.log("pa help (command)");
 		Utils.log("pa backup : Create a backup zip of the Parkour config folder");	

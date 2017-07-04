@@ -22,7 +22,7 @@ import org.bukkit.entity.Player;
  *
  * @author A5H73Y
  */
-public class Validation {
+public class ValidationMethods {
 
 	/**
 	 * Validate course creation
@@ -64,7 +64,7 @@ public class Validation {
 
 		/* Player in wrong world */
 		if (Parkour.getSettings().isEnforceWorld()){
-			if (!player.getLocation().getWorld().getName().equals(course.getCheckpoint().getWorld())){
+			if (!player.getLocation().getWorld().getName().equals(course.getCurrentCheckpoint().getWorld())){
 				player.sendMessage(Utils.getTranslation("Error.WrongWorld"));
 				return false;
 			}
@@ -198,11 +198,11 @@ public class Validation {
 
 		Player target = Bukkit.getPlayer(args[2]);
 
-		if (!Validation.courseJoiningNoMessages(player, courseName)){
+		if (!ValidationMethods.courseJoiningNoMessages(player, courseName)){
 			player.sendMessage(Static.getParkourString() + "You are not able to join this course!");
 			return false;
 		}
-		if (!Validation.courseJoiningNoMessages(target, courseName)){
+		if (!ValidationMethods.courseJoiningNoMessages(target, courseName)){
 			player.sendMessage(Static.getParkourString() + "They are not able to join this course!");
 			return false;
 		}

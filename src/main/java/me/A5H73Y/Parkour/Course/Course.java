@@ -2,8 +2,8 @@ package me.A5H73Y.Parkour.Course;
 
 import java.io.Serializable;
 
-import me.A5H73Y.Parkour.Other.ParkourBlocks;
-import me.A5H73Y.Parkour.Utilities.Static;
+import me.A5H73Y.Parkour.Other.Constants;
+import me.A5H73Y.Parkour.Other.ParkourKit;
 
 /**
  * This work is licensed under a Creative Commons 
@@ -19,21 +19,34 @@ public class Course implements Serializable {
 	private String name;
 	private Checkpoint checkpoint;
 	private Integer maxDeaths;
-	private ParkourBlocks parkourBlocks;
+	private ParkourKit parkourKit;
 	private int checkpoints;
 
+	public Course(String name, Checkpoint checkpoint, ParkourKit parkourKit) {
+        this.name = name;
+        this.checkpoint = checkpoint;
+        this.parkourKit = parkourKit;
+        this.checkpoints = CheckpointMethods.getNumberOfCheckpoints(name);
+    }
+
 	public Course(String name, Checkpoint checkpoint) {
-		this.name = name;
-		this.checkpoint = checkpoint;
-		this.parkourBlocks = ParkourBlocks.getParkourBlocks("default");
-		this.checkpoints = CheckpointMethods.getNumberOfCheckpoints(name);
+		this(name, checkpoint, ParkourKit.getParkourKit(Constants.DEFAULT));
 	}
 
+    /**
+     * Get course's unique name
+     * This will be lowercase
+     * @return Course Name
+     */
 	public String getName() {
 		return name;
 	}
 
-	public Checkpoint getCheckpoint() {
+    /**
+     * The current checkpoint achieved
+     * @return Checkpoint
+     */
+	public Checkpoint getCurrentCheckpoint() {
 		return checkpoint;
 	}
 
@@ -41,18 +54,31 @@ public class Course implements Serializable {
 		this.maxDeaths = maxDeaths;
 	}
 
+    /**
+     * Maximum number of deaths a player can accumulate before failing the course
+     * @return maximum deaths for course
+     */
 	public Integer getMaxDeaths() {
 		return maxDeaths;
 	}
 
-	public ParkourBlocks getParkourBlocks() {
-		return parkourBlocks;
+    /**
+     * ParkourKit for the course
+     * This will be loaded when the course object is created
+     * @return ParkourKit
+     */
+	public ParkourKit getParkourKit() {
+		return parkourKit;
 	}
 
-	public void setParkourBlocks(ParkourBlocks parkourBlocks) {
-		this.parkourBlocks = parkourBlocks;
+	public void setParkourKit(ParkourKit parkourKit) {
+		this.parkourKit = parkourKit;
 	}
 
+    /**
+     * Number of checkpoints on the course
+     * @return Count of Course's checkpoints
+     */
 	public int getCheckpoints(){
 		return checkpoints;
 	}

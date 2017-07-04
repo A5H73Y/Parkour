@@ -10,7 +10,6 @@ import java.util.Set;
 
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Other.Challenge;
-import me.A5H73Y.Parkour.Other.ParkourBlocks;
 import me.A5H73Y.Parkour.Other.Question;
 
 import org.bukkit.entity.Player;

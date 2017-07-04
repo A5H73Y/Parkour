@@ -269,7 +269,7 @@ public class ParkourCommands implements CommandExecutor {
 						if (!Utils.hasPermission(player, "Parkour.Admin", "Testmode"))
 							return false;
 
-						PlayerMethods.toggleTestmode(player);
+						PlayerMethods.toggleTestmode(args, player);
 
 					} else if (args[0].equalsIgnoreCase("economy") || args[0].equalsIgnoreCase("econ")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
@@ -295,32 +295,32 @@ public class ParkourCommands implements CommandExecutor {
 
 						CourseMethods.setCourseMode(args, player);
 
-					} else if (args[0].equalsIgnoreCase("createparkourblocks") || args[0].equalsIgnoreCase("createpb")) {
+					} else if (args[0].equalsIgnoreCase("createparkourkit") || args[0].equalsIgnoreCase("createkit")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
 							return false;
 
-						new ParkourConversation(player, ConversationType.PARKOURBLOCKS).begin();
+						new ParkourConversation(player, ConversationType.PARKOURKIT).begin();
 
-					} else if (args[0].equalsIgnoreCase("linkpb")) {
+					} else if (args[0].equalsIgnoreCase("linkkit")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
 							return false;
 
 						if (!Utils.validateArgs(player, args, 3))
 							return false;
 
-						CourseMethods.linkParkourBlocks(args, player);
+						CourseMethods.linkParkourKit(args, player);
 						
-					} else if (args[0].equalsIgnoreCase("listpb")) {
+					} else if (args[0].equalsIgnoreCase("listkit")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
 							return false;
 
-						Utils.listParkourBlocks(args, player);
+						Utils.listParkourKit(args, player);
 
-					} else if (args[0].equalsIgnoreCase("validatepb")) {
+					} else if (args[0].equalsIgnoreCase("validatekit")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
 							return false;
 
-						Utils.validateParkourBlocks(args, player);
+						Utils.validateParkourKit(args, player);
 
 					} else if (args[0].equalsIgnoreCase("challenge")) {
 						if (!Utils.hasPermission(player, "Parkour.Basic", "Challenge"))
@@ -459,8 +459,8 @@ public class ParkourCommands implements CommandExecutor {
 					} else if (args[0].equalsIgnoreCase("list")) {
 						ParkourConsoleCommands.displayList(args, sender);
 						
-					} else if (args[0].equalsIgnoreCase("listpb")) {
-						ParkourConsoleCommands.displayParkourBlocks(args, sender);
+					} else if (args[0].equalsIgnoreCase("listkit")) {
+						ParkourConsoleCommands.displayParkourKit(args, sender);
 						
 					} else if (args[0].equalsIgnoreCase("settings")) {
 						ParkourConsoleCommands.displaySettings(args, sender);

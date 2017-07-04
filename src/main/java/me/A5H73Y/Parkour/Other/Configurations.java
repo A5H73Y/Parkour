@@ -21,8 +21,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public class Configurations {
 
-	private File dataFolder, courseFile, stringFile, usersFile, invFile, checkFile, econFile, pbFile;
-	private FileConfiguration courseData, stringData, usersData, invData, checkData, econData, pbData;
+	private File dataFolder, courseFile, stringFile, usersFile, invFile, checkFile, econFile, kitFile;
+	private FileConfiguration courseData, stringData, usersData, invData, checkData, econData, kitData;
 
 	/**
 	 * This no longer generates the default config.yml to allow the ability of creating a backup of the existing config.
@@ -43,8 +43,8 @@ public class Configurations {
 		invData = new YamlConfiguration();
 		checkFile = new File(dataFolder, "checkpoints.yml");
 		checkData = new YamlConfiguration();
-		pbFile = new File(dataFolder, "parkourblocks.yml");
-		pbData = new YamlConfiguration();
+		kitFile = new File(dataFolder, "parkourkit.yml");
+		kitData = new YamlConfiguration();
 
 		// courses
 		if (!courseFile.exists()) {
@@ -102,11 +102,11 @@ public class Configurations {
 			}
 		}
 
-        // parkourblocks
-        if (!pbFile.exists()) {
+        // parkourkit
+        if (!kitFile.exists()) {
             try {
-                pbFile.createNewFile();
-                Utils.log("Created parkourblocks.yml");
+                kitFile.createNewFile();
+                Utils.log("Created parkourkit.yml");
             } catch (Exception ex) {
                 ex.printStackTrace();
                 Utils.log("Failed!");
@@ -119,7 +119,7 @@ public class Configurations {
 			usersData.load(usersFile);
 			invData.load(invFile);
 			checkData.load(checkFile);
-			pbData.load(pbFile);
+			kitData.load(kitFile);
 
 		} catch (Exception ex){
 			Utils.log("Failed loading config: " + ex.getMessage());
@@ -136,7 +136,7 @@ public class Configurations {
 		saveInv();
 		saveStrings();
 		saveUsers();
-		saveParkourBlocks();
+		saveParkourKit();
 		Parkour.getPlugin().saveConfig();
 	}
 
@@ -148,7 +148,7 @@ public class Configurations {
 		usersData = YamlConfiguration.loadConfiguration(usersFile);
 		invData = YamlConfiguration.loadConfiguration(invFile);
 		checkData = YamlConfiguration.loadConfiguration(checkFile);
-		pbData = YamlConfiguration.loadConfiguration(pbFile);
+		kitData = YamlConfiguration.loadConfiguration(kitFile);
 		if (Static.getEconomy())
 			econData = YamlConfiguration.loadConfiguration(econFile);
 	}
@@ -177,8 +177,8 @@ public class Configurations {
 		return econData;
 	}
 
-	public FileConfiguration getParkourBlocksData() {
-	    return pbData;
+	public FileConfiguration getParkourKitData() {
+	    return kitData;
 	}
 
 	public File getDataFolder(){
@@ -229,11 +229,11 @@ public class Configurations {
 		}
 	}
 
-	public void saveParkourBlocks() {
+	public void saveParkourKit() {
 	    try {
-            pbData.addDefault("ParkourBlocks.default.HUGE_MUSHROOM_2.Action", "finish");
-            pbData.options().copyDefaults(true);
-            pbData.save(pbFile);
+            kitData.addDefault("ParkourKit.default.HUGE_MUSHROOM_2.Action", "finish");
+            kitData.options().copyDefaults(true);
+            kitData.save(kitFile);
         } catch (IOException ex) {
 	        ex.printStackTrace();
         }
@@ -348,7 +348,7 @@ public class Configurations {
 			stringData.addDefault("Other.Item_Leave", "&7SHIFT + &6Right click to leave course");
 			stringData.addDefault("Other.Item_Book", "&6View course stats");
 			stringData.addDefault("Other.Reload", "Config Reloaded!");
-			stringData.addDefault("Other.Kit", "Kit Given!");
+			stringData.addDefault("Other.Kit", "ParkourKit Given!");
 
 			stringData.addDefault("Economy.Insufficient", "You require at least &b%AMOUNT% &fbefore joining &b%COURSE%");
 			stringData.addDefault("Economy.Fee", "&b%AMOUNT% &fhas been deducted from your balance for joining &b%COURSE%");
@@ -358,12 +358,11 @@ public class Configurations {
 			stringData.addDefault("Kit.Climb", "&bClimb Block");
 			stringData.addDefault("Kit.Launch", "&bLaunch Block");
 			stringData.addDefault("Kit.Finish", "&bFinish Block");
-			stringData.addDefault("Kit.Norun", "&bNoRun Block");
-			stringData.addDefault("Kit.Nofall", "&bNoFall Block");
-			stringData.addDefault("Kit.Nopotion", "&bNoPotion Block");
+			stringData.addDefault("Kit.NoRun", "&bNoRun Block");
+			stringData.addDefault("Kit.NoFall", "&bNoFall Block");
+			stringData.addDefault("Kit.NoPotion", "&bNoPotion Block");
 			stringData.addDefault("Kit.Sign", "&bSign");
 			stringData.addDefault("Kit.Death", "&bDeath Block");
-			stringData.addDefault("Kit.Bounce", "&bBounce Block");
 
 			stringData.addDefault("Mode.Spectate.AlertPlayer", "You are now being spectated by &b%PLAYER%");
 			stringData.addDefault("Mode.Spectate.FinishedSpec", "You are no longer being spectated");
@@ -418,7 +417,7 @@ public class Configurations {
 		config.addDefault("OnJoin.Item.HideAll.Global", true);
 		config.addDefault("OnJoin.Item.Leave.Material", "SAPLING");
 
-		config.addDefault("OnCourse.UseParkourBlocks", true);
+		config.addDefault("OnCourse.UseParkourKit", true);
 		config.addDefault("OnCourse.DieInLiquid", false);
 		config.addDefault("OnCourse.EnforceParkourCommands.Enabled", true);
 		String[] whitelisted = {"login"};

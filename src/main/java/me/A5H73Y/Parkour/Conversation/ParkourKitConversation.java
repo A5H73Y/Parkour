@@ -13,12 +13,12 @@ import org.bukkit.conversations.*;
  *
  * @author A5H73Y
  */
-public class ParkourBlockConversation extends StringPrompt {
+public class ParkourKitConversation extends StringPrompt {
 
 	private String[] actionTypes = {"death", "finish", "climb", "launch", "bounce", "speed", "norun", "nopotion"};
 
 	public String getPromptText(ConversationContext context) {
-		return ChatColor.LIGHT_PURPLE + " What would you like to name your ParkourBlocks?";
+		return ChatColor.LIGHT_PURPLE + " What would you like to name your ParkourKit?";
 	}
 
 	public Prompt acceptInput(ConversationContext context, String message) {
@@ -28,8 +28,8 @@ public class ParkourBlockConversation extends StringPrompt {
 
 		message = message.toLowerCase();
 
-		if (Parkour.getParkourConfig().getParkourBlocksData().contains("ParkourBlocks." + message)){
-			ParkourConversation.sendErrorMessage(context, "This ParkourBlock already exists");
+		if (Parkour.getParkourConfig().getParkourKitData().contains("ParkourKit." + message)){
+			ParkourConversation.sendErrorMessage(context, "This ParkourKit already exists");
 			return this;
 		}
 
@@ -89,9 +89,9 @@ public class ParkourBlockConversation extends StringPrompt {
             String material = context.getSessionData("material").toString();
             String action = context.getSessionData("action").toString();
 
-            Parkour.getParkourConfig().getParkourBlocksData()
-                    .set("ParkourBlocks." + name + "." + material + ".Action", action);
-            Parkour.getParkourConfig().saveParkourBlocks();
+            Parkour.getParkourConfig().getParkourKitData()
+                    .set("ParkourKit." + name + "." + material + ".Action", action);
+            Parkour.getParkourConfig().saveParkourKit();
 
             if (!input) {
                 return Prompt.END_OF_CONVERSATION;
