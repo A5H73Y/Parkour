@@ -178,7 +178,7 @@ public class ParkourListener implements Listener {
             return;
 
         String rank = Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + event.getPlayer().getName() + ".Rank");
-        rank = rank == null ? Utils.getTranslation("Event.DefaultRank", false) : rank;
+        rank = rank == null ? Utils.getTranslation(Parkour.getSettings().getDefaultRank(), false) : rank;
 
         event.setFormat(Utils.colour(Utils.getTranslation("Event.Chat", false)
                 .replace("%RANK%", rank)
@@ -457,7 +457,7 @@ public class ParkourListener implements Listener {
                     break;
                 }
             }
-            if (allowed == false) {
+            if (!allowed) {
                 event.setCancelled(true);
                 player.sendMessage(Utils.getTranslation("Error.Command"));
             }

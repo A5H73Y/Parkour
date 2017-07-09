@@ -34,9 +34,6 @@ public class Settings {
 	//Strings
 	private String defaultRank;
 
-	//decimals
-	private double climbStrength, launchStrength;
-
 	public Settings(){
 		FileConfiguration config = Parkour.getPlugin().getConfig();
 		commandPermission = config.getBoolean("Other.Parkour.CommandPermissions");
@@ -59,9 +56,6 @@ public class Settings {
 		maxFallTicks = config.getInt("OnCourse.MaxFallTicks");
 
 		defaultRank = config.getString("Event.DefaultRank");
-
-		climbStrength = config.getDouble("DefaultBlocks.Climb.Strength");
-		launchStrength = config.getDouble("DefaultBlocks.Launch.Strength");
 
 		titleIn = config.getInt("DisplayTitle.FadeIn");
 		titleStay = config.getInt("DisplayTitle.Stay");

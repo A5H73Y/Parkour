@@ -818,7 +818,7 @@ public class CourseMethods {
 			player.sendMessage(Utils.getTranslation("Error.Unknown"));
 			return;
 		}
-		if (!Parkour.getPlugin().getConfig().contains("ParkourKit." + args[2].toLowerCase())) {
+		if (!Parkour.getParkourConfig().getParkourKitData().contains("ParkourKit." + args[2].toLowerCase())) {
 			player.sendMessage(Static.getParkourString() + "ParkourKit doesn't exist!");
 			return;
 		}
