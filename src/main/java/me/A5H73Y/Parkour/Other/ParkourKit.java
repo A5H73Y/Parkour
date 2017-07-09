@@ -25,7 +25,7 @@ public class ParkourKit implements Serializable {
 
     // object attributes
     private String name;
-    private List<Material> materials = new ArrayList<Material>();
+    private List<Material> materials = new ArrayList<>();
 
     /**
      * ParkourKit

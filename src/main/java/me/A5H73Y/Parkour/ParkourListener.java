@@ -73,7 +73,7 @@ public class ParkourListener implements Listener {
 
         ParkourSession session = PlayerMethods.getParkourSession(event.getPlayer().getName());
 
-        if (session.getMode() == ParkourMode.NONE)
+        if (session == null || session.getMode() == ParkourMode.NONE)
             return;
 
         if (session.getMode() == ParkourMode.DRUNK) {
@@ -124,31 +124,39 @@ public class ParkourListener implements Listener {
         if (kit.getMaterials().contains(belowMaterial)) {
             String action = kit.getAction(belowMaterial);
 
-            if (action.equals("finish")) {
-                PlayerMethods.playerFinish(player);
+            switch (action) {
+                case "finish":
+                    PlayerMethods.playerFinish(player);
+                    break;
 
-            } else if (action.equals("death")) {
-                PlayerMethods.playerDie(player);
+                case "death":
+                    PlayerMethods.playerDie(player);
+                    break;
 
-            } else if (action.equals("launch")) {
-                player.setVelocity(new Vector(0, kit.getStrength(belowMaterial), 0));
+                case "launch":
+                    player.setVelocity(new Vector(0, kit.getStrength(belowMaterial), 0));
+                    break;
 
-            } else if (action.equals("bounce")) {
-                if (!player.hasPotionEffect(PotionEffectType.JUMP))
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, kit.getDuration(belowMaterial), kit.getStrength(belowMaterial)));
+                case "bounce":
+                    if (!player.hasPotionEffect(PotionEffectType.JUMP))
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, kit.getDuration(belowMaterial), kit.getStrength(belowMaterial)));
+                    break;
 
-            } else if (action.equals("speed")) {
-                if (!player.hasPotionEffect(PotionEffectType.SPEED))
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, kit.getDuration(belowMaterial), kit.getStrength(belowMaterial)));
+                case "speed":
+                    if (!player.hasPotionEffect(PotionEffectType.SPEED))
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, kit.getDuration(belowMaterial), kit.getStrength(belowMaterial)));
+                    break;
 
-            } else if (action.equals("norun")) {
-                player.setSprinting(false);
+                case "norun":
+                    player.setSprinting(false);
+                    break;
 
-            } else if (action.equals("nopotion")) {
-                for (PotionEffect effect : player.getActivePotionEffects())
-                    player.removePotionEffect(effect.getType());
+                case "nopotion":
+                    for (PotionEffect effect : player.getActivePotionEffects())
+                        player.removePotionEffect(effect.getType());
 
-                player.setFireTicks(0);
+                    player.setFireTicks(0);
+                    break;
             }
         } else {
             Block climb = player.getTargetBlock((Set<Material>) null, 1);

@@ -50,7 +50,7 @@ public final class Utils {
      * @param prefix display Parkour prefix
      * @return String of appropriate translation
      */
-    public final static String getTranslation(String string, boolean prefix) {
+    public static String getTranslation(String string, boolean prefix) {
         if (string == null || string.isEmpty())
             return "Invalid translation.";
 
@@ -65,7 +65,7 @@ public final class Utils {
      * @param string
      * @return String of appropriate translation
      */
-    public final static String getTranslation(String string) {
+    public static String getTranslation(String string) {
         return getTranslation(string, true);
     }
 
@@ -77,7 +77,7 @@ public final class Utils {
      * @param permission
      * @return whether they have permission
      */
-    public final static boolean hasPermission(Player player, String permission) {
+    public static boolean hasPermission(Player player, String permission) {
         if (player.hasPermission(permission) || player.hasPermission("Parkour.*"))
             return true;
 
@@ -94,7 +94,7 @@ public final class Utils {
      * @param permission "join"
      * @return whether they have permission
      */
-    public final static boolean hasPermission(Player player, String permissionBranch, String permission) {
+    public static boolean hasPermission(Player player, String permissionBranch, String permission) {
         if (player.hasPermission(permissionBranch + ".*") || player.hasPermission(permissionBranch + "." + permission) || player.hasPermission("Parkour.*"))
             return true;
 
@@ -112,7 +112,7 @@ public final class Utils {
      * @param courseName
      * @return whether they have permission
      */
-    public final static boolean hasPermissionOrCourseOwnership(Player player, String permissionBranch, String permission, String courseName) {
+    public static boolean hasPermissionOrCourseOwnership(Player player, String permissionBranch, String permission, String courseName) {
         if (!(CourseMethods.exist(courseName))) {
             player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", courseName));
             return false;
@@ -154,7 +154,7 @@ public final class Utils {
      * @param desired
      * @return whether the arguments match the criteria
      */
-    public final static boolean validateArgs(CommandSender sender, String[] args, int desired) {
+    public static boolean validateArgs(CommandSender sender, String[] args, int desired) {
         if (args.length > desired) {
             sender.sendMessage(Utils.getTranslation("Error.TooMany") + " (" + desired + ")");
             sender.sendMessage(Utils.getTranslation("Help.Command").replace("%COMMAND%", Utils.standardizeText(args[0])));
@@ -175,7 +175,7 @@ public final class Utils {
      * @param text
      * @return standardized input
      */
-    public final static String standardizeText(String text) {
+    public static String standardizeText(String text) {
         if (text == null || text.length() == 0) {
             return text;
         }
@@ -189,7 +189,7 @@ public final class Utils {
      * @param text
      * @return whether the input is numeric
      */
-    public final static boolean isNumber(String text) {
+    public static boolean isNumber(String text) {
         try {
             Integer.parseInt(text);
             return true;
@@ -204,7 +204,7 @@ public final class Utils {
      * @param text
      * @return colourised input
      */
-    public final static String colour(String text) {
+    public static String colour(String text) {
         return ChatColor.translateAlternateColorCodes('&', text);
     }
 
@@ -214,7 +214,7 @@ public final class Utils {
      * @param millis
      * @return formatted time: HH:MM:SS
      */
-    public final static String calculateTime(long millis) {
+    public static String calculateTime(long millis) {
         return String.format("%02d:%02d:%02d", millis / (3600 * 1000),
                 millis / (60 * 1000) % 60,
                 millis / 1000 % 60);
@@ -227,7 +227,7 @@ public final class Utils {
      * @param message
      * @param severity (0 - 2)
      */
-    public final static void log(String message, int severity) {
+    public static void log(String message, int severity) {
         switch (severity) {
             case 1:
                 Parkour.getPlugin().getLogger().warning(message);
@@ -247,7 +247,7 @@ public final class Utils {
      *
      * @param message
      */
-    public final static void log(String message) {
+    public static void log(String message) {
         log(message, 0);
     }
 
@@ -258,7 +258,7 @@ public final class Utils {
      *
      * @param message
      */
-    public final static void logToFile(String message) {
+    public static void logToFile(String message) {
         if (!Parkour.getPlugin().getConfig().getBoolean("Other.LogToFile"))
             return;
 
@@ -284,7 +284,7 @@ public final class Utils {
      * @param message
      * @param permission
      */
-    public final static void broadcastMessage(String message, String permission) {
+    public static void broadcastMessage(String message, String permission) {
         Bukkit.broadcast(message, permission);
         log(message);
     }
@@ -295,7 +295,7 @@ public final class Utils {
      *
      * @return formatted datetime DD/MM/YYYY | HH:MM:SS
      */
-    public final static String getDateTime() {
+    public static String getDateTime() {
         Format formatter = new SimpleDateFormat("[dd/MM/yyyy | HH:mm:ss]");
         return formatter.format(new Date());
     }
@@ -306,7 +306,7 @@ public final class Utils {
      *
      * @return formatted date DD-MM-YYYY
      */
-    public final static String getDate() {
+    public static String getDate() {
         Format formatter = new SimpleDateFormat("dd-MM-yyyy");
         return formatter.format(new Date());
     }
@@ -319,7 +319,7 @@ public final class Utils {
      * @param arguments
      * @return formatted error message
      */
-    public final static String invalidSyntax(String command, String arguments) {
+    public static String invalidSyntax(String command, String arguments) {
         return getTranslation("Error.Syntax")
                 .replace("%COMMAND%", command)
                 .replace("%ARGUMENTS%", arguments);
@@ -331,7 +331,7 @@ public final class Utils {
      * @param gamemode
      * @return chosen GameMode
      */
-    public final static GameMode getGamemode(int gamemode) {
+    public static GameMode getGamemode(int gamemode) {
         switch (gamemode) {
             case 1:
                 return GameMode.CREATIVE;
@@ -352,7 +352,7 @@ public final class Utils {
      * @param args
      * @param player
      */
-    public final static void validateParkourKit(String[] args, Player player) {
+    public static void validateParkourKit(String[] args, Player player) {
 
         /*TODO - update me
 
@@ -390,7 +390,7 @@ public final class Utils {
      * @param obj
      * @param path
      */
-    public final static void saveAllPlaying(Object obj, String path) {
+    public static void saveAllPlaying(Object obj, String path) {
         try {
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path));
             oos.writeObject(obj);
@@ -407,7 +407,7 @@ public final class Utils {
      *
      * @param path
      */
-    public final static Object loadAllPlaying(String path) throws Exception {
+    public static Object loadAllPlaying(String path) {
         Object result = null;
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
@@ -428,7 +428,7 @@ public final class Utils {
      * @param title
      * @param attemptTitle
      */
-    public final static void sendTitle(Player player, String title, boolean attemptTitle) {
+    public static void sendTitle(Player player, String title, boolean attemptTitle) {
         if (Static.containsQuiet(player.getName()))
             return;
 
@@ -443,7 +443,7 @@ public final class Utils {
         }
     }
 
-    public final static void sendFullTitle(Player player, String title, String subTitle, boolean attemptTitle) {
+    public static void sendFullTitle(Player player, String title, String subTitle, boolean attemptTitle) {
         if (Static.containsQuiet(player.getName()))
             return;
 
@@ -458,7 +458,7 @@ public final class Utils {
         }
     }
 
-    public final static void sendSubTitle(Player player, String subTitle, boolean attemptTitle) {
+    public static void sendSubTitle(Player player, String subTitle, boolean attemptTitle) {
         if (Static.containsQuiet(player.getName()))
             return;
 
@@ -473,7 +473,7 @@ public final class Utils {
         }
     }
 
-    public final static void sendActionBar(Player player, String title, boolean attemptTitle) {
+    public static void sendActionBar(Player player, String title, boolean attemptTitle) {
         if (Static.containsQuiet(player.getName()))
             return;
 
@@ -492,7 +492,7 @@ public final class Utils {
      * @param args
      * @param player
      */
-    public final static void deleteCommand(String[] args, Player player) {
+    public static void deleteCommand(String[] args, Player player) {
         if (args[1].equalsIgnoreCase("course")) {
             if (!CourseMethods.exist(args[2])) {
                 player.sendMessage(Utils.getTranslation("Error.Unknown"));
@@ -552,7 +552,7 @@ public final class Utils {
      * @param args
      * @param player
      */
-    public final static void resetCommand(String[] args, Player player) {
+    public static void resetCommand(String[] args, Player player) {
         if (args[1].equalsIgnoreCase("course")) {
             if (!CourseMethods.exist(args[2])) {
                 player.sendMessage(Utils.getTranslation("Error.Unknown"));
@@ -812,7 +812,7 @@ public final class Utils {
      * @return List<Player>
      */
     public static List<Player> getOnlineParkourPlayers() {
-        List<Player> onlineParkourPlayers = new ArrayList<Player>();
+        List<Player> onlineParkourPlayers = new ArrayList<>();
 
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             if (PlayerMethods.isPlaying(player.getName())) {
@@ -836,7 +836,7 @@ public final class Utils {
      * @param override
      */
     public static void toggleVisibility(Player player, boolean override) {
-        boolean enabled = override ? true : Static.containsHidden(player.getName());
+        boolean enabled = override || Static.containsHidden(player.getName());
         List<Player> playerScope;
 
         if (Parkour.getPlugin().getConfig().getBoolean("OnJoin.Item.HideAll.Global") || override) {

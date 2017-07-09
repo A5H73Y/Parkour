@@ -17,7 +17,7 @@ import me.A5H73Y.Parkour.Utilities.Utils;
  *
  * @author A5H73Y
  */
-public class ParkourConsoleCommands {
+class ParkourConsoleCommands {
 
 	public static void startBackup() {
 		Backup.backupNow(true);
@@ -98,7 +98,7 @@ public class ParkourConsoleCommands {
 		Utils.listParkourKit(args, sender);
 	}
 	
-	public static void displaySettings(String[] args, CommandSender sender) {
+	public static void displaySettings(CommandSender sender) {
 		Help.displaySettings(sender);
 	}
 	

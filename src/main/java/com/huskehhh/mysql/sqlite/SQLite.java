@@ -49,11 +49,9 @@ public class SQLite extends Database {
 			Class.forName("org.sqlite.JDBC");
 			connection = DriverManager.getConnection("jdbc:sqlite:" + databaseFile);
 
-		} catch (ClassNotFoundException ex) {
+		} catch (ClassNotFoundException | SQLException ex) {
 			ex.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
-		return connection;
+        return connection;
 	}
 }

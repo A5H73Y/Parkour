@@ -29,8 +29,7 @@ public class ParkourSession implements Serializable {
 	private long timestarted;
 	private Course course;
 	private ParkourMode mode;
-	private boolean useTrail;
-	private int seconds;
+    private int seconds;
 
 	/**
 	 * This is the ParkourSession object.
@@ -116,7 +115,4 @@ public class ParkourSession implements Serializable {
 		return mode;
 	}
 
-	public boolean getUseTrail() {
-		return useTrail;
-	}
 }

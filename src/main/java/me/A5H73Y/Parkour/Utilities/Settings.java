@@ -60,6 +60,8 @@ public class Settings {
 		titleIn = config.getInt("DisplayTitle.FadeIn");
 		titleStay = config.getInt("DisplayTitle.Stay");
 		titleOut = config.getInt("DisplayTitle.FadeOut");
+
+		cmdWhitelist = config.getStringList("OnCourse.EnforceParkourCommands.Whitelist");
 	}
 
 	public boolean isCommandPermission() {

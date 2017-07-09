@@ -50,7 +50,7 @@ public class ParkourSignListener implements Listener {
 				sm.createStandardSign(event, player, "Leave");
 
 			} else if (event.getLine(1).equalsIgnoreCase("effect") || event.getLine(1).equalsIgnoreCase("e")) {
-				sm.createEffectSign(event, player, "Effect");
+				sm.createEffectSign(event, player);
 
 			} else if (event.getLine(1).equalsIgnoreCase("stats") || event.getLine(1).equalsIgnoreCase("s")) {
 				sm.createStandardCourseSign(event, player, "Stats");
@@ -194,12 +194,10 @@ public class ParkourSignListener implements Listener {
 			if (lines[2].isEmpty() || !CourseMethods.exist(lines[2])){
 				event.getPlayer().sendMessage(Utils.getTranslation("Error.Unknown"));
 
-			} else if (!Utils.delayPlayer(event.getPlayer(), 4, true)) {
-
-			} else {
-				Utils.displayLeaderboard(event.getPlayer(), 
-						DatabaseMethods.getTopCourseResults(lines[2]), lines[2]);
-			}
+			} else if (Utils.delayPlayer(event.getPlayer(), 4, true)) {
+                Utils.displayLeaderboard(event.getPlayer(),
+                        DatabaseMethods.getTopCourseResults(lines[2]), lines[2]);
+            }
 
 		} else {
 			event.getPlayer().sendMessage(Utils.getTranslation("Error.UnknownSignCommand"));

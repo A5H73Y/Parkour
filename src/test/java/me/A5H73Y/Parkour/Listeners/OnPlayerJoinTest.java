@@ -21,7 +21,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest({PlayerJoinEvent.class, ParkourListener.class, Parkour.class, Settings.class, Utils.class, Static.class, PlayerMethods.class})
 public class OnPlayerJoinTest {
 	
-	Player mockPlayer;
+	private Player mockPlayer;
 	private static final String PLAYER_NAME = "A5H73Y";
 	
 	@Before

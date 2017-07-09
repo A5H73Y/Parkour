@@ -71,6 +71,7 @@ public class Question {
 			LobbyMethods.deleteLobby(argument, player);
 			player.sendMessage("Lobby " + ChatColor.AQUA + argument + ChatColor.WHITE + " deleted...");
 			Utils.logToFile("lobby " + argument + " was deleted by " + player.getName());
+			return;
 
 		case RESET_COURSE:
 			CourseMethods.resetCourse(argument);
@@ -88,8 +89,6 @@ public class Question {
 			DatabaseMethods.deleteCourseTimes(argument);
 			player.sendMessage(Static.getParkourString() + ChatColor.AQUA + argument + ChatColor.WHITE + " leaderboards have been reset.");
 			Utils.logToFile(argument + " leaderboards were reset by " + player.getName());
-			return;
-			
 		}
 	}
 }

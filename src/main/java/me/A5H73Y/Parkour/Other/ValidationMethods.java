@@ -290,14 +290,14 @@ public class ValidationMethods {
 
 	/**
 	 * Validate a course before deleting it
-	 * @param string
+	 * @param courseName
 	 * @param player
 	 * @return
 	 */
 	public static boolean deleteCourse(String courseName, Player player) {
 		courseName = courseName.toLowerCase();
 		FileConfiguration courseConfig = Parkour.getParkourConfig().getCourseData();
-		List<String> dependantCourses = new ArrayList<String>();
+		List<String> dependantCourses = new ArrayList<>();
 
 		for (String course : Static.getCourses()){
 			String linkedCourse = courseConfig.getString(course + ".LinkedCourse");
@@ -317,14 +317,14 @@ public class ValidationMethods {
 
 	/**
 	 * Validate a lobby before deleting it
-	 * @param string
+	 * @param courseName
 	 * @param player
 	 * @return
 	 */
 	public static boolean deleteLobby(String courseName, Player player) {
 		courseName = courseName.toLowerCase();
 		FileConfiguration courseConfig = Parkour.getParkourConfig().getCourseData();
-		List<String> dependantCourses = new ArrayList<String>();
+		List<String> dependantCourses = new ArrayList<>();
 
 		for (String course : Static.getCourses()){
 			String linkedCourse = courseConfig.getString(course + ".LinkedLobby");

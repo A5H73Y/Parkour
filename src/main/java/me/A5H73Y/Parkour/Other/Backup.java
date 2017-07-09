@@ -1,12 +1,5 @@
 package me.A5H73Y.Parkour.Other;
 
-/**
- * This work is licensed under a Creative Commons 
- * Attribution-NonCommercial-ShareAlike 4.0 International License. 
- * https://creativecommons.org/licenses/by-nc-sa/4.0/
- *
- * @author A5H73Y
- */
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -37,22 +30,18 @@ public class Backup {
 	public static void backupNow(boolean message){
 		if (message)
 			Utils.log("Beginning backup...");
-		fileList = new ArrayList<String>();
+		fileList = new ArrayList<>();
 
 		generateFileList(new File(SOURCE_FOLDER));
-		zipIt(OUTPUT_ZIP_FILE);
+		zipIt();
 		if(message)
 			Utils.log("Backup completed!");
 	}
 
-	/**
-	 * Zip it
-	 * @param zipFile output ZIP file location
-	 */
-	public static void zipIt(String zipFile){
+	private static void zipIt(){
 		byte[] buffer = new byte[1024];
 		try{
-			FileOutputStream fos = new FileOutputStream(zipFile);
+			FileOutputStream fos = new FileOutputStream(OUTPUT_ZIP_FILE);
 			ZipOutputStream zos = new ZipOutputStream(fos);
 
 			for(String file : fileList){
@@ -81,7 +70,7 @@ public class Backup {
 	 * and add the file into fileList  
 	 * @param node file or directory
 	 */
-	public static void generateFileList(File node){
+	private static void generateFileList(File node){
 		//add file only
 		if(node.isFile()){
 			if (!node.getName().contains(".zip"))

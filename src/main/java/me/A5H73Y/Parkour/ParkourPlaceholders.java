@@ -8,11 +8,11 @@ import org.bukkit.entity.Player;
 
 public class ParkourPlaceholders extends EZPlaceholderHook {
 
-    Parkour plugin;
+    private Parkour plugin;
 	
-    public ParkourPlaceholders(Parkour passplugin){
-    	super(passplugin, "parkour");
-    	this.plugin = passplugin;
+    public ParkourPlaceholders(Parkour plugin){
+    	super(plugin, "parkour");
+    	this.plugin = plugin;
     }
 
     @Override

@@ -151,7 +151,7 @@ public class StartPlugin {
 
 		if (bountifulAPI != null && bountifulAPI.isEnabled()) {
 			Utils.log("[BountifulAPI] Successfully linked. Version: " + bountifulAPI.getDescription().getVersion());
-			Static.setBountifulAPI(true);
+			Static.enableBountifulAPI();
 		} else {
 			Utils.log("[BountifulAPI] Plugin is missing, disabling config option.", 1);
 			Parkour.getPlugin().getConfig().set("Other.BountifulAPI.Enabled", false);
@@ -168,7 +168,7 @@ public class StartPlugin {
 
 		if (placeholderAPI != null && placeholderAPI.isEnabled()) {
 			Utils.log("[PlaceholderAPI] Successfully linked. Version: " + placeholderAPI.getDescription().getVersion());
-			Static.setPlaceholderAPI(true);
+			Static.enablePlaceholderAPI();
 		} else {
 			Utils.log("[PlaceholderAPI] Plugin is missing, disabling config option.", 1);
 			Parkour.getPlugin().getConfig().set("Other.PlaceholderAPI.Enabled", false);

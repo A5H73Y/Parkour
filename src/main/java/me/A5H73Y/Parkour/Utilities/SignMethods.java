@@ -22,17 +22,15 @@ public class SignMethods {
 	 * @param sign
 	 * @param player
 	 * @param title
-	 * @return if they have permission
 	 */
-	public boolean createStandardSign(SignChangeEvent sign, Player player, String title){
+	public void createStandardSign(SignChangeEvent sign, Player player, String title){
 		if (!Utils.hasSignPermission(player, sign, title))
-			return false;
+			return;
 
 		sign.setLine(1, title);
 		sign.setLine(2, "");
 		sign.setLine(3, "-----");
 		player.sendMessage(Static.getParkourString() + title + " sign created!");
-		return true;
 	}
 
 	public void createStandardCourseSign(SignChangeEvent sign, Player player, String title){
@@ -78,9 +76,9 @@ public class SignMethods {
 			return;
 
 		if (Parkour.getParkourConfig().getCourseData().contains(sign.getLine(2).toLowerCase() + ".MinimumLevel"))
-			sign.setLine(3, ChatColor.RED + "" + Parkour.getParkourConfig().getCourseData().get(sign.getLine(2).toLowerCase().toString() + ".MinimumLevel"));
+			sign.setLine(3, ChatColor.RED + "" + Parkour.getParkourConfig().getCourseData().get(sign.getLine(2).toLowerCase() + ".MinimumLevel"));
 
-		player.sendMessage(Static.getParkourString() + "Join for " + ChatColor.AQUA + sign.getLine(2).toString() + ChatColor.WHITE + " created!");
+		player.sendMessage(Static.getParkourString() + "Join for " + ChatColor.AQUA + sign.getLine(2) + ChatColor.WHITE + " created!");
 	}
 
 	/**
@@ -112,8 +110,8 @@ public class SignMethods {
 		}
 	}
 
-	public void createEffectSign(SignChangeEvent sign, Player player, String title) {
-		if (!Utils.hasSignPermission(player, sign, title))
+	public void createEffectSign(SignChangeEvent sign, Player player) {
+		if (!Utils.hasSignPermission(player, sign, "Effect"))
 			return;
 
 		sign.setLine(1, "Effect");

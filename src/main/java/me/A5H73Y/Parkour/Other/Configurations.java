@@ -244,7 +244,7 @@ public class Configurations {
 	}
 
 	public void initiateEconomy(){
-		Static.setEconomy(true);
+		Static.enableEconomy();
 		econFile = new File(Parkour.getPlugin().getDataFolder(), "economy.yml");
 		econData = new YamlConfiguration();
 

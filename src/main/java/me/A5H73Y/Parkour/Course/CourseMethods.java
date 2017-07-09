@@ -192,7 +192,7 @@ public class CourseMethods {
 	 * Displays all the information stored about a course. 
 	 * Accessed via "/pa stats (course)", will only display applicable information.
 	 * 
-	 * @param args
+	 * @param courseName
 	 * @param player
 	 */
 	public static void displayCourseInfo(String courseName, Player player) {
@@ -406,11 +406,10 @@ public class CourseMethods {
 
 	/**
 	 * Finish editing a course
-	 * 
-	 * @param args
-	 * @param player
-	 */
-	public static void deselectCourse(String[] args, Player player) {
+	 *
+     * @param player
+     */
+	public static void deselectCourse(Player player) {
 		if (Parkour.getParkourConfig().getUsersData().contains("PlayerInfo." + player.getName() + ".Selected")) {
 			Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Selected", null);
 			Parkour.getParkourConfig().saveUsers();
@@ -444,7 +443,7 @@ public class CourseMethods {
 	 */
 	public static void increaseComplete(String courseName) {
 		int completed = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Completed");
-		Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Completed", completed += 1);
+		Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Completed", completed + 1);
 		Parkour.getParkourConfig().saveCourses();
 	}
 
@@ -455,17 +454,16 @@ public class CourseMethods {
 	 */
 	public static void increaseView(String courseName) {
 		int views = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Views");
-		Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Views", views += 1);
+		Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Views", views + 1);
 		Parkour.getParkourConfig().saveCourses();
 	}
 
 	/**
 	 * Overwrite the start location of the course.
-	 * 
-	 * @param args
-	 * @param player
-	 */
-	public static void setStart(String[] args, Player player) {
+	 *
+     * @param player
+     */
+	public static void setStart(Player player) {
 		String selected = PlayerMethods.getSelected(player.getName());
 
 		if (!CourseMethods.exist(selected)) {
@@ -658,11 +656,10 @@ public class CourseMethods {
 	/**
 	 * Set the course status to Complete
 	 * A player will not be able to join a course if it's not set to finished.
-	 * 
-	 * @param args
-	 * @param player
-	 */
-	public static void setFinish(String[] args, Player player) {
+	 *
+     * @param player
+     */
+	public static void setFinish(Player player) {
 		String courseName = PlayerMethods.getSelected(player.getName());
 
 		if (isReady(courseName)){
@@ -739,7 +736,7 @@ public class CourseMethods {
 	 * 
 	 * @param courseName
 	 */
-	public final static void resetCourse(String courseName) {
+	public static void resetCourse(String courseName) {
 		if (!exist(courseName))
 			return;
 

@@ -27,7 +27,7 @@ import org.bukkit.entity.Player;
  *
  * @author A5H73Y
  */
-public class ParkourCommands implements CommandExecutor {
+class ParkourCommands implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -101,7 +101,7 @@ public class ParkourCommands implements CommandExecutor {
 						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerMethods.getSelected(player.getName())))
 							return false;
 
-						CourseMethods.setFinish(args, player);
+						CourseMethods.setFinish(player);
 
 					} else if (args[0].equalsIgnoreCase("setstart")) {
 						if (!PlayerMethods.hasSelected(player))
@@ -110,7 +110,7 @@ public class ParkourCommands implements CommandExecutor {
 						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerMethods.getSelected(player.getName())))
 							return false;
 
-						CourseMethods.setStart(args, player);
+						CourseMethods.setStart(player);
 
 					} else if (args[0].equalsIgnoreCase("prize")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin", "Prize"))
@@ -152,7 +152,7 @@ public class ParkourCommands implements CommandExecutor {
 						CourseMethods.selectCourse(args, player);
 
 					} else if (args[0].equalsIgnoreCase("done") || args[0].equalsIgnoreCase("deselect") || args[0].equalsIgnoreCase("stopselect")) {
-						CourseMethods.deselectCourse(args, player);
+						CourseMethods.deselectCourse(player);
 
 					} else if (args[0].equalsIgnoreCase("tp") || args[0].equalsIgnoreCase("teleport")) {
 						if (!Utils.hasPermission(player, "Parkour.Basic", "TP"))
@@ -347,7 +347,7 @@ public class ParkourCommands implements CommandExecutor {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
 							return false;
 
-						Help.displaySQL(args, player);
+						Help.displaySQL(player);
 
 					} else if (args[0].equalsIgnoreCase("recreate")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
@@ -463,7 +463,7 @@ public class ParkourCommands implements CommandExecutor {
 						ParkourConsoleCommands.displayParkourKit(args, sender);
 						
 					} else if (args[0].equalsIgnoreCase("settings")) {
-						ParkourConsoleCommands.displaySettings(args, sender);
+						ParkourConsoleCommands.displaySettings(sender);
 						
 					} else if (args[0].equalsIgnoreCase("help")) {
 						ParkourConsoleCommands.displayHelp(args, sender);

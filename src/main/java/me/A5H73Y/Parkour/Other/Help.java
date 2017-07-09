@@ -286,7 +286,7 @@ public final class Help {
 	 * @param args
 	 * @param player
 	 */
-	public static final void processCommandsInput(String[] args, Player player) {
+	public static void processCommandsInput(String[] args, Player player) {
 		if (args.length == 1){
 			displayCommandsIndex(player);	
 
@@ -417,7 +417,6 @@ public final class Help {
 
 	/**
 	 * Display the sign Parkour commands
-	 * @param args
 	 * @param player
 	 */
 	private static void displaySignCommands(Player player) {
@@ -529,7 +528,7 @@ public final class Help {
 		return updated;
 	}
 
-	public static void displaySQL(String[] args, Player player) {
+	public static void displaySQL(Player player) {
 		player.sendMessage(Utils.getStandardHeading("SQL Details"));
 		player.sendMessage("Type: " + DatabaseMethods.type);
 		player.sendMessage("Connected: " + (Parkour.getDatabaseObj().getConnection() != null));

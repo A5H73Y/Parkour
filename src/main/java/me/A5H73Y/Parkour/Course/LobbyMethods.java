@@ -100,7 +100,7 @@ public class LobbyMethods {
      * @param path
      * @return Location
      */
-    private final static Location getLobby(String path) {
+    private static Location getLobby(String path) {
         World world = Bukkit.getWorld(Parkour.getPlugin().getConfig().getString(path + ".World"));
         double x = Parkour.getPlugin().getConfig().getDouble(path + ".X");
         double y = Parkour.getPlugin().getConfig().getDouble(path + ".Y");
@@ -116,7 +116,7 @@ public class LobbyMethods {
      * @param args
      * @param player
      */
-    private final static void setLobby(String[] args, Player player) {
+    private static void setLobby(String[] args, Player player) {
         Location loc = player.getLocation();
         String path = args.length > 1 ? "Lobby." + args[1] : "Lobby";
         Parkour.getPlugin().getConfig().set(path + ".World", loc.getWorld().getName());
@@ -153,13 +153,12 @@ public class LobbyMethods {
      * @param session
      */
     public static void leaveCourse(Player player, ParkourSession session) {
-        String[] args = null;
         String lobbyName = null;
 
         if (Parkour.getPlugin().getConfig().getBoolean("OnLeave.TeleportToCustomLobby")) {
             lobbyName = CourseMethods.getLinkedLobby(session.getCourse().getName());
         }
-        args = new String[]{null, lobbyName};
+        String[] args = new String[]{null, lobbyName};
 
         LobbyMethods.joinLobby(args, player);
     }

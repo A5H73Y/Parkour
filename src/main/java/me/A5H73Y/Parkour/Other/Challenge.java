@@ -12,11 +12,11 @@ import java.util.List;
  */
 public class Challenge {
 
-    private static List<Challenge> challenges = new ArrayList<>();
+    private static final List<Challenge> challenges = new ArrayList<>();
 
-	private String player;
-	private String targetPlayer;
-	private String courseName;
+	private final String player;
+	private final String targetPlayer;
+	private final String courseName;
 
 	/**
 	 * Challenge player

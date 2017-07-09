@@ -19,7 +19,6 @@ import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
@@ -37,7 +36,7 @@ import org.bukkit.potion.PotionEffectType;
  */
 public class PlayerMethods {
 
-    private static HashMap<String, ParkourSession> parkourPlayers = new HashMap<String, ParkourSession>();
+    private static HashMap<String, ParkourSession> parkourPlayers = new HashMap<>();
 
     /**
      * This method is only called from the CourseMethods after course
@@ -310,7 +309,7 @@ public class PlayerMethods {
             if (DatabaseMethods.hasPlayerCompleted(player.getName(), courseName))
                 return;
 
-        int amount = 0;
+        int amount;
         Material material;
 
         // Use Custom prize
@@ -576,7 +575,7 @@ public class PlayerMethods {
      */
     public static void givePlayerKit(String[] args, Player player) {
         player.getInventory().clear();
-        ParkourKit kit = null;
+        ParkourKit kit;
 
         if (args != null && args.length == 2) {
             kit = ParkourKit.getParkourKit(args[1]);
@@ -705,8 +704,8 @@ public class PlayerMethods {
             player.setGameMode(Utils.getGamemode(gamemode));
         }
 
-        Damageable damag = player;
-        damag.setHealth(damag.getMaxHealth());
+        Damageable playerDamage = player;
+        playerDamage.setHealth(playerDamage.getMaxHealth());
         player.setFallDistance(0);
         player.setFireTicks(0);
     }
@@ -863,7 +862,7 @@ public class PlayerMethods {
      *
      * @param playerName
      */
-    public final static void resetPlayer(String playerName) {
+    public static void resetPlayer(String playerName) {
         Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + playerName, null);
         Parkour.getParkourConfig().saveUsers();
         DatabaseMethods.deleteAllTimesForPlayer(playerName);
@@ -1037,8 +1036,8 @@ public class PlayerMethods {
     @SuppressWarnings("deprecation")
     public static void applyEffect(String[] lines, Player player) {
         if (lines[2].equalsIgnoreCase("heal")) {
-            Damageable damag = player;
-            damag.setHealth(damag.getMaxHealth());
+            Damageable playerDamage = player;
+            playerDamage.setHealth(playerDamage.getMaxHealth());
             player.sendMessage(Static.getParkourString() + "Healed!");
 
         } else if (lines[2].equalsIgnoreCase("jump")) {
