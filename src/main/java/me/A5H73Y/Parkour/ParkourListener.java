@@ -92,7 +92,8 @@ public class ParkourListener implements Listener {
             if (event.getPlayer().hasPotionEffect(PotionEffectType.JUMP))
                 return;
 
-            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 10000, Parkour.getSettings().getBounceStrength()));
+            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 10000,
+                    Parkour.getPlugin().getConfig().getInt("ParkourModes.Moon.Strength")));
         }
     }
 
@@ -130,15 +131,15 @@ public class ParkourListener implements Listener {
                 PlayerMethods.playerDie(player);
 
             } else if (action.equals("launch")) {
-                player.setVelocity(new Vector(0, Parkour.getSettings().getLaunchStrength(), 0));
+                player.setVelocity(new Vector(0, kit.getStrength(belowMaterial), 0));
 
             } else if (action.equals("bounce")) {
                 if (!player.hasPotionEffect(PotionEffectType.JUMP))
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Parkour.getSettings().getBounceDuration(), Parkour.getSettings().getBounceStrength()));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, kit.getDuration(belowMaterial), kit.getStrength(belowMaterial)));
 
             } else if (action.equals("speed")) {
                 if (!player.hasPotionEffect(PotionEffectType.SPEED))
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Parkour.getSettings().getSpeedDuration(), Parkour.getSettings().getSpeedStrength()));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, kit.getDuration(belowMaterial), kit.getStrength(belowMaterial)));
 
             } else if (action.equals("norun")) {
                 player.setSprinting(false);
@@ -157,7 +158,7 @@ public class ParkourListener implements Listener {
                 String action = kit.getAction(climb.getType());
 
                 if (action.equals("climb")) {
-                    player.setVelocity(new Vector(0, Parkour.getSettings().getClimbStrength(), 0));
+                    player.setVelocity(new Vector(0, kit.getStrength(climb.getType()), 0));
                 }
             }
 

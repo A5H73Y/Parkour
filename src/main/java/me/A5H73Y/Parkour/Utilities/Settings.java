@@ -29,7 +29,7 @@ public class Settings {
 	private List<String> cmdWhitelist; 
 
 	//int
-	private int maxFallTicks, bounceStrength, bounceDuration, speedStrength, speedDuration, titleIn, titleStay, titleOut;
+	private int maxFallTicks, titleIn, titleStay, titleOut;
 
 	//Strings
 	private String defaultRank;
@@ -62,10 +62,6 @@ public class Settings {
 
 		climbStrength = config.getDouble("DefaultBlocks.Climb.Strength");
 		launchStrength = config.getDouble("DefaultBlocks.Launch.Strength");
-		bounceStrength = config.getInt("DefaultBlocks.Bounce.Strength");
-		bounceDuration = config.getInt("DefaultBlocks.Bounce.Duration");
-		speedStrength = config.getInt("DefaultBlocks.Speed.Strength");
-		speedDuration = config.getInt("DefaultBlocks.Speed.Duration");
 
 		titleIn = config.getInt("DisplayTitle.FadeIn");
 		titleStay = config.getInt("DisplayTitle.Stay");
@@ -134,30 +130,6 @@ public class Settings {
 
 	public String getDefaultRank() {
 		return defaultRank;
-	}
-
-	public int getBounceStrength() {
-		return bounceStrength;
-	}
-
-	public int getBounceDuration() {
-		return bounceDuration;
-	}
-
-	public int getSpeedStrength() {
-		return speedStrength;
-	}
-
-	public int getSpeedDuration() {
-		return speedDuration;
-	}
-
-	public double getClimbStrength() {
-		return climbStrength;
-	}
-
-	public double getLaunchStrength() {
-		return launchStrength;
 	}
 
 	public int getTitleIn() {

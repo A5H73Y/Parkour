@@ -23,6 +23,7 @@ Add a whole new element of fun to any server, highly competitive gameplay with r
 | ------------- | ------------- |
 | [Vault](https://dev.bukkit.org/projects/vault) | Add economy support to the plugin, reward or penalise the player. |
 | [BountifulAPI](https://www.spigotmc.org/resources/bountifulapi-1-8-1-9-1-10.1394/) | Add title and actionbar support to the plugin. Works very nicely with the plugin. |
+| [PlaceholderAPI](https://www.spigotmc.org/resources/parkour-expansion.41874/) | Add PlaceholderAPI support to the plugin via a plugin steve4744 created. |
 
 ## Maven
 ```

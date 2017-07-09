@@ -86,6 +86,24 @@ public class ParkourKit implements Serializable {
                 .getString("ParkourKit." + name + "." + material.name() + ".Action").toLowerCase();
     }
 
+    public Integer getStrength(Material material) {
+        if (!materials.contains(material)) {
+            return null;
+        }
+
+        return Parkour.getParkourConfig().getParkourKitData()
+                .getInt("ParkourKit." + name + "." + material.name() + ".Strength", 1);
+    }
+
+    public Integer getDuration(Material material) {
+        if (!materials.contains(material)) {
+            return null;
+        }
+
+        return Parkour.getParkourConfig().getParkourKitData()
+                .getInt("ParkourKit." + name + "." + material.name() + ".Duration", 200);
+    }
+
     /**
      * New point of accessing ParkourKit
      * If it's already loaded, then just return that, otherwise create the set and load it.

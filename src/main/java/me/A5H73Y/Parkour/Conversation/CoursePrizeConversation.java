@@ -128,7 +128,8 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 
 		@Override
 		public String getPromptText(ConversationContext arg0) {
-			return ChatColor.LIGHT_PURPLE + " Would you like to run this command now? (to test) Yes / No";
+			return ChatColor.LIGHT_PURPLE + " Would you like to run this command now? (to test)\n" +
+            ChatColor.GREEN + "[yes, no]";
 		}
 
 		@Override

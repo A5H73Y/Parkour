@@ -358,9 +358,9 @@ public class Configurations {
 			stringData.addDefault("Kit.Climb", "&bClimb Block");
 			stringData.addDefault("Kit.Launch", "&bLaunch Block");
 			stringData.addDefault("Kit.Finish", "&bFinish Block");
-			stringData.addDefault("Kit.NoRun", "&bNoRun Block");
-			stringData.addDefault("Kit.NoFall", "&bNoFall Block");
-			stringData.addDefault("Kit.NoPotion", "&bNoPotion Block");
+			stringData.addDefault("Kit.Norun", "&bNoRun Block");
+			stringData.addDefault("Kit.Nofall", "&bNoFall Block");
+			stringData.addDefault("Kit.Nopotion", "&bNoPotion Block");
 			stringData.addDefault("Kit.Sign", "&bSign");
 			stringData.addDefault("Kit.Death", "&bDeath Block");
 
@@ -457,6 +457,7 @@ public class Configurations {
 		config.addDefault("ParkourModes.Challenge.HidePlayers", true);
 		config.addDefault("ParkourModes.Speedy.SetSpeed", 0.8);
 		config.addDefault("ParkourModes.Speedy.ResetSpeed", 0.2);
+		config.addDefault("ParkourModes.Moon.Strength", 5);
 
 		config.addDefault("DisplayTitle.FadeIn", 5);
 		config.addDefault("DisplayTitle.Stay", 20);
