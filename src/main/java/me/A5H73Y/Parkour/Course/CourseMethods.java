@@ -215,7 +215,7 @@ public class CourseMethods {
 		int rewardLevelAdd = config.getInt(courseName + ".LevelAdd");
 		int XP = config.getInt(courseName + ".XP");
 		int parkoins = config.getInt(courseName + ".Parkoins");
-		int joinFee = econ.getInt("Price." + courseName + ".JoinFee");
+
 		String linkedLobby = config.getString(courseName + ".LinkedLobby");
 		String linkedCourse = config.getString(courseName + ".LinkedCourse");
 		String creator = config.getString(courseName + ".Creator");
@@ -263,8 +263,12 @@ public class CourseMethods {
 		if (mode != null && !"none".equalsIgnoreCase(mode))
 			player.sendMessage("Mode: " + aqua + mode);
 		
-		if (joinFee > 0)
-			player.sendMessage("Join Fee: " + aqua + joinFee);
+		if (Static.getEconomy()) {
+			int joinFee = econ.getInt("Price." + courseName + ".JoinFee");
+			if (joinFee > 0) {
+				player.sendMessage("Join Fee: " + aqua + joinFee);
+			}
+		}
 
 		double likePercent = Math.round(DatabaseMethods.getVotePercent(courseName));
 
