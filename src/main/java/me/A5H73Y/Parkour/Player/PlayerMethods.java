@@ -201,7 +201,7 @@ public class PlayerMethods {
         if (Parkour.getPlugin().getConfig().getBoolean("OnDie.SetXPBarToDeathCount"))
             player.setLevel(0);
 
-        if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.TeleportToLobby")) {
+        if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.TeleportAway")) {
             Long delay = Parkour.getPlugin().getConfig().getLong("OnFinish.TeleportDelay");
 
             if (delay > 0) {
@@ -282,10 +282,8 @@ public class PlayerMethods {
                 }
                 return;
             case 2:
-                for (Player players : Bukkit.getServer().getOnlinePlayers()) {
-                    if (PlayerMethods.isPlaying(players.getPlayerListName())) {
-                        players.sendMessage(finishBroadcast);
-                    }
+                for (Player players : Utils.getOnlineParkourPlayers()) {
+                    players.sendMessage(finishBroadcast);
                 }
                 return;
             case 1:
@@ -315,16 +313,13 @@ public class PlayerMethods {
         // Use Custom prize
         if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".Prize.Material")) {
             material = Material.getMaterial(Parkour.getParkourConfig().getCourseData().getString(courseName + ".Prize.Material"));
-            amount = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Prize.Amount");
+            amount = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Prize.Amount", 0);
         } else {
             material = Material.getMaterial(Parkour.getPlugin().getConfig().getString("OnFinish.DefaultPrize.Material"));
-            amount = Parkour.getPlugin().getConfig().getInt("OnFinish.DefaultPrize.Amount");
+            amount = Parkour.getPlugin().getConfig().getInt("OnFinish.DefaultPrize.Amount", 0);
         }
 
-        if (amount < 0)
-            amount = 0;
-
-        if (material != null)
+        if (material != null && amount > 0)
             player.getInventory().addItem(new ItemStack(material, amount));
 
         // Give XP to player
@@ -343,9 +338,11 @@ public class PlayerMethods {
 
             if (current < rewardLevel) {
                 Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Level", rewardLevel);
-                player.sendMessage(Utils.getTranslation("Parkour.RewardLevel")
-                        .replace("%LEVEL%", String.valueOf(rewardLevel))
-                        .replace("%COURSE%", courseName));
+                if (Parkour.getPlugin().getConfig().getBoolean("Other.Display.LevelReward")) {
+                    player.sendMessage(Utils.getTranslation("Parkour.RewardLevel")
+                            .replace("%LEVEL%", String.valueOf(rewardLevel))
+                            .replace("%COURSE%", courseName));
+                }
             }
         }
         // Level increment
@@ -653,7 +650,7 @@ public class PlayerMethods {
      */
     private static void prepareJoinPlayer(Player player, String courseName) {
         saveInventory(player);
-        preparePlayer(player, 0);
+        preparePlayer(player, Parkour.getPlugin().getConfig().getInt("OnJoin.SetGamemode"));
 
         if (Parkour.getPlugin().getConfig().getBoolean("OnJoin.FillHealth"))
             player.setFoodLevel(20);

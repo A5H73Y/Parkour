@@ -101,14 +101,23 @@ public class Settings {
 	}
 
 	public Material getLastCheckpoint() {
+	    if (lastCheckpoint == Material.AIR)
+	        return null;
+
 		return lastCheckpoint;
 	}
 
 	public Material getHideall() {
+        if (hideall == Material.AIR)
+            return null;
+
 		return hideall;
 	}
 
 	public Material getLeave() {
+        if (leave == Material.AIR)
+            return null;
+
 		return leave;
 	}
 

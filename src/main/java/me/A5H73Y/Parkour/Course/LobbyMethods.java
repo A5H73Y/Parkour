@@ -155,7 +155,7 @@ public class LobbyMethods {
     public static void leaveCourse(Player player, ParkourSession session) {
         String lobbyName = null;
 
-        if (Parkour.getPlugin().getConfig().getBoolean("OnLeave.TeleportToCustomLobby")) {
+        if (Parkour.getPlugin().getConfig().getBoolean("OnLeave.TeleportToLinkedLobby")) {
             lobbyName = CourseMethods.getLinkedLobby(session.getCourse().getName());
         }
         String[] args = new String[]{null, lobbyName};
