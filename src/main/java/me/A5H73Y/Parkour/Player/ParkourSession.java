@@ -10,8 +10,10 @@ import me.A5H73Y.Parkour.Enums.ParkourMode;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  * This work is licensed under a Creative Commons 
@@ -31,6 +33,8 @@ public class ParkourSession implements Serializable {
 	private ParkourMode mode;
     private int seconds;
 
+    private int taskId = 0;
+
 	/**
 	 * This is the ParkourSession object.
 	 * We use this object to track all the players information while on a course, how
@@ -48,7 +52,7 @@ public class ParkourSession implements Serializable {
 		this.timestarted = System.currentTimeMillis();
 		this.course = course;
 		this.mode = CourseMethods.getCourseMode(course.getName());
-	}
+    }
 	
 	public void startVisualTimer(final Player player) {
 		if (!Static.getBountifulAPI() ||
@@ -56,18 +60,22 @@ public class ParkourSession implements Serializable {
 				Static.containsQuiet(player.getName()))
 			return;
 		
-		new BukkitRunnable() {
+		BukkitTask task = new BukkitRunnable() {
             @Override
             public void run() {
-            	if (!PlayerMethods.isPlaying(player.getName())) {
-            		Utils.sendActionBar(player, "", true);
-            		cancel();
-            	} else {
-            		Utils.sendActionBar(player, Utils.convertSecondsToTime(++seconds), true);
-            	}
+                Utils.sendActionBar(player, Utils.convertSecondsToTime(++seconds), true);
             }
         }.runTaskTimer(Parkour.getPlugin(), 20, 20);
+
+		taskId = task.getTaskId();
 	}
+
+	public void cancelVisualTimer() {
+	    if (taskId > 0) {
+            Bukkit.getScheduler().cancelTask(taskId);
+            taskId = 0;
+        }
+    }
 
 	public int getDeaths() {
 		return deaths;

@@ -224,11 +224,19 @@ public final class Help {
 			displayHelpMessage(sender, "Display Parkour Settings", "/pa settings", null,
 					" Display the main Parkour settings for the server.");
 
-		} else if (args[1].equalsIgnoreCase("request")){	
-			displayHelpMessage(sender, "Request a Feature / Report a Bug", "/pa request", null,
-					" Have an idea for the plugin or found a bug you want to report? Click the link provided to navigate to the Parkour forums section.");
+		} else if (args[1].equalsIgnoreCase("request")) {
+            displayHelpMessage(sender, "Request a Feature / Report a Bug", "/pa request", null,
+                    " Have an idea for the plugin or found a bug you want to report? Click the link provided to navigate to the Parkour forums section.");
 
-		} else {
+        } else if (args[1].equalsIgnoreCase("setlevel")) {
+		    displayHelpMessage(sender, "Set Player's ParkourLevel", "/pa setlevel (player) (level)", "/pa setlevel A5H73Y 10",
+                    " You are able to manually set a player's ParkourLevel. Used to quickly test you've setup requirements correctly, or to reward a player manually.");
+
+		} else if (args[1].equalsIgnoreCase("setrank")) {
+            displayHelpMessage(sender, "Set Player's Parkour Rank", "/pa setrank (player) (rank)", "/pa setrank A5H73Y &6God",
+                    " You are able to manually set a player's Parkour Rank. This will instantly update their chat prefix.");
+
+        } else {
 			sender.sendMessage(Static.getParkourString() + "Unrecognised command. Please find all available commands using '/pa cmds'");
 		}
 	}
@@ -410,6 +418,8 @@ public final class Help {
 		displayCommandUsage(player, "economy", null, "Display economy menu");
 		displayCommandUsage(player, "createKit", null, "Start ParkourKit creation");
 		displayCommandUsage(player, "validateKit", "[Kit]", "Validate ParkourKit");
+		displayCommandUsage(player, "setlevel", "(player) (level)", "Set ParkourLevel");
+		displayCommandUsage(player, "setrank", "(player) (rank)", "Set Parkour Rank");
 		displayCommandUsage(player, "sql", null, "Display SQL menu");
 		displayCommandUsage(player, "settings", null, "Display Parkour Settings");
 		displayCommandUsage(player, "request / bug", null, "Display relevant info");

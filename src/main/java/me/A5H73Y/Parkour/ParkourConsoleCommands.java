@@ -1,5 +1,6 @@
 package me.A5H73Y.Parkour;
 
+import me.A5H73Y.Parkour.Player.PlayerMethods;
 import org.bukkit.command.CommandSender;
 
 import me.A5H73Y.Parkour.Course.CourseMethods;
@@ -116,10 +117,26 @@ class ParkourConsoleCommands {
 		Utils.log("pa rewardlevel (course) (level)");
 		Utils.log("pa rewardrank (level) (rank)");
 		Utils.log("pa rewardparkoins (course) (amount)");
+		Utils.log("pa setlevel (player) (level)");
+		Utils.log("pa setrank (player) (rank)");
 		Utils.log("pa list (courses / players)");
 		Utils.log("pa listkit (course)");
 		Utils.log("pa settings");
 		Utils.log("pa help (command)");
 		Utils.log("pa backup : Create a backup zip of the Parkour config folder");	
 	}
+
+    public static void setPlayerLevel(String[] args, CommandSender sender) {
+        if (!Utils.validateArgs(sender, args, 3))
+            return;
+
+        PlayerMethods.setLevel(args, sender);
+    }
+
+    public static void setPlayerRank(String[] args, CommandSender sender) {
+        if (!Utils.validateArgs(sender, args, 3))
+            return;
+
+        PlayerMethods.setRank(args, sender);
+    }
 }

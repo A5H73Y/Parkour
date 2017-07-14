@@ -31,9 +31,6 @@ public class Settings {
 	//int
 	private int maxFallTicks, titleIn, titleStay, titleOut;
 
-	//Strings
-	private String defaultRank;
-
 	public Settings(){
 		FileConfiguration config = Parkour.getPlugin().getConfig();
 		commandPermission = config.getBoolean("Other.Parkour.CommandPermissions");
@@ -54,8 +51,6 @@ public class Settings {
 		displayWelcome = config.getBoolean("Other.Display.JoinWelcomeMessage");
 
 		maxFallTicks = config.getInt("OnCourse.MaxFallTicks");
-
-		defaultRank = config.getString("Event.DefaultRank");
 
 		titleIn = config.getInt("DisplayTitle.FadeIn");
 		titleStay = config.getInt("DisplayTitle.Stay");
@@ -131,10 +126,6 @@ public class Settings {
 
 	public boolean isAttemptLessChecks(){
 		return attemptLessChecks;
-	}
-
-	public String getDefaultRank() {
-		return defaultRank;
 	}
 
 	public int getTitleIn() {

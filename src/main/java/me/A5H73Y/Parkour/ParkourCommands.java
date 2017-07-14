@@ -357,13 +357,31 @@ class ParkourCommands implements CommandExecutor {
 						DatabaseMethods.recreateAllCourses();
 
 					} else if (args[0].equalsIgnoreCase("whitelist")) {
-						if (!Utils.hasPermission(player, "Parkour.Admin"))
-							return false;
+                        if (!Utils.hasPermission(player, "Parkour.Admin"))
+                            return false;
 
-						if (!Utils.validateArgs(player, args, 2))
-							return false;
+                        if (!Utils.validateArgs(player, args, 2))
+                            return false;
 
-						Utils.addWhitelistedCommand(args, player);
+                        Utils.addWhitelistedCommand(args, player);
+
+                    } else if (args[0].equalsIgnoreCase("setlevel")) {
+                        if (!Utils.hasPermission(player, "Parkour.Admin"))
+                            return false;
+
+                        if (!Utils.validateArgs(player, args, 3))
+                            return false;
+
+                        PlayerMethods.setLevel(args, player);
+
+                    } else if (args[0].equalsIgnoreCase("setrank")) {
+                        if (!Utils.hasPermission(player, "Parkour.Admin"))
+                            return false;
+
+                        if (!Utils.validateArgs(player, args, 3))
+                            return false;
+
+                        PlayerMethods.setRank(args, player);
 
 						//Other commands//	
 					} else if (args[0].equalsIgnoreCase("about") || args[0].equalsIgnoreCase("version")) {
@@ -454,8 +472,14 @@ class ParkourCommands implements CommandExecutor {
 						ParkourConsoleCommands.setRewardRank(args, sender);
 						
 					} else if (args[0].equalsIgnoreCase("rewardparkoins")) {
-						ParkourConsoleCommands.setRewardParkoins(args, sender);
-						
+                        ParkourConsoleCommands.setRewardParkoins(args, sender);
+
+                    } else if (args[0].equalsIgnoreCase("setlevel")) {
+                        ParkourConsoleCommands.setPlayerLevel(args, sender);
+
+                    } else if (args[0].equalsIgnoreCase("setrank")) {
+					    ParkourConsoleCommands.setPlayerRank(args, sender);
+
 					} else if (args[0].equalsIgnoreCase("list")) {
 						ParkourConsoleCommands.displayList(args, sender);
 						

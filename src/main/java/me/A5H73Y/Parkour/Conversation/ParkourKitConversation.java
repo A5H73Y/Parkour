@@ -48,9 +48,14 @@ public class ParkourKitConversation extends StringPrompt {
         @Override
         public Prompt acceptInput(ConversationContext context, String message) {
             Material material = Material.getMaterial(message.toUpperCase());
+            String kitName = context.getSessionData("name").toString();
 
             if (material == null){
                 ParkourConversation.sendErrorMessage(context, message.toUpperCase() + " is not a valid Material");
+                return this;
+            }
+            if (Parkour.getParkourConfig().getParkourKitData().contains("ParkourKit." + kitName + "." + material.name())){
+                ParkourConversation.sendErrorMessage(context, "You've already used this Material");
                 return this;
             }
 

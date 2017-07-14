@@ -20,6 +20,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -71,10 +72,10 @@ public class PlayerMethods {
                 player.sendMessage(Utils.getTranslation("Parkour.TimeReset"));
         }
 
-        addPlayer(player.getName(), new ParkourSession(course));
+        ParkourSession session = addPlayer(player.getName(), new ParkourSession(course));
         Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".LastPlayed", course.getName());
         setupPlayerMode(player);
-        getParkourSession(player.getName()).startVisualTimer(player);
+        session.startVisualTimer(player);
     }
 
     /**
@@ -518,8 +519,9 @@ public class PlayerMethods {
      * @param playerName
      * @param session
      */
-    private static void addPlayer(String playerName, ParkourSession session) {
+    private static ParkourSession addPlayer(String playerName, ParkourSession session) {
         parkourPlayers.put(playerName, session);
+        return session;
     }
 
     /**
@@ -527,7 +529,11 @@ public class PlayerMethods {
      * @param playerName
      */
     private static void removePlayer(String playerName) {
-        parkourPlayers.remove(playerName);
+        ParkourSession session = parkourPlayers.get(playerName);
+        if (session != null) {
+            session.cancelVisualTimer();
+            parkourPlayers.remove(playerName);
+        }
     }
 
     /**
@@ -1083,5 +1089,39 @@ public class PlayerMethods {
 
     public static int getParkourLevel(String playerName) {
         return Parkour.getParkourConfig().getUsersData().getInt("PlayerInfo." + playerName + ".Level");
+    }
+
+    public static void setLevel(String[] args, CommandSender sender) {
+        if (!Utils.isNumber(args[2])) {
+            sender.sendMessage(Static.getParkourString() + "Minimum level is not valid.");
+            return;
+        }
+
+        Player target = Bukkit.getPlayer(args[1]);
+
+        if (target == null) {
+            sender.sendMessage(Static.getParkourString() + "That player is not online.");
+            return;
+        }
+
+        int newLevel = Integer.valueOf(args[2]);
+        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + target.getName() + ".Level", newLevel);
+        Parkour.getParkourConfig().saveUsers();
+
+        sender.sendMessage(Static.getParkourString() + target.getName() + "'s Level was set to " + newLevel);
+    }
+
+    public static void setRank(String[] args, CommandSender sender) {
+        Player target = Bukkit.getPlayer(args[1]);
+
+        if (target == null) {
+            sender.sendMessage(Static.getParkourString() + "That player is not online.");
+            return;
+        }
+
+        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + target.getName() + ".Rank", args[2]);
+        Parkour.getParkourConfig().saveUsers();
+
+        sender.sendMessage(Static.getParkourString() + target.getName() + "'s Rank was set to " + args[2]);
     }
 }
