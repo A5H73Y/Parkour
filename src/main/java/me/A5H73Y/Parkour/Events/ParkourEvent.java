@@ -26,7 +26,7 @@ public class ParkourEvent extends Event implements Cancellable {
         return handlers;
     }
 
-    public HandlerList getHandlerList() {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 
