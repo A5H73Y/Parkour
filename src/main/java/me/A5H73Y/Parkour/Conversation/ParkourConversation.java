@@ -23,63 +23,62 @@ import org.bukkit.entity.Player;
  */
 public class ParkourConversation implements ConversationAbandonedListener {
 
-	private ConversationFactory conversationFactory;
+    private ConversationFactory conversationFactory;
 
-	private String courseName;
-	private Player player;
+    private String courseName;
+    private Player player;
 
-	public ParkourConversation(Player player, ConversationType conversationType){
-		this.player = player;
+    public ParkourConversation(Player player, ConversationType conversationType){
+        this.player = player;
 
-		conversationFactory = new ConversationFactory(Parkour.getPlugin())
-		.withModality(true)
-		.withEscapeSequence("cancel")
-		.withTimeout(30)
-		.withLocalEcho(true)
-		.thatExcludesNonPlayersWithMessage("This is only possible in game, sorry.")
-		.withPrefix(new NullConversationPrefix())
-		.addConversationAbandonedListener(this)
-		.withFirstPrompt(getEntryPrompt(conversationType, player));
-	}
+        conversationFactory = new ConversationFactory(Parkour.getPlugin())
+                .withEscapeSequence("cancel")
+                .withTimeout(30)
+                .thatExcludesNonPlayersWithMessage("This is only possible in game, sorry.")
+                .addConversationAbandonedListener(this)
+                .withFirstPrompt(getEntryPrompt(conversationType, player));
+    }
 
-	private Prompt getEntryPrompt(ConversationType type, Player player) {
+    private Prompt getEntryPrompt(ConversationType type, Player player) {
         player.sendMessage(ChatColor.GRAY + "Nope: Enter 'cancel' to quit the conversation.");
-		switch (type){
-		case PARKOURKIT:
-			return new ParkourKitConversation();
-		case COURSEPRIZE:
-			return new CoursePrizeConversation();
-		case LEADERBOARD:
-			return new LeaderboardConversation();
-		case PARKOURMODE:
-			return new ParkourModeConversation();
-		default:
-			player.sendMessage(ChatColor.RED + "Something went wrong.");
-			return null;
-		}
-	}
+        switch (type){
+            case PARKOURKIT:
+                return new ParkourKitConversation();
+            case COURSEPRIZE:
+                return new CoursePrizeConversation();
+            case LEADERBOARD:
+                return new LeaderboardConversation();
+            case PARKOURMODE:
+                return new ParkourModeConversation();
+            case EDITPARKOURKIT:
+                return new EditParkourKitConversation();
+            default:
+                player.sendMessage(ChatColor.RED + "Something went wrong.");
+                return null;
+        }
+    }
 
-	@Override
-	public void conversationAbandoned(ConversationAbandonedEvent event) {
-		if (!event.gracefulExit())
-			event.getContext().getForWhom().sendRawMessage(Static.getParkourString() + "Conversation aborted...");
-	}
+    @Override
+    public void conversationAbandoned(ConversationAbandonedEvent event) {
+        if (!event.gracefulExit())
+            event.getContext().getForWhom().sendRawMessage(Static.getParkourString() + "Conversation aborted...");
+    }
 
-	public static void sendErrorMessage(ConversationContext context, String message) {
-		context.getForWhom().sendRawMessage(ChatColor.RED + message + ". Please try again...");
-	}
+    public static void sendErrorMessage(ConversationContext context, String message) {
+        context.getForWhom().sendRawMessage(ChatColor.RED + message + ". Please try again...");
+    }
 
-	public ParkourConversation withCourseName(String courseName) {
-		this.courseName = courseName;
-		return this;
-	}
+    public ParkourConversation withCourseName(String courseName) {
+        this.courseName = courseName;
+        return this;
+    }
 
-	public void begin() {
-		Conversation convo = conversationFactory.buildConversation(player);
-		convo.getContext().setSessionData("playerName", player.getName());
-		if (courseName != null)
-			convo.getContext().setSessionData("courseName", courseName);
+    public void begin() {
+        Conversation convo = conversationFactory.buildConversation(player);
+        convo.getContext().setSessionData("playerName", player.getName());
+        if (courseName != null)
+            convo.getContext().setSessionData("courseName", courseName);
 
-		convo.begin();
-	}
+        convo.begin();
+    }
 }

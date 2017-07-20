@@ -419,6 +419,7 @@ public class Configurations {
 
 		config.addDefault("OnCourse.UseParkourKit", true);
 		config.addDefault("OnCourse.DieInLiquid", false);
+		config.addDefault("OnCourse.DieInVoid", false);
 		config.addDefault("OnCourse.EnforceParkourCommands.Enabled", true);
 		String[] whitelisted = {"login"};
 		config.addDefault("OnCourse.EnforceParkourCommands.Whitelist", whitelisted);

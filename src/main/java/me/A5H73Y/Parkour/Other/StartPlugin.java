@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Enums.DatabaseType;
+import me.A5H73Y.Parkour.ParkourPlaceholders;
 import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
@@ -107,7 +108,7 @@ public class StartPlugin {
 			database = new MySQL(config.getString("MySQL.Host"), config.getString("MySQL.Port"), config.getString("MySQL.Database"), config.getString("MySQL.User"), config.getString("MySQL.Password"));
 			DatabaseMethods.type = DatabaseType.MySQL;
 		} else {
-			database = new SQLite(Parkour.getPlugin().getDataFolder().toString());
+			database = new SQLite(Parkour.getPlugin().getDataFolder().getAbsolutePath());
 			DatabaseMethods.type = DatabaseType.SQLite;
 		}
 
@@ -169,6 +170,11 @@ public class StartPlugin {
 		if (placeholderAPI != null && placeholderAPI.isEnabled()) {
 			Utils.log("[PlaceholderAPI] Successfully linked. Version: " + placeholderAPI.getDescription().getVersion());
 			Static.enablePlaceholderAPI();
+
+            if (Static.isPlaceholderAPI()) {
+                new ParkourPlaceholders(Parkour.getPlugin()).hook();
+            }
+
 		} else {
 			Utils.log("[PlaceholderAPI] Plugin is missing, disabling config option.", 1);
 			Parkour.getPlugin().getConfig().set("Other.PlaceholderAPI.Enabled", false);

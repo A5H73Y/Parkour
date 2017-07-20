@@ -238,6 +238,13 @@ public class ParkourListener implements Listener {
         if (!PlayerMethods.isPlaying(player.getName()))
             return;
 
+        if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
+            if (Parkour.getPlugin().getConfig().getBoolean("OnCourse.DieInVoid")) {
+                PlayerMethods.playerDie(player);
+                return;
+            }
+        }
+
         if (Parkour.getSettings().isDisablePlayerDamage()) {
             event.setDamage(0);
             return;
@@ -460,7 +467,7 @@ public class ParkourListener implements Listener {
 
             boolean allowed = false;
             for (String word : Static.getWhitelistedCommands()) {
-                if (event.getMessage().startsWith("/" + word)) {
+                if (event.getMessage().startsWith("/" + word + " ")) {
                     allowed = true;
                     break;
                 }

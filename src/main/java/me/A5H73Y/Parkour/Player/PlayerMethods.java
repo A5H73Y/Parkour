@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import me.A5H73Y.Parkour.Course.LobbyMethods;
+import me.A5H73Y.Parkour.Events.PlayerFinishCourseEvent;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.Checkpoint;
 import me.A5H73Y.Parkour.Course.Course;
@@ -224,6 +225,9 @@ public class PlayerMethods {
 
         Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".LastCompleted", courseName);
         Parkour.getParkourConfig().saveUsers();
+
+        PlayerFinishCourseEvent finishEvent = new PlayerFinishCourseEvent(player, courseName);
+        Bukkit.getServer().getPluginManager().callEvent(finishEvent);
     }
 
     /**

@@ -296,10 +296,16 @@ class ParkourCommands implements CommandExecutor {
 						CourseMethods.setCourseMode(args, player);
 
 					} else if (args[0].equalsIgnoreCase("createparkourkit") || args[0].equalsIgnoreCase("createkit")) {
-						if (!Utils.hasPermission(player, "Parkour.Admin"))
-							return false;
+                        if (!Utils.hasPermission(player, "Parkour.Admin"))
+                            return false;
 
-						new ParkourConversation(player, ConversationType.PARKOURKIT).begin();
+                        new ParkourConversation(player, ConversationType.PARKOURKIT).begin();
+
+                    } else if (args[0].equalsIgnoreCase("editparkourkit") || args[0].equalsIgnoreCase("editkit")) {
+                        if (!Utils.hasPermission(player, "Parkour.Admin"))
+                            return false;
+
+                        new ParkourConversation(player, ConversationType.EDITPARKOURKIT).begin();
 
 					} else if (args[0].equalsIgnoreCase("linkkit")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))

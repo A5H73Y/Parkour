@@ -116,12 +116,17 @@ public class ParkourKit implements Serializable {
             return loaded.get(name);
         }
 
-        if (!Parkour.getParkourConfig().getParkourKitData().contains("ParkourKit." + name)) {
+        if (!getAllParkourKits().contains(name)) {
             return null;
         }
 
         ParkourKit kit = new ParkourKit(name);
         loaded.put(name, kit);
         return kit;
+    }
+
+    public static Set<String> getAllParkourKits() {
+        return Parkour.getParkourConfig().getParkourKitData()
+                .getConfigurationSection("ParkourKit").getKeys(false);
     }
 }

@@ -26,7 +26,7 @@ public class LeaderboardConversation extends StringPrompt {
 
 	@Override
 	public String getPromptText(ConversationContext context) {
-		return ChatColor.LIGHT_PURPLE + " Which course would you to view?";
+		return ChatColor.LIGHT_PURPLE + " Which course would you like to view?";
 	}
 
 	@Override

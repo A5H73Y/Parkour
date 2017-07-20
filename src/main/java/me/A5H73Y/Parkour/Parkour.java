@@ -9,6 +9,7 @@ import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 import net.milkbowl.vault.economy.Economy;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.huskehhh.mysql.Database;
@@ -33,15 +34,14 @@ public class Parkour extends JavaPlugin {
 		StartPlugin.isFreshInstall();
 		config = new Configurations();
 		StartPlugin.run();
-		updatePlugin();
 		settings = new Settings();
-		if (Static.isPlaceholderAPI()) {
-			new ParkourPlaceholders(this).hook();
-		}
 
 		getServer().getPluginManager().registerEvents(new ParkourListener(), this);
 		getServer().getPluginManager().registerEvents(new ParkourSignListener(), this);
 		getCommand("parkour").setExecutor(new ParkourCommands());
+
+        Metrics metrics = new Metrics(this);
+        updatePlugin();
 	}
 
 	public void onDisable() {

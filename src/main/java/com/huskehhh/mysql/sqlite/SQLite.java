@@ -35,9 +35,9 @@ public class SQLite extends Database {
 		if (!dataFolder.exists()) {
 			dataFolder.mkdirs();
 		}
-		
-		File databaseFile = new File(dataFolder + File.separator + "parkour.db");
-		if (!(databaseFile.exists())) {
+
+		File databaseFile = new File(dataFolder, "parkour.db");
+		if (!databaseFile.exists()) {
 			try {
 				databaseFile.createNewFile();
 			} catch (IOException e) {
