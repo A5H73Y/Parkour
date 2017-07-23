@@ -172,6 +172,8 @@ public class ParkourKitConversation extends StringPrompt {
             Parkour.getParkourConfig().saveParkourKit();
 
             if (addAnother) {
+            	context.setSessionData("strength", null);
+            	context.setSessionData("duration", null);
                 return new chooseMaterial();
             }
 
