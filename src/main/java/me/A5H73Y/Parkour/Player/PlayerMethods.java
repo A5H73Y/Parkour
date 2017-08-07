@@ -179,6 +179,7 @@ public class PlayerMethods {
 
         ParkourSession session = getParkourSession(player.getName());
         final String courseName = session.getCourse().getName();
+        final long timeTaken = session.getTime();
 
         if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.EnforceCompletion")
                 && session.getCheckpoint() != (session.getCourse().getCheckpoints())) {
@@ -221,7 +222,11 @@ public class PlayerMethods {
         loadInventory(player);
         givePrize(player, courseName);
 
-        DatabaseMethods.insertTime(courseName, player.getName(), session.getTime(), session.getDeaths());
+        if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.UpdatePlayerDatabaseTime")) {
+            DatabaseMethods.updateTime(courseName, player.getName(), timeTaken, session.getDeaths());
+        } else {
+            DatabaseMethods.insertTime(courseName, player.getName(), timeTaken, session.getDeaths());
+        }
 
         Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".LastCompleted", courseName);
         Parkour.getParkourConfig().saveUsers();

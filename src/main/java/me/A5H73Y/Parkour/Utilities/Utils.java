@@ -565,7 +565,7 @@ public final class Utils {
             Static.addQuestion(player.getName(), new Question(QuestionType.RESET_COURSE, args[2].toLowerCase()));
 
         } else if (args[1].equalsIgnoreCase("player")) {
-            if (Bukkit.getPlayer(args[2]) == null && Parkour.getParkourConfig().getUsersData().contains("PlayerInfo." + args[2])) {
+            if (Bukkit.getPlayer(args[2]) == null || !Parkour.getParkourConfig().getUsersData().contains("PlayerInfo." + args[2])) {
                 player.sendMessage(Utils.getTranslation("Error.UnknownPlayer"));
                 return;
             }

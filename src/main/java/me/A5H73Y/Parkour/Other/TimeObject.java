@@ -22,6 +22,7 @@ public class TimeObject {
 	public String getPlayer() {
 		return player;
 	}
+
 	public long getTime() {
 		return time;
 	}

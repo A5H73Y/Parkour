@@ -155,6 +155,23 @@ public class DatabaseMethods extends Database {
         }
     }
 
+    public static void updateTime(String courseName, String playerName, long time, int deaths){
+        List<TimeObject> results = getTopPlayerCourseResults(playerName, courseName, 1);
+
+        if (results == null || results.isEmpty()) {
+            insertTime(courseName, playerName, time, deaths);
+            return;
+        }
+
+        TimeObject result = results.get(0);
+
+        if (result.getTime() <= time)
+            return;
+
+        deletePlayerCourseTimes(playerName, courseName);
+        insertTime(courseName, playerName, time, deaths);
+    }
+
     /**
      * When a player votes whether or not a player likes course.
      * @param courseName
@@ -288,6 +305,25 @@ public class DatabaseMethods extends Database {
             PreparedStatement ps = Parkour.getDatabaseObj().openConnection()
                     .prepareStatement("DELETE FROM `time` WHERE `courseId`=?;");
             ps.setInt(1, courseId);
+            ps.executeUpdate();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            Parkour.getDatabaseObj().closeConnection();
+        }
+    }
+
+    public static void deletePlayerCourseTimes(String playerName, String courseName) {
+        try {
+            int courseId = getCourseId(courseName);
+            if (courseId == 0)
+                return;
+
+            PreparedStatement ps = Parkour.getDatabaseObj().openConnection()
+                    .prepareStatement("DELETE FROM `time` WHERE `player`=? AND `courseId`=?;");
+
+            ps.setString(1, playerName);
+            ps.setInt(2, courseId);
             ps.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();

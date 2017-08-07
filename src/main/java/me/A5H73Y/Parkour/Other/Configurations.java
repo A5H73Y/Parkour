@@ -446,6 +446,7 @@ public class Configurations {
 		config.addDefault("OnFinish.DefaultPrize.XP", 0);
 		config.addDefault("OnFinish.TeleportDelay", 0);
 		config.addDefault("OnFinish.DisplayStats", true);
+		config.addDefault("OnFinish.UpdatePlayerDatabaseTime", false);
 
 		config.addDefault("OnLeave.TeleportToLinkedLobby", false);
 
