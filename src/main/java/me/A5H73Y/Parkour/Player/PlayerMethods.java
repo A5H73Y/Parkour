@@ -223,7 +223,7 @@ public class PlayerMethods {
         givePrize(player, courseName);
 
         if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.UpdatePlayerDatabaseTime")) {
-            DatabaseMethods.updateTime(courseName, player.getName(), timeTaken, session.getDeaths());
+            DatabaseMethods.updateTime(courseName, player, timeTaken, session.getDeaths());
         } else {
             DatabaseMethods.insertTime(courseName, player.getName(), timeTaken, session.getDeaths());
         }

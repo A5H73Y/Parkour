@@ -14,6 +14,7 @@ import me.A5H73Y.Parkour.Other.TimeObject;
 import org.bukkit.Bukkit;
 
 import com.huskehhh.mysql.Database;
+import org.bukkit.entity.Player;
 
 /**
  * This work is licensed under a Creative Commons 
@@ -155,11 +156,11 @@ public class DatabaseMethods extends Database {
         }
     }
 
-    public static void updateTime(String courseName, String playerName, long time, int deaths){
-        List<TimeObject> results = getTopPlayerCourseResults(playerName, courseName, 1);
+    public static void updateTime(String courseName, Player player, long time, int deaths){
+        List<TimeObject> results = getTopPlayerCourseResults(player.getName(), courseName, 1);
 
         if (results == null || results.isEmpty()) {
-            insertTime(courseName, playerName, time, deaths);
+            insertTime(courseName, player.getName(), time, deaths);
             return;
         }
 
@@ -168,8 +169,9 @@ public class DatabaseMethods extends Database {
         if (result.getTime() <= time)
             return;
 
-        deletePlayerCourseTimes(playerName, courseName);
-        insertTime(courseName, playerName, time, deaths);
+        player.sendMessage(Static.getParkourString() + "This is your best time so far!");
+        deletePlayerCourseTimes(player.getName(), courseName);
+        insertTime(courseName, player.getName(), time, deaths);
     }
 
     /**

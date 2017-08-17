@@ -158,4 +158,16 @@ public class SignMethods {
 			player.sendMessage(Static.getParkourString() + "Unknown Effect");
 		}
 	}
+
+	public void createLeaderboardsSign(SignChangeEvent sign, Player player) {
+	    if (!createStandardCourseSign(sign, player, "Leaderboards", false))
+	        return;
+
+	    if (!sign.getLine(3).isEmpty()) {
+	        if (!Utils.isNumber(sign.getLine(3)))
+	            sign.setLine(3, "");
+        }
+
+        player.sendMessage(Static.getParkourString() + "Leaderboards sign for " + ChatColor.AQUA + sign.getLine(2) + ChatColor.WHITE + " created!");
+    }
 }

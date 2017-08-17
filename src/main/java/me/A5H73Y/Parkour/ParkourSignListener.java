@@ -56,7 +56,7 @@ public class ParkourSignListener implements Listener {
 				sm.createStandardCourseSign(event, player, "Stats");
 
 			} else if (event.getLine(1).equalsIgnoreCase("leaderboards") || event.getLine(1).equalsIgnoreCase("lb")) {
-				sm.createStandardCourseSign(event, player, "Leaderboards");
+				sm.createLeaderboardsSign(event, player);
 
 			} else if (event.getLine(1).equalsIgnoreCase("setpoint") || event.getLine(1).equalsIgnoreCase("sp")) {
 				//event.getBlock().breakNaturally();
@@ -195,8 +195,10 @@ public class ParkourSignListener implements Listener {
 				event.getPlayer().sendMessage(Utils.getTranslation("Error.Unknown"));
 
 			} else if (Utils.delayPlayer(event.getPlayer(), 4, true)) {
+			    int amount = lines[3].isEmpty() ? 5 : Integer.valueOf(lines[3]);
+
                 Utils.displayLeaderboard(event.getPlayer(),
-                        DatabaseMethods.getTopCourseResults(lines[2]), lines[2]);
+                        DatabaseMethods.getTopCourseResults(lines[2], amount), lines[2]);
             }
 
 		} else {
