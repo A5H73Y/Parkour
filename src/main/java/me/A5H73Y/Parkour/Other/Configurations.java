@@ -435,6 +435,7 @@ public class Configurations {
 		config.addDefault("OnCourse.SneakToInteractItems", true);
 		config.addDefault("OnCourse.AdminPlaceBreakBlocks", true);
 		config.addDefault("OnCourse.PreventOpeningOtherInventories", false);
+		config.addDefault("OnCourse.PreventAttackingEntities", false);
 
 		config.addDefault("OnFinish.EnforceCompletion", true);
 		config.addDefault("OnFinish.TeleportAway", true);

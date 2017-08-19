@@ -17,7 +17,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class Settings {
 
 	private boolean commandPermission, chatPrefix, disablePlayerDamage, resetOnLeave, enforceWorld, disableCommands,
-            allowTrails, signPermission, attemptLessChecks, useParkourKit;
+            allowTrails, signPermission, attemptLessChecks, useParkourKit, preventAttackingEntities;
 
 	//Display
 	private boolean displayWelcome;
@@ -43,6 +43,7 @@ public class Settings {
 		signPermission = config.getBoolean("Other.Parkour.SignPermissions");
 		attemptLessChecks = config.getBoolean("OnCourse.AttemptLessChecks");
         useParkourKit = config.getBoolean("OnCourse.UseParkourKit");
+        preventAttackingEntities = config.getBoolean("OnCourse.PreventAttackingEntities");
 
 		lastCheckpoint = Material.getMaterial(config.getString("OnJoin.Item.LastCheckpoint.Material"));
 		hideall = Material.getMaterial(config.getString("OnJoin.Item.HideAll.Material"));
@@ -93,6 +94,10 @@ public class Settings {
 
 	public boolean isDisplayWelcome() {
 		return displayWelcome;
+	}
+
+	public boolean isPreventAttackingEntities() {
+		return preventAttackingEntities;
 	}
 
 	public Material getLastCheckpoint() {
