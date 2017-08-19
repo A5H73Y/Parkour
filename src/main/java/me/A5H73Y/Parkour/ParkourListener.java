@@ -29,6 +29,7 @@ import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -216,9 +217,20 @@ public class ParkourListener implements Listener {
 
     @EventHandler
     public void onEntityDamageEntity(EntityDamageByEntityEvent event) {
-        if (event.getEntity() instanceof Player)
+        if (event.getEntity() instanceof Player) {
             if (PlayerMethods.isPlaying(((Player)event.getEntity()).getName()))
                 event.setCancelled(true);
+        } else if (event.getDamager() instanceof Player) {
+            if (PlayerMethods.isPlaying(((Player)event.getDamager()).getName()))
+                if (Parkour.getSettings().isPreventAttackingEntities())
+                    event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerBreakingHangingItem(HangingBreakByEntityEvent event) {
+        if (event.getRemover() instanceof Player && PlayerMethods.isPlaying(((Player)event.getRemover()).getName()) && Parkour.getSettings().isPreventAttackingEntities())
+            event.setCancelled(true);
     }
 
     @EventHandler
