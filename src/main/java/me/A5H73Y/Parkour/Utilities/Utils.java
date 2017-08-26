@@ -859,4 +859,10 @@ public final class Utils {
             player.sendMessage(Utils.getTranslation("Event.HideAll2"));
         }
     }
+
+    public static void forceVisible(Player player) {
+        for (Player players : Bukkit.getOnlinePlayers()) {
+            players.showPlayer(player);
+        }
+    }
 }

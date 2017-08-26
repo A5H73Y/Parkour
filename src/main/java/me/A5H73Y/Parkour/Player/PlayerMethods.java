@@ -108,6 +108,8 @@ public class PlayerMethods {
 
         if (Static.containsHidden(player.getName()))
             Utils.toggleVisibility(player, true);
+
+        Utils.forceVisible(player);
     }
 
     /**
@@ -233,6 +235,7 @@ public class PlayerMethods {
 
         PlayerFinishCourseEvent finishEvent = new PlayerFinishCourseEvent(player, courseName);
         Bukkit.getServer().getPluginManager().callEvent(finishEvent);
+        Utils.forceVisible(player);
     }
 
     /**
