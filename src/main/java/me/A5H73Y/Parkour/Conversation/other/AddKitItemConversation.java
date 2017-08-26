@@ -1,41 +1,26 @@
-package me.A5H73Y.Parkour.Conversation;
+package me.A5H73Y.Parkour.Conversation.other;
 
+import me.A5H73Y.Parkour.Conversation.ParkourConversation;
 import me.A5H73Y.Parkour.Parkour;
-
 import me.A5H73Y.Parkour.Utilities.Static;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.conversations.*;
 
-/**
- * This work is licensed under a Creative Commons 
- * Attribution-NonCommercial-ShareAlike 4.0 International License. 
- * https://creativecommons.org/licenses/by-nc-sa/4.0/
- *
- * @author A5H73Y
- */
-public class ParkourKitConversation extends StringPrompt {
+public class AddKitItemConversation {
 
     private String[] actionTypes = {"death", "finish", "climb", "launch", "bounce", "speed", "norun", "nopotion"};
 
-    public String getPromptText(ConversationContext context) {
-        return ChatColor.LIGHT_PURPLE + " What would you like to name your ParkourKit?";
+    private Prompt endingConversation;
+    private String kitName;
+
+    public AddKitItemConversation(Prompt endingConversation, String kitName) {
+        this.endingConversation = endingConversation;
+        this.kitName = kitName;
     }
 
-    public Prompt acceptInput(ConversationContext context, String message) {
-        if (message.length() == 0) {
-            return Prompt.END_OF_CONVERSATION;
-        }
-
-        message = message.toLowerCase();
-
-        if (Parkour.getParkourConfig().getParkourKitData().contains("ParkourKit." + message)){
-            ParkourConversation.sendErrorMessage(context, "This ParkourKit already exists");
-            return this;
-        }
-
-        context.setSessionData("name", message);
+    public StringPrompt startConversation() {
         return new chooseMaterial();
     }
 
@@ -48,7 +33,6 @@ public class ParkourKitConversation extends StringPrompt {
         @Override
         public Prompt acceptInput(ConversationContext context, String message) {
             Material material = Material.getMaterial(message.toUpperCase());
-            String kitName = context.getSessionData("name").toString();
 
             if (material == null){
                 ParkourConversation.sendErrorMessage(context, message.toUpperCase() + " is not a valid Material");
@@ -151,14 +135,13 @@ public class ParkourKitConversation extends StringPrompt {
 
         @Override
         protected Prompt acceptValidatedInput(ConversationContext context, boolean addAnother) {
-            String name = context.getSessionData("name").toString();
             String material = context.getSessionData("material").toString();
             String action = context.getSessionData("action").toString();
             boolean hasStrength = context.getSessionData("strength") != null;
             boolean hasDuration = context.getSessionData("duration") != null;
 
             FileConfiguration config = Parkour.getParkourConfig().getParkourKitData();
-            String path = "ParkourKit." + name + "." + material;
+            String path = "ParkourKit." + kitName + "." + material;
 
             config.set(path + ".Action", action);
 
@@ -172,13 +155,13 @@ public class ParkourKitConversation extends StringPrompt {
             Parkour.getParkourConfig().saveParkourKit();
 
             if (addAnother) {
-            	context.setSessionData("strength", null);
-            	context.setSessionData("duration", null);
+                context.setSessionData("strength", null);
+                context.setSessionData("duration", null);
                 return new chooseMaterial();
             }
 
-            context.getForWhom().sendRawMessage(Static.getParkourString() + name + " ParkourKit has been successfully created.");
-            return Prompt.END_OF_CONVERSATION;
+            context.getForWhom().sendRawMessage(Static.getParkourString() + kitName + " ParkourKit has been successfully created.");
+            return endingConversation;
         }
     }
 }

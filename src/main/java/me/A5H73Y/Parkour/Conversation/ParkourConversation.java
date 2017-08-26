@@ -43,7 +43,7 @@ public class ParkourConversation implements ConversationAbandonedListener {
         player.sendMessage(ChatColor.GRAY + "Nope: Enter 'cancel' to quit the conversation.");
         switch (type){
             case PARKOURKIT:
-                return new ParkourKitConversation();
+                return new CreateParkourKitConversation();
             case COURSEPRIZE:
                 return new CoursePrizeConversation();
             case LEADERBOARD:

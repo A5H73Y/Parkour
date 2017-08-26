@@ -1,17 +1,22 @@
 package me.A5H73Y.Parkour.Conversation;
 
+import me.A5H73Y.Parkour.Conversation.other.AddKitItemConversation;
 import me.A5H73Y.Parkour.Other.ParkourKit;
+import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.Utilities.Static;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.FixedSetPrompt;
 import org.bukkit.conversations.Prompt;
+import org.bukkit.conversations.StringPrompt;
 
 import java.util.Arrays;
 
 public class EditParkourKitConversation extends FixedSetPrompt {
 
     EditParkourKitConversation(){
-        super(Arrays.toString(ParkourKit.getAllParkourKits().toArray()));
+        super(ParkourKit.getAllParkourKits().toArray(new String[0]));
     }
 
     @Override
@@ -41,9 +46,40 @@ public class EditParkourKitConversation extends FixedSetPrompt {
         @Override
         protected Prompt acceptValidatedInput(ConversationContext context, String choice) {
             if (choice.equals("add")) {
-                //TODO
+                String kitName = context.getSessionData("kit").toString();
+                return new AddKitItemConversation(new ChooseOption(), kitName).startConversation();
             }
-            return null;
+            return new RemoveMaterial();
+        }
+    }
+
+    private class RemoveMaterial extends StringPrompt {
+
+        @Override
+        public String getPromptText(ConversationContext context) {
+            return ChatColor.LIGHT_PURPLE + " What material would you like to remove?";
+        }
+
+        @Override
+        public Prompt acceptInput(ConversationContext context, String message) {
+            Material material = Material.getMaterial(message.toUpperCase());
+
+            if (material == null){
+                ParkourConversation.sendErrorMessage(context, "This isn't a valid Material.");
+                return this;
+            }
+
+            String kitName = (String) context.getSessionData("kit");
+
+            if (!Parkour.getParkourConfig().getParkourKitData().contains("ParkourKit." + kitName + "." + material.name())){
+                ParkourConversation.sendErrorMessage(context, "This Material hasn't got an entry");
+                return this;
+            }
+
+            context.getForWhom().sendRawMessage(Static.getParkourString() + material.name() + " removed from " + kitName);
+            Parkour.getParkourConfig().getParkourKitData().set("ParkourKit." + kitName + "." + material.name(), null);
+            Parkour.getParkourConfig().saveParkourKit();
+            return new ChooseOption();
         }
     }
 }
