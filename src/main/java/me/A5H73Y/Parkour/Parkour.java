@@ -24,7 +24,7 @@ import com.huskehhh.mysql.Database;
 public class Parkour extends JavaPlugin {
 
 	private static Parkour instance;
-	private static Configurations config;
+	private Configurations config;
 	private static Database database;
 	private static Economy economy;
 	private static Settings settings;
@@ -71,7 +71,7 @@ public class Parkour extends JavaPlugin {
 	}
 
 	public static Configurations getParkourConfig() {
-		return config;
+		return getPlugin().config;
 	}
 
 	public static Settings getSettings() {

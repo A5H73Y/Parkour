@@ -37,7 +37,7 @@ public final class Help {
 		}
 
 		if (args[1].equalsIgnoreCase("join")){
-			displayHelpMessage(sender, "Join a Course", "/pa join (courseName)", "/pa join Tutorial",
+			displayHelpMessage(sender, "Join a Course", "/pa join (courseName)", "/pa join tutorial",
 					" You are able to join a course using its name, without having to use the correct case. Each course has a unique numeric identifier (courseID) which can be used to join the course instead of its name. Once you have joined a course, you are in 'Parkour Mode', which allows you to interact with the ParkourKit and track your statistics.");
 
 		} else if (args[1].equalsIgnoreCase("leave")){
@@ -49,7 +49,7 @@ public final class Help {
 					" Display all your Parkour statistics, which can include your current progress through a course as well as the saved information, such as your Parkour level. Using the extra argument will allow you to display the information of a different player.");
 
 		} else if (args[1].equalsIgnoreCase("stats")){
-			displayHelpMessage(sender, "Display course statistics", "/pa stats (course)", "/pa stats Tutorial",
+			displayHelpMessage(sender, "Display course statistics", "/pa stats (course)", "/pa stats tutorial",
 					" Display all the course information and statistics, including the requirements to join and the rewards given on completion.");
 
 		} else if (args[1].equalsIgnoreCase("lobby")){	
@@ -77,11 +77,11 @@ public final class Help {
 					" If another player is interested in which course you are currently on, simply send them an invite and it will instruct them on how to join. If you want to challenge each other, check out the '/pa challenge' command.");
 
 		} else if (args[1].equalsIgnoreCase("challenge")){	
-			displayHelpMessage(sender, "Challenge a player to a course", "/pa challenge (course) (player)", "/pa challenge Tutorial A5H73Y", 
+			displayHelpMessage(sender, "Challenge a player to a course", "/pa challenge (course) (player)", "/pa challenge tutorial A5H73Y",
 					" Fancy adding an element of competition? Simply execute the command above to send a challenge to the player. If they accept using '/pa accept' then you'll both be teleported to the beginning of the course and a countdown will initiate. When the counter reaches 0 the race will begin. The visibility of each player is configurable.");
 
 		} else if (args[1].equalsIgnoreCase("create")){
-			displayHelpMessage(sender, "Create a Course", "/pa create (courseName)", "/pa create Tutorial",
+			displayHelpMessage(sender, "Create a Course", "/pa create (courseName)", "/pa create tutorial",
 					" Creating a new Parkour course only takes 1 command, all the setup is automatic. Remember that your location and the direction you're facing is saved and then loaded once the course is joined. By default, the course will be 'unfinished' until set otherwise using '/pa ready'.");
 
 		} else if (args[1].equalsIgnoreCase("checkpoint")){	
@@ -89,11 +89,11 @@ public final class Help {
 					" Made to be as automated and easy as possible. All you do is simply select (edit) a course using '/pa select (course)', then stand where you want a checkpoint to be and enter '/pa checkpoint'. As if by magic it's all done! If you mess up a checkpoint, you can simply override it using '/pa checkpoint (number)'. A pressureplate will be placed automatically.");
 
 		} else if (args[1].equalsIgnoreCase("kit")){	
-			displayHelpMessage(sender, "Retrieve ParkourKit", "/pa kit [Kit]", "/pa kit FireKit",
+			displayHelpMessage(sender, "Retrieve ParkourKit", "/pa kit [Kit]", "/pa kit firekit",
 					" You can create a set of ParkourKit and name it whatever you want. Using this command you can fill your inventory with the blocks you configured. If you don't specify a ParkourKit set, it will use the Default blocks.");
 
 		} else if (args[1].equalsIgnoreCase("select")){	
-			displayHelpMessage(sender, "Edit a course", "/pa select (course)", "/pa select Tutorial",
+			displayHelpMessage(sender, "Edit a course", "/pa select (course)", "/pa select tutorial",
 					" Many of the commands don't require a course argument as they will use the course you are editing to make things a bit easier. For example '/pa checkpoint' will use the course you are currently editing. If you want to find out which course you are currently editing use '/pa select'. When you create a course, it will automatically select it for editing.");
 
 		} else if (args[1].equalsIgnoreCase("done")){	
@@ -105,7 +105,7 @@ public final class Help {
 					" The start of the selected course will be overwritten to your current position, rather than having to recreate the course.");
 
 		} else if (args[1].equalsIgnoreCase("setcreator")){	
-			displayHelpMessage(sender, "Set creator of a course", "/pa setcreator (course) (playerName)", "/pa setcreator Tutorial A5H73Y",
+			displayHelpMessage(sender, "Set creator of a course", "/pa setcreator (course) (playerName)", "/pa setcreator tutorial A5H73Y",
 					" The creator of the course will be overwritten to what you've specified. Helpful if an Admin has to setup the course which a non-admin player created. The creator of a course will have certain permissions for that course, regardless of if they are an Admin.");
 
 		} else if (args[1].equalsIgnoreCase("setlobby")){	
@@ -117,15 +117,15 @@ public final class Help {
 					" When you first create a course, it will not be joinable until it has been set to finished by its creator (configurable). The command will set the status to 'ready' to join and will place the default finish block to where you are stood.");
 
 		} else if (args[1].equalsIgnoreCase("prize")){	
-			displayHelpMessage(sender, "Configure course prize", "/pa prize (course)", "/pa prize Example",
+			displayHelpMessage(sender, "Configure course prize", "/pa prize (course)", "/pa prize tutorial",
 					" A conversation will be started to allow you to setup a course prize exactly how you want, without having to enter long ugly commands.");
 
 		} else if (args[1].equalsIgnoreCase("test")){	
-			displayHelpMessage(sender, "Toggle Parkour Test Mode", "/pa test", null,
-					" When wanting to test your course in 'ParkourMode' to similate how each set of ParkourKit will respond, you can enable TestMode, which will basically fake being on a course to allow you to test it without having to join / leave the course repeatedly.");
+			displayHelpMessage(sender, "Toggle Parkour Test Mode", "/pa test [Kit]", "/pa test firekit",
+					" Test Mode can be toggled on and off using the command, this will simulate being on a generic Parkour course. The position you start Test Mode will act as the starting point. If you specify a ParkourKit this will be simulated, otherwise the default Kit will be used.");
 
 		} else if (args[1].equalsIgnoreCase("leaderboard")){	
-			displayHelpMessage(sender, "Display course leaderboards", "/pa leaderboard [[course] [amount] [scope]]", "/pa leaderboard Example 10 global",
+			displayHelpMessage(sender, "Display course leaderboards", "/pa leaderboard [[course] [amount] [scope]]", "/pa leaderboard tutorial 10 global",
 					" A conversation will be started to display the leaderboards you want, whether it's the best global or personal times. If you do not wish to use the converation, you can provide the required arguments for instant results.");
 
 		} else if (args[1].equalsIgnoreCase("tutorial")){	
@@ -133,51 +133,51 @@ public final class Help {
 					" If you wish to learn from the offical Parkour tutorials, click the link to be navigated to the tutorial section of the bukkit plugin page.");
 
 		} else if (args[1].equalsIgnoreCase("tp")){	
-			displayHelpMessage(sender, "Teleport to Course", "/pa tp (course)", "/pa tp Example",
+			displayHelpMessage(sender, "Teleport to Course", "/pa tp (course)", "/pa tp tutorial",
 					" Teleport to the start of the chosen course. This will NOT activate 'Parkour Mode', but simply move you to the beginning of the course.");
 
 		} else if (args[1].equalsIgnoreCase("tpc")){	
-			displayHelpMessage(sender, "Teleport to Course checkpoint", "/pa tpc (course) (point)", "/pa tpc Example 2",
+			displayHelpMessage(sender, "Teleport to Course checkpoint", "/pa tpc (course) (point)", "/pa tpc tutorial 2",
 					" Teleport to the chosen checkpoint on the course. This will NOT activate 'Parkour Mode', but simply move you to the chosen checkpoint on the course.");
 
 		} else if (args[1].equalsIgnoreCase("link")){	
-			displayHelpMessage(sender, "Link the course after completion", "/pa link (course / lobby) (argument)", "/pa link course Level2",
-					" You are now able to link the selected course to either a custom lobby, or to join a different course straight after you complete the selected course. For example if you selected a course '/pa select Level1', you would be able to make the player join Level2 after they complete Level1 by doing '/pa link course Level2', or if you wish for them to teleport to a custom lobby '/pa link lobby Admin'. If you want to remove the link enter '/pa link reset'");
+			displayHelpMessage(sender, "Link the course after completion", "/pa link (course / lobby) (argument)", "/pa link course level2",
+					" You are now able to link the selected course to either a custom lobby, or to join a different course straight after you complete the selected course. For example if you selected a course '/pa select tutorial', you would be able to make the player join Level2 after they complete Level1 by doing '/pa link course Level2', or if you wish for them to teleport to a custom lobby '/pa link lobby Admin'. If you want to remove the link enter '/pa link reset'");
 
 		} else if (args[1].equalsIgnoreCase("linkKit")){
-			displayHelpMessage(sender, "Link a course to ParkourKit", "/pa linkKit (course) (Kit)", "/pa linkKit Example FireKit",
-					" Each course has the ability to have a unique set of ParkourKit, created using the '/pa createKit' command. Once linked, each type of ParkourKit for that course will be configured to what you set.");
+			displayHelpMessage(sender, "Link a course to ParkourKit", "/pa linkKit (course) (Kit)", "/pa linkKit tutorial firekit",
+					" Each course has the ability to have a unique ParkourKit, created using the '/pa createKit' command. Once linked, each type of ParkourKit material for that course will be configured to the action you set.");
 
 		} else if (args[1].equalsIgnoreCase("listKit")){
 			displayHelpMessage(sender, "List ParkourKit information", "/pa listKit [Kit]", "/pa listKit firekit",
-					" Display all the ParkourKit available by using the command without the parameter. If you want to see what each ParkourKit is, you can specify its name and each type of block will be displayed.");
+					" Display all the ParkourKits available by using the command without the parameter. You can specify a kit name if you want to each material with the corresponding actions.");
 
 		} else if (args[1].equalsIgnoreCase("setmode")){
-			displayHelpMessage(sender, "Set Mode for course", "/pa setmode (course)", "/pa setmode Example",
+			displayHelpMessage(sender, "Set Mode for course", "/pa setmode (course)", "/pa setmode tutorial",
 					" By default, a course does not have a Parkour Mode attached. Each mode can affect the interaction with the course, an example being the 'Freedom' mode allows you to create and load your own checkpoints.");
 
 		} else if (args[1].equalsIgnoreCase("setjoinitem")){
-			displayHelpMessage(sender, "Set Join Item for course", "/pa setjoinitem (course) (material) (amount)", "/pa setjoinitem Example Elytra 1",
+			displayHelpMessage(sender, "Set Join Item for course", "/pa setjoinitem (course) (material) (amount)", "/pa setjoinitem tutorial elytra 1",
 					" By default, a course will give you the default join items (configurable). You can provide the player with an additional specified item when they join a course, such as Elytra or Ender pearls for a certain types of courses etc.");
 
 		} else if (args[1].equalsIgnoreCase("setminlevel")){	
-			displayHelpMessage(sender, "Set minimum required level for course", "/pa setminlevel (course) (level)", "/pa setminlevel Example 5",
+			displayHelpMessage(sender, "Set minimum required level for course", "/pa setminlevel (course) (level)", "/pa setminlevel tutorial 5",
 					" By default, a course does not have a minimum level requirement to join. However, if you want to enforce the progression of Parkour courses, you can require the player to have a Parkour level greater than or equal to the minimum level specified.");
 
 		} else if (args[1].equalsIgnoreCase("setmaxdeath")){	
-			displayHelpMessage(sender, "Set maximum amount of deaths for course", "/pa setmaxdeath (course) (amount)", "/pa setmaxdeath Example 5",
+			displayHelpMessage(sender, "Set maximum amount of deaths for course", "/pa setmaxdeath (course) (amount)", "/pa setmaxdeath tutorial 5",
 					" By default, a course does not have a maximum amount of deaths. However, you can enforce a limit on the amount of deaths the player can accumulate before being forced to leave the course.");
 
 		} else if (args[1].equalsIgnoreCase("rewardonce")){	
-			displayHelpMessage(sender, "Reward only once for that course", "/pa rewardonce (course)", "/pa rewardonce Example",
+			displayHelpMessage(sender, "Reward only once for that course", "/pa rewardonce (course)", "/pa rewardonce tutorial",
 					" Prevent a player from rewarding themselves multiple times for completing a course, by only allowing them to claim the reward the first time they complete the course.");
 
 		} else if (args[1].equalsIgnoreCase("rewardlevel")){	
-			displayHelpMessage(sender, "Reward a Parkour Level", "/pa rewardlevel (course) (level)", "/pa rewardlevel Example 5",
+			displayHelpMessage(sender, "Reward a Parkour Level", "/pa rewardlevel (course) (level)", "/pa rewardlevel tutorial 5",
 					" You can reward a player with a Parkour level on the completion of a course, which will allow them to unlock new courses which would have a minimum level requirement to join. Their level is not overwritten if their current level is higher than the reward level.");
 
 		} else if (args[1].equalsIgnoreCase("rewardleveladd")){	
-			displayHelpMessage(sender, "Reward an increase to current Parkour Level", "/pa rewardleveladd (course) (amount)", "/pa rewardleveladd Example 2",
+			displayHelpMessage(sender, "Reward an increase to current Parkour Level", "/pa rewardleveladd (course) (amount)", "/pa rewardleveladd tutorial 2",
 					" You can reward a player with an increase to their Parkour level on the completion of a course, which will allow them to unlock new courses which would have a minimum level requirement to join. The amount is added to their current level.");
 
 		} else if (args[1].equalsIgnoreCase("rewardrank")){	
@@ -185,7 +185,7 @@ public final class Help {
 					" You can link a Parkour level to a rank, which would display beside their name if you enable the Parkour Chat Prefix setting. This would allow you to differentiate each Parkour level a player is, based on their rank. ");
 
 		} else if (args[1].equalsIgnoreCase("rewardparkoins")){	
-			displayHelpMessage(sender, "Reward Parkoins", "/pa rewardparkoins (course) (amount)", "/pa rewardparkoins Example 10",
+			displayHelpMessage(sender, "Reward Parkoins", "/pa rewardparkoins (course) (amount)", "/pa rewardparkoins tutorial 10",
 					" You can reward a player with Parkoins for completing a course. These can be spent in the store to unlock additional content which would be unobtainable without the minimum amount of Parkoins required.");
 
 		} else if (args[1].equalsIgnoreCase("recreate")){	
@@ -193,7 +193,7 @@ public final class Help {
 					" Used to fix the database if there are missing courses that haven't been synchronised with the server.");
 
 		} else if (args[1].equalsIgnoreCase("delete")){	
-			displayHelpMessage(sender, "Delete a course / lobby", "/pa delete (course / checkpoint / lobby) (argument)", "/pa delete course Example",
+			displayHelpMessage(sender, "Delete a course / lobby", "/pa delete (course / checkpoint / lobby) (argument)", "/pa delete course tutorial",
 					" You can delete a course, which will remove all information stored on the server about the course, as well as remove all references from the database. You can delete a lobby from the server. The operation will have to be confirmed or cancelled before the change is made.");
 
 		} else if (args[1].equalsIgnoreCase("reset")){	
@@ -210,9 +210,13 @@ public final class Help {
 
 		} else if (args[1].equalsIgnoreCase("createKit")){
 			displayHelpMessage(sender, "Create ParkourKit", "/pa createKit", null,
-					" A conversation will be started to allow you to create a new ParkourKit, which can be linked to a course to override the default blocks. Each block must be a valid material and you are limited to 1 of each type.");
+					" A conversation will be started to allow you to create a new ParkourKit, which can be linked to a course to override the default blocks. Each Material chosen must be unique, but many materials can share the same action.");
 
-		} else if (args[1].equalsIgnoreCase("validateKit")){
+        } else if (args[1].equalsIgnoreCase("editKit")){
+            displayHelpMessage(sender, "Create ParkourKit", "/pa editKit", null,
+                    " A conversation will be started to allow you to edit an exising ParkourKit, you have the option to remove a material or add a new material with the corresponding action and related attributes.");
+
+        } else if (args[1].equalsIgnoreCase("validateKit")){
 			displayHelpMessage(sender, "Validate ParkourKit", "/pa validateKit [Kit]", "/pa validateKit firekit",
 					" If you have manually created a ParkourKit, or something has gone wrong. You can validate a ParkourKit to find out where the problem has originated.");
 
@@ -417,6 +421,7 @@ public final class Help {
 		displayCommandUsage(player, "whitelist", "(command)", "Whitelist a command");
 		displayCommandUsage(player, "economy", null, "Display economy menu");
 		displayCommandUsage(player, "createKit", null, "Start ParkourKit creation");
+        displayCommandUsage(player, "editKit", null, "Edit existing ParkourKit");
 		displayCommandUsage(player, "validateKit", "[Kit]", "Validate ParkourKit");
 		displayCommandUsage(player, "setlevel", "(player) (level)", "Set ParkourLevel");
 		displayCommandUsage(player, "setrank", "(player) (rank)", "Set Parkour Rank");
