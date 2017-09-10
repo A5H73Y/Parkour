@@ -484,6 +484,7 @@ public class Configurations {
 		config.addDefault("Other.Parkour.CommandPermissions", false);
 		config.addDefault("Other.Display.JoinWelcomeMessage", true);
 		config.addDefault("Other.Display.LevelReward", true);
+		config.addDefault("Other.Display.Milliseconds", false);
 
 		config.addDefault("MySQL.Use", false);
 		config.addDefault("MySQL.Host", "Host");
