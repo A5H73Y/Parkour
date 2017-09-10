@@ -215,7 +215,7 @@ public final class Utils {
      * @return formatted time: HH:MM:SS.(sss)
      */
     public static String calculateTime(long millis) {
-    	if (Parkour.getPlugin().getConfig().getBoolean("Other.Display.Milliseconds")) {
+    	if (Parkour.getPlugin().getConfig().getBoolean("Other.Display.ShowMilliseconds")) {
     		return String.format("%02d:%02d:%02d.%03d", millis / (3600 * 1000),
     				millis / (60 * 1000) % 60,
     				millis / 1000 % 60,
