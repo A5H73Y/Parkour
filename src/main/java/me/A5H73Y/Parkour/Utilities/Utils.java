@@ -209,12 +209,18 @@ public final class Utils {
     }
 
     /**
-     * Convert milliseconds into formatted time HH:MM:SS
+     * Convert milliseconds into formatted time HH:MM:SS(.sss)
      *
      * @param millis
-     * @return formatted time: HH:MM:SS
+     * @return formatted time: HH:MM:SS.(sss)
      */
     public static String calculateTime(long millis) {
+    	if (Parkour.getPlugin().getConfig().getBoolean("Other.Display.ShowMilliseconds")) {
+    		return String.format("%02d:%02d:%02d.%03d", millis / (3600 * 1000),
+    				millis / (60 * 1000) % 60,
+    				millis / 1000 % 60,
+    				millis % 1000);
+    	}
         return String.format("%02d:%02d:%02d", millis / (3600 * 1000),
                 millis / (60 * 1000) % 60,
                 millis / 1000 % 60);
