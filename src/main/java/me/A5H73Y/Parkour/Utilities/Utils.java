@@ -215,15 +215,15 @@ public final class Utils {
      * @return formatted time: HH:MM:SS.(sss)
      */
     public static String calculateTime(long millis) {
-    	if (Parkour.getPlugin().getConfig().getBoolean("Other.Display.ShowMilliseconds")) {
-    		return String.format("%02d:%02d:%02d.%03d", millis / (3600 * 1000),
-    				millis / (60 * 1000) % 60,
-    				millis / 1000 % 60,
-    				millis % 1000);
+        long hours = millis / (3600 * 1000);
+        long minutes = millis / (60 * 1000) % 60;
+        long seconds = millis / 1000 % 60;
+
+    	if (Parkour.getSettings().isDisplayMilliseconds()) {
+            long milliseconds = millis % 1000;
+    		return String.format("%02d:%02d:%02d.%03d", hours, minutes, seconds, milliseconds);
     	}
-        return String.format("%02d:%02d:%02d", millis / (3600 * 1000),
-                millis / (60 * 1000) % 60,
-                millis / 1000 % 60);
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
     /**

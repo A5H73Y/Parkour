@@ -427,7 +427,8 @@ public class Configurations {
 		config.addDefault("OnCourse.DisablePlayerDamage", false);
 		config.addDefault("OnCourse.MaxFallTicks", 80);
 		config.addDefault("OnCourse.AllowTrails", false);
-		config.addDefault("OnCourse.DisableItemDrop", false); 
+		config.addDefault("OnCourse.DisableItemDrop", false);
+		config.addDefault("OnCourse.DisableItemPickup", false);
 		config.addDefault("OnCourse.PreventPlateStick", true);
 		config.addDefault("OnCourse.AttemptLessChecks", false);
 		config.addDefault("OnCourse.DisplayLiveTime", false);

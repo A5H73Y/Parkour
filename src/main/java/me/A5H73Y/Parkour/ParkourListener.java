@@ -32,14 +32,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -290,6 +283,15 @@ public class ParkourListener implements Listener {
     }
 
     @EventHandler
+    public void onItemPickup(PlayerPickupItemEvent event) {
+        if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+            return;
+
+        if (Parkour.getPlugin().getConfig().getBoolean("OnCourse.DisableItemPickup"))
+            event.setCancelled(true);
+    }
+
+    @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         if (Parkour.getSettings().isDisplayWelcome())
             event.getPlayer().sendMessage(Utils.getTranslation("Event.Join")
@@ -357,9 +359,6 @@ public class ParkourListener implements Listener {
         Player player = event.getPlayer();
 
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.getAction().equals(Action.RIGHT_CLICK_AIR))
-            return;
-
-        if (event.getHand().equals(EquipmentSlot.OFF_HAND))
             return;
 
         if (!player.isSneaking() && Parkour.getPlugin().getConfig().getBoolean("OnCourse.SneakToInteractItems"))
