@@ -105,7 +105,6 @@ public class CheckpointMethods {
 		if (blockUnder.getType().equals(Material.AIR))
 			blockUnder.setType(Material.STONE);
 
-		Block block = location.getBlock();
 		block.setType(Material.STONE_PLATE);
 		
 		createCheckpointData(selected, location, checkpoint);
