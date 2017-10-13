@@ -6,14 +6,19 @@ import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.material.Stairs;
 
 /**
  * This work is licensed under a Creative Commons 
@@ -58,6 +63,8 @@ public class CheckpointMethods {
 	 * Create a checkpoint
 	 * If valid numeric argument is supplied, will attempt to override the existing checkpoint.
 	 * Otherwise a new checkpoint will be generated.
+	 * The block on which the checkpoint is created must be able to have  a pressure plate
+	 * placed on it.
 	 * 
 	 * @param args
 	 * @param player
@@ -70,16 +77,37 @@ public class CheckpointMethods {
 		Location location = player.getLocation();
 		int checkpoint = args.length == 2 ? Integer.parseInt(args[1]) :
 			Parkour.getParkourConfig().getCourseData().getInt(selected + ".Points") + 1;
-
-		createCheckpointData(selected, location, checkpoint);
-
+		
 		Block block = location.getBlock();
-		block.setType(Material.STONE_PLATE);
-		location.setY(location.getBlockY() - 1);
-		block = location.getBlock();
-		if (block.getType().equals(Material.AIR))
-			block.setType(Material.STONE);
+		Block blockUnder = block.getRelative(BlockFace.DOWN);
+		Stairs stairs = null;
+		List<Material> validMaterials = Arrays.asList(Material.AIR, Material.REDSTONE_BLOCK, Material.STEP, Material.WOOD_STEP, Material.STONE_SLAB2, Material.PURPUR_SLAB);
+		
+		//check if player is standing in a half-block
+		if (! block.getType().equals(Material.AIR) && ! block.getType().equals(Material.STONE_PLATE)) {
+			player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + block.getType());
+			return;
+		}
 
+		if (! blockUnder.getType().isOccluding()) {
+			if (blockUnder.getState().getData() instanceof Stairs) {
+				stairs = (Stairs) blockUnder.getState().getData();
+				if (! stairs.isInverted()) {
+					player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + blockUnder.getType());
+					return;	
+				}
+			} else if (! validMaterials.contains(blockUnder.getType())) {
+				player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + blockUnder.getType());
+				return;
+			}
+		}
+		
+		if (blockUnder.getType().equals(Material.AIR))
+			blockUnder.setType(Material.STONE);
+
+		block.setType(Material.STONE_PLATE);
+		
+		createCheckpointData(selected, location, checkpoint);
 		player.sendMessage(Static.getParkourString() + "Checkpoint " + ChatColor.DARK_AQUA + checkpoint + ChatColor.WHITE + " set on " + ChatColor.AQUA + selected);
 	}
 
