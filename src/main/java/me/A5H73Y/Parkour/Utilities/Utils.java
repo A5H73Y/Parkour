@@ -24,11 +24,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.Stairs;
 
 import com.connorlinfoot.bountifulapi.BountifulAPI;
 
@@ -836,7 +839,7 @@ public final class Utils {
     /**
      * Toggle visibility of all players for the player
      * Can be overwritten to force the reappearance of all players (i.e. when a player leaves / finishes a course)
-     * Option can be choasen whether to hide all online players, or just parkour players
+     * Option can be chosen whether to hide all online players, or just parkour players
      *
      * @param player
      * @param override
@@ -870,5 +873,31 @@ public final class Utils {
         for (Player players : Bukkit.getOnlinePlayers()) {
             players.showPlayer(player);
         }
+    }
+    
+    public static boolean isCheckpointSafe(Player player, Block block) {
+		Block blockUnder = block.getRelative(BlockFace.DOWN);
+		Stairs stairs = null;
+		List<Material> validMaterials = Arrays.asList(Material.AIR, Material.REDSTONE_BLOCK, Material.STEP, Material.WOOD_STEP, Material.STONE_SLAB2, Material.PURPUR_SLAB);
+		
+		//check if player is standing in a half-block
+		if (! block.getType().equals(Material.AIR) && ! block.getType().equals(Material.STONE_PLATE)) {
+			player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + block.getType());
+			return false;
+		}
+
+		if (! blockUnder.getType().isOccluding()) {
+			if (blockUnder.getState().getData() instanceof Stairs) {
+				stairs = (Stairs) blockUnder.getState().getData();
+				if (! stairs.isInverted()) {
+					player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + blockUnder.getType());
+					return false;	
+				}
+			} else if (! validMaterials.contains(blockUnder.getType())) {
+				player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + blockUnder.getType());
+				return false;
+			}
+		}
+    	return true;
     }
 }

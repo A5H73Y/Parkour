@@ -6,9 +6,6 @@ import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -18,7 +15,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.material.Stairs;
 
 /**
  * This work is licensed under a Creative Commons 
@@ -80,33 +76,17 @@ public class CheckpointMethods {
 		
 		Block block = location.getBlock();
 		Block blockUnder = block.getRelative(BlockFace.DOWN);
-		Stairs stairs = null;
-		List<Material> validMaterials = Arrays.asList(Material.AIR, Material.REDSTONE_BLOCK, Material.STEP, Material.WOOD_STEP, Material.STONE_SLAB2, Material.PURPUR_SLAB);
 		
-		//check if player is standing in a half-block
-		if (! block.getType().equals(Material.AIR) && ! block.getType().equals(Material.STONE_PLATE)) {
-			player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + block.getType());
-			return;
-		}
-
-		if (! blockUnder.getType().isOccluding()) {
-			if (blockUnder.getState().getData() instanceof Stairs) {
-				stairs = (Stairs) blockUnder.getState().getData();
-				if (! stairs.isInverted()) {
-					player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + blockUnder.getType());
-					return;	
-				}
-			} else if (! validMaterials.contains(blockUnder.getType())) {
-				player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + blockUnder.getType());
+		if (Parkour.getSettings().isEnforceSafeCheckpoints()) {
+			if (! Utils.isCheckpointSafe(player, block)) {
 				return;
 			}
 		}
-		
+			
 		if (blockUnder.getType().equals(Material.AIR))
 			blockUnder.setType(Material.STONE);
 
-		block.setType(Material.STONE_PLATE);
-		
+		block.setType(Material.STONE_PLATE);		
 		createCheckpointData(selected, location, checkpoint);
 		player.sendMessage(Static.getParkourString() + "Checkpoint " + ChatColor.DARK_AQUA + checkpoint + ChatColor.WHITE + " set on " + ChatColor.AQUA + selected);
 	}

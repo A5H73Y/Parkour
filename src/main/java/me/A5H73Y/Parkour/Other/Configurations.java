@@ -486,6 +486,7 @@ public class Configurations {
 		config.addDefault("Other.Display.JoinWelcomeMessage", true);
 		config.addDefault("Other.Display.LevelReward", true);
 		config.addDefault("Other.Display.ShowMilliseconds", false);
+		config.addDefault("Other.EnforceSafeCheckpoints", true);
 
 		config.addDefault("MySQL.Use", false);
 		config.addDefault("MySQL.Host", "Host");
