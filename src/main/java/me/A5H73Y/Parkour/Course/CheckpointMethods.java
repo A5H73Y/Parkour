@@ -12,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -58,6 +59,8 @@ public class CheckpointMethods {
 	 * Create a checkpoint
 	 * If valid numeric argument is supplied, will attempt to override the existing checkpoint.
 	 * Otherwise a new checkpoint will be generated.
+	 * The block on which the checkpoint is created must be able to have  a pressure plate
+	 * placed on it.
 	 * 
 	 * @param args
 	 * @param player
@@ -70,16 +73,21 @@ public class CheckpointMethods {
 		Location location = player.getLocation();
 		int checkpoint = args.length == 2 ? Integer.parseInt(args[1]) :
 			Parkour.getParkourConfig().getCourseData().getInt(selected + ".Points") + 1;
-
-		createCheckpointData(selected, location, checkpoint);
-
+		
 		Block block = location.getBlock();
-		block.setType(Material.STONE_PLATE);
-		location.setY(location.getBlockY() - 1);
-		block = location.getBlock();
-		if (block.getType().equals(Material.AIR))
-			block.setType(Material.STONE);
+		Block blockUnder = block.getRelative(BlockFace.DOWN);
+		
+		if (Parkour.getSettings().isEnforceSafeCheckpoints()) {
+			if (! Utils.isCheckpointSafe(player, block)) {
+				return;
+			}
+		}
+			
+		if (blockUnder.getType().equals(Material.AIR))
+			blockUnder.setType(Material.STONE);
 
+		block.setType(Material.STONE_PLATE);		
+		createCheckpointData(selected, location, checkpoint);
 		player.sendMessage(Static.getParkourString() + "Checkpoint " + ChatColor.DARK_AQUA + checkpoint + ChatColor.WHITE + " set on " + ChatColor.AQUA + selected);
 	}
 

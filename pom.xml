@@ -84,7 +84,7 @@
             <artifactId>bstats-bukkit</artifactId>
             <version>1.2</version>
         </dependency>
-		
+        
 		<!-- Unit Tests -->
 		<dependency>
 		  <groupId>junit</groupId>
