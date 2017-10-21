@@ -911,7 +911,7 @@ public class CourseMethods {
 		if (args.length >= 4) {
 			if (args[3].equalsIgnoreCase("global")){
 				personal = false;
-			} else {
+			} else if (!args[3].equalsIgnoreCase("personal")) {
 				player.sendMessage(Static.getParkourString() + "Defaulting to 'personal', alternative option: 'global'");
 			}
 		}

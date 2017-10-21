@@ -12,6 +12,7 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import me.A5H73Y.Parkour.Other.ParkourKit;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Enums.QuestionType;
@@ -362,34 +363,38 @@ public final class Utils {
      * @param player
      */
     public static void validateParkourKit(String[] args, Player player) {
+        String kitName = (args.length == 2 ? args[1].toLowerCase() : "default");
 
-        /*TODO - update me
-
-        String name = (args.length == 2 ? "ParkourKit." + args[1].toLowerCase() : "DefaultBlocks");
-
-        if (!Parkour.getPlugin().getConfig().contains(name + ".Death.Material")) {
-            player.sendMessage("ParkourKit " + name + " doesn't exist!");
+        if (!ParkourKit.doesParkourKitExist(kitName)) {
+            player.sendMessage(Static.getParkourString() + kitName + " ParkourKit does not exist!");
             return;
         }
 
+        String path = "ParkourKit." + kitName;
+
         List<String> invalidTypes = new ArrayList<String>();
-        String[] types = {"Death", "Finish", "Climb", "Launch", "Speed", "NoRun", "NoPotion", "Bounce"};
+        List<String> types = Arrays.asList("death", "finish", "climb", "launch", "speed", "norun", "nopotion", "bounce");
 
-        for (String type : types){
-            if (getParkourMaterial(name + "." + type + ".Material") == null)
-                invalidTypes.add(type);
-        }
+        Set<String> materialList =
+                Parkour.getParkourConfig().getParkourKitData().getConfigurationSection(path).getKeys(false);
 
-        player.sendMessage(Static.getParkourString() + invalidTypes.size() + " problems with " + ChatColor.AQUA + name + ChatColor.WHITE + " found.");
-        if (invalidTypes.size() > 0){
-            String message = ChatColor.RED + "";
-            for (String type : invalidTypes){
-                message = message.concat(type + " ");
+        for (String material : materialList){
+            if (Material.getMaterial(material) == null) {
+                invalidTypes.add("Unknown Material: " + material);
+            } else {
+                String action = Parkour.getParkourConfig().getParkourKitData().getString(path + "." + material + ".Action");
+                if (!types.contains(action)) {
+                    invalidTypes.add("Material: " + material + ", Unknown Action: " + action);
+                }
             }
-            player.sendMessage(message);
         }
-        */
 
+        player.sendMessage(Static.getParkourString() + invalidTypes.size() + " problems with " + ChatColor.AQUA + kitName + ChatColor.WHITE + " found.");
+        if (invalidTypes.size() > 0){
+            for (String type : invalidTypes){
+                player.sendMessage(ChatColor.RED + type);
+            }
+        }
     }
 
     /**

@@ -18,7 +18,7 @@ public class ParkourKit implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private static List<String> validActions =
+    private static final List<String> validActions =
             Arrays.asList("death", "finish", "climb", "launch", "speed", "norun", "nopotion", "bounce");
 
     private static Map<String, ParkourKit> loaded = new HashMap<>();
@@ -116,7 +116,7 @@ public class ParkourKit implements Serializable {
             return loaded.get(name);
         }
 
-        if (!getAllParkourKits().contains(name)) {
+        if (!doesParkourKitExist(name)) {
             return null;
         }
 
@@ -128,5 +128,9 @@ public class ParkourKit implements Serializable {
     public static Set<String> getAllParkourKits() {
         return Parkour.getParkourConfig().getParkourKitData()
                 .getConfigurationSection("ParkourKit").getKeys(false);
+    }
+
+    public static boolean doesParkourKitExist(String name) {
+        return getAllParkourKits().contains(name.toLowerCase());
     }
 }
