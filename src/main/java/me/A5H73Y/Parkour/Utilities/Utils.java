@@ -372,7 +372,7 @@ public final class Utils {
 
         String path = "ParkourKit." + kitName;
 
-        List<String> invalidTypes = new ArrayList<String>();
+        List<String> invalidTypes = new ArrayList<>();
         List<String> types = Arrays.asList("death", "finish", "climb", "launch", "speed", "norun", "nopotion", "bounce");
 
         Set<String> materialList =
@@ -882,7 +882,6 @@ public final class Utils {
     
     public static boolean isCheckpointSafe(Player player, Block block) {
 		Block blockUnder = block.getRelative(BlockFace.DOWN);
-		Stairs stairs = null;
 		List<Material> validMaterials = Arrays.asList(Material.AIR, Material.REDSTONE_BLOCK, Material.STEP, Material.WOOD_STEP, Material.STONE_SLAB2, Material.PURPUR_SLAB);
 		
 		//check if player is standing in a half-block
@@ -893,7 +892,7 @@ public final class Utils {
 
 		if (! blockUnder.getType().isOccluding()) {
 			if (blockUnder.getState().getData() instanceof Stairs) {
-				stairs = (Stairs) blockUnder.getState().getData();
+                Stairs stairs = (Stairs) blockUnder.getState().getData();
 				if (! stairs.isInverted()) {
 					player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + blockUnder.getType());
 					return false;	

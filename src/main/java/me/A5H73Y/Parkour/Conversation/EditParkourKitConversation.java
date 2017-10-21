@@ -11,8 +11,6 @@ import org.bukkit.conversations.FixedSetPrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 
-import java.util.Arrays;
-
 public class EditParkourKitConversation extends FixedSetPrompt {
 
     EditParkourKitConversation(){

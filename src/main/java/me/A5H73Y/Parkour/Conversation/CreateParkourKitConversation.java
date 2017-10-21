@@ -3,10 +3,7 @@ package me.A5H73Y.Parkour.Conversation;
 import me.A5H73Y.Parkour.Conversation.other.AddKitItemConversation;
 import me.A5H73Y.Parkour.Parkour;
 
-import me.A5H73Y.Parkour.Utilities.Static;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.conversations.*;
 
 /**
