@@ -18,8 +18,8 @@ public class ParkourKit implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private static final List<String> validActions =
-            Arrays.asList("death", "finish", "climb", "launch", "speed", "norun", "nopotion", "bounce");
+    public static final List<String> validActions =
+            Arrays.asList("death", "finish", "climb", "launch", "speed", "repulse", "norun", "nopotion", "bounce");
 
     private static Map<String, ParkourKit> loaded = new HashMap<>();
 
@@ -64,6 +64,10 @@ public class ParkourKit implements Serializable {
         }
     }
 
+    public static List<String> getValidActions() {
+        return validActions;
+    }
+
     /**
      * Get the materials that this ParkourKit is made up of
      * @return List<Material>
@@ -86,13 +90,13 @@ public class ParkourKit implements Serializable {
                 .getString("ParkourKit." + name + "." + material.name() + ".Action").toLowerCase();
     }
 
-    public Integer getStrength(Material material) {
+    public Double getStrength(Material material) {
         if (!materials.contains(material)) {
-            return null;
+            return 0.0;
         }
 
         return Parkour.getParkourConfig().getParkourKitData()
-                .getInt("ParkourKit." + name + "." + material.name() + ".Strength", 1);
+                .getDouble("ParkourKit." + name + "." + material.name() + ".Strength", 1);
     }
 
     public Integer getDuration(Material material) {

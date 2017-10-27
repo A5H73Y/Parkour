@@ -10,7 +10,7 @@ import org.bukkit.conversations.*;
 
 public class AddKitItemConversation {
 
-    private String[] actionTypes = {"death", "finish", "climb", "launch", "bounce", "speed", "norun", "nopotion"};
+    private String[] actionTypes = {"death", "finish", "climb", "launch", "bounce", "speed", "repulse", "norun", "nopotion"};
 
     private Prompt endingConversation;
     private String kitName;
@@ -64,7 +64,7 @@ public class AddKitItemConversation {
         protected Prompt acceptValidatedInput(ConversationContext context, String choice) {
             context.setSessionData("action", choice);
 
-            if (choice.equals("climb") || choice.equals("launch") || choice.equals("bounce") || choice.equals("speed")) {
+            if (choice.equals("climb") || choice.equals("launch") || choice.equals("bounce") || choice.equals("speed") || choice.equals("repulse")) {
                 return new ChooseStrength();
             } else {
                 return new ProcessComplete();
@@ -91,7 +91,7 @@ public class AddKitItemConversation {
 
         @Override
         protected Prompt acceptValidatedInput(ConversationContext context, Number amount) {
-            context.setSessionData("strength", amount.intValue());
+            context.setSessionData("strength", amount);
 
             String action = context.getSessionData("action").toString();
             if (action.equals("speed") || action.equals("bounce")) {
@@ -146,10 +146,10 @@ public class AddKitItemConversation {
             config.set(path + ".Action", action);
 
             if (hasStrength) {
-                config.set(path + ".Strength", Integer.parseInt(context.getSessionData("strength").toString()));
+                config.set(path + ".Strength", context.getSessionData("strength").toString());
             }
             if (hasDuration) {
-                config.set(path + ".Duration", Integer.parseInt(context.getSessionData("duration").toString()));
+                config.set(path + ".Duration", context.getSessionData("duration").toString());
             }
 
             Parkour.getParkourConfig().saveParkourKit();
@@ -160,7 +160,7 @@ public class AddKitItemConversation {
                 return new chooseMaterial();
             }
 
-            context.getForWhom().sendRawMessage(Static.getParkourString() + kitName + " ParkourKit has been successfully created.");
+            context.getForWhom().sendRawMessage(Static.getParkourString() + kitName + " ParkourKit has been successfully saved.");
             return endingConversation;
         }
     }

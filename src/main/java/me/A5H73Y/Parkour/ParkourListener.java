@@ -37,7 +37,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import java.util.Set;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This work is licensed under a Creative Commons 
@@ -47,6 +48,9 @@ import java.util.Set;
  * @author A5H73Y
  */
 public class ParkourListener implements Listener {
+
+    private static final List<BlockFace> blockFaces =
+            Arrays.asList(BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST);
 
     @EventHandler
     public void onPlayerMoveTrails(PlayerMoveEvent event) {
@@ -96,6 +100,18 @@ public class ParkourListener implements Listener {
         if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
             return;
 
+        Player player = event.getPlayer();
+
+        if (player.getFallDistance() > Parkour.getSettings().getMaxFallTicks()) {
+            PlayerMethods.playerDie(player);
+            return;
+        }
+
+        if (player.getLocation().getBlock().isLiquid() &&
+                Parkour.getPlugin().getConfig().getBoolean("OnCourse.DieInLiquid")) {
+            PlayerMethods.playerDie(player);
+        }
+
         if (!Parkour.getSettings().isUseParkourKit())
             return;
 
@@ -106,14 +122,12 @@ public class ParkourListener implements Listener {
                 return;
         }
 
-        if (event.getPlayer().getFallDistance() > Parkour.getSettings().getMaxFallTicks()) {
-            PlayerMethods.playerDie(event.getPlayer());
-            return;
-        }
+        Material belowMaterial = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
+        ParkourKit kit = PlayerMethods.getParkourSession(player.getName()).getCourse().getParkourKit();
 
-        Material belowMaterial = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
-        ParkourKit kit = PlayerMethods.getParkourSession(event.getPlayer().getName()).getCourse().getParkourKit();
-        Player player = event.getPlayer();
+        if (belowMaterial.equals(Material.SPONGE)) {
+            player.setFallDistance(0);
+        }
 
         if (kit.getMaterials().contains(belowMaterial)) {
             String action = kit.getAction(belowMaterial);
@@ -133,12 +147,18 @@ public class ParkourListener implements Listener {
 
                 case "bounce":
                     if (!player.hasPotionEffect(PotionEffectType.JUMP))
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, kit.getDuration(belowMaterial), kit.getStrength(belowMaterial)));
+                        player.addPotionEffect(
+                                new PotionEffect(PotionEffectType.JUMP,
+                                        kit.getDuration(belowMaterial),
+                                        kit.getStrength(belowMaterial).intValue()));
                     break;
 
                 case "speed":
                     if (!player.hasPotionEffect(PotionEffectType.SPEED))
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, kit.getDuration(belowMaterial), kit.getStrength(belowMaterial)));
+                        player.addPotionEffect(
+                                new PotionEffect(PotionEffectType.SPEED,
+                                        kit.getDuration(belowMaterial),
+                                        kit.getStrength(belowMaterial).intValue()));
                     break;
 
                 case "norun":
@@ -152,24 +172,30 @@ public class ParkourListener implements Listener {
                     player.setFireTicks(0);
                     break;
             }
-        } else {
-            Block climb = player.getTargetBlock((Set<Material>) null, 1);
+        }
 
-            if (kit.getMaterials().contains(climb.getType())
-                    && climb.getLocation().getBlockY() > player.getLocation().getBlockY()) {
-                String action = kit.getAction(climb.getType());
+        for (BlockFace blockFace : blockFaces) {
+            Material material = player.getLocation().getBlock().getRelative(blockFace).getType();
 
-                if (action.equals("climb")) {
-                    player.setVelocity(new Vector(0, kit.getStrength(climb.getType()), 0));
+            if (kit.getMaterials().contains(material)) {
+                String action = kit.getAction(material);
+
+                switch (action) {
+                    case "climb":
+                        if (!player.isSneaking()) {
+                            player.setVelocity(new Vector(0, kit.getStrength(material), 0));
+                        }
+                        break;
+                    case "repulse":
+                        double strength = kit.getStrength(material);
+                        double x = blockFace == BlockFace.NORTH || blockFace == BlockFace.SOUTH ? 0
+                                : blockFace == BlockFace.EAST ? -strength : strength;
+                        double z = blockFace == BlockFace.EAST || blockFace == BlockFace.WEST ? 0
+                                : blockFace == BlockFace.NORTH ? strength : -strength;
+
+                        player.setVelocity(new Vector(x, 0.1, z));
+                        break;
                 }
-            }
-
-            if (player.getLocation().getBlock().isLiquid() &&
-                    Parkour.getPlugin().getConfig().getBoolean("OnCourse.DieInLiquid")) {
-                PlayerMethods.playerDie(player);
-
-            } else if (belowMaterial.equals(Material.SPONGE)) {
-                player.setFallDistance(0);
             }
         }
     }

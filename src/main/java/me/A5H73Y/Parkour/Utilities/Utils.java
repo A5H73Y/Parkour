@@ -373,7 +373,6 @@ public final class Utils {
         String path = "ParkourKit." + kitName;
 
         List<String> invalidTypes = new ArrayList<>();
-        List<String> types = Arrays.asList("death", "finish", "climb", "launch", "speed", "norun", "nopotion", "bounce");
 
         Set<String> materialList =
                 Parkour.getParkourConfig().getParkourKitData().getConfigurationSection(path).getKeys(false);
@@ -383,7 +382,7 @@ public final class Utils {
                 invalidTypes.add("Unknown Material: " + material);
             } else {
                 String action = Parkour.getParkourConfig().getParkourKitData().getString(path + "." + material + ".Action");
-                if (!types.contains(action)) {
+                if (!ParkourKit.getValidActions().contains(action)) {
                     invalidTypes.add("Material: " + material + ", Unknown Action: " + action);
                 }
             }

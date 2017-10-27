@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import com.huskehhh.mysql.Database;
+import me.A5H73Y.Parkour.Parkour;
 
 /**
  * Connects to and uses a SQLite database
@@ -31,27 +32,36 @@ public class SQLite extends Database {
 			return connection;
 		}
 
-		File dataFolder = new File(dbLocation + File.separator + "sqlite-db");
-		if (!dataFolder.exists()) {
-			dataFolder.mkdirs();
-		}
-
-		File databaseFile = new File(dataFolder, "parkour.db");
-		if (!databaseFile.exists()) {
-			try {
-				databaseFile.createNewFile();
-			} catch (IOException e) {
-				System.out.println("Unable to create database!");
-			}
-		}
-
 		try {
-			Class.forName("org.sqlite.JDBC");
-			connection = DriverManager.getConnection("jdbc:sqlite:" + databaseFile);
+            String pathOverride = Parkour.getPlugin().getConfig().getString("SQLite.PathOverride");
+            String path = pathOverride.isEmpty() ? dbLocation + File.separator + "sqlite-db" : pathOverride;
 
-		} catch (ClassNotFoundException | SQLException ex) {
-			ex.printStackTrace();
-		}
-        return connection;
+            File dataFolder = new File(path);
+            if (!dataFolder.exists()) {
+                dataFolder.mkdirs();
+            }
+
+            File databaseFile = new File(dataFolder, "parkour.db");
+            if (!databaseFile.exists()) {
+                try {
+                    databaseFile.createNewFile();
+                } catch (IOException e) {
+                    System.out.println("Unable to create database: " + e.getMessage());
+                }
+            }
+            try {
+                Class.forName("org.sqlite.JDBC");
+                connection = DriverManager.getConnection("jdbc:sqlite:" + databaseFile);
+
+            } catch (ClassNotFoundException | SQLException ex) {
+                ex.printStackTrace();
+            }
+            return connection;
+
+        } catch (Exception e) {
+            System.out.println("Error occurred: " + e.getMessage());
+        }
+
+		return null;
 	}
 }

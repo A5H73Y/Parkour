@@ -488,6 +488,7 @@ public class Configurations {
 		config.addDefault("Other.Display.ShowMilliseconds", false);
 		config.addDefault("Other.EnforceSafeCheckpoints", true);
 
+		config.addDefault("SQLite.PathOverride", "");
 		config.addDefault("MySQL.Use", false);
 		config.addDefault("MySQL.Host", "Host");
 		config.addDefault("MySQL.Port", 3306);

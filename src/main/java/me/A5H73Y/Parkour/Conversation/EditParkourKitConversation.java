@@ -35,6 +35,10 @@ public class EditParkourKitConversation extends FixedSetPrompt {
             super("add", "remove");
         }
 
+        ChooseOption(boolean displayCancel){
+            super("add", "remove", "cancel");
+        }
+
         @Override
         public String getPromptText(ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " What option would you like to perform?\n" +
@@ -77,7 +81,7 @@ public class EditParkourKitConversation extends FixedSetPrompt {
             context.getForWhom().sendRawMessage(Static.getParkourString() + material.name() + " removed from " + kitName);
             Parkour.getParkourConfig().getParkourKitData().set("ParkourKit." + kitName + "." + material.name(), null);
             Parkour.getParkourConfig().saveParkourKit();
-            return new ChooseOption();
+            return new ChooseOption(true);
         }
     }
 }
