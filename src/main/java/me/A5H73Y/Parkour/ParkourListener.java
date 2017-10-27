@@ -507,7 +507,7 @@ public class ParkourListener implements Listener {
 
             boolean allowed = false;
             for (String word : Static.getWhitelistedCommands()) {
-                if (event.getMessage().startsWith("/" + word + " ")) {
+                if (event.getMessage().startsWith("/" + word + " ") || (event.getMessage().equalsIgnoreCase("/" + word))) {
                     allowed = true;
                     break;
                 }

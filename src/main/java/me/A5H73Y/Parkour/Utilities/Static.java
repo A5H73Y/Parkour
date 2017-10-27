@@ -190,5 +190,6 @@ public final class Static {
 		List<String> commands = getWhitelistedCommands();
 		commands.add(command);
 		Parkour.getPlugin().getConfig().set("OnCourse.EnforceParkourCommands.Whitelist", commands);
+		Parkour.getPlugin().saveConfig();
 	}
 }
