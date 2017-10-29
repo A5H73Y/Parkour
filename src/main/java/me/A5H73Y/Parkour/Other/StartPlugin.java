@@ -108,7 +108,7 @@ public class StartPlugin {
 			database = new MySQL(config.getString("MySQL.Host"), config.getString("MySQL.Port"), config.getString("MySQL.Database"), config.getString("MySQL.User"), config.getString("MySQL.Password"));
 			DatabaseMethods.type = DatabaseType.MySQL;
 		} else {
-			database = new SQLite(Parkour.getPlugin().getDataFolder().getAbsolutePath());
+			database = new SQLite("parkour.db");
 			DatabaseMethods.type = DatabaseType.SQLite;
 		}
 

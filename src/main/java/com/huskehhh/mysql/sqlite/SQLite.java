@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 import com.huskehhh.mysql.Database;
 import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.Utilities.Utils;
 
 /**
  * Connects to and uses a SQLite database
@@ -20,10 +21,10 @@ public class SQLite extends Database {
 	/**
 	 * Creates a new SQLite instance
 	 *
-	 * @param pluginFolder Location of the Database (Must end in .db)
+	 * @param dbLocation Location of the Database (Must end in .db)
 	 */
-	public SQLite(String pluginFolder) {
-		this.dbLocation = pluginFolder;
+	public SQLite(String dbLocation) {
+		this.dbLocation = dbLocation;
 	}
 
 	@Override
@@ -32,36 +33,29 @@ public class SQLite extends Database {
 			return connection;
 		}
 
-		try {
-            String pathOverride = Parkour.getPlugin().getConfig().getString("SQLite.PathOverride");
-            String path = pathOverride.isEmpty() ? dbLocation + File.separator + "sqlite-db" : pathOverride;
+        String pathOverride = Parkour.getPlugin().getConfig().getString("SQLite.PathOverride");
+        String path = pathOverride.isEmpty() ? "plugins/Parkour/sqlite-db" : pathOverride;
 
-            File dataFolder = new File(path);
-            if (!dataFolder.exists()) {
-                dataFolder.mkdirs();
-            }
-
-            File databaseFile = new File(dataFolder, "parkour.db");
-            if (!databaseFile.exists()) {
-                try {
-                    databaseFile.createNewFile();
-                } catch (IOException e) {
-                    System.out.println("Unable to create database: " + e.getMessage());
-                }
-            }
-            try {
-                Class.forName("org.sqlite.JDBC");
-                connection = DriverManager.getConnection("jdbc:sqlite:" + databaseFile);
-
-            } catch (ClassNotFoundException | SQLException ex) {
-                ex.printStackTrace();
-            }
-            return connection;
-
-        } catch (Exception e) {
-            System.out.println("Error occurred: " + e.getMessage());
+        File dataFolder = new File(path);
+        if (!dataFolder.exists()) {
+            dataFolder.mkdirs();
         }
 
-		return null;
+        File databaseFile = new File(dataFolder, dbLocation);
+        if (!databaseFile.exists()) {
+            try {
+                databaseFile.createNewFile();
+            } catch (IOException e) {
+                Utils.log("Unable to create database: " + e.getMessage(), 2);
+            }
+        }
+
+        try {
+            Class.forName("org.sqlite.JDBC");
+            connection = DriverManager.getConnection("jdbc:sqlite:" + dataFolder + "/" + dbLocation);
+        } catch (SQLException | ClassNotFoundException ex) {
+            Utils.log("Error occurred: " + ex.getMessage(), 2);
+        }
+        return connection;
 	}
 }
