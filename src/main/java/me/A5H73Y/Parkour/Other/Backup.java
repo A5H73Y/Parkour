@@ -74,7 +74,7 @@ public class Backup {
 		//add file only
 		if(node.isFile()){
 			if (!node.getName().contains(".zip"))
-				fileList.add(generateZipEntry(SOURCE_FOLDER + File.separator + node.getName()));
+				fileList.add(generateZipEntry(node.toString()));
 		}
 
 		if(node.isDirectory()){

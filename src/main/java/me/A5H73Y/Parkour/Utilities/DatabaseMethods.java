@@ -59,13 +59,17 @@ public class DatabaseMethods extends Database {
         return null;
     }
 
+    public static int getCourseId(String courseName) {
+        return getCourseId(courseName, true);
+    }
+
     /**
      * Return the course's unique ID based on its name in the database.
      * @param courseName
      * @return
      * @throws SQLException
      */
-    public static int getCourseId(String courseName) {
+    public static int getCourseId(String courseName, boolean printError) {
         int courseId = 0;
 
         try{
@@ -83,7 +87,7 @@ public class DatabaseMethods extends Database {
             Parkour.getDatabaseObj().closeConnection();
         }
 
-        if (courseId == 0)
+        if (courseId == 0 && printError)
             Utils.log("Course '" + courseName + "' was not found in the database. Run command '/pa recreate' to fix.", 1);
 
         return courseId;
