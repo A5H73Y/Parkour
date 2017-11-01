@@ -146,10 +146,10 @@ public class AddKitItemConversation {
             config.set(path + ".Action", action);
 
             if (hasStrength) {
-                config.set(path + ".Strength", context.getSessionData("strength").toString());
+                config.set(path + ".Strength", context.getSessionData("strength"));
             }
             if (hasDuration) {
-                config.set(path + ".Duration", context.getSessionData("duration").toString());
+                config.set(path + ".Duration", context.getSessionData("duration"));
             }
 
             Parkour.getParkourConfig().saveParkourKit();
