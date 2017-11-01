@@ -292,10 +292,10 @@ public class StartPlugin {
     private static void setLobbyData(String[] lobbyData) {
         Parkour.getPlugin().getConfig().set("Lobby.Set", true);
         Parkour.getPlugin().getConfig().set("Lobby.World", lobbyData[0]);
-        Parkour.getPlugin().getConfig().set("Lobby.X", lobbyData[1]);
-        Parkour.getPlugin().getConfig().set("Lobby.Y", lobbyData[2]);
-        Parkour.getPlugin().getConfig().set("Lobby.Z", lobbyData[3]);
-        Parkour.getPlugin().getConfig().set("Lobby.Pitch", lobbyData[4]);
-        Parkour.getPlugin().getConfig().set("Lobby.Yaw", lobbyData[5]);
+        Parkour.getPlugin().getConfig().set("Lobby.X", Double.valueOf(lobbyData[1]));
+        Parkour.getPlugin().getConfig().set("Lobby.Y", Double.valueOf(lobbyData[2]));
+        Parkour.getPlugin().getConfig().set("Lobby.Z", Double.valueOf(lobbyData[3]));
+        Parkour.getPlugin().getConfig().set("Lobby.Pitch", Double.valueOf(lobbyData[4]));
+        Parkour.getPlugin().getConfig().set("Lobby.Yaw", Double.valueOf(lobbyData[5]));
     }
 }
