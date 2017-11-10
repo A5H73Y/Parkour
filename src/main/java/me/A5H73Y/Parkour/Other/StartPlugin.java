@@ -5,9 +5,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
-
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Enums.DatabaseType;
 import me.A5H73Y.Parkour.ParkourPlaceholders;
@@ -250,7 +252,8 @@ public class StartPlugin {
             }
             Files.write(path, content.getBytes(StandardCharsets.UTF_8));
 
-            String[] lobbyData = getLobbyData();
+            String[] lobbyData = getLobbyData("Lobby");
+            List<String> linkedLobbyData = getLinkedLobbyData();
 
             if (fromBeforeVersion4) {
                 // Reset current config
@@ -266,7 +269,8 @@ public class StartPlugin {
             Parkour.getParkourConfig().setupConfig();
             Parkour.setSettings(new Settings());
 
-            setLobbyData(lobbyData);
+            setLobbyData(lobbyData, "Lobby");
+            setLinkedLobbyData(linkedLobbyData);
 
             Static.initiate();
 
@@ -276,26 +280,57 @@ public class StartPlugin {
         }
     }
 
-    private static String[] getLobbyData() {
+    private static String[] getLobbyData(String lobbyName) {
         String[] details = new String[6];
 
-        details[0] = Parkour.getPlugin().getConfig().getString("Lobby.World");
-        details[1] = Parkour.getPlugin().getConfig().getString("Lobby.X");
-        details[2] = Parkour.getPlugin().getConfig().getString("Lobby.Y");
-        details[3] = Parkour.getPlugin().getConfig().getString("Lobby.Z");
-        details[4] = Parkour.getPlugin().getConfig().getString("Lobby.Pitch");
-        details[5] = Parkour.getPlugin().getConfig().getString("Lobby.Yaw");
+        details[0] = Parkour.getPlugin().getConfig().getString(lobbyName + ".World");
+        details[1] = Parkour.getPlugin().getConfig().getString(lobbyName + ".X");
+        details[2] = Parkour.getPlugin().getConfig().getString(lobbyName + ".Y");
+        details[3] = Parkour.getPlugin().getConfig().getString(lobbyName + ".Z");
+        details[4] = Parkour.getPlugin().getConfig().getString(lobbyName + ".Pitch");
+        details[5] = Parkour.getPlugin().getConfig().getString(lobbyName + ".Yaw");
 
         return details;
     }
+    
+    private static List<String> getLinkedLobbyData() {
+    	String[] details = new String[6];
+    	ArrayList<String> linkedLobbyData = new ArrayList<String>();
+    	
+    	for (String linkedLobby : Static.getLobbyList()) {
+    		details = getLobbyData("Lobby." + linkedLobby);
+    		linkedLobbyData.addAll(Arrays.asList(details));
+    	}
+    	
+    	return linkedLobbyData;
+    }
 
-    private static void setLobbyData(String[] lobbyData) {
-        Parkour.getPlugin().getConfig().set("Lobby.Set", true);
-        Parkour.getPlugin().getConfig().set("Lobby.World", lobbyData[0]);
-        Parkour.getPlugin().getConfig().set("Lobby.X", Double.valueOf(lobbyData[1]));
-        Parkour.getPlugin().getConfig().set("Lobby.Y", Double.valueOf(lobbyData[2]));
-        Parkour.getPlugin().getConfig().set("Lobby.Z", Double.valueOf(lobbyData[3]));
-        Parkour.getPlugin().getConfig().set("Lobby.Pitch", Double.valueOf(lobbyData[4]));
-        Parkour.getPlugin().getConfig().set("Lobby.Yaw", Double.valueOf(lobbyData[5]));
+    private static void setLobbyData(String[] lobbyData, String lobbyName) {
+    	if (lobbyName.equalsIgnoreCase("Lobby")) {
+    		if (lobbyData[0] == null || lobbyData[0].isEmpty()) {
+    			Parkour.getPlugin().getConfig().set("Lobby.Set", false);
+    			return;
+    		} else {
+    			Parkour.getPlugin().getConfig().set("Lobby.Set", true);
+    		}
+    	}
+        Parkour.getPlugin().getConfig().set(lobbyName + ".World", lobbyData[0]);
+        Parkour.getPlugin().getConfig().set(lobbyName + ".X", Double.valueOf(lobbyData[1]));
+        Parkour.getPlugin().getConfig().set(lobbyName + ".Y", Double.valueOf(lobbyData[2]));
+        Parkour.getPlugin().getConfig().set(lobbyName + ".Z", Double.valueOf(lobbyData[3]));
+        Parkour.getPlugin().getConfig().set(lobbyName + ".Pitch", Double.valueOf(lobbyData[4]));
+        Parkour.getPlugin().getConfig().set(lobbyName + ".Yaw", Double.valueOf(lobbyData[5]));
+    }
+    
+    private static void setLinkedLobbyData(List<String> linkedLobbyData) {
+    	String[] lobbyData = new String[6];
+    	int count = 0;
+    	for (String linkedLobby : Static.getLobbyList()) {
+    		for (int i = 0; i < 6; i++) {
+    			lobbyData[i] = linkedLobbyData.get(count + i);
+    		}
+    		setLobbyData(lobbyData, "Lobby." + linkedLobby);
+    		count+=6;
+    	}	
     }
 }
