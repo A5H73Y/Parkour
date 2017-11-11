@@ -895,8 +895,10 @@ public final class Utils {
     
     public static boolean isCheckpointSafe(Player player, Block block) {
 		Block blockUnder = block.getRelative(BlockFace.DOWN);
-		List<Material> validMaterials = Arrays.asList(Material.AIR, Material.REDSTONE_BLOCK, Material.STEP, Material.WOOD_STEP, Material.STONE_SLAB2, Material.PURPUR_SLAB);
-		
+		List<Material> validMaterials = Arrays.asList(Material.AIR, Material.REDSTONE_BLOCK, Material.STEP, Material.WOOD_STEP, Material.STONE_SLAB2);
+		if (!Bukkit.getBukkitVersion().contains("1.8")){
+			validMaterials.add(Material.PURPUR_SLAB);
+		}
 		//check if player is standing in a half-block
 		if (! block.getType().equals(Material.AIR) && ! block.getType().equals(Material.STONE_PLATE)) {
 			player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + block.getType());
