@@ -221,8 +221,6 @@ public class Configurations {
 
 	public void saveEcon() {
 		try {
-			econData.addDefault("Price.Kit", 0);
-			econData.options().copyDefaults(true);
 			econData.save(econFile);
 		} catch (IOException ex) {
 			ex.printStackTrace();

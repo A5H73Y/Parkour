@@ -135,12 +135,12 @@ public class LobbyMethods {
      * @param player
      */
     public static void deleteLobby(String lobby, Player player) {
-        if (!Parkour.getPlugin().getConfig().contains(lobby + ".World")) {
+        if (!Parkour.getPlugin().getConfig().contains("Lobby." + lobby + ".World")) {
             player.sendMessage(Static.getParkourString() + "This lobby does not exist!");
             return;
         }
 
-        Parkour.getPlugin().getConfig().set(lobby, null);
+        Parkour.getPlugin().getConfig().set("Lobby." + lobby, null);
         Parkour.getPlugin().saveConfig();
 
         player.sendMessage(Static.getParkourString() + "Lobby " + lobby + " was deleted successfully.");

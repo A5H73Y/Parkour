@@ -30,7 +30,7 @@ public class ParkourKit implements Serializable {
     /**
      * ParkourKit
      * Each ParkourKit set has a unique name to refer to it, apart from the default set.
-     * The format being ParkourKit.name.MATERIAL.Action = "action"
+     * The format being ParkourKit.(name).MATERIAL.Action = "action"
      * If the Material provided is invalid, then it won't be added to our list of materials
      * Also if the Action provided is invalid, then it won't be added to our list of materials.
      * This is so ParkourKit remain safe while in use on a course.
@@ -64,6 +64,10 @@ public class ParkourKit implements Serializable {
         }
     }
 
+    /**
+     * Get a list of all the action possibilities
+     * @return List of actions
+     */
     public static List<String> getValidActions() {
         return validActions;
     }
@@ -79,7 +83,7 @@ public class ParkourKit implements Serializable {
     /**
      * Get the corresponding action for the material
      * @param material
-     * @return
+     * @return corresponding action for material
      */
     public String getAction(Material material) {
         if (!materials.contains(material)) {
@@ -136,5 +140,10 @@ public class ParkourKit implements Serializable {
 
     public static boolean doesParkourKitExist(String name) {
         return getAllParkourKits().contains(name.toLowerCase());
+    }
+
+    public static void deleteKit(String argument) {
+        Parkour.getParkourConfig().getParkourKitData().set("ParkourKit." + argument, null);
+        Parkour.getParkourConfig().saveParkourKit();
     }
 }

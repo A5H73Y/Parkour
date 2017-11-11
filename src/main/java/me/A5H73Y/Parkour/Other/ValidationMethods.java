@@ -297,18 +297,18 @@ public class ValidationMethods {
 	public static boolean deleteCourse(String courseName, Player player) {
 		courseName = courseName.toLowerCase();
 		FileConfiguration courseConfig = Parkour.getParkourConfig().getCourseData();
-		List<String> dependantCourses = new ArrayList<>();
+		List<String> dependentCourses = new ArrayList<>();
 
 		for (String course : Static.getCourses()){
 			String linkedCourse = courseConfig.getString(course + ".LinkedCourse");
 
 			if (linkedCourse != null && courseName.equals(linkedCourse)) {
-				dependantCourses.add(course);
+				dependentCourses.add(course);
 			}
 		}
 
-		if (dependantCourses.size() > 0) {
-			player.sendMessage(Static.getParkourString() + "This course can not be deleted as there are dependant courses: " + dependantCourses);
+		if (dependentCourses.size() > 0) {
+			player.sendMessage(Static.getParkourString() + "This course can not be deleted as there are dependent courses: " + dependentCourses);
 			return false;
 		}
 
@@ -324,21 +324,42 @@ public class ValidationMethods {
 	public static boolean deleteLobby(String courseName, Player player) {
 		courseName = courseName.toLowerCase();
 		FileConfiguration courseConfig = Parkour.getParkourConfig().getCourseData();
-		List<String> dependantCourses = new ArrayList<>();
+		List<String> dependentCourses = new ArrayList<>();
 
 		for (String course : Static.getCourses()){
 			String linkedCourse = courseConfig.getString(course + ".LinkedLobby");
 
 			if (linkedCourse != null && courseName.equals(linkedCourse)) {
-				dependantCourses.add(course);
+				dependentCourses.add(course);
 			}
 		}
 
-		if (dependantCourses.size() > 0) {
-			player.sendMessage(Static.getParkourString() + "This lobby can not be deleted as there are dependant courses: " + dependantCourses);
+		if (dependentCourses.size() > 0) {
+			player.sendMessage(Static.getParkourString() + "This lobby can not be deleted as there are dependent courses: " + dependentCourses);
 			return false;
 		}
 
 		return true;
 	}
+
+    public static boolean deleteParkourKit(String parkourKit, Player player) {
+        parkourKit = parkourKit.toLowerCase();
+        FileConfiguration courseConfig = Parkour.getParkourConfig().getCourseData();
+        List<String> dependentCourses = new ArrayList<>();
+
+        for (String course : Static.getCourses()){
+            String linkedKit = courseConfig.getString(course + ".ParkourKit"); //TODO check
+
+            if (linkedKit != null && parkourKit.equals(linkedKit)) {
+                dependentCourses.add(course);
+            }
+        }
+
+        if (dependentCourses.size() > 0) {
+            player.sendMessage(Static.getParkourString() + "This ParkourKit can not be deleted as there are dependent courses: " + dependentCourses);
+            return false;
+        }
+
+        return true;
+    }
 }

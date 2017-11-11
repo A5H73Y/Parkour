@@ -548,12 +548,26 @@ public final class Utils {
                 return;
 
             player.sendMessage(Static.getParkourString() + "You are about to delete lobby " + ChatColor.AQUA + args[2] + ChatColor.WHITE + "...");
-            player.sendMessage(ChatColor.GRAY + "Deleting a lobby will remove all information about it from the server. If any courses are linked to this lobby, they will be broken.");
+            player.sendMessage(ChatColor.GRAY + "Deleting a lobby will remove all information about it from the server.");
             player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
             Static.addQuestion(player.getName(), new Question(QuestionType.DELETE_LOBBY, args[2].toLowerCase()));
 
+        } else if (args[1].equalsIgnoreCase("kit")) {
+            if (!ParkourKit.doesParkourKitExist(args[2])) {
+                player.sendMessage(Static.getParkourString() + "This ParkourKit does not exist!");
+                return;
+            }
+
+            if (!ValidationMethods.deleteParkourKit(args[2], player))
+                return;
+
+            player.sendMessage(Static.getParkourString() + "You are about to delete ParkourKit " + ChatColor.AQUA + args[2] + ChatColor.WHITE + "...");
+            player.sendMessage(ChatColor.GRAY + "Deleting a ParkourKit will remove all information about it from the server.");
+            player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
+            Static.addQuestion(player.getName(), new Question(QuestionType.DELETE_KIT, args[2].toLowerCase()));
+
         } else {
-            player.sendMessage(invalidSyntax("delete", "(course / checkpoint / lobby) (name)"));
+            player.sendMessage(invalidSyntax("delete", "(course / checkpoint / lobby / kit) (name)"));
         }
     }
 
