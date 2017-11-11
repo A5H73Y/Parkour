@@ -831,7 +831,6 @@ public class PlayerMethods {
             if (kit == null) {
                 player.sendMessage(Static.getParkourString() + "ParkourKit " + kitName + " doesn't exist!");
             } else {
-                //player.teleport(new Location(player.getWorld(), location.getX(),location.getY(),location.getZ(),location.getYaw(), location.getPitch()));
                 Checkpoint checkpoint = new Checkpoint(player.getLocation(), 0, 0, 0);
                 ParkourSession session = new ParkourSession(new Course(Constants.TEST_MODE, checkpoint));
                 session.getCourse().setParkourKit(kit);

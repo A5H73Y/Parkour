@@ -2,6 +2,7 @@ package me.A5H73Y.Parkour.Conversation;
 
 import me.A5H73Y.Parkour.Parkour;
 
+import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.conversations.BooleanPrompt;
@@ -54,7 +55,7 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 
 		@Override
 		public Prompt acceptInput(ConversationContext context, String message) {
-			Material material = Material.getMaterial(message.toUpperCase());
+			Material material = Utils.getMaterial(message.toUpperCase());
 			if (material == null){
 				ParkourConversation.sendErrorMessage(context, "This is not a valid material");
 				return this;

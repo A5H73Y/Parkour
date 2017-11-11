@@ -389,6 +389,9 @@ class ParkourCommands implements CommandExecutor {
 
                         PlayerMethods.setRank(args, player);
 
+                    } else if (args[0].equalsIgnoreCase("material")) {
+					    Utils.lookupMaterial(args, player);
+
 						//Other commands//	
 					} else if (args[0].equalsIgnoreCase("about") || args[0].equalsIgnoreCase("version")) {
 						player.sendMessage(Static.getParkourString() + "Server is running Parkour " + ChatColor.GRAY + Static.getVersion());

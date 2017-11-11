@@ -919,4 +919,26 @@ public final class Utils {
 		}
     	return true;
     }
+
+    public static Material getMaterial(String name) {
+        if (isNumber(name)) {
+            return Material.getMaterial(Integer.parseInt(name));
+        } else {
+            return Material.getMaterial(name);
+        }
+    }
+
+    public static void lookupMaterial(String[] args, Player player) {
+        Material material;
+        if (args.length > 1) {
+            material = getMaterial(args[1]);
+        } else {
+            material = getMaterialInPlayersHand(player);
+        }
+        if (material != null) {
+            player.sendMessage(Static.getParkourString() + "Material: " + material.name());
+        } else {
+            player.sendMessage(Static.getParkourString() + "Invalid material!");
+        }
+    }
 }

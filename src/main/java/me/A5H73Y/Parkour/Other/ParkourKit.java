@@ -6,6 +6,7 @@ import java.util.*;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  * This work is licensed under a Creative Commons 
@@ -143,7 +144,36 @@ public class ParkourKit implements Serializable {
     }
 
     public static void deleteKit(String argument) {
+        clearMemory(argument);
         Parkour.getParkourConfig().getParkourKitData().set("ParkourKit." + argument, null);
         Parkour.getParkourConfig().saveParkourKit();
+    }
+
+    /**
+     * The need to pass config as the plugin has not initialised fully at this stage
+     * @param config
+     * @param name
+     */
+    public static void createStandardKit(FileConfiguration config, String name) {
+		config.set("ParkourKit." + name + ".SMOOTH_BRICK.Action", "death");
+        config.set("ParkourKit." + name + ".HUGE_MUSHROOM_2.Action", "finish");
+        config.set("ParkourKit." + name + ".BRICK.Action", "climb");
+        config.set("ParkourKit." + name + ".BRICK.Strength", 0.4);
+        config.set("ParkourKit." + name + ".EMERALD_BLOCK.Action", "launch");
+        config.set("ParkourKit." + name + ".EMERALD_BLOCK.Strength", 1.2);
+        config.set("ParkourKit." + name + ".MOSSY_COBBLESTONE.Action", "bounce");
+        config.set("ParkourKit." + name + ".MOSSY_COBBLESTONE.Strength", (double) 5);
+        config.set("ParkourKit." + name + ".MOSSY_COBBLESTONE.Duration", 200);
+        config.set("ParkourKit." + name + ".OBSIDIAN.Action", "speed");
+        config.set("ParkourKit." + name + ".OBSIDIAN.Strength", (double) 5);
+        config.set("ParkourKit." + name + ".OBSIDIAN.Duration", 200);
+        config.set("ParkourKit." + name + ".ENDER_STONE.Action", "repulse");
+        config.set("ParkourKit." + name + ".ENDER_STONE.Strength", 0.4);
+        config.set("ParkourKit." + name + ".GOLD_BLOCK.Action", "norun");
+        config.set("ParkourKit." + name + ".HUGE_MUSHROOM_1.Action", "nopotion");
+    }
+
+    public static void clearMemory(String kitName) {
+        loaded.remove(kitName);
     }
 }

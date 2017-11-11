@@ -193,7 +193,7 @@ public final class Help {
 					" Used to fix the database if there are missing courses that haven't been synchronised with the server.");
 
 		} else if (args[1].equalsIgnoreCase("delete")){	
-			displayHelpMessage(sender, "Delete a course / lobby", "/pa delete (course / checkpoint / lobby) (argument)", "/pa delete course tutorial",
+			displayHelpMessage(sender, "Delete a course / checkpoint / lobby / kit", "/pa delete (course / checkpoint / lobby / kit) (argument)", "/pa delete course tutorial",
 					" You can delete a course, which will remove all information stored on the server about the course, as well as remove all references from the database. You can delete a lobby from the server. The operation will have to be confirmed or cancelled before the change is made.");
 
 		} else if (args[1].equalsIgnoreCase("reset")){	
@@ -416,7 +416,7 @@ public final class Help {
 		player.sendMessage(Utils.getStandardHeading("Admin Commands"));
 
 		displayCommandUsage(player, "recreate", null, "Fix course database");
-		displayCommandUsage(player, "delete", "(argument)", "Delete course / lobby");
+		displayCommandUsage(player, "delete", "(argument)", "Delete various features");
 		displayCommandUsage(player, "reset", "(argument)", "Delete course / player");
 		displayCommandUsage(player, "whitelist", "(command)", "Whitelist a command");
 		displayCommandUsage(player, "economy", null, "Display economy menu");
