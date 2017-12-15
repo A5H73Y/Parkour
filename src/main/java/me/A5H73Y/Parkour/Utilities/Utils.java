@@ -895,7 +895,6 @@ public final class Utils {
     
     public static boolean isCheckpointSafe(Player player, Block block) {
 		Block blockUnder = block.getRelative(BlockFace.DOWN);
-		//List<Material> validMaterials = Arrays.asList(Material.AIR, Material.REDSTONE_BLOCK, Material.STEP, Material.WOOD_STEP, Material.STONE_SLAB2);
 		List<Material> validMaterials = new ArrayList<Material>();
 		Collections.addAll(validMaterials, Material.AIR, Material.REDSTONE_BLOCK, Material.STEP, Material.WOOD_STEP, Material.STONE_SLAB2);
 		if (!Bukkit.getBukkitVersion().contains("1.8")){
