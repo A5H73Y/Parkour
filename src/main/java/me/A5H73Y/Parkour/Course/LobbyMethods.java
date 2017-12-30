@@ -162,10 +162,9 @@ public class LobbyMethods {
         String lobbyName = null;
 
         if (Parkour.getPlugin().getConfig().getBoolean("OnLeave.TeleportToLinkedLobby")) {
-            lobbyName = CourseMethods.getLinkedLobby(session.getCourse().getName());
+            lobbyName = CourseInfo.getLinkedLobby(session.getCourse().getName());
         }
         String[] args = new String[]{null, lobbyName};
-
         LobbyMethods.joinLobby(args, player);
     }
 }

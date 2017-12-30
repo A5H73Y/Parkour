@@ -5,6 +5,7 @@ import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Enums.ParkourMode;
 import me.A5H73Y.Parkour.Other.ParkourKit;
+import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
@@ -25,10 +26,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityCombustEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -205,8 +203,7 @@ public class ParkourListener implements Listener {
         if (!Parkour.getSettings().isChatPrefix())
             return;
 
-        String rank = Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + event.getPlayer().getName() + ".Rank");
-        rank = rank == null ? Utils.getTranslation("Event.DefaultRank", false) : rank;
+        String rank = PlayerInfo.getRank(event.getPlayer().getName());
 
         event.setFormat(Utils.colour(Utils.getTranslation("Event.Chat", false)
                 .replace("%RANK%", rank)
@@ -308,8 +305,8 @@ public class ParkourListener implements Listener {
     }
 
     @EventHandler
-    public void onItemPickup(PlayerPickupItemEvent event) {
-        if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+    public void onItemPickup(EntityPickupItemEvent event) {
+        if (!PlayerMethods.isPlaying(event.getEntity().getName()))
             return;
 
         if (Parkour.getPlugin().getConfig().getBoolean("OnCourse.DisableItemPickup"))

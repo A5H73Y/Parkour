@@ -1,5 +1,6 @@
 package me.A5H73Y.Parkour;
 
+import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.clip.placeholderapi.external.EZPlaceholderHook;
@@ -32,16 +33,16 @@ public class ParkourPlaceholders extends EZPlaceholderHook {
             return "";
 
         if (message.equalsIgnoreCase("last_completed")) {
-            return PlayerMethods.getLastCompletedCourse(player.getName());
+            return PlayerInfo.getLastCompletedCourse(player.getName());
 
         } else if (message.equalsIgnoreCase("last_played")) {
-            return PlayerMethods.getLastPlayedCourse(player.getName());
+            return PlayerInfo.getLastPlayedCourse(player.getName());
             
         } else if (message.equalsIgnoreCase("parkoins")) {
-            return String.valueOf(PlayerMethods.getParkoins(player.getName()));
+            return String.valueOf(PlayerInfo.getParkoins(player.getName()));
 
         } else if (message.equalsIgnoreCase("level")) {
-            return String.valueOf(PlayerMethods.getParkourLevel(player.getName()));
+            return String.valueOf(PlayerInfo.getParkourLevel(player.getName()));
         }
 
         return null;

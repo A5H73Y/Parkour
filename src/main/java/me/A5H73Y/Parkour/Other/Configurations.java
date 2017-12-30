@@ -310,9 +310,11 @@ public class Configurations {
             stringData.addDefault("Parkour.Accept", "&7Enter &a/pa accept &7to accept.");
             stringData.addDefault("Parkour.RewardLevel", "Your level has been set to &b%LEVEL% &ffor completing &b%COURSE%&f!");
             stringData.addDefault("Parkour.RewardRank", "Your rank has been set to %RANK%");
+            stringData.addDefault("Parkour.RewardParkoins", "&b%AMOUNT% &fParkoins rewarded! New total: &7%TOTAL%");
             stringData.addDefault("Parkour.SetMode", "Mode for &b%COURSE% &fset to &b%MODE%");
 
             stringData.addDefault("Error.NotOnCourse", "You are not on this course!");
+            stringData.addDefault("Error.NotOnAnyCourse", "You are not on a course!");
             stringData.addDefault("Error.TooMany", "Too many arguments!");
             stringData.addDefault("Error.TooLittle", "Not enough arguments!");
             stringData.addDefault("Error.Exist", "This course already exists!");

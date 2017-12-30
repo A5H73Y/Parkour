@@ -3,9 +3,11 @@ package me.A5H73Y.Parkour.Other;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Course.CourseMethods;
+import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
@@ -71,21 +73,21 @@ public class ValidationMethods {
 		}
 
 		/* Players level isn't high enough */
-		if (Parkour.getParkourConfig().getCourseData().contains(course.getName() + ".MinimumLevel")){
-			int minimumLevel = Parkour.getParkourConfig().getCourseData().getInt(course.getName() + ".MinimumLevel");
+		int minimumLevel = CourseInfo.getMinimumLevel(course.getName());
 
-			if (!player.hasPermission("Parkour.Admin.MinBypass") && !player.hasPermission("Parkour.Level." + minimumLevel)){
-				int currentLevel = Parkour.getParkourConfig().getUsersData().getInt("PlayerInfo." + player.getName() + ".Level");
+		if (minimumLevel > 0) {
+            if (!player.hasPermission("Parkour.Admin.MinBypass") && !player.hasPermission("Parkour.Level." + minimumLevel)) {
+                int currentLevel = PlayerInfo.getParkourLevel(player.getName());
 
-				if (currentLevel < minimumLevel){
-					player.sendMessage(Utils.getTranslation("Error.RequiredLvl").replace("%LEVEL%", String.valueOf(minimumLevel)));
-					return false;
-				}
-			}
-		}
+                if (currentLevel < minimumLevel) {
+                    player.sendMessage(Utils.getTranslation("Error.RequiredLvl").replace("%LEVEL%", String.valueOf(minimumLevel)));
+                    return false;
+                }
+            }
+        }
 
 		/* Course isn't finished */
-		if (!CourseMethods.isReady(course.getName())){
+		if (!CourseInfo.getFinished(course.getName())){
 			if (Parkour.getPlugin().getConfig().getBoolean("OnJoin.EnforceFinished")){
 				if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Bypass", course.getName())){
 					player.sendMessage(Utils.getTranslation("Error.Finished1"));
@@ -98,7 +100,7 @@ public class ValidationMethods {
 
 		/* Check if player has enough currency to join */
 		if (Static.getEconomy()){
-			int joinFee = Parkour.getParkourConfig().getEconData().getInt("Price." + course.getName() + ".JoinFee");
+			int joinFee = CourseInfo.getEconomyJoiningFee(course.getName());
 			String currencyName = Parkour.getEconomy().currencyNamePlural() == null ? 
 					"" : " " + Parkour.getEconomy().currencyNamePlural();
 			
@@ -129,17 +131,17 @@ public class ValidationMethods {
 	public static boolean courseJoiningNoMessages(Player player, String courseName){
 		/* Player in wrong world */
 		if (Parkour.getSettings().isEnforceWorld()){
-			if (!player.getLocation().getWorld().getName().equals(Parkour.getParkourConfig().getCourseData().getString(courseName + ".World"))){
+			if (!player.getLocation().getWorld().getName().equals(CourseInfo.getWorld(courseName))){
 				return false;
 			}
 		}
 
 		/* Players level isn't high enough */
-		if (Parkour.getParkourConfig().getCourseData().contains(courseName + ".MinimumLevel")){
-			int minimumLevel = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".MinimumLevel");
+        int minimumLevel = CourseInfo.getMinimumLevel(courseName);
 
+        if (minimumLevel > 0) {
 			if (!player.hasPermission("Parkour.Admin.MinBypass") && !player.hasPermission("Parkour.Level." + minimumLevel)){
-				int currentLevel = Parkour.getParkourConfig().getUsersData().getInt("PlayerInfo." + player.getName() + ".Level");
+				int currentLevel = PlayerInfo.getParkourLevel(player.getName());
 
 				if (currentLevel < minimumLevel){
 					return false;
@@ -148,7 +150,7 @@ public class ValidationMethods {
 		}
 
 		/* Course isn't finished */
-		if (!CourseMethods.isReady(courseName)){
+		if (!CourseInfo.getFinished(courseName)){
 			if (Parkour.getPlugin().getConfig().getBoolean("OnJoin.EnforceFinished")){
 				if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Bypass", courseName)){
 					return false;
@@ -158,7 +160,7 @@ public class ValidationMethods {
 
 		/* Check if player has enough currency to join */
 		if (Static.getEconomy()){
-			int joinFee = Parkour.getParkourConfig().getEconData().getInt("Price." + courseName + "JoinFee");
+			int joinFee = CourseInfo.getEconomyJoiningFee(courseName);
 
 			if (joinFee > 0){
 				if (Parkour.getEconomy().getBalance(Bukkit.getOfflinePlayer(player.getUniqueId())) < joinFee){
@@ -243,7 +245,7 @@ public class ValidationMethods {
 		int level = Parkour.getPlugin().getConfig().getInt("Lobby." + lobby + ".Level");
 
 		if (level > 0 && !player.hasPermission("Parkour.Admin.MinBypass")) {
-			if (Parkour.getParkourConfig().getUsersData().getInt("PlayerInfo." + player.getName() + ".Level") < level) {
+            if (PlayerInfo.getParkourLevel(player.getName()) < level) {
 				player.sendMessage(Utils.getTranslation("Error.RequiredLvl").replace("%LEVEL%", String.valueOf(level)));
 				return false;
 			}
@@ -259,14 +261,14 @@ public class ValidationMethods {
 	 * @return
 	 */
 	public static boolean createCheckpoint(String[] args, Player player) {
-		String selected = PlayerMethods.getSelected(player.getName()).toLowerCase();
+		String selected = PlayerInfo.getSelected(player.getName()).toLowerCase();
 
 		if (!CourseMethods.exist(selected)) {
 			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", selected));
 			return false;
 		}
 
-		int pointcount = Parkour.getParkourConfig().getCourseData().getInt((selected + ".Points")) + 1;
+		int pointcount = CourseInfo.getCheckpointAmount(selected) + 1;
 
 		if (!(args.length <= 1)) {
 			if (!Utils.isNumber(args[1])) {
@@ -296,11 +298,10 @@ public class ValidationMethods {
 	 */
 	public static boolean deleteCourse(String courseName, Player player) {
 		courseName = courseName.toLowerCase();
-		FileConfiguration courseConfig = Parkour.getParkourConfig().getCourseData();
 		List<String> dependentCourses = new ArrayList<>();
 
 		for (String course : Static.getCourses()){
-			String linkedCourse = courseConfig.getString(course + ".LinkedCourse");
+			String linkedCourse = CourseInfo.getLinkedCourse(courseName);
 
 			if (linkedCourse != null && courseName.equals(linkedCourse)) {
 				dependentCourses.add(course);
@@ -323,11 +324,10 @@ public class ValidationMethods {
 	 */
 	public static boolean deleteLobby(String courseName, Player player) {
 		courseName = courseName.toLowerCase();
-		FileConfiguration courseConfig = Parkour.getParkourConfig().getCourseData();
 		List<String> dependentCourses = new ArrayList<>();
 
 		for (String course : Static.getCourses()){
-			String linkedCourse = courseConfig.getString(course + ".LinkedLobby");
+			String linkedCourse = CourseInfo.getLinkedLobby(courseName);
 
 			if (linkedCourse != null && courseName.equals(linkedCourse)) {
 				dependentCourses.add(course);
@@ -344,11 +344,10 @@ public class ValidationMethods {
 
     public static boolean deleteParkourKit(String parkourKit, Player player) {
         parkourKit = parkourKit.toLowerCase();
-        FileConfiguration courseConfig = Parkour.getParkourConfig().getCourseData();
         List<String> dependentCourses = new ArrayList<>();
 
         for (String course : Static.getCourses()){
-            String linkedKit = courseConfig.getString(course + ".ParkourKit"); //TODO check
+            String linkedKit = CourseInfo.getParkourKit(course);
 
             if (linkedKit != null && parkourKit.equals(linkedKit)) {
                 dependentCourses.add(course);

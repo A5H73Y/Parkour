@@ -1,6 +1,6 @@
 package me.A5H73Y.Parkour.Conversation;
 
-import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
 import org.bukkit.ChatColor;
@@ -31,8 +31,7 @@ public class ParkourModeConversation extends FixedSetPrompt {
 	protected Prompt acceptValidatedInput(ConversationContext context, String choice) {
 		String courseName = (String) context.getSessionData("courseName");
 
-		Parkour.getParkourConfig().getCourseData().set(courseName + ".Mode", choice);
-		Parkour.getParkourConfig().saveCourses();
+		CourseInfo.setMode(courseName, choice);
 
 		context.getForWhom().sendRawMessage(Utils.getTranslation("Parkour.SetMode")
 				.replace("%COURSE%", courseName)

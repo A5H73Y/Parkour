@@ -12,6 +12,7 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Other.ParkourKit;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.CourseMethods;
@@ -20,6 +21,7 @@ import me.A5H73Y.Parkour.Other.Question;
 import me.A5H73Y.Parkour.Other.TimeObject;
 import me.A5H73Y.Parkour.Other.ValidationMethods;
 
+import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -124,7 +126,7 @@ public final class Utils {
         } else if (player.hasPermission(permissionBranch + ".*") || player.hasPermission(permissionBranch + "." + permission) || player.hasPermission("Parkour.*")) {
             return true;
 
-        } else if (player.getName().equals(Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".Creator"))) {
+        } else if (player.getName().equals(CourseInfo.getCreator(courseName))) {
             return true;
         }
 
@@ -526,7 +528,7 @@ public final class Utils {
                 return;
             }
 
-            int checkpoints = Parkour.getParkourConfig().getCourseData().getInt(args[2].toLowerCase() + ".Points");
+            int checkpoints = CourseInfo.getCheckpointAmount(args[2]);
             // if it has no checkpoints
             if (checkpoints <= 0) {
                 player.sendMessage(Static.getParkourString() + args[2] + " has no checkpoints!");
@@ -592,7 +594,7 @@ public final class Utils {
             Static.addQuestion(player.getName(), new Question(QuestionType.RESET_COURSE, args[2].toLowerCase()));
 
         } else if (args[1].equalsIgnoreCase("player")) {
-            if (Bukkit.getPlayer(args[2]) == null || !Parkour.getParkourConfig().getUsersData().contains("PlayerInfo." + args[2])) {
+            if (Bukkit.getPlayer(args[2]) == null || !PlayerInfo.hasPlayerInfo(args[2])) {
                 player.sendMessage(Utils.getTranslation("Error.UnknownPlayer"));
                 return;
             }

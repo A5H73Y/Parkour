@@ -26,7 +26,7 @@ public class Course implements Serializable {
         this.name = name;
         this.checkpoint = checkpoint;
         this.parkourKit = parkourKit;
-        this.checkpoints = CheckpointMethods.getNumberOfCheckpoints(name);
+        this.checkpoints = CourseInfo.getCheckpointAmount(name);
     }
 
 	public Course(String name, Checkpoint checkpoint) {
@@ -87,4 +87,7 @@ public class Course implements Serializable {
 		this.checkpoint = checkpoint;
 	}
 
+    public boolean hasMaxDeaths() {
+	    return maxDeaths != null;
+    }
 }

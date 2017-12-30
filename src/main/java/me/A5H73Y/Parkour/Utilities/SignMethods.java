@@ -1,5 +1,6 @@
 package me.A5H73Y.Parkour.Utilities;
 
+import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 
@@ -75,8 +76,10 @@ public class SignMethods {
 		if (!createStandardCourseSign(sign, player, "Join", false))
 			return;
 
-		if (Parkour.getParkourConfig().getCourseData().contains(sign.getLine(2).toLowerCase() + ".MinimumLevel"))
-			sign.setLine(3, ChatColor.RED + "" + Parkour.getParkourConfig().getCourseData().get(sign.getLine(2).toLowerCase() + ".MinimumLevel"));
+		int minimumLevel = CourseInfo.getMinimumLevel(sign.getLine(2));
+
+		if (minimumLevel > 0)
+			sign.setLine(3, ChatColor.RED + "" + minimumLevel);
 
 		player.sendMessage(Static.getParkourString() + "Join for " + ChatColor.AQUA + sign.getLine(2) + ChatColor.WHITE + " created!");
 	}

@@ -1,11 +1,12 @@
 package me.A5H73Y.Parkour.Other;
 
+import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Course.LobbyMethods;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Enums.QuestionType;
-import me.A5H73Y.Parkour.Player.PlayerMethods;
+import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
@@ -64,7 +65,7 @@ public class Question {
 
             case DELETE_CHECKPOINT:
                 CheckpointMethods.deleteCheckpoint(argument, player);
-                Utils.logToFile(argument + "'s checkpoint " + Parkour.getParkourConfig().getCourseData().getInt(argument + ".Points") + " was deleted by " + player.getName());
+                Utils.logToFile(argument + "'s checkpoint " + CourseInfo.getCheckpointAmount(argument) + " was deleted by " + player.getName());
                 return;
 
             case DELETE_LOBBY:
@@ -85,7 +86,7 @@ public class Question {
                 return;
 
             case RESET_PLAYER:
-                PlayerMethods.resetPlayer(argument);
+                PlayerInfo.resetPlayer(argument);
                 player.sendMessage(Static.getParkourString() + ChatColor.AQUA + argument + ChatColor.WHITE + " has been reset.");
                 Utils.logToFile("player " + argument + " was reset by " + player.getName());
                 return;

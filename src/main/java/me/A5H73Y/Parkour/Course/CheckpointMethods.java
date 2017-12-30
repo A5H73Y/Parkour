@@ -2,7 +2,7 @@ package me.A5H73Y.Parkour.Course;
 
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Other.ValidationMethods;
-import me.A5H73Y.Parkour.Player.PlayerMethods;
+import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
@@ -69,10 +69,10 @@ public class CheckpointMethods {
 		if (!ValidationMethods.createCheckpoint(args, player))
 			return;
 
-		String selected = PlayerMethods.getSelected(player.getName());
+		String selected = PlayerInfo.getSelected(player.getName());
 		Location location = player.getLocation();
 		int checkpoint = args.length == 2 ? Integer.parseInt(args[1]) :
-			Parkour.getParkourConfig().getCourseData().getInt(selected + ".Points") + 1;
+			CourseInfo.getCheckpointAmount(selected) + 1;
 		
 		Block block = location.getBlock();
 		Block blockUnder = block.getRelative(BlockFace.DOWN);
@@ -169,7 +169,7 @@ public class CheckpointMethods {
 			return;
 
 		courseName = courseName.toLowerCase();
-		int point = Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Points");
+		int point = CourseInfo.getCheckpointAmount(courseName);
 		if (point <= 0){
 			player.sendMessage(Static.getParkourString() + courseName + " has no checkpoints!");
 			return;
@@ -186,16 +186,6 @@ public class CheckpointMethods {
 				.replace("%COURSE%", courseName));
 
 		Utils.logToFile("Checkpoint " + point + " was deleted on " + courseName + " by " + player.getName());
-	}
-
-	/**
-	 * Get the amount of checkpoints in the specified course
-	 * 
-	 * @param courseName
-	 * @return int
-	 */
-	public static int getNumberOfCheckpoints(String courseName) {
-		return Parkour.getParkourConfig().getCourseData().getInt(courseName + ".Points", 0);
 	}
 
     /**

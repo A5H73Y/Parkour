@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+
+import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Enums.DatabaseType;
 import me.A5H73Y.Parkour.ParkourPlaceholders;
@@ -122,7 +124,7 @@ public class StartPlugin {
             if (updateExisting){
                 for (String courseName : Static.getCourses()){
                     if (DatabaseMethods.getCourseId(courseName, false) == 0) {
-                        DatabaseMethods.insertCourse(courseName, Parkour.getParkourConfig().getCourseData().getString(courseName + ".Creator"));
+                        DatabaseMethods.insertCourse(courseName, CourseInfo.getCreator(courseName));
                     }
                 }
             }

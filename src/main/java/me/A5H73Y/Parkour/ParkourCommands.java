@@ -7,6 +7,7 @@ import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Course.LobbyMethods;
 import me.A5H73Y.Parkour.Enums.ConversationType;
 import me.A5H73Y.Parkour.Other.Help;
+import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Settings;
@@ -86,28 +87,22 @@ class ParkourCommands implements CommandExecutor {
 						CourseMethods.setCreator(args, player);
 
 					} else if (args[0].equalsIgnoreCase("checkpoint")) {
-						if (!PlayerMethods.hasSelected(player))
+						if (!PlayerInfo.hasSelected(player))
 							return false;
 
-						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerMethods.getSelected(player.getName())))
+						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerInfo.getSelected(player.getName())))
 							return false;
 
 						CheckpointMethods.createCheckpoint(args, player);
 
 					} else if (args[0].equalsIgnoreCase("finish")) {
-						if (!PlayerMethods.hasSelected(player))
-							return false;
-
-						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerMethods.getSelected(player.getName())))
-							return false;
-
-						CourseMethods.setFinish(player);
+						CourseMethods.setFinish(args, player);
 
 					} else if (args[0].equalsIgnoreCase("setstart")) {
-						if (!PlayerMethods.hasSelected(player))
+						if (!PlayerInfo.hasSelected(player))
 							return false;
 
-						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerMethods.getSelected(player.getName())))
+						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerInfo.getSelected(player.getName())))
 							return false;
 
 						CourseMethods.setStart(player);
@@ -125,7 +120,7 @@ class ParkourCommands implements CommandExecutor {
 						CourseMethods.rateCourse(args, player);
 
 					} else if (args[0].equalsIgnoreCase("perms")) {
-						PlayerMethods.getPermissions(player);
+						PlayerMethods.displayPermissions(player);
 
 					} else if (args[0].equalsIgnoreCase("kit")) {
 						if (!Utils.hasPermission(player, "Parkour.Basic", "Kit"))
@@ -173,10 +168,10 @@ class ParkourCommands implements CommandExecutor {
 						CheckpointMethods.teleportCheckpoint(args, player, true);
 
 					} else if (args[0].equalsIgnoreCase("link")) {
-						if (!PlayerMethods.hasSelected(player))
+						if (!PlayerInfo.hasSelected(player))
 							return false;
 
-						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerMethods.getSelected(player.getName())))
+						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerInfo.getSelected(player.getName())))
 							return false;
 
 						CourseMethods.linkCourse(args, player);

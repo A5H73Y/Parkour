@@ -23,9 +23,8 @@ public class Checkpoint implements Serializable {
 
 	/**
 	 * The location is used for where the player is physically teleported.
-     * The coordinates are used for the detection of the pressure plate.
-	 * As locations are transient, when retrieving all the sessions, the plugin was forgetting the locations after a reload.
-	 * Although it's ugly, it will fix all the problems.
+     * The nextCheckpoint coordinates are used for the detection of the pressure plate.
+	 * As locations are transient, we must reconstruct the Checkpoints after a reload.
 	 */
 	public Checkpoint(Location location, double nextCheckpointX, double nextCheckpointY, double nextCheckpointZ){
 		this.x = location.getX();

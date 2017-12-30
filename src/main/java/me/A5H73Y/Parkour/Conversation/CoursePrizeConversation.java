@@ -1,5 +1,6 @@
 package me.A5H73Y.Parkour.Conversation;
 
+import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Parkour;
 
 import me.A5H73Y.Parkour.Utilities.Utils;
@@ -94,9 +95,9 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 
 	private class MaterialProcessComplete extends MessagePrompt {
 		public String getPromptText(ConversationContext context) {
-			Parkour.getParkourConfig().getCourseData().set(context.getSessionData("courseName") + ".Prize.Material", context.getSessionData("material"));
-			Parkour.getParkourConfig().getCourseData().set(context.getSessionData("courseName") + ".Prize.Amount", context.getSessionData("amount"));
-			Parkour.getParkourConfig().saveCourses();
+			CourseInfo.setMaterialPrize(context.getSessionData("courseName").toString(),
+                    context.getSessionData("material").toString(),
+                    context.getSessionData("amount").toString());
 
 			return " The Material prize for " + ChatColor.DARK_AQUA + context.getSessionData("courseName") + ChatColor.WHITE + " was set to " + ChatColor.AQUA + context.getSessionData("amount") + " " + context.getSessionData("material");
 		}
@@ -148,8 +149,8 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 
 	private class CommandProcessComplete extends MessagePrompt {
 		public String getPromptText(ConversationContext context) {
-			Parkour.getParkourConfig().getCourseData().set(context.getSessionData("courseName") + ".Prize.CMD", context.getSessionData("command"));
-			Parkour.getParkourConfig().saveCourses();
+		    CourseInfo.setCommandPrize(context.getSessionData("courseName").toString(),
+                    context.getSessionData("command").toString());
 
 			return " The Command prize for " + ChatColor.DARK_AQUA + context.getSessionData("courseName") + ChatColor.WHITE + " was set to /" + ChatColor.AQUA + context.getSessionData("command");
 		}
@@ -188,8 +189,8 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 
 	private class XPProcessComplete extends MessagePrompt {
 		public String getPromptText(ConversationContext context) {
-			Parkour.getParkourConfig().getCourseData().set(context.getSessionData("courseName") + ".Prize.XP", context.getSessionData("amount"));
-			Parkour.getParkourConfig().saveCourses();
+		    CourseInfo.setXPPrize(context.getSessionData("courseName").toString(),
+                    context.getSessionData("amount").toString());
 
 			return " The XP prize for " + ChatColor.DARK_AQUA + context.getSessionData("courseName") + ChatColor.WHITE + " was set to " + ChatColor.AQUA + context.getSessionData("amount");
 		}

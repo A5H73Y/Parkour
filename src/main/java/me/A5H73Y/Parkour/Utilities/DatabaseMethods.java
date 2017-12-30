@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Enums.DatabaseType;
 import me.A5H73Y.Parkour.Other.TimeObject;
@@ -428,7 +429,7 @@ public class DatabaseMethods extends Database {
                 int changes = 0;
                 for (String courseName : Static.getCourses()){
                     if (getCourseId(courseName) == 0){
-                        insertCourse(courseName, Parkour.getParkourConfig().getCourseData().getString(courseName + ".Creator"));
+                        insertCourse(courseName, CourseInfo.getCreator(courseName));
                         changes++;
                     }
                 }
