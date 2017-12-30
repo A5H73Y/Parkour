@@ -113,8 +113,8 @@ public final class Help {
 					" Create a lobby where you are stood, specifying its name and a level requirement to join. You are able to link courses to lobbies after completion.");
 
 		} else if (args[1].equalsIgnoreCase("finish")){	
-			displayHelpMessage(sender, "Set Course status to Finish", "/pa finish", null,
-					" When you first create a course, it will not be joinable until it has been set to finished by its creator (configurable). The command will set the status to 'ready' to join and will place the default finish block to where you are stood.");
+			displayHelpMessage(sender, "Set Course finish status", "/pa finish [course]", "/pa finish example",
+					" When you first create a course, it will not be joinable until it has been set to finished by its creator (configurable). The command will toggle the finish status, so you mark it as finished or unfinished. If you don't provide a course parameter, your selected course will be used.");
 
 		} else if (args[1].equalsIgnoreCase("prize")){	
 			displayHelpMessage(sender, "Configure course prize", "/pa prize (course)", "/pa prize tutorial",
@@ -379,7 +379,7 @@ public final class Help {
 		displayCommandUsage(player, "setstart", null, "Set selected course start to current position");
 		displayCommandUsage(player, "setcreator", "(course) (player)", "Set creator of course");
 		displayCommandUsage(player, "setlobby", "[name] [level]", "Create / overwrite Parkour lobby");
-		displayCommandUsage(player, "finish", null, "Set the status of the selected course to finished");
+		displayCommandUsage(player, "finish", "[course]", "Toggle the finish status of the chosen course");
 		displayCommandUsage(player, "prize", "(course)", "Configure course prize");
 		displayCommandUsage(player, "test", null, "Toggle Parkour test mode");
 		displayCommandUsage(player, "leaderboard", "[course] [amount] [type]", "Show leaderboards");
