@@ -50,4 +50,21 @@ public class Challenge {
 	    return challenge;
     }
 
+    public static void removeChallenge(Challenge challenge){
+        if (challenges.contains(challenge))
+            challenges.remove(challenge);
+    }
+
+    /**
+     * Find the challenge the recipient player has recieved.
+     * @param targetPlayer
+     * @return
+     */
+    public static Challenge getChallenge(String targetPlayer){
+        for (Challenge challenge : challenges){
+            if (challenge.getTargetPlayer().equals(targetPlayer))
+                return challenge;
+        }
+        return null;
+    }
 }

@@ -27,7 +27,6 @@ public final class Static {
 	private static List<String> courseList = new ArrayList<>();
 	private static List<String> quiet = new ArrayList<>();
 	private static List<String> hidden = new ArrayList<>();
-	private static List<Challenge> challenges = new ArrayList<>();
 	private static Map<String, Long> delay = new HashMap<>();
 
 	private static List<String> lobbyList;
@@ -131,24 +130,6 @@ public final class Static {
 
 	public static void removeHidden(String playerName) {
 		hidden.remove(playerName);
-	}
-
-    public static void removeChallenge(Challenge challenge){
-		if (challenges.contains(challenge))
-			challenges.remove(challenge);
-	}
-
-	/**
-	 * Find the challenge the recipient player has recieved.
-	 * @param targetPlayer
-	 * @return
-	 */
-	public static Challenge getChallenge(String targetPlayer){
-		for (Challenge challenge : challenges){
-			if (challenge.getTargetPlayer().equals(targetPlayer))
-				return challenge;
-		}
-		return null;
 	}
 
 	/**

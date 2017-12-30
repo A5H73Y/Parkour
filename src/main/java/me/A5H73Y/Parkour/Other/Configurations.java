@@ -305,12 +305,12 @@ public class Configurations {
             stringData.addDefault("Parkour.Die2", "You died! Going back to checkpoint &b%POINT%");
             stringData.addDefault("Parkour.LifeCount", "&b%AMOUNT% &flives remaining!");
             stringData.addDefault("Parkour.Playing", " &b%PLAYER% &f- &8C: &7%COURSE% &8D: &7%DEATHS% &8T: &7%TIME%");
-            stringData.addDefault("Parkour.ChallengeReceive", "You have been challenged by &b%PLAYER% &fto beat &f%COURSE%.");
-            stringData.addDefault("Parkour.ChallengeSend", "You have challenged %PLAYER% to beat %COURSE%!");
+            stringData.addDefault("Parkour.ChallengeReceive", "You have been challenged by &b%PLAYER% &fto course &b%COURSE%");
+            stringData.addDefault("Parkour.ChallengeSend", "You have challenged &b%PLAYER% &fto course &b%COURSE%");
             stringData.addDefault("Parkour.Accept", "&7Enter &a/pa accept &7to accept.");
             stringData.addDefault("Parkour.RewardLevel", "Your level has been set to &b%LEVEL% &ffor completing &b%COURSE%&f!");
             stringData.addDefault("Parkour.RewardRank", "Your rank has been set to %RANK%");
-            stringData.addDefault("Parkour.SetMode", "Mode for &b%COURSE%&f set to &b%MODE%");
+            stringData.addDefault("Parkour.SetMode", "Mode for &b%COURSE% &fset to &b%MODE%");
 
             stringData.addDefault("Error.NotOnCourse", "You are not on this course!");
             stringData.addDefault("Error.TooMany", "Too many arguments!");
@@ -484,6 +484,7 @@ public class Configurations {
         config.addDefault("Version", Double.parseDouble(Parkour.getPlugin().getDescription().getVersion()));
 
         config.addDefault("Lobby.Set", false);
+        config.addDefault("Lobby.EnforceWorld", false);
         config.options().copyDefaults(true);
         Parkour.getPlugin().saveConfig();
     }

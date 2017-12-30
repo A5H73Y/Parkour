@@ -77,6 +77,12 @@ public class LobbyMethods {
             player.sendMessage(Static.getParkourString() + "Lobby is corrupt, please investigate.");
             return;
         }
+        if (Parkour.getPlugin().getConfig().getBoolean("Lobby.EnforceWorld") &&
+                !lobby.getWorld().getName().equals(player.getWorld().getName())) {
+            player.sendMessage(Utils.getTranslation("Error.WrongWorld"));
+            return;
+        }
+
         if (PlayerMethods.isPlaying(player.getName())) {
             PlayerMethods.playerLeave(player);
         }

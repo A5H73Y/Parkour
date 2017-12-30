@@ -39,7 +39,7 @@ public class ParkourConversation implements ConversationAbandonedListener {
     }
 
     private Prompt getEntryPrompt(ConversationType type, Player player) {
-        player.sendMessage(ChatColor.GRAY + "Nope: Enter 'cancel' to quit the conversation.");
+        player.sendMessage(ChatColor.GRAY + "Note: Enter 'cancel' to quit the conversation.");
         switch (type){
             case PARKOURKIT:
                 return new CreateParkourKitConversation();

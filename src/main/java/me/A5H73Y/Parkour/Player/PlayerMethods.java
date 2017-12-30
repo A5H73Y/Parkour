@@ -970,7 +970,7 @@ public class PlayerMethods {
      * @param targetPlayer
      */
     public static void acceptChallenge(final Player targetPlayer){
-        Challenge challenge = Static.getChallenge(targetPlayer.getName());
+        Challenge challenge = Challenge.getChallenge(targetPlayer.getName());
 
         if (challenge == null){
             targetPlayer.sendMessage(Static.getParkourString() + "You have not been invited!");
@@ -981,7 +981,7 @@ public class PlayerMethods {
             return;
         }
 
-        Static.removeChallenge(challenge);
+        Challenge.removeChallenge(challenge);
         final Player player = Bukkit.getPlayer(challenge.getPlayer());
 
         if (Parkour.getPlugin().getConfig().getBoolean("ParkourModes.Challenge.hidePlayers")){
