@@ -143,7 +143,7 @@ public class CourseInfo {
 
     public static void setMaterialPrize(String courseName, String material, String amount) {
         Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Prize.Material", material);
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Prize.Amount", amount);
+        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Prize.Amount", Integer.parseInt(amount));
         Parkour.getParkourConfig().saveCourses();
     }
 
@@ -152,7 +152,7 @@ public class CourseInfo {
     }
 
     public static void setXPPrize(String courseName, String amount) {
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Prize.XP", amount);
+        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Prize.XP", Integer.parseInt(amount));
         Parkour.getParkourConfig().saveCourses();
     }
 
