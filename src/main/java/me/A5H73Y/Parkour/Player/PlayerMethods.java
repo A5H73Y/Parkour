@@ -208,6 +208,9 @@ public class PlayerMethods {
         if (Parkour.getPlugin().getConfig().getBoolean("OnDie.SetXPBarToDeathCount"))
             player.setLevel(0);
 
+        loadInventory(player);
+        givePrize(player, courseName);
+        
         if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.TeleportAway")) {
             Long delay = Parkour.getPlugin().getConfig().getLong("OnFinish.TeleportDelay");
 
@@ -222,9 +225,6 @@ public class PlayerMethods {
                 courseCompleteLocation(player, courseName);
             }
         }
-
-        loadInventory(player);
-        givePrize(player, courseName);
 
         if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.UpdatePlayerDatabaseTime")) {
             DatabaseMethods.updateTime(courseName, player, timeTaken, session.getDeaths());
