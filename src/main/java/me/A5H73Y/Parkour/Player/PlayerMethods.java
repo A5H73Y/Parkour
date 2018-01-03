@@ -171,6 +171,8 @@ public class PlayerMethods {
      * Player finishes a course
      * This will be called when the player completes the course.
      * Their reward will be given here, as well as a time entry to the database.
+     * Inventory is restored before the player is teleported. If the teleport is delayed,
+     * restore the inventory after the delay.
      *
      * @param player
      */
@@ -207,17 +209,19 @@ public class PlayerMethods {
 
         if (Parkour.getPlugin().getConfig().getBoolean("OnDie.SetXPBarToDeathCount"))
             player.setLevel(0);
-
-        loadInventory(player);
-        givePrize(player, courseName);
         
+        Long delay = Parkour.getPlugin().getConfig().getLong("OnFinish.TeleportDelay");
+        if (delay <= 0 || !Parkour.getPlugin().getConfig().getBoolean("OnFinish.TeleportAway")) {
+            loadInventory(player);
+            givePrize(player, courseName);
+        }
         if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.TeleportAway")) {
-            Long delay = Parkour.getPlugin().getConfig().getLong("OnFinish.TeleportDelay");
-
             if (delay > 0) {
                 Bukkit.getScheduler().scheduleSyncDelayedTask(Parkour.getPlugin(), new Runnable() {
                     public void run() {
-                        courseCompleteLocation(player, courseName);
+                    	loadInventory(player);
+                    	givePrize(player, courseName);
+                    	courseCompleteLocation(player, courseName);
                     }
                 }, delay);
 
