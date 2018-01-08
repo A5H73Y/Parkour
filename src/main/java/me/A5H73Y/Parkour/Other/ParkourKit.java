@@ -121,7 +121,10 @@ public class ParkourKit implements Serializable {
      * @return ParkourKit
      */
     public static ParkourKit getParkourKit(String name) {
-        if (loaded.containsKey(name)) {
+        
+    	name = name.toLowerCase();
+    	
+    	if (loaded.containsKey(name)) {
             return loaded.get(name);
         }
 
