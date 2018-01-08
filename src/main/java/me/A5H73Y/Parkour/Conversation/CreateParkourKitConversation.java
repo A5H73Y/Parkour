@@ -26,7 +26,7 @@ public class CreateParkourKitConversation extends StringPrompt {
             return Prompt.END_OF_CONVERSATION;
         }
 
-        name = name.toLowerCase();
+        name = name.toLowerCase().replace(' ', '_');
 
         if (Parkour.getParkourConfig().getParkourKitData().contains("ParkourKit." + name)){
             ParkourConversation.sendErrorMessage(context, "This ParkourKit already exists");
