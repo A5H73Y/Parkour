@@ -568,7 +568,7 @@ public class PlayerMethods {
         ParkourKit kit;
 
         if (args != null && args.length == 2) {
-            kit = ParkourKit.getParkourKit(args[1].toLowerCase());
+            kit = ParkourKit.getParkourKit(args[1]);
             if (kit == null) {
                 player.sendMessage(Static.getParkourString() + "Invalid ParkourKit: " + ChatColor.RED + args[1]);
                 return;

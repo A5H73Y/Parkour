@@ -26,7 +26,12 @@ public class CreateParkourKitConversation extends StringPrompt {
             return Prompt.END_OF_CONVERSATION;
         }
 
-        name = name.toLowerCase().replace(' ', '_');
+        if (name.contains(" ")) {
+        	ParkourConversation.sendErrorMessage(context, "The ParkourKit name cannot include spaces");
+        	return this;
+        }
+        
+        name = name.toLowerCase();
 
         if (Parkour.getParkourConfig().getParkourKitData().contains("ParkourKit." + name)){
             ParkourConversation.sendErrorMessage(context, "This ParkourKit already exists");
