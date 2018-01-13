@@ -77,7 +77,7 @@ public class ValidationMethods {
 
 		if (minimumLevel > 0) {
             if (!player.hasPermission("Parkour.Admin.MinBypass") && !player.hasPermission("Parkour.Level." + minimumLevel)) {
-                int currentLevel = PlayerInfo.getParkourLevel(player.getName());
+                int currentLevel = PlayerInfo.getParkourLevel(player);
 
                 if (currentLevel < minimumLevel) {
                     player.sendMessage(Utils.getTranslation("Error.RequiredLvl").replace("%LEVEL%", String.valueOf(minimumLevel)));
@@ -141,7 +141,7 @@ public class ValidationMethods {
 
         if (minimumLevel > 0) {
 			if (!player.hasPermission("Parkour.Admin.MinBypass") && !player.hasPermission("Parkour.Level." + minimumLevel)){
-				int currentLevel = PlayerInfo.getParkourLevel(player.getName());
+				int currentLevel = PlayerInfo.getParkourLevel(player);
 
 				if (currentLevel < minimumLevel){
 					return false;
@@ -245,7 +245,7 @@ public class ValidationMethods {
 		int level = Parkour.getPlugin().getConfig().getInt("Lobby." + lobby + ".Level");
 
 		if (level > 0 && !player.hasPermission("Parkour.Admin.MinBypass")) {
-            if (PlayerInfo.getParkourLevel(player.getName()) < level) {
+            if (PlayerInfo.getParkourLevel(player) < level) {
 				player.sendMessage(Utils.getTranslation("Error.RequiredLvl").replace("%LEVEL%", String.valueOf(level)));
 				return false;
 			}
@@ -261,7 +261,7 @@ public class ValidationMethods {
 	 * @return
 	 */
 	public static boolean createCheckpoint(String[] args, Player player) {
-		String selected = PlayerInfo.getSelected(player.getName()).toLowerCase();
+		String selected = PlayerInfo.getSelected(player).toLowerCase();
 
 		if (!CourseMethods.exist(selected)) {
 			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", selected));

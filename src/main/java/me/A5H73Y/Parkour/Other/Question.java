@@ -11,7 +11,9 @@ import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -86,9 +88,15 @@ public class Question {
                 return;
 
             case RESET_PLAYER:
-                PlayerInfo.resetPlayer(argument);
-                player.sendMessage(Static.getParkourString() + ChatColor.AQUA + argument + ChatColor.WHITE + " has been reset.");
-                Utils.logToFile("player " + argument + " was reset by " + player.getName());
+                OfflinePlayer target = Bukkit.getOfflinePlayer(argument);
+
+                if (target != null) {
+                    PlayerInfo.resetPlayer(target);
+                    player.sendMessage(Static.getParkourString() + ChatColor.AQUA + argument + ChatColor.WHITE + " has been reset.");
+                    Utils.logToFile("player " + argument + " was reset by " + player.getName());
+                } else {
+                    player.sendMessage(Static.getParkourString() + ChatColor.AQUA + argument + ChatColor.WHITE + " does not exists.");
+                }
                 return;
 
             case RESET_LEADERBOARD:

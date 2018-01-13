@@ -203,7 +203,7 @@ public class ParkourListener implements Listener {
         if (!Parkour.getSettings().isChatPrefix())
             return;
 
-        String rank = PlayerInfo.getRank(event.getPlayer().getName());
+        String rank = PlayerInfo.getRank(event.getPlayer());
 
         event.setFormat(Utils.colour(Utils.getTranslation("Event.Chat", false)
                 .replace("%RANK%", rank)
@@ -232,6 +232,26 @@ public class ParkourListener implements Listener {
     }
 
     @EventHandler
+    public void onPlayerBreakingHangingItem(HangingBreakByEntityEvent event) {
+        if (!(event.getRemover() instanceof Player) || !PlayerMethods.isPlaying(event.getRemover().getName()))
+            return;
+
+        if (!Utils.hasPermission((Player) event.getRemover(), "Parkour.Admin")
+                || (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks")))
+            event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onPlayerInteractArmorStand(PlayerArmorStandManipulateEvent event) {
+        if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+            return;
+
+        if (!Utils.hasPermission(event.getPlayer(), "Parkour.Admin")
+                || (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks")))
+            event.setCancelled(true);
+    }
+
+    @EventHandler
     public void onEntityDamageEntity(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player) {
             if (PlayerMethods.isPlaying(((Player)event.getEntity()).getName()))
@@ -241,12 +261,6 @@ public class ParkourListener implements Listener {
                 if (Parkour.getSettings().isPreventAttackingEntities())
                     event.setCancelled(true);
         }
-    }
-
-    @EventHandler
-    public void onPlayerBreakingHangingItem(HangingBreakByEntityEvent event) {
-        if (event.getRemover() instanceof Player && PlayerMethods.isPlaying(((Player)event.getRemover()).getName()) && Parkour.getSettings().isPreventAttackingEntities())
-            event.setCancelled(true);
     }
 
     @EventHandler

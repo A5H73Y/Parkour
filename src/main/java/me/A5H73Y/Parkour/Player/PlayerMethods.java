@@ -14,10 +14,7 @@ import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
@@ -74,7 +71,7 @@ public class PlayerMethods {
         }
 
         ParkourSession session = addPlayer(player.getName(), new ParkourSession(course));
-        PlayerInfo.setLastPlayedCourse(player.getName(), course.getName());
+        PlayerInfo.setLastPlayedCourse(player, course.getName());
         setupPlayerMode(player);
         session.startVisualTimer(player);
     }
@@ -210,24 +207,25 @@ public class PlayerMethods {
         if (Parkour.getPlugin().getConfig().getBoolean("OnDie.SetXPBarToDeathCount"))
             player.setLevel(0);
         
-        Long delay = Parkour.getPlugin().getConfig().getLong("OnFinish.TeleportDelay");
-        if (delay <= 0 || !Parkour.getPlugin().getConfig().getBoolean("OnFinish.TeleportAway")) {
+        final long delay = Parkour.getPlugin().getConfig().getLong("OnFinish.TeleportDelay");
+        final boolean teleportAway = Parkour.getPlugin().getConfig().getBoolean("OnFinish.TeleportAway");
+
+        if (delay <= 0) {
             loadInventory(player);
             givePrize(player, courseName);
-        }
-        if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.TeleportAway")) {
-            if (delay > 0) {
-                Bukkit.getScheduler().scheduleSyncDelayedTask(Parkour.getPlugin(), new Runnable() {
-                    public void run() {
-                    	loadInventory(player);
-                    	givePrize(player, courseName);
-                    	courseCompleteLocation(player, courseName);
-                    }
-                }, delay);
-
-            } else {
+            if (teleportAway) {
                 courseCompleteLocation(player, courseName);
             }
+        } else {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(Parkour.getPlugin(), new Runnable() {
+                public void run() {
+                    loadInventory(player);
+                    givePrize(player, courseName);
+                    if (teleportAway) {
+                        courseCompleteLocation(player, courseName);
+                    }
+                }
+            }, delay);
         }
 
         if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.UpdatePlayerDatabaseTime")) {
@@ -236,7 +234,7 @@ public class PlayerMethods {
             DatabaseMethods.insertTime(courseName, player.getName(), timeTaken, session.getDeaths());
         }
 
-        PlayerInfo.setLastCompletedCourse(player.getName(), courseName);
+        PlayerInfo.setLastCompletedCourse(player, courseName);
 
         PlayerFinishCourseEvent finishEvent = new PlayerFinishCourseEvent(player, courseName);
         Bukkit.getServer().getPluginManager().callEvent(finishEvent);
@@ -352,10 +350,10 @@ public class PlayerMethods {
         // Level player
         int rewardLevel = CourseInfo.getRewardLevel(courseName);
         if (rewardLevel > 0) {
-            int current = PlayerInfo.getParkourLevel(player.getName());
+            int current = PlayerInfo.getParkourLevel(player);
 
             if (current < rewardLevel) {
-                PlayerInfo.setParkourLevel(player.getName(), rewardLevel);
+                PlayerInfo.setParkourLevel(player, rewardLevel);
                 if (Parkour.getPlugin().getConfig().getBoolean("Other.Display.LevelReward")) {
                     player.sendMessage(Utils.getTranslation("Parkour.RewardLevel")
                             .replace("%LEVEL%", String.valueOf(rewardLevel))
@@ -366,9 +364,9 @@ public class PlayerMethods {
         // Level increment
         int addLevel = CourseInfo.getRewardLevelAdd(courseName);
         if (addLevel > 0) {
-            int newLevel = PlayerInfo.getParkourLevel(player.getName()) + addLevel;
+            int newLevel = PlayerInfo.getParkourLevel(player) + addLevel;
 
-            PlayerInfo.setParkourLevel(player.getName(), newLevel);
+            PlayerInfo.setParkourLevel(player, newLevel);
             player.sendMessage(Utils.getTranslation("Parkour.RewardLevel")
                     .replace("%LEVEL%", String.valueOf(newLevel))
                     .replace("%COURSE%", courseName));
@@ -376,11 +374,11 @@ public class PlayerMethods {
 
         // check if there is a rank upgrade
         // update - this should be based on their new level, and not the course level
-        int newLevel = PlayerInfo.getParkourLevel(player.getName());
+        int newLevel = PlayerInfo.getParkourLevel(player);
 
         String rewardRank = CourseInfo.getRewardRank(newLevel);
         if (rewardRank != null) {
-            PlayerInfo.setRank(player.getName(), rewardRank);
+            PlayerInfo.setRank(player, rewardRank);
             player.sendMessage(Utils.colour(Utils.getTranslation("Parkour.RewardRank").replace("%RANK%", rewardRank)));
         }
 
@@ -412,8 +410,8 @@ public class PlayerMethods {
         if (parkoins <= 0)
             return;
 
-        int total = parkoins + PlayerInfo.getParkoins(player.getName());
-        PlayerInfo.setParkoins(player.getName(), total);
+        int total = parkoins + PlayerInfo.getParkoins(player);
+        PlayerInfo.setParkoins(player, total);
         player.sendMessage(Utils.getTranslation("Parkour.RewardParkoins")
                 .replace("%AMOUNT%", String.valueOf(parkoins))
                 .replace("%TOTAL", String.valueOf(total)));
@@ -428,10 +426,10 @@ public class PlayerMethods {
         if (parkoins <= 0)
             return;
 
-        int current = PlayerInfo.getParkoins(player.getName());
+        int current = PlayerInfo.getParkoins(player);
         current = (current < parkoins) ? 0 : (current - parkoins);
 
-        PlayerInfo.setParkoins(player.getName(), current);
+        PlayerInfo.setParkoins(player, current);
         player.sendMessage(Static.getParkourString() + parkoins + " Parkoins deducted! New total: " + ChatColor.AQUA + current);
     }
 
@@ -502,16 +500,16 @@ public class PlayerMethods {
      * @param player
      */
     public static void displayPlayerInfo(String[] args, Player player) {
-        String playerName = args.length <= 1 ? player.getName() : args[1];
+        OfflinePlayer target = args.length <= 1 ? player : Bukkit.getOfflinePlayer(args[1]);
 
-        ParkourSession session = PlayerMethods.getParkourSession(playerName);
+        ParkourSession session = PlayerMethods.getParkourSession(target.getName());
 
-        if (session == null && !PlayerInfo.hasPlayerInfo(playerName)) {
+        if (session == null && !PlayerInfo.hasPlayerInfo(target)) {
             player.sendMessage(Static.getParkourString() + "Player has never played Parkour. What is wrong with them?!");
             return;
         }
 
-        player.sendMessage(Utils.getStandardHeading(playerName + "'s information"));
+        player.sendMessage(Utils.getStandardHeading(target.getName() + "'s information"));
 
         if (session != null) {
             player.sendMessage("Course: " + ChatColor.AQUA + session.getCourse().getName());
@@ -520,9 +518,9 @@ public class PlayerMethods {
             player.sendMessage("Checkpoint: " + ChatColor.AQUA + session.getCheckpoint());
         }
 
-        if (PlayerInfo.hasPlayerInfo(playerName)) {
-            int level = PlayerInfo.getParkourLevel(playerName);
-            String selected = PlayerInfo.getSelected(playerName);
+        if (PlayerInfo.hasPlayerInfo(target)) {
+            int level = PlayerInfo.getParkourLevel(target);
+            String selected = PlayerInfo.getSelected(target);
 
             if (level > 0)
                 player.sendMessage("Level: " + ChatColor.AQUA + level);
@@ -530,8 +528,8 @@ public class PlayerMethods {
             if (selected != null && selected.length() > 0)
                 player.sendMessage("Editing: " + ChatColor.AQUA + selected);
 
-            if (PlayerInfo.getParkoins(playerName) > 0)
-                player.sendMessage("Parkoins: " + ChatColor.AQUA + PlayerInfo.getParkoins(playerName));
+            if (PlayerInfo.getParkoins(target) > 0)
+                player.sendMessage("Parkoins: " + ChatColor.AQUA + PlayerInfo.getParkoins(target));
         }
     }
 
@@ -1023,7 +1021,7 @@ public class PlayerMethods {
         }
 
         int newLevel = Integer.valueOf(args[2]);
-        PlayerInfo.setParkourLevel(target.getName(), newLevel);
+        PlayerInfo.setParkourLevel(target, newLevel);
 
         sender.sendMessage(Static.getParkourString() + target.getName() + "'s Level was set to " + newLevel);
     }
@@ -1036,7 +1034,7 @@ public class PlayerMethods {
             return;
         }
 
-        PlayerInfo.setRank(target.getName(), args[2]);
+        PlayerInfo.setRank(target, args[2]);
         sender.sendMessage(Static.getParkourString() + target.getName() + "'s Rank was set to " + args[2]);
     }
 

@@ -4,6 +4,7 @@ import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -14,25 +15,25 @@ public class PlayerInfo {
 
     /**
      * Retrieve the player's selected course.
-     * @param playerName
+     * @param player
      * @return selected course
      */
-    public static String getSelected(String playerName) {
-        return Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + playerName + ".Selected");
+    public static String getSelected(OfflinePlayer player) {
+        return Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + player.getName() + ".Selected");
     }
 
     /**
      * Set the player's selected course.
-     * @param playerName
+     * @param player
      * @param courseName
      */
-    public static void setSelected(String playerName, String courseName) {
-        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + playerName + ".Selected", courseName.toLowerCase());
+    public static void setSelected(OfflinePlayer player, String courseName) {
+        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Selected", courseName.toLowerCase());
         Parkour.getParkourConfig().saveUsers();
     }
 
-    public static void setDelected(String playerName) {
-        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + playerName + ".Selected", null);
+    public static void setDelected(OfflinePlayer player) {
+        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Selected", null);
         Parkour.getParkourConfig().saveUsers();
     }
 
@@ -42,7 +43,7 @@ public class PlayerInfo {
      * @return boolean
      */
     public static boolean hasSelected(Player player) {
-        String selected = getSelected(player.getName());
+        String selected = getSelected(player);
         if (selected == null || selected.length() == 0) {
             player.sendMessage(Utils.getTranslation("Error.Selected"));
             player.sendMessage(ChatColor.GRAY + "Usage: " + ChatColor.WHITE + "/pa select " + ChatColor.AQUA + "(course)");
@@ -56,77 +57,77 @@ public class PlayerInfo {
      * Parkoins allow you to interact with the new store, making purchases etc.
      * Points will be rewarded on course completion etc.
      *
-     * @param playerName
+     * @param player
      * @return int
      */
-    public static int getParkoins(String playerName) {
-        return Parkour.getParkourConfig().getUsersData().getInt("PlayerInfo." + playerName + ".Parkoins");
+    public static int getParkoins(OfflinePlayer player) {
+        return Parkour.getParkourConfig().getUsersData().getInt("PlayerInfo." + player.getName() + ".Parkoins");
     }
 
     /**
      * Set the amount of player's Parkoins
-     * @param playerName
+     * @param player
      * @param amount
      */
-    public static void setParkoins(String playerName, int amount) {
-        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + playerName + ".Parkoins", amount);
+    public static void setParkoins(OfflinePlayer player, int amount) {
+        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Parkoins", amount);
         Parkour.getParkourConfig().saveUsers();
     }
 
     /**
      * Return the name of the course the player last completed
-     * @param playerName
+     * @param player
      * @return courseName
      */
-    public static String getLastCompletedCourse(String playerName) {
-        return Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + playerName + ".LastCompleted");
+    public static String getLastCompletedCourse(OfflinePlayer player) {
+        return Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + player.getName() + ".LastCompleted");
     }
 
     /**
      * Return the name of the course the player last attempted
-     * @param playerName
+     * @param player
      * @return courseName
      */
-    public static String getLastPlayedCourse(String playerName) {
-        return Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + playerName + ".LastPlayed");
+    public static String getLastPlayedCourse(OfflinePlayer player) {
+        return Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + player.getName() + ".LastPlayed");
     }
 
     /**
      * Get the player's ParkourLevel
-     * @param playerName
+     * @param player
      * @return parkourLevel
      */
-    public static int getParkourLevel(String playerName) {
-        return Parkour.getParkourConfig().getUsersData().getInt("PlayerInfo." + playerName + ".Level");
+    public static int getParkourLevel(OfflinePlayer player) {
+        return Parkour.getParkourConfig().getUsersData().getInt("PlayerInfo." + player.getName() + ".Level");
     }
 
     /**
      * Set the player's ParkourLevel
-     * @param playerName
+     * @param player
      * @param level
      */
-    public static void setParkourLevel(String playerName, int level) {
-        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + playerName + ".Level", level);
+    public static void setParkourLevel(OfflinePlayer player, int level) {
+        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Level", level);
         Parkour.getParkourConfig().saveUsers();
     }
 
     /**
      * Set the last completed course for the player
-     * @param playerName
+     * @param player
      * @param courseName
      */
-    public static void setLastCompletedCourse(String playerName, String courseName) {
-        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + playerName + ".LastCompleted", courseName);
+    public static void setLastCompletedCourse(OfflinePlayer player, String courseName) {
+        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".LastCompleted", courseName);
         Parkour.getParkourConfig().saveUsers();
     }
 
     /**
      * Set the last played course for the player
-     * @param playerName
+     * @param player
      * @param courseName
      */
-    public static void setLastPlayedCourse(String playerName, String courseName) {
-        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + playerName + ".LastPlayed", courseName);
+    public static void setLastPlayedCourse(OfflinePlayer player, String courseName) {
+        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".LastPlayed", courseName);
         Parkour.getParkourConfig().saveUsers();
     }
 
@@ -134,31 +135,31 @@ public class PlayerInfo {
      * Get the player's ParkourRank
      * If the player has an achieved ParkourRank it will use this,
      * otherwise the default rank will be returned
-     * @param playerName
+     * @param player
      * @return
      */
-    public static String getRank(String playerName) {
-        String rank = Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + playerName + ".Rank");
+    public static String getRank(OfflinePlayer player) {
+        String rank = Parkour.getParkourConfig().getUsersData().getString("PlayerInfo." + player.getName() + ".Rank");
         return rank == null ? Utils.getTranslation("Event.DefaultRank", false) : rank;
     }
 
     /**
      * Set the player's PatrkourRank
-     * @param playerName
+     * @param player
      * @param rank
      */
-    public static void setRank(String playerName, String rank) {
-        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + playerName + ".Rank", rank);
+    public static void setRank(OfflinePlayer player, String rank) {
+        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Rank", rank);
         Parkour.getParkourConfig().saveUsers();
     }
 
     /**
      * Determine if the Parkour has any saved information about a player
-     * @param playerName
+     * @param player
      * @return
      */
-    public static boolean hasPlayerInfo(String playerName) {
-        return Parkour.getParkourConfig().getUsersData().contains("PlayerInfo." + playerName);
+    public static boolean hasPlayerInfo(OfflinePlayer player) {
+        return Parkour.getParkourConfig().getUsersData().contains("PlayerInfo." + player.getName());
     }
 
     /**
@@ -166,11 +167,11 @@ public class PlayerInfo {
      * This will remove all trace of the player from the plugin.
      * All SQL time entries from the player will be removed, and their parkour stats will be deleted from the config.
      *
-     * @param playerName
+     * @param player
      */
-    public static void resetPlayer(String playerName) {
-        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + playerName, null);
+    public static void resetPlayer(OfflinePlayer player) {
+        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName(), null);
         Parkour.getParkourConfig().saveUsers();
-        DatabaseMethods.deleteAllTimesForPlayer(playerName);
+        DatabaseMethods.deleteAllTimesForPlayer(player.getName());
     }
 }

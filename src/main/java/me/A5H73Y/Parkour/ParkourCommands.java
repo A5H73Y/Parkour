@@ -90,7 +90,7 @@ class ParkourCommands implements CommandExecutor {
 						if (!PlayerInfo.hasSelected(player))
 							return false;
 
-						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerInfo.getSelected(player.getName())))
+						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerInfo.getSelected(player)))
 							return false;
 
 						CheckpointMethods.createCheckpoint(args, player);
@@ -102,7 +102,7 @@ class ParkourCommands implements CommandExecutor {
 						if (!PlayerInfo.hasSelected(player))
 							return false;
 
-						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerInfo.getSelected(player.getName())))
+						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerInfo.getSelected(player)))
 							return false;
 
 						CourseMethods.setStart(player);
@@ -171,7 +171,7 @@ class ParkourCommands implements CommandExecutor {
 						if (!PlayerInfo.hasSelected(player))
 							return false;
 
-						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerInfo.getSelected(player.getName())))
+						if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerInfo.getSelected(player)))
 							return false;
 
 						CourseMethods.linkCourse(args, player);

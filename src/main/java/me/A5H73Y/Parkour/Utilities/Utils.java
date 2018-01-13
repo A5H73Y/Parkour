@@ -23,10 +23,7 @@ import me.A5H73Y.Parkour.Other.ValidationMethods;
 
 import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
@@ -594,7 +591,8 @@ public final class Utils {
             Static.addQuestion(player.getName(), new Question(QuestionType.RESET_COURSE, args[2].toLowerCase()));
 
         } else if (args[1].equalsIgnoreCase("player")) {
-            if (Bukkit.getPlayer(args[2]) == null || !PlayerInfo.hasPlayerInfo(args[2])) {
+            OfflinePlayer target = Bukkit.getOfflinePlayer(args[2]);
+            if (target == null || !PlayerInfo.hasPlayerInfo(target)) {
                 player.sendMessage(Utils.getTranslation("Error.UnknownPlayer"));
                 return;
             }

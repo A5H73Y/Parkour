@@ -148,7 +148,7 @@ public class CourseMethods {
         courseData.set("Courses", Static.getCourses());
         Parkour.getParkourConfig().saveCourses();
 
-        PlayerInfo.setSelected(player.getName(), name);
+        PlayerInfo.setSelected(player, name);
 
         player.sendMessage(Utils.getTranslation("Parkour.Created").replace("%COURSE%", args[1]));
         DatabaseMethods.insertCourse(name, player.getName());
@@ -385,7 +385,7 @@ public class CourseMethods {
         player.sendMessage(Static.getParkourString() + "Now Editing: " + ChatColor.AQUA + args[1]);
         Integer pointcount = CourseInfo.getCheckpointAmount(courseName);
         player.sendMessage(Static.getParkourString() + "Checkpoints: " + ChatColor.AQUA + pointcount);
-        PlayerInfo.setSelected(player.getName(), courseName);
+        PlayerInfo.setSelected(player, courseName);
     }
 
     /**
@@ -395,7 +395,7 @@ public class CourseMethods {
      */
     public static void deselectCourse(Player player) {
         if (PlayerInfo.hasSelected(player)) {
-            PlayerInfo.setDelected(player.getName());
+            PlayerInfo.setDelected(player);
             player.sendMessage(Static.getParkourString() + "Finished editing.");
         } else {
             player.sendMessage(Utils.getTranslation("Error.Selected"));
@@ -425,7 +425,7 @@ public class CourseMethods {
      * @param player
      */
     public static void setStart(Player player) {
-        String selected = PlayerInfo.getSelected(player.getName());
+        String selected = PlayerInfo.getSelected(player);
 
         if (!CourseMethods.exist(selected)) {
             player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", selected));
@@ -613,7 +613,7 @@ public class CourseMethods {
      * @param player
      */
     public static void setFinish(String[] args, Player player) {
-        String courseName = args.length > 1 ? args[1].toLowerCase() : PlayerInfo.getSelected(player.getName());
+        String courseName = args.length > 1 ? args[1].toLowerCase() : PlayerInfo.getSelected(player);
 
         if (courseName == null || courseName.length() == 0) {
             player.sendMessage(Static.getParkourString() + "Please select a course, or provide a course argument");
@@ -647,7 +647,7 @@ public class CourseMethods {
             return;
         }
 
-        String selected = PlayerInfo.getSelected(player.getName());
+        String selected = PlayerInfo.getSelected(player);
 
         if (args.length >= 3 && args[1].equalsIgnoreCase("course")) {
             if (!CourseMethods.exist(args[2])) {
@@ -731,7 +731,7 @@ public class CourseMethods {
         if (args.length > 1) {
             courseName = args[1].toLowerCase();
         } else {
-            courseName = PlayerInfo.getLastCompletedCourse(player.getName());
+            courseName = PlayerInfo.getLastCompletedCourse(player);
         }
 
         if (!CourseMethods.exist(courseName)) {

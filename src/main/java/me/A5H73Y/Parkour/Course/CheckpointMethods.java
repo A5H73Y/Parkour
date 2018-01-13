@@ -69,7 +69,7 @@ public class CheckpointMethods {
 		if (!ValidationMethods.createCheckpoint(args, player))
 			return;
 
-		String selected = PlayerInfo.getSelected(player.getName());
+		String selected = PlayerInfo.getSelected(player);
 		Location location = player.getLocation();
 		int checkpoint = args.length == 2 ? Integer.parseInt(args[1]) :
 			CourseInfo.getCheckpointAmount(selected) + 1;
