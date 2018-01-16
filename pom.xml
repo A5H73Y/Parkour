@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.A5H73Y</groupId>
 	<artifactId>Parkour</artifactId>
-	<version>4.3</version>
+	<version>4.4</version>
 	<packaging>jar</packaging>
 	
 	<name>Parkour</name>
@@ -171,7 +171,6 @@
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
-                            <!-- Replace this with your package! -->
                             <shadedPattern>me.A5H73Y.Parkour</shadedPattern>
                         </relocation>
                     </relocations>
@@ -187,12 +186,11 @@
             </plugin>
 		</plugins>
 	</build>
-	
-	<distributionManagement>
-	    <repository>
-	        <id>bintray-a5h73y-repo</id>
-	        <name>a5h73y-repo</name>
-	        <url>https://api.bintray.com/maven/a5h73y/repo/Parkour/;publish=1</url>
-	    </repository>
-	</distributionManagement>
+    <distributionManagement>
+        <repository>
+            <id>bintray-a5h73y-repo</id>
+            <name>A5H73Y-repo</name>
+            <url>https://api.bintray.com/maven/a5h73y/repo/Parkour/;publish=1</url>
+        </repository>
+    </distributionManagement>
 </project>

@@ -21,13 +21,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-/**
- * This work is licensed under a Creative Commons 
- * Attribution-NonCommercial-ShareAlike 4.0 International License. 
- * https://creativecommons.org/licenses/by-nc-sa/4.0/
- *
- * @author A5H73Y
- */
 class ParkourCommands implements CommandExecutor {
 
 	@Override
@@ -388,7 +381,7 @@ class ParkourCommands implements CommandExecutor {
 					    Utils.lookupMaterial(args, player);
 
 						//Other commands//	
-					} else if (args[0].equalsIgnoreCase("about") || args[0].equalsIgnoreCase("version")) {
+					} else if (args[0].equalsIgnoreCase("about") || args[0].equalsIgnoreCase("ver") || args[0].equalsIgnoreCase("version")) {
 						player.sendMessage(Static.getParkourString() + "Server is running Parkour " + ChatColor.GRAY + Static.getVersion());
 						if (Static.getDevBuild())
 							player.sendMessage(ChatColor.RED + "- You are running a development build -");

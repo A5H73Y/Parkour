@@ -23,13 +23,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-/**
- * This work is licensed under a Creative Commons 
- * Attribution-NonCommercial-ShareAlike 4.0 International License. 
- * https://creativecommons.org/licenses/by-nc-sa/4.0/
- *
- * @author A5H73Y
- */
 public class PlayerMethods {
 
     /**

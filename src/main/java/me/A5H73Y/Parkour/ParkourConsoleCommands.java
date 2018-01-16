@@ -11,13 +11,6 @@ import me.A5H73Y.Parkour.Utilities.Settings;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
-/**
- * This work is licensed under a Creative Commons 
- * Attribution-NonCommercial-ShareAlike 4.0 International License. 
- * https://creativecommons.org/licenses/by-nc-sa/4.0/
- *
- * @author A5H73Y
- */
 class ParkourConsoleCommands {
 
 	public static void startBackup() {

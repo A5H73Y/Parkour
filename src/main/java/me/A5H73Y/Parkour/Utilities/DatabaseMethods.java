@@ -17,13 +17,6 @@ import org.bukkit.Bukkit;
 import com.huskehhh.mysql.Database;
 import org.bukkit.entity.Player;
 
-/**
- * This work is licensed under a Creative Commons 
- * Attribution-NonCommercial-ShareAlike 4.0 International License. 
- * https://creativecommons.org/licenses/by-nc-sa/4.0/
- *
- * @author A5H73Y
- */
 public class DatabaseMethods extends Database {
 
     public static DatabaseType type;

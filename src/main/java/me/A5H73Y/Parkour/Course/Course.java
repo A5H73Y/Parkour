@@ -5,13 +5,6 @@ import java.io.Serializable;
 import me.A5H73Y.Parkour.Other.Constants;
 import me.A5H73Y.Parkour.Other.ParkourKit;
 
-/**
- * This work is licensed under a Creative Commons 
- * Attribution-NonCommercial-ShareAlike 4.0 International License. 
- * https://creativecommons.org/licenses/by-nc-sa/4.0/
- *
- * @author A5H73Y
- */
 public class Course implements Serializable {
 
 	private static final long serialVersionUID = 1L;
