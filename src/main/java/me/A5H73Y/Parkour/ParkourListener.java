@@ -235,16 +235,6 @@ public class ParkourListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerInteractArmorStand(PlayerArmorStandManipulateEvent event) {
-        if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
-            return;
-
-        if (!Utils.hasPermission(event.getPlayer(), "Parkour.Admin")
-                || (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks")))
-            event.setCancelled(true);
-    }
-
-    @EventHandler
     public void onEntityDamageEntity(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player) {
             if (PlayerMethods.isPlaying(((Player)event.getEntity()).getName()))
@@ -312,8 +302,8 @@ public class ParkourListener implements Listener {
     }
 
     @EventHandler
-    public void onItemPickup(EntityPickupItemEvent event) {
-        if (!PlayerMethods.isPlaying(event.getEntity().getName()))
+    public void onItemPickup(PlayerPickupItemEvent event) {
+        if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
             return;
 
         if (Parkour.getPlugin().getConfig().getBoolean("OnCourse.DisableItemPickup"))
