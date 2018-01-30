@@ -293,7 +293,7 @@ public class CourseMethods {
             displayPlaying(sender);
 
         } else if (args[1].equalsIgnoreCase("courses")) {
-            int page = (args.length == 3 && args[2] != null ? Integer.parseInt(args[2]) : 1);
+            int page = (args.length == 3 && args[2] != null && Utils.isNumber(args[2]) ? Integer.parseInt(args[2]) : 1);
             displayCourses(sender, page);
 
         } else {
