@@ -293,7 +293,7 @@ public class CourseMethods {
             displayPlaying(sender);
 
         } else if (args[1].equalsIgnoreCase("courses")) {
-            int page = (args.length == 3 && args[2] != null ? Integer.parseInt(args[2]) : 1);
+            int page = (args.length == 3 && args[2] != null && Utils.isNumber(args[2]) ? Integer.parseInt(args[2]) : 1);
             displayCourses(sender, page);
 
         } else {
@@ -339,26 +339,27 @@ public class CourseMethods {
             return;
         }
 
+        int results = 8;
         List<String> courseList = Static.getCourses();
         if (page <= 0) {
             sender.sendMessage(Static.getParkourString() + "Please enter a valid page number.");
             return;
         }
 
-        int fromIndex = (page - 1) * 8;
-        if (courseList.size() < fromIndex) {
+        int fromIndex = (page - 1) * results;
+        if (courseList.size() <= fromIndex) {
             sender.sendMessage(Static.getParkourString() + "This page doesn't exist.");
             return;
         }
 
         sender.sendMessage(Static.getParkourString() + courseList.size() + " courses available:");
-        List<String> limited = courseList.subList(fromIndex, Math.min(fromIndex + 8, courseList.size()));
+        List<String> limited = courseList.subList(fromIndex, Math.min(fromIndex + results, courseList.size()));
 
         for (int i = 0; i < limited.size(); i++) {
             sender.sendMessage(((fromIndex) + (i + 1)) + ") " + ChatColor.AQUA + limited.get(i));
         }
 
-        sender.sendMessage("== " + page + " / " + ((courseList.size() / 8) + 1) + " ==");
+        sender.sendMessage("== " + page + " / " + ((courseList.size() + results - 1) / results) + " ==");
     }
 
     /**

@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 import me.A5H73Y.Parkour.Parkour;
-import me.A5H73Y.Parkour.Other.Challenge;
 import me.A5H73Y.Parkour.Other.Question;
 
 import org.bukkit.entity.Player;
@@ -146,6 +145,7 @@ public final class Static {
 
 		lobbyListSet.remove("Set");
 		lobbyListSet.remove("World");
+		lobbyListSet.remove("EnforceWorld");
 		lobbyListSet.remove("X");
 		lobbyListSet.remove("Y");
 		lobbyListSet.remove("Z");
