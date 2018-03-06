@@ -204,10 +204,10 @@ public final class Utils {
     }
 
     /**
-     * Convert milliseconds into formatted time (DD:)HH:MM:SS(.sss)
+     * Convert milliseconds into formatted time HH:MM:SS(.sss)
      *
      * @param millis
-     * @return formatted time: (DD:)HH:MM:SS.(sss)
+     * @return formatted time: HH:MM:SS.(sss)
      */
     public static String calculateTime(long millis) {
         long hours = millis / (3600 * 1000);
@@ -216,13 +216,9 @@ public final class Utils {
 
     	if (Parkour.getSettings().isDisplayMilliseconds()) {
             long milliseconds = millis % 1000;
-    		return String.format("%02d:%02d:%02d.%03d", hours, minutes, seconds, milliseconds);
+            return String.format("%02d:%02d:%02d.%03d", hours, minutes, seconds, milliseconds);
     	}
-    	if (hours < 24) {
-    		return String.format("%02d:%02d:%02d", hours, minutes, seconds);
-    	}
-    	long days = millis / (3600 * 1000 * 24);
-        return String.format("%02d:%02d:%02d:%02d", days, hours % 24, minutes, seconds);
+    	return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
     /**
@@ -925,10 +921,11 @@ public final class Utils {
     		return true;
     	}
     	String[] waitTime = Utils.calculateTime((rewardDelay*24*60*60*1000) - (currTime - lastTime)).split(":");
-    	if (waitTime.length == 4) {
-    		player.sendMessage(Static.getParkourString() + "You will have to wait " + ChatColor.AQUA + waitTime[0] + ":" + waitTime[1] + ":" + waitTime[2] + ":" + waitTime[3] + ChatColor.WHITE + " before you can receive this prize again.");
+    	int hours = Integer.valueOf(waitTime[0]);
+    	if (hours > 48) {
+    		player.sendMessage(Static.getParkourString() + "You have to wait " + ChatColor.AQUA + (hours / 24) + " days before you can receive this prize again.");
     	} else {
-    		player.sendMessage(Static.getParkourString() + "You will have to wait " + ChatColor.AQUA + waitTime[0] + ":" + waitTime[1] + ":" + waitTime[2] + ChatColor.WHITE  + " before you can receive this prize again.");
+    		player.sendMessage(Static.getParkourString() + "You have to wait " + ChatColor.AQUA + waitTime[0] + ":" + waitTime[1] + ":" + waitTime[2].substring(0, Math.min(2, waitTime[2].length())) + ChatColor.WHITE  + " before you can receive this prize again.");
     	}
     	return false;
     }

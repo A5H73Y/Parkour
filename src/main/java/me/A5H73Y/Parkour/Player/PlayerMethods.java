@@ -415,7 +415,7 @@ public class PlayerMethods {
         PlayerInfo.setParkoins(player, total);
         player.sendMessage(Utils.getTranslation("Parkour.RewardParkoins")
                 .replace("%AMOUNT%", String.valueOf(parkoins))
-                .replace("%TOTAL", String.valueOf(total)));
+                .replace("%TOTAL%", String.valueOf(total)));
     }
 
     /**
