@@ -181,6 +181,10 @@ public final class Help {
 			displayHelpMessage(sender, "Reward Parkoins", "/pa rewardparkoins (course) (amount)", "/pa rewardparkoins tutorial 10",
 					" You can reward a player with Parkoins for completing a course. These can be spent in the store to unlock additional content which would be unobtainable without the minimum amount of Parkoins required.");
 
+		} else if (args[1].equalsIgnoreCase("rewarddelay")){	
+			displayHelpMessage(sender, "Reward Delay/Frequency for course", "/pa rewarddelay (course) (delay)", "/pa rewarddelay tutorial 1",
+					" Limit a course reward for a player to once per day, as in the example. The rate at which the reward is given, is achieved by setting the delay to the number of days which need to elapse before the player can win the same prize again.");
+		
 		} else if (args[1].equalsIgnoreCase("recreate")){	
 			displayHelpMessage(sender, "Recreate course database", "/pa recreate", null,
 					" Used to fix the database if there are missing courses that haven't been synchronised with the server.");
@@ -399,6 +403,7 @@ public final class Help {
 		displayCommandUsage(player, "rewardleveladd", "(course) (amount)", "Reward level addon");
 		displayCommandUsage(player, "rewardrank", "(level) (rank)", "Reward rank on complete");
 		displayCommandUsage(player, "rewardparkoins", "(course) (amount)", "Reward Parkoins");
+		displayCommandUsage(player, "rewarddelay", "(course) (delay)", "Reward cool-down (days)");
 	}
 
 	/**
