@@ -11,7 +11,7 @@ public class Settings {
 
 	private boolean commandPermission, chatPrefix, disablePlayerDamage, resetOnLeave, enforceWorld, disableCommands,
             allowTrails, signPermission, attemptLessChecks, useParkourKit, preventAttackingEntities, displayMilliseconds,
-            enforceSafeCheckpoints;
+            enforceSafeCheckpoints, chatPrefixOverride;
 
 	//Display
 	private boolean displayWelcome;
@@ -28,7 +28,8 @@ public class Settings {
 	public Settings(){
 		FileConfiguration config = Parkour.getPlugin().getConfig();
 		commandPermission = config.getBoolean("Other.Parkour.CommandPermissions");
-		chatPrefix = config.getBoolean("Other.Parkour.ChatRankPrefix");
+		chatPrefix = config.getBoolean("Other.Parkour.ChatRankPrefix.Enabled");
+		chatPrefixOverride = config.getBoolean("Other.Parkour.ChatRankPrefix.OverrideChat");
 		disablePlayerDamage = config.getBoolean("OnCourse.DisablePlayerDamage");
 		resetOnLeave = config.getBoolean("OnLeaveServer.LeaveCourse");
 		enforceWorld = config.getBoolean("OnJoin.EnforceWorld");
@@ -151,5 +152,9 @@ public class Settings {
     
     public boolean isEnforceSafeCheckpoints() {
     	return enforceSafeCheckpoints;
+    }
+
+    public boolean isChatPrefixOverride() {
+        return chatPrefixOverride;
     }
 }

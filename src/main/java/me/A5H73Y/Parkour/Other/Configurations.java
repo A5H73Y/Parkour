@@ -457,7 +457,8 @@ public class Configurations {
         config.addDefault("Other.PlaceholderAPI.Enabled", true);
         config.addDefault("Other.CheckForUpdates", true);
         config.addDefault("Other.LogToFile", true);
-        config.addDefault("Other.Parkour.ChatRankPrefix", false);
+        config.addDefault("Other.Parkour.ChatRankPrefix.Enabled", false);
+        config.addDefault("Other.Parkour.ChatRankPrefix.OverrideChat", true);
         config.addDefault("Other.Parkour.SignProtection", true);
         config.addDefault("Other.Parkour.InventoryManagement", true);
         config.addDefault("Other.Parkour.SignPermissions", false);

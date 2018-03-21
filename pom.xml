@@ -11,11 +11,17 @@
 	<name>Parkour</name>
 	<description>The ultimate Parkour plugin</description>
 	<url>http://www.mcparkour.co.uk/</url>
-	
-	<licenses>
+
+    <issueManagement>
+        <url>https://github.com/A5H73Y/Parkour/issues</url>
+        <system>GitHub Issues</system>
+    </issueManagement>
+
+    <licenses>
         <license>
-            <name>Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</name>
-            <url>https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode</url>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
         </license>
     </licenses>
     

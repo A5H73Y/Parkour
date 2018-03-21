@@ -191,17 +191,28 @@ public class ParkourListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         if (!Parkour.getSettings().isChatPrefix())
             return;
 
+        String finalMessage;
         String rank = PlayerInfo.getRank(event.getPlayer());
 
-        event.setFormat(Utils.colour(Utils.getTranslation("Event.Chat", false)
-                .replace("%RANK%", rank)
-                .replace("%PLAYER%", event.getPlayer().getDisplayName())
-                .replace("%MESSAGE%", event.getMessage())));
+        // should we completely override the chat format
+        if (Parkour.getSettings().isChatPrefixOverride()) {
+            finalMessage = Utils.colour(Utils.getTranslation("Event.Chat", false)
+                    .replace("%RANK%", rank)
+                    .replace("%PLAYER%", event.getPlayer().getDisplayName())
+                    .replace("%MESSAGE%", event.getMessage()));
+        } else {
+            // or do we use the existing format, just replacing the Parkour variables
+            finalMessage = Utils.colour(event.getFormat()
+                    .replace("%RANK%", rank)
+                    .replace("%PLAYER%", event.getPlayer().getDisplayName()));
+        }
+
+        event.setFormat(finalMessage);
     }
 
     @EventHandler
