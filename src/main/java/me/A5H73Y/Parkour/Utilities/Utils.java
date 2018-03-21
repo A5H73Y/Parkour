@@ -216,9 +216,9 @@ public final class Utils {
 
     	if (Parkour.getSettings().isDisplayMilliseconds()) {
             long milliseconds = millis % 1000;
-    		return String.format("%02d:%02d:%02d.%03d", hours, minutes, seconds, milliseconds);
+            return String.format("%02d:%02d:%02d.%03d", hours, minutes, seconds, milliseconds);
     	}
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    	return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
     /**
@@ -911,6 +911,23 @@ public final class Utils {
 			}
 		}
     	return true;
+    }
+    
+    public static boolean canRewardPrize(Player player, String courseName) {
+    	int rewardDelay = CourseInfo.getRewardDelay(courseName);
+    	long currTime = System.currentTimeMillis();
+    	long lastTime = PlayerInfo.getRewardTime(player, courseName);
+    	if (currTime - lastTime > rewardDelay*24*60*60*1000) {
+    		return true;
+    	}
+    	String[] waitTime = Utils.calculateTime((rewardDelay*24*60*60*1000) - (currTime - lastTime)).split(":");
+    	int hours = Integer.valueOf(waitTime[0]);
+    	if (hours > 48) {
+    		player.sendMessage(Static.getParkourString() + "You have to wait " + ChatColor.AQUA + (hours / 24) + " days before you can receive this prize again.");
+    	} else {
+    		player.sendMessage(Static.getParkourString() + "You have to wait " + ChatColor.AQUA + waitTime[0] + ":" + waitTime[1] + ":" + waitTime[2].substring(0, Math.min(2, waitTime[2].length())) + ChatColor.WHITE  + " before you can receive this prize again.");
+    	}
+    	return false;
     }
 
     public static Material getMaterial(String name) {

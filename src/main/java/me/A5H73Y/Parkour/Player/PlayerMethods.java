@@ -316,6 +316,14 @@ public class PlayerMethods {
                 DatabaseMethods.hasPlayerCompleted(player.getName(), courseName))
             return;
 
+        // Check how often prize can be rewarded
+        if (CourseInfo.getRewardDelay(courseName) > 0) {
+        	if (!Utils.canRewardPrize(player, courseName)) {
+        		return;
+        	}
+        	PlayerInfo.setRewardTime(player, courseName, System.currentTimeMillis());
+        }
+        
         Material material;
         int amount;
 
@@ -407,7 +415,7 @@ public class PlayerMethods {
         PlayerInfo.setParkoins(player, total);
         player.sendMessage(Utils.getTranslation("Parkour.RewardParkoins")
                 .replace("%AMOUNT%", String.valueOf(parkoins))
-                .replace("%TOTAL", String.valueOf(total)));
+                .replace("%TOTAL%", String.valueOf(total)));
     }
 
     /**

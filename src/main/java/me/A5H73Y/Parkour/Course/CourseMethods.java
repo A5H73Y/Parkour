@@ -571,12 +571,32 @@ public class CourseMethods {
         }
 
         if (args[2] == null || args[2].trim().length() == 0) {
-            sender.sendMessage(Static.getParkourString() + "Rank is not valid");
+            sender.sendMessage(Static.getParkourString() + "Rank is not valid.");
             return;
         }
 
         CourseInfo.setRewardRank(args[1], args[2]);
         sender.sendMessage(Static.getParkourString() + "Level " + args[1] + "'s rank was set to " + Utils.colour(args[2]));
+    }
+    
+    /**
+     * Set the number of days that have to elapse before the prize can be won again by the same player.
+     *
+     * @param args
+     * @param sender
+     */
+    public static void setRewardDelay(String[] args, CommandSender sender) {
+    	if (!CourseMethods.exist(args[1])) {
+            sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
+            return;
+        }
+    	if (!Utils.isNumber(args[2])) {
+            sender.sendMessage(Static.getParkourString() + "Reward delay needs to be numeric.");
+            return;
+        }
+    	
+    	CourseInfo.setRewardDelay(args[1], args[2]);
+    	sender.sendMessage(Static.getParkourString() + args[1] + "'s reward delay was set to " + Utils.colour(args[2]) + " day(s).");
     }
 
     /**

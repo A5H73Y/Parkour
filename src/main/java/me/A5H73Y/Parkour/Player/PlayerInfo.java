@@ -152,6 +152,27 @@ public class PlayerInfo {
         Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Rank", rank);
         Parkour.getParkourConfig().saveUsers();
     }
+    
+    /**
+     * Get the time the player last won the reward for the course
+     * @param player
+     * @param courseName
+     * @return
+     */
+    public static long getRewardTime(OfflinePlayer player, String courseName) {
+    	return Parkour.getParkourConfig().getUsersData().getLong("PlayerInfo." + player.getName() + ".Prizes." + courseName);
+    }
+    
+    /**
+     * Set the time the player wins the reward for the course
+     * @param player
+     * @param courseName
+     * @param rewardTime
+     */
+    public static void setRewardTime(OfflinePlayer player, String courseName, long rewardTime) {
+    	Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Prizes." + courseName, rewardTime);
+    	Parkour.getParkourConfig().saveUsers();
+    }
 
     /**
      * Determine if the Parkour has any saved information about a player

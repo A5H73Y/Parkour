@@ -215,6 +215,15 @@ public class CourseInfo {
         Parkour.getParkourConfig().getUsersData().set("ServerInfo.Levels." + level + ".Rank", rank);
         Parkour.getParkourConfig().saveUsers();
     }
+    
+    public static int getRewardDelay(String courseName) {
+    	return Parkour.getParkourConfig().getCourseData().getInt(courseName.toLowerCase() + ".RewardDelay");
+    }
+    
+    public static void setRewardDelay(String courseName, String rewardDelay) {
+    	Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".RewardDelay", Integer.parseInt(rewardDelay));
+        Parkour.getParkourConfig().saveCourses();
+    }
 
     public static int getRewardParkoins(String courseName) {
         return Parkour.getParkourConfig().getCourseData().getInt(courseName.toLowerCase() + ".Parkoins");

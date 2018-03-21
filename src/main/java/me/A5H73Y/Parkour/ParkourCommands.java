@@ -232,6 +232,15 @@ class ParkourCommands implements CommandExecutor {
 
 						CourseMethods.setRewardRank(args, player);
 
+					} else if (args[0].equalsIgnoreCase("rewarddelay")) {
+						if (!Utils.hasPermission(player, "Parkour.Admin"))
+							return false;
+
+						if (!Utils.validateArgs(player, args, 3))
+							return false;
+
+						CourseMethods.setRewardDelay(args, player);
+					
 					} else if (args[0].equalsIgnoreCase("rewardparkoins")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
 							return false;
