@@ -468,7 +468,7 @@ public class CourseMethods {
             return;
         }
 
-        CourseInfo.setMaximumDeaths(args[1], args[2]);
+        CourseInfo.setMaximumDeaths(args[1], Integer.parseInt(args[2]));
         sender.sendMessage(Static.getParkourString() + ChatColor.AQUA + args[1] + ChatColor.WHITE + " maximum deaths was set to " + ChatColor.AQUA + args[2]);
     }
 
@@ -488,7 +488,7 @@ public class CourseMethods {
             return;
         }
 
-        CourseInfo.setMinimumLevel(args[1], args[2]);
+        CourseInfo.setMinimumLevel(args[1], Integer.parseInt(args[2]));
         sender.sendMessage(Static.getParkourString() + ChatColor.AQUA + args[1] + ChatColor.WHITE + " minimum level requirement was set to " + ChatColor.AQUA + args[2]);
     }
 
@@ -510,7 +510,7 @@ public class CourseMethods {
             return;
         }
 
-        CourseInfo.setRewardLevel(args[1], args[2]);
+        CourseInfo.setRewardLevel(args[1], Integer.parseInt(args[2]));
         sender.sendMessage(Static.getParkourString() + args[1] + "'s reward level was set to " + ChatColor.AQUA + args[2]);
     }
 
@@ -595,8 +595,8 @@ public class CourseMethods {
             return;
         }
     	
-    	CourseInfo.setRewardDelay(args[1], args[2]);
-    	sender.sendMessage(Static.getParkourString() + args[1] + "'s reward delay was set to " + Utils.colour(args[2]) + " day(s).");
+    	CourseInfo.setRewardDelay(args[1], Integer.parseInt(args[2]));
+    	sender.sendMessage(Static.getParkourString() + args[1] + "'s reward delay was set to " + args[2] + " day(s).");
     }
 
     /**
@@ -616,7 +616,7 @@ public class CourseMethods {
             return;
         }
 
-        CourseInfo.setRewardParkoins(args[1], args[2]);
+        CourseInfo.setRewardParkoins(args[1], Integer.parseInt(args[2]));
         sender.sendMessage(Static.getParkourString() + args[1] + "'s parkoins reward was set to " + ChatColor.AQUA + args[2]);
     }
 

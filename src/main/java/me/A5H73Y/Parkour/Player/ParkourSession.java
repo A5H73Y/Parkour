@@ -105,7 +105,7 @@ public class ParkourSession implements Serializable {
 	}
 
 	public String displayTime() {
-		return Utils.calculateTime(getTime());
+		return Utils.displayCurrentTime(getTime());
 	}
 
 	public void setMode(ParkourMode mode) {

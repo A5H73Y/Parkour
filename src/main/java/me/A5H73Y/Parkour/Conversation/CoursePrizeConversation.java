@@ -90,7 +90,7 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 		public String getPromptText(ConversationContext context) {
 			CourseInfo.setMaterialPrize(context.getSessionData("courseName").toString(),
                     context.getSessionData("material").toString(),
-                    context.getSessionData("amount").toString());
+                    Integer.parseInt(context.getSessionData("amount").toString()));
 
 			return " The Material prize for " + ChatColor.DARK_AQUA + context.getSessionData("courseName") + ChatColor.WHITE + " was set to " + ChatColor.AQUA + context.getSessionData("amount") + " " + context.getSessionData("material");
 		}
@@ -183,7 +183,7 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 	private class XPProcessComplete extends MessagePrompt {
 		public String getPromptText(ConversationContext context) {
 		    CourseInfo.setXPPrize(context.getSessionData("courseName").toString(),
-                    context.getSessionData("amount").toString());
+                    Integer.parseInt(context.getSessionData("amount").toString()));
 
 			return " The XP prize for " + ChatColor.DARK_AQUA + context.getSessionData("courseName") + ChatColor.WHITE + " was set to " + ChatColor.AQUA + context.getSessionData("amount");
 		}

@@ -14,7 +14,7 @@ public class Settings {
             enforceSafeCheckpoints, chatPrefixOverride;
 
 	//Display
-	private boolean displayWelcome;
+	private boolean displayWelcome, displayPrizeCooldown;
 
 	//Materials
 	private Material lastCheckpoint, hideall, leave;
@@ -47,6 +47,7 @@ public class Settings {
 		leave = Material.getMaterial(config.getString("OnJoin.Item.Leave.Material"));
 
 		displayWelcome = config.getBoolean("Other.Display.JoinWelcomeMessage");
+		displayPrizeCooldown = config.getBoolean("Other.Display.PrizeCooldown");
 
 		maxFallTicks = config.getInt("OnCourse.MaxFallTicks");
 
@@ -156,5 +157,9 @@ public class Settings {
 
     public boolean isChatPrefixOverride() {
         return chatPrefixOverride;
+    }
+
+    public boolean isDisplayPrizeCooldown() {
+        return displayPrizeCooldown;
     }
 }

@@ -13,13 +13,10 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import me.A5H73Y.Parkour.Course.CourseInfo;
-import me.A5H73Y.Parkour.Other.ParkourKit;
+import me.A5H73Y.Parkour.Other.*;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Enums.QuestionType;
-import me.A5H73Y.Parkour.Other.Question;
-import me.A5H73Y.Parkour.Other.TimeObject;
-import me.A5H73Y.Parkour.Other.ValidationMethods;
 
 import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
@@ -209,16 +206,10 @@ public final class Utils {
      * @param millis
      * @return formatted time: HH:MM:SS.(sss)
      */
-    public static String calculateTime(long millis) {
-        long hours = millis / (3600 * 1000);
-        long minutes = millis / (60 * 1000) % 60;
-        long seconds = millis / 1000 % 60;
-
-    	if (Parkour.getSettings().isDisplayMilliseconds()) {
-            long milliseconds = millis % 1000;
-            return String.format("%02d:%02d:%02d.%03d", hours, minutes, seconds, milliseconds);
-    	}
-    	return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    public static String displayCurrentTime(long millis) {
+        MillisecondConverter time = new MillisecondConverter(millis);
+        String pattern = Parkour.getSettings().isDisplayMilliseconds() ? "%02d:%02d:%02d.%02d" : "%02d:%02d:%02d";
+        return String.format(pattern, time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds());
     }
 
     /**
@@ -647,7 +638,7 @@ public final class Utils {
 
         player.sendMessage(Utils.getStandardHeading(courseName + " : Top " + times.size() + " results"));
         for (int i = 0; i < times.size(); i++) {
-            player.sendMessage(Utils.colour((i + 1) + ") &b" + times.get(i).getPlayer() + "&f in &3" + Utils.calculateTime(times.get(i).getTime()) + "&f, dying &7" + times.get(i).getDeaths() + " &ftimes"));
+            player.sendMessage(Utils.colour((i + 1) + ") &b" + times.get(i).getPlayer() + "&f in &3" + Utils.displayCurrentTime(times.get(i).getTime()) + "&f, dying &7" + times.get(i).getDeaths() + " &ftimes"));
             //TODO - translate
         }
     }
@@ -884,50 +875,87 @@ public final class Utils {
             players.showPlayer(player);
         }
     }
-    
-    public static boolean isCheckpointSafe(Player player, Block block) {
-		Block blockUnder = block.getRelative(BlockFace.DOWN);
-		List<Material> validMaterials = new ArrayList<Material>();
-		Collections.addAll(validMaterials, Material.AIR, Material.REDSTONE_BLOCK, Material.STEP, Material.WOOD_STEP, Material.STONE_SLAB2);
-		if (!Bukkit.getBukkitVersion().contains("1.8")){
-			validMaterials.add(Material.PURPUR_SLAB);
-		}
-		//check if player is standing in a half-block
-		if (! block.getType().equals(Material.AIR) && ! block.getType().equals(Material.STONE_PLATE)) {
-			player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + block.getType());
-			return false;
-		}
 
-		if (! blockUnder.getType().isOccluding()) {
-			if (blockUnder.getState().getData() instanceof Stairs) {
+    public static boolean isCheckpointSafe(Player player, Block block) {
+        Block blockUnder = block.getRelative(BlockFace.DOWN);
+        List<Material> validMaterials = new ArrayList<Material>();
+        Collections.addAll(validMaterials, Material.AIR, Material.REDSTONE_BLOCK, Material.STEP, Material.WOOD_STEP, Material.STONE_SLAB2);
+        if (!Bukkit.getBukkitVersion().contains("1.8")){
+            validMaterials.add(Material.PURPUR_SLAB);
+        }
+        //check if player is standing in a half-block
+        if (! block.getType().equals(Material.AIR) && ! block.getType().equals(Material.STONE_PLATE)) {
+            player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + block.getType());
+            return false;
+        }
+
+        if (! blockUnder.getType().isOccluding()) {
+            if (blockUnder.getState().getData() instanceof Stairs) {
                 Stairs stairs = (Stairs) blockUnder.getState().getData();
-				if (! stairs.isInverted()) {
-					player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + blockUnder.getType());
-					return false;	
-				}
-			} else if (! validMaterials.contains(blockUnder.getType())) {
-				player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + blockUnder.getType());
-				return false;
-			}
-		}
-    	return true;
+                if (! stairs.isInverted()) {
+                    player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + blockUnder.getType());
+                    return false;
+                }
+            } else if (! validMaterials.contains(blockUnder.getType())) {
+                player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + blockUnder.getType());
+                return false;
+            }
+        }
+        return true;
     }
-    
-    public static boolean canRewardPrize(Player player, String courseName) {
-    	int rewardDelay = CourseInfo.getRewardDelay(courseName);
-    	long currTime = System.currentTimeMillis();
-    	long lastTime = PlayerInfo.getRewardTime(player, courseName);
-    	if (currTime - lastTime > rewardDelay*24*60*60*1000) {
-    		return true;
-    	}
-    	String[] waitTime = Utils.calculateTime((rewardDelay*24*60*60*1000) - (currTime - lastTime)).split(":");
-    	int hours = Integer.valueOf(waitTime[0]);
-    	if (hours > 48) {
-    		player.sendMessage(Static.getParkourString() + "You have to wait " + ChatColor.AQUA + (hours / 24) + " days before you can receive this prize again.");
-    	} else {
-    		player.sendMessage(Static.getParkourString() + "You have to wait " + ChatColor.AQUA + waitTime[0] + ":" + waitTime[1] + ":" + waitTime[2].substring(0, Math.min(2, waitTime[2].length())) + ChatColor.WHITE  + " before you can receive this prize again.");
-    	}
-    	return false;
+
+    /**
+     * Check to see if the minimum amount of time has passed (in days) to allow the plugin to provide the prize again
+     * @param player
+     * @param courseName
+     * @return boolean
+     */
+    public static boolean hasPrizeCooldownDurationPassed(Player player, String courseName) {
+        int rewardDelay = CourseInfo.getRewardDelay(courseName);
+
+        if (rewardDelay <= 0) return true;
+
+        long lastRewardTime = PlayerInfo.getLastRewardedTime(player, courseName);
+
+        if (lastRewardTime <= 0) return true;
+
+        long timeDifference = System.currentTimeMillis() - lastRewardTime;
+        long daysDelay = convertDaysToMilliseconds(rewardDelay);
+
+        if (timeDifference > daysDelay) return true;
+
+        if (Parkour.getSettings().isDisplayPrizeCooldown()) {
+            String timeRemaining = displayTimeRemaining(daysDelay - timeDifference);
+            player.sendMessage(Utils.getTranslation("Error.PrizeCooldown").replace("%TIME%", timeRemaining));
+        }
+        return false;
+    }
+
+    private static String displayTimeRemaining(long millis) {
+        MillisecondConverter time = new MillisecondConverter(millis);
+        StringBuffer totalTime = new StringBuffer();
+
+        if (time.getDays() > 2) {
+            totalTime.append(time.getDays());
+            totalTime.append(" days"); //todo translate
+            return totalTime.toString();
+        }
+
+        if (time.getDays() > 0) {
+            totalTime.append(1);
+            totalTime.append(" day, ");
+        }
+        if (time.getHours() > 0) {
+            totalTime.append(time.getHours());
+            totalTime.append(" hours, ");
+        }
+        totalTime.append(time.getMinutes());
+        totalTime.append(" minutes");
+        return totalTime.toString();
+    }
+
+    private static long convertDaysToMilliseconds(int days) {
+        return days * 86400000; //(24*60*60*1000)
     }
 
     public static Material getMaterial(String name) {

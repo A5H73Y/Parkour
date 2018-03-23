@@ -317,11 +317,13 @@ public class PlayerMethods {
             return;
 
         // Check how often prize can be rewarded
-        if (CourseInfo.getRewardDelay(courseName) > 0) {
-        	if (!Utils.canRewardPrize(player, courseName)) {
+        if (CourseInfo.hasRewardDelay(courseName)) {
+            // if we still have to wait, return out of this function
+        	if (!Utils.hasPrizeCooldownDurationPassed(player, courseName)) {
         		return;
         	}
-        	PlayerInfo.setRewardTime(player, courseName, System.currentTimeMillis());
+        	// otherwise make a note of last time rewarded, and let them continue
+        	PlayerInfo.setLastRewardedTime(player, courseName, System.currentTimeMillis());
         }
         
         Material material;

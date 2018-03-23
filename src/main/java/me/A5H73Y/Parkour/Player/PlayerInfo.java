@@ -117,7 +117,7 @@ public class PlayerInfo {
      * @param courseName
      */
     public static void setLastCompletedCourse(OfflinePlayer player, String courseName) {
-        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".LastCompleted", courseName);
+        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".LastCompleted", courseName.toLowerCase());
         Parkour.getParkourConfig().saveUsers();
     }
 
@@ -127,7 +127,7 @@ public class PlayerInfo {
      * @param courseName
      */
     public static void setLastPlayedCourse(OfflinePlayer player, String courseName) {
-        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".LastPlayed", courseName);
+        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".LastPlayed", courseName.toLowerCase());
         Parkour.getParkourConfig().saveUsers();
     }
 
@@ -159,8 +159,9 @@ public class PlayerInfo {
      * @param courseName
      * @return
      */
-    public static long getRewardTime(OfflinePlayer player, String courseName) {
-    	return Parkour.getParkourConfig().getUsersData().getLong("PlayerInfo." + player.getName() + ".Prizes." + courseName);
+    public static long getLastRewardedTime(OfflinePlayer player, String courseName) {
+    	return Parkour.getParkourConfig().getUsersData()
+                .getLong("PlayerInfo." + player.getName() + ".LastRewarded." + courseName.toLowerCase(), 0);
     }
     
     /**
@@ -169,8 +170,9 @@ public class PlayerInfo {
      * @param courseName
      * @param rewardTime
      */
-    public static void setRewardTime(OfflinePlayer player, String courseName, long rewardTime) {
-    	Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Prizes." + courseName, rewardTime);
+    public static void setLastRewardedTime(OfflinePlayer player, String courseName, long rewardTime) {
+    	Parkour.getParkourConfig().getUsersData()
+                .set("PlayerInfo." + player.getName() + ".LastRewarded." + courseName.toLowerCase(), rewardTime);
     	Parkour.getParkourConfig().saveUsers();
     }
 

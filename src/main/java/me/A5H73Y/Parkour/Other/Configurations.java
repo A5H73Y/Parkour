@@ -332,6 +332,7 @@ public class Configurations {
             stringData.addDefault("Error.Cooldown", "Slow down! Please wait &b%AMOUNT% &fmore seconds.");
             stringData.addDefault("Error.NotCompleted", "You have not yet completed &b%COURSE%&f!");
             stringData.addDefault("Error.AlreadyVoted", "You have already voted for &b%COURSE%&f!");
+            stringData.addDefault("Error.PrizeCooldown", "You have to wait &b%TIME% &fbefore you can receive this prize again!");
 
             stringData.addDefault("Help.Command", "&7/pa help &9%COMMAND% &0: &7To learn more about this command.");
             stringData.addDefault("Help.Commands", "&3/pa &bcmds &8: &fTo display the Parkour commands menu.");
@@ -466,6 +467,7 @@ public class Configurations {
         config.addDefault("Other.Display.JoinWelcomeMessage", true);
         config.addDefault("Other.Display.LevelReward", true);
         config.addDefault("Other.Display.ShowMilliseconds", false);
+        config.addDefault("Other.Display.PrizeCooldown", true);
         config.addDefault("Other.EnforceSafeCheckpoints", true);
 
         config.addDefault("SQLite.PathOverride", "");
