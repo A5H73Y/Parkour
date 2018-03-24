@@ -40,7 +40,7 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 		return null;
 	}
 
-	/* BEGIN MATERIAL PRIZE */
+    /* BEGIN MATERIAL PRIZE */
 	private class ChooseBlock extends StringPrompt {
 		@Override
 		public String getPromptText(ConversationContext context) {

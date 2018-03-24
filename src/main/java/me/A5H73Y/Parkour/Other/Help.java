@@ -194,7 +194,7 @@ public final class Help {
 					" You can delete a course, which will remove all information stored on the server about the course, as well as remove all references from the database. You can delete a lobby from the server. The operation will have to be confirmed or cancelled before the change is made.");
 
 		} else if (args[1].equalsIgnoreCase("reset")){	
-			displayHelpMessage(sender, "Reset a course / player", "/pa reset (course / player / leaderboard) (argument)", "/pa reset player A5H73Y",
+			displayHelpMessage(sender, "Reset a course / player / leaderboard / prize", "/pa reset (course / player / leaderboard / prize) (argument)", "/pa reset player A5H73Y",
 					" Resetting a course will delete all the statistics stored, which includes leaderboards and various Parkour attributes. This will NOT affect the spawn / checkpoints. Resetting a player will delete all their times across all courses and delete all various Parkour attributes. The operation will have to be confirmed or cancelled before the change is made.");
 
 		} else if (args[1].equalsIgnoreCase("whitelist")){	
@@ -414,8 +414,8 @@ public final class Help {
 		player.sendMessage(Utils.getStandardHeading("Admin Commands"));
 
 		displayCommandUsage(player, "recreate", null, "Fix course database");
-		displayCommandUsage(player, "delete", "(argument)", "Delete various features");
-		displayCommandUsage(player, "reset", "(argument)", "Delete course / player");
+		displayCommandUsage(player, "delete", "(feature) (argument)", "Delete various features");
+		displayCommandUsage(player, "reset", "(feature) (argument)", "Reset various features");
 		displayCommandUsage(player, "whitelist", "(command)", "Whitelist a command");
 		displayCommandUsage(player, "economy", null, "Display economy menu");
 		displayCommandUsage(player, "createKit", null, "Start ParkourKit creation");

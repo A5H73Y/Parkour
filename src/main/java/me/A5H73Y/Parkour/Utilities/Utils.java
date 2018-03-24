@@ -497,10 +497,7 @@ public final class Utils {
             if (!ValidationMethods.deleteCourse(args[2], player))
                 return;
 
-            player.sendMessage(Static.getParkourString() + "You are about to delete course " + ChatColor.AQUA + args[2] + ChatColor.WHITE + "...");
-            player.sendMessage(ChatColor.GRAY + "This will remove all information about the course ever existing, which includes all leaderboard data, course statistics and everything else the plugin knows about it.");
-            player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
-            Static.addQuestion(player.getName(), new Question(QuestionType.DELETE_COURSE, args[2].toLowerCase()));
+            QuestionManager.askDeleteCourseQuestion(player, args[2]);
 
         } else if (args[1].equalsIgnoreCase("checkpoint")) {
             if (!CourseMethods.exist(args[2])) {
@@ -515,10 +512,7 @@ public final class Utils {
                 return;
             }
 
-            player.sendMessage(Static.getParkourString() + "You are about to delete checkpoint " + ChatColor.AQUA + checkpoints + ChatColor.WHITE + " for course " + ChatColor.AQUA + args[2] + ChatColor.WHITE + "...");
-            player.sendMessage(ChatColor.GRAY + "Deleting a checkpoint will impact everybody that is currently playing on " + args[2] + ". You should not set a course to finished and then continue to make changes.");
-            player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
-            Static.addQuestion(player.getName(), new Question(QuestionType.DELETE_CHECKPOINT, args[2].toLowerCase()));
+            QuestionManager.askDeleteCheckpointQuestion(player, args[2], checkpoints);
 
         } else if (args[1].equalsIgnoreCase("lobby")) {
             if (!Parkour.getPlugin().getConfig().contains("Lobby." + args[2].toLowerCase() + ".World")) {
@@ -529,10 +523,7 @@ public final class Utils {
             if (!ValidationMethods.deleteLobby(args[2], player))
                 return;
 
-            player.sendMessage(Static.getParkourString() + "You are about to delete lobby " + ChatColor.AQUA + args[2] + ChatColor.WHITE + "...");
-            player.sendMessage(ChatColor.GRAY + "Deleting a lobby will remove all information about it from the server.");
-            player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
-            Static.addQuestion(player.getName(), new Question(QuestionType.DELETE_LOBBY, args[2].toLowerCase()));
+            QuestionManager.askDeleteLobbyQuestion(player, args[2]);
 
         } else if (args[1].equalsIgnoreCase("kit")) {
             if (!ParkourKit.doesParkourKitExist(args[2])) {
@@ -543,10 +534,7 @@ public final class Utils {
             if (!ValidationMethods.deleteParkourKit(args[2], player))
                 return;
 
-            player.sendMessage(Static.getParkourString() + "You are about to delete ParkourKit " + ChatColor.AQUA + args[2] + ChatColor.WHITE + "...");
-            player.sendMessage(ChatColor.GRAY + "Deleting a ParkourKit will remove all information about it from the server.");
-            player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
-            Static.addQuestion(player.getName(), new Question(QuestionType.DELETE_KIT, args[2].toLowerCase()));
+            QuestionManager.askDeleteKitQuestion(player, args[2]);
 
         } else {
             player.sendMessage(invalidSyntax("delete", "(course / checkpoint / lobby / kit) (name)"));
@@ -568,10 +556,7 @@ public final class Utils {
                 return;
             }
 
-            player.sendMessage(Static.getParkourString() + "You are about to reset " + ChatColor.AQUA + args[2] + ChatColor.WHITE + "...");
-            player.sendMessage(ChatColor.GRAY + "Resetting a course will delete all the statistics stored, which includes leaderboards and various parkour attributes. This will NOT affect the spawn / checkpoints.");
-            player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
-            Static.addQuestion(player.getName(), new Question(QuestionType.RESET_COURSE, args[2].toLowerCase()));
+            QuestionManager.askResetCourseQuestion(player, args[2]);
 
         } else if (args[1].equalsIgnoreCase("player")) {
             OfflinePlayer target = Bukkit.getOfflinePlayer(args[2]);
@@ -580,10 +565,7 @@ public final class Utils {
                 return;
             }
 
-            player.sendMessage(Static.getParkourString() + "You are about to reset player " + ChatColor.AQUA + args[2] + ChatColor.WHITE + "...");
-            player.sendMessage(ChatColor.GRAY + "Resetting a player will delete all their times across all courses and delete all various parkour attributes.");
-            player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
-            Static.addQuestion(player.getName(), new Question(QuestionType.RESET_PLAYER, args[2]));
+            QuestionManager.askResetPlayerQuestion(player, args[2]);
 
         } else if (args[1].equalsIgnoreCase("leaderboard")) {
             if (!CourseMethods.exist(args[2])) {
@@ -591,13 +573,18 @@ public final class Utils {
                 return;
             }
 
-            player.sendMessage(Static.getParkourString() + "You are about to reset " + ChatColor.AQUA + args[2] + ChatColor.WHITE + " leaderboards...");
-            player.sendMessage(ChatColor.GRAY + "Resetting the leaderboards will remove all times from the database for this course. This will NOT affect the course in any other way.");
-            player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
-            Static.addQuestion(player.getName(), new Question(QuestionType.RESET_LEADERBOARD, args[2].toLowerCase()));
+            QuestionManager.askResetLeaderboardQuestion(player, args[2]);
+
+        } else if (args[1].equalsIgnoreCase("prize")) {
+            if (!CourseMethods.exist(args[2])) {
+                player.sendMessage(Utils.getTranslation("Error.Unknown"));
+                return;
+            }
+
+            QuestionManager.askResetPrizeQuestion(player, args[2]);
 
         } else {
-            invalidSyntax("reset", "(course / player / leaderboard) (argument)");
+            player.sendMessage(invalidSyntax("reset", "(course / player / leaderboard / prize) (argument)"));
         }
     }
 

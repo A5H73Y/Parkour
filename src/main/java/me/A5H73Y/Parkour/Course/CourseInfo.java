@@ -300,4 +300,11 @@ public class CourseInfo {
         Parkour.getParkourConfig().saveCourses();
         DatabaseMethods.deleteCourseAndReferences(courseName);
     }
+
+    public static void resetPrizes(String courseName) {
+        courseName = courseName.toLowerCase();
+
+        Parkour.getParkourConfig().getCourseData().set(courseName + ".Prize", null);
+        Parkour.getParkourConfig().saveCourses();
+    }
 }

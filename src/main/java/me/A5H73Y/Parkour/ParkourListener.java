@@ -5,6 +5,7 @@ import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Enums.ParkourMode;
 import me.A5H73Y.Parkour.Other.ParkourKit;
+import me.A5H73Y.Parkour.Other.QuestionManager;
 import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
@@ -498,8 +499,14 @@ public class ParkourListener implements Listener {
 
         Player player = event.getPlayer();
 
-        if (commandIsPa && Static.containsQuestion(player.getName())) {
-            Static.getQuestion(player.getName()).questionPlayer(player, event.getMessage());
+        if (commandIsPa && QuestionManager.hasPlayerBeenAskedQuestion(player.getName())) {
+            String[] args = event.getMessage().split(" ");
+            if (args.length <= 1) {
+                player.sendMessage(Static.getParkourString() + "Invalid answer.");
+                player.sendMessage("Please use either " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " or " + ChatColor.AQUA + "/pa no");
+            } else {
+                QuestionManager.answerQuestion(player, args[1]);
+            }
             event.setCancelled(true);
         }
 

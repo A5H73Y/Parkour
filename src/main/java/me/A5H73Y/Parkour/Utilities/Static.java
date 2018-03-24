@@ -8,13 +8,10 @@ import java.util.Map;
 import java.util.Set;
 
 import me.A5H73Y.Parkour.Parkour;
-import me.A5H73Y.Parkour.Other.Question;
 
 import org.bukkit.entity.Player;
 
 public final class Static {
-
-	private static Map<String, Question> questions = new HashMap<>();
 
 	private static List<String> courseList = new ArrayList<>();
 	private static List<String> quiet = new ArrayList<>();
@@ -52,22 +49,6 @@ public final class Static {
 
 	public static List<String> getCourses() {
 		return courseList;
-	}
-
-    public static boolean containsQuestion(String playerName) {
-		return questions.containsKey(playerName);
-	}
-
-	public static void addQuestion(String playerName, Question question) {
-		questions.put(playerName, question);
-	}
-
-	public static Question getQuestion(String playerName) {
-		return questions.get(playerName);
-	}
-
-	public static void removeQuestion(String playerName) {
-		questions.remove(playerName);
 	}
 
 	public static void enableEconomy() {
