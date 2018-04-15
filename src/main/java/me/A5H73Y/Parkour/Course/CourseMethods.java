@@ -938,7 +938,9 @@ public class CourseMethods {
 
         } else if ("moon".equalsIgnoreCase(mode)) {
             return ParkourMode.MOON;
-        }
+
+        } else if ("dropper".equalsIgnoreCase(mode))
+            return ParkourMode.DROPPER;
 
         return ParkourMode.NONE;
     }

@@ -93,8 +93,11 @@ public class ParkourListener implements Listener {
             return;
 
         Player player = event.getPlayer();
+        ParkourSession session = PlayerMethods.getParkourSession(player.getName());
 
-        if (player.getFallDistance() > Parkour.getSettings().getMaxFallTicks()) {
+        // Only do fall checks if mode is not 'dropper' course
+        if (session.getMode() != ParkourMode.DROPPER &&
+                player.getFallDistance() > Parkour.getSettings().getMaxFallTicks()) {
             PlayerMethods.playerDie(player);
             return;
         }
@@ -115,7 +118,7 @@ public class ParkourListener implements Listener {
         }
 
         Material belowMaterial = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
-        ParkourKit kit = PlayerMethods.getParkourSession(player.getName()).getCourse().getParkourKit();
+        ParkourKit kit = session.getCourse().getParkourKit();
 
         if (belowMaterial.equals(Material.SPONGE)) {
             player.setFallDistance(0);
@@ -284,6 +287,13 @@ public class ParkourListener implements Listener {
 
         if (Parkour.getSettings().isDisablePlayerDamage()) {
             event.setDamage(0);
+            return;
+        }
+
+        if (PlayerMethods.getParkourSession(player.getName()).getMode() == ParkourMode.DROPPER
+                && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
+            event.setDamage(0);
+            event.setCancelled(true);
             return;
         }
 
