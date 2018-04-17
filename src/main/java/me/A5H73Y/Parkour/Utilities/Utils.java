@@ -920,7 +920,7 @@ public final class Utils {
 
     private static String displayTimeRemaining(long millis) {
         MillisecondConverter time = new MillisecondConverter(millis);
-        StringBuffer totalTime = new StringBuffer();
+        StringBuilder totalTime = new StringBuilder();
 
         if (time.getDays() > 2) {
             totalTime.append(time.getDays());

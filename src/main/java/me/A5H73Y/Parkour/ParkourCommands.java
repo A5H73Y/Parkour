@@ -55,7 +55,7 @@ class ParkourCommands implements CommandExecutor {
 					} else if (args[0].equalsIgnoreCase("info")) {
 						PlayerMethods.displayPlayerInfo(args, player);
 
-					} else if (args[0].equalsIgnoreCase("stats")) {
+					} else if (args[0].equalsIgnoreCase("stats") || args[0].equalsIgnoreCase("course")) {
 						if (!Utils.validateArgs(player, args, 2))
 							return false;
 

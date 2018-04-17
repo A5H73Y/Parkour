@@ -356,7 +356,18 @@ public class CourseMethods {
         List<String> limited = courseList.subList(fromIndex, Math.min(fromIndex + results, courseList.size()));
 
         for (int i = 0; i < limited.size(); i++) {
-            sender.sendMessage(((fromIndex) + (i + 1)) + ") " + ChatColor.AQUA + limited.get(i));
+            String courseName = limited.get(i);
+            Integer minimumLevel = CourseInfo.getMinimumLevel(courseName);
+            Integer rewardLevel = CourseInfo.getRewardLevel(courseName);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(((fromIndex) + (i + 1)));
+            sb.append(") " + ChatColor.AQUA + courseName);
+
+            if (minimumLevel > 0) sb.append(ChatColor.RED + " (" + minimumLevel + ")");
+            if (rewardLevel > 0) sb.append(ChatColor.GREEN + " (" + rewardLevel + ")");
+
+            sender.sendMessage(sb.toString());
         }
 
         sender.sendMessage("== " + page + " / " + ((courseList.size() + results - 1) / results) + " ==");

@@ -33,7 +33,7 @@ public class Parkour extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ParkourSignListener(), this);
 		getCommand("parkour").setExecutor(new ParkourCommands());
 
-        Metrics metrics = new Metrics(this);
+        new Metrics(this);
         updatePlugin();
 	}
 
