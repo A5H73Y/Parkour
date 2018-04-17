@@ -218,7 +218,13 @@ public class CourseMethods {
         player.sendMessage("Finished: " + aqua + finished);
 
         if (minLevel > 0)
-            player.sendMessage("Required level: " + aqua + minLevel);
+            player.sendMessage("Level Required: " + aqua + minLevel);
+
+        if (rewardLevel > 0)
+            player.sendMessage("Level Reward: " + aqua + rewardLevel);
+
+        if (rewardLevelAdd > 0)
+            player.sendMessage("Level Reward Addon: " + aqua + rewardLevelAdd);
 
         if (maxDeaths > 0)
             player.sendMessage("Max Deaths: " + aqua + maxDeaths);
@@ -228,12 +234,6 @@ public class CourseMethods {
 
         if (linkedCourse != null && linkedCourse.length() > 0)
             player.sendMessage("Linked Course: " + aqua + linkedCourse);
-
-        if (rewardLevel > 0)
-            player.sendMessage("Level Reward: " + aqua + rewardLevel);
-
-        if (rewardLevelAdd > 0)
-            player.sendMessage("Level Reward Addon: " + aqua + rewardLevelAdd);
 
         if (XP > 0)
             player.sendMessage("XP Reward: " + aqua + XP);
@@ -245,7 +245,7 @@ public class CourseMethods {
             player.sendMessage("ParkourKit: " + aqua + parkourKit);
 
         if (mode != null && !"none".equalsIgnoreCase(mode))
-            player.sendMessage("Mode: " + aqua + mode);
+            player.sendMessage("ParkourMode: " + aqua + mode);
 
         if (Static.getEconomy()) {
             int joinFee = econ.getInt("Price." + courseName + ".JoinFee");
