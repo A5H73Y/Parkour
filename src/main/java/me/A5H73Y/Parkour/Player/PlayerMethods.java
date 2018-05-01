@@ -1055,7 +1055,7 @@ public class PlayerMethods {
                 player.sendMessage("* Basic");
                 anyPerms = true;
             }
-            if (player.hasPermission("Parkour.Signs.*")) {
+            if (player.hasPermission("Parkour.Sign.*")) {
                 player.sendMessage("* Signs");
                 anyPerms = true;
             }
