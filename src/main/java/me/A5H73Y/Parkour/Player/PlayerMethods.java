@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import me.A5H73Y.Parkour.Course.*;
-import me.A5H73Y.Parkour.Events.PlayerFinishCourseEvent;
+import me.A5H73Y.Parkour.Events.*;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Enums.ParkourMode;
 import me.A5H73Y.Parkour.Other.Challenge;
@@ -67,6 +67,7 @@ public class PlayerMethods {
         PlayerInfo.setLastPlayedCourse(player, course.getName());
         setupPlayerMode(player);
         session.startVisualTimer(player);
+        Bukkit.getServer().getPluginManager().callEvent(new PlayerJoinCourseEvent(player, course.getName()));
     }
 
     /**
@@ -100,6 +101,7 @@ public class PlayerMethods {
             Utils.toggleVisibility(player, true);
 
         Utils.forceVisible(player);
+        Bukkit.getServer().getPluginManager().callEvent(new PlayerLeaveCourseEvent(player, session.getCourse().getName()));
     }
 
     /**
@@ -155,6 +157,7 @@ public class PlayerMethods {
         //TODO sounds
 
         preparePlayer(player, Parkour.getPlugin().getConfig().getInt("OnJoin.SetGamemode"));
+        Bukkit.getServer().getPluginManager().callEvent(new PlayerDeathEvent(player, session.getCourse().getName()));
     }
 
     /**
@@ -229,9 +232,8 @@ public class PlayerMethods {
 
         PlayerInfo.setLastCompletedCourse(player, courseName);
 
-        PlayerFinishCourseEvent finishEvent = new PlayerFinishCourseEvent(player, courseName);
-        Bukkit.getServer().getPluginManager().callEvent(finishEvent);
         Utils.forceVisible(player);
+        Bukkit.getServer().getPluginManager().callEvent(new PlayerFinishCourseEvent(player, courseName));
     }
 
     /**
@@ -960,6 +962,8 @@ public class PlayerMethods {
                             session.getCheckpoint() + " / " + session.getCourse().getCheckpoints(),
                     showTitle);
         }
+        Bukkit.getServer().getPluginManager().callEvent(
+                new PlayerAchieveCheckpointEvent(player, session.getCourse().getName(), session.getCourse().getCurrentCheckpoint()));
     }
 
     /**

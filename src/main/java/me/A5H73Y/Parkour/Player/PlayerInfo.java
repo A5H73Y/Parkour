@@ -1,8 +1,10 @@
 package me.A5H73Y.Parkour.Player;
 
+import me.A5H73Y.Parkour.Events.PlayerParkourLevelEvent;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -109,6 +111,8 @@ public class PlayerInfo {
     public static void setParkourLevel(OfflinePlayer player, int level) {
         Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Level", level);
         Parkour.getParkourConfig().saveUsers();
+
+        Bukkit.getServer().getPluginManager().callEvent(new PlayerParkourLevelEvent((Player) player, null, level));
     }
 
     /**
