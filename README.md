@@ -1,17 +1,19 @@
 <p align="center"><img src="http://i.imgur.com/OayXKol.png" alt="Parkour Logo"></p>
 
-Parkour is the original, most powerful Parkour based plugin available! 
-First released in November 2012, and has been updated since. Parkour is now open source, allowing you to contribute ideas and enhancements, or create your own spin on the plugin.<p />
-Add a whole new element of fun to any server, highly competitive gameplay with rewards and leaderboards.<p />
-[**Join the Discord support server**](https://discord.gg/Gc8RGYr)<p />
 [![travis-ci](https://travis-ci.org/A5H73Y/Parkour.svg?branch=master)](https://travis-ci.org/A5H73Y/Parkour/branches)
 [![bStats](https://img.shields.io/badge/statistics-bstats-brightgreen.svg)](https://bstats.org/plugin/bukkit/Parkour)
 [![dev.bukkit](https://img.shields.io/badge/tutorials-dev.bukkit-blue.svg)](https://dev.bukkit.org/projects/parkour/pages/tutorial)
 [![license: MIT](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://tldrlegal.com/license/mit-license)
 
+Parkour is the original, most powerful Parkour based plugin available! 
+First released in November 2012, and has been updated since. Parkour is now open source, allowing you to contribute ideas and enhancements, or create your own spin on the plugin.<p />
+Add a whole new element of fun to any server, highly competitive gameplay with rewards and leaderboards.<p />
+
+[<img src="https://i.imgur.com/aMmpMyj.png" alt="Discord Support">](https://discord.gg/Gc8RGYr)<p />
+
 ## Installation
 * Install [Spigot](https://www.spigotmc.org/threads/buildtools-updates-information.42865/) _(1.8.X, 1.9.X, 1.10.X, 1.11.X, 1.12.X)._
-* Download Parkour from [dev.bukkit](https://dev.bukkit.org/projects/parkour/files)
+* Download Parkour from [dev.bukkit.org](https://dev.bukkit.org/projects/parkour/files)
 * Place the Parkour.jar into the 'plugins' folder of the server.
 * Start your server and check the server logs to ensure the plugin started successfully.
 * Check the config.yml and configure it to your preference before fully implementing the plugin.
@@ -37,6 +39,7 @@ Add a whole new element of fun to any server, highly competitive gameplay with r
     <groupId>me.A5H73Y</groupId>
     <artifactId>Parkour</artifactId>
     <version>4.6</version>
-    <type>pom</type>
+    <type>jar</type>
+    <scope>provided</scope>
 </dependency>
 ```
