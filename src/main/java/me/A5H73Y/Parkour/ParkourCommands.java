@@ -430,9 +430,7 @@ class ParkourCommands implements CommandExecutor {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
 							return false;
 
-						Parkour.getParkourConfig().reload();
-						Parkour.setSettings(new Settings());
-						Static.initiate();
+						Utils.reloadConfig();
 						player.sendMessage(Utils.getTranslation("Other.Reload"));
 						Utils.logToFile(player.getName() + " reloaded the Parkour config");
 

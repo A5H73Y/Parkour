@@ -71,9 +71,18 @@ public class CheckpointMethods {
 		Block blockUnder = block.getRelative(BlockFace.DOWN);
 		
 		if (Parkour.getSettings().isEnforceSafeCheckpoints()) {
-			if (! Utils.isCheckpointSafe(player, block)) {
-				return;
-			}
+		    try {
+                if (!Utils.isCheckpointSafe(player, block)) {
+                    return;
+                }
+            } catch (NoSuchFieldError ex) {
+		        // using an older version of server - disable the option to stop error appearing
+                Utils.log("Safe Checkpoints has been disabled due to old server", 2);
+                Parkour.getPlugin().getConfig().set("Other.EnforceSafeCheckpoints", false);
+                Parkour.getPlugin().saveConfig();
+
+                Utils.reloadConfig();
+            }
 		}
 			
 		if (blockUnder.getType().equals(Material.AIR))

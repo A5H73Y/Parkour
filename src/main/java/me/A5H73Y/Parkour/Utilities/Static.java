@@ -118,10 +118,7 @@ public final class Static {
 	 * I'm aware this looks like shit, but it's the best solution.
 	 * @return List<String>
 	 */
-	public static List<String> getLobbyList() {
-		if (lobbyList != null)
-			return lobbyList;
-
+	public static Set<String> getLobbyList() {
 		Set<String> lobbyListSet = Parkour.getPlugin().getConfig().getConfigurationSection("Lobby").getKeys(false);
 
 		lobbyListSet.remove("Set");
@@ -132,9 +129,8 @@ public final class Static {
 		lobbyListSet.remove("Z");
 		lobbyListSet.remove("Pitch");
 		lobbyListSet.remove("Yaw");
-		lobbyList = new ArrayList<>(lobbyListSet);
 
-		return lobbyList;
+		return lobbyListSet;
 	}
 
 	public static List<String> getWhitelistedCommands() {

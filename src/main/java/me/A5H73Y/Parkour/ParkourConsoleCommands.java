@@ -18,9 +18,7 @@ class ParkourConsoleCommands {
 	}
 
 	public static void reloadConfig() {
-		Parkour.getParkourConfig().reload();
-		Parkour.setSettings(new Settings());
-		Static.initiate();
+		Utils.reloadConfig();
 		Utils.log("Config reloaded!");
 	}
 

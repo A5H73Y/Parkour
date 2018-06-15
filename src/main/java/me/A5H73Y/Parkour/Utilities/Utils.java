@@ -966,4 +966,10 @@ public final class Utils {
             player.sendMessage(Static.getParkourString() + "Invalid material!");
         }
     }
+
+    public static void reloadConfig() {
+        Parkour.getParkourConfig().reload();
+        Parkour.setSettings(new Settings());
+        Static.initiate();
+    }
 }
