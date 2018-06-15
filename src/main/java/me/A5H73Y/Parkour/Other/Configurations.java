@@ -276,6 +276,7 @@ public class Configurations {
 
             stringData.addDefault("Parkour.Join", "Joined &b%COURSE%");
             stringData.addDefault("Parkour.JoinLives", "&7You have &3%AMOUNT% &7lives on this course!");
+            stringData.addDefault("Parkour.TimerStarted", "Timer started!");
             stringData.addDefault("Parkour.Leave", "You left &b%COURSE%");
             stringData.addDefault("Parkour.Created", "&b%COURSE% &fhas been created and selected!");
             stringData.addDefault("Parkour.Delete", "&b%COURSE% &fhas been deleted!");
@@ -392,6 +393,7 @@ public class Configurations {
         config.addDefault("OnJoin.EnforceFinished", true);
         config.addDefault("OnJoin.AllowViaCommand", true);
         config.addDefault("OnJoin.FillHealth", true);
+        config.addDefault("OnJoin.TreatFirstCheckpointAsStart", false);
         config.addDefault("OnJoin.Item.LastCheckpoint.Material", "ARROW");
         config.addDefault("OnJoin.Item.HideAll.Material", "BONE");
         config.addDefault("OnJoin.Item.HideAll.Global", true);

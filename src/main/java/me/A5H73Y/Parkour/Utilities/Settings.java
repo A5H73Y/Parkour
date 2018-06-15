@@ -11,7 +11,7 @@ public class Settings {
 
 	private boolean commandPermission, chatPrefix, disablePlayerDamage, resetOnLeave, enforceWorld, disableCommands,
             allowTrails, signPermission, attemptLessChecks, useParkourKit, preventAttackingEntities, displayMilliseconds,
-            enforceSafeCheckpoints, chatPrefixOverride;
+            enforceSafeCheckpoints, chatPrefixOverride, firstCheckAsStart;
 
 	//Display
 	private boolean displayWelcome, displayPrizeCooldown;
@@ -41,6 +41,7 @@ public class Settings {
         preventAttackingEntities = config.getBoolean("OnCourse.PreventAttackingEntities");
         displayMilliseconds = config.getBoolean("Other.Display.ShowMilliseconds");
         enforceSafeCheckpoints = config.getBoolean("Other.EnforceSafeCheckpoints");
+        firstCheckAsStart = config.getBoolean("OnJoin.TreatFirstCheckpointAsStart");
 
 		lastCheckpoint = Material.getMaterial(config.getString("OnJoin.Item.LastCheckpoint.Material"));
 		hideall = Material.getMaterial(config.getString("OnJoin.Item.HideAll.Material"));
@@ -161,5 +162,9 @@ public class Settings {
 
     public boolean isDisplayPrizeCooldown() {
         return displayPrizeCooldown;
+    }
+
+    public boolean isFirstCheckAsStart() {
+        return firstCheckAsStart;
     }
 }
