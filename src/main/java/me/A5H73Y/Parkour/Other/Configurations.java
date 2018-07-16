@@ -306,6 +306,9 @@ public class Configurations {
             stringData.addDefault("Parkour.RewardRank", "Your rank has been set to %RANK%");
             stringData.addDefault("Parkour.RewardParkoins", "&b%AMOUNT% &fParkoins rewarded! New total: &7%TOTAL%");
             stringData.addDefault("Parkour.SetMode", "Mode for &b%COURSE% &fset to &b%MODE%");
+            stringData.addDefault("Parkour.Countdown", "Starting in &b%AMOUNT% &fseconds...");
+            stringData.addDefault("Parkour.Go", "Go!");
+            stringData.addDefault("Parkour.BestTime", "This is your best time so far!");
 
             stringData.addDefault("Error.NotOnCourse", "You are not on this course!");
             stringData.addDefault("Error.NotOnAnyCourse", "You are not on a course!");
@@ -334,6 +337,7 @@ public class Configurations {
             stringData.addDefault("Error.NotCompleted", "You have not yet completed &b%COURSE%&f!");
             stringData.addDefault("Error.AlreadyVoted", "You have already voted for &b%COURSE%&f!");
             stringData.addDefault("Error.PrizeCooldown", "You have to wait &b%TIME% &fbefore you can receive this prize again!");
+            stringData.addDefault("Error.NoQuestion", "You have not been asked a question!");
 
             stringData.addDefault("Help.Command", "&7/pa help &9%COMMAND% &0: &7To learn more about this command.");
             stringData.addDefault("Help.Commands", "&3/pa &bcmds &8: &fTo display the Parkour commands menu.");

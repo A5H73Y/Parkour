@@ -167,7 +167,7 @@ public class DatabaseMethods extends Database {
         if (result.getTime() <= time)
             return;
 
-        player.sendMessage(Static.getParkourString() + "This is your best time so far!");
+        player.sendMessage(Utils.getTranslation("Parkour.BestTime"));
         deletePlayerCourseTimes(player.getName(), courseName);
         insertTime(courseName, player.getName(), time, deaths);
     }

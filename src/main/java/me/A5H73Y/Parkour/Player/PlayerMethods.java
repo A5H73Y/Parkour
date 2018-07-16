@@ -929,12 +929,15 @@ public class PlayerMethods {
                 if (count > 1) {
                     count--;
 
-                    player.sendMessage("Starting in " + count + " seconds...");
-                    targetPlayer.sendMessage("Starting in " + count + " seconds...");
+                    String translation = Utils.getTranslation("Parkour.Countdown", false).replace("%AMOUNT%", String.valueOf(count));
+                    player.sendMessage(translation);
+                    targetPlayer.sendMessage(translation);
                 } else {
                     Bukkit.getScheduler().cancelTask(taskID);
-                    player.sendMessage("Go!");
-                    targetPlayer.sendMessage("Go!");
+
+                    String translation = Utils.getTranslation("Parkour.Go", false);
+                    player.sendMessage(translation);
+                    targetPlayer.sendMessage(translation);
                     player.setWalkSpeed(playerSpeed);
                     targetPlayer.setWalkSpeed(targetSpeed);
                 }

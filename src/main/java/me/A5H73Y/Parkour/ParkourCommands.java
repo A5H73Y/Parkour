@@ -424,7 +424,7 @@ class ParkourCommands implements CommandExecutor {
 						PlayerMethods.acceptChallenge(player);
 
 					} else if (args[0].equalsIgnoreCase("yes") || args[0].equalsIgnoreCase("no")) {
-						player.sendMessage(Static.getParkourString() + "You have not been asked a question!");
+						player.sendMessage(Utils.getTranslation("Error.NoQuestion"));
 
 					} else if (args[0].equalsIgnoreCase("reload")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin"))
