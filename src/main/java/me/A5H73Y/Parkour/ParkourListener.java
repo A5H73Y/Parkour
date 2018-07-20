@@ -485,13 +485,13 @@ public class ParkourListener implements Listener {
         if (check == null)
             return;
 
-        if (Parkour.getSettings().isFirstCheckAsStart() && session.getCheckpoint() == 0) {
-            session.resetTimeStarted();
-            Utils.sendActionBar(event.getPlayer(), Utils.getTranslation("Parkour.TimerStarted", false), true);
+        if (check.getNextCheckpointX() == below.getLocation().getBlockX() && check.getNextCheckpointY() == below.getLocation().getBlockY() && check.getNextCheckpointZ() == below.getLocation().getBlockZ()) {
+        	if (Parkour.getSettings().isFirstCheckAsStart() && session.getCheckpoint() == 0) {
+                session.resetTimeStarted();
+                Utils.sendActionBar(event.getPlayer(), Utils.getTranslation("Parkour.TimerStarted", false), true);
+            }
+        	PlayerMethods.increaseCheckpoint(session, event.getPlayer());
         }
-
-        if (check.getNextCheckpointX() == below.getLocation().getBlockX() && check.getNextCheckpointY() == below.getLocation().getBlockY() && check.getNextCheckpointZ() == below.getLocation().getBlockZ())
-            PlayerMethods.increaseCheckpoint(session, event.getPlayer());
     }
 
     @EventHandler
