@@ -182,6 +182,10 @@ public class ValidationMethods {
 			player.sendMessage(Static.getParkourString() + "This player is not online!");
 			return false;
 		}
+		if (PlayerMethods.isPlaying(player.getName())) {
+		    player.sendMessage(Static.getParkourString() + "You are already on a course!");
+		    return false;
+        }
 		if (PlayerMethods.isPlaying(args[2])){
 			player.sendMessage(Static.getParkourString() + "This player is already playing!");
 			return false;

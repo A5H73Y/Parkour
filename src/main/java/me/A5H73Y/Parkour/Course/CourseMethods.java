@@ -315,7 +315,6 @@ public class CourseMethods {
 
         sender.sendMessage(Static.getParkourString() + PlayerMethods.getPlaying().size() + " players using Parkour: ");
 
-        // TODO pages - reuse courses page
         String playingTemplate = Utils.getTranslation("Parkour.Playing", false);
         for (Map.Entry<String, ParkourSession> entry : PlayerMethods.getPlaying().entrySet()) {
             sender.sendMessage(playingTemplate

@@ -889,57 +889,60 @@ public class PlayerMethods {
      * Executed by the recipient of a challenge invite.
      * Will prepare each player for the challenge.
      *
-     * @param targetPlayer
+     * @param receiverPlayer
      */
-    public static void acceptChallenge(final Player targetPlayer){
-        Challenge challenge = Challenge.getChallenge(targetPlayer.getName());
+    public static void acceptChallenge(final Player receiverPlayer){
+        Challenge challenge = Challenge.getChallenge(receiverPlayer.getName());
 
         if (challenge == null){
-            targetPlayer.sendMessage(Static.getParkourString() + "You have not been invited!");
+            receiverPlayer.sendMessage(Static.getParkourString() + "You have not been invited!");
             return;
         }
-        if (!PlayerMethods.isPlayerOnline(challenge.getPlayer())){
-            targetPlayer.sendMessage(Static.getParkourString() + "Player is not online!");
+        if (!PlayerMethods.isPlayerOnline(challenge.getSenderPlayer())){
+            receiverPlayer.sendMessage(Static.getParkourString() + "Player is not online!");
             return;
         }
 
         Challenge.removeChallenge(challenge);
-        final Player player = Bukkit.getPlayer(challenge.getPlayer());
+        final Player senderPlayer = Bukkit.getPlayer(challenge.getSenderPlayer());
 
         if (Parkour.getPlugin().getConfig().getBoolean("ParkourModes.Challenge.hidePlayers")){
-            player.hidePlayer(targetPlayer);
-            targetPlayer.hidePlayer(player);
+            senderPlayer.hidePlayer(receiverPlayer);
+            receiverPlayer.hidePlayer(senderPlayer);
         }
 
-        CourseMethods.joinCourse(player, challenge.getCourseName());
-        CourseMethods.joinCourse(targetPlayer, challenge.getCourseName());
+        CourseMethods.joinCourse(senderPlayer, challenge.getCourseName());
+        CourseMethods.joinCourse(receiverPlayer, challenge.getCourseName());
 
-        final float playerSpeed = player.getWalkSpeed();
-        final float targetSpeed = targetPlayer.getWalkSpeed();
+        final float playerSpeed = senderPlayer.getWalkSpeed();
+        final float targetSpeed = receiverPlayer.getWalkSpeed();
 
-        player.setWalkSpeed(0f);
-        targetPlayer.setWalkSpeed(0f);
+        senderPlayer.setWalkSpeed(0f);
+        receiverPlayer.setWalkSpeed(0f);
 
         new Runnable() {
             public int taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(Parkour.getPlugin(), this, 0L, 20L);
 
-            int count = 6;
+            int count = Parkour.getPlugin().getConfig().getInt("ParkourModes.Challenge.CountdownFrom") + 1;
             @Override
             public void run() {
                 if (count > 1) {
                     count--;
 
                     String translation = Utils.getTranslation("Parkour.Countdown", false).replace("%AMOUNT%", String.valueOf(count));
-                    player.sendMessage(translation);
-                    targetPlayer.sendMessage(translation);
+                    senderPlayer.sendMessage(translation);
+                    receiverPlayer.sendMessage(translation);
                 } else {
                     Bukkit.getScheduler().cancelTask(taskID);
 
                     String translation = Utils.getTranslation("Parkour.Go", false);
-                    player.sendMessage(translation);
-                    targetPlayer.sendMessage(translation);
-                    player.setWalkSpeed(playerSpeed);
-                    targetPlayer.setWalkSpeed(targetSpeed);
+                    senderPlayer.sendMessage(translation);
+                    receiverPlayer.sendMessage(translation);
+                    senderPlayer.setWalkSpeed(playerSpeed);
+                    receiverPlayer.setWalkSpeed(targetSpeed);
+
+                    getParkourSession(senderPlayer.getName()).resetTimeStarted();
+                    getParkourSession(receiverPlayer.getName()).resetTimeStarted();
                 }
             }
         };

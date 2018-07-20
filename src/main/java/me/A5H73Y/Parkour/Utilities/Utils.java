@@ -623,10 +623,20 @@ public final class Utils {
             return;
         }
 
-        player.sendMessage(Utils.getStandardHeading(courseName + " : Top " + times.size() + " results"));
+        String heading = Utils.getTranslation("Parkour.LeaderboardHeading", false)
+                .replace("%COURSE%", courseName)
+                .replace("%AMOUNT%", String.valueOf(times.size()));
+
+        player.sendMessage(Utils.getStandardHeading(heading));
+
         for (int i = 0; i < times.size(); i++) {
-            player.sendMessage(Utils.colour((i + 1) + ") &b" + times.get(i).getPlayer() + "&f in &3" + Utils.displayCurrentTime(times.get(i).getTime()) + "&f, dying &7" + times.get(i).getDeaths() + " &ftimes"));
-            //TODO - translate
+            String translation = Utils.getTranslation("Parkour.LeaderboardEntry", false)
+                    .replace("%POSITION%", String.valueOf(i + 1))
+                    .replace("%PLAYER%", times.get(i).getPlayer())
+                    .replace("%TIME%", Utils.displayCurrentTime(times.get(i).getTime()))
+                    .replace("%DEATHS%", String.valueOf(times.get(i).getDeaths()));
+
+            player.sendMessage(translation);
         }
     }
 

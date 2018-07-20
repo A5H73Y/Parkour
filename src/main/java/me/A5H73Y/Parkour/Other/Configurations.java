@@ -309,6 +309,8 @@ public class Configurations {
             stringData.addDefault("Parkour.Countdown", "Starting in &b%AMOUNT% &fseconds...");
             stringData.addDefault("Parkour.Go", "Go!");
             stringData.addDefault("Parkour.BestTime", "This is your best time so far!");
+            stringData.addDefault("Parkour.LeaderboardHeading", "%COURSE% : Top %AMOUNT% results");
+            stringData.addDefault("Parkour.LeaderboardEntry", "%POSITION%) &b%PLAYER% &fin &3%TIME%&f, dying &7%DEATHS% &ftimes");
 
             stringData.addDefault("Error.NotOnCourse", "You are not on this course!");
             stringData.addDefault("Error.NotOnAnyCourse", "You are not on a course!");
@@ -445,6 +447,7 @@ public class Configurations {
         config.addDefault("OnLeaveServer.TeleportToLastCheckpoint", false);
 
         config.addDefault("ParkourModes.Challenge.HidePlayers", true);
+        config.addDefault("ParkourModes.Challenge.CountdownFrom", 5);
         config.addDefault("ParkourModes.Speedy.SetSpeed", 0.8);
         config.addDefault("ParkourModes.Speedy.ResetSpeed", 0.2);
         config.addDefault("ParkourModes.Moon.Strength", 5);
