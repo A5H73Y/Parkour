@@ -208,7 +208,7 @@ public final class Utils {
      */
     public static String displayCurrentTime(long millis) {
         MillisecondConverter time = new MillisecondConverter(millis);
-        String pattern = Parkour.getSettings().isDisplayMilliseconds() ? "%02d:%02d:%02d.%02d" : "%02d:%02d:%02d";
+        String pattern = Parkour.getSettings().isDisplayMilliseconds() ? "%02d:%02d:%02d.%03d" : "%02d:%02d:%02d";
         return String.format(pattern, time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds());
     }
 

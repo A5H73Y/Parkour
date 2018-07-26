@@ -112,6 +112,14 @@ public class ValidationMethods {
 			}
 		}
 
+		/* Check if the player is allowed to leave the course for another */
+        if (Parkour.getPlugin().getConfig().getBoolean("OnCourse.PreventJoiningDifferentCourse")) {
+            if (PlayerMethods.isPlaying(player.getName())) {
+                player.sendMessage(Utils.getTranslation("Error.JoiningAnotherCourse"));
+                return false;
+            }
+        }
+
 		return true;
 	}
 

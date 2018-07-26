@@ -17,7 +17,7 @@ public class Settings {
 	private boolean displayWelcome, displayPrizeCooldown;
 
 	//Materials
-	private Material lastCheckpoint, hideall, leave;
+	private Material lastCheckpointTool, hideallTool, leaveTool, restartTool;
 
 	//Lists
 	private List<String> cmdWhitelist; 
@@ -43,9 +43,10 @@ public class Settings {
         enforceSafeCheckpoints = config.getBoolean("Other.EnforceSafeCheckpoints");
         firstCheckAsStart = config.getBoolean("OnJoin.TreatFirstCheckpointAsStart");
 
-		lastCheckpoint = Material.getMaterial(config.getString("OnJoin.Item.LastCheckpoint.Material"));
-		hideall = Material.getMaterial(config.getString("OnJoin.Item.HideAll.Material"));
-		leave = Material.getMaterial(config.getString("OnJoin.Item.Leave.Material"));
+		lastCheckpointTool = Material.getMaterial(config.getString("OnJoin.Item.LastCheckpoint.Material"));
+		hideallTool = Material.getMaterial(config.getString("OnJoin.Item.HideAll.Material"));
+		leaveTool = Material.getMaterial(config.getString("OnJoin.Item.Leave.Material"));
+        restartTool = Material.getMaterial(config.getString("OnJoin.Item.Restart.Material"));
 
 		displayWelcome = config.getBoolean("Other.Display.JoinWelcomeMessage");
 		displayPrizeCooldown = config.getBoolean("Other.Display.PrizeCooldown");
@@ -99,26 +100,21 @@ public class Settings {
 		return preventAttackingEntities;
 	}
 
-	public Material getLastCheckpoint() {
-	    if (lastCheckpoint == Material.AIR)
-	        return null;
-
-		return lastCheckpoint;
+	public Material getLastCheckpointTool() {
+        return lastCheckpointTool == Material.AIR ? null : lastCheckpointTool;
 	}
 
-	public Material getHideall() {
-        if (hideall == Material.AIR)
-            return null;
-
-		return hideall;
+	public Material getHideallTool() {
+        return hideallTool == Material.AIR ? null : hideallTool;
 	}
 
-	public Material getLeave() {
-        if (leave == Material.AIR)
-            return null;
-
-		return leave;
+	public Material getLeaveTool() {
+        return leaveTool == Material.AIR ? null : leaveTool;
 	}
+
+    public Material getRestartTool() {
+        return restartTool == Material.AIR ? null : restartTool;
+    }
 
 	public List<String> getCmdWhitelist() {
 		return cmdWhitelist;

@@ -237,6 +237,27 @@ public class PlayerMethods {
     }
 
     /**
+     * Restart the course progress
+     * Time and deaths are reset.
+     * Will take into account treating the first checkpoint as start
+     * @param player
+     */
+    public static void restartCourse(Player player) {
+        if (!isPlaying(player.getName()))
+            return;
+
+        ParkourSession session = getParkourSession(player.getName());
+        session.restartSession();
+
+        if (Parkour.getSettings().isFirstCheckAsStart()) {
+            session.increaseCheckpoint();
+        }
+
+        player.sendMessage(Utils.getTranslation("Parkour.Restarting"));
+        player.teleport(session.getCourse().getCurrentCheckpoint().getLocation());
+    }
+
+    /**
      * Teleport player after course completion
      * Based on the linked course or lobby
      * @param player
@@ -270,7 +291,9 @@ public class PlayerMethods {
      * @param session
      */
     private static void displayFinishMessage(Player player, ParkourSession session) {
-        if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.DisplayStats")) {
+        if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.DisplayStats") && Static.getBountifulAPI()) {
+
+            // we only want to display this if they have titles enabled, otherwise it sends the message in chat twice, which is dumb
             Utils.sendFullTitle(player,
                     Utils.getTranslation("Parkour.FinishCourse1", false)
                             .replace("%COURSE%", session.getCourse().getName()),
@@ -625,17 +648,21 @@ public class PlayerMethods {
             player.setFlying(false);
         }
 
-        if (Parkour.getSettings().getLastCheckpoint() != null && !player.getInventory().contains(Parkour.getSettings().getLastCheckpoint()))
+        if (Parkour.getSettings().getLastCheckpointTool() != null && !player.getInventory().contains(Parkour.getSettings().getLastCheckpointTool()))
             player.getInventory().addItem(Utils.getItemStack(
-                    Parkour.getSettings().getLastCheckpoint(), Utils.getTranslation("Other.Item_LastCheckpoint", false)));
+                    Parkour.getSettings().getLastCheckpointTool(), Utils.getTranslation("Other.Item_LastCheckpoint", false)));
 
-        if (Parkour.getSettings().getHideall() != null && !player.getInventory().contains(Parkour.getSettings().getHideall()))
+        if (Parkour.getSettings().getHideallTool() != null && !player.getInventory().contains(Parkour.getSettings().getHideallTool()))
             player.getInventory().addItem(Utils.getItemStack(
-                    Parkour.getSettings().getHideall(), Utils.getTranslation("Other.Item_HideAll", false)));
+                    Parkour.getSettings().getHideallTool(), Utils.getTranslation("Other.Item_HideAll", false)));
 
-        if (Parkour.getSettings().getLeave() != null && !player.getInventory().contains(Parkour.getSettings().getLeave()))
+        if (Parkour.getSettings().getLeaveTool() != null && !player.getInventory().contains(Parkour.getSettings().getLeaveTool()))
             player.getInventory().addItem(Utils.getItemStack(
-                    Parkour.getSettings().getLeave(), Utils.getTranslation("Other.Item_Leave", false)));
+                    Parkour.getSettings().getLeaveTool(), Utils.getTranslation("Other.Item_Leave", false)));
+
+        if (Parkour.getSettings().getRestartTool() != null && !player.getInventory().contains(Parkour.getSettings().getRestartTool()))
+            player.getInventory().addItem(Utils.getItemStack(
+                    Parkour.getSettings().getRestartTool(), Utils.getTranslation("Other.Item_Restart", false)));
 
         if (CourseInfo.hasJoinItem(courseName)){
             Material joinItem = CourseInfo.getJoinItem(courseName);

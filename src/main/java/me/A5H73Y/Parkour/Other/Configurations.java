@@ -277,6 +277,7 @@ public class Configurations {
             stringData.addDefault("Parkour.Join", "Joined &b%COURSE%");
             stringData.addDefault("Parkour.JoinLives", "&7You have &3%AMOUNT% &7lives on this course!");
             stringData.addDefault("Parkour.TimerStarted", "Timer started!");
+            stringData.addDefault("Parkour.Restarting", "Restarting course");
             stringData.addDefault("Parkour.Leave", "You left &b%COURSE%");
             stringData.addDefault("Parkour.Created", "&b%COURSE% &fhas been created and selected!");
             stringData.addDefault("Parkour.Delete", "&b%COURSE% &fhas been deleted!");
@@ -340,6 +341,7 @@ public class Configurations {
             stringData.addDefault("Error.AlreadyVoted", "You have already voted for &b%COURSE%&f!");
             stringData.addDefault("Error.PrizeCooldown", "You have to wait &b%TIME% &fbefore you can receive this prize again!");
             stringData.addDefault("Error.NoQuestion", "You have not been asked a question!");
+            stringData.addDefault("Error.JoiningAnotherCourse", "You can not join another course while on a course.");
 
             stringData.addDefault("Help.Command", "&7/pa help &9%COMMAND% &0: &7To learn more about this command.");
             stringData.addDefault("Help.Commands", "&3/pa &bcmds &8: &fTo display the Parkour commands menu.");
@@ -348,6 +350,7 @@ public class Configurations {
             stringData.addDefault("Other.Item_LastCheckpoint", "&7SHIFT + &6Right click to go back to last checkpoint");
             stringData.addDefault("Other.Item_HideAll", "&7SHIFT + &6Right click to toggle visibility");
             stringData.addDefault("Other.Item_Leave", "&7SHIFT + &6Right click to leave course");
+            stringData.addDefault("Other.Item_Restart", "&7SHIFT + &6Right click to restart course");
             stringData.addDefault("Other.Item_Book", "&6View course stats");
             stringData.addDefault("Other.Reload", "Config Reloaded!");
             stringData.addDefault("Other.Kit", "ParkourKit Given!");
@@ -404,6 +407,7 @@ public class Configurations {
         config.addDefault("OnJoin.Item.HideAll.Material", "BONE");
         config.addDefault("OnJoin.Item.HideAll.Global", true);
         config.addDefault("OnJoin.Item.Leave.Material", "SAPLING");
+        config.addDefault("OnJoin.Item.Restart.Material", "STICK");
 
         config.addDefault("OnCourse.UseParkourKit", true);
         config.addDefault("OnCourse.DieInLiquid", false);
@@ -425,6 +429,7 @@ public class Configurations {
         config.addDefault("OnCourse.AdminPlaceBreakBlocks", true);
         config.addDefault("OnCourse.PreventOpeningOtherInventories", false);
         config.addDefault("OnCourse.PreventAttackingEntities", false);
+        config.addDefault("OnCourse.PreventJoiningDifferentCourse", false);
 
         config.addDefault("OnFinish.EnforceCompletion", true);
         config.addDefault("OnFinish.TeleportAway", true);

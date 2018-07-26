@@ -116,4 +116,9 @@ public class ParkourSession implements Serializable {
 		return mode;
 	}
 
+	public void restartSession() {
+	    checkpoint = 0;
+	    deaths = 0;
+	    resetTimeStarted();
+    }
 }
