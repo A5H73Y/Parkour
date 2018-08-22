@@ -469,6 +469,9 @@ public class ParkourListener implements Listener {
         if (event.getAction() != Action.PHYSICAL)
             return;
 
+        if(event.getClickedBlock().getType() != Material.getMaterial(Parkour.getPlugin().getConfig().getString("OnCourse.CheckpointMaterial")))
+            return;
+
         if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
             return;
 
