@@ -142,7 +142,7 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 
 	private class CommandProcessComplete extends MessagePrompt {
 		public String getPromptText(ConversationContext context) {
-		    CourseInfo.setCommandPrize(context.getSessionData("courseName").toString(),
+		    CourseInfo.addCommandPrize(context.getSessionData("courseName").toString(),
                     context.getSessionData("command").toString());
 
 			return " The Command prize for " + ChatColor.DARK_AQUA + context.getSessionData("courseName") + ChatColor.WHITE + " was set to /" + ChatColor.AQUA + context.getSessionData("command");

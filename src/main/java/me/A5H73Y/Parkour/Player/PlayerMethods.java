@@ -202,7 +202,7 @@ public class PlayerMethods {
 
         if (Parkour.getPlugin().getConfig().getBoolean("OnDie.SetXPBarToDeathCount"))
             player.setLevel(0);
-        
+
         final long delay = Parkour.getPlugin().getConfig().getLong("OnFinish.TeleportDelay");
         final boolean teleportAway = Parkour.getPlugin().getConfig().getBoolean("OnFinish.TeleportAway");
 
@@ -344,13 +344,13 @@ public class PlayerMethods {
         // Check how often prize can be rewarded
         if (CourseInfo.hasRewardDelay(courseName)) {
             // if we still have to wait, return out of this function
-        	if (!Utils.hasPrizeCooldownDurationPassed(player, courseName)) {
-        		return;
-        	}
-        	// otherwise make a note of last time rewarded, and let them continue
-        	PlayerInfo.setLastRewardedTime(player, courseName, System.currentTimeMillis());
+            if (!Utils.hasPrizeCooldownDurationPassed(player, courseName)) {
+                return;
+            }
+            // otherwise make a note of last time rewarded, and let them continue
+            PlayerInfo.setLastRewardedTime(player, courseName, System.currentTimeMillis());
         }
-        
+
         Material material;
         int amount;
 
@@ -412,10 +412,11 @@ public class PlayerMethods {
 
         // Execute the command
         if (CourseInfo.hasCommandPrize(courseName)) {
-            Parkour.getPlugin().getServer().dispatchCommand(
-                    Parkour.getPlugin().getServer().getConsoleSender(),
-                    CourseInfo.getCommandPrize(courseName)
-                            .replace("%PLAYER%", player.getName()));
+            for (String command : CourseInfo.getCommandsPrize(courseName)) {
+                Parkour.getPlugin().getServer().dispatchCommand(
+                        Parkour.getPlugin().getServer().getConsoleSender(),
+                        command.replace("%PLAYER%", player.getName()));
+            }
         }
 
         // Give player Parkoins

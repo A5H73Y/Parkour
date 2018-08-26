@@ -733,7 +733,7 @@ public final class Utils {
      * @param player
      */
     public static void addWhitelistedCommand(String[] args, Player player) {
-        if (Static.getWhitelistedCommands().contains(args[1].toLowerCase())) {
+        if (Parkour.getSettings().getWhitelistedCommands().contains(args[1].toLowerCase())) {
             player.sendMessage(Static.getParkourString() + "This command is already whitelisted!");
             return;
         }

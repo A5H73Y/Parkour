@@ -30,7 +30,7 @@ class ParkourCommands implements CommandExecutor {
 			if (sender instanceof Player) {
 				Player player = (Player) sender;
 
-				if (Parkour.getSettings().isCommandPermission() && !Utils.hasPermission(player, "Parkour.Basic", "Commands"))
+				if (Parkour.getSettings().isPermissionsForCommands() && !Utils.hasPermission(player, "Parkour.Basic", "Commands"))
 					return false;
 
 				if (args.length >= 1) {
