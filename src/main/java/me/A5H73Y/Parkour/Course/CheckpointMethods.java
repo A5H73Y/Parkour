@@ -88,8 +88,9 @@ public class CheckpointMethods {
 		if (blockUnder.getType().equals(Material.AIR))
 			blockUnder.setType(Material.STONE);
 
-		Material plate = Material.getMaterial(Parkour.getPlugin().getConfig().getString("OnCourse.CheckpointMaterial"));
-		switch (plate){
+		Material plate = Parkour.getSettings().getCheckpointMaterial();
+
+		switch (plate) {
 			case STONE_PLATE:
 			case IRON_PLATE:
 			case GOLD_PLATE:

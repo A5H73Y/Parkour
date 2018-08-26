@@ -49,7 +49,7 @@ public class ParkourListener implements Listener {
         if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
             return;
 
-        if (!Parkour.getSettings().isAllowTrails())
+        if (!Parkour.getSettings().isTrailsEnabled())
             return;
 
         Location loc = event.getPlayer().getLocation().add(0, 0.4, 0);
@@ -334,7 +334,7 @@ public class ParkourListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        if (Parkour.getSettings().isDisplayWelcome())
+        if (Parkour.getSettings().isDisplayWelcomeMessage())
             event.getPlayer().sendMessage(Utils.getTranslation("Event.Join")
                     .replace("%VERSION%", Static.getVersion().toString()));
 
@@ -349,7 +349,7 @@ public class ParkourListener implements Listener {
         if (Parkour.getPlugin().getConfig().getBoolean("OnLeaveServer.TeleportToLastCheckpoint"))
             PlayerMethods.playerDie(event.getPlayer());
 
-        if (Parkour.getSettings().isResetOnLeave())
+        if (Parkour.getSettings().isPlayerLeaveCourseOnLeaveServer())
             PlayerMethods.playerLeave(event.getPlayer());
     }
 
@@ -469,10 +469,10 @@ public class ParkourListener implements Listener {
         if (event.getAction() != Action.PHYSICAL)
             return;
 
-        if(event.getClickedBlock().getType() != Material.getMaterial(Parkour.getPlugin().getConfig().getString("OnCourse.CheckpointMaterial")))
+        if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
             return;
 
-        if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+        if (event.getClickedBlock().getType() != Parkour.getSettings().getCheckpointMaterial())
             return;
 
         Block below = event.getClickedBlock().getRelative(BlockFace.DOWN);
@@ -535,14 +535,14 @@ public class ParkourListener implements Listener {
         }
 
         if (!commandIsPa && PlayerMethods.isPlaying(player.getName())) {
-            if (!Parkour.getSettings().isDisableCommands())
+            if (!Parkour.getSettings().isDisableCommandsOnCourse())
                 return;
 
             if (player.hasPermission("Parkour.Admin.*") || player.hasPermission("Parkour.*"))
                 return;
 
             boolean allowed = false;
-            for (String word : Static.getWhitelistedCommands()) {
+            for (String word : Parkour.getSettings().getWhitelistedCommands()) {
                 if (event.getMessage().startsWith("/" + word + " ") || (event.getMessage().equalsIgnoreCase("/" + word))) {
                     allowed = true;
                     break;

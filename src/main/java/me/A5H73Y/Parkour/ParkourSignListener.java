@@ -113,7 +113,7 @@ public class ParkourSignListener implements Listener {
 			return;
 		}
 
-		if (Parkour.getSettings().isSignPermission() && !Utils.hasPermission(event.getPlayer(), "Parkour.Basic", "Signs"))
+		if (Parkour.getSettings().isPermissionForSignInteraction() && !Utils.hasPermission(event.getPlayer(), "Parkour.Basic", "Signs"))
 			return;
 
 		if (lines[1].equalsIgnoreCase("join")) {
