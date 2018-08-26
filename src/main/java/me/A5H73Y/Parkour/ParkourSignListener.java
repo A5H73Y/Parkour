@@ -70,7 +70,7 @@ public class ParkourSignListener implements Listener {
 		if (event.getAction() != Action.LEFT_CLICK_BLOCK) 
 			return;
 
-		if ((event.getClickedBlock().getType() != Material.SIGN) && (event.getClickedBlock().getType() != Material.SIGN_POST) && (event.getClickedBlock().getType() != Material.WALL_SIGN)) 
+		if ((event.getClickedBlock().getType() != Material.SIGN) && (event.getClickedBlock().getType() != Material.WALL_SIGN))
 			return;
 
 		if (!Parkour.getPlugin().getConfig().getBoolean("Other.Parkour.SignProtection"))
@@ -96,7 +96,7 @@ public class ParkourSignListener implements Listener {
 		if (event.getAction() != Action.RIGHT_CLICK_BLOCK)  
 			return;
 
-		if ((event.getClickedBlock().getType() != Material.SIGN) && (event.getClickedBlock().getType() != Material.SIGN_POST) && (event.getClickedBlock().getType() != Material.WALL_SIGN)) 
+		if ((event.getClickedBlock().getType() != Material.SIGN) && (event.getClickedBlock().getType() != Material.WALL_SIGN))
 			return;
 
 		Sign sign = (Sign) event.getClickedBlock().getState();

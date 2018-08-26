@@ -12,6 +12,7 @@ import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
+import me.A5H73Y.Parkour.Utilities.XMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -453,7 +454,7 @@ public class ParkourListener implements Listener {
 
         event.setCancelled(true);
 
-        if (Utils.getMaterialInPlayersHand(player) == Material.REDSTONE_TORCH_ON) {
+        if (Utils.getMaterialInPlayersHand(player) == XMaterial.REDSTONE_TORCH.parseMaterial()) {
             if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
                 PlayerMethods.getParkourSession(player.getName()).getCourse().setCheckpoint(CheckpointMethods.createCheckpointFromPlayerLocation(player));
                 player.sendMessage(Utils.getTranslation("Mode.Freedom.Save"));

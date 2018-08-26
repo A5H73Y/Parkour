@@ -6,6 +6,7 @@ import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
+import me.A5H73Y.Parkour.Utilities.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -88,18 +89,9 @@ public class CheckpointMethods {
 		if (blockUnder.getType().equals(Material.AIR))
 			blockUnder.setType(Material.STONE);
 
-		Material plate = Parkour.getSettings().getCheckpointMaterial();
 
-		switch (plate) {
-			case STONE_PLATE:
-			case IRON_PLATE:
-			case GOLD_PLATE:
-			case WOOD_PLATE:
-				block.setType(plate);
-				break;
-			default:
-				block.setType(Material.STONE_PLATE);
-		}
+        Material pressurePlate = XMaterial.fromString(Parkour.getSettings().getCheckpointMaterial()).parseMaterial();
+		block.setType(pressurePlate);
 
 		createCheckpointData(selected, location, checkpoint);
 		player.sendMessage(Static.getParkourString() + "Checkpoint " + ChatColor.DARK_AQUA + checkpoint + ChatColor.WHITE + " set on " + ChatColor.AQUA + selected);

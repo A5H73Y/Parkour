@@ -49,7 +49,8 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 
 		@Override
 		public Prompt acceptInput(ConversationContext context, String message) {
-			Material material = Utils.getMaterial(message.toUpperCase());
+			Material material = Material.getMaterial(message.toUpperCase());
+
 			if (material == null){
 				ParkourConversation.sendErrorMessage(context, "This is not a valid material");
 				return this;

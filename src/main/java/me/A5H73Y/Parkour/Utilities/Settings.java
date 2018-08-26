@@ -107,8 +107,10 @@ public class Settings {
         return restartTool == Material.AIR ? null : restartTool;
     }
 
-    public Material getCheckpointMaterial() {
-		return Material.getMaterial(Parkour.getPlugin().getConfig().getString("OnCourse.CheckpointMaterial"));
+    /* Strings */
+
+    public String getCheckpointMaterial() {
+		return Parkour.getPlugin().getConfig().getString("OnCourse.CheckpointMaterial");
 	}
 
     /* Lists */

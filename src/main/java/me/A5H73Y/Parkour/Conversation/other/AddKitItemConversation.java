@@ -34,7 +34,7 @@ public class AddKitItemConversation {
 
         @Override
         public Prompt acceptInput(ConversationContext context, String message) {
-            Material material = Utils.getMaterial(message.toUpperCase());
+            Material material = Material.getMaterial(message.toUpperCase());
 
             if (material == null){
                 ParkourConversation.sendErrorMessage(context, message.toUpperCase() + " is not a valid Material");

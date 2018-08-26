@@ -14,6 +14,7 @@ import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
+import me.A5H73Y.Parkour.Utilities.XMaterial;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Damageable;
@@ -886,7 +887,7 @@ public class PlayerMethods {
         if (session.getMode() == ParkourMode.FREEDOM) {
             player.sendMessage(Utils.getTranslation("Mode.Freedom.JoinText"));
             player.getInventory().addItem(Utils.getItemStack(
-                    Material.REDSTONE_TORCH_ON, Utils.getTranslation("Mode.Freedom.ItemName", false)));
+                    XMaterial.REDSTONE_TORCH.parseMaterial(), Utils.getTranslation("Mode.Freedom.ItemName", false)));
 
         } else if (session.getMode() == ParkourMode.DRUNK) {
             player.sendMessage(Utils.getTranslation("Mode.Drunk.JoinText"));
