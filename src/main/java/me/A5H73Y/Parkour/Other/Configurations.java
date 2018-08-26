@@ -408,6 +408,7 @@ public class Configurations {
         config.addDefault("OnJoin.Item.HideAll.Global", true);
         config.addDefault("OnJoin.Item.Leave.Material", "SAPLING");
         config.addDefault("OnJoin.Item.Restart.Material", "STICK");
+        config.addDefault("OnCourse.CheckpointMaterial", "STONE_PLATE");
 
         config.addDefault("OnCourse.UseParkourKit", true);
         config.addDefault("OnCourse.DieInLiquid", false);

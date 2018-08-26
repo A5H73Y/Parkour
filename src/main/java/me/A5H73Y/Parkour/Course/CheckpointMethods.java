@@ -88,7 +88,18 @@ public class CheckpointMethods {
 		if (blockUnder.getType().equals(Material.AIR))
 			blockUnder.setType(Material.STONE);
 
-		block.setType(Material.STONE_PLATE);		
+		Material plate = Material.getMaterial(Parkour.getPlugin().getConfig().getString("OnCourse.CheckpointMaterial"));
+		switch (plate){
+			case STONE_PLATE:
+			case IRON_PLATE:
+			case GOLD_PLATE:
+			case WOOD_PLATE:
+				block.setType(plate);
+				break;
+			default:
+				block.setType(Material.STONE_PLATE);
+		}
+
 		createCheckpointData(selected, location, checkpoint);
 		player.sendMessage(Static.getParkourString() + "Checkpoint " + ChatColor.DARK_AQUA + checkpoint + ChatColor.WHITE + " set on " + ChatColor.AQUA + selected);
 	}
