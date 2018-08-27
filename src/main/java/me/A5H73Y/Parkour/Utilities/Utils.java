@@ -129,8 +129,8 @@ public final class Utils {
      * @param permission
      * @return whether they have permission
      */
-    public static boolean hasSignPermission(Player player, SignChangeEvent sign, String permission){
-        if (!Utils.hasPermission(player, "Parkour.Sign", permission)){
+    public static boolean hasSignPermission(Player player, SignChangeEvent sign, String permission) {
+        if (!Utils.hasPermission(player, "Parkour.Sign", permission)) {
             sign.setCancelled(true);
             sign.getBlock().breakNaturally();
             return false;
@@ -359,7 +359,7 @@ public final class Utils {
         Set<String> materialList =
                 Parkour.getParkourConfig().getParkourKitData().getConfigurationSection(path).getKeys(false);
 
-        for (String material : materialList){
+        for (String material : materialList) {
             if (Material.getMaterial(material) == null) {
                 invalidTypes.add("Unknown Material: " + material);
             } else {
@@ -371,8 +371,8 @@ public final class Utils {
         }
 
         player.sendMessage(Static.getParkourString() + invalidTypes.size() + " problems with " + ChatColor.AQUA + kitName + ChatColor.WHITE + " found.");
-        if (invalidTypes.size() > 0){
-            for (String type : invalidTypes){
+        if (invalidTypes.size() > 0) {
+            for (String type : invalidTypes) {
                 player.sendMessage(ChatColor.RED + type);
             }
         }
@@ -593,7 +593,7 @@ public final class Utils {
      * @param headingText
      * @return standardised Parkour heading
      */
-    public static String getStandardHeading(String headingText){
+    public static String getStandardHeading(String headingText) {
         return "-- " + ChatColor.BLUE + ChatColor.BOLD + headingText + ChatColor.RESET + " --";
     }
 
@@ -879,7 +879,7 @@ public final class Utils {
 
         Collections.addAll(validMaterials, Material.AIR, Material.REDSTONE_BLOCK,
                 XMaterial.STONE_SLAB.parseMaterial(), XMaterial.OAK_SLAB.parseMaterial(), XMaterial.RED_SANDSTONE_SLAB.parseMaterial());
-        if (!Bukkit.getBukkitVersion().contains("1.8")){
+        if (!Bukkit.getBukkitVersion().contains("1.8")) {
             validMaterials.add(Material.PURPUR_SLAB);
         }
         //check if player is standing in a half-block

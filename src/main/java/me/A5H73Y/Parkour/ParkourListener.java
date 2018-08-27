@@ -362,7 +362,7 @@ public class ParkourListener implements Listener {
         if (PlayerMethods.isPlayerInTestmode(event.getPlayer().getName()))
             return;
 
-        if (event.getTo().getBlockX() == 0 && event.getTo().getBlockY() == 0 && event.getTo().getBlockZ() == 0){
+        if (event.getTo().getBlockX() == 0 && event.getTo().getBlockY() == 0 && event.getTo().getBlockZ() == 0) {
             event.getPlayer().sendMessage(Static.getParkourString() + ChatColor.RED + "This checkpoint is invalid. For safety you have been teleported to the lobby.");
             event.setCancelled(true);
             PlayerMethods.playerLeave(event.getPlayer());
@@ -473,7 +473,7 @@ public class ParkourListener implements Listener {
         if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
             return;
 
-        if (event.getClickedBlock().getType() != Parkour.getSettings().getCheckpointMaterial())
+        if (event.getClickedBlock().getType() != XMaterial.fromString(Parkour.getSettings().getCheckpointMaterial()).parseMaterial())
             return;
 
         Block below = event.getClickedBlock().getRelative(BlockFace.DOWN);

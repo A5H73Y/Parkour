@@ -14,7 +14,7 @@ import org.bukkit.conversations.StringPrompt;
 
 public class EditParkourKitConversation extends FixedSetPrompt {
 
-    EditParkourKitConversation(){
+    EditParkourKitConversation() {
         super(ParkourKit.getAllParkourKits().toArray(new String[0]));
     }
 
@@ -32,11 +32,11 @@ public class EditParkourKitConversation extends FixedSetPrompt {
 
 
     private class ChooseOption extends FixedSetPrompt {
-        ChooseOption(){
+        ChooseOption() {
             super("add", "remove");
         }
 
-        ChooseOption(boolean displayCancel){
+        ChooseOption(boolean displayCancel) {
             super("add", "remove", "cancel");
         }
 
@@ -67,14 +67,14 @@ public class EditParkourKitConversation extends FixedSetPrompt {
         public Prompt acceptInput(ConversationContext context, String message) {
             Material material = Material.getMaterial(message.toUpperCase());
 
-            if (material == null){
+            if (material == null) {
                 ParkourConversation.sendErrorMessage(context, "This isn't a valid Material.");
                 return this;
             }
 
             String kitName = (String) context.getSessionData("kit");
 
-            if (!Parkour.getParkourConfig().getParkourKitData().contains("ParkourKit." + kitName + "." + material.name())){
+            if (!Parkour.getParkourConfig().getParkourKitData().contains("ParkourKit." + kitName + "." + material.name())) {
                 ParkourConversation.sendErrorMessage(context, "This Material hasn't got an entry");
                 return this;
             }

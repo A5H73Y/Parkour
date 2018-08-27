@@ -17,7 +17,7 @@ import org.bukkit.Bukkit;
 import com.huskehhh.mysql.Database;
 import org.bukkit.entity.Player;
 
-public class DatabaseMethods extends Database {
+public class DatabaseMethods {
 
     public static DatabaseType type;
 
@@ -48,11 +48,6 @@ public class DatabaseMethods extends Database {
         }
     }
 
-    @Override
-    public Connection openConnection() {
-        return null;
-    }
-
     public static int getCourseId(String courseName) {
         return getCourseId(courseName, true);
     }
@@ -71,7 +66,7 @@ public class DatabaseMethods extends Database {
             ps.setString(1, courseName);
 
             ResultSet rs = ps.executeQuery();
-            if (rs.next()){
+            if (rs.next()) {
                 courseId =  rs.getInt("courseId");
             }
 
@@ -96,7 +91,7 @@ public class DatabaseMethods extends Database {
     private static List<TimeObject> processTimes(ResultSet rs) throws SQLException{
         List<TimeObject> times = new ArrayList<>();
 
-        while (rs.next()){
+        while (rs.next()) {
             TimeObject time = new TimeObject(
                     rs.getString("player"),
                     rs.getLong("time"),
@@ -134,7 +129,7 @@ public class DatabaseMethods extends Database {
      * @param time
      * @param deaths
      */
-    public static void insertTime(String courseName, String playerName, long time, int deaths){
+    public static void insertTime(String courseName, String playerName, long time, int deaths) {
         try {
             int courseId = getCourseId(courseName);
             if (courseId == 0)
@@ -154,7 +149,7 @@ public class DatabaseMethods extends Database {
         }
     }
 
-    public static void updateTime(String courseName, Player player, long time, int deaths){
+    public static void updateTime(String courseName, Player player, long time, int deaths) {
         List<TimeObject> results = getTopPlayerCourseResults(player.getName(), courseName, 1);
 
         if (results == null || results.isEmpty()) {
@@ -178,7 +173,7 @@ public class DatabaseMethods extends Database {
      * @param playerName
      * @param like
      */
-    public static void insertVote(String courseName, String playerName, Boolean like){
+    public static void insertVote(String courseName, String playerName, Boolean like) {
         try {
             int courseId = getCourseId(courseName);
             if (courseId == 0)
@@ -202,7 +197,7 @@ public class DatabaseMethods extends Database {
      * @param courseName
      * @return
      */
-    public static double getVotePercent(String courseName){
+    public static double getVotePercent(String courseName) {
         double percentage = 0;
         try {
             int courseId = getCourseId(courseName);
@@ -232,7 +227,7 @@ public class DatabaseMethods extends Database {
         return percentage;
     }
 
-    public static boolean hasVoted(String courseName, String playerName){
+    public static boolean hasVoted(String courseName, String playerName) {
         boolean voted = true;
         try {
             int courseId = getCourseId(courseName);
@@ -244,7 +239,7 @@ public class DatabaseMethods extends Database {
             ps.setInt(1, courseId);
             ps.setString(2, playerName);
             ResultSet rs = ps.executeQuery();
-            if (!rs.next()){
+            if (!rs.next()) {
                 voted = false;
             }
 
@@ -261,13 +256,13 @@ public class DatabaseMethods extends Database {
      * May add an option to hook into deleting a player to automatically remove all their times (if configured)
      * @param playerName
      */
-    public static void deleteAllTimesForPlayer(String playerName){
+    public static void deleteAllTimesForPlayer(String playerName) {
         try {
             PreparedStatement ps = Parkour.getDatabaseObj().openConnection()
                     .prepareStatement("DELETE FROM `time` WHERE `player`=?;");
             ps.setString(1, playerName);
             ps.executeUpdate();
-        } catch (SQLException | ClassNotFoundException e){
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
             Parkour.getDatabaseObj().closeConnection();
@@ -279,7 +274,7 @@ public class DatabaseMethods extends Database {
      * Remove the times, votes and actual course from the database.
      * @param courseName
      */
-    public static void deleteCourseAndReferences(String courseName){
+    public static void deleteCourseAndReferences(String courseName) {
         try {
             PreparedStatement ps = Parkour.getDatabaseObj().openConnection()
                     .prepareStatement("DELETE FROM `course` WHERE `name`=?;");
@@ -296,7 +291,7 @@ public class DatabaseMethods extends Database {
      * Delete all the times for the course
      * @param courseName
      */
-    public static void deleteCourseTimes(String courseName){
+    public static void deleteCourseTimes(String courseName) {
         try {
             int courseId = getCourseId(courseName);
             if (courseId == 0)
@@ -332,11 +327,11 @@ public class DatabaseMethods extends Database {
         }
     }
 
-    public static List<TimeObject> getTopCourseResults(String courseName){
+    public static List<TimeObject> getTopCourseResults(String courseName) {
         return getTopCourseResults(courseName, 5);
     }
 
-    public static List<TimeObject> getTopCourseResults(String courseName, int limit){
+    public static List<TimeObject> getTopCourseResults(String courseName, int limit) {
         limit = limit < 1 ? 1 : limit > 20 ? 20 : limit;
 
         List<TimeObject> times = new ArrayList<>();
@@ -360,11 +355,11 @@ public class DatabaseMethods extends Database {
         return times;
     }
 
-    public static List<TimeObject> getTopPlayerCourseResults(String playerName, String courseName){
+    public static List<TimeObject> getTopPlayerCourseResults(String playerName, String courseName) {
         return getTopPlayerCourseResults(playerName, courseName, 5);
     }
 
-    public static List<TimeObject> getTopPlayerCourseResults(String playerName, String courseName, int limit){
+    public static List<TimeObject> getTopPlayerCourseResults(String playerName, String courseName, int limit) {
         limit = limit < 1 ? 1 : limit > 20 ? 20 : limit;
 
         List<TimeObject> times = new ArrayList<>();
@@ -401,7 +396,7 @@ public class DatabaseMethods extends Database {
             ps.setInt(1, courseId);
             ps.setString(2, playerName);
             ResultSet rs = ps.executeQuery();
-            if (!rs.next()){
+            if (!rs.next()) {
                 completed = false;
             }
 
@@ -420,8 +415,8 @@ public class DatabaseMethods extends Database {
                 Utils.logToFile("Started courses recreation.");
                 Utils.log("Starting recreation of courses process...");
                 int changes = 0;
-                for (String courseName : Static.getCourses()){
-                    if (getCourseId(courseName) == 0){
+                for (String courseName : Static.getCourses()) {
+                    if (getCourseId(courseName) == 0) {
                         insertCourse(courseName, CourseInfo.getCreator(courseName));
                         changes++;
                     }

@@ -72,11 +72,11 @@ public class Course implements Serializable {
      * Number of checkpoints on the course
      * @return Count of Course's checkpoints
      */
-	public int getCheckpoints(){
+	public int getCheckpoints() {
 		return checkpoints;
 	}
 
-	public void setCheckpoint(Checkpoint checkpoint){
+	public void setCheckpoint(Checkpoint checkpoint) {
 		this.checkpoint = checkpoint;
 	}
 

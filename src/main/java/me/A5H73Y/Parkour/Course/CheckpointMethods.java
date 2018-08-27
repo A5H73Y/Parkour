@@ -26,7 +26,7 @@ public class CheckpointMethods {
 	 * @param courseName
 	 * @return Checkpoint
 	 */
-	public static Checkpoint getNextCheckpoint(String courseName, int currentPoint){
+	public static Checkpoint getNextCheckpoint(String courseName, int currentPoint) {
 		FileConfiguration courseData = Parkour.getParkourConfig().getCourseData();
 		FileConfiguration checkData = Parkour.getParkourConfig().getCheckData();
 
@@ -105,7 +105,7 @@ public class CheckpointMethods {
 	 * @param location
 	 * @param checkpoint
 	 */
-	private static void createCheckpointData(String selected, Location location, int checkpoint){
+	private static void createCheckpointData(String selected, Location location, int checkpoint) {
 		FileConfiguration courseData = Parkour.getParkourConfig().getCourseData();
 		FileConfiguration checkData = Parkour.getParkourConfig().getCheckData();
 
@@ -137,7 +137,7 @@ public class CheckpointMethods {
 	 * @param checkpoint
 	 */
 	public static void teleportCheckpoint(String[] args, Player player, boolean checkpoint) {
-		if (!CourseMethods.exist(args[1])){
+		if (!CourseMethods.exist(args[1])) {
 			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
 			return;
 		}
@@ -176,7 +176,7 @@ public class CheckpointMethods {
 
 		courseName = courseName.toLowerCase();
 		int point = CourseInfo.getCheckpointAmount(courseName);
-		if (point <= 0){
+		if (point <= 0) {
 			player.sendMessage(Static.getParkourString() + courseName + " has no checkpoints!");
 			return;
 		}

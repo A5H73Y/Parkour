@@ -107,7 +107,7 @@ public final class Static {
 	 * Get the current delay map
 	 * @return
 	 */
-	public static Map<String, Long> getDelay(){
+	public static Map<String, Long> getDelay() {
 		return delay;
 	}
 

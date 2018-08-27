@@ -17,7 +17,7 @@ public class SignMethods {
 	 * @param player
 	 * @param title
 	 */
-	public void createStandardSign(SignChangeEvent sign, Player player, String title){
+	public void createStandardSign(SignChangeEvent sign, Player player, String title) {
 		if (!Utils.hasSignPermission(player, sign, title))
 			return;
 
@@ -27,7 +27,7 @@ public class SignMethods {
 		player.sendMessage(Static.getParkourString() + title + " sign created!");
 	}
 
-	public void createStandardCourseSign(SignChangeEvent sign, Player player, String title){
+	public void createStandardCourseSign(SignChangeEvent sign, Player player, String title) {
 		createStandardCourseSign(sign, player, title, true);
 	}
 
@@ -40,11 +40,11 @@ public class SignMethods {
 	 * @param message
 	 * @return
 	 */
-	public boolean createStandardCourseSign(SignChangeEvent sign, Player player, String title, boolean message){
+	public boolean createStandardCourseSign(SignChangeEvent sign, Player player, String title, boolean message) {
 		if (!Utils.hasSignPermission(player, sign, title))
 			return false;
 
-		if (!CourseMethods.exist(sign.getLine(2))){
+		if (!CourseMethods.exist(sign.getLine(2))) {
 			player.sendMessage(Utils.getTranslation("Error.Unknown"));
 			sign.setLine(2, ChatColor.RED + "Unknown Course!");
 			sign.setLine(3, "");
@@ -65,7 +65,7 @@ public class SignMethods {
 	 * @param sign
 	 * @param player
 	 */
-	public void createJoinCourseSign(SignChangeEvent sign, Player player){
+	public void createJoinCourseSign(SignChangeEvent sign, Player player) {
 		if (!createStandardCourseSign(sign, player, "Join", false))
 			return;
 
@@ -82,13 +82,13 @@ public class SignMethods {
 	 * @param sign
 	 * @param player
 	 */
-	public void createLobbyJoinSign(SignChangeEvent sign, Player player){
+	public void createLobbyJoinSign(SignChangeEvent sign, Player player) {
 		if (!Utils.hasSignPermission(player, sign, "Lobby"))
 			return;
 
 		sign.setLine(1, "Lobby");
 
-		if (sign.getLine(2).isEmpty()){
+		if (sign.getLine(2).isEmpty()) {
 			sign.setLine(3, "");
 			player.sendMessage(Static.getParkourString() + "Lobby shortcut created!");
 

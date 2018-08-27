@@ -47,7 +47,7 @@ public class PlayerMethods {
         if (getParkourSession(player.getName()) == null) {
             boolean displayTitle = Parkour.getPlugin().getConfig().getBoolean("DisplayTitle.JoinCourse");
 
-            if (course.getMaxDeaths() == null){
+            if (course.getMaxDeaths() == null) {
                 Utils.sendTitle(player, Utils.getTranslation("Parkour.Join", false)
                                 .replace("%COURSE%", course.getName()),
                         displayTitle);
@@ -666,7 +666,7 @@ public class PlayerMethods {
             player.getInventory().addItem(Utils.getItemStack(
                     Parkour.getSettings().getRestartTool(), Utils.getTranslation("Other.Item_Restart", false)));
 
-        if (CourseInfo.hasJoinItem(courseName)){
+        if (CourseInfo.hasJoinItem(courseName)) {
             Material joinItem = CourseInfo.getJoinItem(courseName);
             if (joinItem != null) {
                 String label = CourseInfo.getJoinItemLabel(courseName);
@@ -822,7 +822,7 @@ public class PlayerMethods {
      * @param player
      */
     public static void invitePlayer(String[] args, Player player) {
-        if (!isPlaying(player.getName())){
+        if (!isPlaying(player.getName())) {
             player.sendMessage(Static.getParkourString() + "You aren't on a course.");
             return;
         }
@@ -866,7 +866,7 @@ public class PlayerMethods {
      * @return boolean
      */
     public static boolean isPlayerOnline(String playerName) {
-        for (Player player : Bukkit.getOnlinePlayers()){
+        for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.getName().equalsIgnoreCase(playerName))
                 return true;
         }
@@ -920,14 +920,14 @@ public class PlayerMethods {
      *
      * @param receiverPlayer
      */
-    public static void acceptChallenge(final Player receiverPlayer){
+    public static void acceptChallenge(final Player receiverPlayer) {
         Challenge challenge = Challenge.getChallenge(receiverPlayer.getName());
 
-        if (challenge == null){
+        if (challenge == null) {
             receiverPlayer.sendMessage(Static.getParkourString() + "You have not been invited!");
             return;
         }
-        if (!PlayerMethods.isPlayerOnline(challenge.getSenderPlayer())){
+        if (!PlayerMethods.isPlayerOnline(challenge.getSenderPlayer())) {
             receiverPlayer.sendMessage(Static.getParkourString() + "Player is not online!");
             return;
         }
@@ -935,7 +935,7 @@ public class PlayerMethods {
         Challenge.removeChallenge(challenge);
         final Player senderPlayer = Bukkit.getPlayer(challenge.getSenderPlayer());
 
-        if (Parkour.getPlugin().getConfig().getBoolean("ParkourModes.Challenge.hidePlayers")){
+        if (Parkour.getPlugin().getConfig().getBoolean("ParkourModes.Challenge.hidePlayers")) {
             senderPlayer.hidePlayer(receiverPlayer);
             receiverPlayer.hidePlayer(senderPlayer);
         }

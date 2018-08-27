@@ -340,7 +340,7 @@ class ParkourCommands implements CommandExecutor {
 					} else if (args[0].equalsIgnoreCase("help")) {
 						Help.lookupCommandHelp(args, player);
 
-					} else if (args[0].equalsIgnoreCase("leaderboard") || args[0].equalsIgnoreCase("leaderboards")){
+					} else if (args[0].equalsIgnoreCase("leaderboard") || args[0].equalsIgnoreCase("leaderboards")) {
 						if (!Utils.hasPermission(player, "Parkour.Basic", "Leaderboard"))
 							return false;
 

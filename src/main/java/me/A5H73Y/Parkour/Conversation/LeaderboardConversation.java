@@ -24,7 +24,7 @@ public class LeaderboardConversation extends StringPrompt {
 
 	@Override
 	public Prompt acceptInput(ConversationContext context, String message) {
-		if (!Static.getCourses().contains(message.toLowerCase())){
+		if (!Static.getCourses().contains(message.toLowerCase())) {
 			ParkourConversation.sendErrorMessage(context, "This course does not exist");
 			return this;
 		}
@@ -35,7 +35,7 @@ public class LeaderboardConversation extends StringPrompt {
 
 	private class ChooseType extends FixedSetPrompt {
 
-		ChooseType(){
+		ChooseType() {
 			super("personal", "global");
 		}
 

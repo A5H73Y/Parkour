@@ -19,6 +19,7 @@ public class TimeObject {
 	public long getTime() {
 		return time;
 	}
+
 	public int getDeaths() {
 		return deaths;
 	}

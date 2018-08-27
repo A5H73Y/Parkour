@@ -868,18 +868,18 @@ public enum XMaterial {
     String m;
     int data;
 
-    XMaterial(String m, int data ){
+    XMaterial(String m, int data ) {
         this.m = m;
         this.data = data;
     }
 
     static int newV = -1;
 
-    public static boolean isNewVersion(){
-        if(newV == 0) return false;
-        if(newV == 1) return true;
+    public static boolean isNewVersion() {
+        if (newV == 0) return false;
+        if (newV == 1) return true;
         Material mat = Material.matchMaterial("RED_WOOL");
-        if(mat != null){
+        if (mat != null) {
             newV = 1;
             return true;
         }
@@ -889,7 +889,7 @@ public enum XMaterial {
 
     private static HashMap<String, XMaterial> cachedSearch = new HashMap<>();
 
-    public static XMaterial requestXMaterial(String name, byte data){
+    public static XMaterial requestXMaterial(String name, byte data) {
         if (cachedSearch.containsKey(name.toUpperCase()+","+data)) {
             return cachedSearch.get(name.toUpperCase()+","+data);
         }
@@ -902,12 +902,12 @@ public enum XMaterial {
         return null;
     }
 
-    public XMaterial fromMaterial(Material mat){
+    public XMaterial fromMaterial(Material mat) {
         try{
             return XMaterial.valueOf(mat.toString());
-        }catch(IllegalArgumentException e){
-            for(XMaterial xmat:XMaterial.values()){
-                if(xmat.m.equals(mat.toString())){
+        }catch(IllegalArgumentException e) {
+            for(XMaterial xmat:XMaterial.values()) {
+                if (xmat.m.equals(mat.toString())) {
                     return xmat;
                 }
             }
@@ -931,9 +931,9 @@ public enum XMaterial {
         }
     }
 
-    public Material parseMaterial(){
+    public Material parseMaterial() {
         Material mat = Material.matchMaterial(this.toString());
-        if (mat != null){
+        if (mat != null) {
             return mat;
         }
         return Material.matchMaterial(m);

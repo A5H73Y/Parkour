@@ -11,13 +11,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class ParkourKit implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private static Map<String, ParkourKit> loaded = new HashMap<>();
 
     public static final List<String> validActions =
             Arrays.asList("death", "finish", "climb", "launch", "speed", "repulse", "norun", "nopotion", "bounce");
 
-    private static Map<String, ParkourKit> loaded = new HashMap<>();
-
-    // object attributes
+    // ParkourKit attributes
     private String name;
     private List<Material> materials = new ArrayList<>();
 

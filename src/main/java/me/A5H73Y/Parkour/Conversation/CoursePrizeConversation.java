@@ -16,7 +16,7 @@ import org.bukkit.conversations.StringPrompt;
 
 public class CoursePrizeConversation extends FixedSetPrompt {
 
-	CoursePrizeConversation(){
+	CoursePrizeConversation() {
 		super("material", "command", "xp");
 	}
 
@@ -51,7 +51,7 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 		public Prompt acceptInput(ConversationContext context, String message) {
 			Material material = Material.getMaterial(message.toUpperCase());
 
-			if (material == null){
+			if (material == null) {
 				ParkourConversation.sendErrorMessage(context, "This is not a valid material");
 				return this;
 			}

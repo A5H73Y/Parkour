@@ -57,7 +57,7 @@ public class Settings {
 		return config.getBoolean("OnCourse.AllowTrails");
 	}
 
-	public boolean isAttemptLessChecks(){
+	public boolean isAttemptLessChecks() {
 		return config.getBoolean("OnCourse.AttemptLessChecks");
 	}
 
@@ -121,7 +121,7 @@ public class Settings {
 
 	/* ints */
 
-	public int getMaxFallTicks(){
+	public int getMaxFallTicks() {
 		return config.getInt("OnCourse.MaxFallTicks");
 	}
 

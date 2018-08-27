@@ -36,11 +36,11 @@ public class AddKitItemConversation {
         public Prompt acceptInput(ConversationContext context, String message) {
             Material material = Material.getMaterial(message.toUpperCase());
 
-            if (material == null){
+            if (material == null) {
                 ParkourConversation.sendErrorMessage(context, message.toUpperCase() + " is not a valid Material");
                 return this;
             }
-            if (Parkour.getParkourConfig().getParkourKitData().contains("ParkourKit." + kitName + "." + material.name())){
+            if (Parkour.getParkourConfig().getParkourKitData().contains("ParkourKit." + kitName + "." + material.name())) {
                 ParkourConversation.sendErrorMessage(context, "You've already used this Material");
                 return this;
             }
@@ -52,7 +52,7 @@ public class AddKitItemConversation {
 
     private class chooseAction extends FixedSetPrompt {
 
-        chooseAction(){
+        chooseAction() {
             super(actionTypes);
         }
 
