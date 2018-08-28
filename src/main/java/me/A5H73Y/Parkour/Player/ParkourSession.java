@@ -26,6 +26,8 @@ public class ParkourSession implements Serializable {
 	private ParkourMode mode;
     private int seconds;
 
+    private String liveTime;
+
     private int taskId = 0;
 
 	/**
@@ -56,7 +58,10 @@ public class ParkourSession implements Serializable {
 		BukkitTask task = new BukkitRunnable() {
             @Override
             public void run() {
-                Utils.sendActionBar(player, Utils.convertSecondsToTime(++seconds), true);
+                liveTime = Utils.convertSecondsToTime(++seconds);
+
+                //TODO if scoreboard is uninstalled, or disabled
+                Utils.sendActionBar(player, liveTime, true);
             }
         }.runTaskTimer(Parkour.getPlugin(), 20, 20);
 
@@ -69,6 +74,12 @@ public class ParkourSession implements Serializable {
             taskId = 0;
         }
     }
+
+    /**
+     * Get the current time of the ParkourSession
+     * @return String in %02d:%02d:%02d format
+     */
+    public String getLiveTime() { return liveTime; }
 
 	public int getDeaths() {
 		return deaths;
