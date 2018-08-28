@@ -130,6 +130,7 @@ public class ParkourSession implements Serializable {
 	public void restartSession() {
 	    checkpoint = 0;
 	    deaths = 0;
+        course.setCheckpoint(CheckpointMethods.getNextCheckpoint(course.getName(), checkpoint));
 	    resetTimeStarted();
     }
 }
