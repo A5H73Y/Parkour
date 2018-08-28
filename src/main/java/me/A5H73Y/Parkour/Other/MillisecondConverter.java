@@ -8,6 +8,10 @@ public class MillisecondConverter {
     private long hours;
     private long days;
 
+    /**
+     * Convert milliseconds into different divisions
+     * @param millis
+     */
     public MillisecondConverter(long millis) {
         this.milliseconds = millis;
         this.seconds = millis / 1000;

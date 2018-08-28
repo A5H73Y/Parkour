@@ -6,6 +6,7 @@ import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
+import me.A5H73Y.Parkour.Utilities.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -25,7 +26,7 @@ public class CheckpointMethods {
 	 * @param courseName
 	 * @return Checkpoint
 	 */
-	public static Checkpoint getNextCheckpoint(String courseName, int currentPoint){
+	public static Checkpoint getNextCheckpoint(String courseName, int currentPoint) {
 		FileConfiguration courseData = Parkour.getParkourConfig().getCourseData();
 		FileConfiguration checkData = Parkour.getParkourConfig().getCheckData();
 
@@ -88,7 +89,10 @@ public class CheckpointMethods {
 		if (blockUnder.getType().equals(Material.AIR))
 			blockUnder.setType(Material.STONE);
 
-		block.setType(Material.STONE_PLATE);		
+
+        Material pressurePlate = XMaterial.fromString(Parkour.getSettings().getCheckpointMaterial()).parseMaterial();
+		block.setType(pressurePlate);
+
 		createCheckpointData(selected, location, checkpoint);
 		player.sendMessage(Static.getParkourString() + "Checkpoint " + ChatColor.DARK_AQUA + checkpoint + ChatColor.WHITE + " set on " + ChatColor.AQUA + selected);
 	}
@@ -101,7 +105,7 @@ public class CheckpointMethods {
 	 * @param location
 	 * @param checkpoint
 	 */
-	private static void createCheckpointData(String selected, Location location, int checkpoint){
+	private static void createCheckpointData(String selected, Location location, int checkpoint) {
 		FileConfiguration courseData = Parkour.getParkourConfig().getCourseData();
 		FileConfiguration checkData = Parkour.getParkourConfig().getCheckData();
 
@@ -133,7 +137,7 @@ public class CheckpointMethods {
 	 * @param checkpoint
 	 */
 	public static void teleportCheckpoint(String[] args, Player player, boolean checkpoint) {
-		if (!CourseMethods.exist(args[1])){
+		if (!CourseMethods.exist(args[1])) {
 			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
 			return;
 		}
@@ -172,7 +176,7 @@ public class CheckpointMethods {
 
 		courseName = courseName.toLowerCase();
 		int point = CourseInfo.getCheckpointAmount(courseName);
-		if (point <= 0){
+		if (point <= 0) {
 			player.sendMessage(Static.getParkourString() + courseName + " has no checkpoints!");
 			return;
 		}

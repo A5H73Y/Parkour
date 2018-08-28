@@ -5,6 +5,8 @@ import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import org.bukkit.Material;
 
+import java.util.List;
+
 public class CourseInfo {
 
     /**
@@ -128,16 +130,19 @@ public class CourseInfo {
         Parkour.getParkourConfig().saveCourses();
     }
 
-    public static String getCommandPrize(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".Prize.CMD");
+    public static List<String> getCommandsPrize(String courseName) {
+        return Parkour.getParkourConfig().getCourseData().getStringList(courseName.toLowerCase() + ".Prize.CMD");
     }
 
     public static boolean hasCommandPrize(String courseName) {
         return Parkour.getParkourConfig().getCourseData().contains(courseName.toLowerCase() + ".Prize.CMD");
     }
 
-    public static void setCommandPrize(String courseName, String command) {
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Prize.CMD", command);
+    public static void addCommandPrize(String courseName, String command) {
+        List<String> commands = getCommandsPrize(courseName);
+        commands.add(command);
+
+        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Prize.CMD", commands);
         Parkour.getParkourConfig().saveCourses();
     }
 

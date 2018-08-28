@@ -11,7 +11,7 @@ public class ParkourPlaceholders extends EZPlaceholderHook {
 
     private Parkour plugin;
 	
-    public ParkourPlaceholders(Parkour plugin){
+    public ParkourPlaceholders(Parkour plugin) {
     	super(plugin, "parkour");
     	this.plugin = plugin;
     }

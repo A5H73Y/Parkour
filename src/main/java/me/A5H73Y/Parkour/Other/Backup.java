@@ -15,10 +15,10 @@ import me.A5H73Y.Parkour.Utilities.Utils;
 public class Backup {
 
 	private static List<String> fileList;
-	private static final String OUTPUT_ZIP_FILE = Parkour.getPlugin().getDataFolder().toString() + File.separator + "[" + Utils.getDate() + "] Backup.zip";
 	private static final String SOURCE_FOLDER = Parkour.getPlugin().getDataFolder().toString();
+	private static final String OUTPUT_ZIP_FILE = SOURCE_FOLDER + File.separator + "[" + Utils.getDate() + "] Backup.zip";
 
-	public static void backupNow(){
+	public static void backupNow() {
 		backupNow(true);
 	}
 
@@ -27,24 +27,24 @@ public class Backup {
 	 * A new zip will be generated with the current date containing all parkour files
 	 * @param message
 	 */
-	public static void backupNow(boolean message){
+	public static void backupNow(boolean message) {
 		if (message)
 			Utils.log("Beginning backup...");
 		fileList = new ArrayList<>();
 
 		generateFileList(new File(SOURCE_FOLDER));
 		zipIt();
-		if(message)
+		if (message)
 			Utils.log("Backup completed!");
 	}
 
-	private static void zipIt(){
+	private static void zipIt() {
 		byte[] buffer = new byte[1024];
 		try{
 			FileOutputStream fos = new FileOutputStream(OUTPUT_ZIP_FILE);
 			ZipOutputStream zos = new ZipOutputStream(fos);
 
-			for(String file : fileList){
+			for (String file : fileList) {
 				ZipEntry ze= new ZipEntry(file);
 				zos.putNextEntry(ze);
 
@@ -60,7 +60,7 @@ public class Backup {
 			zos.closeEntry();
 			//remember close it
 			zos.close();
-		}catch(IOException ex){
+		} catch(IOException ex) {
 			ex.printStackTrace();   
 		}
 	}
@@ -70,16 +70,16 @@ public class Backup {
 	 * and add the file into fileList  
 	 * @param node file or directory
 	 */
-	private static void generateFileList(File node){
+	private static void generateFileList(File node) {
 		//add file only
-		if(node.isFile()){
+		if (node.isFile()) {
 			if (!node.getName().contains(".zip"))
 				fileList.add(generateZipEntry(node.toString()));
 		}
 
-		if(node.isDirectory()){
+		if (node.isDirectory()) {
 			String[] subNote = node.list();
-			for(String filename : subNote){
+			for(String filename : subNote) {
 				generateFileList(new File(node, filename));
 			}
 		}
@@ -91,7 +91,7 @@ public class Backup {
 	 * @param file file path
 	 * @return Formatted file path
 	 */
-	private static String generateZipEntry(String file){
+	private static String generateZipEntry(String file) {
 		return file.substring(SOURCE_FOLDER.length()+1, file.length());
 	}
 

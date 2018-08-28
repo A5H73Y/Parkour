@@ -53,7 +53,7 @@ public class StartPlugin {
      * Just makes onEnable look ugly
      * @return
      */
-    public static boolean isFreshInstall(){
+    public static boolean isFreshInstall() {
         if (new File(Parkour.getPlugin().getDataFolder().toString() + File.separator + "config.yml").exists())
             return false;
 
@@ -113,8 +113,8 @@ public class StartPlugin {
             Parkour.setDatabaseObj(database);
             DatabaseMethods.setupTables();
 
-            if (updateExisting){
-                for (String courseName : Static.getCourses()){
+            if (updateExisting) {
+                for (String courseName : Static.getCourses()) {
                     if (DatabaseMethods.getCourseId(courseName, false) == 0) {
                         DatabaseMethods.insertCourse(courseName, CourseInfo.getCreator(courseName));
                     }

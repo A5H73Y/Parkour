@@ -28,10 +28,10 @@ public class QuestionManager {
     private static QuestionManager instance = null;
     private Map<String, Question> questionMap = new HashMap<>();
 
-    protected QuestionManager() {}
+    private QuestionManager() {}
 
     public static QuestionManager getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new QuestionManager();
         }
         return instance;

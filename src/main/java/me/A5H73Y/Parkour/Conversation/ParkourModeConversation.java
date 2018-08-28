@@ -10,7 +10,7 @@ import org.bukkit.conversations.Prompt;
 
 public class ParkourModeConversation extends FixedSetPrompt {
 
-	ParkourModeConversation(){
+	ParkourModeConversation() {
 		super("freedom", "darkness", "drunk", "speedy", "moon", "dropper", "none");
 	}
 

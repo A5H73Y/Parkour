@@ -129,8 +129,8 @@ public final class Utils {
      * @param permission
      * @return whether they have permission
      */
-    public static boolean hasSignPermission(Player player, SignChangeEvent sign, String permission){
-        if (!Utils.hasPermission(player, "Parkour.Sign", permission)){
+    public static boolean hasSignPermission(Player player, SignChangeEvent sign, String permission) {
+        if (!Utils.hasPermission(player, "Parkour.Sign", permission)) {
             sign.setCancelled(true);
             sign.getBlock().breakNaturally();
             return false;
@@ -359,7 +359,7 @@ public final class Utils {
         Set<String> materialList =
                 Parkour.getParkourConfig().getParkourKitData().getConfigurationSection(path).getKeys(false);
 
-        for (String material : materialList){
+        for (String material : materialList) {
             if (Material.getMaterial(material) == null) {
                 invalidTypes.add("Unknown Material: " + material);
             } else {
@@ -371,8 +371,8 @@ public final class Utils {
         }
 
         player.sendMessage(Static.getParkourString() + invalidTypes.size() + " problems with " + ChatColor.AQUA + kitName + ChatColor.WHITE + " found.");
-        if (invalidTypes.size() > 0){
-            for (String type : invalidTypes){
+        if (invalidTypes.size() > 0) {
+            for (String type : invalidTypes) {
                 player.sendMessage(ChatColor.RED + type);
             }
         }
@@ -593,7 +593,7 @@ public final class Utils {
      * @param headingText
      * @return standardised Parkour heading
      */
-    public static String getStandardHeading(String headingText){
+    public static String getStandardHeading(String headingText) {
         return "-- " + ChatColor.BLUE + ChatColor.BOLD + headingText + ChatColor.RESET + " --";
     }
 
@@ -733,7 +733,7 @@ public final class Utils {
      * @param player
      */
     public static void addWhitelistedCommand(String[] args, Player player) {
-        if (Static.getWhitelistedCommands().contains(args[1].toLowerCase())) {
+        if (Parkour.getSettings().getWhitelistedCommands().contains(args[1].toLowerCase())) {
             player.sendMessage(Static.getParkourString() + "This command is already whitelisted!");
             return;
         }
@@ -875,25 +875,27 @@ public final class Utils {
 
     public static boolean isCheckpointSafe(Player player, Block block) {
         Block blockUnder = block.getRelative(BlockFace.DOWN);
-        List<Material> validMaterials = new ArrayList<Material>();
-        Collections.addAll(validMaterials, Material.AIR, Material.REDSTONE_BLOCK, Material.STEP, Material.WOOD_STEP, Material.STONE_SLAB2);
-        if (!Bukkit.getBukkitVersion().contains("1.8")){
+        List<Material> validMaterials = new ArrayList<>();
+
+        Collections.addAll(validMaterials, Material.AIR, Material.REDSTONE_BLOCK,
+                XMaterial.STONE_SLAB.parseMaterial(), XMaterial.OAK_SLAB.parseMaterial(), XMaterial.RED_SANDSTONE_SLAB.parseMaterial());
+        if (!Bukkit.getBukkitVersion().contains("1.8")) {
             validMaterials.add(Material.PURPUR_SLAB);
         }
         //check if player is standing in a half-block
-        if (! block.getType().equals(Material.AIR) && ! block.getType().equals(Material.STONE_PLATE)) {
+        if (! block.getType().equals(Material.AIR) && ! block.getType().equals(XMaterial.STONE_PRESSURE_PLATE.parseMaterial())) {
             player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + block.getType());
             return false;
         }
 
-        if (! blockUnder.getType().isOccluding()) {
+        if (!blockUnder.getType().isOccluding()) {
             if (blockUnder.getState().getData() instanceof Stairs) {
                 Stairs stairs = (Stairs) blockUnder.getState().getData();
-                if (! stairs.isInverted()) {
+                if (!stairs.isInverted()) {
                     player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + blockUnder.getType());
                     return false;
                 }
-            } else if (! validMaterials.contains(blockUnder.getType())) {
+            } else if (!validMaterials.contains(blockUnder.getType())) {
                 player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + blockUnder.getType());
                 return false;
             }
@@ -955,18 +957,10 @@ public final class Utils {
         return days * 86400000; //(24*60*60*1000)
     }
 
-    public static Material getMaterial(String name) {
-        if (isNumber(name)) {
-            return Material.getMaterial(Integer.parseInt(name));
-        } else {
-            return Material.getMaterial(name);
-        }
-    }
-
     public static void lookupMaterial(String[] args, Player player) {
         Material material;
         if (args.length > 1) {
-            material = getMaterial(args[1]);
+            material = Material.getMaterial(args[1]);
         } else {
             material = getMaterialInPlayersHand(player);
         }

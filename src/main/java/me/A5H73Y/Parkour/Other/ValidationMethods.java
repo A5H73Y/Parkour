@@ -25,7 +25,7 @@ public class ValidationMethods {
 	 * @param player
 	 * @return
 	 */
-	public static boolean courseCreation(String[] args, Player player){
+	public static boolean courseCreation(String[] args, Player player) {
 		if (args.length > 2) {
 			player.sendMessage(Utils.getTranslation("Error.TooMany"));
 			return false;
@@ -38,7 +38,7 @@ public class ValidationMethods {
 		} else if (args[1].contains(".")) {
 			player.sendMessage(Static.getParkourString() + "Course name can not contain '.'");
 			return false;
-		} else if (Utils.isNumber(args[1])){
+		} else if (Utils.isNumber(args[1])) {
 			player.sendMessage(Static.getParkourString() + "Course name can not only be numeric");
 			return false;
 		} else if (CourseMethods.exist(args[1])) {
@@ -55,11 +55,11 @@ public class ValidationMethods {
 	 * @param course
 	 * @return
 	 */
-	public static boolean courseJoining(Player player, Course course){
+	public static boolean courseJoining(Player player, Course course) {
 
 		/* Player in wrong world */
-		if (Parkour.getSettings().isEnforceWorld()){
-			if (!player.getLocation().getWorld().getName().equals(course.getCurrentCheckpoint().getWorld())){
+		if (Parkour.getSettings().isEnforceWorld()) {
+			if (!player.getLocation().getWorld().getName().equals(course.getCurrentCheckpoint().getWorld())) {
 				player.sendMessage(Utils.getTranslation("Error.WrongWorld"));
 				return false;
 			}
@@ -80,9 +80,9 @@ public class ValidationMethods {
         }
 
 		/* Course isn't finished */
-		if (!CourseInfo.getFinished(course.getName())){
-			if (Parkour.getPlugin().getConfig().getBoolean("OnJoin.EnforceFinished")){
-				if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Bypass", course.getName())){
+		if (!CourseInfo.getFinished(course.getName())) {
+			if (Parkour.getPlugin().getConfig().getBoolean("OnJoin.EnforceFinished")) {
+				if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Bypass", course.getName())) {
 					player.sendMessage(Utils.getTranslation("Error.Finished1"));
 					return false;
 				}
@@ -92,13 +92,13 @@ public class ValidationMethods {
 		}
 
 		/* Check if player has enough currency to join */
-		if (Static.getEconomy()){
+		if (Static.getEconomy()) {
 			int joinFee = CourseInfo.getEconomyJoiningFee(course.getName());
 			String currencyName = Parkour.getEconomy().currencyNamePlural() == null ? 
 					"" : " " + Parkour.getEconomy().currencyNamePlural();
 			
-			if (joinFee > 0){
-				if (Parkour.getEconomy().getBalance(Bukkit.getOfflinePlayer(player.getUniqueId())) < joinFee){
+			if (joinFee > 0) {
+				if (Parkour.getEconomy().getBalance(Bukkit.getOfflinePlayer(player.getUniqueId())) < joinFee) {
 					player.sendMessage(Utils.getTranslation("Economy.Insufficient")
 							.replace("%AMOUNT%", joinFee + currencyName)
 							.replace("%COURSE%", course.getName()));
@@ -129,10 +129,10 @@ public class ValidationMethods {
 	 * @param courseName
 	 * @return
 	 */
-	public static boolean courseJoiningNoMessages(Player player, String courseName){
+	public static boolean courseJoiningNoMessages(Player player, String courseName) {
 		/* Player in wrong world */
-		if (Parkour.getSettings().isEnforceWorld()){
-			if (!player.getLocation().getWorld().getName().equals(CourseInfo.getWorld(courseName))){
+		if (Parkour.getSettings().isEnforceWorld()) {
+			if (!player.getLocation().getWorld().getName().equals(CourseInfo.getWorld(courseName))) {
 				return false;
 			}
 		}
@@ -141,30 +141,30 @@ public class ValidationMethods {
         int minimumLevel = CourseInfo.getMinimumLevel(courseName);
 
         if (minimumLevel > 0) {
-			if (!player.hasPermission("Parkour.Admin.MinBypass") && !player.hasPermission("Parkour.Level." + minimumLevel)){
+			if (!player.hasPermission("Parkour.Admin.MinBypass") && !player.hasPermission("Parkour.Level." + minimumLevel)) {
 				int currentLevel = PlayerInfo.getParkourLevel(player);
 
-				if (currentLevel < minimumLevel){
+				if (currentLevel < minimumLevel) {
 					return false;
 				}
 			}
 		}
 
 		/* Course isn't finished */
-		if (!CourseInfo.getFinished(courseName)){
-			if (Parkour.getPlugin().getConfig().getBoolean("OnJoin.EnforceFinished")){
-				if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Bypass", courseName)){
+		if (!CourseInfo.getFinished(courseName)) {
+			if (Parkour.getPlugin().getConfig().getBoolean("OnJoin.EnforceFinished")) {
+				if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Bypass", courseName)) {
 					return false;
 				}
 			}
 		}
 
 		/* Check if player has enough currency to join */
-		if (Static.getEconomy()){
+		if (Static.getEconomy()) {
 			int joinFee = CourseInfo.getEconomyJoiningFee(courseName);
 
-			if (joinFee > 0){
-				if (Parkour.getEconomy().getBalance(Bukkit.getOfflinePlayer(player.getUniqueId())) < joinFee){
+			if (joinFee > 0) {
+				if (Parkour.getEconomy().getBalance(Bukkit.getOfflinePlayer(player.getUniqueId())) < joinFee) {
 					return false;
 				} 
 			}
@@ -182,11 +182,11 @@ public class ValidationMethods {
 	public static boolean challengePlayer(String[] args, Player player) {
 		String courseName = args[1].toLowerCase();
 
-		if (!CourseMethods.exist(courseName)){
+		if (!CourseMethods.exist(courseName)) {
 			player.sendMessage(Utils.getTranslation("Error.Unknown"));
 			return false;
 		}
-		if (!PlayerMethods.isPlayerOnline(args[2])){
+		if (!PlayerMethods.isPlayerOnline(args[2])) {
 			player.sendMessage(Static.getParkourString() + "This player is not online!");
 			return false;
 		}
@@ -194,22 +194,22 @@ public class ValidationMethods {
 		    player.sendMessage(Static.getParkourString() + "You are already on a course!");
 		    return false;
         }
-		if (PlayerMethods.isPlaying(args[2])){
+		if (PlayerMethods.isPlaying(args[2])) {
 			player.sendMessage(Static.getParkourString() + "This player is already playing!");
 			return false;
 		}
-		if (player.getName().equalsIgnoreCase(args[2])){
+		if (player.getName().equalsIgnoreCase(args[2])) {
 			player.sendMessage(Static.getParkourString() + "You can't challenge yourself!");
 			return false;
 		}
 
 		Player target = Bukkit.getPlayer(args[2]);
 
-		if (!ValidationMethods.courseJoiningNoMessages(player, courseName)){
+		if (!ValidationMethods.courseJoiningNoMessages(player, courseName)) {
 			player.sendMessage(Static.getParkourString() + "You are not able to join this course!");
 			return false;
 		}
-		if (!ValidationMethods.courseJoiningNoMessages(target, courseName)){
+		if (!ValidationMethods.courseJoiningNoMessages(target, courseName)) {
 			player.sendMessage(Static.getParkourString() + "They are not able to join this course!");
 			return false;
 		}
@@ -280,7 +280,7 @@ public class ValidationMethods {
 				player.sendMessage(Static.getParkourString() + "Checkpoint specified is not numeric!");
 				return false; 
 			}
-			if (pointcount < Integer.parseInt(args[1])){
+			if (pointcount < Integer.parseInt(args[1])) {
 				player.sendMessage(Static.getParkourString() + "This checkpoint does not exist! " + ChatColor.RED + "Creation cancelled.");
 				return false;
 			}
@@ -288,7 +288,7 @@ public class ValidationMethods {
 			pointcount = Integer.parseInt(args[1]);
 		}
 
-		if (pointcount < 1){
+		if (pointcount < 1) {
 			player.sendMessage(Static.getParkourString() + "Invalid checkpoint number.");
 			return false;
 		}
@@ -305,7 +305,7 @@ public class ValidationMethods {
 		courseName = courseName.toLowerCase();
 		List<String> dependentCourses = new ArrayList<>();
 
-		for (String course : Static.getCourses()){
+		for (String course : Static.getCourses()) {
 			String linkedCourse = CourseInfo.getLinkedCourse(courseName);
 
 			if (linkedCourse != null && courseName.equals(linkedCourse)) {
@@ -331,7 +331,7 @@ public class ValidationMethods {
 		courseName = courseName.toLowerCase();
 		List<String> dependentCourses = new ArrayList<>();
 
-		for (String course : Static.getCourses()){
+		for (String course : Static.getCourses()) {
 			String linkedCourse = CourseInfo.getLinkedLobby(courseName);
 
 			if (linkedCourse != null && courseName.equals(linkedCourse)) {
@@ -351,7 +351,7 @@ public class ValidationMethods {
         parkourKit = parkourKit.toLowerCase();
         List<String> dependentCourses = new ArrayList<>();
 
-        for (String course : Static.getCourses()){
+        for (String course : Static.getCourses()) {
             String linkedKit = CourseInfo.getParkourKit(course);
 
             if (linkedKit != null && parkourKit.equals(linkedKit)) {

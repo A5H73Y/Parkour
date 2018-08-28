@@ -20,7 +20,7 @@ public class ParkourConversation implements ConversationAbandonedListener {
     private String courseName;
     private Player player;
 
-    public ParkourConversation(Player player, ConversationType conversationType){
+    public ParkourConversation(Player player, ConversationType conversationType) {
         this.player = player;
 
         conversationFactory = new ConversationFactory(Parkour.getPlugin())
@@ -33,7 +33,7 @@ public class ParkourConversation implements ConversationAbandonedListener {
 
     private Prompt getEntryPrompt(ConversationType type, Player player) {
         player.sendMessage(ChatColor.GRAY + "Note: Enter 'cancel' to quit the conversation.");
-        switch (type){
+        switch (type) {
             case PARKOURKIT:
                 return new CreateParkourKitConversation();
             case COURSEPRIZE:

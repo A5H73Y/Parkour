@@ -18,8 +18,6 @@ public final class Static {
 	private static List<String> hidden = new ArrayList<>();
 	private static Map<String, Long> delay = new HashMap<>();
 
-	private static List<String> lobbyList;
-
 	private static boolean economy = false;
 	private static boolean bountifulAPI = false;
 	private static boolean placeholderAPI = false;
@@ -109,7 +107,7 @@ public final class Static {
 	 * Get the current delay map
 	 * @return
 	 */
-	public static Map<String, Long> getDelay(){
+	public static Map<String, Long> getDelay() {
 		return delay;
 	}
 
@@ -133,12 +131,8 @@ public final class Static {
 		return lobbyListSet;
 	}
 
-	public static List<String> getWhitelistedCommands() {
-		return new ArrayList<>(Parkour.getPlugin().getConfig().getStringList("OnCourse.EnforceParkourCommands.Whitelist"));
-	}
-
 	public static void addWhitelistedCommand(String command) {
-		List<String> commands = getWhitelistedCommands();
+		List<String> commands = Parkour.getSettings().getWhitelistedCommands();
 		commands.add(command);
 		Parkour.getPlugin().getConfig().set("OnCourse.EnforceParkourCommands.Whitelist", commands);
 		Parkour.getPlugin().saveConfig();

@@ -7,160 +7,133 @@ import me.A5H73Y.Parkour.Parkour;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
+/**
+ * Quickly access Parkour Settings without knowing the property name
+ * Bukkit implementation caches the property files for us, so there's no need for us to.
+ */
 public class Settings {
 
-	private boolean commandPermission, chatPrefix, disablePlayerDamage, resetOnLeave, enforceWorld, disableCommands,
-            allowTrails, signPermission, attemptLessChecks, useParkourKit, preventAttackingEntities, displayMilliseconds,
-            enforceSafeCheckpoints, chatPrefixOverride, firstCheckAsStart;
+	FileConfiguration config = Parkour.getPlugin().getConfig();
 
-	//Display
-	private boolean displayWelcome, displayPrizeCooldown;
+	/* booleans */
 
-	//Materials
-	private Material lastCheckpointTool, hideallTool, leaveTool, restartTool;
-
-	//Lists
-	private List<String> cmdWhitelist; 
-
-	//int
-	private int maxFallTicks, titleIn, titleStay, titleOut;
-
-	public Settings(){
-		FileConfiguration config = Parkour.getPlugin().getConfig();
-		commandPermission = config.getBoolean("Other.Parkour.CommandPermissions");
-		chatPrefix = config.getBoolean("Other.Parkour.ChatRankPrefix.Enabled");
-		chatPrefixOverride = config.getBoolean("Other.Parkour.ChatRankPrefix.OverrideChat");
-		disablePlayerDamage = config.getBoolean("OnCourse.DisablePlayerDamage");
-		resetOnLeave = config.getBoolean("OnLeaveServer.LeaveCourse");
-		enforceWorld = config.getBoolean("OnJoin.EnforceWorld");
-		disableCommands = config.getBoolean("OnCourse.EnforceParkourCommands.Enabled");
-		allowTrails = config.getBoolean("OnCourse.AllowTrails");
-		signPermission = config.getBoolean("Other.Parkour.SignPermissions");
-		attemptLessChecks = config.getBoolean("OnCourse.AttemptLessChecks");
-        useParkourKit = config.getBoolean("OnCourse.UseParkourKit");
-        preventAttackingEntities = config.getBoolean("OnCourse.PreventAttackingEntities");
-        displayMilliseconds = config.getBoolean("Other.Display.ShowMilliseconds");
-        enforceSafeCheckpoints = config.getBoolean("Other.EnforceSafeCheckpoints");
-        firstCheckAsStart = config.getBoolean("OnJoin.TreatFirstCheckpointAsStart");
-
-		lastCheckpointTool = Material.getMaterial(config.getString("OnJoin.Item.LastCheckpoint.Material"));
-		hideallTool = Material.getMaterial(config.getString("OnJoin.Item.HideAll.Material"));
-		leaveTool = Material.getMaterial(config.getString("OnJoin.Item.Leave.Material"));
-        restartTool = Material.getMaterial(config.getString("OnJoin.Item.Restart.Material"));
-
-		displayWelcome = config.getBoolean("Other.Display.JoinWelcomeMessage");
-		displayPrizeCooldown = config.getBoolean("Other.Display.PrizeCooldown");
-
-		maxFallTicks = config.getInt("OnCourse.MaxFallTicks");
-
-		titleIn = config.getInt("DisplayTitle.FadeIn");
-		titleStay = config.getInt("DisplayTitle.Stay");
-		titleOut = config.getInt("DisplayTitle.FadeOut");
-
-		cmdWhitelist = config.getStringList("OnCourse.EnforceParkourCommands.Whitelist");
+	public boolean isPermissionsForCommands() {
+		return config.getBoolean("Other.Parkour.CommandPermissions");
 	}
 
-	public boolean isCommandPermission() {
-		return commandPermission;
+	public boolean isPermissionForSignInteraction() {
+		return config.getBoolean("Other.Parkour.SignPermissions");
+	}
+
+	public boolean isUseParkourKit() {
+		return config.getBoolean("OnCourse.UseParkourKit");
 	}
 
 	public boolean isChatPrefix() {
-		return chatPrefix;
+		return config.getBoolean("Other.Parkour.ChatRankPrefix.Enabled");
+	}
+
+	public boolean isChatPrefixOverride() {
+		return config.getBoolean("Other.Parkour.ChatRankPrefix.OverrideChat");
 	}
 
 	public boolean isDisablePlayerDamage() {
-		return disablePlayerDamage;
+		return config.getBoolean("OnCourse.DisablePlayerDamage");
 	}
 
-	public boolean isResetOnLeave() {
-		return resetOnLeave;
+	public boolean isPlayerLeaveCourseOnLeaveServer() {
+		return config.getBoolean("OnLeaveServer.LeaveCourse");
 	}
 
 	public boolean isEnforceWorld() {
-		return enforceWorld;
+		return config.getBoolean("OnJoin.EnforceWorld");
 	}
 
-	public boolean isDisableCommands() {
-		return disableCommands;
+	public boolean isDisableCommandsOnCourse() {
+		return config.getBoolean("OnCourse.EnforceParkourCommands.Enabled");
 	}
 
-	public boolean isAllowTrails() {
-		return allowTrails;
+	public boolean isTrailsEnabled() {
+		return config.getBoolean("OnCourse.AllowTrails");
 	}
 
-	public boolean isSignPermission() {
-		return signPermission;
+	public boolean isAttemptLessChecks() {
+		return config.getBoolean("OnCourse.AttemptLessChecks");
 	}
 
-	public boolean isDisplayWelcome() {
-		return displayWelcome;
+	public boolean isDisplayWelcomeMessage() {
+		return config.getBoolean("Other.Display.JoinWelcomeMessage");
+	}
+
+	public boolean isDisplayPrizeCooldown() {
+		return config.getBoolean("Other.Display.PrizeCooldown");
 	}
 
 	public boolean isPreventAttackingEntities() {
-		return preventAttackingEntities;
+		return config.getBoolean("OnCourse.PreventAttackingEntities");
 	}
 
+	public boolean isDisplayMilliseconds() {
+		return config.getBoolean("Other.Display.ShowMilliseconds");
+	}
+
+	public boolean isEnforceSafeCheckpoints() {
+		return config.getBoolean("Other.EnforceSafeCheckpoints");
+	}
+
+	public boolean isFirstCheckAsStart() {
+		return config.getBoolean("OnJoin.TreatFirstCheckpointAsStart");
+	}
+
+	/* Materials */
+
 	public Material getLastCheckpointTool() {
+		Material lastCheckpointTool = Material.getMaterial(config.getString("OnJoin.Item.LastCheckpoint.Material"));
         return lastCheckpointTool == Material.AIR ? null : lastCheckpointTool;
 	}
 
 	public Material getHideallTool() {
+		Material hideallTool = Material.getMaterial(config.getString("OnJoin.Item.HideAll.Material"));
         return hideallTool == Material.AIR ? null : hideallTool;
 	}
 
 	public Material getLeaveTool() {
+		Material leaveTool = Material.getMaterial(config.getString("OnJoin.Item.Leave.Material"));
         return leaveTool == Material.AIR ? null : leaveTool;
 	}
 
     public Material getRestartTool() {
+		Material restartTool = Material.getMaterial(config.getString("OnJoin.Item.Restart.Material"));
         return restartTool == Material.AIR ? null : restartTool;
     }
 
-	public List<String> getCmdWhitelist() {
-		return cmdWhitelist;
-	}	
+    /* Strings */
 
-	public int getMaxFallTicks(){
-		return maxFallTicks;
+    public String getCheckpointMaterial() {
+		return Parkour.getPlugin().getConfig().getString("OnCourse.CheckpointMaterial");
 	}
 
-	public boolean isAttemptLessChecks(){
-		return attemptLessChecks;
+    /* Lists */
+
+	public List<String> getWhitelistedCommands() {
+		return config.getStringList("OnCourse.EnforceParkourCommands.Whitelist");
+	}	
+
+	/* ints */
+
+	public int getMaxFallTicks() {
+		return config.getInt("OnCourse.MaxFallTicks");
 	}
 
 	public int getTitleIn() {
-		return titleIn;
+		return config.getInt("DisplayTitle.FadeIn");
 	}
 
 	public int getTitleStay() {
-		return titleStay;
+		return config.getInt("DisplayTitle.Stay");
 	}
 
 	public int getTitleOut() {
-		return titleOut;
+		return config.getInt("DisplayTitle.FadeOut");
 	}
-
-    public boolean isUseParkourKit() {
-        return useParkourKit;
-    }
-
-    public boolean isDisplayMilliseconds() {
-        return displayMilliseconds;
-    }
-    
-    public boolean isEnforceSafeCheckpoints() {
-    	return enforceSafeCheckpoints;
-    }
-
-    public boolean isChatPrefixOverride() {
-        return chatPrefixOverride;
-    }
-
-    public boolean isDisplayPrizeCooldown() {
-        return displayPrizeCooldown;
-    }
-
-    public boolean isFirstCheckAsStart() {
-        return firstCheckAsStart;
-    }
 }

@@ -19,7 +19,7 @@ public class Checkpoint implements Serializable {
      * The nextCheckpoint coordinates are used for the detection of the pressure plate.
 	 * As locations are transient, we must reconstruct the Checkpoints after a reload.
 	 */
-	public Checkpoint(Location location, double nextCheckpointX, double nextCheckpointY, double nextCheckpointZ){
+	public Checkpoint(Location location, double nextCheckpointX, double nextCheckpointY, double nextCheckpointZ) {
 		this.x = location.getX();
 		this.y = location.getY();
 		this.z = location.getZ();
@@ -44,7 +44,7 @@ public class Checkpoint implements Serializable {
 		return nextCheckpointZ;
 	}	
 
-	public Location getLocation(){
+	public Location getLocation() {
 		return new Location(Bukkit.getWorld(world), x, y, z , yaw, pitch);
 	}
 }

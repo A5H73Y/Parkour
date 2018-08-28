@@ -16,7 +16,7 @@ import org.bukkit.conversations.StringPrompt;
 
 public class CoursePrizeConversation extends FixedSetPrompt {
 
-	CoursePrizeConversation(){
+	CoursePrizeConversation() {
 		super("material", "command", "xp");
 	}
 
@@ -49,8 +49,9 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 
 		@Override
 		public Prompt acceptInput(ConversationContext context, String message) {
-			Material material = Utils.getMaterial(message.toUpperCase());
-			if (material == null){
+			Material material = Material.getMaterial(message.toUpperCase());
+
+			if (material == null) {
 				ParkourConversation.sendErrorMessage(context, "This is not a valid material");
 				return this;
 			}
@@ -142,7 +143,7 @@ public class CoursePrizeConversation extends FixedSetPrompt {
 
 	private class CommandProcessComplete extends MessagePrompt {
 		public String getPromptText(ConversationContext context) {
-		    CourseInfo.setCommandPrize(context.getSessionData("courseName").toString(),
+		    CourseInfo.addCommandPrize(context.getSessionData("courseName").toString(),
                     context.getSessionData("command").toString());
 
 			return " The Command prize for " + ChatColor.DARK_AQUA + context.getSessionData("courseName") + ChatColor.WHITE + " was set to /" + ChatColor.AQUA + context.getSessionData("command");

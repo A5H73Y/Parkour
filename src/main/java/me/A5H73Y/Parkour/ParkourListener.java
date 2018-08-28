@@ -12,6 +12,7 @@ import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
+import me.A5H73Y.Parkour.Utilities.XMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -49,7 +50,7 @@ public class ParkourListener implements Listener {
         if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
             return;
 
-        if (!Parkour.getSettings().isAllowTrails())
+        if (!Parkour.getSettings().isTrailsEnabled())
             return;
 
         Location loc = event.getPlayer().getLocation().add(0, 0.4, 0);
@@ -334,7 +335,7 @@ public class ParkourListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        if (Parkour.getSettings().isDisplayWelcome())
+        if (Parkour.getSettings().isDisplayWelcomeMessage())
             event.getPlayer().sendMessage(Utils.getTranslation("Event.Join")
                     .replace("%VERSION%", Static.getVersion().toString()));
 
@@ -349,7 +350,7 @@ public class ParkourListener implements Listener {
         if (Parkour.getPlugin().getConfig().getBoolean("OnLeaveServer.TeleportToLastCheckpoint"))
             PlayerMethods.playerDie(event.getPlayer());
 
-        if (Parkour.getSettings().isResetOnLeave())
+        if (Parkour.getSettings().isPlayerLeaveCourseOnLeaveServer())
             PlayerMethods.playerLeave(event.getPlayer());
     }
 
@@ -361,7 +362,7 @@ public class ParkourListener implements Listener {
         if (PlayerMethods.isPlayerInTestmode(event.getPlayer().getName()))
             return;
 
-        if (event.getTo().getBlockX() == 0 && event.getTo().getBlockY() == 0 && event.getTo().getBlockZ() == 0){
+        if (event.getTo().getBlockX() == 0 && event.getTo().getBlockY() == 0 && event.getTo().getBlockZ() == 0) {
             event.getPlayer().sendMessage(Static.getParkourString() + ChatColor.RED + "This checkpoint is invalid. For safety you have been teleported to the lobby.");
             event.setCancelled(true);
             PlayerMethods.playerLeave(event.getPlayer());
@@ -453,7 +454,7 @@ public class ParkourListener implements Listener {
 
         event.setCancelled(true);
 
-        if (Utils.getMaterialInPlayersHand(player) == Material.REDSTONE_TORCH_ON) {
+        if (Utils.getMaterialInPlayersHand(player) == XMaterial.REDSTONE_TORCH.parseMaterial()) {
             if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
                 PlayerMethods.getParkourSession(player.getName()).getCourse().setCheckpoint(CheckpointMethods.createCheckpointFromPlayerLocation(player));
                 player.sendMessage(Utils.getTranslation("Mode.Freedom.Save"));
@@ -470,6 +471,9 @@ public class ParkourListener implements Listener {
             return;
 
         if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+            return;
+
+        if (event.getClickedBlock().getType() != XMaterial.fromString(Parkour.getSettings().getCheckpointMaterial()).parseMaterial())
             return;
 
         Block below = event.getClickedBlock().getRelative(BlockFace.DOWN);
@@ -532,14 +536,14 @@ public class ParkourListener implements Listener {
         }
 
         if (!commandIsPa && PlayerMethods.isPlaying(player.getName())) {
-            if (!Parkour.getSettings().isDisableCommands())
+            if (!Parkour.getSettings().isDisableCommandsOnCourse())
                 return;
 
             if (player.hasPermission("Parkour.Admin.*") || player.hasPermission("Parkour.*"))
                 return;
 
             boolean allowed = false;
-            for (String word : Static.getWhitelistedCommands()) {
+            for (String word : Parkour.getSettings().getWhitelistedCommands()) {
                 if (event.getMessage().startsWith("/" + word + " ") || (event.getMessage().equalsIgnoreCase("/" + word))) {
                     allowed = true;
                     break;

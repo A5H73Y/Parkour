@@ -21,7 +21,7 @@ public class Configurations {
      * This no longer generates the default config.yml to allow the ability of creating a backup of the existing config.
      *
      */
-    public Configurations(){
+    public Configurations() {
         Parkour.getPlugin().saveConfig();
 
         dataFolder = Parkour.getPlugin().getDataFolder();
@@ -114,7 +114,7 @@ public class Configurations {
             checkData.load(checkFile);
             kitData.load(kitFile);
 
-        } catch (Exception ex){
+        } catch (Exception ex) {
             Utils.log("Failed loading config: " + ex.getMessage());
             ex.printStackTrace();
         }
@@ -122,10 +122,9 @@ public class Configurations {
         saveAll();
     }
 
-    public void saveAll(){
+    public void saveAll() {
         saveCheck();
         saveCourses();
-        //saveEcon();
         saveInv();
         saveStrings();
         saveUsers();
@@ -133,7 +132,7 @@ public class Configurations {
         Parkour.getPlugin().saveConfig();
     }
 
-    public void reload(){
+    public void reload() {
         Parkour.getPlugin().reloadConfig();
 
         courseData = YamlConfiguration.loadConfiguration(courseFile);
@@ -174,7 +173,7 @@ public class Configurations {
         return kitData;
     }
 
-    public File getDataFolder(){
+    public File getDataFolder() {
         return dataFolder;
     }
 
@@ -235,7 +234,7 @@ public class Configurations {
         return courseData.getStringList("Courses");
     }
 
-    public void initiateEconomy(){
+    public void initiateEconomy() {
         Static.enableEconomy();
         econFile = new File(Parkour.getPlugin().getDataFolder(), "economy.yml");
         econData = new YamlConfiguration();
@@ -384,7 +383,7 @@ public class Configurations {
             stringData.addDefault("NoPermission", "You do not have Permission: &b%PERMISSION%");
             stringData.options().copyDefaults(true);
             stringData.save(stringFile);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -392,7 +391,7 @@ public class Configurations {
     /**
      * Default configuration options
      */
-    public void setupConfig(){
+    public void setupConfig() {
         FileConfiguration config = Parkour.getPlugin().getConfig();
 
         config.options().header("==== Parkour Config ==== #");
@@ -408,6 +407,7 @@ public class Configurations {
         config.addDefault("OnJoin.Item.HideAll.Global", true);
         config.addDefault("OnJoin.Item.Leave.Material", "SAPLING");
         config.addDefault("OnJoin.Item.Restart.Material", "STICK");
+        config.addDefault("OnCourse.CheckpointMaterial", "STONE_PLATE");
 
         config.addDefault("OnCourse.UseParkourKit", true);
         config.addDefault("OnCourse.DieInLiquid", false);
@@ -421,7 +421,7 @@ public class Configurations {
         config.addDefault("OnCourse.AllowTrails", false);
         config.addDefault("OnCourse.DisableItemDrop", false);
         config.addDefault("OnCourse.DisableItemPickup", false);
-        config.addDefault("OnCourse.PreventPlateStick", true);
+        config.addDefault("OnCourse.PreventPlateStick", false);
         config.addDefault("OnCourse.AttemptLessChecks", false);
         config.addDefault("OnCourse.DisplayLiveTime", false);
         config.addDefault("OnCourse.DisableFly", true);
