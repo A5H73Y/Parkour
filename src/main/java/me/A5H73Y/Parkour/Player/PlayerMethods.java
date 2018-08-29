@@ -67,6 +67,7 @@ public class PlayerMethods {
         ParkourSession session = addPlayer(player.getName(), new ParkourSession(course));
         PlayerInfo.setLastPlayedCourse(player, course.getName());
         setupPlayerMode(player);
+        Parkour.getPlugin().getScoreboardManager().addScoreboard(player);
         session.startVisualTimer(player);
         Bukkit.getServer().getPluginManager().callEvent(new PlayerJoinCourseEvent(player, course.getName()));
     }
@@ -102,6 +103,7 @@ public class PlayerMethods {
             Utils.toggleVisibility(player, true);
 
         Utils.forceVisible(player);
+        Parkour.getPlugin().getScoreboardManager().removeScoreboard(player);
         Bukkit.getServer().getPluginManager().callEvent(new PlayerLeaveCourseEvent(player, session.getCourse().getName()));
     }
 

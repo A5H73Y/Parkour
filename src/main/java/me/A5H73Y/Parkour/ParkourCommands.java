@@ -335,7 +335,7 @@ class ParkourCommands implements CommandExecutor {
 						CourseMethods.challengePlayer(args, player);
 
 					} else if (args[0].equalsIgnoreCase("list")) {
-						CourseMethods.displayList(args, player);
+                        CourseMethods.displayList(args, player);
 
 					} else if (args[0].equalsIgnoreCase("help")) {
 						Help.lookupCommandHelp(args, player);

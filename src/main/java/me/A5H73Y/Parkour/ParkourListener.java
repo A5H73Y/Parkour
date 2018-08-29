@@ -347,6 +347,8 @@ public class ParkourListener implements Listener {
         if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
             return;
 
+        Parkour.getPlugin().getScoreboardManager().addScoreboard(event.getPlayer());
+
         if (Parkour.getPlugin().getConfig().getBoolean("OnLeaveServer.TeleportToLastCheckpoint"))
             PlayerMethods.playerDie(event.getPlayer());
 

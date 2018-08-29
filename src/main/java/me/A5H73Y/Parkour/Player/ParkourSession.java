@@ -50,8 +50,7 @@ public class ParkourSession implements Serializable {
     }
 	
 	public void startVisualTimer(final Player player) {
-		if (!Static.getBountifulAPI() ||
-				!Parkour.getPlugin().getConfig().getBoolean("OnCourse.DisplayLiveTime") ||
+		if (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.DisplayLiveTime") ||
 				Static.containsQuiet(player.getName()))
 			return;
 		
@@ -60,8 +59,16 @@ public class ParkourSession implements Serializable {
             public void run() {
                 liveTime = Utils.convertSecondsToTime(++seconds);
 
-                //TODO if scoreboard is uninstalled, or disabled
-                Utils.sendActionBar(player, liveTime, true);
+                if (!player.isOnline()) {
+                    cancelVisualTimer();
+                    return;
+                }
+
+                if (Parkour.getPlugin().getScoreboardManager().isEnabled()) {// Scoreboard is enabled and CurrentTime is true
+                    Parkour.getPlugin().getScoreboardManager().updateScoreboardTimer(player, liveTime);
+                } else if (Static.getBountifulAPI()) {
+                    Utils.sendActionBar(player, liveTime, true);
+                }
             }
         }.runTaskTimer(Parkour.getPlugin(), 20, 20);
 

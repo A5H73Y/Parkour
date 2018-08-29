@@ -4,6 +4,7 @@ import me.A5H73Y.Parkour.Other.Configurations;
 import me.A5H73Y.Parkour.Other.StartPlugin;
 import me.A5H73Y.Parkour.Other.Updater;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
+import me.A5H73Y.Parkour.Scoreboard.ScoreboardManager;
 import me.A5H73Y.Parkour.Utilities.Settings;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
@@ -21,6 +22,7 @@ public class Parkour extends JavaPlugin {
 	private static Database database;
 	private static Economy economy;
 	private static Settings settings;
+	private ScoreboardManager scoreboardManager;
 
 	public void onEnable() {
 		instance = this;
@@ -78,6 +80,13 @@ public class Parkour extends JavaPlugin {
 	public static Economy getEconomy() {
 		return economy;
 	}
+
+	public ScoreboardManager getScoreboardManager() {
+	    if (scoreboardManager == null) {
+	        scoreboardManager = new ScoreboardManager();
+        }
+	    return scoreboardManager;
+    }
 
 	private void updatePlugin() {
 		if (Parkour.getPlugin().getConfig().getBoolean("Other.CheckForUpdates"))
