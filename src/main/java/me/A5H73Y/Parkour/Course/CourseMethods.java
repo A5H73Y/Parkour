@@ -17,10 +17,13 @@ import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
+import me.A5H73Y.Parkour.Utilities.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -444,6 +447,51 @@ public class CourseMethods {
         Parkour.getParkourConfig().getCourseData().set(selected + ".0.Pitch", player.getLocation().getPitch());
         Utils.logToFile(selected + " spawn was reset by " + player.getName());
         player.sendMessage(Static.getParkourString() + "Spawn for " + ChatColor.AQUA + selected + ChatColor.WHITE + " has been set to your position");
+    }
+
+    /**
+     * Set the course prize
+     * Starts a Prize conversation that allows you to configure what the player gets awarded with when the complete the course.
+     * A course could have every type of Prize if setup.
+     *
+     * @param args
+     * @param player
+     */
+    public static void setAutoStart(String[] args, Player player) {
+        if (!exist(args[1])) {
+            player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
+            return;
+        }
+
+        Block block = player.getLocation().getBlock();
+        String coordinates = block.getX() + "-" + block.getY() + "-" + block.getZ();
+
+        if (Parkour.getParkourConfig().getCourseData().contains("CourseInfo.AutoStart." + coordinates)) {
+            player.sendMessage(Static.getParkourString() + "There is already an AutoStart here!");
+            return;
+        }
+
+        Parkour.getParkourConfig().getCourseData().set("CourseInfo.AutoStart." + coordinates, args[1].toLowerCase());
+        Parkour.getParkourConfig().saveCourses();
+        player.sendMessage(Static.getParkourString() + "AutoStart for " + args[1] + " created!");
+
+        block.setType(XMaterial.STONE_PRESSURE_PLATE.parseMaterial());
+        Block blockUnder = block.getRelative(BlockFace.DOWN);
+        blockUnder.setType(Material.BEDROCK);
+    }
+
+    public static String getAutoStartCourse(Location location) {
+        FileConfiguration config = Parkour.getParkourConfig().getCourseData();
+        String coordinates = location.getBlockX() + "-" + location.getBlockY() + "-" + location.getBlockZ();
+
+        // Go through each entry to find matching coordinates, then return the course
+        for (String entry : config.getConfigurationSection("CourseInfo.AutoStart").getKeys(false)) {
+            if (entry.equals(coordinates)) {
+                return config.get("CourseInfo.AutoStart." + entry).toString();
+            }
+        }
+
+        return null;
     }
 
     /**

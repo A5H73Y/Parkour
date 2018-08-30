@@ -3,6 +3,7 @@ package me.A5H73Y.Parkour;
 import me.A5H73Y.Parkour.Course.Checkpoint;
 import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.Course;
+import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Enums.ParkourMode;
 import me.A5H73Y.Parkour.Other.ParkourKit;
 import me.A5H73Y.Parkour.Other.QuestionManager;
@@ -504,6 +505,32 @@ public class ParkourListener implements Listener {
             }
         	PlayerMethods.increaseCheckpoint(session, event.getPlayer());
         }
+    }
+
+    @EventHandler
+    public void onAutoStartEvent(PlayerInteractEvent event) {
+        if (event.getAction() != Action.PHYSICAL)
+            return;
+
+        if (PlayerMethods.isPlaying(event.getPlayer().getName()))
+            return;
+
+        Block below = event.getClickedBlock().getRelative(BlockFace.DOWN);
+
+        if (below == null || below.getType() != Material.BEDROCK) //TODO configurable
+            return;
+
+        // Prevent a user spamming the joins
+        if (!Utils.delayPlayer(event.getPlayer(), 3, false))
+            return;
+
+        String courseName = CourseMethods.getAutoStartCourse(event.getClickedBlock().getLocation());
+
+        if (courseName != null)
+            CourseMethods.joinCourse(event.getPlayer(), courseName);
+
+        // An attempt to stop the moving to fast message
+        event.setCancelled(true);
     }
 
     @EventHandler
