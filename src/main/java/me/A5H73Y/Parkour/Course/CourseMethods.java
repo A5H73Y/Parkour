@@ -1002,4 +1002,14 @@ public class CourseMethods {
 
         return ParkourMode.NONE;
     }
+
+    public static void joinCourseButDelayed(Player player, String courseName) {
+        player.sendMessage("Waaaaaait...");
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(Parkour.getPlugin(), new Runnable() {
+            public void run() {
+                joinCourse(player, courseName);
+            }
+        }, 20);
+    }
 }

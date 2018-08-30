@@ -527,10 +527,7 @@ public class ParkourListener implements Listener {
         String courseName = CourseMethods.getAutoStartCourse(event.getClickedBlock().getLocation());
 
         if (courseName != null)
-            CourseMethods.joinCourse(event.getPlayer(), courseName);
-
-        // An attempt to stop the moving to fast message
-        event.setCancelled(true);
+            CourseMethods.joinCourseButDelayed(event.getPlayer(), courseName);
     }
 
     @EventHandler
