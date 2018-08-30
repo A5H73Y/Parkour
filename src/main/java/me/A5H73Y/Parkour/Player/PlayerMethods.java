@@ -236,6 +236,7 @@ public class PlayerMethods {
         PlayerInfo.setLastCompletedCourse(player, courseName);
 
         Utils.forceVisible(player);
+        Parkour.getPlugin().getScoreboardManager().removeScoreboard(player);
         Bukkit.getServer().getPluginManager().callEvent(new PlayerFinishCourseEvent(player, courseName));
     }
 
