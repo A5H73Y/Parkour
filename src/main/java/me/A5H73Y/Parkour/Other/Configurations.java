@@ -484,6 +484,10 @@ public class Configurations {
         config.addDefault("Other.Display.PrizeCooldown", true);
         config.addDefault("Other.EnforceSafeCheckpoints", true);
 
+        config.addDefault("AutoStart.Enabled", true);
+        config.addDefault("AutoStart.Material", "BEDROCK");
+        config.addDefault("AutoStart.TickDelay", 0);
+
         config.addDefault("Scoreboard.Enabled", true); //TODO set to false
         config.addDefault("Scoreboard.MainHeading", "&b&l== Parkour ==");
         config.addDefault("Scoreboard.TitleFormat", "&b%TITLE%");

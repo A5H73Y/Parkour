@@ -85,6 +85,8 @@ public class Settings {
 		return config.getBoolean("OnJoin.TreatFirstCheckpointAsStart");
 	}
 
+    public boolean isAutoStartEnabled() { return config.getBoolean("AutoStart.Enabled"); }
+
 	/* Materials */
 
 	public Material getLastCheckpointTool() {
@@ -105,6 +107,10 @@ public class Settings {
     public Material getRestartTool() {
 		Material restartTool = Material.getMaterial(config.getString("OnJoin.Item.Restart.Material"));
         return restartTool == Material.AIR ? null : restartTool;
+    }
+
+    public Material getAutoStartMaterial() {
+	    return Material.getMaterial(config.getString("AutoStart.Material"));
     }
 
     /* Strings */
@@ -136,4 +142,8 @@ public class Settings {
 	public int getTitleOut() {
 		return config.getInt("DisplayTitle.FadeOut");
 	}
+
+	public int getAutoStartDelay() {
+	    return config.getInt("AutoStart.TickDelay");
+    }
 }

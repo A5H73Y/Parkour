@@ -3,6 +3,7 @@ package me.A5H73Y.Parkour;
 import me.A5H73Y.Parkour.Conversation.ParkourConversation;
 
 import me.A5H73Y.Parkour.Course.CheckpointMethods;
+import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Course.LobbyMethods;
 import me.A5H73Y.Parkour.Enums.ConversationType;
@@ -59,7 +60,7 @@ class ParkourCommands implements CommandExecutor {
 						if (!Utils.validateArgs(player, args, 2))
 							return false;
 
-						CourseMethods.displayCourseInfo(args[1], player);
+						CourseInfo.displayCourseInfo(args[1], player);
 
 					} else if (args[0].equalsIgnoreCase("lobby")) {
 						LobbyMethods.joinLobby(args, player);

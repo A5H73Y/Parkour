@@ -151,6 +151,16 @@ public class CourseMethods {
     }
 
     /**
+     * Execute the joinCourse after waiting a full second
+     * Needed to prevent interactions preventing teleports for player
+     * @param player
+     * @param courseName
+     */
+    public static void joinCourseButDelayed(Player player, String courseName, int delay) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(Parkour.getPlugin(), () -> joinCourse(player, courseName), delay);
+    }
+
+    /**
      * This method serves as validation for the player to join the course.
      * Once validated, the player then joins the course via the PlayerMethods class.
      *
@@ -159,10 +169,11 @@ public class CourseMethods {
      */
     public static void joinCourse(Player player, String courseName) {
         Course course;
-        if (Utils.isNumber(courseName))
+        if (Utils.isNumber(courseName)) {
             course = findByNumber(Integer.parseInt(courseName));
-        else
+        } else {
             course = findByName(courseName);
+        }
 
         if (course == null) {
             player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", courseName));
@@ -173,94 +184,6 @@ public class CourseMethods {
             return;
 
         PlayerMethods.playerJoin(player, course);
-    }
-
-    /**
-     * Displays all the information stored about a course.
-     * Accessed via "/pa stats (course)", will only display applicable information.
-     *
-     * @param courseName
-     * @param player
-     */
-    public static void displayCourseInfo(String courseName, Player player) {
-        if (!exist(courseName)) {
-            player.sendMessage(Utils.getTranslation("Error.Unknown"));
-            return;
-        }
-
-        courseName = courseName.toLowerCase();
-        FileConfiguration config = Parkour.getParkourConfig().getCourseData();
-        FileConfiguration econ = Parkour.getParkourConfig().getEconData();
-        ChatColor aqua = ChatColor.AQUA;
-
-        int views = config.getInt(courseName + ".Views");
-        int completed = config.getInt(courseName + ".Completed");
-        int checkpoints = config.getInt(courseName + ".Points");
-        int maxDeaths = config.getInt(courseName + ".MaxDeaths");
-        int minLevel = config.getInt(courseName + ".MinimumLevel");
-        int rewardLevel = config.getInt(courseName + ".Level");
-        int rewardLevelAdd = config.getInt(courseName + ".LevelAdd");
-        int XP = config.getInt(courseName + ".XP");
-        int parkoins = config.getInt(courseName + ".Parkoins");
-
-        String linkedLobby = config.getString(courseName + ".LinkedLobby");
-        String linkedCourse = config.getString(courseName + ".LinkedCourse");
-        String creator = config.getString(courseName + ".Creator");
-        boolean finished = config.getBoolean(courseName + ".Finished");
-        String parkourKit = config.getString(courseName + ".ParkourKit");
-        String mode = config.getString(courseName + ".Mode");
-
-        double completePercent = Math.round(((completed * 1.0 / views) * 100));
-
-        player.sendMessage(Utils.getStandardHeading(Utils.standardizeText(courseName) + " statistics"));
-
-        player.sendMessage("Views: " + aqua + views);
-        player.sendMessage("Completed: " + aqua + completed + " times (" + completePercent + "%)");
-        player.sendMessage("Checkpoints: " + aqua + checkpoints);
-        player.sendMessage("Creator: " + aqua + creator);
-        player.sendMessage("Finished: " + aqua + finished);
-
-        if (minLevel > 0)
-            player.sendMessage("Level Required: " + aqua + minLevel);
-
-        if (rewardLevel > 0)
-            player.sendMessage("Level Reward: " + aqua + rewardLevel);
-
-        if (rewardLevelAdd > 0)
-            player.sendMessage("Level Reward Addon: " + aqua + rewardLevelAdd);
-
-        if (maxDeaths > 0)
-            player.sendMessage("Max Deaths: " + aqua + maxDeaths);
-
-        if (linkedLobby != null && linkedLobby.length() > 0)
-            player.sendMessage("Linked Lobby: " + aqua + linkedLobby);
-
-        if (linkedCourse != null && linkedCourse.length() > 0)
-            player.sendMessage("Linked Course: " + aqua + linkedCourse);
-
-        if (XP > 0)
-            player.sendMessage("XP Reward: " + aqua + XP);
-
-        if (parkoins > 0)
-            player.sendMessage("Parkoins Reward: " + aqua + parkoins);
-
-        if (parkourKit != null && parkourKit.length() > 0)
-            player.sendMessage("ParkourKit: " + aqua + parkourKit);
-
-        if (mode != null && !"none".equalsIgnoreCase(mode))
-            player.sendMessage("ParkourMode: " + aqua + mode);
-
-        if (Static.getEconomy()) {
-            int joinFee = econ.getInt("Price." + courseName + ".JoinFee");
-            if (joinFee > 0) {
-                player.sendMessage("Join Fee: " + aqua + joinFee);
-            }
-        }
-
-        double likePercent = Math.round(DatabaseMethods.getVotePercent(courseName));
-
-        if (likePercent > 0)
-            player.sendMessage("Liked: " + aqua + likePercent + "%");
     }
 
     /**
@@ -633,7 +556,7 @@ public class CourseMethods {
             return;
         }
 
-        CourseInfo.setRewardRank(args[1], args[2]);
+        CourseInfo.setRewardRank(Integer.valueOf(args[1]), args[2]);
         sender.sendMessage(Static.getParkourString() + "Level " + args[1] + "'s rank was set to " + Utils.colour(args[2]));
     }
     
@@ -1001,15 +924,5 @@ public class CourseMethods {
             return ParkourMode.DROPPER;
 
         return ParkourMode.NONE;
-    }
-
-    public static void joinCourseButDelayed(Player player, String courseName) {
-        player.sendMessage("Waaaaaait...");
-
-        Bukkit.getScheduler().scheduleSyncDelayedTask(Parkour.getPlugin(), new Runnable() {
-            public void run() {
-                joinCourse(player, courseName);
-            }
-        }, 20);
     }
 }

@@ -94,8 +94,12 @@ public final class Help {
 					" Finish editing the course you have selected.");
 
 		} else if (args[1].equalsIgnoreCase("setstart")) {
-			displayHelpMessage(sender, "Set start of a course", "/pa setstart", null,
-					" The start of the selected course will be overwritten to your current position, rather than having to recreate the course.");
+            displayHelpMessage(sender, "Set start of a course", "/pa setstart", null,
+                    " The start of the selected course will be overwritten to your current position, rather than having to recreate the course.");
+
+        } else if (args[1].equalsIgnoreCase("setautostart")) {
+		    displayHelpMessage(sender, "Create auto start for course", "/pa setautostart (course)", "/pa setautostart tutorial",
+                    " Create a pressure plate that will automatically trigger an automatic start of the course specified in the argument. A configured Material will appear below the pressure plate to identify it, and for better performance.");
 
 		} else if (args[1].equalsIgnoreCase("setcreator")) {
 			displayHelpMessage(sender, "Set creator of a course", "/pa setcreator (course) (playerName)", "/pa setcreator tutorial A5H73Y",
@@ -374,6 +378,7 @@ public final class Help {
 		displayCommandUsage(player, "select", "(course)", "Start editing the course");
 		displayCommandUsage(player, "done", null, "Stop editing the course");
 		displayCommandUsage(player, "setstart", null, "Set selected course start to current position");
+		displayCommandUsage(player, "setautostart", "(course)", "Create AutoStart for course on current position");
 		displayCommandUsage(player, "setcreator", "(course) (player)", "Set creator of course");
 		displayCommandUsage(player, "setlobby", "[name] [level]", "Create / overwrite Parkour lobby");
 		displayCommandUsage(player, "finish", "[course]", "Toggle the finish status of the chosen course");

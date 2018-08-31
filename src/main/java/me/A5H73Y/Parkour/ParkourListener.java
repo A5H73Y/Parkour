@@ -515,9 +515,12 @@ public class ParkourListener implements Listener {
         if (PlayerMethods.isPlaying(event.getPlayer().getName()))
             return;
 
+        if (!Parkour.getSettings().isAutoStartEnabled())
+            return;
+
         Block below = event.getClickedBlock().getRelative(BlockFace.DOWN);
 
-        if (below == null || below.getType() != Material.BEDROCK) //TODO configurable
+        if (below == null || below.getType() != Parkour.getSettings().getAutoStartMaterial()) //TODO configurable
             return;
 
         // Prevent a user spamming the joins
@@ -527,7 +530,7 @@ public class ParkourListener implements Listener {
         String courseName = CourseMethods.getAutoStartCourse(event.getClickedBlock().getLocation());
 
         if (courseName != null)
-            CourseMethods.joinCourseButDelayed(event.getPlayer(), courseName);
+            CourseMethods.joinCourseButDelayed(event.getPlayer(), courseName, Parkour.getSettings().getAutoStartDelay());
     }
 
     @EventHandler
