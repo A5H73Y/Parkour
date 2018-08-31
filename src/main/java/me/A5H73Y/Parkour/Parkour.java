@@ -1,10 +1,11 @@
 package me.A5H73Y.Parkour;
 
+import me.A5H73Y.Parkour.Listeners.*;
 import me.A5H73Y.Parkour.Other.Configurations;
 import me.A5H73Y.Parkour.Other.StartPlugin;
 import me.A5H73Y.Parkour.Other.Updater;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
-import me.A5H73Y.Parkour.Scoreboard.ScoreboardManager;
+import me.A5H73Y.Parkour.Managers.ScoreboardManager;
 import me.A5H73Y.Parkour.Utilities.Settings;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
@@ -31,9 +32,8 @@ public class Parkour extends JavaPlugin {
 		StartPlugin.run();
 		settings = new Settings();
 
-		getServer().getPluginManager().registerEvents(new ParkourListener(), this);
-		getServer().getPluginManager().registerEvents(new ParkourSignListener(), this);
-		getCommand("parkour").setExecutor(new ParkourCommands());
+		registerEvents();
+		registerCommands();
 
         new Metrics(this);
         updatePlugin();
@@ -47,6 +47,19 @@ public class Parkour extends JavaPlugin {
 		Utils.log("Disabled Parkour v" + Static.getVersion());
 		instance = null;
 	}
+
+	private void registerEvents() {
+        getServer().getPluginManager().registerEvents(new BlockListener(),  this);
+        getServer().getPluginManager().registerEvents(new ChatListener(),  this);
+        getServer().getPluginManager().registerEvents(new PlayerInteractListener(),  this);
+        getServer().getPluginManager().registerEvents(new PlayerListener(),  this);
+        getServer().getPluginManager().registerEvents(new PlayerMoveListener(),  this);
+        getServer().getPluginManager().registerEvents(new SignListener(),  this);
+    }
+
+    private void registerCommands() {
+        getCommand("parkour").setExecutor(new ParkourCommands());
+    }
 
 	public static void setDatabaseObj(Database databaseObj) {
 		database = databaseObj;

@@ -1,6 +1,6 @@
 package me.A5H73Y.Parkour.Player;
 
-import me.A5H73Y.Parkour.Events.PlayerParkourLevelEvent;
+import me.A5H73Y.Parkour.ParkourEvents.PlayerParkourLevelEvent;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Utils;

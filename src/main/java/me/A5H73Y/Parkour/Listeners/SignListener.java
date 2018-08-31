@@ -1,7 +1,9 @@
-package me.A5H73Y.Parkour;
+package me.A5H73Y.Parkour.Listeners;
 
+import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Course.LobbyMethods;
+import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
@@ -19,7 +21,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public class ParkourSignListener implements Listener {
+public class SignListener implements Listener {
 
 	private final SignMethods sm = new SignMethods();
 
@@ -161,7 +163,7 @@ public class ParkourSignListener implements Listener {
 				return;
 			}
 
-			CourseMethods.displayCourseInfo(lines[2], event.getPlayer());
+			CourseInfo.displayCourseInfo(lines[2], event.getPlayer());
 
 		} else if (lines[1].equalsIgnoreCase("leave")) {
 			PlayerMethods.playerLeave(event.getPlayer());
@@ -199,5 +201,4 @@ public class ParkourSignListener implements Listener {
 		}
 		event.setCancelled(true);
 	}
-
 }

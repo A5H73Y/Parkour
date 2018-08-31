@@ -1,8 +1,8 @@
-package me.A5H73Y.Parkour.Other;
+package me.A5H73Y.Parkour.Managers;
 
 import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Course.LobbyMethods;
-import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.Other.ParkourKit;
 import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Enums.QuestionType;
@@ -25,10 +25,9 @@ import java.util.Map;
  */
 public class QuestionManager {
 
-    private static QuestionManager instance = null;
-    private Map<String, Question> questionMap = new HashMap<>();
+    private static QuestionManager instance;
 
-    private QuestionManager() {}
+    private Map<String, Question> questionMap = new HashMap<>();
 
     public static QuestionManager getInstance() {
         if (instance == null) {
@@ -37,64 +36,66 @@ public class QuestionManager {
         return instance;
     }
 
-    public static boolean hasPlayerBeenAskedQuestion(String playerName) {
-        return getInstance().questionMap.containsKey(playerName);
+    private QuestionManager() {}
+
+    public boolean hasPlayerBeenAskedQuestion(String playerName) {
+        return questionMap.containsKey(playerName);
     }
 
-    public static void askResetPlayerQuestion(Player player, String targetName) {
+    public void askResetPlayerQuestion(Player player, String targetName) {
         player.sendMessage(Static.getParkourString() + "You are about to reset player " + ChatColor.AQUA + targetName + ChatColor.WHITE + "...");
         player.sendMessage(ChatColor.GRAY + "Resetting a player will delete all their times across all courses and delete all various Parkour attributes.");
-        getInstance().askQuestion(player, targetName, QuestionType.RESET_PLAYER);
+        askQuestion(player, targetName, QuestionType.RESET_PLAYER);
     }
 
-    public static void askResetCourseQuestion(Player player, String courseName) {
+    public void askResetCourseQuestion(Player player, String courseName) {
         courseName = courseName.toLowerCase();
         player.sendMessage(Static.getParkourString() + "You are about to reset " + ChatColor.AQUA + courseName + ChatColor.WHITE + "...");
         player.sendMessage(ChatColor.GRAY + "Resetting a course will delete all the statistics stored, which includes leaderboards and various Parkour attributes. This will NOT affect the spawn or checkpoints.");
-        getInstance().askQuestion(player, courseName, QuestionType.RESET_COURSE);
+        askQuestion(player, courseName, QuestionType.RESET_COURSE);
     }
 
-    public static void askResetLeaderboardQuestion(Player player, String courseName) {
+    public void askResetLeaderboardQuestion(Player player, String courseName) {
         courseName = courseName.toLowerCase();
         player.sendMessage(Static.getParkourString() + "You are about to reset " + ChatColor.AQUA + courseName + ChatColor.WHITE + " leaderboards...");
         player.sendMessage(ChatColor.GRAY + "Resetting the leaderboards will remove all times from the database for this course. This will NOT affect the course in any other way.");
-        getInstance().askQuestion(player, courseName, QuestionType.RESET_LEADERBOARD);
+        askQuestion(player, courseName, QuestionType.RESET_LEADERBOARD);
     }
 
-    public static void askResetPrizeQuestion(Player player, String courseName) {
+    public void askResetPrizeQuestion(Player player, String courseName) {
         courseName = courseName.toLowerCase();
         player.sendMessage(Static.getParkourString() + "You are about to reset the prizes for " + ChatColor.AQUA + courseName + ChatColor.WHITE + "...");
         player.sendMessage(ChatColor.GRAY + "Resetting the prizes for this course will set the prize to the default prize found in the main configuration file.");
-        getInstance().askQuestion(player, courseName, QuestionType.RESET_PRIZES);
+        askQuestion(player, courseName, QuestionType.RESET_PRIZES);
     }
 
-    public static void askDeleteCourseQuestion(Player player, String courseName) {
+    public void askDeleteCourseQuestion(Player player, String courseName) {
         courseName = courseName.toLowerCase();
         player.sendMessage(Static.getParkourString() + "You are about to delete course " + ChatColor.AQUA + courseName + ChatColor.WHITE + "...");
         player.sendMessage(ChatColor.GRAY + "This will remove all information about the course ever existing, which includes all leaderboard data, course statistics and everything else the plugin knows about it.");
-        getInstance().askQuestion(player, courseName, QuestionType.DELETE_COURSE);
+        askQuestion(player, courseName, QuestionType.DELETE_COURSE);
     }
 
-    public static void askDeleteCheckpointQuestion(Player player, String courseName, int checkpoint) {
+    public void askDeleteCheckpointQuestion(Player player, String courseName, int checkpoint) {
         courseName = courseName.toLowerCase();
         player.sendMessage(Static.getParkourString() + "You are about to delete checkpoint " + ChatColor.AQUA + checkpoint + ChatColor.WHITE + " for course " + ChatColor.AQUA + courseName + ChatColor.WHITE + "...");
         player.sendMessage(ChatColor.GRAY + "Deleting a checkpoint will impact everybody that is currently playing on " + courseName + ". You should not set a course to finished and then continue to make changes.");
-        getInstance().askQuestion(player, courseName, QuestionType.DELETE_CHECKPOINT);
+        askQuestion(player, courseName, QuestionType.DELETE_CHECKPOINT);
     }
 
-    public static void askDeleteLobbyQuestion(Player player, String lobbyName) {
+    public void askDeleteLobbyQuestion(Player player, String lobbyName) {
         player.sendMessage(Static.getParkourString() + "You are about to delete lobby " + ChatColor.AQUA + lobbyName + ChatColor.WHITE + "...");
         player.sendMessage(ChatColor.GRAY + "Deleting a lobby will remove all information about it from the server.");
-        getInstance().askQuestion(player, lobbyName, QuestionType.DELETE_LOBBY);
+        askQuestion(player, lobbyName, QuestionType.DELETE_LOBBY);
     }
 
-    public static void askDeleteKitQuestion(Player player, String kitName) {
+    public void askDeleteKitQuestion(Player player, String kitName) {
         player.sendMessage(Static.getParkourString() + "You are about to delete ParkourKit " + ChatColor.AQUA + kitName + ChatColor.WHITE + "...");
         player.sendMessage(ChatColor.GRAY + "Deleting a ParkourKit will remove all information about it from the server.");
-        getInstance().askQuestion(player, kitName, QuestionType.DELETE_KIT);
+        askQuestion(player, kitName, QuestionType.DELETE_KIT);
     }
 
-    public static void answerQuestion(Player player, String argument) {
+    public void answerQuestion(Player player, String argument) {
         if (argument.equalsIgnoreCase("yes")) {
             Question question = getInstance().questionMap.get(player.getName());
             question.confirm(player, question.getType(), question.getArgument());
@@ -115,7 +116,7 @@ public class QuestionManager {
         questionMap.put(player.getName(), new Question(type, argument));
     }
 
-    private static class Question {
+    private class Question {
 
         private QuestionType type;
         private String argument;

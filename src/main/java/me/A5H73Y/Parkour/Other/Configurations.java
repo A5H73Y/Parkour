@@ -467,6 +467,20 @@ public class Configurations {
         config.addDefault("DisplayTitle.Leave", true);
         config.addDefault("DisplayTitle.Finish", true);
 
+        config.addDefault("AutoStart.Enabled", true);
+        config.addDefault("AutoStart.Material", "BEDROCK");
+        config.addDefault("AutoStart.TickDelay", 0);
+
+        config.addDefault("Scoreboard.Enabled", true); //TODO set to false
+        config.addDefault("Scoreboard.MainHeading", "&b&l== Parkour ==");
+        config.addDefault("Scoreboard.TitleFormat", "&b%TITLE%");
+        config.addDefault("Scoreboard.TextFormat", "&f%TEXT%");
+        config.addDefault("Scoreboard.Display.CourseName", true);
+        config.addDefault("Scoreboard.Display.BestTimeEver", true);
+        config.addDefault("Scoreboard.Display.BestTimeEverName", true);
+        config.addDefault("Scoreboard.Display.BestTimeByMe", true);
+        config.addDefault("Scoreboard.Display.CurrentTime", true);
+
         config.addDefault("Other.Economy.Enabled", true);
         config.addDefault("Other.BountifulAPI.Enabled", true);
         config.addDefault("Other.PlaceholderAPI.Enabled", true);
@@ -483,20 +497,6 @@ public class Configurations {
         config.addDefault("Other.Display.ShowMilliseconds", false);
         config.addDefault("Other.Display.PrizeCooldown", true);
         config.addDefault("Other.EnforceSafeCheckpoints", true);
-
-        config.addDefault("AutoStart.Enabled", true);
-        config.addDefault("AutoStart.Material", "BEDROCK");
-        config.addDefault("AutoStart.TickDelay", 0);
-
-        config.addDefault("Scoreboard.Enabled", true); //TODO set to false
-        config.addDefault("Scoreboard.MainHeading", "&b&l== Parkour ==");
-        config.addDefault("Scoreboard.TitleFormat", "&b%TITLE%");
-        config.addDefault("Scoreboard.TextFormat", "&f%TEXT%");
-        config.addDefault("Scoreboard.Display.CourseName", true);
-        config.addDefault("Scoreboard.Display.BestTimeEver", true);
-        config.addDefault("Scoreboard.Display.BestTimeEverName", true);
-        config.addDefault("Scoreboard.Display.BestTimeByMe", true);
-        config.addDefault("Scoreboard.Display.CurrentTime", true);
 
         config.addDefault("SQLite.PathOverride", "");
         config.addDefault("MySQL.Use", false);

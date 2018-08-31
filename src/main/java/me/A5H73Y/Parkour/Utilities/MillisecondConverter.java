@@ -1,4 +1,4 @@
-package me.A5H73Y.Parkour.Other;
+package me.A5H73Y.Parkour.Utilities;
 
 public class MillisecondConverter {
 

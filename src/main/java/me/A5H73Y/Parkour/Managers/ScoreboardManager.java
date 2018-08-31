@@ -1,4 +1,4 @@
-package me.A5H73Y.Parkour.Scoreboard;
+package me.A5H73Y.Parkour.Managers;
 
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Other.TimeObject;
@@ -76,12 +76,6 @@ public class ScoreboardManager {
 
         return board;
     }
-    /*
-    CourseName", t
-    BestTimeEver",
-    BestTimeEverNa
-    BestTimeByMe",
-    CurrentTime", */
 
     private void addCourseName(Scoreboard board, Player player, Objective objective) {
         if (!Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.CourseName"))

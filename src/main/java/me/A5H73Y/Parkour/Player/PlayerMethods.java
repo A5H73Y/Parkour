@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import me.A5H73Y.Parkour.Course.*;
-import me.A5H73Y.Parkour.Events.*;
+import me.A5H73Y.Parkour.ParkourEvents.*;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Enums.ParkourMode;
-import me.A5H73Y.Parkour.Other.Challenge;
+import me.A5H73Y.Parkour.Managers.ChallengeManager;
 import me.A5H73Y.Parkour.Other.Constants;
 import me.A5H73Y.Parkour.Other.ParkourKit;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
@@ -924,7 +924,7 @@ public class PlayerMethods {
      * @param receiverPlayer
      */
     public static void acceptChallenge(final Player receiverPlayer) {
-        Challenge challenge = Challenge.getChallenge(receiverPlayer.getName());
+        ChallengeManager.Challenge challenge = ChallengeManager.getInstance().getChallengeForPlayer(receiverPlayer.getName());
 
         if (challenge == null) {
             receiverPlayer.sendMessage(Static.getParkourString() + "You have not been invited!");
@@ -935,7 +935,7 @@ public class PlayerMethods {
             return;
         }
 
-        Challenge.removeChallenge(challenge);
+        ChallengeManager.getInstance().removeChallenge(challenge);
         final Player senderPlayer = Bukkit.getPlayer(challenge.getSenderPlayer());
 
         if (Parkour.getPlugin().getConfig().getBoolean("ParkourModes.Challenge.hidePlayers")) {

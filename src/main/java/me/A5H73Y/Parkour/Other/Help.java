@@ -378,7 +378,7 @@ public final class Help {
 		displayCommandUsage(player, "select", "(course)", "Start editing the course");
 		displayCommandUsage(player, "done", null, "Stop editing the course");
 		displayCommandUsage(player, "setstart", null, "Set selected course start to current position");
-		displayCommandUsage(player, "setautostart", "(course)", "Create AutoStart for course on current position");
+		displayCommandUsage(player, "setautostart", "(course)", "Create auto start for course");
 		displayCommandUsage(player, "setcreator", "(course) (player)", "Set creator of course");
 		displayCommandUsage(player, "setlobby", "[name] [level]", "Create / overwrite Parkour lobby");
 		displayCommandUsage(player, "finish", "[course]", "Toggle the finish status of the chosen course");

@@ -1,4 +1,4 @@
-package me.A5H73Y.Parkour.Events;
+package me.A5H73Y.Parkour.ParkourEvents;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;

@@ -7,7 +7,7 @@ import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Conversation.ParkourConversation;
 import me.A5H73Y.Parkour.Enums.ConversationType;
 import me.A5H73Y.Parkour.Enums.ParkourMode;
-import me.A5H73Y.Parkour.Other.Challenge;
+import me.A5H73Y.Parkour.Managers.ChallengeManager;
 import me.A5H73Y.Parkour.Other.ParkourKit;
 import me.A5H73Y.Parkour.Other.ValidationMethods;
 import me.A5H73Y.Parkour.Player.PlayerInfo;
@@ -803,7 +803,7 @@ public class CourseMethods {
         player.sendMessage(Utils.getTranslation("Parkour.ChallengeSend")
                 .replace("%PLAYER%", target.getName())
                 .replace("%COURSE%", courseName));
-        Challenge.challengePlayer(player.getName(), target.getName(), courseName);
+        ChallengeManager.getInstance().challengePlayer(player.getName(), target.getName(), courseName);
     }
 
     /**

@@ -13,10 +13,10 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import me.A5H73Y.Parkour.Course.CourseInfo;
+import me.A5H73Y.Parkour.Managers.QuestionManager;
 import me.A5H73Y.Parkour.Other.*;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.CourseMethods;
-import me.A5H73Y.Parkour.Enums.QuestionType;
 
 import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
@@ -497,7 +497,7 @@ public final class Utils {
             if (!ValidationMethods.deleteCourse(args[2], player))
                 return;
 
-            QuestionManager.askDeleteCourseQuestion(player, args[2]);
+            QuestionManager.getInstance().askDeleteCourseQuestion(player, args[2]);
 
         } else if (args[1].equalsIgnoreCase("checkpoint")) {
             if (!CourseMethods.exist(args[2])) {
@@ -512,7 +512,7 @@ public final class Utils {
                 return;
             }
 
-            QuestionManager.askDeleteCheckpointQuestion(player, args[2], checkpoints);
+            QuestionManager.getInstance().askDeleteCheckpointQuestion(player, args[2], checkpoints);
 
         } else if (args[1].equalsIgnoreCase("lobby")) {
             if (!Parkour.getPlugin().getConfig().contains("Lobby." + args[2].toLowerCase() + ".World")) {
@@ -523,7 +523,7 @@ public final class Utils {
             if (!ValidationMethods.deleteLobby(args[2], player))
                 return;
 
-            QuestionManager.askDeleteLobbyQuestion(player, args[2]);
+            QuestionManager.getInstance().askDeleteLobbyQuestion(player, args[2]);
 
         } else if (args[1].equalsIgnoreCase("kit")) {
             if (!ParkourKit.doesParkourKitExist(args[2])) {
@@ -534,7 +534,7 @@ public final class Utils {
             if (!ValidationMethods.deleteParkourKit(args[2], player))
                 return;
 
-            QuestionManager.askDeleteKitQuestion(player, args[2]);
+            QuestionManager.getInstance().askDeleteKitQuestion(player, args[2]);
 
         } else {
             player.sendMessage(invalidSyntax("delete", "(course / checkpoint / lobby / kit) (name)"));
@@ -556,7 +556,7 @@ public final class Utils {
                 return;
             }
 
-            QuestionManager.askResetCourseQuestion(player, args[2]);
+            QuestionManager.getInstance().askResetCourseQuestion(player, args[2]);
 
         } else if (args[1].equalsIgnoreCase("player")) {
             OfflinePlayer target = Bukkit.getOfflinePlayer(args[2]);
@@ -565,7 +565,7 @@ public final class Utils {
                 return;
             }
 
-            QuestionManager.askResetPlayerQuestion(player, args[2]);
+            QuestionManager.getInstance().askResetPlayerQuestion(player, args[2]);
 
         } else if (args[1].equalsIgnoreCase("leaderboard")) {
             if (!CourseMethods.exist(args[2])) {
@@ -573,7 +573,7 @@ public final class Utils {
                 return;
             }
 
-            QuestionManager.askResetLeaderboardQuestion(player, args[2]);
+            QuestionManager.getInstance().askResetLeaderboardQuestion(player, args[2]);
 
         } else if (args[1].equalsIgnoreCase("prize")) {
             if (!CourseMethods.exist(args[2])) {
@@ -581,7 +581,7 @@ public final class Utils {
                 return;
             }
 
-            QuestionManager.askResetPrizeQuestion(player, args[2]);
+            QuestionManager.getInstance().askResetPrizeQuestion(player, args[2]);
 
         } else {
             player.sendMessage(invalidSyntax("reset", "(course / player / leaderboard / prize) (argument)"));
@@ -803,6 +803,16 @@ public final class Utils {
      */
     @SuppressWarnings("deprecation")
     public static Material getMaterialInPlayersHand(Player player) {
+        return getItemStackInPlayersHand(player).getType();
+    }
+
+    /**
+     * Made because < 1.8
+     * @param player
+     * @return
+     */
+    @SuppressWarnings("deprecation")
+    public static ItemStack getItemStackInPlayersHand(Player player) {
         ItemStack stack;
 
         try {
@@ -811,7 +821,7 @@ public final class Utils {
             stack = player.getItemInHand();
         }
 
-        return stack.getType();
+        return stack;
     }
 
     /**
@@ -959,13 +969,18 @@ public final class Utils {
 
     public static void lookupMaterial(String[] args, Player player) {
         Material material;
+        ItemStack data = null;
+
         if (args.length > 1) {
             material = Material.getMaterial(args[1]);
         } else {
-            material = getMaterialInPlayersHand(player);
+            data = getItemStackInPlayersHand(player);
+            material = data.getType();
         }
         if (material != null) {
             player.sendMessage(Static.getParkourString() + "Material: " + material.name());
+            if (data != null)
+                player.sendMessage(Static.getParkourString() + "Data: " + data.toString());
         } else {
             player.sendMessage(Static.getParkourString() + "Invalid material!");
         }

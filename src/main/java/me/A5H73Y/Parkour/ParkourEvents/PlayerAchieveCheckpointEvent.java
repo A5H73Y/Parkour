@@ -1,4 +1,4 @@
-package me.A5H73Y.Parkour.Events;
+package me.A5H73Y.Parkour.ParkourEvents;
 
 import me.A5H73Y.Parkour.Course.Checkpoint;
 import org.bukkit.entity.Player;
