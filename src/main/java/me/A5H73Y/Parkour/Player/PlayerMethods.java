@@ -216,13 +216,11 @@ public class PlayerMethods {
                 courseCompleteLocation(player, courseName);
             }
         } else {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(Parkour.getPlugin(), new Runnable() {
-                public void run() {
-                    loadInventory(player);
-                    givePrize(player, courseName);
-                    if (teleportAway) {
-                        courseCompleteLocation(player, courseName);
-                    }
+            Bukkit.getScheduler().scheduleSyncDelayedTask(Parkour.getPlugin(), () -> {
+                loadInventory(player);
+                givePrize(player, courseName);
+                if (teleportAway) {
+                    courseCompleteLocation(player, courseName);
                 }
             }, delay);
         }
@@ -749,6 +747,7 @@ public class PlayerMethods {
             return;
         }
 
+        //TODO really need to sort this mess out
         ItemStack[] inventory = null;
         ItemStack[] armor = null;
         if (a instanceof ItemStack[]) {

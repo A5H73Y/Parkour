@@ -199,7 +199,7 @@ public class StartPlugin {
             }
         } catch (Exception e) {
             Utils.log("Failed to load players: " + e.getMessage(), 2);
-            PlayerMethods.setPlaying(new HashMap<String, ParkourSession>());
+            PlayerMethods.setPlaying(new HashMap<>());
         }
     }
 
@@ -290,7 +290,7 @@ public class StartPlugin {
     }
     
     private static List<String> getLinkedLobbyData() {
-    	String[] details = new String[6];
+    	String[] details;
     	ArrayList<String> linkedLobbyData = new ArrayList<String>();
     	
     	for (String linkedLobby : Static.getLobbyList()) {

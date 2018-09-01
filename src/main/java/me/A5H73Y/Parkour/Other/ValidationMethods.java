@@ -14,7 +14,6 @@ import me.A5H73Y.Parkour.Utilities.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class ValidationMethods {
@@ -166,7 +165,7 @@ public class ValidationMethods {
 			if (joinFee > 0) {
 				if (Parkour.getEconomy().getBalance(Bukkit.getOfflinePlayer(player.getUniqueId())) < joinFee) {
 					return false;
-				} 
+				}
 			}
 		}
 

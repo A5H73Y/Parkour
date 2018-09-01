@@ -3,7 +3,6 @@ package me.A5H73Y.Parkour.Utilities;
 import java.util.HashMap;
 
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
 
 /**
@@ -916,7 +915,7 @@ public enum XMaterial {
     }
 
     public static XMaterial fromString(String key) {
-        XMaterial xmat = null;
+        XMaterial xmat;
         try {
             xmat = XMaterial.valueOf(key);
             return xmat;

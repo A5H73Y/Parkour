@@ -85,16 +85,13 @@ public class LeaderboardConversation extends StringPrompt {
 			final Integer amount = (Integer) context.getSessionData("amount");
 			final Player player = Bukkit.getPlayer((String) context.getSessionData("playerName"));
 
-			Bukkit.getScheduler().runTaskLaterAsynchronously(Parkour.getPlugin(), new Runnable() {
-				@Override
-				public void run() {
-					if (leaderboardType.equals("personal")) {
-						Utils.displayLeaderboard(player, DatabaseMethods.getTopPlayerCourseResults(player.getName(), courseName, amount), courseName);
-					} else if (leaderboardType.equals("global")) {
-						Utils.displayLeaderboard(player, DatabaseMethods.getTopCourseResults(courseName, amount), courseName);
-					}
-				}
-			}, 3);
+			Bukkit.getScheduler().runTaskLaterAsynchronously(Parkour.getPlugin(), () -> {
+                if (leaderboardType.equals("personal")) {
+                    Utils.displayLeaderboard(player, DatabaseMethods.getTopPlayerCourseResults(player.getName(), courseName, amount), courseName);
+                } else if (leaderboardType.equals("global")) {
+                    Utils.displayLeaderboard(player, DatabaseMethods.getTopCourseResults(courseName, amount), courseName);
+                }
+            }, 3);
 
 			return "";
 		}

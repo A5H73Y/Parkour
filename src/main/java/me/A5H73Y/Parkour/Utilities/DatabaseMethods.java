@@ -1,6 +1,5 @@
 package me.A5H73Y.Parkour.Utilities;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,7 +13,6 @@ import me.A5H73Y.Parkour.Other.TimeObject;
 
 import org.bukkit.Bukkit;
 
-import com.huskehhh.mysql.Database;
 import org.bukkit.entity.Player;
 
 public class DatabaseMethods {
@@ -409,20 +407,17 @@ public class DatabaseMethods {
     }
 
     public static void recreateAllCourses() {
-        Bukkit.getScheduler().runTaskLaterAsynchronously(Parkour.getPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                Utils.logToFile("Started courses recreation.");
-                Utils.log("Starting recreation of courses process...");
-                int changes = 0;
-                for (String courseName : Static.getCourses()) {
-                    if (getCourseId(courseName) == 0) {
-                        insertCourse(courseName, CourseInfo.getCreator(courseName));
-                        changes++;
-                    }
+        Bukkit.getScheduler().runTaskLaterAsynchronously(Parkour.getPlugin(), () -> {
+            Utils.logToFile("Started courses recreation.");
+            Utils.log("Starting recreation of courses process...");
+            int changes = 0;
+            for (String courseName : Static.getCourses()) {
+                if (getCourseId(courseName) == 0) {
+                    insertCourse(courseName, CourseInfo.getCreator(courseName));
+                    changes++;
                 }
-                Utils.log("Process complete. Courses recreated: " + changes);
             }
+            Utils.log("Process complete. Courses recreated: " + changes);
         }, 1);
     }
 }

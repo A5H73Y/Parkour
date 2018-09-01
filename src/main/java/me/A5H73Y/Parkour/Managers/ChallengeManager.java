@@ -33,8 +33,7 @@ public class ChallengeManager {
     }
 
     public void removeChallenge(Challenge challenge) {
-        if (challenges.contains(challenge))
-            challenges.remove(challenge);
+        challenges.remove(challenge);
     }
 
     /**

@@ -3,7 +3,6 @@ package me.A5H73Y.Parkour.Conversation;
 import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Parkour;
 
-import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.conversations.BooleanPrompt;

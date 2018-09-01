@@ -7,8 +7,6 @@ import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Other.Backup;
 import me.A5H73Y.Parkour.Other.Help;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
-import me.A5H73Y.Parkour.Utilities.Settings;
-import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
 class ParkourConsoleCommands {

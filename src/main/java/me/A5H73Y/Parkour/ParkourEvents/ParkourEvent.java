@@ -5,7 +5,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class ParkourEvent extends Event implements Cancellable {
+public abstract class ParkourEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled = false;
@@ -36,11 +36,11 @@ public class ParkourEvent extends Event implements Cancellable {
 
     @Override
     public boolean isCancelled() {
-        return false;
+        return cancelled;
     }
 
     @Override
-    public void setCancelled(boolean cancel) {
-        cancelled = cancel;
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 }

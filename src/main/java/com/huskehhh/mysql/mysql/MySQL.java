@@ -60,7 +60,7 @@ public class MySQL extends Database {
 	}
 
 	@Override
-	public Connection openConnection() throws SQLException, ClassNotFoundException{
+	public Connection openConnection() {
 		if (checkConnection()) {
 			return connection;
 		}
