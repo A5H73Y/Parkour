@@ -29,20 +29,20 @@ public class DatabaseMethods {
 
                                 "CREATE TABLE IF NOT EXISTS vote (courseId INTEGER NOT NULL, player VARCHAR(20) NOT NULL, liked BIT NOT NULL, PRIMARY KEY (courseId, player), FOREIGN KEY (courseId) REFERENCES course(courseId) ON DELETE CASCADE ON UPDATE CASCADE); ";
 
-                Parkour.getDatabaseObj().updateSQL(tableScript);
+                Parkour.getDatabase().updateSQL(tableScript);
 
             } else if (type.equals(DatabaseType.MySQL)) {
                 String tableScript = "CREATE TABLE IF NOT EXISTS course (courseId INTEGER PRIMARY KEY AUTO_INCREMENT, name VARCHAR(15) NOT NULL UNIQUE, author VARCHAR(20) NOT NULL, created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL); ";
-                Parkour.getDatabaseObj().updateSQL(tableScript);
+                Parkour.getDatabase().updateSQL(tableScript);
                 tableScript = "CREATE TABLE IF NOT EXISTS time (timeId INTEGER PRIMARY KEY AUTO_INCREMENT, courseId INTEGER NOT NULL, player VARCHAR(20) NOT NULL, time DECIMAL(13,0) NOT NULL, deaths INT(5) NOT NULL, FOREIGN KEY (courseId) REFERENCES course(courseId) ON DELETE CASCADE ON UPDATE CASCADE); ";
-                Parkour.getDatabaseObj().updateSQL(tableScript);
+                Parkour.getDatabase().updateSQL(tableScript);
                 tableScript = "CREATE TABLE IF NOT EXISTS vote (courseId INTEGER NOT NULL, player VARCHAR(20) NOT NULL, liked BIT NOT NULL, PRIMARY KEY (courseId, player), FOREIGN KEY (courseId) REFERENCES course(courseId) ON DELETE CASCADE ON UPDATE CASCADE); ";
-                Parkour.getDatabaseObj().updateSQL(tableScript);
+                Parkour.getDatabase().updateSQL(tableScript);
             }
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         } finally {
-            Parkour.getDatabaseObj().closeConnection();
+            Parkour.getDatabase().closeConnection();
         }
     }
 
@@ -60,7 +60,7 @@ public class DatabaseMethods {
         int courseId = 0;
 
         try{
-            PreparedStatement ps = Parkour.getDatabaseObj().openConnection().prepareStatement("SELECT courseId FROM course WHERE name = ?;");
+            PreparedStatement ps = Parkour.getDatabase().openConnection().prepareStatement("SELECT courseId FROM course WHERE name = ?;");
             ps.setString(1, courseName);
 
             ResultSet rs = ps.executeQuery();
@@ -71,7 +71,7 @@ public class DatabaseMethods {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
-            Parkour.getDatabaseObj().closeConnection();
+            Parkour.getDatabase().closeConnection();
         }
 
         if (courseId == 0 && printError)
@@ -107,7 +107,7 @@ public class DatabaseMethods {
      */
     public static void insertCourse(String courseName, String playerName) {
         try {
-            PreparedStatement ps = Parkour.getDatabaseObj().openConnection()
+            PreparedStatement ps = Parkour.getDatabase().openConnection()
                     .prepareStatement("INSERT INTO `course` (`name`, `author`) VALUES (?, ?);");
             ps.setString(1, courseName);
             ps.setString(2, playerName);
@@ -115,7 +115,7 @@ public class DatabaseMethods {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
-            Parkour.getDatabaseObj().closeConnection();
+            Parkour.getDatabase().closeConnection();
         }
     }
 
@@ -133,7 +133,7 @@ public class DatabaseMethods {
             if (courseId == 0)
                 return;
 
-            PreparedStatement ps = Parkour.getDatabaseObj().openConnection()
+            PreparedStatement ps = Parkour.getDatabase().openConnection()
                     .prepareStatement("INSERT INTO `time` (`courseId`, `player`, `time`, `deaths`) VALUES (?, ?, ?, ?);");
             ps.setInt(1, courseId);
             ps.setString(2, playerName);
@@ -143,7 +143,7 @@ public class DatabaseMethods {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
-            Parkour.getDatabaseObj().closeConnection();
+            Parkour.getDatabase().closeConnection();
         }
     }
 
@@ -177,7 +177,7 @@ public class DatabaseMethods {
             if (courseId == 0)
                 return;
 
-            PreparedStatement ps = Parkour.getDatabaseObj().openConnection()
+            PreparedStatement ps = Parkour.getDatabase().openConnection()
                     .prepareStatement("INSERT INTO `vote` (courseId, player, liked) VALUES (?, ?, ?);");
             ps.setInt(1, courseId);
             ps.setString(2, playerName);
@@ -186,7 +186,7 @@ public class DatabaseMethods {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
-            Parkour.getDatabaseObj().closeConnection();
+            Parkour.getDatabase().closeConnection();
         }
     }
 
@@ -202,7 +202,7 @@ public class DatabaseMethods {
             if (courseId == 0)
                 return 0;
 
-            PreparedStatement ps = Parkour.getDatabaseObj().openConnection()
+            PreparedStatement ps = Parkour.getDatabase().openConnection()
                     .prepareStatement("SELECT count(*) AS votes, (SELECT count(*) FROM vote WHERE liked = 1 AND courseId=?) AS likes FROM vote WHERE courseId=?;");
             ps.setInt(1, courseId);
             ps.setInt(2, courseId);
@@ -220,7 +220,7 @@ public class DatabaseMethods {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
-            Parkour.getDatabaseObj().closeConnection();
+            Parkour.getDatabase().closeConnection();
         }
         return percentage;
     }
@@ -232,7 +232,7 @@ public class DatabaseMethods {
             if (courseId == 0)
                 return true;
 
-            PreparedStatement ps = Parkour.getDatabaseObj().openConnection()
+            PreparedStatement ps = Parkour.getDatabase().openConnection()
                     .prepareStatement("SELECT 1 FROM vote WHERE courseId=? AND player=? LIMIT 1;");
             ps.setInt(1, courseId);
             ps.setString(2, playerName);
@@ -244,7 +244,7 @@ public class DatabaseMethods {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
-            Parkour.getDatabaseObj().closeConnection();
+            Parkour.getDatabase().closeConnection();
         }
         return voted;
     }
@@ -256,14 +256,14 @@ public class DatabaseMethods {
      */
     public static void deleteAllTimesForPlayer(String playerName) {
         try {
-            PreparedStatement ps = Parkour.getDatabaseObj().openConnection()
+            PreparedStatement ps = Parkour.getDatabase().openConnection()
                     .prepareStatement("DELETE FROM `time` WHERE `player`=?;");
             ps.setString(1, playerName);
             ps.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
-            Parkour.getDatabaseObj().closeConnection();
+            Parkour.getDatabase().closeConnection();
         }
     }
 
@@ -274,14 +274,14 @@ public class DatabaseMethods {
      */
     public static void deleteCourseAndReferences(String courseName) {
         try {
-            PreparedStatement ps = Parkour.getDatabaseObj().openConnection()
+            PreparedStatement ps = Parkour.getDatabase().openConnection()
                     .prepareStatement("DELETE FROM `course` WHERE `name`=?;");
             ps.setString(1, courseName);
             ps.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
-            Parkour.getDatabaseObj().closeConnection();
+            Parkour.getDatabase().closeConnection();
         }
     }
 
@@ -295,14 +295,14 @@ public class DatabaseMethods {
             if (courseId == 0)
                 return;
 
-            PreparedStatement ps = Parkour.getDatabaseObj().openConnection()
+            PreparedStatement ps = Parkour.getDatabase().openConnection()
                     .prepareStatement("DELETE FROM `time` WHERE `courseId`=?;");
             ps.setInt(1, courseId);
             ps.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
-            Parkour.getDatabaseObj().closeConnection();
+            Parkour.getDatabase().closeConnection();
         }
     }
 
@@ -312,7 +312,7 @@ public class DatabaseMethods {
             if (courseId == 0)
                 return;
 
-            PreparedStatement ps = Parkour.getDatabaseObj().openConnection()
+            PreparedStatement ps = Parkour.getDatabase().openConnection()
                     .prepareStatement("DELETE FROM `time` WHERE `player`=? AND `courseId`=?;");
 
             ps.setString(1, playerName);
@@ -321,7 +321,7 @@ public class DatabaseMethods {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
-            Parkour.getDatabaseObj().closeConnection();
+            Parkour.getDatabase().closeConnection();
         }
     }
 
@@ -338,7 +338,7 @@ public class DatabaseMethods {
             if (courseId == 0)
                 return times;
 
-            PreparedStatement ps = Parkour.getDatabaseObj().openConnection()
+            PreparedStatement ps = Parkour.getDatabase().openConnection()
                     .prepareStatement("SELECT player, time, deaths FROM time WHERE courseId=? ORDER BY time LIMIT ?;");
             ps.setInt(1, courseId);
             ps.setInt(2, limit);
@@ -348,7 +348,7 @@ public class DatabaseMethods {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
-            Parkour.getDatabaseObj().closeConnection();
+            Parkour.getDatabase().closeConnection();
         }
         return times;
     }
@@ -366,7 +366,7 @@ public class DatabaseMethods {
             if (courseId == 0)
                 return times;
 
-            PreparedStatement ps = Parkour.getDatabaseObj().openConnection()
+            PreparedStatement ps = Parkour.getDatabase().openConnection()
                     .prepareStatement("SELECT player, time, deaths FROM time WHERE courseId=? AND player=? ORDER BY time LIMIT ?;");
             ps.setInt(1, courseId);
             ps.setString(2, playerName);
@@ -377,7 +377,7 @@ public class DatabaseMethods {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
-            Parkour.getDatabaseObj().closeConnection();
+            Parkour.getDatabase().closeConnection();
         }
         return times;
     }
@@ -389,7 +389,7 @@ public class DatabaseMethods {
             if (courseId == 0)
                 return true;
 
-            PreparedStatement ps = Parkour.getDatabaseObj().openConnection()
+            PreparedStatement ps = Parkour.getDatabase().openConnection()
                     .prepareStatement("SELECT 1 FROM time WHERE courseId=? AND player=? LIMIT 1;");
             ps.setInt(1, courseId);
             ps.setString(2, playerName);
@@ -401,7 +401,7 @@ public class DatabaseMethods {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
-            Parkour.getDatabaseObj().closeConnection();
+            Parkour.getDatabase().closeConnection();
         }
         return completed;
     }

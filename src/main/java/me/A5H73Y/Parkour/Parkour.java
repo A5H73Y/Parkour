@@ -20,12 +20,13 @@ public class Parkour extends JavaPlugin {
 
 	private static Parkour instance;
 	private Configurations config;
-	private static Database database;
-	private static Economy economy;
-	private static Settings settings;
+	private Database database;
+	private Economy economy;
+	private Settings settings;
+
 	private ScoreboardManager scoreboardManager;
 
-	public void onEnable() {
+    public void onEnable() {
 		instance = this;
 		config = new Configurations();
 		StartPlugin.run();
@@ -47,6 +48,10 @@ public class Parkour extends JavaPlugin {
 		instance = null;
 	}
 
+    public static Parkour getPlugin() {
+        return instance;
+    }
+
 	private void registerEvents() {
         getServer().getPluginManager().registerEvents(new BlockListener(),  this);
         getServer().getPluginManager().registerEvents(new ChatListener(),  this);
@@ -60,44 +65,35 @@ public class Parkour extends JavaPlugin {
         getCommand("parkour").setExecutor(new ParkourCommands());
     }
 
-	public static void setDatabaseObj(Database databaseObj) {
-		database = databaseObj;
-	}
-
-	public static void setEconomy(Economy newEconomy) {
-		economy = newEconomy;
-	}
-
-	public static void setSettings(Settings newSettings) {
-		settings = newSettings;
-	}
-
-	// Getters
-	public static Parkour getPlugin() {
-		return instance;
-	}
-
 	public static Configurations getParkourConfig() {
 		return getPlugin().config;
 	}
 
 	public static Settings getSettings() {
-		return settings;
-	}
-
-	public static Database getDatabaseObj() {
-		return database;
+		return getPlugin().settings;
 	}
 
 	public static Economy getEconomy() {
-		return economy;
+		return getPlugin().economy;
 	}
 
-	public ScoreboardManager getScoreboardManager() {
-	    if (scoreboardManager == null) {
-	        scoreboardManager = new ScoreboardManager();
+    public static Database getDatabase() {
+        return getPlugin().database;
+    }
+
+    public static ScoreboardManager getScoreboardManager() {
+        if (getPlugin().scoreboardManager == null) {
+            getPlugin().scoreboardManager = new ScoreboardManager();
         }
-	    return scoreboardManager;
+        return getPlugin().scoreboardManager;
+    }
+
+    public static void setDatabase(Database database) {
+        getPlugin().database = database;
+    }
+
+    public static void setEconomy(Economy economy) {
+        getPlugin().economy = economy;
     }
 
 	private void updatePlugin() {

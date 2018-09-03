@@ -988,7 +988,6 @@ public final class Utils {
 
     public static void reloadConfig() {
         Parkour.getParkourConfig().reload();
-        Parkour.setSettings(new Settings());
         Static.initiate();
     }
 }

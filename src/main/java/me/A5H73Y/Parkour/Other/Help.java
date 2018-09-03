@@ -550,7 +550,7 @@ public final class Help {
 	public static void displaySQL(Player player) {
 		player.sendMessage(Utils.getStandardHeading("SQL Details"));
 		player.sendMessage("Type: " + DatabaseMethods.type);
-		player.sendMessage("Connected: " + (Parkour.getDatabaseObj().getConnection() != null));
+		player.sendMessage("Connected: " + (Parkour.getDatabase().getConnection() != null));
 		if (DatabaseMethods.type == DatabaseType.SQLite) {
 			player.sendMessage("Database location: " + Parkour.getPlugin().getDataFolder() + File.separator + "sqlite-db" + File.separator + "parkour.db"); 
 		}
@@ -567,7 +567,7 @@ public final class Help {
 		sender.sendMessage("DevBuild: " + ChatColor.AQUA + Static.getDevBuild());
 		sender.sendMessage("Economy: " + ChatColor.AQUA + Static.getEconomy());
 		sender.sendMessage("BountifulAPI: " + ChatColor.AQUA + Static.getBountifulAPI());
-		sender.sendMessage("Disable Commands: " + ChatColor.AQUA + Parkour.getSettings().isDisableCommandsOnCourse());
+		sender.sendMessage("Disable Commands: " + ChatColor.AQUA + Parkour.getPlugin().getSettings().isDisableCommandsOnCourse());
 		sender.sendMessage("Enforce world: " + ChatColor.AQUA + Parkour.getSettings().isEnforceWorld());
 		sender.sendMessage("Less checks: " + ChatColor.AQUA + Parkour.getSettings().isAttemptLessChecks());
 

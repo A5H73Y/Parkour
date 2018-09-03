@@ -94,7 +94,7 @@ public class StartPlugin {
 
         try {
             database.openConnection();
-            Parkour.setDatabaseObj(database);
+            Parkour.setDatabase(database);
             DatabaseMethods.setupTables();
         } catch (Exception ex) {
             failedSQL(ex);
