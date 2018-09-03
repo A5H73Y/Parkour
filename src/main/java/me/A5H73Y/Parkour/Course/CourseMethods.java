@@ -42,7 +42,7 @@ public class CourseMethods {
 
         courseName = courseName.trim().toLowerCase();
 
-        for (String course : Static.getCourses()) {
+        for (String course : CourseInfo.getAllCourses()) {
             if (courseName.equals(course))
                 return true;
         }
@@ -90,10 +90,10 @@ public class CourseMethods {
      * @return Course
      */
     public static Course findByNumber(int courseNumber) {
-        if (courseNumber <= 0 || courseNumber > Static.getCourses().size())
+        if (courseNumber <= 0 || courseNumber > CourseInfo.getAllCourses().size())
             return null;
 
-        String courseName = Static.getCourses().get(courseNumber - 1);
+        String courseName = CourseInfo.getAllCourses().get(courseNumber - 1);
         return findByName(courseName);
     }
 
@@ -140,8 +140,8 @@ public class CourseMethods {
         courseData.set(name + ".0.Yaw", location.getYaw());
         courseData.set(name + ".0.Pitch", location.getPitch());
 
-        Static.getCourses().add(name);
-        courseData.set("Courses", Static.getCourses());
+        CourseInfo.getAllCourses().add(name);
+        courseData.set("Courses", CourseInfo.getAllCourses());
         Parkour.getParkourConfig().saveCourses();
 
         PlayerInfo.setSelected(player, name);
@@ -259,13 +259,13 @@ public class CourseMethods {
      * @param page
      */
     private static void displayCourses(CommandSender sender, int page) {
-        if (Static.getCourses().size() == 0) {
+        if (CourseInfo.getAllCourses().size() == 0) {
             sender.sendMessage(Static.getParkourString() + "There are no Parkour courses!");
             return;
         }
 
         int results = 8;
-        List<String> courseList = Static.getCourses();
+        List<String> courseList = CourseInfo.getAllCourses();
         if (page <= 0) {
             sender.sendMessage(Static.getParkourString() + "Please enter a valid page number.");
             return;

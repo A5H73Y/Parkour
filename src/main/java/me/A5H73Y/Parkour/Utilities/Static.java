@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 
 public final class Static {
 
-	private static List<String> courseList = new ArrayList<>();
 	private static List<String> quiet = new ArrayList<>();
 	private static List<String> hidden = new ArrayList<>();
 	private static Map<String, Long> delay = new HashMap<>();
@@ -30,7 +29,6 @@ public final class Static {
 
 	public static void initiate() {
 		version = Double.parseDouble(Parkour.getPlugin().getDescription().getVersion());
-		courseList = Parkour.getParkourConfig().getAllCourses();
 		parkourString = Utils.getTranslation("Parkour.Prefix", false);
 		parkourSignString = Utils.getTranslation("Parkour.SignHeading", false);
 	}
@@ -43,10 +41,6 @@ public final class Static {
 
 	public static Double getVersion() {
 		return version;
-	}
-
-	public static List<String> getCourses() {
-		return courseList;
 	}
 
 	public static void enableEconomy() {

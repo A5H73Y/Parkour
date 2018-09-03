@@ -2,6 +2,7 @@ package me.A5H73Y.Parkour.Other;
 
 import java.io.File;
 
+import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Enums.DatabaseType;
@@ -528,7 +529,7 @@ public final class Help {
 		FileConfiguration econ = Parkour.getParkourConfig().getEconData();
 
 		int updated = 0;
-		for (String course : Static.getCourses()) {
+		for (String course : CourseInfo.getAllCourses()) {
 			try {
 				if (!(Parkour.getParkourConfig().getEconData().contains("Price." + course + ".JoinFee"))) {
 					updated++;

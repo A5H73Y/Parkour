@@ -17,11 +17,13 @@ public class Configurations {
     private File dataFolder, courseFile, stringFile, usersFile, invFile, checkFile, econFile, kitFile;
     private FileConfiguration courseData, stringData, usersData, invData, checkData, econData, kitData;
 
+    private boolean freshInstall = false;
+
     /**
      * This no longer generates the default config.yml to allow the ability of creating a backup of the existing config.
-     *
      */
     public Configurations() {
+        setFreshInstall();
         Parkour.getPlugin().saveConfig();
 
         dataFolder = Parkour.getPlugin().getDataFolder();
@@ -230,10 +232,6 @@ public class Configurations {
         }
     }
 
-    public List<String> getAllCourses() {
-        return courseData.getStringList("Courses");
-    }
-
     public void initiateEconomy() {
         Static.enableEconomy();
         econFile = new File(Parkour.getPlugin().getDataFolder(), "economy.yml");
@@ -256,10 +254,28 @@ public class Configurations {
         }
     }
 
+    /**
+     * @return is the plugin a fresh install
+     */
+    public boolean isFreshInstall() {
+        return freshInstall;
+    }
+
+    /**
+     * Check whether this is a Fresh install of the plugin
+     * Done by checking if the generated config.yml exists yet
+     */
+    private void setFreshInstall() {
+        if (new File(Parkour.getPlugin().getDataFolder().toString() + File.separator + "config.yml").exists())
+            return;
+
+        Utils.log("Fresh install as no previous version was found.");
+        freshInstall = true;
+    }
 
     /**
      * Default Translations
-     * Seperated and organised into sections of the plugins
+     * Separated and organised into sections of the plugins
      */
     private void saveStrings() {
         try{

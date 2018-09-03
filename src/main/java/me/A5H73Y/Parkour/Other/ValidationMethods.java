@@ -304,7 +304,7 @@ public class ValidationMethods {
 		courseName = courseName.toLowerCase();
 		List<String> dependentCourses = new ArrayList<>();
 
-		for (String course : Static.getCourses()) {
+		for (String course : CourseInfo.getAllCourses()) {
 			String linkedCourse = CourseInfo.getLinkedCourse(courseName);
 
 			if (linkedCourse != null && courseName.equals(linkedCourse)) {
@@ -330,7 +330,7 @@ public class ValidationMethods {
 		courseName = courseName.toLowerCase();
 		List<String> dependentCourses = new ArrayList<>();
 
-		for (String course : Static.getCourses()) {
+		for (String course : CourseInfo.getAllCourses()) {
 			String linkedCourse = CourseInfo.getLinkedLobby(courseName);
 
 			if (linkedCourse != null && courseName.equals(linkedCourse)) {
@@ -350,7 +350,7 @@ public class ValidationMethods {
         parkourKit = parkourKit.toLowerCase();
         List<String> dependentCourses = new ArrayList<>();
 
-        for (String course : Static.getCourses()) {
+        for (String course : CourseInfo.getAllCourses()) {
             String linkedKit = CourseInfo.getParkourKit(course);
 
             if (linkedKit != null && parkourKit.equals(linkedKit)) {

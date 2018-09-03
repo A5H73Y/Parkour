@@ -1,8 +1,8 @@
 package me.A5H73Y.Parkour.Conversation;
 
+import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
-import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
 import org.bukkit.Bukkit;
@@ -24,7 +24,7 @@ public class LeaderboardConversation extends StringPrompt {
 
 	@Override
 	public Prompt acceptInput(ConversationContext context, String message) {
-		if (!Static.getCourses().contains(message.toLowerCase())) {
+		if (!CourseInfo.getAllCourses().contains(message.toLowerCase())) {
 			ParkourConversation.sendErrorMessage(context, "This course does not exist");
 			return this;
 		}

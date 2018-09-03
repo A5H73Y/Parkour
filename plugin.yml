@@ -5,6 +5,7 @@ softdepend: [Vault, BountifulAPI]
 author: A5H73Y
 main: me.A5H73Y.Parkour.Parkour
 website: http://www.mcparkour.co.uk/
+api-version: 1.13
 commands:
   parkour:
     aliases: [pa, pkr]

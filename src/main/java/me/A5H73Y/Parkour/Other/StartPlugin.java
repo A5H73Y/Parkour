@@ -23,6 +23,7 @@ import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 import net.milkbowl.vault.economy.Economy;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -35,9 +36,6 @@ import com.huskehhh.mysql.sqlite.SQLite;
 
 public class StartPlugin {
 
-    private static boolean freshInstall = false;
-    private static boolean updateExisting = false;
-
     public static void run() {
         checkConvertToLatest();
         Parkour.getParkourConfig().setupConfig();
@@ -46,20 +44,6 @@ public class StartPlugin {
         setupExternalPlugins();
         populatePlayers();
         Utils.log("Enabled Parkour v" + Static.getVersion() + "!");
-    }
-
-    /**
-     * Unfortunately this has to be run before the configuration can initialize.
-     * Just makes onEnable look ugly
-     * @return
-     */
-    public static boolean isFreshInstall() {
-        if (new File(Parkour.getPlugin().getDataFolder().toString() + File.separator + "config.yml").exists())
-            return false;
-
-        Utils.log("Fresh install as no previous version was found.");
-        freshInstall = true;
-        return true;
     }
 
     private static void setupExternalPlugins() {
@@ -112,14 +96,6 @@ public class StartPlugin {
             database.openConnection();
             Parkour.setDatabaseObj(database);
             DatabaseMethods.setupTables();
-
-            if (updateExisting) {
-                for (String courseName : Static.getCourses()) {
-                    if (DatabaseMethods.getCourseId(courseName, false) == 0) {
-                        DatabaseMethods.insertCourse(courseName, CourseInfo.getCreator(courseName));
-                    }
-                }
-            }
         } catch (Exception ex) {
             failedSQL(ex);
         }
@@ -207,7 +183,7 @@ public class StartPlugin {
      * We only want to update completely, if the config version (previous version) is less than 4.0 (new system)
      */
     private static void checkConvertToLatest() {
-        if (freshInstall)
+        if (Parkour.getParkourConfig().isFreshInstall())
             return;
 
         double configVersion = Parkour.getPlugin().getConfig().getDouble("Version");
@@ -218,115 +194,19 @@ public class StartPlugin {
 
         boolean fromBeforeVersion4 = configVersion < 4.0;
 
-        updateExisting = true;
         // We backup all their files first before touching them
         Backup.backupNow(false);
 
         if (fromBeforeVersion4) {
-            Utils.log("[Backup] Your config is very outdated. Beginning conversion process...");
-            convertToLatest();
-        } else {
-            Utils.log("[Backup] Updating config to " + currentVersion + "...");
+            Utils.log("Your config is too outdated.", 2);
+            Utils.log("You must update the plugin to v4.8, and then to " + currentVersion, 2);
+            Utils.log("Disabling the plugin to prevent corruption.", 2);
+            Bukkit.getPluginManager().disablePlugin(Parkour.getPlugin());
+            return;
         }
+
+        Utils.log("[Backup] Updating config to " + currentVersion + "...");
         Parkour.getPlugin().getConfig().set("Version", currentVersion);
         Parkour.getPlugin().saveConfig();
-    }
-
-    private static void convertToLatest() {
-        try {
-            // Update existing checkpoints to use lowercase course names
-            Path path = Paths.get(Parkour.getPlugin().getDataFolder().getPath(), "checkpoints.yml");
-            String content = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
-            for (String course : Parkour.getParkourConfig().getAllCourses()) {
-                content = content.replace(course, course.toLowerCase());
-            }
-            Files.write(path, content.getBytes(StandardCharsets.UTF_8));
-
-            // Update the existing courses to use lowercase course names
-            path = Paths.get(Parkour.getPlugin().getDataFolder().getPath(), "courses.yml");
-            content = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
-            for (String course : Parkour.getParkourConfig().getAllCourses()) {
-                content = content.replace(course, course.toLowerCase());
-            }
-            Files.write(path, content.getBytes(StandardCharsets.UTF_8));
-
-            String[] lobbyData = getLobbyData("Lobby");
-            List<String> linkedLobbyData = getLinkedLobbyData();
-
-            // Reset current config
-            for (String key : Parkour.getPlugin().getConfig().getKeys(false)) {
-                Parkour.getPlugin().getConfig().set(key, null);
-            }
-            Utils.broadcastMessage("[Backup] Your existing config has been backed up. We have generated a new config, please reapply the settings you want.", "Parkour.Admin");
-
-            Parkour.getPlugin().saveConfig();
-            Parkour.getParkourConfig().reload();
-
-            Parkour.getParkourConfig().setupConfig();
-            Parkour.setSettings(new Settings());
-
-            setLobbyData(lobbyData, "Lobby");
-            setLinkedLobbyData(linkedLobbyData);
-
-            Static.initiate();
-
-            Utils.log("[Backup] Complete.");
-        } catch (Exception ex) {
-            Utils.log("[Backup] Failed: " + ex.getMessage());
-        }
-    }
-
-    private static String[] getLobbyData(String lobbyName) {
-        String[] details = new String[6];
-
-        details[0] = Parkour.getPlugin().getConfig().getString(lobbyName + ".World");
-        details[1] = Parkour.getPlugin().getConfig().getString(lobbyName + ".X");
-        details[2] = Parkour.getPlugin().getConfig().getString(lobbyName + ".Y");
-        details[3] = Parkour.getPlugin().getConfig().getString(lobbyName + ".Z");
-        details[4] = Parkour.getPlugin().getConfig().getString(lobbyName + ".Pitch");
-        details[5] = Parkour.getPlugin().getConfig().getString(lobbyName + ".Yaw");
-
-        return details;
-    }
-    
-    private static List<String> getLinkedLobbyData() {
-    	String[] details;
-    	ArrayList<String> linkedLobbyData = new ArrayList<String>();
-    	
-    	for (String linkedLobby : Static.getLobbyList()) {
-    		details = getLobbyData("Lobby." + linkedLobby);
-    		linkedLobbyData.addAll(Arrays.asList(details));
-    	}
-    	
-    	return linkedLobbyData;
-    }
-
-    private static void setLobbyData(String[] lobbyData, String lobbyName) {
-    	if (lobbyName.equalsIgnoreCase("Lobby")) {
-    		if (lobbyData[0] == null || lobbyData[0].isEmpty()) {
-    			Parkour.getPlugin().getConfig().set("Lobby.Set", false);
-    			return;
-    		} else {
-    			Parkour.getPlugin().getConfig().set("Lobby.Set", true);
-    		}
-    	}
-        Parkour.getPlugin().getConfig().set(lobbyName + ".World", lobbyData[0]);
-        Parkour.getPlugin().getConfig().set(lobbyName + ".X", Double.valueOf(lobbyData[1]));
-        Parkour.getPlugin().getConfig().set(lobbyName + ".Y", Double.valueOf(lobbyData[2]));
-        Parkour.getPlugin().getConfig().set(lobbyName + ".Z", Double.valueOf(lobbyData[3]));
-        Parkour.getPlugin().getConfig().set(lobbyName + ".Pitch", Double.valueOf(lobbyData[4]));
-        Parkour.getPlugin().getConfig().set(lobbyName + ".Yaw", Double.valueOf(lobbyData[5]));
-    }
-    
-    private static void setLinkedLobbyData(List<String> linkedLobbyData) {
-    	String[] lobbyData = new String[6];
-    	int count = 0;
-    	for (String linkedLobby : Static.getLobbyList()) {
-    		for (int i = 0; i < 6; i++) {
-    			lobbyData[i] = linkedLobbyData.get(count + i);
-    		}
-    		setLobbyData(lobbyData, "Lobby." + linkedLobby);
-    		count+=6;
-    	}	
     }
 }

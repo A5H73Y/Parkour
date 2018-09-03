@@ -14,6 +14,14 @@ import java.util.List;
 public class CourseInfo {
 
     /**
+     * Get list of all Parkour courses
+     * @return
+     */
+    public static List<String> getAllCourses() {
+        return Parkour.getParkourConfig().getCourseData().getStringList("Courses");
+    }
+
+    /**
      * Return the linked course of the specified course
      * Will validate it's a valid course before returning
      * @param courseName
@@ -449,9 +457,9 @@ public class CourseInfo {
     public static void deleteCourse(String courseName) {
         courseName = courseName.toLowerCase();
 
-        Static.getCourses().remove(courseName);
+        getAllCourses().remove(courseName);
         Parkour.getParkourConfig().getCourseData().set(courseName, null);
-        Parkour.getParkourConfig().getCourseData().set("Courses", Static.getCourses());
+        Parkour.getParkourConfig().getCourseData().set("Courses", getAllCourses());
         Parkour.getParkourConfig().saveCourses();
         DatabaseMethods.deleteCourseAndReferences(courseName);
     }

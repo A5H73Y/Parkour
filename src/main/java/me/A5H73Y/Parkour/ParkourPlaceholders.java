@@ -1,5 +1,6 @@
 package me.A5H73Y.Parkour;
 
+import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
@@ -22,7 +23,7 @@ public class ParkourPlaceholders extends EZPlaceholderHook {
             return String.valueOf(Static.getVersion());
 
         } else if (message.equalsIgnoreCase("course_count")) {
-            return String.valueOf(Static.getCourses().size());
+            return String.valueOf(CourseInfo.getAllCourses().size());
 
         } else if (message.equalsIgnoreCase("player_count")) {
             return String.valueOf(PlayerMethods.getPlaying().size());

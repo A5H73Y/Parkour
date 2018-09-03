@@ -411,7 +411,7 @@ public class DatabaseMethods {
             Utils.logToFile("Started courses recreation.");
             Utils.log("Starting recreation of courses process...");
             int changes = 0;
-            for (String courseName : Static.getCourses()) {
+            for (String courseName : CourseInfo.getAllCourses()) {
                 if (getCourseId(courseName) == 0) {
                     insertCourse(courseName, CourseInfo.getCreator(courseName));
                     changes++;

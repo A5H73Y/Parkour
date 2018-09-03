@@ -27,7 +27,6 @@ public class Parkour extends JavaPlugin {
 
 	public void onEnable() {
 		instance = this;
-		StartPlugin.isFreshInstall();
 		config = new Configurations();
 		StartPlugin.run();
 		settings = new Settings();
