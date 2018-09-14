@@ -64,8 +64,9 @@ public class ScoreboardManager {
 
         // Set up the scoreboard itself
         Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
-        Objective objective = board.registerNewObjective(player.getName(), "Parkour", mainHeading);
+        Objective objective = board.registerNewObjective(player.getName(), "Parkour");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        objective.setDisplayName(mainHeading);
 
         //TODO poc - This can be refactored to be much smaller
         addCourseName(board, player, objective);
@@ -98,7 +99,7 @@ public class ScoreboardManager {
 
         String courseName = CourseMethods.findByPlayer(player.getName()).getName();
         List<TimeObject> result = DatabaseMethods.getTopCourseResults(courseName, 1);
-        String bestTime = result.size() > 0 ? Utils.displayCurrentTime(result.get(0).getTime()) : "Not completed yet";
+        String bestTime = result.size() > 0 ? Utils.displayCurrentTime(result.get(0).getTime()) : "Not completed";
 
         Score onlineName = objective.getScore(convertTitle("Best Time:"));
         onlineName.setScore(reduceAndReturnScoreboardCount(player.getName()));
@@ -115,7 +116,7 @@ public class ScoreboardManager {
 
         String courseName = CourseMethods.findByPlayer(player.getName()).getName();
         List<TimeObject> result = DatabaseMethods.getTopCourseResults(courseName, 1);
-        String bestTimeName = result.size() > 0 ? result.get(0).getPlayer() : "Not completed yet";
+        String bestTimeName = result.size() > 0 ? result.get(0).getPlayer() : "Not completed";
 
         Score onlineName = objective.getScore(convertTitle("Best Player:"));
         onlineName.setScore(reduceAndReturnScoreboardCount(player.getName()));
@@ -132,7 +133,7 @@ public class ScoreboardManager {
 
         String courseName = CourseMethods.findByPlayer(player.getName()).getName();
         List<TimeObject> result = DatabaseMethods.getTopPlayerCourseResults(player.getName(), courseName, 1);
-        String bestTime = result.size() > 0 ? Utils.displayCurrentTime(result.get(0).getTime()) : "Not completed yet";
+        String bestTime = result.size() > 0 ? Utils.displayCurrentTime(result.get(0).getTime()) : "Not completed";
 
         Score onlineName = objective.getScore(convertTitle("My Best Time:"));
         onlineName.setScore(reduceAndReturnScoreboardCount(player.getName()));
