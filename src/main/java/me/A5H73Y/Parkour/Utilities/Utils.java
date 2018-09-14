@@ -893,7 +893,7 @@ public final class Utils {
             validMaterials.add(Material.PURPUR_SLAB);
         }
         //check if player is standing in a half-block
-        if (! block.getType().equals(Material.AIR) && ! block.getType().equals(XMaterial.STONE_PRESSURE_PLATE.parseMaterial())) {
+        if (! block.getType().equals(Material.AIR) && ! block.getType().equals(XMaterial.fromString(Parkour.getPlugin().getConfig().getString("OnCourse.CheckpointMaterial")).parseMaterial())) {
             player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + block.getType());
             return false;
         }
