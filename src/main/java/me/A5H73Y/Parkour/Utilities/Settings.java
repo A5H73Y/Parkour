@@ -100,7 +100,7 @@ public class Settings {
 	}
 
 	public Material getLeaveTool() {
-		Material leaveTool = Material.getMaterial(config.getString("OnJoin.Item.Leave.Material"));
+		Material leaveTool = XMaterial.fromString(config.getString("OnJoin.Item.Leave.Material")).parseMaterial();
         return leaveTool == Material.AIR ? null : leaveTool;
 	}
 

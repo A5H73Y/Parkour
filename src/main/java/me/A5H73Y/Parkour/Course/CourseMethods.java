@@ -140,9 +140,9 @@ public class CourseMethods {
         courseData.set(name + ".0.Yaw", location.getYaw());
         courseData.set(name + ".0.Pitch", location.getPitch());
 
-        List<String> courses = CourseInfo.getAllCourses();
-        courses.add(name);
-        courseData.set("Courses", courses);
+        List<String> courseList = CourseInfo.getAllCourses();
+        courseList.add(name);
+        courseData.set("Courses", courseList);
         Parkour.getParkourConfig().saveCourses();
 
         PlayerInfo.setSelected(player, name);

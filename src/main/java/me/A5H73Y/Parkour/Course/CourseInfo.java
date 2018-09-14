@@ -457,9 +457,10 @@ public class CourseInfo {
     public static void deleteCourse(String courseName) {
         courseName = courseName.toLowerCase();
 
-        getAllCourses().remove(courseName);
+        List<String> courseList = getAllCourses();
+        courseList.remove(courseName);
         Parkour.getParkourConfig().getCourseData().set(courseName, null);
-        Parkour.getParkourConfig().getCourseData().set("Courses", getAllCourses());
+        Parkour.getParkourConfig().getCourseData().set("Courses", courseList);
         Parkour.getParkourConfig().saveCourses();
         DatabaseMethods.deleteCourseAndReferences(courseName);
     }
