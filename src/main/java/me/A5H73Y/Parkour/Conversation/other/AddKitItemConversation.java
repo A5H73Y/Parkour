@@ -4,6 +4,7 @@ import me.A5H73Y.Parkour.Conversation.ParkourConversation;
 import me.A5H73Y.Parkour.Other.ParkourKit;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Utilities.Static;
+import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -33,7 +34,7 @@ public class AddKitItemConversation {
 
         @Override
         public Prompt acceptInput(ConversationContext context, String message) {
-            Material material = Material.getMaterial(message.toUpperCase());
+            Material material = Utils.lookupMaterial(message.toUpperCase());
 
             if (material == null) {
                 ParkourConversation.sendErrorMessage(context, message.toUpperCase() + " is not a valid Material");

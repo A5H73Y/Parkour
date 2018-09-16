@@ -40,7 +40,7 @@ public class Parkour extends JavaPlugin {
 	}
 
 	public void onDisable() {
-		Utils.saveAllPlaying(PlayerMethods.getPlaying(), Static.PATH);
+		Utils.saveAllPlaying(PlayerMethods.getPlaying(), Static.PLAYING_BIN_PATH);
 		config.saveAll();
 		getParkourConfig().reload();
 		database.closeConnection();

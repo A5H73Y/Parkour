@@ -90,27 +90,27 @@ public class Settings {
 	/* Materials */
 
 	public Material getLastCheckpointTool() {
-		Material lastCheckpointTool = Material.getMaterial(config.getString("OnJoin.Item.LastCheckpoint.Material"));
+		Material lastCheckpointTool = Utils.lookupMaterial(config.getString("OnJoin.Item.LastCheckpoint.Material"));
         return lastCheckpointTool == Material.AIR ? null : lastCheckpointTool;
 	}
 
 	public Material getHideallTool() {
-		Material hideallTool = Material.getMaterial(config.getString("OnJoin.Item.HideAll.Material"));
+		Material hideallTool = Utils.lookupMaterial(config.getString("OnJoin.Item.HideAll.Material"));
         return hideallTool == Material.AIR ? null : hideallTool;
 	}
 
 	public Material getLeaveTool() {
-		Material leaveTool = XMaterial.fromString(config.getString("OnJoin.Item.Leave.Material")).parseMaterial();
+		Material leaveTool = Utils.lookupMaterial(config.getString("OnJoin.Item.Leave.Material"));
         return leaveTool == Material.AIR ? null : leaveTool;
 	}
 
     public Material getRestartTool() {
-		Material restartTool = Material.getMaterial(config.getString("OnJoin.Item.Restart.Material"));
+		Material restartTool = Utils.lookupMaterial(config.getString("OnJoin.Item.Restart.Material"));
         return restartTool == Material.AIR ? null : restartTool;
     }
 
     public Material getAutoStartMaterial() {
-	    return Material.getMaterial(config.getString("AutoStart.Material"));
+	    return Utils.lookupMaterial(config.getString("AutoStart.Material"));
     }
 
     /* Strings */

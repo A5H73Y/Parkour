@@ -111,13 +111,11 @@ public class PlayerListener implements Listener {
             event.getPlayer().sendMessage(Utils.getTranslation("Event.Join")
                     .replace("%VERSION%", Static.getVersion().toString()));
 
-        if (PlayerMethods.isPlaying(event.getPlayer().getName())) {
-            event.getPlayer().sendMessage(Utils.getTranslation("Parkour.Continue")
-                    .replace("%COURSE%", PlayerMethods.getParkourSession(event.getPlayer().getName()).getCourse().getName()));
-        }
-
         if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
             return;
+
+        event.getPlayer().sendMessage(Utils.getTranslation("Parkour.Continue")
+                .replace("%COURSE%", PlayerMethods.getParkourSession(event.getPlayer().getName()).getCourse().getName()));
 
         Parkour.getScoreboardManager().addScoreboard(event.getPlayer());
 

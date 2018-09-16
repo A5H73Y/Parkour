@@ -325,6 +325,8 @@ public class Configurations {
             stringData.addDefault("Parkour.BestTime", "This is your best time so far!");
             stringData.addDefault("Parkour.LeaderboardHeading", "%COURSE% : Top %AMOUNT% results");
             stringData.addDefault("Parkour.LeaderboardEntry", "%POSITION%) &b%PLAYER% &fin &3%TIME%&f, dying &7%DEATHS% &ftimes");
+            stringData.addDefault("Parkour.QuietOn", "Quiet Mode: &bON");
+            stringData.addDefault("Parkour.QuietOff", "Quiet Mode: &bOFF");
 
             stringData.addDefault("Error.NotOnCourse", "You are not on this course!");
             stringData.addDefault("Error.NotOnAnyCourse", "You are not on a course!");
@@ -384,8 +386,6 @@ public class Configurations {
             stringData.addDefault("Kit.Bounce", "&bBounce Block");
             stringData.addDefault("Kit.Repulse", "&bRepulse Block");
 
-            stringData.addDefault("Mode.Spectate.AlertPlayer", "You are now being spectated by &b%PLAYER%");
-            stringData.addDefault("Mode.Spectate.FinishedSpec", "You are no longer being spectated");
             stringData.addDefault("Mode.Freedom.ItemName", "&6Freedom Tool");
             stringData.addDefault("Mode.Freedom.JoinText", "&6Freedom Mode &f- Right click: &2Save&f, Left click: &5Load");
             stringData.addDefault("Mode.Freedom.Save", "Position saved");

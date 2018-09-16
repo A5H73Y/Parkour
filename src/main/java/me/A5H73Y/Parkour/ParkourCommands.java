@@ -7,6 +7,7 @@ import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Course.LobbyMethods;
 import me.A5H73Y.Parkour.Enums.ConversationType;
+import me.A5H73Y.Parkour.Managers.QuietModeManager;
 import me.A5H73Y.Parkour.Other.Help;
 import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
@@ -260,7 +261,7 @@ class ParkourCommands implements CommandExecutor {
 						CourseMethods.setRewardParkoins(args, player);
 
 					} else if (args[0].equalsIgnoreCase("quiet")) {
-						PlayerMethods.toggleQuiet(player);
+						QuietModeManager.toggleQuietMode(player);
 
 					} else if (args[0].equalsIgnoreCase("reset")) {
 						if (!Utils.hasPermission(player, "Parkour.Admin", "Reset"))
@@ -396,13 +397,11 @@ class ParkourCommands implements CommandExecutor {
                         PlayerMethods.setRank(args, player);
 
                     } else if (args[0].equalsIgnoreCase("material")) {
-					    Utils.lookupMaterial(args, player);
+					    Utils.lookupMaterialInformation(args, player);
 
 						//Other commands//	
 					} else if (args[0].equalsIgnoreCase("about") || args[0].equalsIgnoreCase("ver") || args[0].equalsIgnoreCase("version")) {
 						player.sendMessage(Static.getParkourString() + "Server is running Parkour " + ChatColor.GRAY + Static.getVersion());
-						if (Static.getDevBuild())
-							player.sendMessage(ChatColor.RED + "- You are running a development build -");
 						player.sendMessage("This plugin was developed by " + ChatColor.GOLD + "A5H73Y");
 
 					} else if (args[0].equalsIgnoreCase("contact")) {

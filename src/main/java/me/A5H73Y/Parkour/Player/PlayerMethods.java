@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import me.A5H73Y.Parkour.Course.*;
+import me.A5H73Y.Parkour.Managers.QuietModeManager;
 import me.A5H73Y.Parkour.ParkourEvents.*;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Enums.ParkourMode;
@@ -60,7 +61,7 @@ public class PlayerMethods {
             }
         } else {
             removePlayer(player.getName());
-            if (!Static.containsQuiet(player.getName()))
+            if (!QuietModeManager.isInQuiteMode(player.getName()))
                 player.sendMessage(Utils.getTranslation("Parkour.TimeReset"));
         }
 
@@ -142,14 +143,14 @@ public class PlayerMethods {
         if (session.getCheckpoint() == 0) {
             if (Parkour.getPlugin().getConfig().getBoolean("OnDie.ResetTimeWithNoCheckpoint")) {
                 session.resetTimeStarted();
-                if (!Static.containsQuiet(player.getName()))
+                if (!QuietModeManager.isInQuiteMode(player.getName()))
                     player.sendMessage(Utils.getTranslation("Parkour.Die1") + Utils.getTranslation("Parkour.TimeReset", false));
             } else {
-                if (!Static.containsQuiet(player.getName()))
+                if (!QuietModeManager.isInQuiteMode(player.getName()))
                     player.sendMessage(Utils.getTranslation("Parkour.Die1"));
             }
         } else {
-            if (!Static.containsQuiet(player.getName()))
+            if (!QuietModeManager.isInQuiteMode(player.getName()))
                 player.sendMessage(Utils.getTranslation("Parkour.Die2")
                         .replace("%POINT%", String.valueOf(session.getCheckpoint())));
         }
@@ -361,7 +362,7 @@ public class PlayerMethods {
             material = CourseInfo.getMaterialPrize(courseName);
             amount = CourseInfo.getMaterialPrizeAmount(courseName);
         } else {
-            material = Material.getMaterial(Parkour.getPlugin().getConfig().getString("OnFinish.DefaultPrize.Material"));
+            material = Utils.lookupMaterial(Parkour.getPlugin().getConfig().getString("OnFinish.DefaultPrize.Material"));
             amount = Parkour.getPlugin().getConfig().getInt("OnFinish.DefaultPrize.Amount", 0);
         }
 
@@ -772,19 +773,6 @@ public class PlayerMethods {
         Parkour.getParkourConfig().saveInv();
     }
 
-    /**
-     * Toggle quiet mode
-     * Will add / remove the player from the list of quiet players.
-     * If enabled, will limit the amount of Parkour messages displayed to the player.
-     *
-     * @param player
-     */
-    public static void toggleQuiet(Player player) {
-        if (Static.containsQuiet(player.getName()))
-            Static.removeQuiet(player);
-        else
-            Static.addQuiet(player);
-    }
 
 
     /**

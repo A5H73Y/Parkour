@@ -2,6 +2,7 @@ package me.A5H73Y.Parkour.Player;
 
 import java.io.Serializable;
 
+import me.A5H73Y.Parkour.Managers.QuietModeManager;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.Course;
@@ -51,7 +52,7 @@ public class ParkourSession implements Serializable {
 	
 	public void startVisualTimer(final Player player) {
 		if (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.DisplayLiveTime") ||
-				Static.containsQuiet(player.getName()))
+                QuietModeManager.isInQuiteMode(player.getName()))
 			return;
 		
 		BukkitTask task = new BukkitRunnable() {

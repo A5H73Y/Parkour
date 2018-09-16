@@ -25,6 +25,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -408,10 +409,14 @@ public class CourseMethods {
         FileConfiguration config = Parkour.getParkourConfig().getCourseData();
         String coordinates = location.getBlockX() + "-" + location.getBlockY() + "-" + location.getBlockZ();
 
-        // Go through each entry to find matching coordinates, then return the course
-        for (String entry : config.getConfigurationSection("CourseInfo.AutoStart").getKeys(false)) {
-            if (entry.equals(coordinates)) {
-                return config.get("CourseInfo.AutoStart." + entry).toString();
+        ConfigurationSection entries = config.getConfigurationSection("CourseInfo.AutoStart");
+
+        if (entries != null) {
+            // Go through each entry to find matching coordinates, then return the course
+            for (String entry : entries.getKeys(false)){
+                if (entry.equals(coordinates)) {
+                    return config.get("CourseInfo.AutoStart." + entry).toString();
+                }
             }
         }
 
@@ -819,7 +824,7 @@ public class CourseMethods {
             sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
             return;
         }
-        if (Material.getMaterial(args[2].toUpperCase()) == null) {
+        if (Utils.lookupMaterial(args[2].toUpperCase()) == null) {
             sender.sendMessage(Static.getParkourString() + "Invalid material: " + args[2].toUpperCase());
             return;
         }

@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 
 public final class Static {
 
-	private static List<String> quiet = new ArrayList<>();
 	private static List<String> hidden = new ArrayList<>();
 	private static Map<String, Long> delay = new HashMap<>();
 
@@ -25,7 +24,7 @@ public final class Static {
 	private static String parkourSignString;
 	private static Double version;
 
-	public final static String PATH = Parkour.getPlugin().getDataFolder() + File.separator + "playing.bin";
+	public final static String PLAYING_BIN_PATH = Parkour.getPlugin().getDataFolder() + File.separator + "playing.bin";
 
 	public static void initiate() {
 		version = Double.parseDouble(Parkour.getPlugin().getDescription().getVersion());
@@ -49,24 +48,6 @@ public final class Static {
 
 	public static boolean getEconomy() {
 		return economy;
-	}
-
-	public static boolean getDevBuild() {
-        return false;
-	}
-
-	public static void addQuiet(Player player) {
-		Utils.sendActionBar(player, Utils.colour("Quiet Mode: &bON"), true);
-		quiet.add(player.getName());
-	}
-
-	public static void removeQuiet(Player player) {
-		quiet.remove(player.getName());
-		Utils.sendActionBar(player, Utils.colour("Quiet Mode: &bOFF"), true);
-	}
-
-	public static boolean containsQuiet(String playerName) {
-		return quiet.contains(playerName);
 	}
 
 	public static void enableBountifulAPI() {

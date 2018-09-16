@@ -1,24 +1,15 @@
 package me.A5H73Y.Parkour.Other;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map.Entry;
 
-import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Enums.DatabaseType;
 import me.A5H73Y.Parkour.ParkourPlaceholders;
 import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
-import me.A5H73Y.Parkour.Utilities.Settings;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 import net.milkbowl.vault.economy.Economy;
@@ -157,12 +148,12 @@ public class StartPlugin {
     }
 
     private static void populatePlayers() {
-        if (!new File(Static.PATH).exists())
+        if (!new File(Static.PLAYING_BIN_PATH).exists())
             return;
 
         try {
             @SuppressWarnings("unchecked")
-            HashMap<String, ParkourSession> players = (HashMap<String, ParkourSession>) Utils.loadAllPlaying(Static.PATH);
+            HashMap<String, ParkourSession> players = (HashMap<String, ParkourSession>) Utils.loadAllPlaying(Static.PLAYING_BIN_PATH);
             PlayerMethods.setPlaying(players);
 
             for (Entry<String, ParkourSession> entry : players.entrySet()) {

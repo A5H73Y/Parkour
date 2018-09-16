@@ -564,7 +564,6 @@ public final class Help {
 		sender.sendMessage(Utils.getStandardHeading("Parkour Settings"));
 
 		sender.sendMessage("Version: " + ChatColor.AQUA + Static.getVersion());
-		sender.sendMessage("DevBuild: " + ChatColor.AQUA + Static.getDevBuild());
 		sender.sendMessage("Economy: " + ChatColor.AQUA + Static.getEconomy());
 		sender.sendMessage("BountifulAPI: " + ChatColor.AQUA + Static.getBountifulAPI());
 		sender.sendMessage("Disable Commands: " + ChatColor.AQUA + Parkour.getPlugin().getSettings().isDisableCommandsOnCourse());

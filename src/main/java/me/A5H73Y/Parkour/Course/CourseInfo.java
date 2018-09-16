@@ -402,7 +402,7 @@ public class CourseInfo {
     }
 
     public static Material getJoinItem(String courseName) {
-        return Material.getMaterial(Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".JoinItemMaterial"));
+        return Utils.lookupMaterial(Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".JoinItemMaterial"));
     }
 
     public static int getJoinItemAmount(String courseName) {
@@ -437,7 +437,7 @@ public class CourseInfo {
     }
 
     public static Material getMaterialPrize(String courseName) {
-        return Material.getMaterial(Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".Prize.Material"));
+        return Utils.lookupMaterial(Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".Prize.Material"));
     }
 
     public static int getMaterialPrizeAmount(String courseName) {

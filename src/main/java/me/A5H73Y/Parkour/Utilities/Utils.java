@@ -14,6 +14,7 @@ import java.util.*;
 
 import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Managers.QuestionManager;
+import me.A5H73Y.Parkour.Managers.QuietModeManager;
 import me.A5H73Y.Parkour.Other.*;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.CourseMethods;
@@ -360,7 +361,7 @@ public final class Utils {
                 Parkour.getParkourConfig().getParkourKitData().getConfigurationSection(path).getKeys(false);
 
         for (String material : materialList) {
-            if (Material.getMaterial(material) == null) {
+            if (Utils.lookupMaterial(material) == null) {
                 invalidTypes.add("Unknown Material: " + material);
             } else {
                 String action = Parkour.getParkourConfig().getParkourKitData().getString(path + "." + material + ".Action");
@@ -424,7 +425,7 @@ public final class Utils {
      * @param attemptTitle
      */
     public static void sendTitle(Player player, String title, boolean attemptTitle) {
-        if (Static.containsQuiet(player.getName()))
+        if (QuietModeManager.isInQuiteMode(player.getName()))
             return;
 
         if (Static.getBountifulAPI() && attemptTitle) {
@@ -439,7 +440,7 @@ public final class Utils {
     }
 
     public static void sendFullTitle(Player player, String title, String subTitle, boolean attemptTitle) {
-        if (Static.containsQuiet(player.getName()))
+        if (QuietModeManager.isInQuiteMode(player.getName()))
             return;
 
         if (Static.getBountifulAPI() && attemptTitle) {
@@ -454,7 +455,7 @@ public final class Utils {
     }
 
     public static void sendSubTitle(Player player, String subTitle, boolean attemptTitle) {
-        if (Static.containsQuiet(player.getName()))
+        if (QuietModeManager.isInQuiteMode(player.getName()))
             return;
 
         if (Static.getBountifulAPI() && attemptTitle) {
@@ -469,7 +470,7 @@ public final class Utils {
     }
 
     public static void sendActionBar(Player player, String title, boolean attemptTitle) {
-        if (Static.containsQuiet(player.getName()))
+        if (QuietModeManager.isInQuiteMode(player.getName()))
             return;
 
         if (Static.getBountifulAPI() && attemptTitle) {
@@ -721,7 +722,7 @@ public final class Utils {
             return true;
         }
 
-        if (displayMessage && !Static.containsQuiet(player.getName()))
+        if (displayMessage && !QuietModeManager.isInQuiteMode(player.getName()))
             player.sendMessage(Utils.getTranslation("Error.Cooldown").replace("%AMOUNT%", String.valueOf(secondsToWait - secondsElapsed)));
 
         return false;
@@ -893,7 +894,7 @@ public final class Utils {
             validMaterials.add(Material.PURPUR_SLAB);
         }
         //check if player is standing in a half-block
-        if (! block.getType().equals(Material.AIR) && ! block.getType().equals(XMaterial.fromString(Parkour.getPlugin().getConfig().getString("OnCourse.CheckpointMaterial")).parseMaterial())) {
+        if (!block.getType().equals(Material.AIR) && !block.getType().equals(Utils.lookupMaterial(Parkour.getPlugin().getConfig().getString("OnCourse.CheckpointMaterial")))) {
             player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + block.getType());
             return false;
         }
@@ -967,7 +968,32 @@ public final class Utils {
         return days * 86400000; //(24*60*60*1000)
     }
 
-    public static void lookupMaterial(String[] args, Player player) {
+    /**
+     * Lookup the matching Material
+     * Use the 1.13 API to lookup the Material,
+     * It will fall back to XMaterial if it fails to find it
+     * @param materialName
+     * @return matching Material
+     */
+    public static Material lookupMaterial(String materialName) {
+        Material material = Material.getMaterial(materialName);
+
+        if (material == null) {
+            material = XMaterial.fromString(materialName).parseMaterial();
+        }
+
+        return material;
+    }
+
+
+    /**
+     * Lookup the Material information requested by player
+     * Will either lookup the provided argument
+     * Or lookup the ItemStack in the players main hand
+     * @param args
+     * @param player
+     */
+    public static void lookupMaterialInformation(String[] args, Player player) {
         Material material;
         ItemStack data = null;
 

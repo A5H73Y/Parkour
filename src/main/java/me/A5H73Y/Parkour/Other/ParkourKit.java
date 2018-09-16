@@ -37,7 +37,7 @@ public class ParkourKit implements Serializable {
                 .getConfigurationSection("ParkourKit." + name).getKeys(false);
 
         for (String rawMaterial : rawMaterials) {
-            Material material = Material.getMaterial(rawMaterial);
+            Material material = Utils.lookupMaterial(rawMaterial);
 
             if (material == null) {
                 Utils.log("Material " + rawMaterial + " is invalid.", 1);
@@ -150,7 +150,9 @@ public class ParkourKit implements Serializable {
      * @param name
      */
     public static void createStandardKit(FileConfiguration config, String name) {
-		config.set("ParkourKit." + name + ".SMOOTH_BRICK.Action", "death");
+        //TODO is there a better way to do this, because it's nasty
+        Material smoothBrick = Utils.lookupMaterial("SMOOTH_BRICK");
+		config.set("ParkourKit." + name + "." + smoothBrick.name() + ".Action", "death");
         config.set("ParkourKit." + name + ".HUGE_MUSHROOM_2.Action", "finish");
         config.set("ParkourKit." + name + ".BRICK.Action", "climb");
         config.set("ParkourKit." + name + ".BRICK.Strength", 0.4);

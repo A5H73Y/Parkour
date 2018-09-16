@@ -28,6 +28,9 @@ public class ScoreboardManager {
     private final String textFormat;
 
     private final boolean enabled;
+    private final boolean displayCourseName, displayBestTimeEver, displayBestTimeEverName, displayBestTimeByMe, displayCurrentTime;
+
+    private int numberOfRowsNeeded;
 
     Map<String, Integer> scoreboardCount = new HashMap<>();
 
@@ -35,6 +38,14 @@ public class ScoreboardManager {
         this.enabled = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Enabled");
         this.titleFormat = Parkour.getPlugin().getConfig().getString("Scoreboard.TitleFormat");
         this.textFormat = Parkour.getPlugin().getConfig().getString("Scoreboard.TextFormat");
+
+        this.displayCourseName = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.CourseName");
+        this.displayBestTimeEver = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.BestTimeEver");
+        this.displayBestTimeEverName = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.BestTimeEverName");
+        this.displayBestTimeByMe = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.BestTimeByMe");
+        this.displayCurrentTime = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.CurrentTime");
+
+        calculateRows();
     }
 
     public boolean isEnabled() {
@@ -45,7 +56,7 @@ public class ScoreboardManager {
         if (!this.enabled)
             return;
 
-        scoreboardCount.put(player.getName(), 10); //TODO, actually count the amount of items we need
+        scoreboardCount.put(player.getName(), numberOfRowsNeeded);
         Scoreboard board = setupScoreboard(player);
         player.setScoreboard(board);
     }
@@ -65,8 +76,8 @@ public class ScoreboardManager {
         // Set up the scoreboard itself
         Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
         Objective objective = board.registerNewObjective(player.getName(), "Parkour");
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         objective.setDisplayName(mainHeading);
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         //TODO poc - This can be refactored to be much smaller
         addCourseName(board, player, objective);
@@ -79,7 +90,7 @@ public class ScoreboardManager {
     }
 
     private void addCourseName(Scoreboard board, Player player, Objective objective) {
-        if (!Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.CourseName"))
+        if (!displayCourseName)
             return;
 
         String courseName = CourseMethods.findByPlayer(player.getName()).getName();
@@ -94,7 +105,7 @@ public class ScoreboardManager {
     }
 
     private void addBestTimeEver(Scoreboard board, Player player, Objective objective) {
-        if (!Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.BestTimeEver"))
+        if (!displayBestTimeEver)
             return;
 
         String courseName = CourseMethods.findByPlayer(player.getName()).getName();
@@ -111,7 +122,7 @@ public class ScoreboardManager {
     }
 
     private void addBestTimeEverName(Scoreboard board, Player player, Objective objective) {
-        if (!Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.BestTimeEverName"))
+        if (!displayBestTimeEverName)
             return;
 
         String courseName = CourseMethods.findByPlayer(player.getName()).getName();
@@ -128,7 +139,7 @@ public class ScoreboardManager {
     }
 
     private void addBestTimeEverMe(Scoreboard board, Player player, Objective objective) {
-        if (!Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.BestTimeByMe"))
+        if (!displayBestTimeByMe)
             return;
 
         String courseName = CourseMethods.findByPlayer(player.getName()).getName();
@@ -145,7 +156,7 @@ public class ScoreboardManager {
     }
 
     private void addCurrentTime(Scoreboard board, Player player, Objective objective) {
-        if (!Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.CurrentTime"))
+        if (!displayCurrentTime)
             return;
 
         Score onlineName = objective.getScore(convertTitle("Course Time:"));
@@ -173,5 +184,16 @@ public class ScoreboardManager {
 
     public void removeScoreboard(Player player) {
         player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+    }
+
+    /**
+     * Each row needs a heading and a text entry
+     */
+    private void calculateRows() {
+        if (displayCourseName) numberOfRowsNeeded += 2;
+        if (displayBestTimeEver) numberOfRowsNeeded += 2;
+        if (displayBestTimeEverName) numberOfRowsNeeded += 2;
+        if (displayBestTimeByMe) numberOfRowsNeeded += 2;
+        if (displayCurrentTime) numberOfRowsNeeded += 2;
     }
 }
