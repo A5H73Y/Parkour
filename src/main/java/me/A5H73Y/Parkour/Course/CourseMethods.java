@@ -66,13 +66,18 @@ public class CourseMethods {
         courseName = courseName.toLowerCase();
 
         Checkpoint checkpoint = CheckpointMethods.getNextCheckpoint(courseName, 0);
-        Course course = new Course(courseName, checkpoint);
+        Course course = null;
 
         if (CourseInfo.hasParkourKit(courseName)) {
             String name = CourseInfo.getParkourKit(courseName);
             ParkourKit kit = ParkourKit.getParkourKit(name);
-            if (kit != null)
-                course.setParkourKit(kit);
+            if (kit != null) {
+                course = new Course(courseName, checkpoint, kit);
+            }
+        }
+
+        if (course == null) {
+            course = new Course(courseName, checkpoint);
         }
 
         int maxDeaths = CourseInfo.getMaximumDeaths(courseName);

@@ -337,7 +337,7 @@ public class PlayerMethods {
      * @param courseName
      */
     private static void givePrize(Player player, String courseName) {
-        if (!Parkour.getPlugin().getConfig().getBoolean("OnFinish.Prize.Enabled"))
+        if (!Parkour.getPlugin().getConfig().getBoolean("OnFinish.EnablePrizes"))
             return;
 
         if (CourseInfo.getRewardOnce(courseName) &&
@@ -798,8 +798,7 @@ public class PlayerMethods {
                 player.sendMessage(Static.getParkourString() + "ParkourKit " + kitName + " doesn't exist!");
             } else {
                 Checkpoint checkpoint = new Checkpoint(player.getLocation(), 0, 0, 0);
-                ParkourSession session = new ParkourSession(new Course(Constants.TEST_MODE, checkpoint));
-                session.getCourse().setParkourKit(kit);
+                ParkourSession session = new ParkourSession(new Course(Constants.TEST_MODE, checkpoint, kit));
                 addPlayer(player.getName(), session);
                 Utils.sendActionBar(player, Utils.colour("Test Mode &2enabled&f. Simulating &b" + kitName + "&f ParkourKit."), true);
             }

@@ -410,66 +410,66 @@ public class Configurations {
 
         config.options().header("==== Parkour Config ==== #");
 
-        config.addDefault("OnJoin.SetGamemode", 0);
+        config.addDefault("OnJoin.AllowViaCommand", true);
         config.addDefault("OnJoin.EnforceWorld", false);
         config.addDefault("OnJoin.EnforceFinished", true);
-        config.addDefault("OnJoin.AllowViaCommand", true);
         config.addDefault("OnJoin.FillHealth", true);
-        config.addDefault("OnJoin.TreatFirstCheckpointAsStart", false);
         config.addDefault("OnJoin.Item.LastCheckpoint.Material", "ARROW");
         config.addDefault("OnJoin.Item.HideAll.Material", "BONE");
         config.addDefault("OnJoin.Item.HideAll.Global", true);
         config.addDefault("OnJoin.Item.Leave.Material", "SAPLING");
         config.addDefault("OnJoin.Item.Restart.Material", "STICK");
-        config.addDefault("OnCourse.CheckpointMaterial", "STONE_PLATE");
+        config.addDefault("OnJoin.SetGamemode", 0);
+        config.addDefault("OnJoin.TreatFirstCheckpointAsStart", false);
 
-        config.addDefault("OnCourse.UseParkourKit", true);
+        config.addDefault("OnCourse.AdminPlaceBreakBlocks", true);
+        config.addDefault("OnCourse.AllowTrails", false);
+        config.addDefault("OnCourse.AttemptLessChecks", false);
+        config.addDefault("OnCourse.CheckpointMaterial", "STONE_PLATE");
         config.addDefault("OnCourse.DieInLiquid", false);
         config.addDefault("OnCourse.DieInVoid", false);
-        config.addDefault("OnCourse.EnforceParkourCommands.Enabled", true);
-        String[] whitelisted = {"login"};
-        config.addDefault("OnCourse.EnforceParkourCommands.Whitelist", whitelisted);
-        config.addDefault("OnCourse.EnforceParkourSigns", true);
-        config.addDefault("OnCourse.DisablePlayerDamage", false);
-        config.addDefault("OnCourse.MaxFallTicks", 80);
-        config.addDefault("OnCourse.AllowTrails", false);
         config.addDefault("OnCourse.DisableItemDrop", false);
         config.addDefault("OnCourse.DisableItemPickup", false);
-        config.addDefault("OnCourse.PreventPlateStick", false);
-        config.addDefault("OnCourse.AttemptLessChecks", false);
-        config.addDefault("OnCourse.DisplayLiveTime", false);
+        config.addDefault("OnCourse.DisablePlayerDamage", false);
         config.addDefault("OnCourse.DisableFly", true);
-        config.addDefault("OnCourse.SneakToInteractItems", true);
-        config.addDefault("OnCourse.AdminPlaceBreakBlocks", true);
+        config.addDefault("OnCourse.DisplayLiveTime", false);
+        config.addDefault("OnCourse.EnforceParkourSigns", true);
+        config.addDefault("OnCourse.MaxFallTicks", 80);
+        config.addDefault("OnCourse.PreventPlateStick", false);
         config.addDefault("OnCourse.PreventOpeningOtherInventories", false);
         config.addDefault("OnCourse.PreventAttackingEntities", false);
         config.addDefault("OnCourse.PreventJoiningDifferentCourse", false);
+        config.addDefault("OnCourse.SneakToInteractItems", true);
+        config.addDefault("OnCourse.UseParkourKit", true);
+        config.addDefault("OnCourse.EnforceParkourCommands.Enabled", true);
+        String[] whitelisted = {"login"};
+        config.addDefault("OnCourse.EnforceParkourCommands.Whitelist", whitelisted);
 
-        config.addDefault("OnFinish.EnforceCompletion", true);
-        config.addDefault("OnFinish.TeleportAway", true);
-        config.addDefault("OnFinish.SetGamemode", 0);
         config.addDefault("OnFinish.BroadcastLevel", 3);
-        config.addDefault("OnFinish.Prize.Enabled", true);
         config.addDefault("OnFinish.DefaultPrize.Material", "DIAMOND");
         config.addDefault("OnFinish.DefaultPrize.Amount", 1);
         config.addDefault("OnFinish.DefaultPrize.XP", 0);
-        config.addDefault("OnFinish.TeleportDelay", 0);
         config.addDefault("OnFinish.DisplayStats", true);
+        config.addDefault("OnFinish.EnablePrizes", true);
+        config.addDefault("OnFinish.EnforceCompletion", true);
+        config.addDefault("OnFinish.SetGamemode", 0);
+        config.addDefault("OnFinish.TeleportAway", true);
+        config.addDefault("OnFinish.TeleportDelay", 0);
         config.addDefault("OnFinish.UpdatePlayerDatabaseTime", false);
 
         config.addDefault("OnLeave.TeleportToLinkedLobby", false);
 
-        config.addDefault("OnDie.SetXPBarToDeathCount", false);
         config.addDefault("OnDie.ResetTimeWithNoCheckpoint", false);
+        config.addDefault("OnDie.SetXPBarToDeathCount", false);
 
         config.addDefault("OnLeaveServer.LeaveCourse", false);
         config.addDefault("OnLeaveServer.TeleportToLastCheckpoint", false);
 
         config.addDefault("ParkourModes.Challenge.HidePlayers", true);
         config.addDefault("ParkourModes.Challenge.CountdownFrom", 5);
+        config.addDefault("ParkourModes.Moon.Strength", 5);
         config.addDefault("ParkourModes.Speedy.SetSpeed", 0.8);
         config.addDefault("ParkourModes.Speedy.ResetSpeed", 0.2);
-        config.addDefault("ParkourModes.Moon.Strength", 5);
 
         config.addDefault("DisplayTitle.FadeIn", 5);
         config.addDefault("DisplayTitle.Stay", 20);
@@ -495,10 +495,10 @@ public class Configurations {
         config.addDefault("Scoreboard.Display.BestTimeByMe", true);
         config.addDefault("Scoreboard.Display.CurrentTime", true);
 
-        config.addDefault("Other.Economy.Enabled", true);
-        config.addDefault("Other.BountifulAPI.Enabled", true);
-        config.addDefault("Other.PlaceholderAPI.Enabled", true);
         config.addDefault("Other.CheckForUpdates", true);
+        config.addDefault("Other.BountifulAPI.Enabled", true);
+        config.addDefault("Other.Economy.Enabled", true);
+        config.addDefault("Other.PlaceholderAPI.Enabled", true);
         config.addDefault("Other.LogToFile", true);
         config.addDefault("Other.Parkour.ChatRankPrefix.Enabled", false);
         config.addDefault("Other.Parkour.ChatRankPrefix.OverrideChat", true);
