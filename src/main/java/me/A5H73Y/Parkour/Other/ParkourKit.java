@@ -6,7 +6,6 @@ import java.util.*;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -45,7 +44,7 @@ public class ParkourKit implements Serializable {
                 Utils.log("Material " + rawMaterial + " is invalid.", 1);
                 continue;
             }
-            
+
             String action = Parkour.getParkourConfig().getParkourKitData()
                     .getString("ParkourKit." + name + "." + rawMaterial + ".Action").toLowerCase();
 
