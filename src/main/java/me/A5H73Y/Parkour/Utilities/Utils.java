@@ -889,7 +889,13 @@ public final class Utils {
         List<Material> validMaterials = new ArrayList<>();
 
         Collections.addAll(validMaterials, Material.AIR, Material.REDSTONE_BLOCK,
-                XMaterial.STONE_SLAB.parseMaterial(), XMaterial.OAK_SLAB.parseMaterial(), XMaterial.RED_SANDSTONE_SLAB.parseMaterial());
+        		XMaterial.ACACIA_SLAB.parseMaterial(), XMaterial.BIRCH_SLAB.parseMaterial(), XMaterial.BRICK_SLAB.parseMaterial(),
+        		XMaterial.COBBLESTONE_SLAB.parseMaterial(), XMaterial.DARK_OAK_SLAB.parseMaterial(), XMaterial.DARK_PRISMARINE_SLAB.parseMaterial(),
+        		XMaterial.JUNGLE_SLAB.parseMaterial(), XMaterial.NETHER_BRICK_SLAB.parseMaterial(), XMaterial.OAK_SLAB.parseMaterial(),
+                XMaterial.PETRIFIED_OAK_SLAB.parseMaterial(), XMaterial.PRISMARINE_BRICK_SLAB.parseMaterial(), XMaterial.PRISMARINE_SLAB.parseMaterial(),
+                XMaterial.QUARTZ_SLAB.parseMaterial(), XMaterial.RED_SANDSTONE_SLAB.parseMaterial(), XMaterial.SANDSTONE_SLAB.parseMaterial(),
+                XMaterial.SPRUCE_SLAB.parseMaterial(), XMaterial.STONE_BRICK_SLAB.parseMaterial(), XMaterial.STONE_SLAB.parseMaterial());
+        
         if (!Bukkit.getBukkitVersion().contains("1.8")) {
             validMaterials.add(Material.PURPUR_SLAB);
         }
