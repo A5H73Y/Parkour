@@ -1,29 +1,20 @@
 package me.A5H73Y.Parkour.Utilities;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
+import com.connorlinfoot.bountifulapi.BountifulAPI;
 import me.A5H73Y.Parkour.Course.CourseInfo;
+import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Managers.QuestionManager;
 import me.A5H73Y.Parkour.Managers.QuietModeManager;
-import me.A5H73Y.Parkour.Other.*;
+import me.A5H73Y.Parkour.Other.ParkourKit;
+import me.A5H73Y.Parkour.Other.TimeObject;
+import me.A5H73Y.Parkour.Other.ValidationMethods;
 import me.A5H73Y.Parkour.Parkour;
-import me.A5H73Y.Parkour.Course.CourseMethods;
-
 import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.type.Slab;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
@@ -31,7 +22,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Stairs;
 
-import com.connorlinfoot.bountifulapi.BountifulAPI;
+import java.io.*;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public final class Utils {
 
@@ -886,19 +880,7 @@ public final class Utils {
 
     public static boolean isCheckpointSafe(Player player, Block block) {
         Block blockUnder = block.getRelative(BlockFace.DOWN);
-        List<Material> validMaterials = new ArrayList<>();
 
-        Collections.addAll(validMaterials, Material.AIR, Material.REDSTONE_BLOCK,
-        		XMaterial.ACACIA_SLAB.parseMaterial(), XMaterial.BIRCH_SLAB.parseMaterial(), XMaterial.BRICK_SLAB.parseMaterial(),
-        		XMaterial.COBBLESTONE_SLAB.parseMaterial(), XMaterial.DARK_OAK_SLAB.parseMaterial(), XMaterial.DARK_PRISMARINE_SLAB.parseMaterial(),
-        		XMaterial.JUNGLE_SLAB.parseMaterial(), XMaterial.NETHER_BRICK_SLAB.parseMaterial(), XMaterial.OAK_SLAB.parseMaterial(),
-                XMaterial.PETRIFIED_OAK_SLAB.parseMaterial(), XMaterial.PRISMARINE_BRICK_SLAB.parseMaterial(), XMaterial.PRISMARINE_SLAB.parseMaterial(),
-                XMaterial.QUARTZ_SLAB.parseMaterial(), XMaterial.RED_SANDSTONE_SLAB.parseMaterial(), XMaterial.SANDSTONE_SLAB.parseMaterial(),
-                XMaterial.SPRUCE_SLAB.parseMaterial(), XMaterial.STONE_BRICK_SLAB.parseMaterial(), XMaterial.STONE_SLAB.parseMaterial());
-        
-        if (!Bukkit.getBukkitVersion().contains("1.8")) {
-            validMaterials.add(Material.PURPUR_SLAB);
-        }
         //check if player is standing in a half-block
         if (!block.getType().equals(Material.AIR) && !block.getType().equals(Utils.lookupMaterial(Parkour.getPlugin().getConfig().getString("OnCourse.CheckpointMaterial")))) {
             player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + block.getType());
@@ -912,7 +894,7 @@ public final class Utils {
                     player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + blockUnder.getType());
                     return false;
                 }
-            } else if (!validMaterials.contains(blockUnder.getType())) {
+            } else if (!(blockUnder.getState().getData() instanceof Slab)) {
                 player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + blockUnder.getType());
                 return false;
             }
