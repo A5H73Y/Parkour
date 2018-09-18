@@ -114,10 +114,10 @@ public class ParkourKit implements Serializable {
      * @return ParkourKit
      */
     public static ParkourKit getParkourKit(String name) {
-        
-    	name = name.toLowerCase();
-    	
-    	if (loaded.containsKey(name)) {
+
+        name = name.toLowerCase();
+
+        if (loaded.containsKey(name)) {
             return loaded.get(name);
         }
 
@@ -152,23 +152,37 @@ public class ParkourKit implements Serializable {
      */
     public static void createStandardKit(FileConfiguration config, String name) {
         //TODO is there a better way to do this, because it's nasty
-        Material smoothBrick = Utils.lookupMaterial("SMOOTH_BRICK");
-		config.set("ParkourKit." + name + "." + smoothBrick.name() + ".Action", "death");
-        config.set("ParkourKit." + name + ".HUGE_MUSHROOM_2.Action", "finish");
-        config.set("ParkourKit." + name + ".BRICK.Action", "climb");
-        config.set("ParkourKit." + name + ".BRICK.Strength", 0.4);
-        config.set("ParkourKit." + name + ".EMERALD_BLOCK.Action", "launch");
-        config.set("ParkourKit." + name + ".EMERALD_BLOCK.Strength", 1.2);
-        config.set("ParkourKit." + name + ".MOSSY_COBBLESTONE.Action", "bounce");
-        config.set("ParkourKit." + name + ".MOSSY_COBBLESTONE.Strength", (double) 5);
-        config.set("ParkourKit." + name + ".MOSSY_COBBLESTONE.Duration", 200);
-        config.set("ParkourKit." + name + ".OBSIDIAN.Action", "speed");
-        config.set("ParkourKit." + name + ".OBSIDIAN.Strength", (double) 5);
-        config.set("ParkourKit." + name + ".OBSIDIAN.Duration", 200);
-        config.set("ParkourKit." + name + ".ENDER_STONE.Action", "repulse");
-        config.set("ParkourKit." + name + ".ENDER_STONE.Strength", 0.4);
-        config.set("ParkourKit." + name + ".GOLD_BLOCK.Action", "norun");
-        config.set("ParkourKit." + name + ".HUGE_MUSHROOM_1.Action", "nopotion");
+        Material matching = Utils.lookupMaterial("SMOOTH_BRICK");
+        config.set("ParkourKit." + name + "." + matching.name() + ".Action", "death");
+        matching = Utils.lookupMaterial("BRICKS");
+        config.set("ParkourKit." + name + "." + matching.name() + ".Action", "climb");
+        config.set("ParkourKit." + name + "." + matching.name() + ".Strength", 0.4);
+        matching = Utils.lookupMaterial("EMERALD_BLOCK");
+        config.set("ParkourKit." + name + "." + matching.name() + ".Action", "launch");
+        config.set("ParkourKit." + name + "." + matching.name() + ".Strength", 1.2);
+        matching = Utils.lookupMaterial("MOSSY_COBBLESTONE");
+        config.set("ParkourKit." + name + "." + matching.name() + ".Action", "bounce");
+        config.set("ParkourKit." + name + "." + matching.name() + ".Strength", (double) 5);
+        config.set("ParkourKit." + name + "." + matching.name() + ".Duration", 200);
+        matching = Utils.lookupMaterial("OBSIDIAN");
+        config.set("ParkourKit." + name + "." + matching.name() + ".Action", "speed");
+        config.set("ParkourKit." + name + "." + matching.name() + ".Strength", (double) 5);
+        config.set("ParkourKit." + name + "." + matching.name() + ".Duration", 200);
+        matching = Utils.lookupMaterial("ENDER_STONE");
+        config.set("ParkourKit." + name + "." + matching.name() + ".Action", "repulse");
+        config.set("ParkourKit." + name + "." + matching.name() + ".Strength", 0.4);
+        matching = Utils.lookupMaterial("GOLD_BLOCK");
+        config.set("ParkourKit." + name + "." + matching.name() + ".Action", "norun");
+
+        if (Utils.getMinorServerVersion() <= 12) {
+            config.set("ParkourKit." + name + ".HUGE_MUSHROOM_2.Action", "finish");
+            config.set("ParkourKit." + name + ".HUGE_MUSHROOM_1.Action", "nopotion");
+        } else {
+            matching = Utils.lookupMaterial("RED_MUSHROOM_BLOCK");
+            config.set("ParkourKit." + name + "." + matching.name() + ".Action", "finish");
+            matching = Utils.lookupMaterial("BROWN_MUSHROOM_BLOCK");
+            config.set("ParkourKit." + name + "." + matching.name() + ".Action", "nopotion");
+        }
     }
 
     public static void clearMemory(String kitName) {

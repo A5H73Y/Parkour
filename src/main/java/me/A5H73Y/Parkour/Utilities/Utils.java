@@ -881,6 +881,19 @@ public final class Utils {
     public static boolean isCheckpointSafe(Player player, Block block) {
         Block blockUnder = block.getRelative(BlockFace.DOWN);
 
+        List<Material> validMaterials = new ArrayList<>();
+        Collections.addAll(validMaterials, Material.AIR, Material.REDSTONE_BLOCK,
+                XMaterial.ACACIA_SLAB.parseMaterial(), XMaterial.BIRCH_SLAB.parseMaterial(), XMaterial.BRICK_SLAB.parseMaterial(),
+                XMaterial.COBBLESTONE_SLAB.parseMaterial(), XMaterial.DARK_OAK_SLAB.parseMaterial(), XMaterial.DARK_PRISMARINE_SLAB.parseMaterial(),
+                XMaterial.JUNGLE_SLAB.parseMaterial(), XMaterial.NETHER_BRICK_SLAB.parseMaterial(), XMaterial.OAK_SLAB.parseMaterial(),
+                XMaterial.PETRIFIED_OAK_SLAB.parseMaterial(), XMaterial.PRISMARINE_BRICK_SLAB.parseMaterial(), XMaterial.PRISMARINE_SLAB.parseMaterial(),
+                XMaterial.QUARTZ_SLAB.parseMaterial(), XMaterial.RED_SANDSTONE_SLAB.parseMaterial(), XMaterial.SANDSTONE_SLAB.parseMaterial(),
+                XMaterial.SPRUCE_SLAB.parseMaterial(), XMaterial.STONE_BRICK_SLAB.parseMaterial(), XMaterial.STONE_SLAB.parseMaterial());
+
+        if (!Bukkit.getBukkitVersion().contains("1.8")) {
+            validMaterials.add(Material.PURPUR_SLAB);
+        }
+
         //check if player is standing in a half-block
         if (!block.getType().equals(Material.AIR) && !block.getType().equals(Utils.lookupMaterial(Parkour.getPlugin().getConfig().getString("OnCourse.CheckpointMaterial")))) {
             player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + block.getType());
@@ -894,7 +907,7 @@ public final class Utils {
                     player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + blockUnder.getType());
                     return false;
                 }
-            } else if (!(blockUnder.getState().getData() instanceof Slab)) {
+            } else if (!validMaterials.contains(blockUnder.getType())) {
                 player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + blockUnder.getType());
                 return false;
             }
@@ -1003,5 +1016,9 @@ public final class Utils {
     public static void reloadConfig() {
         Parkour.getParkourConfig().reload();
         Static.initiate();
+    }
+
+    public static int getMinorServerVersion() {
+        return Integer.valueOf(Bukkit.getBukkitVersion().split("\\.")[1]);
     }
 }
