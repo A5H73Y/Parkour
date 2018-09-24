@@ -35,7 +35,7 @@ public class QuietModeManager {
         Utils.sendActionBar(player, getInstance().quietOffMessage, true);
     }
 
-    public static boolean isInQuiteMode(String playerName) {
+    public static boolean isInQuietMode(String playerName) {
         return getInstance().quietPlayers.contains(playerName);
     }
 
@@ -47,7 +47,7 @@ public class QuietModeManager {
      * @param player
      */
     public static void toggleQuietMode(Player player) {
-        if (isInQuiteMode(player.getName())) {
+        if (isInQuietMode(player.getName())) {
             enableQuietMode(player);
         } else {
             disableQuietMode(player);

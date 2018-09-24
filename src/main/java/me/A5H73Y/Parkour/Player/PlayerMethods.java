@@ -62,7 +62,7 @@ public class PlayerMethods {
             }
         } else {
             removePlayer(player.getName());
-            if (!QuietModeManager.isInQuiteMode(player.getName()))
+            if (!QuietModeManager.isInQuietMode(player.getName()))
                 player.sendMessage(Utils.getTranslation("Parkour.TimeReset"));
         }
 
@@ -144,14 +144,14 @@ public class PlayerMethods {
         if (session.getCheckpoint() == 0) {
             if (Parkour.getPlugin().getConfig().getBoolean("OnDie.ResetTimeWithNoCheckpoint")) {
                 session.resetTimeStarted();
-                if (!QuietModeManager.isInQuiteMode(player.getName()))
+                if (!QuietModeManager.isInQuietMode(player.getName()))
                     player.sendMessage(Utils.getTranslation("Parkour.Die1") + Utils.getTranslation("Parkour.TimeReset", false));
             } else {
-                if (!QuietModeManager.isInQuiteMode(player.getName()))
+                if (!QuietModeManager.isInQuietMode(player.getName()))
                     player.sendMessage(Utils.getTranslation("Parkour.Die1"));
             }
         } else {
-            if (!QuietModeManager.isInQuiteMode(player.getName()))
+            if (!QuietModeManager.isInQuietMode(player.getName()))
                 player.sendMessage(Utils.getTranslation("Parkour.Die2")
                         .replace("%POINT%", String.valueOf(session.getCheckpoint())));
         }

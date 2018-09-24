@@ -419,7 +419,7 @@ public final class Utils {
      * @param attemptTitle
      */
     public static void sendTitle(Player player, String title, boolean attemptTitle) {
-        if (QuietModeManager.isInQuiteMode(player.getName()))
+        if (QuietModeManager.isInQuietMode(player.getName()))
             return;
 
         if (Static.getBountifulAPI() && attemptTitle) {
@@ -434,7 +434,7 @@ public final class Utils {
     }
 
     public static void sendFullTitle(Player player, String title, String subTitle, boolean attemptTitle) {
-        if (QuietModeManager.isInQuiteMode(player.getName()))
+        if (QuietModeManager.isInQuietMode(player.getName()))
             return;
 
         if (Static.getBountifulAPI() && attemptTitle) {
@@ -449,7 +449,7 @@ public final class Utils {
     }
 
     public static void sendSubTitle(Player player, String subTitle, boolean attemptTitle) {
-        if (QuietModeManager.isInQuiteMode(player.getName()))
+        if (QuietModeManager.isInQuietMode(player.getName()))
             return;
 
         if (Static.getBountifulAPI() && attemptTitle) {
@@ -464,7 +464,7 @@ public final class Utils {
     }
 
     public static void sendActionBar(Player player, String title, boolean attemptTitle) {
-        if (QuietModeManager.isInQuiteMode(player.getName()))
+        if (QuietModeManager.isInQuietMode(player.getName()))
             return;
 
         if (Static.getBountifulAPI() && attemptTitle) {
@@ -716,7 +716,7 @@ public final class Utils {
             return true;
         }
 
-        if (displayMessage && !QuietModeManager.isInQuiteMode(player.getName()))
+        if (displayMessage && !QuietModeManager.isInQuietMode(player.getName()))
             player.sendMessage(Utils.getTranslation("Error.Cooldown").replace("%AMOUNT%", String.valueOf(secondsToWait - secondsElapsed)));
 
         return false;
