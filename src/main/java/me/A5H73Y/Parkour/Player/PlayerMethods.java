@@ -227,7 +227,7 @@ public class PlayerMethods {
             }, delay);
         }
 
-        DatabaseMethods.updateTime(courseName, player, timeTaken, session.getDeaths());
+        DatabaseMethods.insertOrUpdateTime(courseName, player, timeTaken, session.getDeaths());
 
         PlayerInfo.setLastCompletedCourse(player, courseName);
 

@@ -148,15 +148,22 @@ public class DatabaseMethods {
         }
     }
 
-    public static void updateTime(String courseName, Player player, long time, int deaths) {
-    	if (PlayerMethods.isNewRecord(player, courseName, time)) {
-    		if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.UpdatePlayerDatabaseTime")) {
+    /**
+     * Insert or Update player's time on course
+     * Based on a config option, whether to insert or update
+     * Updating will only apply once the player has beaten their best time
+     * @param courseName
+     * @param player
+     * @param time
+     * @param deaths
+     */
+    public static void insertOrUpdateTime(String courseName, Player player, long time, int deaths) {
+        if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.UpdatePlayerDatabaseTime")) {
+    	    if (PlayerMethods.isNewRecord(player, courseName, time)) {
     			deletePlayerCourseTimes(player.getName(), courseName);
     			insertTime(courseName, player.getName(), time, deaths);
-    			return;
     		}
-    	}
-    	if (!Parkour.getPlugin().getConfig().getBoolean("OnFinish.UpdatePlayerDatabaseTime")) {
+    	} else {
     		insertTime(courseName, player.getName(), time, deaths);
     	}
     }
