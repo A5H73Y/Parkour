@@ -11,6 +11,7 @@ import me.A5H73Y.Parkour.Enums.ParkourMode;
 import me.A5H73Y.Parkour.Managers.ChallengeManager;
 import me.A5H73Y.Parkour.Other.Constants;
 import me.A5H73Y.Parkour.Other.ParkourKit;
+import me.A5H73Y.Parkour.Other.TimeObject;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
@@ -226,17 +227,42 @@ public class PlayerMethods {
             }, delay);
         }
 
-        if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.UpdatePlayerDatabaseTime")) {
-            DatabaseMethods.updateTime(courseName, player, timeTaken, session.getDeaths());
-        } else {
-            DatabaseMethods.insertTime(courseName, player.getName(), timeTaken, session.getDeaths());
-        }
+        DatabaseMethods.updateTime(courseName, player, timeTaken, session.getDeaths());
 
         PlayerInfo.setLastCompletedCourse(player, courseName);
 
         Utils.forceVisible(player);
         Parkour.getScoreboardManager().removeScoreboard(player);
         Bukkit.getServer().getPluginManager().callEvent(new PlayerFinishCourseEvent(player, courseName));
+    }
+    
+    /**
+     * Check if the player's time is a new course or personal record.
+     * @param player
+     * @param courseName
+     * @param timeTaken
+     */
+    public static boolean isNewRecord(Player player, String courseName, long timeTaken) {
+    	List<TimeObject> courseRecord = DatabaseMethods.getTopCourseResults(courseName, 1);
+        if (courseRecord == null || courseRecord.isEmpty()) {
+        	return true;
+        }
+        TimeObject record = courseRecord.get(0);
+        if (record.getTime() > timeTaken) {
+        	Utils.sendFullTitle(player, Utils.getTranslation("Parkour.CourseRecord", false), Utils.displayCurrentTime(timeTaken), true);
+        	return true;
+        }
+
+    	List<TimeObject> playerRecord = DatabaseMethods.getTopPlayerCourseResults(player.getName(), courseName, 1);
+        if (playerRecord == null || playerRecord.isEmpty()) {
+            return true;
+        }
+        TimeObject result = playerRecord.get(0);
+        if (result.getTime() > timeTaken) {
+        	Utils.sendFullTitle(player, Utils.getTranslation("Parkour.BestTime", false), Utils.displayCurrentTime(timeTaken), true);
+            return true;
+        }
+        return false;
     }
 
     /**

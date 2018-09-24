@@ -10,6 +10,7 @@ import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Enums.DatabaseType;
 import me.A5H73Y.Parkour.Other.TimeObject;
+import me.A5H73Y.Parkour.Player.PlayerMethods;
 
 import org.bukkit.Bukkit;
 
@@ -127,7 +128,7 @@ public class DatabaseMethods {
      * @param time
      * @param deaths
      */
-    public static void insertTime(String courseName, String playerName, long time, int deaths) {
+    private static void insertTime(String courseName, String playerName, long time, int deaths) {
         try {
             int courseId = getCourseId(courseName);
             if (courseId == 0)
@@ -148,21 +149,16 @@ public class DatabaseMethods {
     }
 
     public static void updateTime(String courseName, Player player, long time, int deaths) {
-        List<TimeObject> results = getTopPlayerCourseResults(player.getName(), courseName, 1);
-
-        if (results == null || results.isEmpty()) {
-            insertTime(courseName, player.getName(), time, deaths);
-            return;
-        }
-
-        TimeObject result = results.get(0);
-
-        if (result.getTime() <= time)
-            return;
-
-        player.sendMessage(Utils.getTranslation("Parkour.BestTime"));
-        deletePlayerCourseTimes(player.getName(), courseName);
-        insertTime(courseName, player.getName(), time, deaths);
+    	if (PlayerMethods.isNewRecord(player, courseName, time)) {
+    		if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.UpdatePlayerDatabaseTime")) {
+    			deletePlayerCourseTimes(player.getName(), courseName);
+    			insertTime(courseName, player.getName(), time, deaths);
+    			return;
+    		}
+    	}
+    	if (!Parkour.getPlugin().getConfig().getBoolean("OnFinish.UpdatePlayerDatabaseTime")) {
+    		insertTime(courseName, player.getName(), time, deaths);
+    	}
     }
 
     /**

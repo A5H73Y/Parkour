@@ -322,7 +322,8 @@ public class Configurations {
             stringData.addDefault("Parkour.SetMode", "Mode for &b%COURSE% &fset to &b%MODE%");
             stringData.addDefault("Parkour.Countdown", "Starting in &b%AMOUNT% &fseconds...");
             stringData.addDefault("Parkour.Go", "Go!");
-            stringData.addDefault("Parkour.BestTime", "This is your best time so far!");
+            stringData.addDefault("Parkour.BestTime", "Your new best time!");
+            stringData.addDefault("Parkour.CourseRecord", "New course record!");
             stringData.addDefault("Parkour.LeaderboardHeading", "%COURSE% : Top %AMOUNT% results");
             stringData.addDefault("Parkour.LeaderboardEntry", "%POSITION%) &b%PLAYER% &fin &3%TIME%&f, dying &7%DEATHS% &ftimes");
             stringData.addDefault("Parkour.QuietOn", "Quiet Mode: &bON");
