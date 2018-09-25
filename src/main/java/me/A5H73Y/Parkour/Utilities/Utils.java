@@ -355,8 +355,14 @@ public final class Utils {
                 Parkour.getParkourConfig().getParkourKitData().getConfigurationSection(path).getKeys(false);
 
         for (String material : materialList) {
-            if (Utils.lookupMaterial(material) == null) {
+            // try to get the server lookup version first
+            if (Material.getMaterial(material) == null) {
                 invalidTypes.add("Unknown Material: " + material);
+
+                // try to see if we have a matching legacy version
+                Material matching = Utils.lookupMaterial(material);
+                if (matching != null)
+                    invalidTypes.add(" Could you have meant: " + matching.name() + "?");
             } else {
                 String action = Parkour.getParkourConfig().getParkourKitData().getString(path + "." + material + ".Action");
                 if (!ParkourKit.getValidActions().contains(action)) {
@@ -980,7 +986,11 @@ public final class Utils {
         Material material = Material.getMaterial(materialName);
 
         if (material == null) {
-            material = XMaterial.fromString(materialName).parseMaterial();
+            XMaterial matching = XMaterial.fromString(materialName);
+
+            if (matching != null) {
+                material = matching.parseMaterial();
+            }
         }
 
         return material;
