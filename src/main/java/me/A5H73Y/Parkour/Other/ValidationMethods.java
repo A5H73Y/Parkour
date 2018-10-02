@@ -307,7 +307,7 @@ public class ValidationMethods {
 		for (String course : CourseInfo.getAllCourses()) {
 			String linkedCourse = CourseInfo.getLinkedCourse(courseName);
 
-			if (linkedCourse != null && courseName.equals(linkedCourse)) {
+			if (courseName.equals(linkedCourse)) {
 				dependentCourses.add(course);
 			}
 		}
@@ -333,7 +333,7 @@ public class ValidationMethods {
 		for (String course : CourseInfo.getAllCourses()) {
 			String linkedCourse = CourseInfo.getLinkedLobby(courseName);
 
-			if (linkedCourse != null && courseName.equals(linkedCourse)) {
+			if (courseName.equals(linkedCourse)) {
 				dependentCourses.add(course);
 			}
 		}
@@ -353,7 +353,7 @@ public class ValidationMethods {
         for (String course : CourseInfo.getAllCourses()) {
             String linkedKit = CourseInfo.getParkourKit(course);
 
-            if (linkedKit != null && parkourKit.equals(linkedKit)) {
+            if (parkourKit.equals(linkedKit)) {
                 dependentCourses.add(course);
             }
         }

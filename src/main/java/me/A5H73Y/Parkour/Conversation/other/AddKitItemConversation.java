@@ -12,7 +12,7 @@ import org.bukkit.conversations.*;
 
 public class AddKitItemConversation {
 
-    private String[] actionTypes = {"death", "finish", "climb", "launch", "bounce", "speed", "repulse", "norun", "nopotion"};
+    private final String[] actionTypes = {"death", "finish", "climb", "launch", "bounce", "speed", "repulse", "norun", "nopotion"};
 
     private Prompt endingConversation;
     private String kitName;

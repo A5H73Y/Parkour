@@ -63,7 +63,7 @@ public class PlayerInteractListener implements Listener {
     }
 
     @EventHandler
-    public void onInventoryInteract_FreedomMode(PlayerInteractEvent event) {
+    public void onInventoryInteract_ParkourMode(PlayerInteractEvent event) {
         if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
             return;
 
@@ -71,7 +71,9 @@ public class PlayerInteractListener implements Listener {
                 && !event.getAction().equals(Action.LEFT_CLICK_AIR) && !event.getAction().equals(Action.LEFT_CLICK_BLOCK))
             return;
 
-        if (PlayerMethods.getParkourSession(event.getPlayer().getName()).getMode() != ParkourMode.FREEDOM)
+        ParkourMode mode = PlayerMethods.getParkourSession(event.getPlayer().getName()).getMode();
+
+        if (mode != ParkourMode.FREEDOM && mode != ParkourMode.ROCKETS)
             return;
 
         Player player = event.getPlayer();
@@ -81,13 +83,20 @@ public class PlayerInteractListener implements Listener {
 
         event.setCancelled(true);
 
-        if (Utils.getMaterialInPlayersHand(player) == XMaterial.REDSTONE_TORCH.parseMaterial()) {
+        if (mode == ParkourMode.FREEDOM && Utils.getMaterialInPlayersHand(player) == XMaterial.REDSTONE_TORCH.parseMaterial()) {
             if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
                 PlayerMethods.getParkourSession(player.getName()).getCourse().setCheckpoint(CheckpointMethods.createCheckpointFromPlayerLocation(player));
                 player.sendMessage(Utils.getTranslation("Mode.Freedom.Save"));
             } else {
                 player.teleport(PlayerMethods.getParkourSession(player.getName()).getCourse().getCurrentCheckpoint().getLocation());
                 player.sendMessage(Utils.getTranslation("Mode.Freedom.Load"));
+            }
+
+        } else if (mode == ParkourMode.ROCKETS && Utils.getMaterialInPlayersHand(player) == XMaterial.FIREWORK_ROCKET.parseMaterial()) {
+            if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+                if (Utils.delayPlayerEvent(player, 1)) {
+                    PlayerMethods.rocketLaunchPlayer(player);
+                }
             }
         }
     }

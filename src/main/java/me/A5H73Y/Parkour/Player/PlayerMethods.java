@@ -25,6 +25,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 
 public class PlayerMethods {
 
@@ -913,6 +914,11 @@ public class PlayerMethods {
         } else if (session.getMode() == ParkourMode.SPEEDY) {
             float speed = Float.valueOf(Parkour.getPlugin().getConfig().getString("ParkourModes.Speedy.SetSpeed"));
             player.setWalkSpeed(speed);
+
+        } else if (session.getMode() == ParkourMode.ROCKETS) {
+            player.sendMessage(Utils.getTranslation("Mode.Rockets.JoinText"));
+            player.getInventory().addItem(Utils.getItemStack(
+                    XMaterial.FIREWORK_ROCKET.parseMaterial(), Utils.getTranslation("Mode.Rockets.ItemName", false)));
         }
     }
 
@@ -1124,5 +1130,13 @@ public class PlayerMethods {
             if (!anyPerms)
                 player.sendMessage("* You don't have any Parkour permissions.");
         }
+    }
+
+    public static void rocketLaunchPlayer(Player player) {
+        Vector velocity = player.getLocation().getDirection().normalize();
+        velocity = velocity.multiply(-1.5);
+        velocity = velocity.setY(velocity.getY() / 2);
+        player.setVelocity(velocity);
+        player.getWorld().playEffect(player.getLocation(), Effect.SMOKE, 500);
     }
 }

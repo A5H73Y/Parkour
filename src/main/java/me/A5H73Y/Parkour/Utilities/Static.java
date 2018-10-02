@@ -9,8 +9,6 @@ import java.util.Set;
 
 import me.A5H73Y.Parkour.Parkour;
 
-import org.bukkit.entity.Player;
-
 public final class Static {
 
 	private static List<String> hidden = new ArrayList<>();

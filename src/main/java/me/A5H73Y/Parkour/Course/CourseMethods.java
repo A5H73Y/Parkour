@@ -914,26 +914,7 @@ public class CourseMethods {
      * @return ParkourMode
      */
     public static ParkourMode getCourseMode(String courseName) {
-        String mode = CourseInfo.getMode(courseName);
-
-        if ("freedom".equalsIgnoreCase(mode)) {
-            return ParkourMode.FREEDOM;
-
-        } else if ("drunk".equalsIgnoreCase(mode)) {
-            return ParkourMode.DRUNK;
-
-        } else if ("darkness".equalsIgnoreCase(mode)) {
-            return ParkourMode.DARKNESS;
-
-        } else if ("speedy".equalsIgnoreCase(mode)) {
-            return ParkourMode.SPEEDY;
-
-        } else if ("moon".equalsIgnoreCase(mode)) {
-            return ParkourMode.MOON;
-
-        } else if ("dropper".equalsIgnoreCase(mode))
-            return ParkourMode.DROPPER;
-
-        return ParkourMode.NONE;
+        String mode = CourseInfo.getMode(courseName).toUpperCase();
+        return ParkourMode.valueOf(mode);
     }
 }

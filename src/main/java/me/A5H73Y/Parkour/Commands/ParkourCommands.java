@@ -15,12 +15,10 @@ import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.ChatColor;
-import org.bukkit.Effect;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 
 public class ParkourCommands implements CommandExecutor {
 
@@ -440,13 +438,6 @@ public class ParkourCommands implements CommandExecutor {
 
         } else if (args[0].equalsIgnoreCase("accept")) {
             PlayerMethods.acceptChallenge(player);
-
-        } else if (args[0].equalsIgnoreCase("launch")) {
-            Vector velocity = player.getLocation().getDirection().normalize();
-            velocity = velocity.multiply(-1.5);
-            velocity = velocity.setY(velocity.getY() / 2);
-            player.setVelocity(velocity);
-            player.getWorld().playEffect(player.getLocation(), Effect.SMOKE, 500);
 
         } else if (args[0].equalsIgnoreCase("yes") || args[0].equalsIgnoreCase("no")) {
             player.sendMessage(Utils.getTranslation("Error.NoQuestion"));

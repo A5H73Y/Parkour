@@ -394,6 +394,8 @@ public class Configurations {
 
             stringData.addDefault("Mode.Drunk.JoinText", "You feel strange...");
             stringData.addDefault("Mode.Darkness.JoinText", "It suddenly becomes dark...");
+            stringData.addDefault("Mode.Rockets.JoinText", "Use the Rocket Launcher to launch yourself");
+            stringData.addDefault("Mode.Rockets.ItemName", "Rocket Launcher");
 
             stringData.addDefault("NoPermission", "You do not have Permission: &b%PERMISSION%");
             stringData.options().copyDefaults(true);
@@ -424,7 +426,6 @@ public class Configurations {
         config.addDefault("OnJoin.TreatFirstCheckpointAsStart", false);
 
         config.addDefault("OnCourse.AdminPlaceBreakBlocks", true);
-        config.addDefault("OnCourse.AllowTrails", false);
         config.addDefault("OnCourse.AttemptLessChecks", false);
         config.addDefault("OnCourse.CheckpointMaterial", "STONE_PLATE");
         config.addDefault("OnCourse.DieInLiquid", false);
@@ -442,6 +443,8 @@ public class Configurations {
         config.addDefault("OnCourse.PreventJoiningDifferentCourse", false);
         config.addDefault("OnCourse.SneakToInteractItems", true);
         config.addDefault("OnCourse.UseParkourKit", true);
+        config.addDefault("OnCourse.Trails.Enabled", false);
+        config.addDefault("OnCourse.Trails.Particle", "DRIP_LAVA");
         config.addDefault("OnCourse.EnforceParkourCommands.Enabled", true);
         String[] whitelisted = {"login"};
         config.addDefault("OnCourse.EnforceParkourCommands.Whitelist", whitelisted);

@@ -30,7 +30,7 @@ public class CourseInfo {
     public static String getLinkedCourse(String courseName) {
         String linkedCourse = Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".LinkedCourse");
 
-        if (linkedCourse != null && CourseMethods.exist(linkedCourse))
+        if (CourseMethods.exist(linkedCourse))
             return linkedCourse;
 
         return null;
@@ -95,7 +95,7 @@ public class CourseInfo {
      * @return mode
      */
     public static String getMode(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".Mode");
+        return Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".Mode", "NONE");
     }
 
     /**

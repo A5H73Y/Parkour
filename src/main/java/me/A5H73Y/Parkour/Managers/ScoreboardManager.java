@@ -32,7 +32,7 @@ public class ScoreboardManager {
 
     private int numberOfRowsNeeded;
 
-    Map<String, Integer> scoreboardCount = new HashMap<>();
+    private Map<String, Integer> scoreboardCount = new HashMap<>();
 
     public ScoreboardManager() {
         this.enabled = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Enabled");

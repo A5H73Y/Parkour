@@ -10,9 +10,9 @@ public class Course implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String name;
-	private Checkpoint checkpoint;
-	private Integer maxDeaths;
-	private ParkourKit parkourKit;
+    private Checkpoint checkpoint;
+    private Integer maxDeaths;
+    private ParkourKit parkourKit;
 	private int checkpoints;
 
 	public Course(String name, Checkpoint checkpoint, ParkourKit parkourKit) {

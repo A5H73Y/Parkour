@@ -7,5 +7,6 @@ public enum ParkourMode {
 	SPEEDY,
 	MOON,
 	FREEDOM,
-    DROPPER
+    DROPPER,
+    ROCKETS
 }

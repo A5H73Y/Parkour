@@ -35,7 +35,7 @@ public class PlayerMoveListener implements Listener {
             return;
 
         Location loc = event.getPlayer().getLocation().add(0, 0.4, 0);
-        event.getPlayer().getWorld().spawnParticle(Particle.REDSTONE, loc, 1);
+        event.getPlayer().getWorld().spawnParticle(Parkour.getSettings().getTrailParticle(), loc, 1);
     }
 
     @EventHandler

@@ -5,6 +5,7 @@ import java.util.List;
 import me.A5H73Y.Parkour.Parkour;
 
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**
@@ -13,104 +14,109 @@ import org.bukkit.configuration.file.FileConfiguration;
  */
 public class Settings {
 
-	FileConfiguration config = Parkour.getPlugin().getConfig();
+
+    private FileConfiguration getConfig() {
+        return Parkour.getPlugin().getConfig();
+    }
+
+	private Particle trailParticle;
 
 	/* booleans */
 
 	public boolean isPermissionsForCommands() {
-		return config.getBoolean("Other.Parkour.CommandPermissions");
+		return getConfig().getBoolean("Other.Parkour.CommandPermissions");
 	}
 
 	public boolean isPermissionForSignInteraction() {
-		return config.getBoolean("Other.Parkour.SignPermissions");
+		return getConfig().getBoolean("Other.Parkour.SignPermissions");
 	}
 
 	public boolean isUseParkourKit() {
-		return config.getBoolean("OnCourse.UseParkourKit");
+		return getConfig().getBoolean("OnCourse.UseParkourKit");
 	}
 
 	public boolean isChatPrefix() {
-		return config.getBoolean("Other.Parkour.ChatRankPrefix.Enabled");
+		return getConfig().getBoolean("Other.Parkour.ChatRankPrefix.Enabled");
 	}
 
 	public boolean isChatPrefixOverride() {
-		return config.getBoolean("Other.Parkour.ChatRankPrefix.OverrideChat");
+		return getConfig().getBoolean("Other.Parkour.ChatRankPrefix.OverrideChat");
 	}
 
 	public boolean isDisablePlayerDamage() {
-		return config.getBoolean("OnCourse.DisablePlayerDamage");
+		return getConfig().getBoolean("OnCourse.DisablePlayerDamage");
 	}
 
 	public boolean isPlayerLeaveCourseOnLeaveServer() {
-		return config.getBoolean("OnLeaveServer.LeaveCourse");
+		return getConfig().getBoolean("OnLeaveServer.LeaveCourse");
 	}
 
 	public boolean isEnforceWorld() {
-		return config.getBoolean("OnJoin.EnforceWorld");
+		return getConfig().getBoolean("OnJoin.EnforceWorld");
 	}
 
 	public boolean isDisableCommandsOnCourse() {
-		return config.getBoolean("OnCourse.EnforceParkourCommands.Enabled");
+		return getConfig().getBoolean("OnCourse.EnforceParkourCommands.Enabled");
 	}
 
 	public boolean isTrailsEnabled() {
-		return config.getBoolean("OnCourse.AllowTrails");
+		return getConfig().getBoolean("OnCourse.Trails.Enabled");
 	}
 
 	public boolean isAttemptLessChecks() {
-		return config.getBoolean("OnCourse.AttemptLessChecks");
+		return getConfig().getBoolean("OnCourse.AttemptLessChecks");
 	}
 
 	public boolean isDisplayWelcomeMessage() {
-		return config.getBoolean("Other.Display.JoinWelcomeMessage");
+		return getConfig().getBoolean("Other.Display.JoinWelcomeMessage");
 	}
 
 	public boolean isDisplayPrizeCooldown() {
-		return config.getBoolean("Other.Display.PrizeCooldown");
+		return getConfig().getBoolean("Other.Display.PrizeCooldown");
 	}
 
 	public boolean isPreventAttackingEntities() {
-		return config.getBoolean("OnCourse.PreventAttackingEntities");
+		return getConfig().getBoolean("OnCourse.PreventAttackingEntities");
 	}
 
 	public boolean isDisplayMilliseconds() {
-		return config.getBoolean("Other.Display.ShowMilliseconds");
+		return getConfig().getBoolean("Other.Display.ShowMilliseconds");
 	}
 
 	public boolean isEnforceSafeCheckpoints() {
-		return config.getBoolean("Other.EnforceSafeCheckpoints");
+		return getConfig().getBoolean("Other.EnforceSafeCheckpoints");
 	}
 
 	public boolean isFirstCheckAsStart() {
-		return config.getBoolean("OnJoin.TreatFirstCheckpointAsStart");
+		return getConfig().getBoolean("OnJoin.TreatFirstCheckpointAsStart");
 	}
 
-    public boolean isAutoStartEnabled() { return config.getBoolean("AutoStart.Enabled"); }
+    public boolean isAutoStartEnabled() { return getConfig().getBoolean("AutoStart.Enabled"); }
 
 	/* Materials */
 
 	public Material getLastCheckpointTool() {
-		Material lastCheckpointTool = Utils.lookupMaterial(config.getString("OnJoin.Item.LastCheckpoint.Material"));
+		Material lastCheckpointTool = Utils.lookupMaterial(getConfig().getString("OnJoin.Item.LastCheckpoint.Material"));
         return lastCheckpointTool == Material.AIR ? null : lastCheckpointTool;
 	}
 
 	public Material getHideallTool() {
-		Material hideallTool = Utils.lookupMaterial(config.getString("OnJoin.Item.HideAll.Material"));
+		Material hideallTool = Utils.lookupMaterial(getConfig().getString("OnJoin.Item.HideAll.Material"));
         return hideallTool == Material.AIR ? null : hideallTool;
 	}
 
 	public Material getLeaveTool() {
-		Material leaveTool = Utils.lookupMaterial(config.getString("OnJoin.Item.Leave.Material"));
+		Material leaveTool = Utils.lookupMaterial(getConfig().getString("OnJoin.Item.Leave.Material"));
         return leaveTool == Material.AIR ? null : leaveTool;
 	}
 
     public Material getRestartTool() {
-		Material restartTool = Utils.lookupMaterial(config.getString("OnJoin.Item.Restart.Material"));
+		Material restartTool = Utils.lookupMaterial(getConfig().getString("OnJoin.Item.Restart.Material"));
         return restartTool == Material.AIR ? null : restartTool;
     }
 
     public Material getAutoStartMaterial() {
-	    return Utils.lookupMaterial(config.getString("AutoStart.Material"));
+	    return Utils.lookupMaterial(getConfig().getString("AutoStart.Material"));
     }
 
     /* Strings */
@@ -122,28 +128,35 @@ public class Settings {
     /* Lists */
 
 	public List<String> getWhitelistedCommands() {
-		return config.getStringList("OnCourse.EnforceParkourCommands.Whitelist");
+		return getConfig().getStringList("OnCourse.EnforceParkourCommands.Whitelist");
 	}	
 
 	/* ints */
 
 	public int getMaxFallTicks() {
-		return config.getInt("OnCourse.MaxFallTicks");
+		return getConfig().getInt("OnCourse.MaxFallTicks");
 	}
 
 	public int getTitleIn() {
-		return config.getInt("DisplayTitle.FadeIn");
+		return getConfig().getInt("DisplayTitle.FadeIn");
 	}
 
 	public int getTitleStay() {
-		return config.getInt("DisplayTitle.Stay");
+		return getConfig().getInt("DisplayTitle.Stay");
 	}
 
 	public int getTitleOut() {
-		return config.getInt("DisplayTitle.FadeOut");
+		return getConfig().getInt("DisplayTitle.FadeOut");
 	}
 
 	public int getAutoStartDelay() {
-	    return config.getInt("AutoStart.TickDelay");
+	    return getConfig().getInt("AutoStart.TickDelay");
+    }
+
+    public Particle getTrailParticle() {
+	    if (trailParticle == null) {
+            trailParticle = Particle.valueOf(getConfig().getString("OnCourse.Trails.Particle").toUpperCase());
+        }
+	    return trailParticle;
     }
 }
