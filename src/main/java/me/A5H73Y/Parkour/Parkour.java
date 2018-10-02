@@ -63,6 +63,7 @@ public class Parkour extends JavaPlugin {
 
     private void registerCommands() {
         getCommand("parkour").setExecutor(new ParkourCommands());
+        getCommand("parkour").setTabCompleter(new ParkourAutoTabCompleter());
     }
 
 	public static Configurations getParkourConfig() {

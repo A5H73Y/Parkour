@@ -102,7 +102,7 @@ class ParkourCommands implements CommandExecutor {
                         CourseMethods.setStart(player);
 
 					} else if (args[0].equalsIgnoreCase("setautostart")) {
-                        if (!Utils.hasPermission(player, "Parkour.Admin", "Prize"))
+                        if (!Utils.hasPermission(player, "Parkour.Admin", "Course"))
                             return false;
 
                         if (!Utils.validateArgs(player, args, 2))
