@@ -143,11 +143,11 @@ public final class Help {
 					" You are now able to link the selected course to either a custom lobby, or to join a different course straight after you complete the selected course. For example if you selected a course '/pa select tutorial', you would be able to make the player join Level2 after they complete Level1 by doing '/pa link course Level2', or if you wish for them to teleport to a custom lobby '/pa link lobby Admin'. If you want to remove the link enter '/pa link reset'");
 
 		} else if (args[1].equalsIgnoreCase("linkKit")) {
-			displayHelpMessage(sender, "Link a course to ParkourKit", "/pa linkKit (course) (Kit)", "/pa linkKit tutorial firekit",
+			displayHelpMessage(sender, "Link a course to ParkourKit", "/pa linkKit (course) (kit)", "/pa linkKit tutorial firekit",
 					" Each course has the ability to have a unique ParkourKit, created using the '/pa createKit' command. Once linked, each type of ParkourKit material for that course will be configured to the action you set.");
 
 		} else if (args[1].equalsIgnoreCase("listKit")) {
-			displayHelpMessage(sender, "List ParkourKit information", "/pa listKit [Kit]", "/pa listKit firekit",
+			displayHelpMessage(sender, "List ParkourKit information", "/pa listKit [kit]", "/pa listKit firekit",
 					" Display all the ParkourKits available by using the command without the parameter. You can specify a kit name if you want to each material with the corresponding actions.");
 
 		} else if (args[1].equalsIgnoreCase("setmode")) {
@@ -398,8 +398,8 @@ public final class Help {
 
 		displayCommandUsage(player, "tp / tpc", "(course)", "Teleport to course / checkpoint");
 		displayCommandUsage(player, "link", "(argument) (argument)", "Link a course");
-		displayCommandUsage(player, "linkKit", "(course) (Kit)", "Link ParkourKit");
-		displayCommandUsage(player, "listKit", "[Kit]", "Display ParkourKit info");
+		displayCommandUsage(player, "linkKit", "(course) (kit)", "Link ParkourKit");
+		displayCommandUsage(player, "listKit", "[kit]", "Display ParkourKit info");
 		displayCommandUsage(player, "setmode", "(course)", "Set Parkour Mode");
 		displayCommandUsage(player, "setjoinitem", "(course) (material) (amount)", "Join item");
 		displayCommandUsage(player, "setminlevel", "(course) (level)", "Set course minimum level");

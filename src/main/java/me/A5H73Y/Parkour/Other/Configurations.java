@@ -501,6 +501,8 @@ public class Configurations {
         config.addDefault("Other.Economy.Enabled", true);
         config.addDefault("Other.PlaceholderAPI.Enabled", true);
         config.addDefault("Other.LogToFile", true);
+        config.addDefault("Other.EnforceSafeCheckpoints", true);
+        config.addDefault("Other.UseAutoTabCompletion", true);
         config.addDefault("Other.Parkour.ChatRankPrefix.Enabled", false);
         config.addDefault("Other.Parkour.ChatRankPrefix.OverrideChat", true);
         config.addDefault("Other.Parkour.SignProtection", true);
@@ -511,7 +513,6 @@ public class Configurations {
         config.addDefault("Other.Display.LevelReward", true);
         config.addDefault("Other.Display.ShowMilliseconds", false);
         config.addDefault("Other.Display.PrizeCooldown", true);
-        config.addDefault("Other.EnforceSafeCheckpoints", true);
 
         config.addDefault("SQLite.PathOverride", "");
         config.addDefault("MySQL.Use", false);

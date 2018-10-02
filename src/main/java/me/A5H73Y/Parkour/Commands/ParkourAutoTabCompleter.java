@@ -1,32 +1,33 @@
-package me.A5H73Y.Parkour;
+package me.A5H73Y.Parkour.Commands;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import me.A5H73Y.Parkour.Course.CourseInfo;
+import me.A5H73Y.Parkour.Player.PlayerInfo;
+import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import me.A5H73Y.Parkour.Course.CourseInfo;
-import me.A5H73Y.Parkour.Player.PlayerInfo;
-import me.A5H73Y.Parkour.Utilities.Utils;
+import java.util.*;
 
 public class ParkourAutoTabCompleter implements TabCompleter {
-	
-	@Override
+
+    private static final Set<String> basicCmds = new HashSet<>(
+            Arrays.asList("challenge", "leaderboard", "invite", "kit", "kitlist", "tp", "tpc"));
+
+    private static final Set<String> adminCmds = new HashSet<>(
+            Arrays.asList("setstart", "setlobby", "economy", "createkit", "editkit", "validatekit", "recreate",
+            "sql", "settings", "reload", "rewardrank", "whitelist", "setlevel", "setrank", "delete"));
+
+    @Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
 		if (!(sender instanceof Player)) {
 			return null;
 		}
 		
-		List<String> list = new ArrayList<String>();
-		List<String> auto = new ArrayList<String>();
-		List<String> courseCmds = getCourseCmds(sender);
-		List<String> basicCmds = Arrays.asList("challenge", "leaderboard", "invite", "kit", "kitlist", "tp", "tpc");
-		List<String> adminCmds = Arrays.asList("setstart", "setlobby", "economy", "createkit", "editkit", "validatekit", "recreate", 
-				"sql", "settings", "reload", "rewardrank", "whitelist", "setlevel", "setrank", "delete"); 
+		Set<String> list = new HashSet<>();
+		Set<String> auto = new HashSet<>();
+		Set<String> courseCmds = getCourseCmds(sender);
 		
 		if (args.length == 1) {
 			list.add("help");
@@ -106,9 +107,7 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 			
 		} else if (args.length == 2) {
 			if (courseCmds.contains(args[0])) {
-				for (String course : CourseInfo.getAllCourses()) {
-					list.add(course);
-				}
+                list.addAll(CourseInfo.getAllCourses());
 			} else if (args[0].equalsIgnoreCase("list")) {
 				list.add("courses");
 				list.add("players");
@@ -145,13 +144,13 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 			}
 		}
 		
-		return auto.isEmpty() ? list : auto;
+		return auto.isEmpty() ? new ArrayList<>(list) : new ArrayList<>(auto);
 	}
 	
-	private List<String> getCourseCmds(CommandSender sender) {
-		List<String> cmds = new ArrayList<String>();
-		List<String> adminCourseCmds = Arrays.asList("setcreator", "prize", "setmode", "setjoinitem", "setminlevel", 
-				"setmaxdeath", "rewardonce", "rewardlevel", "rewardleveladd", "rewardparkoins", "rewarddelay");
+	private Set<String> getCourseCmds(CommandSender sender) {
+		Set<String> cmds = new HashSet<>();
+		Set<String> adminCourseCmds = new HashSet<>(Arrays.asList("setcreator", "prize", "setmode", "setjoinitem", "setminlevel",
+				"setmaxdeath", "rewardonce", "rewardlevel", "rewardleveladd", "rewardparkoins", "rewarddelay"));
 		
 		cmds.add("join");
 		cmds.add("stats");
@@ -201,5 +200,4 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 		}
 		return player.getName().equals(CourseInfo.getCreator(courseName));
 	}
-
 }

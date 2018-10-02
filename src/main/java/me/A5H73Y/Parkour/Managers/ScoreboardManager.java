@@ -43,7 +43,8 @@ public class ScoreboardManager {
         this.displayBestTimeEver = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.BestTimeEver");
         this.displayBestTimeEverName = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.BestTimeEverName");
         this.displayBestTimeByMe = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.BestTimeByMe");
-        this.displayCurrentTime = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.CurrentTime");
+        this.displayCurrentTime = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.CurrentTime")
+                && Parkour.getPlugin().getConfig().getBoolean("OnCourse.DisplayLiveTime");
 
         calculateRows();
     }

@@ -10,3 +10,6 @@ commands:
   parkour:
     aliases: [pa, pkr]
     description: Parkour commands
+  paconsole:
+    aliases: [pac, parkourc, consolepa]
+    description: Parkour console commands
