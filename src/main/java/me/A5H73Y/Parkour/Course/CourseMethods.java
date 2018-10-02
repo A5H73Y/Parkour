@@ -380,9 +380,9 @@ public class CourseMethods {
     }
 
     /**
-     * Set the course prize
-     * Starts a Prize conversation that allows you to configure what the player gets awarded with when the complete the course.
-     * A course could have every type of Prize if setup.
+     * Create an auto-start for a course
+     * Create an auto-start at the player's location for the specified course.
+     * Save the auto-start coordinates.
      *
      * @param args
      * @param player
