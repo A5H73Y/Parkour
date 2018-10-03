@@ -24,7 +24,7 @@ public class ParkourConsoleCommands implements CommandExecutor {
 
         if (args.length == 0) {
             Utils.log("v" + Static.getVersion() + " installed. Plugin created by A5H73Y.");
-            Utils.log("Enter 'pa cmds' to display all console commands.");
+            Utils.log("Enter 'pac cmds' to display all console commands.");
             return true;
         }
 
@@ -114,7 +114,7 @@ public class ParkourConsoleCommands implements CommandExecutor {
             Backup.backupNow(true);
 
         } else {
-            Utils.log("Unknown Command. Enter 'pa cmds' to display all console commands.");
+            Utils.log("Unknown Command. Enter 'pac cmds' to display all console commands.");
         }
         return true;
     }

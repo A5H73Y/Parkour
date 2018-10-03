@@ -7,6 +7,7 @@ import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 
+import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -143,6 +144,8 @@ public class Configurations {
         kitData = YamlConfiguration.loadConfiguration(kitFile);
         if (Static.getEconomy())
             econData = YamlConfiguration.loadConfiguration(econFile);
+
+        validateConfigProperties();
     }
 
     public FileConfiguration getCheckData() {
@@ -532,5 +535,24 @@ public class Configurations {
         config.addDefault("Lobby.EnforceWorld", false);
         config.options().copyDefaults(true);
         Parkour.getPlugin().saveConfig();
+
+        validateConfigProperties();
+    }
+
+    private void validateConfigProperties() {
+        FileConfiguration config = Parkour.getPlugin().getConfig();
+        // First check if the Trail is valid
+        if (config.getBoolean("OnCourse.Trails.Enabled")) {
+            String trail = config.getString("OnCourse.Trails.Particle").toUpperCase();
+
+            try {
+                Particle particle = Particle.valueOf(trail);
+                Parkour.getPlugin().getServer().getWorlds().get(0).spawnParticle(particle, 0, 0, 0, 1);
+            } catch (IllegalArgumentException | NullPointerException ex) {
+                Utils.log("Particle: " + trail + " is invalid. Disabling Trails.", 2);
+                config.set("OnCourse.Trails.Enabled", false);
+                Parkour.getPlugin().saveConfig();
+            }
+        }
     }
 }
