@@ -14,7 +14,6 @@ import org.bukkit.configuration.file.FileConfiguration;
  */
 public class Settings {
 
-
     private FileConfiguration getConfig() {
         return Parkour.getPlugin().getConfig();
     }
@@ -151,6 +150,10 @@ public class Settings {
 
 	public int getAutoStartDelay() {
 	    return getConfig().getInt("AutoStart.TickDelay");
+    }
+
+    public void resetSettings() {
+	    trailParticle = null;
     }
 
     public Particle getTrailParticle() {

@@ -153,7 +153,7 @@ public class PlayerInteractListener implements Listener {
 
         Block below = event.getClickedBlock().getRelative(BlockFace.DOWN);
 
-        if (below == null || below.getType() != Parkour.getSettings().getAutoStartMaterial()) //TODO configurable
+        if (below == null || below.getType() != Parkour.getSettings().getAutoStartMaterial())
             return;
 
         // Prevent a user spamming the joins

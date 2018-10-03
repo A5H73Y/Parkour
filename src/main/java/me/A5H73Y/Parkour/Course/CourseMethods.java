@@ -407,7 +407,7 @@ public class CourseMethods {
 
         block.setType(XMaterial.STONE_PRESSURE_PLATE.parseMaterial());
         Block blockUnder = block.getRelative(BlockFace.DOWN);
-        blockUnder.setType(Material.BEDROCK);
+        blockUnder.setType(Parkour.getSettings().getAutoStartMaterial());
     }
 
     public static String getAutoStartCourse(Location location) {
