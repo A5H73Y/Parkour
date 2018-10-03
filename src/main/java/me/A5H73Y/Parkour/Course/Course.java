@@ -12,8 +12,12 @@ public class Course implements Serializable {
 	private String name;
     private Checkpoint checkpoint;
     private Integer maxDeaths;
-    private ParkourKit parkourKit;
 	private int checkpoints;
+
+	// Because of the Material Enum changes in 1.13 this will be transient
+    // To stop the errors occurring when loading the ParkourSessions the
+    // ParkourKit will be loaded on startup and set manually
+    private transient ParkourKit parkourKit;
 
 	public Course(String name, Checkpoint checkpoint, ParkourKit parkourKit) {
         this.name = name;

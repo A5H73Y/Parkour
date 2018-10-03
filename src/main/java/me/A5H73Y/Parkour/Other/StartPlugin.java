@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Enums.DatabaseType;
 import me.A5H73Y.Parkour.ParkourPlaceholders;
@@ -15,6 +16,7 @@ import me.A5H73Y.Parkour.Utilities.Utils;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -30,6 +32,7 @@ public class StartPlugin {
     public static void run() {
         checkConvertToLatest();
         Parkour.getParkourConfig().setupConfig();
+        validateConfigProperties();
         Static.initiate();
         initiateSQL();
         setupExternalPlugins();
@@ -154,6 +157,8 @@ public class StartPlugin {
         try {
             @SuppressWarnings("unchecked")
             HashMap<String, ParkourSession> players = (HashMap<String, ParkourSession>) Utils.loadAllPlaying(Static.PLAYING_BIN_PATH);
+            fixParkourBlocks(players);
+
             PlayerMethods.setPlaying(players);
 
             for (Entry<String, ParkourSession> entry : players.entrySet()) {
@@ -199,5 +204,31 @@ public class StartPlugin {
         Utils.log("[Backup] Updating config to " + currentVersion + "...");
         Parkour.getPlugin().getConfig().set("Version", currentVersion);
         Parkour.getPlugin().saveConfig();
+    }
+
+    private static void validateConfigProperties() {
+        FileConfiguration config = Parkour.getPlugin().getConfig();
+        // First check if the Trail is valid
+        if (config.getBoolean("OnCourse.Trails.Enabled")) {
+            String trail = config.getString("OnCourse.Trails.Particle").toUpperCase();
+
+            try {
+                Particle particle = Particle.valueOf(trail);
+                Parkour.getPlugin().getServer().getWorlds().get(0).spawnParticle(particle, 0, 0, 0, 1);
+            } catch (IllegalArgumentException | NullPointerException ex) {
+                Utils.log("Particle: " + trail + " is invalid. Disabling Trails.", 2);
+                config.set("OnCourse.Trails.Enabled", false);
+                Parkour.getPlugin().saveConfig();
+            }
+        }
+    }
+
+    private static void fixParkourBlocks(HashMap<String, ParkourSession> players) {
+        for (String playerName : players.keySet()) {
+            ParkourSession session = players.get(playerName);
+            String parkourKitName = CourseInfo.getParkourKit(session.getCourse().getName());
+            ParkourKit kit = ParkourKit.getParkourKit(parkourKitName);
+            players.get(playerName).getCourse().setParkourKit(kit);
+        }
     }
 }

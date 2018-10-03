@@ -41,7 +41,7 @@ public class ParkourKit implements Serializable {
             Material material = Utils.lookupMaterial(rawMaterial);
 
             if (material == null) {
-                Utils.log("Material " + rawMaterial + " is invalid.", 1);
+                Utils.log("Material " + rawMaterial + " in kit " + name + " is invalid.", 1);
                 continue;
             }
 
@@ -49,7 +49,7 @@ public class ParkourKit implements Serializable {
                     .getString("ParkourKit." + name + "." + rawMaterial + ".Action").toLowerCase();
 
             if (!validActions.contains(action)) {
-                Utils.log("Action " + action + " is invalid.", 1);
+                Utils.log("Action " + action + " in kit " + name + " is invalid.", 1);
                 continue;
             }
 

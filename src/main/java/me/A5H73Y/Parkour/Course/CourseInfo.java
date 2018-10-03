@@ -1,5 +1,6 @@
 package me.A5H73Y.Parkour.Course;
 
+import me.A5H73Y.Parkour.Other.Constants;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
@@ -161,7 +162,7 @@ public class CourseInfo {
      * @return
      */
     public static String getParkourKit(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".ParkourKit");
+        return Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".ParkourKit", Constants.DEFAULT);
     }
 
     /**

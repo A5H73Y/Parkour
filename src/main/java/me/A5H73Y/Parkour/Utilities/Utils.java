@@ -5,6 +5,7 @@ import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Managers.QuestionManager;
 import me.A5H73Y.Parkour.Managers.QuietModeManager;
+import me.A5H73Y.Parkour.Other.Constants;
 import me.A5H73Y.Parkour.Other.ParkourKit;
 import me.A5H73Y.Parkour.Other.TimeObject;
 import me.A5H73Y.Parkour.Other.ValidationMethods;
@@ -339,7 +340,7 @@ public final class Utils {
      * @param player
      */
     public static void validateParkourKit(String[] args, Player player) {
-        String kitName = (args.length == 2 ? args[1].toLowerCase() : "default");
+        String kitName = (args.length == 2 ? args[1].toLowerCase() : Constants.DEFAULT);
 
         if (!ParkourKit.doesParkourKitExist(kitName)) {
             player.sendMessage(Static.getParkourString() + kitName + " ParkourKit does not exist!");

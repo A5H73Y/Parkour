@@ -222,7 +222,7 @@ public class Configurations {
     public void saveParkourKit() {
         try {
             if (!kitData.contains("ParkourKit.default")) {
-                ParkourKit.createStandardKit(kitData, "default");
+                ParkourKit.createStandardKit(kitData, Constants.DEFAULT);
             }
             kitData.save(kitFile);
         } catch (IOException ex) {
