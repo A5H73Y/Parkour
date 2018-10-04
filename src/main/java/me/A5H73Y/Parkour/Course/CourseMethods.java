@@ -1,5 +1,6 @@
 package me.A5H73Y.Parkour.Course;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -148,6 +149,7 @@ public class CourseMethods {
 
         List<String> courseList = CourseInfo.getAllCourses();
         courseList.add(name);
+        Collections.sort(courseList);
         courseData.set("Courses", courseList);
         Parkour.getParkourConfig().saveCourses();
 
@@ -291,10 +293,13 @@ public class CourseMethods {
             String courseName = limited.get(i);
             Integer minimumLevel = CourseInfo.getMinimumLevel(courseName);
             Integer rewardLevel = CourseInfo.getRewardLevel(courseName);
+            boolean finished = CourseInfo.getFinished(courseName);
 
             StringBuilder sb = new StringBuilder();
             sb.append(((fromIndex) + (i + 1)));
-            sb.append(") " + ChatColor.AQUA + courseName);
+            sb.append(") ");
+            sb.append(finished ? ChatColor.AQUA : ChatColor.RED);
+            sb.append(courseName);
 
             if (minimumLevel > 0) sb.append(ChatColor.RED + " (" + minimumLevel + ")");
             if (rewardLevel > 0) sb.append(ChatColor.GREEN + " (" + rewardLevel + ")");

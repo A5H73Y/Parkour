@@ -1029,7 +1029,13 @@ public final class Utils {
         Static.initiate();
     }
 
+    /**
+     * Basically a fancy way of saying, is the server 1.13+
+     * If the Version is weird (like older versions), we can assume it's under 13
+     * @return server version
+     */
     public static int getMinorServerVersion() {
-        return Integer.valueOf(Bukkit.getBukkitVersion().split("\\.")[1]);
+        String version = Bukkit.getBukkitVersion().split("\\.")[1];
+        return Utils.isNumber(version) ? Integer.valueOf(version) : 12;
     }
 }
