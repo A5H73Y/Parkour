@@ -65,7 +65,9 @@ public class ParkourSession implements Serializable {
                     return;
                 }
 
-                if (Parkour.getScoreboardManager().isEnabled()) {// Scoreboard is enabled and CurrentTime is true
+                boolean useScoreboard = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.CurrentTime");
+
+                if (Parkour.getScoreboardManager().isEnabled() && useScoreboard) {
                     Parkour.getScoreboardManager().updateScoreboardTimer(player, liveTime);
                 } else if (Static.getBountifulAPI()) {
                     Utils.sendActionBar(player, liveTime, true);

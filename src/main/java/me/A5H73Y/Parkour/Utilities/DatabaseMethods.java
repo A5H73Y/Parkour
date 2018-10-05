@@ -161,7 +161,7 @@ public class DatabaseMethods {
         boolean isNewRecord = false;
         boolean updatePlayerTime = Parkour.getPlugin().getConfig().getBoolean("OnFinish.UpdatePlayerDatabaseTime");
 
-        if (Parkour.getPlugin().getConfig().getBoolean("UseNewRecord") || updatePlayerTime) {
+        if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.DisplayNewRecords") || updatePlayerTime) {
             isNewRecord = PlayerMethods.isNewRecord(player, courseName, time);
         }
 

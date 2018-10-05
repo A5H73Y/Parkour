@@ -463,6 +463,7 @@ public class Configurations {
         config.addDefault("OnFinish.TeleportAway", true);
         config.addDefault("OnFinish.TeleportDelay", 0);
         config.addDefault("OnFinish.UpdatePlayerDatabaseTime", false);
+        config.addDefault("OnFinish.DisplayNewRecords", false);
 
         config.addDefault("OnLeave.TeleportToLinkedLobby", false);
 
@@ -548,7 +549,7 @@ public class Configurations {
             try {
                 Particle particle = Particle.valueOf(trail);
                 Parkour.getPlugin().getServer().getWorlds().get(0).spawnParticle(particle, 0, 0, 0, 1);
-            } catch (IllegalArgumentException | NullPointerException ex) {
+            } catch (Exception ex) {
                 Utils.log("Particle: " + trail + " is invalid. Disabling Trails.", 2);
                 config.set("OnCourse.Trails.Enabled", false);
                 Parkour.getPlugin().saveConfig();
