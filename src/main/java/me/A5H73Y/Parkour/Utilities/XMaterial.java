@@ -1,15 +1,19 @@
 package me.A5H73Y.Parkour.Utilities;
 
-import java.util.HashMap;
-
 import org.bukkit.Material;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 
 /**
  * Utility class to make upgrading to 1.13 easier
  *
  * Created by Hex_27
- * On Spigot: https://www.spigotmc.org/members/hex_27.23764/
+ * With improvements by FrostedSnowman
+ * On Spigot: https://www.spigotmc.org/threads/1-8-to-1-13-itemstack-material-version-support.329630
  */
 public enum XMaterial {
 
@@ -339,11 +343,11 @@ public enum XMaterial {
     GRAY_DYE("INK_SACK", 8),
     GRAY_GLAZED_TERRACOTTA("GRAY_GLAZED_TERRACOTTA", 0),
     GRAY_SHULKER_BOX("GRAY_SHULKER_BOX", 0),
-	GRAY_STAINED_GLASS("STAINED_GLASS", 7),
-	GRAY_STAINED_GLASS_PANE("STAINED_GLASS_PANE", 7),
-	GRAY_TERRACOTTA("STAINED_CLAY", 7),
+    GRAY_STAINED_GLASS("STAINED_GLASS", 7),
+    GRAY_STAINED_GLASS_PANE("STAINED_GLASS_PANE", 7),
+    GRAY_TERRACOTTA("STAINED_CLAY", 7),
     GRAY_WALL_BANNER("WALL_BANNER", 0),
-	GRAY_WOOL("WOOL", 7),
+    GRAY_WOOL("WOOL", 7),
     GREEN_BANNER("BANNER", 2),
     GREEN_BED("BED", 13),
     GREEN_CARPET("CARPET", 13),
@@ -862,10 +866,12 @@ public enum XMaterial {
     ZOMBIE_PIGMAN_SPAWN_EGG("MONSTER_EGG", 0),
     ZOMBIE_SPAWN_EGG("MONSTER_EGG", 0),
     ZOMBIE_VILLAGER_SPAWN_EGG("MONSTER_EGG", 0),
-    ZOMBIE_WALL_HEAD("SKULL", 0),
-    ;
-    String m;
-    int data;
+    ZOMBIE_WALL_HEAD("SKULL", 0);
+
+    private static final XMaterial[] VALUES = XMaterial.values();
+
+    private final String m;
+    private final int data;
 
     XMaterial(String m, int data ) {
         this.m = m;
@@ -886,47 +892,40 @@ public enum XMaterial {
         return false;
     }
 
-    private static HashMap<String, XMaterial> cachedSearch = new HashMap<>();
+    private static final Map<String, XMaterial> CACHED_SEARCH = new HashMap<>();
 
     public static XMaterial requestXMaterial(String name, byte data) {
-        if (cachedSearch.containsKey(name.toUpperCase()+","+data)) {
-            return cachedSearch.get(name.toUpperCase()+","+data);
-        }
-        for (XMaterial mat:XMaterial.values()) {
-            if (name.toUpperCase().equals(mat.m) && ((byte)mat.data) == data) {
-                cachedSearch.put(mat.m+","+data,mat);
-                return mat;
+        String fixedName = name.toUpperCase();
+
+        XMaterial cached = CACHED_SEARCH.get(fixedName);
+
+        if (cached == null) {
+            Optional<XMaterial> searched = Arrays.stream(VALUES).filter(xm -> xm.m.equals(fixedName) && xm.data == data).findFirst();
+
+            if (searched.isPresent()) {
+                XMaterial found = searched.get();
+                CACHED_SEARCH.put(found.m + "," + data, found);
+                return found;
             }
+            return null;
         }
-        return null;
+        return cached;
     }
 
     public XMaterial fromMaterial(Material mat) {
         try{
             return XMaterial.valueOf(mat.toString());
-        }catch(IllegalArgumentException e) {
-            for(XMaterial xmat:XMaterial.values()) {
-                if (xmat.m.equals(mat.toString())) {
-                    return xmat;
-                }
-            }
+        } catch(IllegalArgumentException e) {
+            return Arrays.stream(VALUES).filter(xMaterial -> xMaterial.m.equals(mat.toString())).findFirst().orElse(null);
         }
-        return null;
     }
 
     public static XMaterial fromString(String key) {
-        XMaterial xmat;
         try {
-            xmat = XMaterial.valueOf(key);
-            return xmat;
-        } catch (IllegalArgumentException e) {
+            return XMaterial.valueOf(key);
+        } catch(IllegalArgumentException e) {
             String[] split = key.split(":");
-            if (split.length == 1) {
-                xmat = requestXMaterial(key, (byte) 0);
-            } else {
-                xmat = requestXMaterial(split[0], (byte) Integer.parseInt(split[1]));
-            }
-            return xmat;
+            return split.length == 1 ? requestXMaterial(key, (byte) 0) : requestXMaterial(split[0], (byte) Integer.parseInt(split[1]));
         }
     }
 
