@@ -166,4 +166,17 @@ public class SignMethods {
 
         player.sendMessage(Static.getParkourString() + "Leaderboards sign for " + ChatColor.AQUA + sign.getLine(2) + ChatColor.WHITE + " created!");
     }
+
+    public void createCheckpointSign(SignChangeEvent sign, Player player, String checkpoint) {
+        if (!createStandardCourseSign(sign, player, "Checkpoint", false))
+            return;
+
+        if (sign.getLine(3).isEmpty() || !Utils.isNumber(sign.getLine(3))) {
+            sign.getBlock().breakNaturally();
+            player.sendMessage(Static.getParkourString() + "Please specify checkpoint on bottom line!");
+            return;
+        }
+
+        player.sendMessage(Static.getParkourString() + "Checkpoint sign for " + ChatColor.AQUA + sign.getLine(2) + ChatColor.WHITE + " created!");
+    }
 }

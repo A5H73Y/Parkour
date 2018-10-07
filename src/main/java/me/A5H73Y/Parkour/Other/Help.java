@@ -443,6 +443,7 @@ public final class Help {
 
 		player.sendMessage(ChatColor.DARK_AQUA + "[pa]");
 		displaySignCommandUsage(player, "Join", "(j)", "Join sign for a Parkour course");
+		displaySignCommandUsage(player, "Checkpoint", "(c)", "Checkpoint for course");
 		displaySignCommandUsage(player, "Finish", "(f)", "Optional finish sign for a Parkour course");
 		displaySignCommandUsage(player, "Lobby", "(l)", "Teleport to Parkour lobby");
 		displaySignCommandUsage(player, "Leave", "(le)", "Leave the current course");

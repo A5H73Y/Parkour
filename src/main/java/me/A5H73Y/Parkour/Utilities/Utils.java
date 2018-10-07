@@ -5,11 +5,10 @@ import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Managers.QuestionManager;
 import me.A5H73Y.Parkour.Managers.QuietModeManager;
-import me.A5H73Y.Parkour.Other.Constants;
-import me.A5H73Y.Parkour.Other.ParkourKit;
 import me.A5H73Y.Parkour.Other.TimeObject;
 import me.A5H73Y.Parkour.Other.ValidationMethods;
 import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.ParkourKit.ParkourKitInfo;
 import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import org.bukkit.*;
@@ -68,7 +67,7 @@ public final class Utils {
         if (player.hasPermission(permission) || player.hasPermission("Parkour.*"))
             return true;
 
-        player.sendMessage(Utils.getTranslation("NoPermission").replace("%PERMISSION%", permission));
+        player.sendMessage(getTranslation("NoPermission").replace("%PERMISSION%", permission));
         return false;
     }
 
@@ -85,7 +84,7 @@ public final class Utils {
         if (player.hasPermission(permissionBranch + ".*") || player.hasPermission(permissionBranch + "." + permission) || player.hasPermission("Parkour.*"))
             return true;
 
-        player.sendMessage(Utils.getTranslation("NoPermission").replace("%PERMISSION%", permissionBranch + "." + permission));
+        player.sendMessage(getTranslation("NoPermission").replace("%PERMISSION%", permissionBranch + "." + permission));
         return false;
     }
 
@@ -101,7 +100,7 @@ public final class Utils {
      */
     public static boolean hasPermissionOrCourseOwnership(Player player, String permissionBranch, String permission, String courseName) {
         if (!(CourseMethods.exist(courseName))) {
-            player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", courseName));
+            player.sendMessage(getTranslation("Error.NoExist").replace("%COURSE%", courseName));
             return false;
 
         } else if (player.hasPermission(permissionBranch + ".*") || player.hasPermission(permissionBranch + "." + permission) || player.hasPermission("Parkour.*")) {
@@ -111,7 +110,7 @@ public final class Utils {
             return true;
         }
 
-        player.sendMessage(Utils.getTranslation("NoPermission").replace("%PERMISSION%", permissionBranch + "." + permission));
+        player.sendMessage(getTranslation("NoPermission").replace("%PERMISSION%", permissionBranch + "." + permission));
         return false;
     }
 
@@ -125,7 +124,7 @@ public final class Utils {
      * @return whether they have permission
      */
     public static boolean hasSignPermission(Player player, SignChangeEvent sign, String permission) {
-        if (!Utils.hasPermission(player, "Parkour.Sign", permission)) {
+        if (!hasPermission(player, "Parkour.Sign", permission)) {
             sign.setCancelled(true);
             sign.getBlock().breakNaturally();
             return false;
@@ -143,13 +142,13 @@ public final class Utils {
      */
     public static boolean validateArgs(CommandSender sender, String[] args, int desired) {
         if (args.length > desired) {
-            sender.sendMessage(Utils.getTranslation("Error.TooMany") + " (" + desired + ")");
-            sender.sendMessage(Utils.getTranslation("Help.Command").replace("%COMMAND%", Utils.standardizeText(args[0])));
+            sender.sendMessage(getTranslation("Error.TooMany") + " (" + desired + ")");
+            sender.sendMessage(getTranslation("Help.Command").replace("%COMMAND%", standardizeText(args[0])));
             return false;
 
         } else if (args.length < desired) {
-            sender.sendMessage(Utils.getTranslation("Error.TooLittle") + " (" + desired + ")");
-            sender.sendMessage(Utils.getTranslation("Help.Command").replace("%COMMAND%", Utils.standardizeText(args[0])));
+            sender.sendMessage(getTranslation("Error.TooLittle") + " (" + desired + ")");
+            sender.sendMessage(getTranslation("Help.Command").replace("%COMMAND%", standardizeText(args[0])));
             return false;
         }
         return true;
@@ -333,53 +332,6 @@ public final class Utils {
     }
 
     /**
-     * Validate ParkourKit set
-     * Used for identifying what the problem with the ParkourKit is.
-     *
-     * @param args
-     * @param player
-     */
-    public static void validateParkourKit(String[] args, Player player) {
-        String kitName = (args.length == 2 ? args[1].toLowerCase() : Constants.DEFAULT);
-
-        if (!ParkourKit.doesParkourKitExist(kitName)) {
-            player.sendMessage(Static.getParkourString() + kitName + " ParkourKit does not exist!");
-            return;
-        }
-
-        String path = "ParkourKit." + kitName;
-
-        List<String> invalidTypes = new ArrayList<>();
-
-        Set<String> materialList =
-                Parkour.getParkourConfig().getParkourKitData().getConfigurationSection(path).getKeys(false);
-
-        for (String material : materialList) {
-            // try to get the server lookup version first
-            if (Material.getMaterial(material) == null) {
-                invalidTypes.add("Unknown Material: " + material);
-
-                // try to see if we have a matching legacy version
-                Material matching = Utils.lookupMaterial(material);
-                if (matching != null)
-                    invalidTypes.add(" Could you have meant: " + matching.name() + "?");
-            } else {
-                String action = Parkour.getParkourConfig().getParkourKitData().getString(path + "." + material + ".Action");
-                if (!ParkourKit.getValidActions().contains(action)) {
-                    invalidTypes.add("Material: " + material + ", Unknown Action: " + action);
-                }
-            }
-        }
-
-        player.sendMessage(Static.getParkourString() + invalidTypes.size() + " problems with " + ChatColor.AQUA + kitName + ChatColor.WHITE + " found.");
-        if (invalidTypes.size() > 0) {
-            for (String type : invalidTypes) {
-                player.sendMessage(ChatColor.RED + type);
-            }
-        }
-    }
-
-    /**
      * Used for saving the ParkourSessions.
      * Thanks to Tomsik68 for this code.
      *
@@ -491,7 +443,7 @@ public final class Utils {
     public static void deleteCommand(String[] args, Player player) {
         if (args[1].equalsIgnoreCase("course")) {
             if (!CourseMethods.exist(args[2])) {
-                player.sendMessage(Utils.getTranslation("Error.Unknown"));
+                player.sendMessage(getTranslation("Error.Unknown"));
                 return;
             }
 
@@ -502,7 +454,7 @@ public final class Utils {
 
         } else if (args[1].equalsIgnoreCase("checkpoint")) {
             if (!CourseMethods.exist(args[2])) {
-                player.sendMessage(Utils.getTranslation("Error.Unknown"));
+                player.sendMessage(getTranslation("Error.Unknown"));
                 return;
             }
 
@@ -527,7 +479,7 @@ public final class Utils {
             QuestionManager.getInstance().askDeleteLobbyQuestion(player, args[2]);
 
         } else if (args[1].equalsIgnoreCase("kit")) {
-            if (!ParkourKit.doesParkourKitExist(args[2])) {
+            if (!ParkourKitInfo.doesParkourKitExist(args[2])) {
                 player.sendMessage(Static.getParkourString() + "This ParkourKit does not exist!");
                 return;
             }
@@ -553,7 +505,7 @@ public final class Utils {
     public static void resetCommand(String[] args, Player player) {
         if (args[1].equalsIgnoreCase("course")) {
             if (!CourseMethods.exist(args[2])) {
-                player.sendMessage(Utils.getTranslation("Error.Unknown"));
+                player.sendMessage(getTranslation("Error.Unknown"));
                 return;
             }
 
@@ -562,7 +514,7 @@ public final class Utils {
         } else if (args[1].equalsIgnoreCase("player")) {
             OfflinePlayer target = Bukkit.getOfflinePlayer(args[2]);
             if (target == null || !PlayerInfo.hasPlayerInfo(target)) {
-                player.sendMessage(Utils.getTranslation("Error.UnknownPlayer"));
+                player.sendMessage(getTranslation("Error.UnknownPlayer"));
                 return;
             }
 
@@ -570,7 +522,7 @@ public final class Utils {
 
         } else if (args[1].equalsIgnoreCase("leaderboard")) {
             if (!CourseMethods.exist(args[2])) {
-                player.sendMessage(Utils.getTranslation("Error.Unknown"));
+                player.sendMessage(getTranslation("Error.Unknown"));
                 return;
             }
 
@@ -578,7 +530,7 @@ public final class Utils {
 
         } else if (args[1].equalsIgnoreCase("prize")) {
             if (!CourseMethods.exist(args[2])) {
-                player.sendMessage(Utils.getTranslation("Error.Unknown"));
+                player.sendMessage(getTranslation("Error.Unknown"));
                 return;
             }
 
@@ -624,29 +576,21 @@ public final class Utils {
             return;
         }
 
-        String heading = Utils.getTranslation("Parkour.LeaderboardHeading", false)
+        String heading = getTranslation("Parkour.LeaderboardHeading", false)
                 .replace("%COURSE%", courseName)
                 .replace("%AMOUNT%", String.valueOf(times.size()));
 
-        player.sendMessage(Utils.getStandardHeading(heading));
+        player.sendMessage(getStandardHeading(heading));
 
         for (int i = 0; i < times.size(); i++) {
-            String translation = Utils.getTranslation("Parkour.LeaderboardEntry", false)
+            String translation = getTranslation("Parkour.LeaderboardEntry", false)
                     .replace("%POSITION%", String.valueOf(i + 1))
                     .replace("%PLAYER%", times.get(i).getPlayer())
-                    .replace("%TIME%", Utils.displayCurrentTime(times.get(i).getTime()))
+                    .replace("%TIME%", displayCurrentTime(times.get(i).getTime()))
                     .replace("%DEATHS%", String.valueOf(times.get(i).getDeaths()));
 
             player.sendMessage(translation);
         }
-    }
-
-    /**
-     * Get a list of possible ParkourKit
-     * @return Set<String> of ParkourKit names
-     */
-    public static Set<String> getParkourKitList() {
-        return Parkour.getParkourConfig().getParkourKitData().getConfigurationSection("ParkourKit").getKeys(false);
     }
 
     /**
@@ -723,7 +667,7 @@ public final class Utils {
         }
 
         if (displayMessage && !QuietModeManager.isInQuietMode(player.getName()))
-            player.sendMessage(Utils.getTranslation("Error.Cooldown").replace("%AMOUNT%", String.valueOf(secondsToWait - secondsElapsed)));
+            player.sendMessage(getTranslation("Error.Cooldown").replace("%AMOUNT%", String.valueOf(secondsToWait - secondsElapsed)));
 
         return false;
     }
@@ -767,7 +711,7 @@ public final class Utils {
      * @param sender
      */
     public static void listParkourKit(String[] args, CommandSender sender) {
-        Set<String> parkourKit = getParkourKitList();
+        Set<String> parkourKit = ParkourKitInfo.getParkourKitNames();
 
         // specifying a kit
         if (args.length == 2) {
@@ -777,20 +721,17 @@ public final class Utils {
                 return;
             }
 
-            sender.sendMessage(Utils.getStandardHeading("ParkourKit: " + kitName));
-            Set<String> materials = Parkour.getParkourConfig().getParkourKitData()
-                    .getConfigurationSection("ParkourKit." + kitName).getKeys(false);
+            sender.sendMessage(getStandardHeading("ParkourKit: " + kitName));
+            Set<String> materials = ParkourKitInfo.getParkourKitContents(kitName);
 
             for (String material : materials) {
-                String action = Parkour.getParkourConfig().getParkourKitData()
-                        .getString("ParkourKit." + kitName + "." + material + ".Action");
-
+                String action = ParkourKitInfo.getActionForMaterial(kitName, material);
                 sender.sendMessage(material + ": " + ChatColor.GRAY + action);
             }
 
         } else {
             //displaying all available kits
-            sender.sendMessage(Utils.getStandardHeading(parkourKit.size() + " ParkourKit found"));
+            sender.sendMessage(getStandardHeading(parkourKit.size() + " ParkourKit found"));
             for (String kit : parkourKit) {
                 sender.sendMessage("* " + kit);
             }
@@ -860,7 +801,7 @@ public final class Utils {
         if (Parkour.getPlugin().getConfig().getBoolean("OnJoin.Item.HideAll.Global") || override) {
             playerScope = (List<Player>) Bukkit.getOnlinePlayers();
         } else {
-            playerScope = Utils.getOnlineParkourPlayers();
+            playerScope = getOnlineParkourPlayers();
         }
 
         for (Player players : playerScope) {
@@ -871,10 +812,10 @@ public final class Utils {
         }
         if (enabled) {
             Static.removeHidden(player.getName());
-            player.sendMessage(Utils.getTranslation("Event.HideAll1"));
+            player.sendMessage(getTranslation("Event.HideAll1"));
         } else {
             Static.addHidden(player.getName());
-            player.sendMessage(Utils.getTranslation("Event.HideAll2"));
+            player.sendMessage(getTranslation("Event.HideAll2"));
         }
     }
 
@@ -901,7 +842,7 @@ public final class Utils {
         }
 
         //check if player is standing in a half-block
-        if (!block.getType().equals(Material.AIR) && !block.getType().equals(Utils.lookupMaterial(Parkour.getPlugin().getConfig().getString("OnCourse.CheckpointMaterial")))) {
+        if (!block.getType().equals(Material.AIR) && !block.getType().equals(lookupMaterial(Parkour.getPlugin().getConfig().getString("OnCourse.CheckpointMaterial")))) {
             player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + block.getType());
             return false;
         }
@@ -943,7 +884,7 @@ public final class Utils {
 
         if (Parkour.getSettings().isDisplayPrizeCooldown()) {
             String timeRemaining = displayTimeRemaining(daysDelay - timeDifference);
-            player.sendMessage(Utils.getTranslation("Error.PrizeCooldown").replace("%TIME%", timeRemaining));
+            player.sendMessage(getTranslation("Error.PrizeCooldown").replace("%TIME%", timeRemaining));
         }
         return false;
     }
@@ -1036,6 +977,6 @@ public final class Utils {
      */
     public static int getMinorServerVersion() {
         String version = Bukkit.getBukkitVersion().split("\\.")[1];
-        return Utils.isNumber(version) ? Integer.valueOf(version) : 12;
+        return isNumber(version) ? Integer.valueOf(version) : 12;
     }
 }

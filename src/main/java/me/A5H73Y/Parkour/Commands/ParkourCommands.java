@@ -9,6 +9,7 @@ import me.A5H73Y.Parkour.Enums.ConversationType;
 import me.A5H73Y.Parkour.Managers.QuietModeManager;
 import me.A5H73Y.Parkour.Other.Help;
 import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.ParkourKit.ParkourKitInfo;
 import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
@@ -341,7 +342,7 @@ public class ParkourCommands implements CommandExecutor {
             if (!Utils.hasPermission(player, "Parkour.Admin"))
                 return false;
 
-            Utils.validateParkourKit(args, player);
+            ParkourKitInfo.validateParkourKit(args, player);
 
         } else if (args[0].equalsIgnoreCase("challenge")) {
             if (!Utils.hasPermission(player, "Parkour.Basic", "Challenge"))

@@ -1,8 +1,8 @@
 package me.A5H73Y.Parkour.Commands;
 
 import me.A5H73Y.Parkour.Course.CourseInfo;
+import me.A5H73Y.Parkour.ParkourKit.ParkourKitInfo;
 import me.A5H73Y.Parkour.Player.PlayerInfo;
-import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -13,7 +13,7 @@ import java.util.*;
 public class ParkourAutoTabCompleter implements TabCompleter {
 
     private static final Set<String> basicCmds = new HashSet<>(
-            Arrays.asList("challenge", "leaderboard", "invite", "kit", "kitlist", "tp", "tpc"));
+            Arrays.asList("challenge", "leaderboard", "invite", "kit", "listkit", "tp", "tpc"));
 
     private static final Set<String> adminCmds = new HashSet<>(
             Arrays.asList("setstart", "setlobby", "economy", "createkit", "editkit", "validatekit", "recreate",
@@ -117,9 +117,7 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 				list.add("lobby");
 				list.add("kit");
 			} else if (args[0].equalsIgnoreCase("kit") || args[0].equalsIgnoreCase("listkit") || args[0].equalsIgnoreCase("validatekit")) {
-				for (String kit : Utils.getParkourKitList()) {
-					list.add(kit);
-				}
+				list.addAll(ParkourKitInfo.getParkourKitNames());
 			} else if (args[0].equalsIgnoreCase("reset")) {
 				list.add("course");
 				list.add("player");
@@ -128,13 +126,9 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 			}
 		} else if (args.length == 3) {
 			if ((args[0].equalsIgnoreCase("reset") || args[0].equalsIgnoreCase("delete")) && args[1].equalsIgnoreCase("course")) {
-				for (String course : CourseInfo.getAllCourses()) {
-					list.add(course);
-				}
+				 list.addAll(CourseInfo.getAllCourses());
 			} else if ((args[0].equalsIgnoreCase("delete") && args[1].equalsIgnoreCase("kit")) || args[0].equalsIgnoreCase("linkkit")) {
-				for (String kit : Utils.getParkourKitList()) {
-					list.add(kit);
-				}
+				list.addAll(ParkourKitInfo.getParkourKitNames());
 			}
 		}
 		

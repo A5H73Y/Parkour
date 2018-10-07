@@ -1,15 +1,16 @@
 package me.A5H73Y.Parkour.Other;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.ParkourKit.ParkourKitInfo;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
-
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class Configurations {
 
@@ -225,7 +226,7 @@ public class Configurations {
     public void saveParkourKit() {
         try {
             if (!kitData.contains("ParkourKit.default")) {
-                ParkourKit.createStandardKit(kitData, Constants.DEFAULT);
+                ParkourKitInfo.createStandardKit(kitData, Constants.DEFAULT);
             }
             kitData.save(kitFile);
         } catch (IOException ex) {

@@ -1,12 +1,14 @@
 package me.A5H73Y.Parkour.Conversation;
 
 import me.A5H73Y.Parkour.Conversation.other.AddKitItemConversation;
-import me.A5H73Y.Parkour.Other.ParkourKit;
 import me.A5H73Y.Parkour.Parkour;
-
+import me.A5H73Y.Parkour.ParkourKit.ParkourKitInfo;
 import me.A5H73Y.Parkour.Utilities.Static;
 import org.bukkit.ChatColor;
-import org.bukkit.conversations.*;
+import org.bukkit.conversations.BooleanPrompt;
+import org.bukkit.conversations.ConversationContext;
+import org.bukkit.conversations.Prompt;
+import org.bukkit.conversations.StringPrompt;
 
 public class CreateParkourKitConversation extends StringPrompt {
 
@@ -49,7 +51,7 @@ public class CreateParkourKitConversation extends StringPrompt {
 
             if (input) {
                 context.getForWhom().sendRawMessage(Static.getParkourString() + name + " will use standard blocks...");
-                ParkourKit.createStandardKit(Parkour.getParkourConfig().getParkourKitData(), name);
+                ParkourKitInfo.createStandardKit(Parkour.getParkourConfig().getParkourKitData(), name);
                 Parkour.getParkourConfig().saveParkourKit();
             }
 

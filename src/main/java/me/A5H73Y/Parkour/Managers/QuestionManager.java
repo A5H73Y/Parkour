@@ -1,16 +1,15 @@
 package me.A5H73Y.Parkour.Managers;
 
-import me.A5H73Y.Parkour.Course.CourseInfo;
-import me.A5H73Y.Parkour.Course.LobbyMethods;
-import me.A5H73Y.Parkour.Other.ParkourKit;
 import me.A5H73Y.Parkour.Course.CheckpointMethods;
+import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Course.CourseMethods;
+import me.A5H73Y.Parkour.Course.LobbyMethods;
 import me.A5H73Y.Parkour.Enums.QuestionType;
+import me.A5H73Y.Parkour.ParkourKit.ParkourKitInfo;
 import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -152,7 +151,7 @@ public class QuestionManager {
                     return;
 
                 case DELETE_KIT:
-                    ParkourKit.deleteKit(argument);
+                    ParkourKitInfo.deleteKit(argument);
                     player.sendMessage(Static.getParkourString() + "ParkoutKit " + ChatColor.AQUA + argument + ChatColor.WHITE + " deleted...");
                     Utils.logToFile("ParkourKit " + argument + " was deleted by " + player.getName());
                     return;

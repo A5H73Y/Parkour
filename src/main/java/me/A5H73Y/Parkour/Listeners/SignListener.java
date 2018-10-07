@@ -53,9 +53,8 @@ public class SignListener implements Listener {
 			} else if (event.getLine(1).equalsIgnoreCase("leaderboards") || event.getLine(1).equalsIgnoreCase("lb")) {
 				sm.createLeaderboardsSign(event, player);
 
-			} else if (event.getLine(1).equalsIgnoreCase("setpoint") || event.getLine(1).equalsIgnoreCase("sp")) {
-				//event.getBlock().breakNaturally();
-				event.getPlayer().sendMessage(Static.getParkourString() + "SetPoint signs are no longer supported. Please convert to using the new checkpoint system, to learn more enter '/pa help checkpoint'");
+			} else if (event.getLine(1).equalsIgnoreCase("checkpoint") || event.getLine(1).equalsIgnoreCase("c")) {
+				sm.createCheckpointSign(event, player, "Checkpoint");
 
 			} else {
 				player.sendMessage(Utils.getTranslation("Error.UnknownSignCommand"));
@@ -126,7 +125,7 @@ public class SignListener implements Listener {
 
 			CourseMethods.joinCourse(event.getPlayer(), lines[2]);
 
-		} else if (lines[1].equalsIgnoreCase("setpoint")) {
+		} else if (lines[1].equalsIgnoreCase("checkpoint")) {
 			if (lines[2].isEmpty() || !CourseMethods.exist(lines[2])) {
 				event.getPlayer().sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", lines[2]));
 				return;
@@ -137,6 +136,9 @@ public class SignListener implements Listener {
 			}
 
 			ParkourSession session = PlayerMethods.getParkourSession(event.getPlayer().getName());
+
+			if (lines[3].isEmpty() || !Utils.isNumber(lines[3]))
+			    return;
 
 			if (session.getCheckpoint() == session.getCourse().getCheckpoints())
 				return;
