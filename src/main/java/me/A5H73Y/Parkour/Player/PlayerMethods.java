@@ -236,7 +236,7 @@ public class PlayerMethods {
         Parkour.getScoreboardManager().removeScoreboard(player);
         Bukkit.getServer().getPluginManager().callEvent(new PlayerFinishCourseEvent(player, courseName));
     }
-    
+
     /**
      * Check if the player's time is a new course or personal record.
      * @param player
@@ -621,7 +621,9 @@ public class PlayerMethods {
      * @param player
      */
     public static void givePlayerKit(String[] args, Player player) {
-        player.getInventory().clear();
+        if (Parkour.getPlugin().getConfig().getBoolean("Other.ParkourKit.ReplaceInventory")) {
+            player.getInventory().clear();
+        }
         ParkourKit kit;
 
         if (args != null && args.length == 2) {

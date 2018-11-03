@@ -49,7 +49,6 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 			list.add("accept");
 			list.add("bug");
 			list.add("cmds");
-			list.add("create");
 			
 			if (sender.hasPermission("Parkour.Basic.*") || sender.hasPermission("Parkour.*")) {
 				list.addAll(basicCmds);
