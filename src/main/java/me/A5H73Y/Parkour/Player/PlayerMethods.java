@@ -95,6 +95,7 @@ public class PlayerMethods {
         teardownPlayerMode(player);
         removePlayer(player.getName());
         preparePlayer(player, Parkour.getPlugin().getConfig().getInt("OnFinish.SetGamemode"));
+        restoreHealth(player);
         loadInventory(player);
 
         if (Parkour.getPlugin().getConfig().getBoolean("OnDie.SetXPBarToDeathCount"))
@@ -213,6 +214,7 @@ public class PlayerMethods {
         final boolean teleportAway = Parkour.getPlugin().getConfig().getBoolean("OnFinish.TeleportAway");
 
         if (delay <= 0) {
+        	restoreHealth(player);
             loadInventory(player);
             givePrize(player, courseName);
             if (teleportAway) {
@@ -220,6 +222,7 @@ public class PlayerMethods {
             }
         } else {
             Bukkit.getScheduler().scheduleSyncDelayedTask(Parkour.getPlugin(), () -> {
+            	restoreHealth(player);
                 loadInventory(player);
                 givePrize(player, courseName);
                 if (teleportAway) {
@@ -671,6 +674,7 @@ public class PlayerMethods {
      */
     private static void prepareJoinPlayer(Player player, String courseName) {
         saveInventory(player);
+        saveHealth(player);
         preparePlayer(player, Parkour.getPlugin().getConfig().getInt("OnJoin.SetGamemode"));
 
         if (Parkour.getPlugin().getConfig().getBoolean("OnJoin.FillHealth"))
@@ -709,6 +713,17 @@ public class PlayerMethods {
         }
 
         player.updateInventory();
+    }
+    
+    /**
+     * Prepare the player for Parkour
+     * Store the player's health and hunger.
+     * @param player
+     */
+    private static void saveHealth(Player player) {
+    	Parkour.getParkourConfig().getInvData().set(player.getName() + ".Health", player.getHealth());
+    	Parkour.getParkourConfig().getInvData().set(player.getName() + ".Hunger", player.getFoodLevel());
+    	Parkour.getParkourConfig().saveInv();
     }
 
     /**
@@ -765,7 +780,7 @@ public class PlayerMethods {
      *
      * @param player
      */
-    public static void loadInventory(Player player) {
+    private static void loadInventory(Player player) {
         if (!Parkour.getPlugin().getConfig().getBoolean("Other.Parkour.InventoryManagement"))
             return;
 
@@ -799,6 +814,20 @@ public class PlayerMethods {
         player.updateInventory();
 
         Parkour.getParkourConfig().getInvData().set(player.getName(), null);
+        Parkour.getParkourConfig().saveInv();
+    }
+    /**
+     * Load the players original health.
+     * When they leave or finish a course, their hunger and exhaustion will be restored to them.
+     * Will delete the health from the config once loaded.
+     *
+     * @param player
+     */
+    private static void restoreHealth(Player player) {
+    	player.setHealth(Parkour.getParkourConfig().getInvData().getDouble(player.getName() + ".Health"));
+    	player.setFoodLevel(Parkour.getParkourConfig().getInvData().getInt(player.getName() + ".Hunger"));
+    	Parkour.getParkourConfig().getInvData().set(player.getName() + ".Health", null);
+    	Parkour.getParkourConfig().getInvData().set(player.getName() + ".Hunger", null);
         Parkour.getParkourConfig().saveInv();
     }
 
