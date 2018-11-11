@@ -686,19 +686,19 @@ public class PlayerMethods {
         }
 
         if (Parkour.getSettings().getLastCheckpointTool() != null && !player.getInventory().contains(Parkour.getSettings().getLastCheckpointTool()))
-            player.getInventory().addItem(Utils.getItemStack(
+            player.getInventory().setItem(Parkour.getSettings().getLastCheckPointToolSlot(), Utils.getItemStack(
                     Parkour.getSettings().getLastCheckpointTool(), Utils.getTranslation("Other.Item_LastCheckpoint", false)));
 
         if (Parkour.getSettings().getHideallTool() != null && !player.getInventory().contains(Parkour.getSettings().getHideallTool()))
-            player.getInventory().addItem(Utils.getItemStack(
+            player.getInventory().setItem(Parkour.getSettings().getHideallToolSlot(), Utils.getItemStack(
                     Parkour.getSettings().getHideallTool(), Utils.getTranslation("Other.Item_HideAll", false)));
 
         if (Parkour.getSettings().getLeaveTool() != null && !player.getInventory().contains(Parkour.getSettings().getLeaveTool()))
-            player.getInventory().addItem(Utils.getItemStack(
+            player.getInventory().setItem(Parkour.getSettings().getLeaveToolSlot(), Utils.getItemStack(
                     Parkour.getSettings().getLeaveTool(), Utils.getTranslation("Other.Item_Leave", false)));
 
         if (Parkour.getSettings().getRestartTool() != null && !player.getInventory().contains(Parkour.getSettings().getRestartTool()))
-            player.getInventory().addItem(Utils.getItemStack(
+            player.getInventory().setItem(Parkour.getSettings().getRestartToolSlot(), Utils.getItemStack(
                     Parkour.getSettings().getRestartTool(), Utils.getTranslation("Other.Item_Restart", false)));
 
         if (CourseInfo.hasJoinItem(courseName)) {
