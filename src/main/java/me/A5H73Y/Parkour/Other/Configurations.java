@@ -422,10 +422,14 @@ public class Configurations {
         config.addDefault("OnJoin.EnforceFinished", true);
         config.addDefault("OnJoin.FillHealth", true);
         config.addDefault("OnJoin.Item.LastCheckpoint.Material", "ARROW");
+        config.addDefault("OnJoin.Item.LastCheckpoint.Slot", 0);
         config.addDefault("OnJoin.Item.HideAll.Material", "BONE");
+        config.addDefault("OnJoin.Item.HideAll.Slot", 1);
         config.addDefault("OnJoin.Item.HideAll.Global", true);
         config.addDefault("OnJoin.Item.Leave.Material", "SAPLING");
+        config.addDefault("OnJoin.Item.Leave.Slot", 2);
         config.addDefault("OnJoin.Item.Restart.Material", "STICK");
+        config.addDefault("OnJoin.Item.Restart.Slot", 3);
         config.addDefault("OnJoin.SetGamemode", 0);
         config.addDefault("OnJoin.TreatFirstCheckpointAsStart", false);
 

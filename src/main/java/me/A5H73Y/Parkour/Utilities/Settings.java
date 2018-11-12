@@ -98,21 +98,37 @@ public class Settings {
 		Material lastCheckpointTool = Utils.lookupMaterial(getConfig().getString("OnJoin.Item.LastCheckpoint.Material"));
         return lastCheckpointTool == Material.AIR ? null : lastCheckpointTool;
 	}
+	
+	public int getLastCheckPointToolSlot() {
+		return Parkour.getPlugin().getConfig().getInt("OnJoin.Item.LastCheckpoint.Slot", 0);
+	}
 
 	public Material getHideallTool() {
 		Material hideallTool = Utils.lookupMaterial(getConfig().getString("OnJoin.Item.HideAll.Material"));
         return hideallTool == Material.AIR ? null : hideallTool;
+	}
+	
+	public int getHideallToolSlot() {
+		return Parkour.getPlugin().getConfig().getInt("OnJoin.Item.HideAll.Slot", 1);
 	}
 
 	public Material getLeaveTool() {
 		Material leaveTool = Utils.lookupMaterial(getConfig().getString("OnJoin.Item.Leave.Material"));
         return leaveTool == Material.AIR ? null : leaveTool;
 	}
+	
+	public int getLeaveToolSlot() {
+		return Parkour.getPlugin().getConfig().getInt("OnJoin.Item.Leave.Slot", 2);
+	}
 
     public Material getRestartTool() {
 		Material restartTool = Utils.lookupMaterial(getConfig().getString("OnJoin.Item.Restart.Material"));
         return restartTool == Material.AIR ? null : restartTool;
     }
+    
+    public int getRestartToolSlot() {
+		return Parkour.getPlugin().getConfig().getInt("OnJoin.Item.Restart.Slot", 3);
+	}
 
     public Material getAutoStartMaterial() {
 	    return Utils.lookupMaterial(getConfig().getString("AutoStart.Material"));
