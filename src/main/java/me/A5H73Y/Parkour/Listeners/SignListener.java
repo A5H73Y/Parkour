@@ -25,7 +25,7 @@ public class SignListener implements Listener {
 
 	private final SignMethods sm = new SignMethods();
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onSignCreate(SignChangeEvent event) {
 		if (event.getLine(0).equalsIgnoreCase("[parkour]") || event.getLine(0).equalsIgnoreCase("[pa]")) {
 			Player player = event.getPlayer();
@@ -66,7 +66,7 @@ public class SignListener implements Listener {
 		}
 	}
 
-	@EventHandler 
+	@EventHandler(ignoreCancelled = true)
 	public void onSignBreak(PlayerInteractEvent event) {
 		if (event.getAction() != Action.LEFT_CLICK_BLOCK) 
 			return;
@@ -92,7 +92,7 @@ public class SignListener implements Listener {
 		event.getPlayer().sendMessage(Static.getParkourString() + "Sign Removed!");
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onSignInteract(PlayerInteractEvent event) {
 		if (event.getAction() != Action.RIGHT_CLICK_BLOCK)  
 			return;

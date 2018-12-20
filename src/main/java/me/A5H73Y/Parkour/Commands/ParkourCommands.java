@@ -6,6 +6,7 @@ import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Course.LobbyMethods;
 import me.A5H73Y.Parkour.Enums.ConversationType;
+import me.A5H73Y.Parkour.GUI.ParkourCoursesInventory;
 import me.A5H73Y.Parkour.Managers.QuietModeManager;
 import me.A5H73Y.Parkour.Other.Help;
 import me.A5H73Y.Parkour.Parkour;
@@ -20,6 +21,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 public class ParkourCommands implements CommandExecutor {
 
@@ -450,6 +452,11 @@ public class ParkourCommands implements CommandExecutor {
             Utils.reloadConfig();
             player.sendMessage(Utils.getTranslation("Other.Reload"));
             Utils.logToFile(player.getName() + " reloaded the Parkour config");
+
+            //TODO move me up further, and document me everywhere
+        } else if (args[0].equalsIgnoreCase("joinall")) {
+            Inventory inv = new ParkourCoursesInventory().buildInventory(player, 1);
+            player.openInventory(inv);
 
         } else {
             player.sendMessage(Utils.getTranslation("Error.UnknownCommand"));

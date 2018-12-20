@@ -148,7 +148,7 @@ public class PlayerInfo {
     }
 
     /**
-     * Set the player's PatrkourRank
+     * Set the player's ParkourRank
      * @param player
      * @param rank
      */

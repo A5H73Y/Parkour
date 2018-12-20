@@ -1,5 +1,5 @@
 name: Parkour
-version: 5.1
+version: 5.2
 description: The original and most powerful Parkour plugin available
 softdepend: [Vault, BountifulAPI]
 author: A5H73Y
