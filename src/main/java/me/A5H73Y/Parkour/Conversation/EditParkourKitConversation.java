@@ -9,25 +9,37 @@ import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.FixedSetPrompt;
 import org.bukkit.conversations.Prompt;
+import org.bukkit.entity.Player;
 
-public class EditParkourKitConversation extends FixedSetPrompt {
+public class EditParkourKitConversation extends ParkourConversation {
 
-    EditParkourKitConversation() {
-        super(ParkourKitInfo.getParkourKitNames().toArray(new String[0]));
+    public EditParkourKitConversation(Player player) {
+        super(player);
     }
 
     @Override
-    public String getPromptText(ConversationContext context) {
-        return ChatColor.LIGHT_PURPLE + " What ParkourKit would you like to edit?\n" +
-                ChatColor.GREEN + formatFixedSet();
+    public Prompt getEntryPrompt() {
+        return new ChooseParkourKit();
     }
 
-    @Override
-    protected Prompt acceptValidatedInput(ConversationContext context, String choice) {
-        context.setSessionData("kit", choice);
-        return new ChooseOption();
-    }
+    private class ChooseParkourKit extends FixedSetPrompt {
 
+        ChooseParkourKit() {
+            super(ParkourKitInfo.getParkourKitNames().toArray(new String[0]));
+        }
+
+        @Override
+        public String getPromptText(ConversationContext context) {
+            return ChatColor.LIGHT_PURPLE + " What ParkourKit would you like to edit?\n" +
+                    ChatColor.GREEN + formatFixedSet();
+        }
+
+        @Override
+        protected Prompt acceptValidatedInput(ConversationContext context, String choice) {
+            context.setSessionData("kit", choice);
+            return new ChooseOption();
+        }
+    }
 
     private class ChooseOption extends FixedSetPrompt {
         ChooseOption() {

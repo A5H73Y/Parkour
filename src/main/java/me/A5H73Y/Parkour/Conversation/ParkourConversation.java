@@ -1,7 +1,6 @@
 package me.A5H73Y.Parkour.Conversation;
 
 import me.A5H73Y.Parkour.Parkour;
-import me.A5H73Y.Parkour.Enums.ConversationType;
 import me.A5H73Y.Parkour.Utilities.Static;
 
 import org.bukkit.ChatColor;
@@ -13,14 +12,16 @@ import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 
-public class ParkourConversation implements ConversationAbandonedListener {
+public abstract class ParkourConversation implements ConversationAbandonedListener {
 
     private ConversationFactory conversationFactory;
+
+    public abstract Prompt getEntryPrompt();
 
     private String courseName;
     private Player player;
 
-    public ParkourConversation(Player player, ConversationType conversationType) {
+    public ParkourConversation(Player player) {
         this.player = player;
 
         conversationFactory = new ConversationFactory(Parkour.getPlugin())
@@ -28,26 +29,9 @@ public class ParkourConversation implements ConversationAbandonedListener {
                 .withTimeout(30)
                 .thatExcludesNonPlayersWithMessage("This is only possible in game, sorry.")
                 .addConversationAbandonedListener(this)
-                .withFirstPrompt(getEntryPrompt(conversationType, player));
-    }
+                .withFirstPrompt(getEntryPrompt());
 
-    private Prompt getEntryPrompt(ConversationType type, Player player) {
         player.sendMessage(ChatColor.GRAY + "Note: Enter 'cancel' to quit the conversation.");
-        switch (type) {
-            case PARKOURKIT:
-                return new CreateParkourKitConversation();
-            case COURSEPRIZE:
-                return new CoursePrizeConversation();
-            case LEADERBOARD:
-                return new LeaderboardConversation();
-            case PARKOURMODE:
-                return new ParkourModeConversation();
-            case EDITPARKOURKIT:
-                return new EditParkourKitConversation();
-            default:
-                player.sendMessage(ChatColor.RED + "Something went wrong.");
-                return null;
-        }
     }
 
     @Override

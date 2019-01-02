@@ -15,23 +15,35 @@ import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
 
-public class LeaderboardConversation extends StringPrompt {
+public class LeaderboardConversation extends ParkourConversation {
 
-	@Override
-	public String getPromptText(ConversationContext context) {
-		return ChatColor.LIGHT_PURPLE + " Which course would you like to view?";
+	public LeaderboardConversation(Player player) {
+		super(player);
 	}
 
 	@Override
-	public Prompt acceptInput(ConversationContext context, String message) {
-		if (!CourseInfo.getAllCourses().contains(message.toLowerCase())) {
-			ParkourConversation.sendErrorMessage(context, "This course does not exist");
-			return this;
+	public Prompt getEntryPrompt() {
+		return new ChooseCourse();
+	}
+
+	private class ChooseCourse extends StringPrompt {
+
+		@Override
+		public String getPromptText(ConversationContext context) {
+			return ChatColor.LIGHT_PURPLE + " Which course would you like to view?";
 		}
 
-		context.setSessionData("course", message.toLowerCase());
-		return new ChooseType();
-	}		
+		@Override
+		public Prompt acceptInput(ConversationContext context, String message) {
+			if (!CourseInfo.getAllCourses().contains(message.toLowerCase())) {
+				ParkourConversation.sendErrorMessage(context, "This course does not exist");
+				return this;
+			}
+
+			context.setSessionData("course", message.toLowerCase());
+			return new ChooseType();
+		}
+	}
 
 	private class ChooseType extends FixedSetPrompt {
 

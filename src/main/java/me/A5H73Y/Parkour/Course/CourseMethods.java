@@ -4,9 +4,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import me.A5H73Y.Parkour.Conversation.CoursePrizeConversation;
+import me.A5H73Y.Parkour.Conversation.LeaderboardConversation;
+import me.A5H73Y.Parkour.Conversation.ParkourModeConversation;
 import me.A5H73Y.Parkour.Parkour;
-import me.A5H73Y.Parkour.Conversation.ParkourConversation;
-import me.A5H73Y.Parkour.Enums.ConversationType;
 import me.A5H73Y.Parkour.Enums.ParkourMode;
 import me.A5H73Y.Parkour.Managers.ChallengeManager;
 import me.A5H73Y.Parkour.ParkourKit.ParkourKit;
@@ -357,7 +358,7 @@ public class CourseMethods {
             return;
         }
 
-        new ParkourConversation(player, ConversationType.COURSEPRIZE).withCourseName(args[1].toLowerCase()).begin();
+        new CoursePrizeConversation(player).withCourseName(args[1].toLowerCase()).begin();
     }
 
     /**
@@ -861,7 +862,7 @@ public class CourseMethods {
             return;
 
         if (args.length == 1) {
-            new ParkourConversation(player, ConversationType.LEADERBOARD).begin();
+            new LeaderboardConversation(player).begin();
             return;
         }
         if (!CourseMethods.exist(args[1])) {
@@ -907,7 +908,7 @@ public class CourseMethods {
             player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
             return;
         }
-        new ParkourConversation(player, ConversationType.PARKOURMODE).withCourseName(args[1].toLowerCase()).begin();
+        new ParkourModeConversation(player).withCourseName(args[1].toLowerCase()).begin();
     }
 
     /**

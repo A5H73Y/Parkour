@@ -13,31 +13,44 @@ import org.bukkit.conversations.MessagePrompt;
 import org.bukkit.conversations.NumericPrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
+import org.bukkit.entity.Player;
 
-public class CoursePrizeConversation extends FixedSetPrompt {
+public class CoursePrizeConversation extends ParkourConversation {
 
-	CoursePrizeConversation() {
-		super("material", "command", "xp");
+	public CoursePrizeConversation(Player player) {
+		super(player);
 	}
 
 	@Override
-	public String getPromptText(ConversationContext context) {
-		return ChatColor.LIGHT_PURPLE + " What type of prize would you like to set?\n" 
-				+ ChatColor.GREEN + formatFixedSet();
+	public Prompt getEntryPrompt() {
+		return new PrizeType();
 	}
 
-	@Override
-	protected Prompt acceptValidatedInput(ConversationContext context, String choice) {
-		if (choice.equalsIgnoreCase("material"))
-			return new ChooseBlock();
+	private class PrizeType extends FixedSetPrompt {
 
-		if (choice.equalsIgnoreCase("command"))
-			return new ChooseCommand();
+		public PrizeType() {
+			super("material", "command", "xp");
+		}
 
-		if (choice.equalsIgnoreCase("xp"))
-			return new ChooseXP();
+		@Override
+		public String getPromptText(ConversationContext context) {
+			return ChatColor.LIGHT_PURPLE + " What type of prize would you like to set?\n"
+					+ ChatColor.GREEN + formatFixedSet();
+		}
 
-		return null;
+		@Override
+		protected Prompt acceptValidatedInput(ConversationContext context, String choice) {
+			if (choice.equalsIgnoreCase("material"))
+				return new ChooseBlock();
+
+			if (choice.equalsIgnoreCase("command"))
+				return new ChooseCommand();
+
+			if (choice.equalsIgnoreCase("xp"))
+				return new ChooseXP();
+
+			return null;
+		}
 	}
 
     /* BEGIN MATERIAL PRIZE */

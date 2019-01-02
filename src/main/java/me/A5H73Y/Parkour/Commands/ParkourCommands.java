@@ -1,11 +1,11 @@
 package me.A5H73Y.Parkour.Commands;
 
-import me.A5H73Y.Parkour.Conversation.ParkourConversation;
+import me.A5H73Y.Parkour.Conversation.CreateParkourKitConversation;
+import me.A5H73Y.Parkour.Conversation.EditParkourKitConversation;
 import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Course.LobbyMethods;
-import me.A5H73Y.Parkour.Enums.ConversationType;
 import me.A5H73Y.Parkour.GUI.ParkourCoursesInventory;
 import me.A5H73Y.Parkour.Managers.QuietModeManager;
 import me.A5H73Y.Parkour.Other.Help;
@@ -317,13 +317,13 @@ public class ParkourCommands implements CommandExecutor {
             if (!Utils.hasPermission(player, "Parkour.Admin"))
                 return false;
 
-            new ParkourConversation(player, ConversationType.PARKOURKIT).begin();
+            new CreateParkourKitConversation(player).begin();
 
         } else if (args[0].equalsIgnoreCase("editparkourkit") || args[0].equalsIgnoreCase("editkit")) {
             if (!Utils.hasPermission(player, "Parkour.Admin"))
                 return false;
 
-            new ParkourConversation(player, ConversationType.EDITPARKOURKIT).begin();
+            new EditParkourKitConversation(player).begin();
 
         } else if (args[0].equalsIgnoreCase("linkkit")) {
             if (!Utils.validateArgs(player, args, 3))

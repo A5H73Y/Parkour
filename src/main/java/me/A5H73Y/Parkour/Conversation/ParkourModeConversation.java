@@ -7,29 +7,42 @@ import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.FixedSetPrompt;
 import org.bukkit.conversations.Prompt;
+import org.bukkit.entity.Player;
 
-public class ParkourModeConversation extends FixedSetPrompt {
+public class ParkourModeConversation extends ParkourConversation{
 
-	ParkourModeConversation() {
-		super("freedom", "darkness", "drunk", "speedy", "moon", "dropper", "rockets", "none");
+	public ParkourModeConversation(Player player) {
+		super(player);
 	}
 
 	@Override
-	public String getPromptText(ConversationContext context) {
-		return ChatColor.LIGHT_PURPLE + " What type of ParkourMode would you like to set?\n" 
-				+ ChatColor.GREEN + formatFixedSet();
+	public Prompt getEntryPrompt() {
+		return new ChooseParkourMode();
 	}
 
-	@Override
-	protected Prompt acceptValidatedInput(ConversationContext context, String choice) {
-		String courseName = (String) context.getSessionData("courseName");
+	private class ChooseParkourMode extends FixedSetPrompt {
 
-		CourseInfo.setMode(courseName, choice);
+		ChooseParkourMode() {
+			super("freedom", "darkness", "drunk", "speedy", "moon", "dropper", "rockets", "none");
+		}
 
-		context.getForWhom().sendRawMessage(Utils.getTranslation("Parkour.SetMode")
-				.replace("%COURSE%", courseName)
-				.replace("%MODE%", choice));
+		@Override
+		public String getPromptText(ConversationContext context) {
+			return ChatColor.LIGHT_PURPLE + " What type of ParkourMode would you like to set?\n"
+					+ ChatColor.GREEN + formatFixedSet();
+		}
 
-		return Prompt.END_OF_CONVERSATION;
+		@Override
+		protected Prompt acceptValidatedInput(ConversationContext context, String choice) {
+			String courseName = (String) context.getSessionData("courseName");
+
+			CourseInfo.setMode(courseName, choice);
+
+			context.getForWhom().sendRawMessage(Utils.getTranslation("Parkour.SetMode")
+					.replace("%COURSE%", courseName)
+					.replace("%MODE%", choice));
+
+			return Prompt.END_OF_CONVERSATION;
+		}
 	}
 }
