@@ -69,9 +69,18 @@ public class ParkourSession implements Serializable {
 
                 if (Parkour.getScoreboardManager().isEnabled() && useScoreboard) {
                     Parkour.getScoreboardManager().updateScoreboardTimer(player, liveTime);
+
                 } else if (Static.getBountifulAPI()) {
                     Utils.sendActionBar(player, liveTime, true);
                 }
+
+                if (course.hasMaxTime()) {
+                	if (seconds >= course.getMaxTime()) {
+						player.sendMessage(Utils.getTranslation("Parkour.MaxTime")
+								.replace("%TIME%", Utils.convertSecondsToTime(course.getMaxTime())));
+                		PlayerMethods.playerLeave(player);
+					}
+				}
             }
         }.runTaskTimer(Parkour.getPlugin(), 20, 20);
 

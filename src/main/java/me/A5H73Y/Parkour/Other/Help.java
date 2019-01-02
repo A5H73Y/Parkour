@@ -34,6 +34,10 @@ public final class Help {
 			displayHelpMessage(sender, "Join a Course", "/pa join (courseName)", "/pa join tutorial",
 					" You are able to join a course using its name, without having to use the correct case. Each course has a unique numeric identifier (courseID) which can be used to join the course instead of its name. Once you have joined a course, you are in 'Parkour Mode', which allows you to interact with the ParkourKit and track your statistics.");
 
+		} else if (args[1].equalsIgnoreCase("joinall")) {
+			displayHelpMessage(sender, "Display Join Courses Menu", "/pa joinall", null,
+					" Display all the Parkour courses available in a scrollable menu. Simply right click the course entry to join it.");
+
 		} else if (args[1].equalsIgnoreCase("leave")) {
 			displayHelpMessage(sender, "Leave a Course", "/pa leave", null,
 					" Leaving the course you are currently playing will terminate all information tracking your current progress, and you will be teleported back to the Parkour lobby.");
@@ -165,6 +169,10 @@ public final class Help {
 		} else if (args[1].equalsIgnoreCase("setmaxdeath")) {
 			displayHelpMessage(sender, "Set maximum amount of deaths for course", "/pa setmaxdeath (course) (amount)", "/pa setmaxdeath tutorial 5",
 					" By default, a course does not have a maximum amount of deaths. However, you can enforce a limit on the amount of deaths the player can accumulate before being forced to leave the course.");
+
+		} else if (args[1].equalsIgnoreCase("setmaxtime")) {
+			displayHelpMessage(sender, "Set a time limit for the course", "/pa setmaxtime (course) (seconds)", "/pa setmaxtime tutorial 30",
+					" By default, a course does not have a maximum time limit. However, you can enforce a time limit the course must be completed by before being forced to leave the course.");
 
 		} else if (args[1].equalsIgnoreCase("rewardonce")) {
 			displayHelpMessage(sender, "Reward only once for that course", "/pa rewardonce (course)", "/pa rewardonce tutorial",
@@ -362,7 +370,8 @@ public final class Help {
 		displayCommandUsage(player, "quiet", null, "Toggle visibility of Parkour messages");
 		displayCommandUsage(player, "invite", "(player)", "Invite the player to the course");
 		displayCommandUsage(player, "challenge", "(course) (player)", "Challenge player to course");
-		displayCommandUsage(player, "help | contact", null, "To get help or contact me");
+		displayCommandUsage(player, "joinall", null, "Join All Courses Menu");
+        displayCommandUsage(player, "help | contact", null, "To get help or contact me");
 		displayCommandUsage(player, "about | version", null, "Display Parkour information");
 	}
 
@@ -403,7 +412,8 @@ public final class Help {
 		displayCommandUsage(player, "setmode", "(course)", "Set Parkour Mode");
 		displayCommandUsage(player, "setjoinitem", "(course) (material) (amount)", "Join item");
 		displayCommandUsage(player, "setminlevel", "(course) (level)", "Set course minimum level");
-		displayCommandUsage(player, "setmaxdeath", "(course) (death)", "Set course max deaths");
+		displayCommandUsage(player, "setmaxdeath", "(course) (deaths)", "Set course max deaths");
+		displayCommandUsage(player, "setmaxtime", "(course) (seconds)", "Set course time limit");
 		displayCommandUsage(player, "rewardonce", "(course)", "Toggle if the prize is given once");
 		displayCommandUsage(player, "rewardlevel", "(course) (level)", "Reward level on complete");
 		displayCommandUsage(player, "rewardleveladd", "(course) (amount)", "Reward level addon");
@@ -476,15 +486,15 @@ public final class Help {
 			player.sendMessage(Static.getParkourString() + "Successfully linked with Vault.");
 
 		} else if (args[1].equalsIgnoreCase("setprize")) {
-			if (!(args.length == 4)) {
+			if (args.length != 4) {
 				player.sendMessage(Utils.invalidSyntax("econ", "setprize (course) (amount)"));
 				return;
 			}
-			if (!(CourseMethods.exist(args[2]))) {
+			if (!CourseMethods.exist(args[2])) {
 				player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[2]));
 				return;
 			}
-			if (!(Utils.isNumber(args[3]))) {
+			if (!Utils.isPositiveNumber(args[3])) {
 				player.sendMessage(Static.getParkourString() + "Amount needs to be numeric.");
 				return;
 			}
@@ -494,15 +504,15 @@ public final class Help {
 			player.sendMessage(Static.getParkourString() + "Prize for " + args[2] + " set to " + args[3]);
 
 		} else if (args[1].equalsIgnoreCase("setfee")) {
-			if (!(args.length == 4)) {
+			if (args.length != 4) {
 				player.sendMessage(Utils.invalidSyntax("econ", "setfee (course) (amount)"));
 				return;
 			}
-			if (!(CourseMethods.exist(args[2]))) {
+			if (!CourseMethods.exist(args[2])) {
 				player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[2]));
 				return;
 			}
-			if (!(Utils.isNumber(args[3]))) {
+			if (!Utils.isPositiveNumber(args[3])) {
 				player.sendMessage(Static.getParkourString() + "Amount needs to be numeric.");
 				return;
 			}

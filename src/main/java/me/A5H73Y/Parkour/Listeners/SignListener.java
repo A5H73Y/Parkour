@@ -137,7 +137,7 @@ public class SignListener implements Listener {
 
 			ParkourSession session = PlayerMethods.getParkourSession(event.getPlayer().getName());
 
-			if (lines[3].isEmpty() || !Utils.isNumber(lines[3]))
+			if (lines[3].isEmpty() || !Utils.isPositiveNumber(lines[3]))
 			    return;
 
 			if (session.getCheckpoint() == session.getCourse().getCheckpoints())

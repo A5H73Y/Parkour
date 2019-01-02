@@ -170,7 +170,7 @@ public final class Utils {
 
     /**
      * Check if the argument is numeric
-     * "1" - true, "Hi" - false
+     * "1" = true, "Hi" = false
      *
      * @param text
      * @return whether the input is numeric
@@ -181,6 +181,17 @@ public final class Utils {
             return true;
         } catch (Exception e) {}
         return false;
+    }
+
+    /**
+     * Check if the argument is numeric
+     * "1" = true, "Hi" = false, "-1" = false
+     *
+     * @param text
+     * @return whether the input is numeric
+     */
+    public static boolean isPositiveNumber(String text) {
+        return isNumber(text) && Integer.parseInt(text) >= 0;
     }
 
     /**

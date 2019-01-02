@@ -65,7 +65,7 @@ public class ScoreboardManager {
     public void updateScoreboardTimer(Player player, String liveTime) {
         Scoreboard board = player.getScoreboard();
 
-        if (board == null)
+        if (board == null || !displayCurrentTime)
             return;
 
         board.getTeam(CURRENT_TIME).setPrefix(liveTime);

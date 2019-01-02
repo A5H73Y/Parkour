@@ -47,6 +47,12 @@ public class ParkourConsoleCommands implements CommandExecutor {
 
             CourseMethods.setMaxDeaths(args, sender);
 
+        } else if (args[0].equalsIgnoreCase("setmaxtime")) {
+            if (!Utils.validateArgs(sender, args, 3))
+                return false;
+
+            CourseMethods.setMaxTime(args, sender);
+
         } else if (args[0].equalsIgnoreCase("setjoinitem")) {
             if (!Utils.validateArgs(sender, args, 4))
                 return false;
@@ -123,7 +129,8 @@ public class ParkourConsoleCommands implements CommandExecutor {
         Utils.log("pac reload");
         Utils.log("pac recreate");
         Utils.log("pac setminlevel (course) (level)");
-        Utils.log("pac setmaxdeath (course) (amount)");
+        Utils.log("pac setmaxdeath (course) (deaths)");
+        Utils.log("pac setmaxtime (course) (seconds)");
         Utils.log("pac setjoinitem (course) (item) (amount)");
         Utils.log("pac rewardonce (course)");
         Utils.log("pac rewardlevel (course) (level)");

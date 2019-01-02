@@ -1066,7 +1066,7 @@ public class PlayerMethods {
             player.sendMessage(Static.getParkourString() + "Healed!");
 
         } else if (lines[2].equalsIgnoreCase("jump")) {
-            if (Utils.isNumber(lines[3])) {
+            if (Utils.isPositiveNumber(lines[3])) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 300, Integer.parseInt(lines[3])));
                 player.sendMessage(Static.getParkourString() + "Jump Effect Applied!");
             } else {
@@ -1102,7 +1102,7 @@ public class PlayerMethods {
     }
 
     public static void setLevel(String[] args, CommandSender sender) {
-        if (!Utils.isNumber(args[2])) {
+        if (!Utils.isPositiveNumber(args[2])) {
             sender.sendMessage(Static.getParkourString() + "Minimum level is not valid.");
             return;
         }

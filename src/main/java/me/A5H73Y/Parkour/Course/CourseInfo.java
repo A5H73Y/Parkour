@@ -187,10 +187,19 @@ public class CourseInfo {
     /**
      * Get the maximum deaths for course
      * @param courseName
-     * @return
+     * @return death count
      */
     public static int getMaximumDeaths(String courseName) {
         return Parkour.getParkourConfig().getCourseData().getInt(courseName.toLowerCase() + ".MaxDeaths", 0);
+    }
+
+    /**
+     * Get the maximum time limit for course
+     * @param courseName
+     * @return seconds
+     */
+    public static int getMaximumTime(String courseName) {
+        return Parkour.getParkourConfig().getCourseData().getInt(courseName.toLowerCase() + ".MaxTime", 0);
     }
 
     /**
@@ -200,6 +209,16 @@ public class CourseInfo {
      */
     public static void setMaximumDeaths(String courseName, int amount) {
         Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".MaxDeaths", amount);
+        Parkour.getParkourConfig().saveCourses();
+    }
+
+    /**
+     * Set the maximum time limit for course
+     * @param courseName
+     * @param seconds
+     */
+    public static void setMaximumTime(String courseName, int seconds) {
+        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".MaxTime", seconds);
         Parkour.getParkourConfig().saveCourses();
     }
 
@@ -476,6 +495,7 @@ public class CourseInfo {
     /**
      * Displays all the information stored about a course.
      * Accessed via "/pa stats (course)", will only display applicable information.
+     * Yeah, it's super ugly.
      *
      * @param courseName
      * @param player
@@ -494,6 +514,7 @@ public class CourseInfo {
         int completed = config.getInt(courseName + ".Completed");
         int checkpoints = config.getInt(courseName + ".Points");
         int maxDeaths = config.getInt(courseName + ".MaxDeaths");
+        int maxTime = config.getInt(courseName + ".MaxTime");
         int minLevel = config.getInt(courseName + ".MinimumLevel");
         int rewardLevel = config.getInt(courseName + ".Level");
         int rewardLevelAdd = config.getInt(courseName + ".LevelAdd");
@@ -526,9 +547,6 @@ public class CourseInfo {
         if (rewardLevelAdd > 0)
             player.sendMessage("Level Reward Addon: " + aqua + rewardLevelAdd);
 
-        if (maxDeaths > 0)
-            player.sendMessage("Max Deaths: " + aqua + maxDeaths);
-
         if (linkedLobby != null && linkedLobby.length() > 0)
             player.sendMessage("Linked Lobby: " + aqua + linkedLobby);
 
@@ -546,6 +564,12 @@ public class CourseInfo {
 
         if (mode != null && !"none".equalsIgnoreCase(mode))
             player.sendMessage("ParkourMode: " + aqua + mode);
+
+        if (maxDeaths > 0)
+            player.sendMessage("Max Deaths: " + aqua + maxDeaths);
+
+        if (maxTime > 0)
+            player.sendMessage("Time Limit: " + aqua + Utils.convertSecondsToTime(maxTime));
 
         if (Static.getEconomy()) {
             int joinFee = Parkour.getParkourConfig().getEconData()

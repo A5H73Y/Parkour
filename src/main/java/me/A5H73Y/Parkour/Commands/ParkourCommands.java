@@ -208,6 +208,15 @@ public class ParkourCommands implements CommandExecutor {
 
             CourseMethods.setMaxDeaths(args, player);
 
+        } else if (args[0].equalsIgnoreCase("setmaxtime")) {
+            if (!Utils.hasPermission(player, "Parkour.Admin"))
+                return false;
+
+            if (!Utils.validateArgs(player, args, 3))
+                return false;
+
+            CourseMethods.setMaxTime(args, player);
+
         } else if (args[0].equalsIgnoreCase("setjoinitem")) {
             if (!Utils.hasPermission(player, "Parkour.Admin"))
                 return false;

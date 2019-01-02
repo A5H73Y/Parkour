@@ -12,6 +12,7 @@ public class Course implements Serializable {
 	private String name;
     private Checkpoint checkpoint;
     private Integer maxDeaths;
+    private Integer maxTime;
 	private int checkpoints;
 
 	// Because of the Material Enum changes in 1.13 this will be transient
@@ -24,6 +25,8 @@ public class Course implements Serializable {
         this.checkpoint = checkpoint;
         this.parkourKit = parkourKit;
         this.checkpoints = CourseInfo.getCheckpointAmount(name);
+		setMaxDeaths(CourseInfo.getMaximumDeaths(name));
+		setMaxTime(CourseInfo.getMaximumTime(name));
     }
 
 	public Course(String name, Checkpoint checkpoint) {
@@ -47,10 +50,6 @@ public class Course implements Serializable {
 		return checkpoint;
 	}
 
-	public void setMaxDeaths(Integer maxDeaths) {
-		this.maxDeaths = maxDeaths;
-	}
-
     /**
      * Maximum number of deaths a player can accumulate before failing the course
      * @return maximum deaths for course
@@ -59,7 +58,25 @@ public class Course implements Serializable {
 		return maxDeaths;
 	}
 
-    /**
+	public void setMaxDeaths(Integer maxDeaths) {
+		if (maxDeaths > 0)
+			this.maxDeaths = maxDeaths;
+	}
+
+	/**
+	 * Maximum number of seconds a player has to complete the course
+	 * @return maximum time in seconds
+	 */
+	public Integer getMaxTime() {
+		return maxTime;
+	}
+
+	public void setMaxTime(Integer maxTime) {
+		if (maxTime > 0)
+			this.maxTime = maxTime;
+	}
+
+	/**
      * ParkourKit for the course
      * This will be loaded when the course object is created
      * @return ParkourKit
@@ -87,4 +104,8 @@ public class Course implements Serializable {
     public boolean hasMaxDeaths() {
 	    return maxDeaths != null;
     }
+
+    public boolean hasMaxTime() {
+		return maxTime != null;
+	}
 }

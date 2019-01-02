@@ -313,6 +313,7 @@ public class Configurations {
             stringData.addDefault("Parkour.Invite.Recieve1", "&b%PLAYER% &fhas invited you to &b%COURSE%");
             stringData.addDefault("Parkour.Invite.Recieve2", "To accept, type &3/pa join %COURSE%");
             stringData.addDefault("Parkour.MaxDeaths", "Sorry, you reached the maximum amount of deaths: &b%AMOUNT%");
+            stringData.addDefault("Parkour.MaxTime", "Sorry, you have reached the maximum time limit of %TIME%!");
             stringData.addDefault("Parkour.Die1", "You died! Going back to the start!");
             stringData.addDefault("Parkour.Die2", "You died! Going back to checkpoint &b%POINT%");
             stringData.addDefault("Parkour.LifeCount", "&b%AMOUNT% &flives remaining!");

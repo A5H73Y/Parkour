@@ -275,7 +275,7 @@ public class ValidationMethods {
 		int pointcount = CourseInfo.getCheckpointAmount(selected) + 1;
 
 		if (!(args.length <= 1)) {
-			if (!Utils.isNumber(args[1])) {
+			if (!Utils.isPositiveNumber(args[1])) {
 				player.sendMessage(Static.getParkourString() + "Checkpoint specified is not numeric!");
 				return false; 
 			}

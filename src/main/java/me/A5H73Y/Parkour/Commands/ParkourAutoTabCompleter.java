@@ -143,9 +143,10 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 	private Set<String> getCourseCmds(CommandSender sender) {
 		Set<String> cmds = new HashSet<>();
 		Set<String> adminCourseCmds = new HashSet<>(Arrays.asList("setcreator", "prize", "setmode", "setjoinitem", "setminlevel",
-				"setmaxdeath", "rewardonce", "rewardlevel", "rewardleveladd", "rewardparkoins", "rewarddelay"));
+				"setmaxdeath", "setmaxtime", "rewardonce", "rewardlevel", "rewardleveladd", "rewardparkoins", "rewarddelay"));
 		
 		cmds.add("join");
+		cmds.add("joinall");
 		cmds.add("stats");
 		cmds.add("course");
 		cmds.add("select"); // so course owner can select own course

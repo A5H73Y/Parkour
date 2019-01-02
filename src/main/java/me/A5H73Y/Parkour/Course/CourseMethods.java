@@ -81,10 +81,6 @@ public class CourseMethods {
             course = new Course(courseName, checkpoint);
         }
 
-        int maxDeaths = CourseInfo.getMaximumDeaths(courseName);
-        if (maxDeaths > 0)
-            course.setMaxDeaths(maxDeaths);
-
         return course;
     }
 
@@ -178,7 +174,7 @@ public class CourseMethods {
      */
     public static void joinCourse(Player player, String courseName) {
         Course course;
-        if (Utils.isNumber(courseName)) {
+        if (Utils.isPositiveNumber(courseName)) {
             course = findByNumber(Integer.parseInt(courseName));
         } else {
             course = findByName(courseName);
@@ -228,7 +224,7 @@ public class CourseMethods {
             displayPlaying(sender);
 
         } else if (args[1].equalsIgnoreCase("courses")) {
-            int page = (args.length == 3 && args[2] != null && Utils.isNumber(args[2]) ? Integer.parseInt(args[2]) : 1);
+            int page = (args.length == 3 && args[2] != null && Utils.isPositiveNumber(args[2]) ? Integer.parseInt(args[2]) : 1);
             displayCourses(sender, page);
 
         } else {
@@ -460,13 +456,41 @@ public class CourseMethods {
             sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
             return;
         }
-        if (!Utils.isNumber(args[2])) {
+
+        if (!Utils.isPositiveNumber(args[2])) {
             sender.sendMessage(Static.getParkourString() + "Amount of deaths is not valid.");
             return;
         }
 
         CourseInfo.setMaximumDeaths(args[1], Integer.parseInt(args[2]));
         sender.sendMessage(Static.getParkourString() + ChatColor.AQUA + args[1] + ChatColor.WHITE + " maximum deaths was set to " + ChatColor.AQUA + args[2]);
+    }
+
+    /**
+     * Set the maximum amount of deaths a player can accumulate before failing the course.
+     *
+     * @param args
+     * @param sender
+     */
+    public static void setMaxTime(String[] args, CommandSender sender) {
+        if (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.DisplayLiveTime")) {
+            sender.sendMessage(Static.getParkourString() + "Live Time is disabled!");
+            return;
+        }
+
+        if (!CourseMethods.exist(args[1])) {
+            sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
+            return;
+        }
+
+        if (!Utils.isPositiveNumber(args[2])) {
+            sender.sendMessage(Static.getParkourString() + "Amount of deaths is not valid.");
+            return;
+        }
+
+        Integer seconds = Integer.parseInt(args[2]);
+        CourseInfo.setMaximumTime(args[1], seconds);
+        sender.sendMessage(Static.getParkourString() + ChatColor.AQUA + args[1] + ChatColor.WHITE + " maximum time limit was set to " + ChatColor.AQUA + Utils.convertSecondsToTime(seconds));
     }
 
     /**
@@ -480,7 +504,7 @@ public class CourseMethods {
             sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
             return;
         }
-        if (!Utils.isNumber(args[2])) {
+        if (!Utils.isPositiveNumber(args[2])) {
             sender.sendMessage(Static.getParkourString() + "Minimum level is not valid.");
             return;
         }
@@ -502,7 +526,7 @@ public class CourseMethods {
             sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
             return;
         }
-        if (!Utils.isNumber(args[2])) {
+        if (!Utils.isPositiveNumber(args[2])) {
             sender.sendMessage(Static.getParkourString() + "Reward level needs to be numeric.");
             return;
         }
@@ -523,7 +547,7 @@ public class CourseMethods {
             sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
             return;
         }
-        if (!Utils.isNumber(args[2])) {
+        if (!Utils.isPositiveNumber(args[2])) {
             sender.sendMessage(Static.getParkourString() + "Reward level addon needs to be numeric.");
             return;
         }
@@ -562,7 +586,7 @@ public class CourseMethods {
      * @param sender
      */
     public static void setRewardRank(String[] args, CommandSender sender) {
-        if (!Utils.isNumber(args[1])) {
+        if (!Utils.isPositiveNumber(args[1])) {
             sender.sendMessage(Static.getParkourString() + "Reward level needs to be numeric.");
             return;
         }
@@ -587,7 +611,7 @@ public class CourseMethods {
             sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
             return;
         }
-    	if (!Utils.isNumber(args[2])) {
+    	if (!Utils.isPositiveNumber(args[2])) {
             sender.sendMessage(Static.getParkourString() + "Reward delay needs to be numeric.");
             return;
         }
@@ -608,7 +632,7 @@ public class CourseMethods {
             sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
             return;
         }
-        if (!Utils.isNumber(args[2])) {
+        if (!Utils.isPositiveNumber(args[2])) {
             sender.sendMessage(Static.getParkourString() + "Parkoins reward needs to be numeric.");
             return;
         }
@@ -838,7 +862,7 @@ public class CourseMethods {
             sender.sendMessage(Static.getParkourString() + "Invalid material: " + args[2].toUpperCase());
             return;
         }
-        if (!Utils.isNumber(args[3])) {
+        if (!Utils.isPositiveNumber(args[3])) {
             sender.sendMessage(Static.getParkourString() + "Amount needs to be numeric.");
             return;
         }
@@ -882,7 +906,7 @@ public class CourseMethods {
         }
 
         if (args.length >= 3) {
-            if (!Utils.isNumber(args[2])) {
+            if (!Utils.isPositiveNumber(args[2])) {
                 player.sendMessage(Static.getParkourString() + "Amount of results needs to be numeric.");
                 return;
             }

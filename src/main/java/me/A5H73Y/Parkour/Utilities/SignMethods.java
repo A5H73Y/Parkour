@@ -52,7 +52,6 @@ public class SignMethods {
 		}
 
 		sign.setLine(1, title);
-		sign.setLine(2, sign.getLine(2).toLowerCase());
 
 		if (message)
 			player.sendMessage(Static.getParkourString() + ChatColor.DARK_AQUA + title + ChatColor.WHITE + " sign for " + ChatColor.AQUA + sign.getLine(2) + ChatColor.WHITE + " created!");
@@ -116,7 +115,7 @@ public class SignMethods {
 			sign.setLine(3, "-----");
 
 		} else if (sign.getLine(2).equalsIgnoreCase("jump")) {
-			if (sign.getLine(3).isEmpty() || Utils.isNumber(sign.getLine(3))) {
+			if (sign.getLine(3).isEmpty() || !Utils.isPositiveNumber(sign.getLine(3))) {
 				player.sendMessage(Static.getParkourString() + "Invalid Jump Height");
 				sign.getBlock().breakNaturally();
 				return;
@@ -160,7 +159,7 @@ public class SignMethods {
 	        return;
 
 	    if (!sign.getLine(3).isEmpty()) {
-	        if (!Utils.isNumber(sign.getLine(3)))
+	        if (!Utils.isPositiveNumber(sign.getLine(3)))
 	            sign.setLine(3, "");
         }
 
@@ -171,7 +170,7 @@ public class SignMethods {
         if (!createStandardCourseSign(sign, player, "Checkpoint", false))
             return;
 
-        if (sign.getLine(3).isEmpty() || !Utils.isNumber(sign.getLine(3))) {
+        if (sign.getLine(3).isEmpty() || !Utils.isPositiveNumber(sign.getLine(3))) {
             sign.getBlock().breakNaturally();
             player.sendMessage(Static.getParkourString() + "Please specify checkpoint on bottom line!");
             return;
