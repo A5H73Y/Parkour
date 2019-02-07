@@ -184,7 +184,9 @@ public class ScoreboardManager {
     }
 
     public void removeScoreboard(Player player) {
-        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+        if (this.enabled) {
+            player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+        }
     }
 
     /**

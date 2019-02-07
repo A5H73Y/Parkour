@@ -745,6 +745,7 @@ public class PlayerMethods {
         playerDamage.setHealth(playerDamage.getMaxHealth());
         player.setFallDistance(0);
         player.setFireTicks(0);
+        player.eject();
     }
 
     /**
@@ -824,7 +825,8 @@ public class PlayerMethods {
      * @param player
      */
     private static void restoreHealth(Player player) {
-    	player.setHealth(Parkour.getParkourConfig().getInvData().getDouble(player.getName() + ".Health"));
+        double health = Math.min(player.getMaxHealth(), Parkour.getParkourConfig().getInvData().getDouble(player.getName() + ".Health"));
+    	player.setHealth(health);
     	player.setFoodLevel(Parkour.getParkourConfig().getInvData().getInt(player.getName() + ".Hunger"));
     	Parkour.getParkourConfig().getInvData().set(player.getName() + ".Health", null);
     	Parkour.getParkourConfig().getInvData().set(player.getName() + ".Hunger", null);
