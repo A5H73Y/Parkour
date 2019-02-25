@@ -344,7 +344,7 @@ public class DatabaseMethods {
 
         List<TimeObject> times = new ArrayList<>();
         try {
-            int courseId = getCourseId(courseName);
+            int courseId = getCourseId(courseName.toLowerCase());
             if (courseId == 0)
                 return times;
 
@@ -372,7 +372,7 @@ public class DatabaseMethods {
 
         List<TimeObject> times = new ArrayList<>();
         try {
-            int courseId = getCourseId(courseName);
+            int courseId = getCourseId(courseName.toLowerCase());
             if (courseId == 0)
                 return times;
 
