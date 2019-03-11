@@ -16,7 +16,9 @@ public class Backup {
 
 	private static List<String> fileList;
 	private static final String SOURCE_FOLDER = Parkour.getPlugin().getDataFolder().toString();
-	private static final String OUTPUT_ZIP_FILE = SOURCE_FOLDER + File.separator + "[" + Utils.getDate() + "] Backup.zip";
+	private static final String BACKUPS_FOLDER = "backups";
+	private static final String OUTPUT_ZIP_FILE = SOURCE_FOLDER + File.separator + BACKUPS_FOLDER + File.separator
+			+ "[" + Utils.getDate() + "] Backup.zip";
 
 	public static void backupNow() {
 		backupNow(true);
@@ -41,6 +43,9 @@ public class Backup {
 	private static void zipIt() {
 		byte[] buffer = new byte[1024];
 		try{
+			File outputFolder = new File(SOURCE_FOLDER + File.separator + BACKUPS_FOLDER);
+			if (!outputFolder.exists()) outputFolder.mkdirs();
+
 			FileOutputStream fos = new FileOutputStream(OUTPUT_ZIP_FILE);
 			ZipOutputStream zos = new ZipOutputStream(fos);
 

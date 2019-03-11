@@ -85,7 +85,7 @@ public final class Static {
 	}
 
 	/**
-	 * Get list of Lobbys
+	 * Get list of Lobbies
 	 * I'm aware this looks like shit, but it's the best solution.
 	 * @return List<String>
 	 */

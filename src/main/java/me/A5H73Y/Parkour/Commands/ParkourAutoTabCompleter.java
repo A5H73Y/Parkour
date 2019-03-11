@@ -110,6 +110,8 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 			} else if (args[0].equalsIgnoreCase("list")) {
 				list.add("courses");
 				list.add("players");
+				list.add("ranks");
+				list.add("lobbies");
 			} else if (args[0].equalsIgnoreCase("delete")) {
 				list.add("course");
 				list.add("checkpoint");

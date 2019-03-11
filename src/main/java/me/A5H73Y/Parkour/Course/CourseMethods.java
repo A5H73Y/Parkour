@@ -1,24 +1,19 @@
 package me.A5H73Y.Parkour.Course;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import me.A5H73Y.Parkour.Conversation.CoursePrizeConversation;
 import me.A5H73Y.Parkour.Conversation.LeaderboardConversation;
 import me.A5H73Y.Parkour.Conversation.ParkourModeConversation;
-import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Enums.ParkourMode;
 import me.A5H73Y.Parkour.Managers.ChallengeManager;
-import me.A5H73Y.Parkour.ParkourKit.ParkourKit;
 import me.A5H73Y.Parkour.Other.ValidationMethods;
-import me.A5H73Y.Parkour.Player.PlayerInfo;
+import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.ParkourKit.ParkourKit;
 import me.A5H73Y.Parkour.Player.ParkourSession;
+import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
-
 import me.A5H73Y.Parkour.Utilities.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -29,6 +24,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CourseMethods {
 
@@ -216,7 +217,7 @@ public class CourseMethods {
      */
     public static void displayList(String[] args, CommandSender sender) {
         if (args.length < 2) {
-            sender.sendMessage(Utils.invalidSyntax("list", "(players / courses)"));
+            sender.sendMessage(Utils.invalidSyntax("list", "(players / courses / ranks / lobbies)"));
             return;
         }
 
@@ -227,8 +228,20 @@ public class CourseMethods {
             int page = (args.length == 3 && args[2] != null && Utils.isPositiveNumber(args[2]) ? Integer.parseInt(args[2]) : 1);
             displayCourses(sender, page);
 
+        } else if (args[1].equalsIgnoreCase("ranks")) {
+            if (sender instanceof Player && !Utils.hasPermission((Player) sender, "Parkour.Admin")) {
+                return;
+            }
+            displayRanks(sender);
+
+        } else if (args[1].equalsIgnoreCase("lobbies")) {
+            if (sender instanceof Player && !Utils.hasPermission((Player) sender, "Parkour.Admin")) {
+                return;
+            }
+            LobbyMethods.displayLobbies(sender);
+
         } else {
-            sender.sendMessage(Utils.invalidSyntax("list", "(players / courses)"));
+            sender.sendMessage(Utils.invalidSyntax("list", "(players / courses / ranks / lobbies)"));
         }
     }
 
@@ -304,6 +317,27 @@ public class CourseMethods {
         }
 
         sender.sendMessage("== " + page + " / " + ((courseList.size() + results - 1) / results) + " ==");
+    }
+
+    private static void displayRanks(CommandSender sender) {
+        sender.sendMessage(Utils.getStandardHeading("Parkour Ranks"));
+        ConfigurationSection section = Parkour.getParkourConfig().getUsersData().getConfigurationSection("ServerInfo.Levels");
+
+        if (section == null) {
+            sender.sendMessage(Static.getParkourString() + "No Ranks set.");
+        } else {
+            Set<String> levels = section.getKeys(false);
+            List<Integer> orderedLevels = levels.stream().mapToInt(Integer::parseInt).sorted().boxed().collect(Collectors.toList());
+
+            for (Integer level : orderedLevels) {
+                String rank = Parkour.getParkourConfig().getUsersData().getString("ServerInfo.Levels." + level + ".Rank");
+                if (rank != null) {
+                    sender.sendMessage(Utils.getTranslation("Parkour.RankInfo", false)
+                            .replace("%LEVEL%", level.toString())
+                            .replace("%RANK%", Utils.colour(rank)));
+                }
+            }
+        }
     }
 
     /**
@@ -599,7 +633,7 @@ public class CourseMethods {
         CourseInfo.setRewardRank(Integer.valueOf(args[1]), args[2]);
         sender.sendMessage(Static.getParkourString() + "Level " + args[1] + "'s rank was set to " + Utils.colour(args[2]));
     }
-    
+
     /**
      * Set the number of days that have to elapse before the prize can be won again by the same player.
      *
@@ -607,17 +641,17 @@ public class CourseMethods {
      * @param sender
      */
     public static void setRewardDelay(String[] args, CommandSender sender) {
-    	if (!CourseMethods.exist(args[1])) {
+        if (!CourseMethods.exist(args[1])) {
             sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
             return;
         }
-    	if (!Utils.isPositiveNumber(args[2])) {
+        if (!Utils.isPositiveNumber(args[2])) {
             sender.sendMessage(Static.getParkourString() + "Reward delay needs to be numeric.");
             return;
         }
-    	
-    	CourseInfo.setRewardDelay(args[1], Integer.parseInt(args[2]));
-    	sender.sendMessage(Static.getParkourString() + args[1] + "'s reward delay was set to " + args[2] + " day(s).");
+
+        CourseInfo.setRewardDelay(args[1], Integer.parseInt(args[2]));
+        sender.sendMessage(Static.getParkourString() + args[1] + "'s reward delay was set to " + args[2] + " day(s).");
     }
 
     /**

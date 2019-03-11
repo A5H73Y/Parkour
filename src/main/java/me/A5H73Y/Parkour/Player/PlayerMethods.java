@@ -1141,7 +1141,7 @@ public class PlayerMethods {
     public static void displayPermissions(Player player) {
         player.sendMessage(Utils.getStandardHeading("Parkour Permissions"));
         if (player.hasPermission("Parkour.*") || player.isOp()) {
-            player.sendMessage("* Everything");
+            player.sendMessage("* All Permissions");
         } else {
             boolean anyPerms = false;
             if (player.hasPermission("Parkour.Basic.*")) {

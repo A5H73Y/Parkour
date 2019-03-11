@@ -6,6 +6,7 @@ import me.A5H73Y.Parkour.Commands.ParkourCommands;
 import me.A5H73Y.Parkour.Commands.ParkourConsoleCommands;
 import me.A5H73Y.Parkour.Listeners.*;
 import me.A5H73Y.Parkour.Managers.ScoreboardManager;
+import me.A5H73Y.Parkour.Other.Backup;
 import me.A5H73Y.Parkour.Other.Configurations;
 import me.A5H73Y.Parkour.Other.StartPlugin;
 import me.A5H73Y.Parkour.Other.Updater;
@@ -43,6 +44,9 @@ public class Parkour extends JavaPlugin {
     public void onDisable() {
         Utils.saveAllPlaying(PlayerMethods.getPlaying(), Static.PLAYING_BIN_PATH);
         config.saveAll();
+        if (instance.getConfig().getBoolean("Other.OnServerShutdown.BackupFiles")) {
+            Backup.backupNow();
+        }
         getParkourConfig().reload();
         database.closeConnection();
         Utils.log("Disabled Parkour v" + Static.getVersion());

@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class LobbyMethods {
@@ -52,9 +53,13 @@ public class LobbyMethods {
         if (!ValidationMethods.lobbyJoiningSet(player))
             return;
 
-        boolean customLobby = (args != null && args.length > 1 && args[1] != null);
+        // if they are on a course, force them to leave, which will ultimately run this method again.
+        if (PlayerMethods.isPlaying(player.getName())) {
+            PlayerMethods.playerLeave(player);
+            return;
+        }
 
-        // variables
+        boolean customLobby = (args != null && args.length > 1 && args[1] != null);
         Location lobby;
 
         if (customLobby) {
@@ -66,18 +71,10 @@ public class LobbyMethods {
             lobby = getLobby("Lobby");
         }
 
-        if (lobby == null) {
-            player.sendMessage(Static.getParkourString() + "Lobby is corrupt, please investigate.");
-            return;
-        }
         if (Parkour.getPlugin().getConfig().getBoolean("Lobby.EnforceWorld") &&
                 !lobby.getWorld().getName().equals(player.getWorld().getName())) {
             player.sendMessage(Utils.getTranslation("Error.WrongWorld"));
             return;
-        }
-
-        if (PlayerMethods.isPlaying(player.getName())) {
-            PlayerMethods.playerLeave(player);
         }
 
         player.teleport(lobby);
@@ -159,5 +156,10 @@ public class LobbyMethods {
         }
         String[] args = new String[]{null, lobbyName};
         LobbyMethods.joinLobby(args, player);
+    }
+
+    public static void displayLobbies(CommandSender sender) {
+        sender.sendMessage(Utils.getStandardHeading("Custom Lobbies"));
+        Static.getLobbyList().forEach(s -> sender.sendMessage("* " + s));
     }
 }

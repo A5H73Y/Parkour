@@ -323,6 +323,7 @@ public class Configurations {
             stringData.addDefault("Parkour.Accept", "&7Enter &a/pa accept &7to accept.");
             stringData.addDefault("Parkour.RewardLevel", "Your level has been set to &b%LEVEL% &ffor completing &b%COURSE%&f!");
             stringData.addDefault("Parkour.RewardRank", "Your rank has been set to %RANK%");
+            stringData.addDefault("Parkour.RankInfo", "* For level &b%LEVEL% &fyou earn: %RANK%");
             stringData.addDefault("Parkour.RewardParkoins", "&b%AMOUNT% &fParkoins rewarded! New total: &7%TOTAL%");
             stringData.addDefault("Parkour.SetMode", "Mode for &b%COURSE% &fset to &b%MODE%");
             stringData.addDefault("Parkour.Countdown", "Starting in &b%AMOUNT% &fseconds...");
@@ -499,7 +500,7 @@ public class Configurations {
         config.addDefault("AutoStart.Material", "BEDROCK");
         config.addDefault("AutoStart.TickDelay", 0);
 
-        config.addDefault("Scoreboard.Enabled", true); //TODO set to false
+        config.addDefault("Scoreboard.Enabled", false);
         config.addDefault("Scoreboard.MainHeading", "&b&l== Parkour ==");
         config.addDefault("Scoreboard.TitleFormat", "&b%TITLE%");
         config.addDefault("Scoreboard.TextFormat", "&f%TEXT%");
@@ -527,6 +528,7 @@ public class Configurations {
         config.addDefault("Other.Display.LevelReward", true);
         config.addDefault("Other.Display.ShowMilliseconds", false);
         config.addDefault("Other.Display.PrizeCooldown", true);
+        config.addDefault("Other.OnServerShutdown.BackupFiles", false);
 
         config.addDefault("SQLite.PathOverride", "");
         config.addDefault("MySQL.Use", false);

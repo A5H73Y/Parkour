@@ -10,12 +10,28 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.conversations.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class AddKitItemConversation {
 
     private final String[] actionTypes = {"death", "finish", "climb", "launch", "bounce", "speed", "repulse", "norun", "nopotion"};
 
+    private final static Map<String, Double> strengthDefault = new HashMap<>();
+    private final static Map<String, Integer> durationDefault = new HashMap<>();
+
     private Prompt endingConversation;
     private String kitName;
+
+    static {
+        strengthDefault.put("climb", 0.4);
+        strengthDefault.put("launch", 1.2);
+        strengthDefault.put("bounce", 5.0);
+        strengthDefault.put("speed", 5.0);
+        strengthDefault.put("repulse", 0.4);
+        durationDefault.put("speed", 200);
+        durationDefault.put("bounce", 200);
+    }
 
     public AddKitItemConversation(Prompt endingConversation, String kitName) {
         this.endingConversation = endingConversation;
@@ -78,12 +94,14 @@ public class AddKitItemConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.LIGHT_PURPLE + " What strength should the action be?";
+            String action = context.getSessionData("action").toString();
+            Double defaultValue = strengthDefault.get(action);
+            return ChatColor.LIGHT_PURPLE + String.format(" What strength should the action be? (default: %.2f)", defaultValue);
         }
 
         @Override
         protected boolean isNumberValid(ConversationContext context, Number input) {
-            return input.intValue() >= 0 && input.intValue() <= 10;
+            return input.doubleValue() >= 0 && input.doubleValue() <= 10;
         }
 
         @Override
@@ -108,7 +126,9 @@ public class AddKitItemConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.LIGHT_PURPLE + " What duration do you want the action to last?";
+            String action = context.getSessionData("action").toString();
+            Integer defaultValue = durationDefault.get(action);
+            return ChatColor.LIGHT_PURPLE + String.format(" What duration do you want the action to last? (default: %d)", defaultValue);
         }
 
         @Override

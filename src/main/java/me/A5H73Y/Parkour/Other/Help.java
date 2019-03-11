@@ -63,8 +63,8 @@ public final class Help {
 					" Once you complete a course, you will have the ability to submit your vote on whether or not you liked the course. If you do not specify a course then the last course completed is selected. You only have one vote for each course. The sole purpose of this is for statistics, i.e. 70% of people liked this course.");
 
 		} else if (args[1].equalsIgnoreCase("list")) {
-			displayHelpMessage(sender, "Display Courses / Parkour players", "/pa list (courses / players)", null,
-					" This command will display either all the courses saved on the server in a page format, ordered by date of creation, each having their own unique numerical ID which can be used to join the course; or display all the players that are currently using the plugin, this includes which course, and how many times they've died.");
+			displayHelpMessage(sender, "Display the list contents", "/pa list (courses / players / ranks / lobbies)", null,
+					" This command can display all the courses saved on the server in a page format, ordered by date of creation, each having their own unique numerical ID which can be used to join the course. Display all the players that are currently using the plugin, this includes which course, and how many times they've died. Display the available Parkour Ranks to be unlocked, with the required Parkour Level to achieve each. Display all custom lobbies available.");
 
 		} else if (args[1].equalsIgnoreCase("quiet")) {
 			displayHelpMessage(sender, "Toggle Quiet mode", "/pa quiet", null, 
@@ -366,7 +366,7 @@ public final class Help {
 		displayCommandUsage(player, "lobby", "[lobby]", "Teleport to the specified lobby");
 		displayCommandUsage(player, "perms", null, "Display your Parkour permissions");
 		displayCommandUsage(player, "like / dislike", null, "Vote for course you finished");
-		displayCommandUsage(player, "list", "(players / courses)", "Display appropriate list");
+		displayCommandUsage(player, "list", "(type)", "Display appropriate list");
 		displayCommandUsage(player, "quiet", null, "Toggle visibility of Parkour messages");
 		displayCommandUsage(player, "invite", "(player)", "Invite the player to the course");
 		displayCommandUsage(player, "challenge", "(course) (player)", "Challenge player to course");
