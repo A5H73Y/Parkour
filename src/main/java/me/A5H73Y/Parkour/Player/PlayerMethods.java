@@ -214,7 +214,7 @@ public class PlayerMethods {
         final boolean teleportAway = Parkour.getPlugin().getConfig().getBoolean("OnFinish.TeleportAway");
 
         if (delay <= 0) {
-        	restoreHealth(player);
+            restoreHealth(player);
             loadInventory(player);
             givePrize(player, courseName);
             if (teleportAway) {
@@ -222,7 +222,7 @@ public class PlayerMethods {
             }
         } else {
             Bukkit.getScheduler().scheduleSyncDelayedTask(Parkour.getPlugin(), () -> {
-            	restoreHealth(player);
+                restoreHealth(player);
                 loadInventory(player);
                 givePrize(player, courseName);
                 if (teleportAway) {
@@ -247,23 +247,23 @@ public class PlayerMethods {
      * @param timeTaken
      */
     public static boolean isNewRecord(Player player, String courseName, long timeTaken) {
-    	List<TimeObject> courseRecord = DatabaseMethods.getTopCourseResults(courseName, 1);
+        List<TimeObject> courseRecord = DatabaseMethods.getTopCourseResults(courseName, 1);
         if (courseRecord == null || courseRecord.isEmpty()) {
-        	return true;
+            return true;
         }
         TimeObject record = courseRecord.get(0);
         if (record.getTime() > timeTaken) {
-        	Utils.sendFullTitle(player, Utils.getTranslation("Parkour.CourseRecord", false), Utils.displayCurrentTime(timeTaken), true);
-        	return true;
+            Utils.sendFullTitle(player, Utils.getTranslation("Parkour.CourseRecord", false), Utils.displayCurrentTime(timeTaken), true);
+            return true;
         }
 
-    	List<TimeObject> playerRecord = DatabaseMethods.getTopPlayerCourseResults(player.getName(), courseName, 1);
+        List<TimeObject> playerRecord = DatabaseMethods.getTopPlayerCourseResults(player.getName(), courseName, 1);
         if (playerRecord == null || playerRecord.isEmpty()) {
             return true;
         }
         TimeObject result = playerRecord.get(0);
         if (result.getTime() > timeTaken) {
-        	Utils.sendFullTitle(player, Utils.getTranslation("Parkour.BestTime", false), Utils.displayCurrentTime(timeTaken), true);
+            Utils.sendFullTitle(player, Utils.getTranslation("Parkour.BestTime", false), Utils.displayCurrentTime(timeTaken), true);
             return true;
         }
         return false;
@@ -714,16 +714,16 @@ public class PlayerMethods {
 
         player.updateInventory();
     }
-    
+
     /**
      * Prepare the player for Parkour
      * Store the player's health and hunger.
      * @param player
      */
     private static void saveHealth(Player player) {
-    	Parkour.getParkourConfig().getInvData().set(player.getName() + ".Health", player.getHealth());
-    	Parkour.getParkourConfig().getInvData().set(player.getName() + ".Hunger", player.getFoodLevel());
-    	Parkour.getParkourConfig().saveInv();
+        Parkour.getParkourConfig().getInvData().set(player.getName() + ".Health", player.getHealth());
+        Parkour.getParkourConfig().getInvData().set(player.getName() + ".Hunger", player.getFoodLevel());
+        Parkour.getParkourConfig().saveInv();
     }
 
     /**
@@ -826,10 +826,10 @@ public class PlayerMethods {
      */
     private static void restoreHealth(Player player) {
         double health = Math.min(player.getMaxHealth(), Parkour.getParkourConfig().getInvData().getDouble(player.getName() + ".Health"));
-    	player.setHealth(health);
-    	player.setFoodLevel(Parkour.getParkourConfig().getInvData().getInt(player.getName() + ".Hunger"));
-    	Parkour.getParkourConfig().getInvData().set(player.getName() + ".Health", null);
-    	Parkour.getParkourConfig().getInvData().set(player.getName() + ".Hunger", null);
+        player.setHealth(health);
+        player.setFoodLevel(Parkour.getParkourConfig().getInvData().getInt(player.getName() + ".Hunger"));
+        Parkour.getParkourConfig().getInvData().set(player.getName() + ".Health", null);
+        Parkour.getParkourConfig().getInvData().set(player.getName() + ".Hunger", null);
         Parkour.getParkourConfig().saveInv();
     }
 
@@ -1067,39 +1067,33 @@ public class PlayerMethods {
             playerDamage.setHealth(playerDamage.getMaxHealth());
             player.sendMessage(Static.getParkourString() + "Healed!");
 
-        } else if (lines[2].equalsIgnoreCase("jump")) {
-            if (Utils.isPositiveNumber(lines[3])) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 300, Integer.parseInt(lines[3])));
-                player.sendMessage(Static.getParkourString() + "Jump Effect Applied!");
-            } else {
-                player.sendMessage(Static.getParkourString() + "Invalid Number");
-            }
-        } else if (lines[2].equalsIgnoreCase("speed")) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 300, 6));
-            player.sendMessage(Static.getParkourString() + "Speed Effect Applied!");
-
-        } else if (lines[2].equalsIgnoreCase("fire")) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 500, 6));
-            player.sendMessage(Static.getParkourString() + "Fire Resistance Applied!");
-
-        } else if (lines[2].equalsIgnoreCase("pain")) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 500, 10));
-            player.sendMessage(Static.getParkourString() + "Pain Resistance Applied!");
-
         } else if (lines[2].equalsIgnoreCase("gamemode")) {
-            if (lines[3].equalsIgnoreCase("creative")) {
-                if (!(player.getGameMode().equals(GameMode.CREATIVE))) {
-                    player.setGameMode(GameMode.CREATIVE);
-                    player.sendMessage(Static.getParkourString() + "GameMode set to Creative!");
+            if (Utils.doesGameModeEnumExist(lines[3].toUpperCase())) {
+                GameMode gameMode = GameMode.valueOf(lines[3].toUpperCase());
+                if (gameMode != player.getGameMode()) {
+                    player.setGameMode(gameMode);
+                    player.sendMessage(Static.getParkourString() + "GameMode set to " + Utils.standardizeText(gameMode.name()));
                 }
             } else {
-                if (!(player.getGameMode().equals(GameMode.SURVIVAL))) {
-                    player.setGameMode(GameMode.SURVIVAL);
-                    player.sendMessage(Static.getParkourString() + "GameMode set to Survival!");
-                }
+                player.sendMessage(Static.getParkourString() + "GameMode not recognised.");
             }
+
         } else {
-            player.sendMessage(Static.getParkourString() + "Unknown Effect!");
+            // if the user enters 'FIRE_RESISTANCE' or 'DAMAGE_RESIST' treat them the same
+            String effect = lines[2].toUpperCase().replace("RESISTANCE", "RESIST").replace("RESIST", "RESISTANCE");
+            PotionEffectType potionType = PotionEffectType.getByName(effect);
+
+            if (potionType == null) {
+                player.sendMessage(Static.getParkourString() + "Unknown Effect!");
+                return;
+            }
+            String[] args = lines[3].split(":");
+            if (args.length == 2) {
+                player.addPotionEffect(new PotionEffect(potionType, Integer.valueOf(args[1]), Integer.valueOf(args[0])));
+                player.sendMessage(Static.getParkourString() + potionType.getName() + " Effect Applied!");
+            } else {
+                player.sendMessage(Static.getParkourString() + "Invalid syntax, must follow '(duration):(strength)' example '1000:6'.");
+            }
         }
     }
 

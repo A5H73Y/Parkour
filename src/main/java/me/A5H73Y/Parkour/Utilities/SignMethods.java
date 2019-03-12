@@ -5,14 +5,16 @@ import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.potion.PotionEffectType;
 
 public class SignMethods {
 
 	/**
 	 * Create a standard Parkour sign, no arguments just display the title
-	 * 
+	 *
 	 * @param sign
 	 * @param player
 	 * @param title
@@ -33,7 +35,7 @@ public class SignMethods {
 
 	/**
 	 * Create standard Parkour course sign, argument being the course name
-	 * 
+	 *
 	 * @param sign
 	 * @param player
 	 * @param title
@@ -110,72 +112,63 @@ public class SignMethods {
 			return;
 
 		sign.setLine(1, "Effect");
+
 		if (sign.getLine(2).equalsIgnoreCase("heal")) {
 			sign.setLine(2, "Heal");
-			sign.setLine(3, "-----");
+			player.sendMessage(Static.getParkourString() + "Heal Effect sign created!");
 
-		} else if (sign.getLine(2).equalsIgnoreCase("jump")) {
-			if (sign.getLine(3).isEmpty() || !Utils.isPositiveNumber(sign.getLine(3))) {
-				player.sendMessage(Static.getParkourString() + "Invalid Jump Height");
+		} else if (sign.getLine(2).equalsIgnoreCase("gamemode")) {
+			sign.setLine(2, "GameMode");
+			if (Utils.doesGameModeEnumExist(sign.getLine(3))) {
+				sign.setLine(3, sign.getLine(3).toUpperCase());
+				player.sendMessage(Static.getParkourString() + sign.getLine(3) + " GameMode Effect sign created!");
+			} else {
+				sign.getBlock().breakNaturally();
+				player.sendMessage(Static.getParkourString() + "GameMode not recognised.");
+			}
+
+		} else {
+			String effect = sign.getLine(2).toUpperCase().replace("RESISTANCE", "RESIST").replace("RESIST", "RESISTANCE");
+			PotionEffectType potionType = PotionEffectType.getByName(effect);
+
+			if (potionType == null) {
+				player.sendMessage(Static.getParkourString() + "Unknown Effect!");
 				sign.getBlock().breakNaturally();
 				return;
 			}
 
-			sign.setLine(2, "Jump");
-			player.sendMessage(Static.getParkourString() + "Created Jump sign");
-
-		} else if (sign.getLine(2).equalsIgnoreCase("speed")) {
-			sign.setLine(2, "Speed");
-			sign.setLine(3, "-----");
-			player.sendMessage(Static.getParkourString() + "Created Speed sign");
-
-		} else if (sign.getLine(2).equalsIgnoreCase("pain") || sign.getLine(2).equalsIgnoreCase("painresist")) {
-			sign.setLine(2, "Pain Resist");
-			sign.setLine(3, "-----");
-			player.sendMessage(Static.getParkourString() + "Created Pain Resistance sign");
-
-		} else if (sign.getLine(2).equalsIgnoreCase("fire") || sign.getLine(2).equalsIgnoreCase("fireresist")) {
-			sign.setLine(2, "Fire Resist");
-			sign.setLine(3, "-----");
-			player.sendMessage(Static.getParkourString() + "Created Fire Resistance sign");
-
-		} else if (sign.getLine(2).equalsIgnoreCase("gamemode")) {
-			sign.setLine(2, "Gamemode");
-			if (sign.getLine(3).equalsIgnoreCase("creative") || sign.getLine(3).equalsIgnoreCase("c")) {
-				sign.setLine(3, "Creative");
+			String[] args = sign.getLine(3).split(":");
+			if (args.length != 2) {
+				sign.getBlock().breakNaturally();
+				player.sendMessage(Static.getParkourString() + "Invalid syntax, must follow '(duration):(strength)' example '1000:6'.");
 			} else {
-				sign.setLine(3, "Survival");
+				player.sendMessage(Static.getParkourString() + potionType.getName() + " effect sign created, with a strength of " + args[0] + " and a duration of " + args[1]);
 			}
-
-		} else {
-			sign.setLine(2, ChatColor.RED + "Unknown Effect");
-			sign.setLine(3, "");
-			player.sendMessage(Static.getParkourString() + "Unknown Effect");
 		}
 	}
 
 	public void createLeaderboardsSign(SignChangeEvent sign, Player player) {
-	    if (!createStandardCourseSign(sign, player, "Leaderboards", false))
-	        return;
+		if (!createStandardCourseSign(sign, player, "Leaderboards", false))
+			return;
 
-	    if (!sign.getLine(3).isEmpty()) {
-	        if (!Utils.isPositiveNumber(sign.getLine(3)))
-	            sign.setLine(3, "");
-        }
+		if (!sign.getLine(3).isEmpty()) {
+			if (!Utils.isPositiveNumber(sign.getLine(3)))
+				sign.setLine(3, "");
+		}
 
-        player.sendMessage(Static.getParkourString() + "Leaderboards sign for " + ChatColor.AQUA + sign.getLine(2) + ChatColor.WHITE + " created!");
-    }
+		player.sendMessage(Static.getParkourString() + "Leaderboards sign for " + ChatColor.AQUA + sign.getLine(2) + ChatColor.WHITE + " created!");
+	}
 
-    public void createCheckpointSign(SignChangeEvent sign, Player player, String checkpoint) {
-        if (!createStandardCourseSign(sign, player, "Checkpoint", false))
-            return;
+	public void createCheckpointSign(SignChangeEvent sign, Player player, String checkpoint) {
+		if (!createStandardCourseSign(sign, player, "Checkpoint", false))
+			return;
 
-        if (sign.getLine(3).isEmpty() || !Utils.isPositiveNumber(sign.getLine(3))) {
-            sign.getBlock().breakNaturally();
-            player.sendMessage(Static.getParkourString() + "Please specify checkpoint on bottom line!");
-            return;
-        }
+		if (sign.getLine(3).isEmpty() || !Utils.isPositiveNumber(sign.getLine(3))) {
+			sign.getBlock().breakNaturally();
+			player.sendMessage(Static.getParkourString() + "Please specify checkpoint on bottom line!");
+			return;
+		}
 
-        player.sendMessage(Static.getParkourString() + "Checkpoint sign for " + ChatColor.AQUA + sign.getLine(2) + ChatColor.WHITE + " created!");
-    }
+		player.sendMessage(Static.getParkourString() + "Checkpoint sign for " + ChatColor.AQUA + sign.getLine(2) + ChatColor.WHITE + " created!");
+	}
 }

@@ -990,4 +990,15 @@ public final class Utils {
         String version = Bukkit.getBukkitVersion().split("\\.")[1];
         return isNumber(version) ? Integer.valueOf(version) : 12;
     }
+
+    public static boolean doesGameModeEnumExist(String value) {
+        boolean match = false;
+        try {
+            GameMode.valueOf(value.toUpperCase());
+            match = true;
+        } catch (IllegalArgumentException ex) {
+            // yum
+        }
+        return match;
+    }
 }
