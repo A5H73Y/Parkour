@@ -194,7 +194,7 @@ public class ValidationMethods {
 		    return false;
         }
 		if (PlayerMethods.isPlaying(args[2])) {
-			player.sendMessage(Static.getParkourString() + "This player is already playing!");
+			player.sendMessage(Static.getParkourString() + "This player is already on a course!");
 			return false;
 		}
 		if (player.getName().equalsIgnoreCase(args[2])) {
@@ -211,6 +211,15 @@ public class ValidationMethods {
 		if (!ValidationMethods.courseJoiningNoMessages(target, courseName)) {
 			player.sendMessage(Static.getParkourString() + "They are not able to join this course!");
 			return false;
+		}
+		if (args.length == 4) {
+			if (!Static.getEconomy()) {
+				player.sendMessage(Static.getParkourString() + "Economy is disabled, no wager will be made.");
+
+			} else if (!Utils.isPositiveNumber(args[3])) {
+				player.sendMessage(Static.getParkourString() + "Wager must be a positive number.");
+				return false;
+			}
 		}
 
 		return true;

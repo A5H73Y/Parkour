@@ -861,23 +861,38 @@ public class CourseMethods {
      * @param player
      */
     public static void challengePlayer(String[] args, Player player) {
+        if (args.length < 3) {
+            player.sendMessage(Utils.invalidSyntax("challenge", "(player) (course) [wager]"));
+            return;
+        }
+
         if (!ValidationMethods.challengePlayer(args, player))
             return;
 
         if (!Utils.delayPlayer(player, 10, true))
             return;
 
+        String wagerString = "";
+        Double wager = null;
+
+        if (args.length == 4 && Static.getEconomy() && Utils.isPositiveNumber(args[3])) {
+            String currencyName = Parkour.getEconomy().currencyNamePlural() == null ?
+                    "" : " " + Parkour.getEconomy().currencyNamePlural();
+            wager = Double.valueOf(args[3]);
+            wagerString = Utils.getTranslation("Parkour.Challenge.Wager", false).replace("%AMOUNT%", wager + currencyName);
+        }
+
         Player target = Bukkit.getPlayer(args[2]);
         String courseName = args[1].toLowerCase();
 
-        target.sendMessage(Utils.getTranslation("Parkour.ChallengeReceive")
+        target.sendMessage(Utils.getTranslation("Parkour.Challenge.Receive")
                 .replace("%PLAYER%", player.getName())
-                .replace("%COURSE%", courseName));
+                .replace("%COURSE%", courseName) + wagerString);
         target.sendMessage(Utils.getTranslation("Parkour.Accept", false));
-        player.sendMessage(Utils.getTranslation("Parkour.ChallengeSend")
+        player.sendMessage(Utils.getTranslation("Parkour.Challenge.Send")
                 .replace("%PLAYER%", target.getName())
-                .replace("%COURSE%", courseName));
-        ChallengeManager.getInstance().challengePlayer(player.getName(), target.getName(), courseName);
+                .replace("%COURSE%", courseName) + wagerString);
+        ChallengeManager.getInstance().createChallenge(player.getName(), target.getName(), courseName, wager);
     }
 
     /**

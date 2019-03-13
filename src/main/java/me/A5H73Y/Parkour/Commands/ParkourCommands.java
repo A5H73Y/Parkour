@@ -7,6 +7,7 @@ import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Course.LobbyMethods;
 import me.A5H73Y.Parkour.GUI.ParkourCoursesInventory;
+import me.A5H73Y.Parkour.Managers.ChallengeManager;
 import me.A5H73Y.Parkour.Managers.QuietModeManager;
 import me.A5H73Y.Parkour.Other.Help;
 import me.A5H73Y.Parkour.Parkour;
@@ -359,9 +360,6 @@ public class ParkourCommands implements CommandExecutor {
             if (!Utils.hasPermission(player, "Parkour.Basic", "Challenge"))
                 return false;
 
-            if (!Utils.validateArgs(player, args, 3))
-                return false;
-
             CourseMethods.challengePlayer(args, player);
 
         } else if (args[0].equalsIgnoreCase("list")) {
@@ -449,7 +447,7 @@ public class ParkourCommands implements CommandExecutor {
             Help.processCommandsInput(args, player);
 
         } else if (args[0].equalsIgnoreCase("accept")) {
-            PlayerMethods.acceptChallenge(player);
+            ChallengeManager.getInstance().acceptChallenge(player);
 
         } else if (args[0].equalsIgnoreCase("yes") || args[0].equalsIgnoreCase("no")) {
             player.sendMessage(Utils.getTranslation("Error.NoQuestion"));

@@ -7,6 +7,7 @@ import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
@@ -28,25 +29,35 @@ public class ScoreboardManager {
     private final String textFormat;
 
     private final boolean enabled;
-    private final boolean displayCourseName, displayBestTimeEver, displayBestTimeEverName, displayBestTimeByMe, displayCurrentTime;
+    private final int numberOfRowsNeeded;
 
-    private int numberOfRowsNeeded;
-
-    private Map<String, Integer> scoreboardCount = new HashMap<>();
+    private Map<String, Boolean> configKey = new HashMap<>();
+    private Map<String, String> translationKey = new HashMap<>();
 
     public ScoreboardManager() {
-        this.enabled = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Enabled");
-        this.titleFormat = Parkour.getPlugin().getConfig().getString("Scoreboard.TitleFormat");
-        this.textFormat = Parkour.getPlugin().getConfig().getString("Scoreboard.TextFormat");
+        FileConfiguration defaultConfig = Parkour.getPlugin().getConfig();
+        FileConfiguration stringsConfig = Parkour.getParkourConfig().getStringData();
 
-        this.displayCourseName = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.CourseName");
-        this.displayBestTimeEver = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.BestTimeEver");
-        this.displayBestTimeEverName = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.BestTimeEverName");
-        this.displayBestTimeByMe = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.BestTimeByMe");
-        this.displayCurrentTime = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.CurrentTime")
-                && Parkour.getPlugin().getConfig().getBoolean("OnCourse.DisplayLiveTime");
+        this.enabled = defaultConfig.getBoolean("Scoreboard.Enabled");
+        this.titleFormat = stringsConfig.getString("Scoreboard.TitleFormat");
+        this.textFormat = stringsConfig.getString("Scoreboard.TextFormat");
 
-        calculateRows();
+        configKey.put(COURSE_NAME, defaultConfig.getBoolean("Scoreboard.Display.CourseName"));
+        configKey.put(BEST_TIME_EVER, defaultConfig.getBoolean("Scoreboard.Display.BestTimeEver"));
+        configKey.put(BEST_TIME_EVER_NAME, defaultConfig.getBoolean("Scoreboard.Display.BestTimeEverName"));
+        configKey.put(BEST_TIME_EVER_ME, defaultConfig.getBoolean("Scoreboard.Display.BestTimeByMe"));
+        configKey.put(CURRENT_TIME, defaultConfig.getBoolean("Scoreboard.Display.CurrentTime")
+                && defaultConfig.getBoolean("OnCourse.DisplayLiveTime"));
+
+        translationKey.put("mainHeading", stringsConfig.getString("Scoreboard.MainHeading"));
+        translationKey.put("notCompleted", stringsConfig.getString("Scoreboard.NotCompleted"));
+        translationKey.put(COURSE_NAME, stringsConfig.getString("Scoreboard.CourseTitle"));
+        translationKey.put(BEST_TIME_EVER, stringsConfig.getString("Scoreboard.BestTimeTitle"));
+        translationKey.put(BEST_TIME_EVER_NAME, stringsConfig.getString("Scoreboard.BestTimeNameTitle"));
+        translationKey.put(BEST_TIME_EVER_ME, stringsConfig.getString("Scoreboard.MyBestTimeTitle"));
+        translationKey.put(CURRENT_TIME, stringsConfig.getString("Scoreboard.CurrentTimeTitle"));
+
+        this.numberOfRowsNeeded = calculateNumberOfRowsNeeded();
     }
 
     public boolean isEnabled() {
@@ -57,7 +68,6 @@ public class ScoreboardManager {
         if (!this.enabled)
             return;
 
-        scoreboardCount.put(player.getName(), numberOfRowsNeeded);
         Scoreboard board = setupScoreboard(player);
         player.setScoreboard(board);
     }
@@ -65,14 +75,14 @@ public class ScoreboardManager {
     public void updateScoreboardTimer(Player player, String liveTime) {
         Scoreboard board = player.getScoreboard();
 
-        if (board == null || !displayCurrentTime)
+        if (board == null || !configKey.get(CURRENT_TIME))
             return;
 
-        board.getTeam(CURRENT_TIME).setPrefix(liveTime);
+        board.getTeam(CURRENT_TIME).setPrefix(convertText(liveTime));
     }
 
     private Scoreboard setupScoreboard(Player player) {
-        String mainHeading = Utils.colour(Parkour.getPlugin().getConfig().getString("Scoreboard.MainHeading"));
+        String mainHeading = Utils.colour(translationKey.get("mainHeading"));
 
         // Set up the scoreboard itself
         Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -80,107 +90,82 @@ public class ScoreboardManager {
         objective.setDisplayName(mainHeading);
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-        //TODO poc - This can be refactored to be much smaller
-        addCourseName(board, player, objective);
-        addBestTimeEver(board, player, objective);
-        addBestTimeEverName(board, player, objective);
-        addBestTimeEverMe(board, player, objective);
-        addCurrentTime(board, player, objective);
+        PlayerScoreboard playerScoreboard = new PlayerScoreboard(player.getName(), board, objective);
+
+        addCourseName(playerScoreboard);
+        addBestTimeEver(playerScoreboard);
+        addBestTimeEverName(playerScoreboard);
+        addBestTimeEverMe(playerScoreboard);
+        addCurrentTime(playerScoreboard);
 
         return board;
     }
 
-    private void addCourseName(Scoreboard board, Player player, Objective objective) {
-        if (!displayCourseName)
+    private void addCourseName(PlayerScoreboard playerBoard) {
+        if (!configKey.get(COURSE_NAME))
             return;
 
-        String courseName = CourseMethods.findByPlayer(player.getName()).getName();
-
-        Score onlineName = objective.getScore(convertTitle("Course:"));
-        onlineName.setScore(reduceAndReturnScoreboardCount(player.getName()));
-
-        Team displayName = board.registerNewTeam(COURSE_NAME);
-        displayName.addEntry(COURSE_NAME);
-        displayName.setPrefix(convertText(courseName));
-        objective.getScore(COURSE_NAME).setScore(reduceAndReturnScoreboardCount(player.getName()));
+        print(playerBoard, playerBoard.courseName, COURSE_NAME);
     }
 
-    private void addBestTimeEver(Scoreboard board, Player player, Objective objective) {
-        if (!displayBestTimeEver)
+    private void addBestTimeEver(PlayerScoreboard playerBoard) {
+        if (!configKey.get(BEST_TIME_EVER))
             return;
 
-        String courseName = CourseMethods.findByPlayer(player.getName()).getName();
-        List<TimeObject> result = DatabaseMethods.getTopCourseResults(courseName, 1);
-        String bestTime = result.size() > 0 ? Utils.displayCurrentTime(result.get(0).getTime()) : "Not completed";
-
-        Score onlineName = objective.getScore(convertTitle("Best Time:"));
-        onlineName.setScore(reduceAndReturnScoreboardCount(player.getName()));
-
-        Team displayName = board.registerNewTeam(BEST_TIME_EVER);
-        displayName.addEntry(BEST_TIME_EVER);
-        displayName.setPrefix(convertText(bestTime));
-        objective.getScore(BEST_TIME_EVER).setScore(reduceAndReturnScoreboardCount(player.getName()));
+        List<TimeObject> result = DatabaseMethods.getTopCourseResults(playerBoard.courseName, 1);
+        String bestTimeEver = result.size() > 0 ? Utils.displayCurrentTime(result.get(0).getTime()) : translationKey.get("notCompleted");
+        print(playerBoard, bestTimeEver, BEST_TIME_EVER);
     }
 
-    private void addBestTimeEverName(Scoreboard board, Player player, Objective objective) {
-        if (!displayBestTimeEverName)
+    private void addBestTimeEverName(PlayerScoreboard playerBoard) {
+        if (!configKey.get(BEST_TIME_EVER_NAME))
             return;
 
-        String courseName = CourseMethods.findByPlayer(player.getName()).getName();
-        List<TimeObject> result = DatabaseMethods.getTopCourseResults(courseName, 1);
-        String bestTimeName = result.size() > 0 ? result.get(0).getPlayer() : "Not completed";
-
-        Score onlineName = objective.getScore(convertTitle("Best Player:"));
-        onlineName.setScore(reduceAndReturnScoreboardCount(player.getName()));
-
-        Team displayName = board.registerNewTeam(BEST_TIME_EVER_NAME);
-        displayName.addEntry(BEST_TIME_EVER_NAME);
-        displayName.setPrefix(convertText(bestTimeName));
-        objective.getScore(BEST_TIME_EVER_NAME).setScore(reduceAndReturnScoreboardCount(player.getName()));
+        List<TimeObject> result = DatabaseMethods.getTopCourseResults(playerBoard.courseName, 1);
+        String bestTimeName = result.size() > 0 ? result.get(0).getPlayer() : translationKey.get("notCompleted");
+        print(playerBoard, bestTimeName, BEST_TIME_EVER_NAME);
     }
 
-    private void addBestTimeEverMe(Scoreboard board, Player player, Objective objective) {
-        if (!displayBestTimeByMe)
+    private void addBestTimeEverMe(PlayerScoreboard playerBoard) {
+        if (!configKey.get(BEST_TIME_EVER_ME))
             return;
 
-        String courseName = CourseMethods.findByPlayer(player.getName()).getName();
-        List<TimeObject> result = DatabaseMethods.getTopPlayerCourseResults(player.getName(), courseName, 1);
-        String bestTime = result.size() > 0 ? Utils.displayCurrentTime(result.get(0).getTime()) : "Not completed";
-
-        Score onlineName = objective.getScore(convertTitle("My Best Time:"));
-        onlineName.setScore(reduceAndReturnScoreboardCount(player.getName()));
-
-        Team displayName = board.registerNewTeam(BEST_TIME_EVER_ME);
-        displayName.addEntry(BEST_TIME_EVER_ME);
-        displayName.setPrefix(convertText(bestTime));
-        objective.getScore(BEST_TIME_EVER_ME).setScore(reduceAndReturnScoreboardCount(player.getName()));
+        List<TimeObject> result = DatabaseMethods.getTopPlayerCourseResults(playerBoard.playerName, playerBoard.courseName, 1);
+        String bestTime = result.size() > 0 ? Utils.displayCurrentTime(result.get(0).getTime()) : translationKey.get("notCompleted");
+        print(playerBoard, bestTime, BEST_TIME_EVER_ME);
     }
 
-    private void addCurrentTime(Scoreboard board, Player player, Objective objective) {
-        if (!displayCurrentTime)
+    private void addCurrentTime(PlayerScoreboard playerBoard) {
+        if (!configKey.get(CURRENT_TIME))
             return;
 
-        Score onlineName = objective.getScore(convertTitle("Course Time:"));
-        onlineName.setScore(reduceAndReturnScoreboardCount(player.getName()));
-
-        Team displayName = board.registerNewTeam(CURRENT_TIME);
-        displayName.addEntry(CURRENT_TIME);
-        displayName.setPrefix(convertText("00:00:00"));
-        objective.getScore(CURRENT_TIME).setScore(reduceAndReturnScoreboardCount(player.getName()));
+        print(playerBoard, "00:00:00", CURRENT_TIME);
     }
 
-    private String convertTitle(String heading) {
-        return Utils.colour(titleFormat.replace("%TITLE%", heading));
+    private void print(PlayerScoreboard playerBoard, String result, String scoreboardKey) {
+        Score onlineName = playerBoard.objective.getScore(convertTitle(translationKey.get(scoreboardKey)));
+        onlineName.setScore(playerBoard.getDecreaseCount());
+
+        Team displayName = playerBoard.scoreboard.registerNewTeam(scoreboardKey);
+        displayName.addEntry(scoreboardKey);
+        displayName.setPrefix(convertText(result));
+        playerBoard.objective.getScore(scoreboardKey).setScore(playerBoard.getDecreaseCount());
     }
 
-    private String convertText(String variable) {
-        return Utils.colour(textFormat.replace("%TEXT%", variable));
+    private String convertTitle(String title) {
+        title = titleFormat.replace("%TITLE%", title);
+        return cropAndColour(title);
     }
 
-    //TODO perhaps think of a better way to manage a decreasing integer per-player
-    private int reduceAndReturnScoreboardCount(String playerName) {
-        int count = scoreboardCount.get(playerName);
-        return scoreboardCount.put(playerName, --count);
+    private String convertText(String value) {
+        value = textFormat.replace("%TEXT%", value);
+        return cropAndColour(value);
+    }
+
+    private String cropAndColour(String text) {
+        text = Utils.colour(text);
+        text = Utils.getMinorServerVersion() < 13 ? text.substring(0, 15) : text;
+        return text;
     }
 
     public void removeScoreboard(Player player) {
@@ -192,11 +177,34 @@ public class ScoreboardManager {
     /**
      * Each row needs a heading and a text entry
      */
-    private void calculateRows() {
-        if (displayCourseName) numberOfRowsNeeded += 2;
-        if (displayBestTimeEver) numberOfRowsNeeded += 2;
-        if (displayBestTimeEverName) numberOfRowsNeeded += 2;
-        if (displayBestTimeByMe) numberOfRowsNeeded += 2;
-        if (displayCurrentTime) numberOfRowsNeeded += 2;
+    private int calculateNumberOfRowsNeeded() {
+        int rowsNeeded = 0;
+        if (configKey.get(COURSE_NAME)) rowsNeeded += 2;
+        if (configKey.get(BEST_TIME_EVER)) rowsNeeded += 2;
+        if (configKey.get(BEST_TIME_EVER_NAME)) rowsNeeded += 2;
+        if (configKey.get(BEST_TIME_EVER_ME)) rowsNeeded += 2;
+        if (configKey.get(CURRENT_TIME)) rowsNeeded += 2;
+        return rowsNeeded;
+    }
+
+    private class PlayerScoreboard {
+
+        private final String playerName;
+        private final String courseName;
+
+        private int scoreboardCount = numberOfRowsNeeded;
+        private Scoreboard scoreboard;
+        private Objective objective;
+
+        public PlayerScoreboard(String playerName, Scoreboard scoreboard, Objective objective) {
+            this.playerName = playerName;
+            this.courseName = CourseMethods.findByPlayer(playerName).getName();
+            this.scoreboard = scoreboard;
+            this.objective = objective;
+        }
+
+        public int getDecreaseCount() {
+            return --scoreboardCount;
+        }
     }
 }

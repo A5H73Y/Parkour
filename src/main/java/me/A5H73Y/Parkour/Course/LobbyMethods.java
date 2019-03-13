@@ -13,6 +13,8 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Set;
+
 public class LobbyMethods {
     /**
      * Creating or overwriting a Parkour lobby.
@@ -148,7 +150,7 @@ public class LobbyMethods {
      * @param player
      * @param session
      */
-    public static void leaveCourse(Player player, ParkourSession session) {
+    public static void teleportToLeaveDestination(Player player, ParkourSession session) {
         String lobbyName = null;
 
         if (Parkour.getPlugin().getConfig().getBoolean("OnLeave.TeleportToLinkedLobby")) {
@@ -158,8 +160,28 @@ public class LobbyMethods {
         LobbyMethods.joinLobby(args, player);
     }
 
+    /**
+     * Get list of Lobbies
+     * I'm aware this looks like shit, but it's the best solution.
+     * @return Set<String>
+     */
+    public static Set<String> getCustomLobbies() {
+        Set<String> lobbyListSet = Parkour.getPlugin().getConfig().getConfigurationSection("Lobby").getKeys(false);
+
+        lobbyListSet.remove("Set");
+        lobbyListSet.remove("World");
+        lobbyListSet.remove("EnforceWorld");
+        lobbyListSet.remove("X");
+        lobbyListSet.remove("Y");
+        lobbyListSet.remove("Z");
+        lobbyListSet.remove("Pitch");
+        lobbyListSet.remove("Yaw");
+
+        return lobbyListSet;
+    }
+
     public static void displayLobbies(CommandSender sender) {
         sender.sendMessage(Utils.getStandardHeading("Custom Lobbies"));
-        Static.getLobbyList().forEach(s -> sender.sendMessage("* " + s));
+        getCustomLobbies().forEach(s -> sender.sendMessage("* " + s));
     }
 }

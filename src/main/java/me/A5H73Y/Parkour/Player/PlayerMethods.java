@@ -1,21 +1,17 @@
 package me.A5H73Y.Parkour.Player;
 
-import java.util.HashMap;
-import java.util.List;
-
 import me.A5H73Y.Parkour.Course.*;
-import me.A5H73Y.Parkour.Managers.QuietModeManager;
-import me.A5H73Y.Parkour.ParkourEvents.*;
-import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Enums.ParkourMode;
 import me.A5H73Y.Parkour.Managers.ChallengeManager;
+import me.A5H73Y.Parkour.Managers.QuietModeManager;
 import me.A5H73Y.Parkour.Other.Constants;
-import me.A5H73Y.Parkour.ParkourKit.ParkourKit;
 import me.A5H73Y.Parkour.Other.TimeObject;
+import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.ParkourEvents.*;
+import me.A5H73Y.Parkour.ParkourKit.ParkourKit;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
-
 import me.A5H73Y.Parkour.Utilities.XMaterial;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
@@ -26,6 +22,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class PlayerMethods {
 
@@ -98,10 +97,14 @@ public class PlayerMethods {
         restoreHealth(player);
         loadInventory(player);
 
+        if (ChallengeManager.getInstance().isPlayerInChallenge(player.getName())) {
+            ChallengeManager.getInstance().terminateChallenge(player);
+        }
+
         if (Parkour.getPlugin().getConfig().getBoolean("OnDie.SetXPBarToDeathCount"))
             player.setLevel(0);
 
-        LobbyMethods.leaveCourse(player, session);
+        LobbyMethods.teleportToLeaveDestination(player, session);
 
         if (Static.containsHidden(player.getName()))
             Utils.toggleVisibility(player, true);
@@ -206,6 +209,10 @@ public class PlayerMethods {
         CourseInfo.increaseComplete(courseName);
         teardownPlayerMode(player);
         removePlayer(player.getName());
+
+        if (ChallengeManager.getInstance().isPlayerInChallenge(player.getName())) {
+            ChallengeManager.getInstance().completeChallenge(player);
+        }
 
         if (Parkour.getPlugin().getConfig().getBoolean("OnDie.SetXPBarToDeathCount"))
             player.setLevel(0);
@@ -965,70 +972,6 @@ public class PlayerMethods {
             float speed = Float.valueOf(Parkour.getPlugin().getConfig().getString("ParkourModes.Speedy.ResetSpeed"));
             player.setWalkSpeed(speed);
         }
-    }
-
-    /**
-     * Accept a challenge
-     * Executed by the recipient of a challenge invite.
-     * Will prepare each player for the challenge.
-     *
-     * @param receiverPlayer
-     */
-    public static void acceptChallenge(final Player receiverPlayer) {
-        ChallengeManager.Challenge challenge = ChallengeManager.getInstance().getChallengeForPlayer(receiverPlayer.getName());
-
-        if (challenge == null) {
-            receiverPlayer.sendMessage(Static.getParkourString() + "You have not been invited!");
-            return;
-        }
-        if (!PlayerMethods.isPlayerOnline(challenge.getSenderPlayer())) {
-            receiverPlayer.sendMessage(Static.getParkourString() + "Player is not online!");
-            return;
-        }
-
-        ChallengeManager.getInstance().removeChallenge(challenge);
-        final Player senderPlayer = Bukkit.getPlayer(challenge.getSenderPlayer());
-
-        if (Parkour.getPlugin().getConfig().getBoolean("ParkourModes.Challenge.hidePlayers")) {
-            senderPlayer.hidePlayer(receiverPlayer);
-            receiverPlayer.hidePlayer(senderPlayer);
-        }
-
-        CourseMethods.joinCourse(senderPlayer, challenge.getCourseName());
-        CourseMethods.joinCourse(receiverPlayer, challenge.getCourseName());
-
-        final float playerSpeed = senderPlayer.getWalkSpeed();
-        final float targetSpeed = receiverPlayer.getWalkSpeed();
-
-        senderPlayer.setWalkSpeed(0f);
-        receiverPlayer.setWalkSpeed(0f);
-
-        new Runnable() {
-            public int taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(Parkour.getPlugin(), this, 0L, 20L);
-
-            int count = Parkour.getPlugin().getConfig().getInt("ParkourModes.Challenge.CountdownFrom") + 1;
-            @Override
-            public void run() {
-                if (count > 1) {
-                    count--;
-
-                    String translation = Utils.getTranslation("Parkour.Countdown", false).replace("%AMOUNT%", String.valueOf(count));
-                    senderPlayer.sendMessage(translation);
-                    receiverPlayer.sendMessage(translation);
-                } else {
-                    Bukkit.getScheduler().cancelTask(taskID);
-
-                    String translation = Utils.getTranslation("Parkour.Go", false);
-                    senderPlayer.sendMessage(translation);
-                    receiverPlayer.sendMessage(translation);
-                    senderPlayer.setWalkSpeed(playerSpeed);
-                    receiverPlayer.setWalkSpeed(targetSpeed);
-
-                    getParkourSession(senderPlayer.getName()).resetTimeStarted();
-                    getParkourSession(receiverPlayer.getName()).resetTimeStarted();
-                }
-            }
-        };
     }
 
     /**

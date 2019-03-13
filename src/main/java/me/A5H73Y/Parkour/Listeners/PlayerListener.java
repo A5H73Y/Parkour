@@ -1,6 +1,7 @@
 package me.A5H73Y.Parkour.Listeners;
 
 import me.A5H73Y.Parkour.Enums.ParkourMode;
+import me.A5H73Y.Parkour.Managers.ChallengeManager;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
@@ -124,6 +125,16 @@ public class PlayerListener implements Listener {
 
         if (Parkour.getSettings().isPlayerLeaveCourseOnLeaveServer())
             PlayerMethods.playerLeave(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onPlayerDisconnect(PlayerQuitEvent event) {
+        if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+            return;
+
+        if (ChallengeManager.getInstance().isPlayerInChallenge(event.getPlayer().getName())) {
+            ChallengeManager.getInstance().terminateChallenge(event.getPlayer());
+        }
     }
 
     @EventHandler

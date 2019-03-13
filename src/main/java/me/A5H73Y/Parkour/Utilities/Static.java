@@ -84,26 +84,6 @@ public final class Static {
 		return delay;
 	}
 
-	/**
-	 * Get list of Lobbies
-	 * I'm aware this looks like shit, but it's the best solution.
-	 * @return List<String>
-	 */
-	public static Set<String> getLobbyList() {
-		Set<String> lobbyListSet = Parkour.getPlugin().getConfig().getConfigurationSection("Lobby").getKeys(false);
-
-		lobbyListSet.remove("Set");
-		lobbyListSet.remove("World");
-		lobbyListSet.remove("EnforceWorld");
-		lobbyListSet.remove("X");
-		lobbyListSet.remove("Y");
-		lobbyListSet.remove("Z");
-		lobbyListSet.remove("Pitch");
-		lobbyListSet.remove("Yaw");
-
-		return lobbyListSet;
-	}
-
 	public static void addWhitelistedCommand(String command) {
 		List<String> commands = Parkour.getSettings().getWhitelistedCommands();
 		commands.add(command);

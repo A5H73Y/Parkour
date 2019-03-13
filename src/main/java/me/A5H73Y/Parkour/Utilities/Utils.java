@@ -882,16 +882,19 @@ public final class Utils {
     public static boolean hasPrizeCooldownDurationPassed(Player player, String courseName) {
         int rewardDelay = CourseInfo.getRewardDelay(courseName);
 
-        if (rewardDelay <= 0) return true;
+        if (rewardDelay <= 0)
+            return true;
 
         long lastRewardTime = PlayerInfo.getLastRewardedTime(player, courseName);
 
-        if (lastRewardTime <= 0) return true;
+        if (lastRewardTime <= 0)
+            return true;
 
         long timeDifference = System.currentTimeMillis() - lastRewardTime;
         long daysDelay = convertDaysToMilliseconds(rewardDelay);
 
-        if (timeDifference > daysDelay) return true;
+        if (timeDifference > daysDelay)
+            return true;
 
         if (Parkour.getSettings().isDisplayPrizeCooldown()) {
             String timeRemaining = displayTimeRemaining(daysDelay - timeDifference);

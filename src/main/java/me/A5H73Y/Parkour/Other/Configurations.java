@@ -318,8 +318,6 @@ public class Configurations {
             stringData.addDefault("Parkour.Die2", "You died! Going back to checkpoint &b%POINT%");
             stringData.addDefault("Parkour.LifeCount", "&b%AMOUNT% &flives remaining!");
             stringData.addDefault("Parkour.Playing", " &b%PLAYER% &f- &8C: &7%COURSE% &8D: &7%DEATHS% &8T: &7%TIME%");
-            stringData.addDefault("Parkour.ChallengeReceive", "You have been challenged by &b%PLAYER% &fto course &b%COURSE%");
-            stringData.addDefault("Parkour.ChallengeSend", "You have challenged &b%PLAYER% &fto course &b%COURSE%");
             stringData.addDefault("Parkour.Accept", "&7Enter &a/pa accept &7to accept.");
             stringData.addDefault("Parkour.RewardLevel", "Your level has been set to &b%LEVEL% &ffor completing &b%COURSE%&f!");
             stringData.addDefault("Parkour.RewardRank", "Your rank has been set to %RANK%");
@@ -334,6 +332,12 @@ public class Configurations {
             stringData.addDefault("Parkour.LeaderboardEntry", "%POSITION%) &b%PLAYER% &fin &3%TIME%&f, dying &7%DEATHS% &ftimes");
             stringData.addDefault("Parkour.QuietOn", "Quiet Mode: &bON");
             stringData.addDefault("Parkour.QuietOff", "Quiet Mode: &bOFF");
+            stringData.addDefault("Parkour.Challenge.Receive", "You have been challenged by &b%PLAYER% &fto course &b%COURSE%");
+            stringData.addDefault("Parkour.Challenge.Send", "You have challenged &b%PLAYER% &fto course &b%COURSE%");
+            stringData.addDefault("Parkour.Challenge.Wager", " &fwith a wager of &b%AMOUNT%");
+            stringData.addDefault("Parkour.Challenge.Terminated", "&b%PLAYER% &fhas terminated the challenge!");
+            stringData.addDefault("Parkour.Challenge.Winner", "Congratulations! You beat &b%PLAYER% &fat &b%COURSE%!");
+            stringData.addDefault("Parkour.Challenge.Loser", "&b%PLAYER% &fhas completed &b%COURSE% &fbefore you!");
 
             stringData.addDefault("Error.NotOnCourse", "You are not on this course!");
             stringData.addDefault("Error.NotOnAnyCourse", "You are not on a course!");
@@ -376,6 +380,16 @@ public class Configurations {
             stringData.addDefault("Other.Item_Book", "&6View course stats");
             stringData.addDefault("Other.Reload", "Config Reloaded!");
             stringData.addDefault("Other.Kit", "ParkourKit Given!");
+
+            stringData.addDefault("Scoreboard.MainHeading", "&b&l== Parkour ==");
+            stringData.addDefault("Scoreboard.TitleFormat", "&b%TITLE%");
+            stringData.addDefault("Scoreboard.TextFormat", "&f%TEXT%");
+            stringData.addDefault("Scoreboard.NotCompleted", "Not Completed");
+            stringData.addDefault("Scoreboard.CourseTitle", "Course:");
+            stringData.addDefault("Scoreboard.BestTimeTitle", "Best Time:");
+            stringData.addDefault("Scoreboard.BestTimeNameTitle", "Best Player:");
+            stringData.addDefault("Scoreboard.MyBestTimeTitle", "My Best Time:");
+            stringData.addDefault("Scoreboard.CurrentTimeTitle", "Current Time:");
 
             stringData.addDefault("Economy.Insufficient", "You require at least &b%AMOUNT% &fbefore joining &b%COURSE%");
             stringData.addDefault("Economy.Fee", "&b%AMOUNT% &fhas been deducted from your balance for joining &b%COURSE%");
@@ -501,9 +515,6 @@ public class Configurations {
         config.addDefault("AutoStart.TickDelay", 0);
 
         config.addDefault("Scoreboard.Enabled", false);
-        config.addDefault("Scoreboard.MainHeading", "&b&l== Parkour ==");
-        config.addDefault("Scoreboard.TitleFormat", "&b%TITLE%");
-        config.addDefault("Scoreboard.TextFormat", "&f%TEXT%");
         config.addDefault("Scoreboard.Display.CourseName", true);
         config.addDefault("Scoreboard.Display.BestTimeEver", true);
         config.addDefault("Scoreboard.Display.BestTimeEverName", true);

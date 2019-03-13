@@ -65,7 +65,7 @@ public class CourseInfo {
     public static String getLinkedLobby(String courseName) {
         String linkedLobby = Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".LinkedLobby");
 
-        if (linkedLobby != null && Static.getLobbyList().contains(linkedLobby))
+        if (linkedLobby != null && LobbyMethods.getCustomLobbies().contains(linkedLobby))
             return linkedLobby;
 
         return null;
