@@ -176,7 +176,7 @@ public class ParkourKit implements Serializable {
             String matchingValue = getParkourKitData().getString("ParkourKit." + name + "." + oldMaterial + "." + attribute);
 
             getParkourKitData().set("ParkourKit." + name + "." + newMaterial + "." + attribute,
-                    Utils.isNumber(matchingValue) ? Integer.valueOf(matchingValue) : matchingValue);
+                    Utils.isInteger(matchingValue) ? Integer.valueOf(matchingValue) : matchingValue);
         }
 
         // remove the old kit

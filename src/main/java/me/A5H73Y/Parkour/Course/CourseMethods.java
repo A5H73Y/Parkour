@@ -175,7 +175,7 @@ public class CourseMethods {
      */
     public static void joinCourse(Player player, String courseName) {
         Course course;
-        if (Utils.isPositiveNumber(courseName)) {
+        if (Utils.isPositiveInteger(courseName)) {
             course = findByNumber(Integer.parseInt(courseName));
         } else {
             course = findByName(courseName);
@@ -225,7 +225,7 @@ public class CourseMethods {
             displayPlaying(sender);
 
         } else if (args[1].equalsIgnoreCase("courses")) {
-            int page = (args.length == 3 && args[2] != null && Utils.isPositiveNumber(args[2]) ? Integer.parseInt(args[2]) : 1);
+            int page = (args.length == 3 && args[2] != null && Utils.isPositiveInteger(args[2]) ? Integer.parseInt(args[2]) : 1);
             displayCourses(sender, page);
 
         } else if (args[1].equalsIgnoreCase("ranks")) {
@@ -491,7 +491,7 @@ public class CourseMethods {
             return;
         }
 
-        if (!Utils.isPositiveNumber(args[2])) {
+        if (!Utils.isPositiveInteger(args[2])) {
             sender.sendMessage(Static.getParkourString() + "Amount of deaths is not valid.");
             return;
         }
@@ -517,8 +517,8 @@ public class CourseMethods {
             return;
         }
 
-        if (!Utils.isPositiveNumber(args[2])) {
-            sender.sendMessage(Static.getParkourString() + "Amount of deaths is not valid.");
+        if (!Utils.isPositiveInteger(args[2])) {
+            sender.sendMessage(Static.getParkourString() + "Amount of seconds is not valid.");
             return;
         }
 
@@ -538,7 +538,7 @@ public class CourseMethods {
             sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
             return;
         }
-        if (!Utils.isPositiveNumber(args[2])) {
+        if (!Utils.isPositiveInteger(args[2])) {
             sender.sendMessage(Static.getParkourString() + "Minimum level is not valid.");
             return;
         }
@@ -560,7 +560,7 @@ public class CourseMethods {
             sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
             return;
         }
-        if (!Utils.isPositiveNumber(args[2])) {
+        if (!Utils.isPositiveInteger(args[2])) {
             sender.sendMessage(Static.getParkourString() + "Reward level needs to be numeric.");
             return;
         }
@@ -581,7 +581,7 @@ public class CourseMethods {
             sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
             return;
         }
-        if (!Utils.isPositiveNumber(args[2])) {
+        if (!Utils.isPositiveInteger(args[2])) {
             sender.sendMessage(Static.getParkourString() + "Reward level addon needs to be numeric.");
             return;
         }
@@ -620,7 +620,7 @@ public class CourseMethods {
      * @param sender
      */
     public static void setRewardRank(String[] args, CommandSender sender) {
-        if (!Utils.isPositiveNumber(args[1])) {
+        if (!Utils.isPositiveInteger(args[1])) {
             sender.sendMessage(Static.getParkourString() + "Reward level needs to be numeric.");
             return;
         }
@@ -645,7 +645,7 @@ public class CourseMethods {
             sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
             return;
         }
-        if (!Utils.isPositiveNumber(args[2])) {
+        if (!Utils.isPositiveInteger(args[2])) {
             sender.sendMessage(Static.getParkourString() + "Reward delay needs to be numeric.");
             return;
         }
@@ -666,7 +666,7 @@ public class CourseMethods {
             sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
             return;
         }
-        if (!Utils.isPositiveNumber(args[2])) {
+        if (!Utils.isPositiveInteger(args[2])) {
             sender.sendMessage(Static.getParkourString() + "Parkoins reward needs to be numeric.");
             return;
         }
@@ -875,7 +875,7 @@ public class CourseMethods {
         String wagerString = "";
         Double wager = null;
 
-        if (args.length == 4 && Static.getEconomy() && Utils.isPositiveNumber(args[3])) {
+        if (args.length == 4 && Static.getEconomy() && Utils.isPositiveDouble(args[3])) {
             String currencyName = Parkour.getEconomy().currencyNamePlural() == null ?
                     "" : " " + Parkour.getEconomy().currencyNamePlural();
             wager = Double.valueOf(args[3]);
@@ -911,7 +911,7 @@ public class CourseMethods {
             sender.sendMessage(Static.getParkourString() + "Invalid material: " + args[2].toUpperCase());
             return;
         }
-        if (!Utils.isPositiveNumber(args[3])) {
+        if (!Utils.isPositiveInteger(args[3])) {
             sender.sendMessage(Static.getParkourString() + "Amount needs to be numeric.");
             return;
         }
@@ -955,7 +955,7 @@ public class CourseMethods {
         }
 
         if (args.length >= 3) {
-            if (!Utils.isPositiveNumber(args[2])) {
+            if (!Utils.isPositiveInteger(args[2])) {
                 player.sendMessage(Static.getParkourString() + "Amount of results needs to be numeric.");
                 return;
             }

@@ -5,7 +5,6 @@ import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.potion.PotionEffectType;
@@ -152,7 +151,7 @@ public class SignMethods {
 			return;
 
 		if (!sign.getLine(3).isEmpty()) {
-			if (!Utils.isPositiveNumber(sign.getLine(3)))
+			if (!Utils.isPositiveInteger(sign.getLine(3)))
 				sign.setLine(3, "");
 		}
 
@@ -163,7 +162,7 @@ public class SignMethods {
 		if (!createStandardCourseSign(sign, player, "Checkpoint", false))
 			return;
 
-		if (sign.getLine(3).isEmpty() || !Utils.isPositiveNumber(sign.getLine(3))) {
+		if (sign.getLine(3).isEmpty() || !Utils.isPositiveInteger(sign.getLine(3))) {
 			sign.getBlock().breakNaturally();
 			player.sendMessage(Static.getParkourString() + "Please specify checkpoint on bottom line!");
 			return;

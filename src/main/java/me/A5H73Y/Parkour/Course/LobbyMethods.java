@@ -28,7 +28,7 @@ public class LobbyMethods {
         setLobby(args, player);
 
         if (args.length > 1) {
-            if (args.length > 2 && Utils.isPositiveNumber(args[2])) {
+            if (args.length > 2 && Utils.isPositiveInteger(args[2])) {
                 created = created.concat(ChatColor.AQUA + args[1] + ChatColor.WHITE + " created, with a required rank of " + ChatColor.DARK_AQUA + Integer.parseInt(args[2]));
                 Parkour.getPlugin().getConfig().set("Lobby." + args[1] + ".Level", Integer.parseInt(args[2]));
             } else {

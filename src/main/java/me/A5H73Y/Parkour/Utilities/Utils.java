@@ -172,12 +172,27 @@ public final class Utils {
      * Check if the argument is numeric
      * "1" = true, "Hi" = false
      *
-     * @param text
+     * @param input
      * @return whether the input is numeric
      */
-    public static boolean isNumber(String text) {
+    public static boolean isInteger(String input) {
         try {
-            Integer.parseInt(text);
+            Integer.parseInt(input);
+            return true;
+        } catch (Exception e) {}
+        return false;
+    }
+
+    /**
+     * Check if the argument is numeric
+     * "1" = true, "1.0" = true, "Hi" = false
+     *
+     * @param input
+     * @return whether the input is numeric
+     */
+    public static boolean isDouble(String input) {
+        try {
+            Double.parseDouble(input);
             return true;
         } catch (Exception e) {}
         return false;
@@ -187,11 +202,22 @@ public final class Utils {
      * Check if the argument is numeric
      * "1" = true, "Hi" = false, "-1" = false
      *
-     * @param text
+     * @param input
      * @return whether the input is numeric
      */
-    public static boolean isPositiveNumber(String text) {
-        return isNumber(text) && Integer.parseInt(text) >= 0;
+    public static boolean isPositiveInteger(String input) {
+        return isInteger(input) && Integer.parseInt(input) >= 0;
+    }
+
+    /**
+     * Check if the argument is numeric
+     * "1" = true, "Hi" = false, "-1" = false
+     *
+     * @param input
+     * @return whether the input is numeric
+     */
+    public static boolean isPositiveDouble(String input) {
+        return isDouble(input) && Double.parseDouble(input) >= 0;
     }
 
     /**
@@ -991,7 +1017,7 @@ public final class Utils {
      */
     public static int getMinorServerVersion() {
         String version = Bukkit.getBukkitVersion().split("\\.")[1];
-        return isNumber(version) ? Integer.valueOf(version) : 12;
+        return isInteger(version) ? Integer.valueOf(version) : 12;
     }
 
     public static boolean doesGameModeEnumExist(String value) {

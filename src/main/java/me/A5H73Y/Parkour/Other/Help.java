@@ -494,7 +494,7 @@ public final class Help {
 				player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[2]));
 				return;
 			}
-			if (!Utils.isPositiveNumber(args[3])) {
+			if (!Utils.isPositiveInteger(args[3])) {
 				player.sendMessage(Static.getParkourString() + "Amount needs to be numeric.");
 				return;
 			}
@@ -512,7 +512,7 @@ public final class Help {
 				player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[2]));
 				return;
 			}
-			if (!Utils.isPositiveNumber(args[3])) {
+			if (!Utils.isPositiveInteger(args[3])) {
 				player.sendMessage(Static.getParkourString() + "Amount needs to be numeric.");
 				return;
 			}

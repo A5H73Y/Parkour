@@ -514,7 +514,7 @@ public class PlayerMethods {
         int reward = CourseInfo.getEconomyFinishReward(courseName);
 
         if (reward > 0) {
-            Parkour.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()), reward);
+            Parkour.getEconomy().depositPlayer(player, reward);
             String currencyName = Parkour.getEconomy().currencyNamePlural() == null ?
                     "" : " " + Parkour.getEconomy().currencyNamePlural();
 
@@ -1041,7 +1041,7 @@ public class PlayerMethods {
     }
 
     public static void setLevel(String[] args, CommandSender sender) {
-        if (!Utils.isPositiveNumber(args[2])) {
+        if (!Utils.isPositiveInteger(args[2])) {
             sender.sendMessage(Static.getParkourString() + "Minimum level is not valid.");
             return;
         }

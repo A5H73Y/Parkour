@@ -12,10 +12,7 @@ import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityCombustEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
@@ -186,5 +183,21 @@ public class PlayerListener implements Listener {
 
         if (event.getInventory().getType() != InventoryType.PLAYER)
             event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onPotionEffect(EntityPotionEffectEvent event) {
+        if (!(event.getEntity() instanceof Player))
+            return;
+
+        Player player = (Player) event.getEntity();
+
+        if (!PlayerMethods.isPlaying(player.getName()))
+            return;
+
+        if (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.PreventAllPotionEffects"))
+            return;
+
+        event.setCancelled(true);
     }
 }

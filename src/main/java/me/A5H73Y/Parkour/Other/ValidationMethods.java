@@ -37,7 +37,7 @@ public class ValidationMethods {
 		} else if (args[1].contains(".")) {
 			player.sendMessage(Static.getParkourString() + "Course name can not contain '.'");
 			return false;
-		} else if (Utils.isNumber(args[1])) {
+		} else if (Utils.isInteger(args[1])) {
 			player.sendMessage(Static.getParkourString() + "Course name can not only be numeric");
 			return false;
 		} else if (CourseMethods.exist(args[1])) {
@@ -97,13 +97,13 @@ public class ValidationMethods {
 					"" : " " + Parkour.getEconomy().currencyNamePlural();
 			
 			if (joinFee > 0) {
-				if (Parkour.getEconomy().getBalance(Bukkit.getOfflinePlayer(player.getUniqueId())) < joinFee) {
+				if (!Parkour.getEconomy().has(player, joinFee)) {
 					player.sendMessage(Utils.getTranslation("Economy.Insufficient")
 							.replace("%AMOUNT%", joinFee + currencyName)
 							.replace("%COURSE%", course.getName()));
 					return false;
 				} else {
-					Parkour.getEconomy().withdrawPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()), joinFee);
+					Parkour.getEconomy().withdrawPlayer(player, joinFee);
 					player.sendMessage(Utils.getTranslation("Economy.Fee")
 							.replace("%AMOUNT%", joinFee + currencyName)
 							.replace("%COURSE%", course.getName()));
@@ -162,10 +162,8 @@ public class ValidationMethods {
 		if (Static.getEconomy()) {
 			int joinFee = CourseInfo.getEconomyJoiningFee(courseName);
 
-			if (joinFee > 0) {
-				if (Parkour.getEconomy().getBalance(Bukkit.getOfflinePlayer(player.getUniqueId())) < joinFee) {
-					return false;
-				}
+			if (joinFee > 0 && !Parkour.getEconomy().has(player, joinFee)) {
+				return false;
 			}
 		}
 
@@ -180,12 +178,13 @@ public class ValidationMethods {
 	 */
 	public static boolean challengePlayer(String[] args, Player player) {
 		String courseName = args[1].toLowerCase();
+		String targetPlayerName = args[2];
 
 		if (!CourseMethods.exist(courseName)) {
 			player.sendMessage(Utils.getTranslation("Error.Unknown"));
 			return false;
 		}
-		if (!PlayerMethods.isPlayerOnline(args[2])) {
+		if (!PlayerMethods.isPlayerOnline(targetPlayerName)) {
 			player.sendMessage(Static.getParkourString() + "This player is not online!");
 			return false;
 		}
@@ -193,16 +192,16 @@ public class ValidationMethods {
 		    player.sendMessage(Static.getParkourString() + "You are already on a course!");
 		    return false;
         }
-		if (PlayerMethods.isPlaying(args[2])) {
+		if (PlayerMethods.isPlaying(targetPlayerName)) {
 			player.sendMessage(Static.getParkourString() + "This player is already on a course!");
 			return false;
 		}
-		if (player.getName().equalsIgnoreCase(args[2])) {
+		if (player.getName().equalsIgnoreCase(targetPlayerName)) {
 			player.sendMessage(Static.getParkourString() + "You can't challenge yourself!");
 			return false;
 		}
 
-		Player target = Bukkit.getPlayer(args[2]);
+		Player target = Bukkit.getPlayer(targetPlayerName);
 
 		if (!ValidationMethods.courseJoiningNoMessages(player, courseName)) {
 			player.sendMessage(Static.getParkourString() + "You are not able to join this course!");
@@ -213,13 +212,23 @@ public class ValidationMethods {
 			return false;
 		}
 		if (args.length == 4) {
+			String wagerAmount = args[3];
+
 			if (!Static.getEconomy()) {
 				player.sendMessage(Static.getParkourString() + "Economy is disabled, no wager will be made.");
 
-			} else if (!Utils.isPositiveNumber(args[3])) {
+			} else if (!Utils.isPositiveDouble(wagerAmount)) {
 				player.sendMessage(Static.getParkourString() + "Wager must be a positive number.");
 				return false;
-			}
+
+			} else if (!Parkour.getEconomy().has(player, Double.valueOf(wagerAmount))) {
+			    player.sendMessage(Static.getParkourString() + "You do not have enough funds for this wager.");
+			    return false;
+
+            } else if (!Parkour.getEconomy().has(target, Double.valueOf(wagerAmount))) {
+			    player.sendMessage(Static.getParkourString() + "They do not have enough funds for this wager.");
+			    return false;
+            }
 		}
 
 		return true;
@@ -284,7 +293,7 @@ public class ValidationMethods {
 		int pointcount = CourseInfo.getCheckpointAmount(selected) + 1;
 
 		if (!(args.length <= 1)) {
-			if (!Utils.isPositiveNumber(args[1])) {
+			if (!Utils.isPositiveInteger(args[1])) {
 				player.sendMessage(Static.getParkourString() + "Checkpoint specified is not numeric!");
 				return false; 
 			}
