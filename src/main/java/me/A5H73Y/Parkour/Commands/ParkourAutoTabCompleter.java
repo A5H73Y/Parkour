@@ -30,25 +30,63 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 		Set<String> courseCmds = getCourseCmds(sender);
 		
 		if (args.length == 1) {
-			list.add("help");
-			list.add("info");
-			list.add("contact");
-			list.add("about");
-			list.add("version");
-			list.add("material");
-			list.add("quiet");
-			list.add("like");
-			list.add("dislike");
-			list.add("list");
-			list.add("lobby");
-			list.add("perms");
-			list.add("leave");
-			list.add("done");
-			list.add("tutorial");
-			list.add("request");
-			list.add("accept");
-			list.add("bug");
-			list.add("cmds");
+			if(args[0].indexOf("help") == 0) {
+				list.add("help");
+			}
+			if(args[0].indexOf("info") == 0) {
+				list.add("info");
+			}
+			if(args[0].indexOf("contact") == 0) {
+				list.add("contact");
+			}
+			if(args[0].indexOf("about") == 0) {
+				list.add("about");
+			}
+			if(args[0].indexOf("version") == 0) {
+				list.add("version");
+			}
+			if(args[0].indexOf("material") == 0) {
+				list.add("material");
+			}
+			if(args[0].indexOf("quiet") == 0) {
+				list.add("quiet");
+			}
+			if(args[0].indexOf("like") == 0) {
+				list.add("like");
+			}
+			if(args[0].indexOf("dislike") == 0) {
+				list.add("dislike");
+			}
+			if(args[0].indexOf("list") == 0) {
+				list.add("list");
+			}
+			if(args[0].indexOf("lobby") == 0) {
+				list.add("lobby");
+			}
+			if(args[0].indexOf("perms") == 0) {
+				list.add("perms");
+			}
+			if(args[0].indexOf("leave") == 0) {	
+				list.add("leave");
+			}
+			if(args[0].indexOf("done") == 0) {	
+				list.add("done");
+			}
+			if(args[0].indexOf("tutorial") == 0) {
+				list.add("tutorial");
+			}
+			if(args[0].indexOf("request") == 0) {
+				list.add("request");
+			}
+			if(args[0].indexOf("accept") == 0) {
+				list.add("accept");
+			}
+			if(args[0].indexOf("bug") == 0) {
+				list.add("bug");
+			}
+			if(args[0].indexOf("cmds") == 0) {
+				list.add("cmds");
+			}
 			
 			if (sender.hasPermission("Parkour.Basic.*") || sender.hasPermission("Parkour.*")) {
 				list.addAll(basicCmds);
