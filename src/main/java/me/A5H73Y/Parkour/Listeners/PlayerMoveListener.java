@@ -1,8 +1,8 @@
 package me.A5H73Y.Parkour.Listeners;
 
 import me.A5H73Y.Parkour.Enums.ParkourMode;
-import me.A5H73Y.Parkour.ParkourKit.ParkourKit;
 import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.ParkourKit.ParkourKit;
 import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import org.bukkit.Location;

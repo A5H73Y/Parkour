@@ -1,9 +1,8 @@
 package me.A5H73Y.Parkour.Utilities;
 
 import me.A5H73Y.Parkour.Course.CourseInfo;
-import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.CourseMethods;
-
+import me.A5H73Y.Parkour.Parkour;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;

@@ -1,20 +1,19 @@
 package me.A5H73Y.Parkour.Player;
 
-import java.io.Serializable;
-
-import me.A5H73Y.Parkour.Managers.QuietModeManager;
-import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Enums.ParkourMode;
+import me.A5H73Y.Parkour.Managers.QuietModeManager;
+import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.io.Serializable;
 
 public class ParkourSession implements Serializable {
 
@@ -25,11 +24,11 @@ public class ParkourSession implements Serializable {
 	private long timestarted;
 	private Course course;
 	private ParkourMode mode;
-    private int seconds;
+	private int seconds;
 
-    private String liveTime;
+	private String liveTime;
 
-    private int taskId = 0;
+	private int taskId = 0;
 
 	/**
 	 * This is the ParkourSession object.
@@ -39,7 +38,7 @@ public class ParkourSession implements Serializable {
 	 * course lookup for a player name. There is also a "Mode" string, this will
 	 * be used to remember different gametypes (in potential updates), one
 	 * example is Freedom mode (Which allows you to set checkpoints whereever)
-	 * 
+	 *
 	 * @param course
 	 */
 	public ParkourSession(Course course) {
@@ -48,57 +47,57 @@ public class ParkourSession implements Serializable {
 		this.timestarted = System.currentTimeMillis();
 		this.course = course;
 		this.mode = CourseMethods.getCourseMode(course.getName());
-    }
-	
+	}
+
 	public void startVisualTimer(final Player player) {
 		if (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.DisplayLiveTime") ||
-                QuietModeManager.isInQuietMode(player.getName()))
+				QuietModeManager.isInQuietMode(player.getName()))
 			return;
-		
+
 		BukkitTask task = new BukkitRunnable() {
-            @Override
-            public void run() {
-                liveTime = Utils.convertSecondsToTime(++seconds);
+			@Override
+			public void run() {
+				liveTime = Utils.convertSecondsToTime(++seconds);
 
-                if (!player.isOnline()) {
-                    cancelVisualTimer();
-                    return;
-                }
+				if (!player.isOnline()) {
+					cancelVisualTimer();
+					return;
+				}
 
-                boolean useScoreboard = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.CurrentTime");
+				boolean useScoreboard = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.CurrentTime");
 
-                if (Parkour.getScoreboardManager().isEnabled() && useScoreboard) {
-                    Parkour.getScoreboardManager().updateScoreboardTimer(player, liveTime);
+				if (Parkour.getScoreboardManager().isEnabled() && useScoreboard) {
+					Parkour.getScoreboardManager().updateScoreboardTimer(player, liveTime);
 
-                } else if (Static.getBountifulAPI()) {
-                    Utils.sendActionBar(player, liveTime, true);
-                }
+				} else if (Static.getBountifulAPI()) {
+					Utils.sendActionBar(player, liveTime, true);
+				}
 
-                if (course.hasMaxTime()) {
-                	if (seconds >= course.getMaxTime()) {
+				if (course.hasMaxTime()) {
+					if (seconds >= course.getMaxTime()) {
 						player.sendMessage(Utils.getTranslation("Parkour.MaxTime")
 								.replace("%TIME%", Utils.convertSecondsToTime(course.getMaxTime())));
-                		PlayerMethods.playerLeave(player);
+						PlayerMethods.playerLeave(player);
 					}
 				}
-            }
-        }.runTaskTimer(Parkour.getPlugin(), 20, 20);
+			}
+		}.runTaskTimer(Parkour.getPlugin(), 20, 20);
 
 		taskId = task.getTaskId();
 	}
 
 	public void cancelVisualTimer() {
-	    if (taskId > 0) {
-            Bukkit.getScheduler().cancelTask(taskId);
-            taskId = 0;
-        }
-    }
+		if (taskId > 0) {
+			Bukkit.getScheduler().cancelTask(taskId);
+			taskId = 0;
+		}
+	}
 
-    /**
-     * Get the current time of the ParkourSession
-     * @return String in %02d:%02d:%02d format
-     */
-    public String getLiveTime() { return liveTime; }
+	/**
+	 * Get the current time of the ParkourSession
+	 * @return String in %02d:%02d:%02d format
+	 */
+	public String getLiveTime() { return liveTime; }
 
 	public int getDeaths() {
 		return deaths;
@@ -147,9 +146,9 @@ public class ParkourSession implements Serializable {
 	}
 
 	public void restartSession() {
-	    checkpoint = 0;
-	    deaths = 0;
-        course.setCheckpoint(CheckpointMethods.getNextCheckpoint(course.getName(), checkpoint));
-	    resetTimeStarted();
-    }
+		checkpoint = 0;
+		deaths = 0;
+		course.setCheckpoint(CheckpointMethods.getNextCheckpoint(course.getName(), checkpoint));
+		resetTimeStarted();
+	}
 }

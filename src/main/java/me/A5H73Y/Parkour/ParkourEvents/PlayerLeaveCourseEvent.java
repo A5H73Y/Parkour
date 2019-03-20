@@ -7,4 +7,5 @@ public class PlayerLeaveCourseEvent extends ParkourEvent {
     public PlayerLeaveCourseEvent(final Player player, final String courseName) {
         super(player, courseName);
     }
+
 }

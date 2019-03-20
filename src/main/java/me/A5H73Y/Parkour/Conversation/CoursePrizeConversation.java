@@ -2,17 +2,10 @@ package me.A5H73Y.Parkour.Conversation;
 
 import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Parkour;
-
 import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.conversations.BooleanPrompt;
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.FixedSetPrompt;
-import org.bukkit.conversations.MessagePrompt;
-import org.bukkit.conversations.NumericPrompt;
-import org.bukkit.conversations.Prompt;
-import org.bukkit.conversations.StringPrompt;
+import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 
 public class CoursePrizeConversation extends ParkourConversation {
@@ -53,7 +46,7 @@ public class CoursePrizeConversation extends ParkourConversation {
 		}
 	}
 
-    /* BEGIN MATERIAL PRIZE */
+	/* BEGIN MATERIAL PRIZE */
 	private class ChooseBlock extends StringPrompt {
 		@Override
 		public String getPromptText(ConversationContext context) {
@@ -71,7 +64,7 @@ public class CoursePrizeConversation extends ParkourConversation {
 
 			context.setSessionData("material", message.toUpperCase());
 			return new ChooseAmount();
-		}		
+		}
 	}
 
 	private class ChooseAmount extends NumericPrompt {
@@ -103,8 +96,8 @@ public class CoursePrizeConversation extends ParkourConversation {
 	private class MaterialProcessComplete extends MessagePrompt {
 		public String getPromptText(ConversationContext context) {
 			CourseInfo.setMaterialPrize(context.getSessionData("courseName").toString(),
-                    context.getSessionData("material").toString(),
-                    Integer.parseInt(context.getSessionData("amount").toString()));
+					context.getSessionData("material").toString(),
+					Integer.parseInt(context.getSessionData("amount").toString()));
 
 			return " The Material prize for " + ChatColor.DARK_AQUA + context.getSessionData("courseName") + ChatColor.WHITE + " was set to " + ChatColor.AQUA + context.getSessionData("amount") + " " + context.getSessionData("material");
 		}
@@ -138,16 +131,16 @@ public class CoursePrizeConversation extends ParkourConversation {
 		@Override
 		public String getPromptText(ConversationContext arg0) {
 			return ChatColor.LIGHT_PURPLE + " Would you like to run this command now? (to test)\n" +
-            ChatColor.GREEN + "[yes, no]";
+					ChatColor.GREEN + "[yes, no]";
 		}
 
 		@Override
 		protected Prompt acceptValidatedInput(ConversationContext context, boolean runNow) {
 			if (runNow)
 				Parkour.getPlugin().getServer().dispatchCommand(
-						Parkour.getPlugin().getServer().getConsoleSender(), 
+						Parkour.getPlugin().getServer().getConsoleSender(),
 						context.getSessionData("command").toString()
-						.replace("%PLAYER%", context.getSessionData("playerName").toString()));
+								.replace("%PLAYER%", context.getSessionData("playerName").toString()));
 
 			return new CommandProcessComplete();
 		}
@@ -156,8 +149,8 @@ public class CoursePrizeConversation extends ParkourConversation {
 
 	private class CommandProcessComplete extends MessagePrompt {
 		public String getPromptText(ConversationContext context) {
-		    CourseInfo.addCommandPrize(context.getSessionData("courseName").toString(),
-                    context.getSessionData("command").toString());
+			CourseInfo.addCommandPrize(context.getSessionData("courseName").toString(),
+					context.getSessionData("command").toString());
 
 			return " The Command prize for " + ChatColor.DARK_AQUA + context.getSessionData("courseName") + ChatColor.WHITE + " was set to /" + ChatColor.AQUA + context.getSessionData("command");
 		}
@@ -196,8 +189,8 @@ public class CoursePrizeConversation extends ParkourConversation {
 
 	private class XPProcessComplete extends MessagePrompt {
 		public String getPromptText(ConversationContext context) {
-		    CourseInfo.setXPPrize(context.getSessionData("courseName").toString(),
-                    Integer.parseInt(context.getSessionData("amount").toString()));
+			CourseInfo.setXPPrize(context.getSessionData("courseName").toString(),
+					Integer.parseInt(context.getSessionData("amount").toString()));
 
 			return " The XP prize for " + ChatColor.DARK_AQUA + context.getSessionData("courseName") + ChatColor.WHITE + " was set to " + ChatColor.AQUA + context.getSessionData("amount");
 		}

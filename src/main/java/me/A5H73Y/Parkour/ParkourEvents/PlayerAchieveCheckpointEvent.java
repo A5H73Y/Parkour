@@ -15,4 +15,5 @@ public class PlayerAchieveCheckpointEvent extends ParkourEvent {
     public Checkpoint getCheckpoint() {
         return checkpoint;
     }
+
 }

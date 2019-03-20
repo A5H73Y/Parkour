@@ -1,12 +1,11 @@
 package me.A5H73Y.Parkour.Utilities;
 
-import java.util.List;
-
 import me.A5H73Y.Parkour.Parkour;
-
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
+
+import java.util.List;
 
 /**
  * Quickly access Parkour Settings without knowing the property name
@@ -14,9 +13,9 @@ import org.bukkit.configuration.file.FileConfiguration;
  */
 public class Settings {
 
-    private FileConfiguration getConfig() {
-        return Parkour.getPlugin().getConfig();
-    }
+	private FileConfiguration getConfig() {
+		return Parkour.getPlugin().getConfig();
+	}
 
 	private Particle trailParticle;
 
@@ -90,61 +89,61 @@ public class Settings {
 		return getConfig().getBoolean("OnJoin.TreatFirstCheckpointAsStart");
 	}
 
-    public boolean isAutoStartEnabled() { return getConfig().getBoolean("AutoStart.Enabled"); }
+	public boolean isAutoStartEnabled() { return getConfig().getBoolean("AutoStart.Enabled"); }
 
 	/* Materials */
 
 	public Material getLastCheckpointTool() {
 		Material lastCheckpointTool = Utils.lookupMaterial(getConfig().getString("OnJoin.Item.LastCheckpoint.Material"));
-        return lastCheckpointTool == Material.AIR ? null : lastCheckpointTool;
+		return lastCheckpointTool == Material.AIR ? null : lastCheckpointTool;
 	}
-	
+
 	public int getLastCheckPointToolSlot() {
 		return Parkour.getPlugin().getConfig().getInt("OnJoin.Item.LastCheckpoint.Slot", 0);
 	}
 
 	public Material getHideallTool() {
 		Material hideallTool = Utils.lookupMaterial(getConfig().getString("OnJoin.Item.HideAll.Material"));
-        return hideallTool == Material.AIR ? null : hideallTool;
+		return hideallTool == Material.AIR ? null : hideallTool;
 	}
-	
+
 	public int getHideallToolSlot() {
 		return Parkour.getPlugin().getConfig().getInt("OnJoin.Item.HideAll.Slot", 1);
 	}
 
 	public Material getLeaveTool() {
 		Material leaveTool = Utils.lookupMaterial(getConfig().getString("OnJoin.Item.Leave.Material"));
-        return leaveTool == Material.AIR ? null : leaveTool;
+		return leaveTool == Material.AIR ? null : leaveTool;
 	}
-	
+
 	public int getLeaveToolSlot() {
 		return Parkour.getPlugin().getConfig().getInt("OnJoin.Item.Leave.Slot", 2);
 	}
 
-    public Material getRestartTool() {
+	public Material getRestartTool() {
 		Material restartTool = Utils.lookupMaterial(getConfig().getString("OnJoin.Item.Restart.Material"));
-        return restartTool == Material.AIR ? null : restartTool;
-    }
-    
-    public int getRestartToolSlot() {
+		return restartTool == Material.AIR ? null : restartTool;
+	}
+
+	public int getRestartToolSlot() {
 		return Parkour.getPlugin().getConfig().getInt("OnJoin.Item.Restart.Slot", 3);
 	}
 
-    public Material getAutoStartMaterial() {
-	    return Utils.lookupMaterial(getConfig().getString("AutoStart.Material"));
-    }
+	public Material getAutoStartMaterial() {
+		return Utils.lookupMaterial(getConfig().getString("AutoStart.Material"));
+	}
 
-    /* Strings */
+	/* Strings */
 
-    public String getCheckpointMaterial() {
+	public String getCheckpointMaterial() {
 		return Parkour.getPlugin().getConfig().getString("OnCourse.CheckpointMaterial");
 	}
 
-    /* Lists */
+	/* Lists */
 
 	public List<String> getWhitelistedCommands() {
 		return getConfig().getStringList("OnCourse.EnforceParkourCommands.Whitelist");
-	}	
+	}
 
 	/* ints */
 
@@ -165,17 +164,17 @@ public class Settings {
 	}
 
 	public int getAutoStartDelay() {
-	    return getConfig().getInt("AutoStart.TickDelay");
-    }
+		return getConfig().getInt("AutoStart.TickDelay");
+	}
 
-    public void resetSettings() {
-	    trailParticle = null;
-    }
+	public void resetSettings() {
+		trailParticle = null;
+	}
 
-    public Particle getTrailParticle() {
-	    if (trailParticle == null) {
-            trailParticle = Particle.valueOf(getConfig().getString("OnCourse.Trails.Particle").toUpperCase());
-        }
-	    return trailParticle;
-    }
+	public Particle getTrailParticle() {
+		if (trailParticle == null) {
+			trailParticle = Particle.valueOf(getConfig().getString("OnCourse.Trails.Particle").toUpperCase());
+		}
+		return trailParticle;
+	}
 }

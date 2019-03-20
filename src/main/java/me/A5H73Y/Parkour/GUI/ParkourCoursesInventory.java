@@ -10,4 +10,5 @@ public class ParkourCoursesInventory extends InventoryBuilder {
     public List<String> getCourses() {
         return CourseInfo.getAllCourses();
     }
+
 }

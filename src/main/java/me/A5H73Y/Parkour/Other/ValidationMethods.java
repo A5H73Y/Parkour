@@ -1,20 +1,19 @@
 package me.A5H73Y.Parkour.Other;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import me.A5H73Y.Parkour.Course.CourseInfo;
-import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.Course;
+import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Course.CourseMethods;
+import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ValidationMethods {
 
@@ -68,15 +67,15 @@ public class ValidationMethods {
 		int minimumLevel = CourseInfo.getMinimumLevel(course.getName());
 
 		if (minimumLevel > 0) {
-            if (!player.hasPermission("Parkour.Admin.MinBypass") && !player.hasPermission("Parkour.Level." + minimumLevel)) {
-                int currentLevel = PlayerInfo.getParkourLevel(player);
+			if (!player.hasPermission("Parkour.Admin.MinBypass") && !player.hasPermission("Parkour.Level." + minimumLevel)) {
+				int currentLevel = PlayerInfo.getParkourLevel(player);
 
-                if (currentLevel < minimumLevel) {
-                    player.sendMessage(Utils.getTranslation("Error.RequiredLvl").replace("%LEVEL%", String.valueOf(minimumLevel)));
-                    return false;
-                }
-            }
-        }
+				if (currentLevel < minimumLevel) {
+					player.sendMessage(Utils.getTranslation("Error.RequiredLvl").replace("%LEVEL%", String.valueOf(minimumLevel)));
+					return false;
+				}
+			}
+		}
 
 		/* Course isn't finished */
 		if (!CourseInfo.getFinished(course.getName())) {
@@ -93,9 +92,9 @@ public class ValidationMethods {
 		/* Check if player has enough currency to join */
 		if (Static.getEconomy()) {
 			int joinFee = CourseInfo.getEconomyJoiningFee(course.getName());
-			String currencyName = Parkour.getEconomy().currencyNamePlural() == null ? 
+			String currencyName = Parkour.getEconomy().currencyNamePlural() == null ?
 					"" : " " + Parkour.getEconomy().currencyNamePlural();
-			
+
 			if (joinFee > 0) {
 				if (!Parkour.getEconomy().has(player, joinFee)) {
 					player.sendMessage(Utils.getTranslation("Economy.Insufficient")
@@ -112,12 +111,12 @@ public class ValidationMethods {
 		}
 
 		/* Check if the player is allowed to leave the course for another */
-        if (Parkour.getPlugin().getConfig().getBoolean("OnCourse.PreventJoiningDifferentCourse")) {
-            if (PlayerMethods.isPlaying(player.getName())) {
-                player.sendMessage(Utils.getTranslation("Error.JoiningAnotherCourse"));
-                return false;
-            }
-        }
+		if (Parkour.getPlugin().getConfig().getBoolean("OnCourse.PreventJoiningDifferentCourse")) {
+			if (PlayerMethods.isPlaying(player.getName())) {
+				player.sendMessage(Utils.getTranslation("Error.JoiningAnotherCourse"));
+				return false;
+			}
+		}
 
 		return true;
 	}
@@ -137,9 +136,9 @@ public class ValidationMethods {
 		}
 
 		/* Players level isn't high enough */
-        int minimumLevel = CourseInfo.getMinimumLevel(courseName);
+		int minimumLevel = CourseInfo.getMinimumLevel(courseName);
 
-        if (minimumLevel > 0) {
+		if (minimumLevel > 0) {
 			if (!player.hasPermission("Parkour.Admin.MinBypass") && !player.hasPermission("Parkour.Level." + minimumLevel)) {
 				int currentLevel = PlayerInfo.getParkourLevel(player);
 
@@ -189,9 +188,9 @@ public class ValidationMethods {
 			return false;
 		}
 		if (PlayerMethods.isPlaying(player.getName())) {
-		    player.sendMessage(Static.getParkourString() + "You are already on a course!");
-		    return false;
-        }
+			player.sendMessage(Static.getParkourString() + "You are already on a course!");
+			return false;
+		}
 		if (PlayerMethods.isPlaying(targetPlayerName)) {
 			player.sendMessage(Static.getParkourString() + "This player is already on a course!");
 			return false;
@@ -222,13 +221,13 @@ public class ValidationMethods {
 				return false;
 
 			} else if (!Parkour.getEconomy().has(player, Double.valueOf(wagerAmount))) {
-			    player.sendMessage(Static.getParkourString() + "You do not have enough funds for this wager.");
-			    return false;
+				player.sendMessage(Static.getParkourString() + "You do not have enough funds for this wager.");
+				return false;
 
-            } else if (!Parkour.getEconomy().has(target, Double.valueOf(wagerAmount))) {
-			    player.sendMessage(Static.getParkourString() + "They do not have enough funds for this wager.");
-			    return false;
-            }
+			} else if (!Parkour.getEconomy().has(target, Double.valueOf(wagerAmount))) {
+				player.sendMessage(Static.getParkourString() + "They do not have enough funds for this wager.");
+				return false;
+			}
 		}
 
 		return true;
@@ -267,7 +266,7 @@ public class ValidationMethods {
 		int level = Parkour.getPlugin().getConfig().getInt("Lobby." + lobby + ".Level");
 
 		if (level > 0 && !player.hasPermission("Parkour.Admin.MinBypass")) {
-            if (PlayerInfo.getParkourLevel(player) < level) {
+			if (PlayerInfo.getParkourLevel(player) < level) {
 				player.sendMessage(Utils.getTranslation("Error.RequiredLvl").replace("%LEVEL%", String.valueOf(level)));
 				return false;
 			}
@@ -295,7 +294,7 @@ public class ValidationMethods {
 		if (!(args.length <= 1)) {
 			if (!Utils.isPositiveInteger(args[1])) {
 				player.sendMessage(Static.getParkourString() + "Checkpoint specified is not numeric!");
-				return false; 
+				return false;
 			}
 			if (pointcount < Integer.parseInt(args[1])) {
 				player.sendMessage(Static.getParkourString() + "This checkpoint does not exist! " + ChatColor.RED + "Creation cancelled.");
@@ -364,23 +363,23 @@ public class ValidationMethods {
 		return true;
 	}
 
-    public static boolean deleteParkourKit(String parkourKit, Player player) {
-        parkourKit = parkourKit.toLowerCase();
-        List<String> dependentCourses = new ArrayList<>();
+	public static boolean deleteParkourKit(String parkourKit, Player player) {
+		parkourKit = parkourKit.toLowerCase();
+		List<String> dependentCourses = new ArrayList<>();
 
-        for (String course : CourseInfo.getAllCourses()) {
-            String linkedKit = CourseInfo.getParkourKit(course);
+		for (String course : CourseInfo.getAllCourses()) {
+			String linkedKit = CourseInfo.getParkourKit(course);
 
-            if (parkourKit.equals(linkedKit)) {
-                dependentCourses.add(course);
-            }
-        }
+			if (parkourKit.equals(linkedKit)) {
+				dependentCourses.add(course);
+			}
+		}
 
-        if (dependentCourses.size() > 0) {
-            player.sendMessage(Static.getParkourString() + "This ParkourKit can not be deleted as there are dependent courses: " + dependentCourses);
-            return false;
-        }
+		if (dependentCourses.size() > 0) {
+			player.sendMessage(Static.getParkourString() + "This ParkourKit can not be deleted as there are dependent courses: " + dependentCourses);
+			return false;
+		}
 
-        return true;
-    }
+		return true;
+	}
 }

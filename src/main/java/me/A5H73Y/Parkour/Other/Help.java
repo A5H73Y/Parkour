@@ -1,25 +1,24 @@
 package me.A5H73Y.Parkour.Other;
 
-import java.io.File;
-
 import me.A5H73Y.Parkour.Course.CourseInfo;
-import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Enums.DatabaseType;
+import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.io.File;
+
 public final class Help {
 
 	/**
 	 * Lookup and display the syntax and description for each Parkour command.
-	 * 
+	 *
 	 * @param args
 	 * @param sender
 	 */
@@ -67,11 +66,11 @@ public final class Help {
 					" This command can display all the courses saved on the server in a page format, ordered by date of creation, each having their own unique numerical ID which can be used to join the course. Display all the players that are currently using the plugin, this includes which course, and how many times they've died. Display the available Parkour Ranks to be unlocked, with the required Parkour Level to achieve each. Display all custom lobbies available.");
 
 		} else if (args[1].equalsIgnoreCase("quiet")) {
-			displayHelpMessage(sender, "Toggle Quiet mode", "/pa quiet", null, 
+			displayHelpMessage(sender, "Toggle Quiet mode", "/pa quiet", null,
 					" If the Parkour messages are becoming annoying i.e. Seeing 'You died! ...' regularly, you can toggle visibility of these messages using this command.");
 
 		} else if (args[1].equalsIgnoreCase("invite")) {
-			displayHelpMessage(sender, "Invite a player to a course", "/pa invite (player)", "/pa invite A5H73Y", 
+			displayHelpMessage(sender, "Invite a player to a course", "/pa invite (player)", "/pa invite A5H73Y",
 					" If another player is interested in which course you are currently on, simply send them an invite and it will instruct them on how to join. If you want to challenge each other, check out the '/pa challenge' command.");
 
 		} else if (args[1].equalsIgnoreCase("challenge")) {
@@ -99,12 +98,12 @@ public final class Help {
 					" Finish editing the course you have selected.");
 
 		} else if (args[1].equalsIgnoreCase("setstart")) {
-            displayHelpMessage(sender, "Set start of a course", "/pa setstart", null,
-                    " The start of the selected course will be overwritten to your current position, rather than having to recreate the course.");
+			displayHelpMessage(sender, "Set start of a course", "/pa setstart", null,
+					" The start of the selected course will be overwritten to your current position, rather than having to recreate the course.");
 
-        } else if (args[1].equalsIgnoreCase("setautostart")) {
-		    displayHelpMessage(sender, "Create auto start for course", "/pa setautostart (course)", "/pa setautostart tutorial",
-                    " Create a pressure plate that will automatically trigger an automatic start of the course specified in the argument. A configured Material will appear below the pressure plate to identify it, and for better performance.");
+		} else if (args[1].equalsIgnoreCase("setautostart")) {
+			displayHelpMessage(sender, "Create auto start for course", "/pa setautostart (course)", "/pa setautostart tutorial",
+					" Create a pressure plate that will automatically trigger an automatic start of the course specified in the argument. A configured Material will appear below the pressure plate to identify it, and for better performance.");
 
 		} else if (args[1].equalsIgnoreCase("setcreator")) {
 			displayHelpMessage(sender, "Set creator of a course", "/pa setcreator (course) (playerName)", "/pa setcreator tutorial A5H73Y",
@@ -197,7 +196,7 @@ public final class Help {
 		} else if (args[1].equalsIgnoreCase("rewarddelay")) {
 			displayHelpMessage(sender, "Reward Delay/Frequency for course", "/pa rewarddelay (course) (delay)", "/pa rewarddelay tutorial 1",
 					" Limit a course reward for a player to once per day, as in the example. The rate at which the reward is given, is achieved by setting the delay to the number of days which need to elapse before the player can win the same prize again.");
-		
+
 		} else if (args[1].equalsIgnoreCase("recreate")) {
 			displayHelpMessage(sender, "Recreate course database", "/pa recreate", null,
 					" Used to fix the database if there are missing courses that haven't been synchronised with the server.");
@@ -222,11 +221,11 @@ public final class Help {
 			displayHelpMessage(sender, "Create ParkourKit", "/pa createKit", null,
 					" A conversation will be started to allow you to create a new ParkourKit, which can be linked to a course to override the default blocks. Each Material chosen must be unique, but many materials can share the same action.");
 
-        } else if (args[1].equalsIgnoreCase("editKit")) {
-            displayHelpMessage(sender, "Create ParkourKit", "/pa editKit", null,
-                    " A conversation will be started to allow you to edit an exising ParkourKit, you have the option to remove a material or add a new material with the corresponding action and related attributes.");
+		} else if (args[1].equalsIgnoreCase("editKit")) {
+			displayHelpMessage(sender, "Create ParkourKit", "/pa editKit", null,
+					" A conversation will be started to allow you to edit an exising ParkourKit, you have the option to remove a material or add a new material with the corresponding action and related attributes.");
 
-        } else if (args[1].equalsIgnoreCase("validateKit")) {
+		} else if (args[1].equalsIgnoreCase("validateKit")) {
 			displayHelpMessage(sender, "Validate ParkourKit", "/pa validateKit [Kit]", "/pa validateKit firekit",
 					" If you have manually created a ParkourKit, or something has gone wrong. You can validate a ParkourKit to find out where the problem has originated.");
 
@@ -239,39 +238,39 @@ public final class Help {
 					" Display the main Parkour settings for the server.");
 
 		} else if (args[1].equalsIgnoreCase("request")) {
-            displayHelpMessage(sender, "Request a Feature / Report a Bug", "/pa request", null,
-                    " Have an idea for the plugin or found a bug you want to report? Click the link provided to navigate to the Parkour forums section.");
+			displayHelpMessage(sender, "Request a Feature / Report a Bug", "/pa request", null,
+					" Have an idea for the plugin or found a bug you want to report? Click the link provided to navigate to the Parkour forums section.");
 
-        } else if (args[1].equalsIgnoreCase("setlevel")) {
-		    displayHelpMessage(sender, "Set Player's ParkourLevel", "/pa setlevel (player) (level)", "/pa setlevel A5H73Y 10",
-                    " You are able to manually set a player's ParkourLevel. Used to quickly test you've setup requirements correctly, or to reward a player manually.");
+		} else if (args[1].equalsIgnoreCase("setlevel")) {
+			displayHelpMessage(sender, "Set Player's ParkourLevel", "/pa setlevel (player) (level)", "/pa setlevel A5H73Y 10",
+					" You are able to manually set a player's ParkourLevel. Used to quickly test you've setup requirements correctly, or to reward a player manually.");
 
 		} else if (args[1].equalsIgnoreCase("setrank")) {
-            displayHelpMessage(sender, "Set Player's Parkour Rank", "/pa setrank (player) (rank)", "/pa setrank A5H73Y &6God",
-                    " You are able to manually set a player's Parkour Rank. This will instantly update their chat prefix.");
+			displayHelpMessage(sender, "Set Player's Parkour Rank", "/pa setrank (player) (rank)", "/pa setrank A5H73Y &6God",
+					" You are able to manually set a player's Parkour Rank. This will instantly update their chat prefix.");
 
-        } else {
+		} else {
 			sender.sendMessage(Static.getParkourString() + "Unrecognised command. Please find all available commands using '/pa cmds'");
 		}
 	}
 
 	/**
 	 * Format and display command usage
-	 * 
+	 *
 	 * @param player
 	 * @param title
 	 * @param arguments
 	 * @param description
 	 */
 	private static void displayCommandUsage(Player player, String title, String arguments, String description) {
-		player.sendMessage(ChatColor.DARK_AQUA + "/pa " + ChatColor.AQUA + title + 
+		player.sendMessage(ChatColor.DARK_AQUA + "/pa " + ChatColor.AQUA + title +
 				(arguments != null ? ChatColor.YELLOW + " " + arguments : "") +
 				ChatColor.BLACK + " : " + ChatColor.WHITE + description);
 	}
 
 	/**
 	 * Display the sign command usage
-	 * 
+	 *
 	 * @param player
 	 * @param title
 	 * @param shortcut
@@ -284,7 +283,7 @@ public final class Help {
 	/**
 	 * Display the syntax and description for each Parkour command.
 	 * Will provide example if applicable.
-	 *  
+	 *
 	 * @param sender
 	 * @param title
 	 * @param syntax
@@ -304,13 +303,13 @@ public final class Help {
 	 * Display relevant command pages
 	 * If signs is specified, will display the available sign commands.
 	 * If no page is specified, will display the commands menu.
-	 * 
+	 *
 	 * @param args
 	 * @param player
 	 */
 	public static void processCommandsInput(String[] args, Player player) {
 		if (args.length == 1) {
-			displayCommandsIndex(player);	
+			displayCommandsIndex(player);
 
 		} else if (args[1].equals("1")) {
 			displayBasicCommands(player);
@@ -323,7 +322,7 @@ public final class Help {
 
 		} else if (args[1].equals("4")) {
 			displayAdminCommands(player);
-			
+
 		} else if (args[1].equalsIgnoreCase("signs")) {
 			displaySignCommands(player);
 
@@ -335,7 +334,7 @@ public final class Help {
 
 	/**
 	 * Display commands menu
-	 * 
+	 *
 	 * @param player
 	 */
 	private static void displayCommandsIndex(Player player) {
@@ -371,7 +370,7 @@ public final class Help {
 		displayCommandUsage(player, "invite", "(player)", "Invite the player to the course");
 		displayCommandUsage(player, "challenge", "(course) (player)", "Challenge player to course");
 		displayCommandUsage(player, "joinall", null, "Join All Courses Menu");
-        displayCommandUsage(player, "help | contact", null, "To get help or contact me");
+		displayCommandUsage(player, "help | contact", null, "To get help or contact me");
 		displayCommandUsage(player, "about | version", null, "Display Parkour information");
 	}
 
@@ -435,7 +434,7 @@ public final class Help {
 		displayCommandUsage(player, "whitelist", "(command)", "Whitelist a command");
 		displayCommandUsage(player, "economy", null, "Display economy menu");
 		displayCommandUsage(player, "createKit", null, "Start ParkourKit creation");
-        displayCommandUsage(player, "editKit", null, "Edit existing ParkourKit");
+		displayCommandUsage(player, "editKit", null, "Edit existing ParkourKit");
 		displayCommandUsage(player, "validateKit", "[Kit]", "Validate ParkourKit");
 		displayCommandUsage(player, "setlevel", "(player) (level)", "Set ParkourLevel");
 		displayCommandUsage(player, "setrank", "(player) (rank)", "Set Parkour Rank");
@@ -467,7 +466,7 @@ public final class Help {
 	/**
 	 * Display the economy information
 	 * Menu is displayed and relevant action will be executed on parameters.
-	 * 
+	 *
 	 * @param args
 	 * @param player
 	 */
@@ -550,7 +549,7 @@ public final class Help {
 					econ.set("Price." + course + ".Finish", 0);
 				}
 			} catch (Exception ex) {
-				Utils.log(Utils.getTranslation("Error.Something", false).replace("%ERROR%", ex.getMessage()));	
+				Utils.log(Utils.getTranslation("Error.Something", false).replace("%ERROR%", ex.getMessage()));
 			}
 		}
 
@@ -563,7 +562,7 @@ public final class Help {
 		player.sendMessage("Type: " + DatabaseMethods.type);
 		player.sendMessage("Connected: " + (Parkour.getDatabase().getConnection() != null));
 		if (DatabaseMethods.type == DatabaseType.SQLite) {
-			player.sendMessage("Database location: " + Parkour.getPlugin().getDataFolder() + File.separator + "sqlite-db" + File.separator + "parkour.db"); 
+			player.sendMessage("Database location: " + Parkour.getPlugin().getDataFolder() + File.separator + "sqlite-db" + File.separator + "parkour.db");
 		}
 	}
 

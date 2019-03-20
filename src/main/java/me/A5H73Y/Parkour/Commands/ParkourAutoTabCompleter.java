@@ -12,23 +12,23 @@ import java.util.*;
 
 public class ParkourAutoTabCompleter implements TabCompleter {
 
-    private static final Set<String> basicCmds = new HashSet<>(
-            Arrays.asList("challenge", "leaderboard", "invite", "kit", "listkit", "tp", "tpc"));
+	private static final Set<String> basicCmds = new HashSet<>(
+			Arrays.asList("challenge", "leaderboard", "invite", "kit", "listkit", "tp", "tpc"));
 
-    private static final Set<String> adminCmds = new HashSet<>(
-            Arrays.asList("setstart", "setlobby", "economy", "createkit", "editkit", "validatekit", "recreate",
-            "sql", "settings", "reload", "rewardrank", "whitelist", "setlevel", "setrank", "delete"));
+	private static final Set<String> adminCmds = new HashSet<>(
+			Arrays.asList("setstart", "setlobby", "economy", "createkit", "editkit", "validatekit", "recreate",
+					"sql", "settings", "reload", "rewardrank", "whitelist", "setlevel", "setrank", "delete"));
 
-    @Override
+	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
 		if (!(sender instanceof Player)) {
 			return null;
 		}
-		
+
 		Set<String> list = new HashSet<>();
 		Set<String> auto = new HashSet<>();
 		Set<String> courseCmds = getCourseCmds(sender);
-		
+
 		if (args.length == 1) {
 			list.add("help");
 			list.add("info");
@@ -49,7 +49,7 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 			list.add("accept");
 			list.add("bug");
 			list.add("cmds");
-			
+
 			if (sender.hasPermission("Parkour.Basic.*") || sender.hasPermission("Parkour.*")) {
 				list.addAll(basicCmds);
 			} else {
@@ -76,7 +76,7 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 					list.add("leaderboard");
 				}
 			}
-			
+
 			if (sender.hasPermission("Parkour.Admin") || sender.hasPermission("Parkour.*")) {
 				list.addAll(adminCmds);
 			}
@@ -101,12 +101,12 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 					list.add("link");
 				}
 			}
-			
+
 			list.addAll(courseCmds);
-			
+
 		} else if (args.length == 2) {
 			if (courseCmds.contains(args[0])) {
-                list.addAll(CourseInfo.getAllCourses());
+				list.addAll(CourseInfo.getAllCourses());
 			} else if (args[0].equalsIgnoreCase("list")) {
 				list.add("courses");
 				list.add("players");
@@ -127,32 +127,32 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 			}
 		} else if (args.length == 3) {
 			if ((args[0].equalsIgnoreCase("reset") || args[0].equalsIgnoreCase("delete")) && args[1].equalsIgnoreCase("course")) {
-				 list.addAll(CourseInfo.getAllCourses());
+				list.addAll(CourseInfo.getAllCourses());
 			} else if ((args[0].equalsIgnoreCase("delete") && args[1].equalsIgnoreCase("kit")) || args[0].equalsIgnoreCase("linkkit")) {
 				list.addAll(ParkourKitInfo.getParkourKitNames());
 			}
 		}
-		
+
 		for (String s : list) {
 			if (s.startsWith(args[args.length - 1])) {
 				auto.add(s);
 			}
 		}
-		
+
 		return auto.isEmpty() ? new ArrayList<>(list) : new ArrayList<>(auto);
 	}
-	
+
 	private Set<String> getCourseCmds(CommandSender sender) {
 		Set<String> cmds = new HashSet<>();
 		Set<String> adminCourseCmds = new HashSet<>(Arrays.asList("setcreator", "prize", "setmode", "setjoinitem", "setminlevel",
 				"setmaxdeath", "setmaxtime", "rewardonce", "rewardlevel", "rewardleveladd", "rewardparkoins", "rewarddelay"));
-		
+
 		cmds.add("join");
 		cmds.add("joinall");
 		cmds.add("stats");
 		cmds.add("course");
 		cmds.add("select"); // so course owner can select own course
-		
+
 		if (sender.hasPermission("Parkour.Basic.*") || sender.hasPermission("Parkour.*")) {
 			cmds.add("challenge");
 			cmds.add("tp");
@@ -172,7 +172,7 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 				cmds.add("leaderboard");
 			}
 		}
-		
+
 		if (sender.hasPermission("Parkour.Admin") || sender.hasPermission("Parkour.*")) {
 			cmds.addAll(adminCourseCmds);
 		}
@@ -181,13 +181,13 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 			cmds.add("linkkit");
 			cmds.add("setautostart");
 			cmds.add("finish");
-		} 
+		}
 		if (sender.hasPermission("Parkour.Admin.*") || sender.hasPermission("Parkour.Admin.Prize") || sender.hasPermission("Parkour.*")) {
 			cmds.add("prize");
 		}
 		return cmds;
 	}
-	
+
 	private boolean isSelectedCourseOwner(CommandSender sender) {
 		Player player = (Player) sender;
 		String courseName = PlayerInfo.getSelected(player);

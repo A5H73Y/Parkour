@@ -4,15 +4,9 @@ import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Utils;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.FixedSetPrompt;
-import org.bukkit.conversations.MessagePrompt;
-import org.bukkit.conversations.NumericPrompt;
-import org.bukkit.conversations.Prompt;
-import org.bukkit.conversations.StringPrompt;
+import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 
 public class LeaderboardConversation extends ParkourConversation {
@@ -98,12 +92,12 @@ public class LeaderboardConversation extends ParkourConversation {
 			final Player player = Bukkit.getPlayer((String) context.getSessionData("playerName"));
 
 			Bukkit.getScheduler().runTaskLaterAsynchronously(Parkour.getPlugin(), () -> {
-                if (leaderboardType.equals("personal")) {
-                    Utils.displayLeaderboard(player, DatabaseMethods.getTopPlayerCourseResults(player.getName(), courseName, amount), courseName);
-                } else if (leaderboardType.equals("global")) {
-                    Utils.displayLeaderboard(player, DatabaseMethods.getTopCourseResults(courseName, amount), courseName);
-                }
-            }, 3);
+				if (leaderboardType.equals("personal")) {
+					Utils.displayLeaderboard(player, DatabaseMethods.getTopPlayerCourseResults(player.getName(), courseName, amount), courseName);
+				} else if (leaderboardType.equals("global")) {
+					Utils.displayLeaderboard(player, DatabaseMethods.getTopCourseResults(courseName, amount), courseName);
+				}
+			}, 3);
 
 			return "";
 		}

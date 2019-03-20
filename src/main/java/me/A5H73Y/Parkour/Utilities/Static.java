@@ -1,13 +1,12 @@
 package me.A5H73Y.Parkour.Utilities;
 
+import me.A5H73Y.Parkour.Parkour;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import me.A5H73Y.Parkour.Parkour;
 
 public final class Static {
 
@@ -18,7 +17,7 @@ public final class Static {
 	private static boolean bountifulAPI = false;
 	private static boolean placeholderAPI = false;
 
-    private static String parkourString;
+	private static String parkourString;
 	private static String parkourSignString;
 	private static Double version;
 
@@ -30,7 +29,7 @@ public final class Static {
 		parkourSignString = Utils.getTranslation("Parkour.SignHeading", false);
 	}
 
-    public static String getParkourString() {
+	public static String getParkourString() {
 		return parkourString;
 	}
 

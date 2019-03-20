@@ -1,12 +1,11 @@
 package me.A5H73Y.Parkour.Other;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map.Entry;
-
+import com.huskehhh.mysql.Database;
+import com.huskehhh.mysql.mysql.MySQL;
+import com.huskehhh.mysql.sqlite.SQLite;
 import me.A5H73Y.Parkour.Course.CourseInfo;
-import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Enums.DatabaseType;
+import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.ParkourKit.ParkourKit;
 import me.A5H73Y.Parkour.ParkourPlaceholders;
 import me.A5H73Y.Parkour.Player.ParkourSession;
@@ -15,7 +14,6 @@ import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -23,9 +21,9 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import com.huskehhh.mysql.Database;
-import com.huskehhh.mysql.mysql.MySQL;
-import com.huskehhh.mysql.sqlite.SQLite;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class StartPlugin {
 

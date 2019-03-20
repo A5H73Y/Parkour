@@ -1,17 +1,12 @@
 package me.A5H73Y.Parkour.Course;
 
-import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Other.ValidationMethods;
+import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
-
 import me.A5H73Y.Parkour.Utilities.XMaterial;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -55,7 +50,7 @@ public class CheckpointMethods {
 	 * Otherwise a new checkpoint will be generated.
 	 * The block on which the checkpoint is created must be able to have  a pressure plate
 	 * placed on it.
-	 * 
+	 *
 	 * @param args
 	 * @param player
 	 */
@@ -66,31 +61,31 @@ public class CheckpointMethods {
 		String selected = PlayerInfo.getSelected(player);
 		Location location = player.getLocation();
 		int checkpoint = args.length == 2 ? Integer.parseInt(args[1]) :
-			CourseInfo.getCheckpointAmount(selected) + 1;
-		
+				CourseInfo.getCheckpointAmount(selected) + 1;
+
 		Block block = location.getBlock();
 		Block blockUnder = block.getRelative(BlockFace.DOWN);
-		
-		if (Parkour.getSettings().isEnforceSafeCheckpoints()) {
-		    try {
-                if (!Utils.isCheckpointSafe(player, block)) {
-                    return;
-                }
-            } catch (NoSuchFieldError ex) {
-		        // using an older version of server - disable the option to stop error appearing
-                Utils.log("Safe Checkpoints has been disabled due to old server", 2);
-                Parkour.getPlugin().getConfig().set("Other.EnforceSafeCheckpoints", false);
-                Parkour.getPlugin().saveConfig();
 
-                Utils.reloadConfig();
-            }
+		if (Parkour.getSettings().isEnforceSafeCheckpoints()) {
+			try {
+				if (!Utils.isCheckpointSafe(player, block)) {
+					return;
+				}
+			} catch (NoSuchFieldError ex) {
+				// using an older version of server - disable the option to stop error appearing
+				Utils.log("Safe Checkpoints has been disabled due to old server", 2);
+				Parkour.getPlugin().getConfig().set("Other.EnforceSafeCheckpoints", false);
+				Parkour.getPlugin().saveConfig();
+
+				Utils.reloadConfig();
+			}
 		}
-			
+
 		if (blockUnder.getType().equals(Material.AIR))
 			blockUnder.setType(Material.STONE);
 
 
-        Material pressurePlate = XMaterial.fromString(Parkour.getSettings().getCheckpointMaterial()).parseMaterial();
+		Material pressurePlate = XMaterial.fromString(Parkour.getSettings().getCheckpointMaterial()).parseMaterial();
 		block.setType(pressurePlate);
 
 		createCheckpointData(selected, location, checkpoint);
@@ -100,7 +95,7 @@ public class CheckpointMethods {
 	/**
 	 * Create the actual checkpoint data
 	 * The location for the player to teleport to and the location for the pressure plate will be created.
-	 * 
+	 *
 	 * @param selected
 	 * @param location
 	 * @param checkpoint
@@ -131,7 +126,7 @@ public class CheckpointMethods {
 	 * Teleport the player to a checkpoint
 	 * If the checkpoint flag is false, it will teleport the player to the start.
 	 * Otherwise the player will teleport to the chosen checkpoint.
-	 * 
+	 *
 	 * @param args
 	 * @param player
 	 * @param checkpoint
@@ -166,7 +161,7 @@ public class CheckpointMethods {
 	/**
 	 * Delete a checkpoint from the course
 	 * This will only delete the last checkpoint, decreasing the amount of checkpoints.
-	 * 
+	 *
 	 * @param courseName
 	 * @param player
 	 */
@@ -194,12 +189,12 @@ public class CheckpointMethods {
 		Utils.logToFile("Checkpoint " + point + " was deleted on " + courseName + " by " + player.getName());
 	}
 
-    /**
-     * Create a new checkpoint based on the players current location.
-     * @param player
-     * @return
-     */
-    public static Checkpoint createCheckpointFromPlayerLocation(Player player) {
-        return new Checkpoint(player.getLocation(),0, 0, 0);
-    }
+	/**
+	 * Create a new checkpoint based on the players current location.
+	 * @param player
+	 * @return
+	 */
+	public static Checkpoint createCheckpointFromPlayerLocation(Player player) {
+		return new Checkpoint(player.getLocation(),0, 0, 0);
+	}
 }

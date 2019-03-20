@@ -1,7 +1,7 @@
 package me.A5H73Y.Parkour.Player;
 
-import me.A5H73Y.Parkour.ParkourEvents.PlayerParkourLevelEvent;
 import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.ParkourEvents.PlayerParkourLevelEvent;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.Bukkit;
@@ -156,7 +156,7 @@ public class PlayerInfo {
         Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Rank", rank);
         Parkour.getParkourConfig().saveUsers();
     }
-    
+
     /**
      * Get the time the player last won the reward for the course
      * @param player
@@ -164,10 +164,10 @@ public class PlayerInfo {
      * @return
      */
     public static long getLastRewardedTime(OfflinePlayer player, String courseName) {
-    	return Parkour.getParkourConfig().getUsersData()
+        return Parkour.getParkourConfig().getUsersData()
                 .getLong("PlayerInfo." + player.getName() + ".LastRewarded." + courseName.toLowerCase(), 0);
     }
-    
+
     /**
      * Set the time the player wins the reward for the course
      * @param player
@@ -175,9 +175,9 @@ public class PlayerInfo {
      * @param rewardTime
      */
     public static void setLastRewardedTime(OfflinePlayer player, String courseName, long rewardTime) {
-    	Parkour.getParkourConfig().getUsersData()
+        Parkour.getParkourConfig().getUsersData()
                 .set("PlayerInfo." + player.getName() + ".LastRewarded." + courseName.toLowerCase(), rewardTime);
-    	Parkour.getParkourConfig().saveUsers();
+        Parkour.getParkourConfig().saveUsers();
     }
 
     /**

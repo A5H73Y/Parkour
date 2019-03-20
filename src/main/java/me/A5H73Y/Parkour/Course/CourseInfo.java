@@ -404,11 +404,11 @@ public class CourseInfo {
     }
 
     public static int getRewardDelay(String courseName) {
-    	return Parkour.getParkourConfig().getCourseData().getInt(courseName.toLowerCase() + ".RewardDelay", 0);
+        return Parkour.getParkourConfig().getCourseData().getInt(courseName.toLowerCase() + ".RewardDelay", 0);
     }
-    
+
     public static void setRewardDelay(String courseName, int rewardDelay) {
-    	Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".RewardDelay", rewardDelay);
+        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".RewardDelay", rewardDelay);
         Parkour.getParkourConfig().saveCourses();
     }
 

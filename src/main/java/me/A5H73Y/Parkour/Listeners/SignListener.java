@@ -10,7 +10,6 @@ import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.SignMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
@@ -68,7 +67,7 @@ public class SignListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onSignBreak(PlayerInteractEvent event) {
-		if (event.getAction() != Action.LEFT_CLICK_BLOCK) 
+		if (event.getAction() != Action.LEFT_CLICK_BLOCK)
 			return;
 
 		if ((event.getClickedBlock().getType() != Material.SIGN) && (event.getClickedBlock().getType() != Material.WALL_SIGN))
@@ -94,7 +93,7 @@ public class SignListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onSignInteract(PlayerInteractEvent event) {
-		if (event.getAction() != Action.RIGHT_CLICK_BLOCK)  
+		if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
 			return;
 
 		if ((event.getClickedBlock().getType() != Material.SIGN) && (event.getClickedBlock().getType() != Material.WALL_SIGN))
@@ -132,13 +131,13 @@ public class SignListener implements Listener {
 
 			} else if (!PlayerMethods.isPlaying(event.getPlayer().getName())) {
 				event.getPlayer().sendMessage(Utils.getTranslation("Error.NotOnCourse"));
-				return;	
+				return;
 			}
 
 			ParkourSession session = PlayerMethods.getParkourSession(event.getPlayer().getName());
 
 			if (lines[3].isEmpty() || !Utils.isPositiveInteger(lines[3]))
-			    return;
+				return;
 
 			if (session.getCheckpoint() == session.getCourse().getCheckpoints())
 				return;
@@ -192,11 +191,11 @@ public class SignListener implements Listener {
 				event.getPlayer().sendMessage(Utils.getTranslation("Error.Unknown"));
 
 			} else if (Utils.delayPlayer(event.getPlayer(), 4, true)) {
-			    int amount = lines[3].isEmpty() ? 5 : Integer.valueOf(lines[3]);
+				int amount = lines[3].isEmpty() ? 5 : Integer.valueOf(lines[3]);
 
-                Utils.displayLeaderboard(event.getPlayer(),
-                        DatabaseMethods.getTopCourseResults(lines[2], amount), lines[2]);
-            }
+				Utils.displayLeaderboard(event.getPlayer(),
+						DatabaseMethods.getTopCourseResults(lines[2], amount), lines[2]);
+			}
 
 		} else {
 			event.getPlayer().sendMessage(Utils.getTranslation("Error.UnknownSignCommand"));

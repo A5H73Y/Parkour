@@ -5,16 +5,15 @@ import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.clip.placeholderapi.external.EZPlaceholderHook;
-
 import org.bukkit.entity.Player;
 
 public class ParkourPlaceholders extends EZPlaceholderHook {
 
     private Parkour plugin;
-	
+
     public ParkourPlaceholders(Parkour plugin) {
-    	super(plugin, "parkour");
-    	this.plugin = plugin;
+        super(plugin, "parkour");
+        this.plugin = plugin;
     }
 
     @Override
@@ -38,7 +37,7 @@ public class ParkourPlaceholders extends EZPlaceholderHook {
 
         } else if (message.equalsIgnoreCase("last_played")) {
             return PlayerInfo.getLastPlayedCourse(player);
-            
+
         } else if (message.equalsIgnoreCase("parkoins")) {
             return String.valueOf(PlayerInfo.getParkoins(player));
 

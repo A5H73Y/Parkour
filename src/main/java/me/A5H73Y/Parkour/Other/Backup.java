@@ -1,5 +1,8 @@
 package me.A5H73Y.Parkour.Other;
 
+import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.Utilities.Utils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -8,9 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import me.A5H73Y.Parkour.Parkour;
-import me.A5H73Y.Parkour.Utilities.Utils;
 
 public class Backup {
 
@@ -53,7 +53,7 @@ public class Backup {
 				ZipEntry ze= new ZipEntry(file);
 				zos.putNextEntry(ze);
 
-				FileInputStream in = 
+				FileInputStream in =
 						new FileInputStream(SOURCE_FOLDER + File.separator + file);
 
 				int len;
@@ -66,7 +66,7 @@ public class Backup {
 			//remember close it
 			zos.close();
 		} catch(IOException ex) {
-			ex.printStackTrace();   
+			ex.printStackTrace();
 		}
 	}
 

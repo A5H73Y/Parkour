@@ -1,13 +1,12 @@
 package me.A5H73Y.Parkour.ParkourKit;
 
-import java.io.Serializable;
-import java.util.*;
-
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Utilities.Utils;
-
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+
+import java.io.Serializable;
+import java.util.*;
 
 public class ParkourKit implements Serializable {
 

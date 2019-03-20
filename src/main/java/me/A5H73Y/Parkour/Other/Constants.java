@@ -5,5 +5,5 @@ public class Constants {
 	public static final String TEST_MODE = "Test Mode";
 
 	public static final String DEFAULT = "default";
-	
+
 }

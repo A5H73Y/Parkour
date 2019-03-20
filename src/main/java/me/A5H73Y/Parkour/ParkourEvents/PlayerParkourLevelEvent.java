@@ -14,4 +14,5 @@ public class PlayerParkourLevelEvent extends ParkourEvent {
     public Integer getNewLevel() {
         return newLevel;
     }
+
 }
