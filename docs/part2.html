@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Arvo" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet"/>
+    <title>Parkour Tutorials - Part 2</title>
+</head>
+<body>
+<div class="wrapper">
+    <div id="navigation-placeholder"></div>
+
+    <section>
+        <div class="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h1>Part 2 - Creating a course</h1>
+
+                        <div id="contents-placeholder"></div>
+
+                        <h2 id="designCourse">Design the course</h2>
+                        <p class="no-margin">Firstly, design and build your course and decide where you want your checkpoints to be.</p>
+                        <p class="italic">If it helps, we can place different blocks to mark where we want the checkpoints to be, we can remove these later.</p>
+                        <img src="https://i.imgur.com/Ckjueri.jpg" alt="Design Course">
+
+                        <h2 id="createCourse">Create the Course</h2>
+                        <p class="no-margin">Decide where you want the course to start, stand in the position and face the direction you want the players to teleport to.</p>
+                        <p class="italic">The position you are facing will be loaded when the players teleport to the course.</p>
+                        <img src="https://i.imgur.com/OcbCbL8.jpg" alt="Create Course">
+                        <p class="no-margin">When you are happy, enter <strong>/pa create (course)</strong>.</p>
+                        <p class="italic">We will refer to our course as 'tutorial'. The course name is how we will refer to our course throughout the plugin, so remember it for now.</p>
+                        <p>If everything was successful, the following message will appear.</p>
+                        <img src="https://i.imgur.com/hA8HpnU.jpg" alt="Course Created"/>
+                        <p class="italic">This will create a course entry in the database, allowing us to now track times against it.</p>
+                        <p>You will notice that 'selected' is referred to often, this means that you are editing the course. This can be manually achieved by entering <strong>/pa select (course)</strong> this means you can execute commands without having to specify the course, for example the following <strong>/pa checkpoint</strong> command does not require you to specify a course.</p>
+
+                        <h2 id="createCheckpoints">Create Checkpoints</h2>
+                        <p class="no-margin">We can now stand where we want our first checkpoint to be, stand in the position and face the direction you want the players to teleport to and enter <strong>/pa checkpoint</strong>.</p>
+                        <p class="italic">This will place a pressure plate to activate the checkpoint.</p>
+                        <img src="https://i.imgur.com/IYgHBJs.jpg" alt="Checkpoint Created"/>
+                        <p>There is no limit to how many checkpoints you can create, they are automatically generated when you enter <strong>/pa checkpoint</strong>. The checkpoint is generated for the course you have selected (editing). This is achieved when you create a course, or you can select it manually by typing <strong>/pa select (course)</strong>.</p>
+                        <p>Now you've learnt how to create a single checkpoint, now repeat the command to create as many checkpoints as you want for the course!</p>
+                        <img src="https://i.imgur.com/TXum8Wx.jpg" alt="Checkpoint 2 Created"/>
+                        <img src="https://i.imgur.com/nlFsGsC.jpg" alt="Many Checkpoints Created"/>
+                        <p>If you happen to make a mistake, or want to move a checkpoint, you can use the same command but with an optional number to overwrite that existing checkpoint. For example <strong>/pa checkpoint 2</strong> would overwrite the second checkpoint.</p>
+
+                        <h2 id="finishCourse">Finish the Course</h2>
+                        <p class="no-margin">We need a "Finish Block" to allow the player to complete the course once they walk over it, because of the new ParkourKit system this can be different for each course. But for now we can set it to the default Finish Block, and you could change it later. Simply enter <strong>/pa kit</strong> to populate your inventory with each item of the default ParkourKit, then find the Material named "Finish Block", and simply place these materials where you want the finish area to be.</p>>
+                        <p class="italic">For more information on ParkourKits, <a href="page4.html">click here.</a></p>
+                        <p>Once we're happy we've created all the checkpoints for the course, it's time to set the status of the course to "finished", so other players can join it. To mark the course as complete, enter <strong>/pa finish (course)</strong>.</p>
+                        <p class="no-margin">By default, players can not join a course that has not been set to finished (so they don't join a half-finished course), this can be disabled by changing "OnJoin.EnforceFinished" to false in the config.yml.</p>
+                        <p class="italic">You can enter <strong>/pa done</strong> to stop editing the course.</p>
+                        <img src="https://i.imgur.com/kd1KkqU.jpg" alt="Course Finished"/>
+                        <p>As simple as that! Now you've got a course setup, which can be joined by other players and track statistics and leaderboards. Try it yourself by joining it <strong>/pa join (course)</strong>.</p>
+
+                        <h2 id="extraInformation">Extra Information</h2>
+                        <h3>Test Mode</h3>
+                        <p>You are able to simulate how each ParkourKit will behave by entering a simple command, just enable Test Mode with <strong>/pa test (Kit name)</strong>.</p>
+                        <p class="no-margin">Please note that this doesn't do anything besides allow you to interact with the Kit and its corresponding actions. If you "die" while in Test Mode, it will take you back to the location you started Test Mode.</p>
+                        <p class="italic">To disable Test Mode, reenter <strong>/pa test</strong>.</p>
+
+                        <h3>Overwriting the Creator of a course</h3>
+                        <p class="no-margin">If you want to overwrite the creator of a course to a different player, you can enter <strong>/pa setcreator (course) (player)</strong> this will now allow the chosen player to have administration permissions for that course.</p>
+                        <p class="italic">The creator of a course has exclusive permissions to be able to edit that course.</p>
+
+                        <h3>Overwriting the Start of a course</h3>
+                        <p class="no-margin">If you want to change the starting position of a course, you can enter <strong>/pa setstart</strong>.</p>
+                        <p class="italic">Remember that you must have the course selected (editing), which can be achieved by entering <strong>/pa select (course)</strong>.</p>
+
+                        <h3>Teleporting to a course</h3>
+                        <p>If you want to teleport to the start of a course, you can enter <strong>/pa tp (course)</strong>. This will only teleport you, exactly as you are, without starting the course.</p>
+                        <p>If you wish to teleport to a specific checkpoint in the course you can enter <strong>/pa tpc (course) (checkpoint)</strong>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="js/script.js"></script>
+
+</html>
