@@ -67,6 +67,10 @@ img {
     margin: 0 auto;
 }
 
+.vertical-menu {
+    padding-top: 30px;
+}
+
 .vertical-menu a {
     background-color: #eee; /* Grey background color */
     color: black; /* Black text color */
