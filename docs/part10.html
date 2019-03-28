@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link href="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="//fonts.googleapis.com/css?family=Arvo" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet"/>
+    <title>Parkour Tutorials - Part 10</title>
+</head>
+<body>
+<div class="wrapper">
+    <div id="navigation-placeholder"></div>
+
+    <section>
+        <div class="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h1>Part 10 - Rewarding the Player</h1>
+
+                        <div id="contents-placeholder"></div>
+
+                        <h2>Description</h2>
+                        <p>There are several ways we can reward the player for completing a course. We are able to reward the Player with ParkourLevels that allow them to unlock new courses, or achieve a ParkourRank that showcases how far they've progressed. All can be configured to match any server requirements, and even allow developers to natively add their own functionality.</p>
+
+                        <h2 id="parkourLevelsDescription">What are ParkourLevels?</h2>
+                        <p>A ParkourLevel is a value that signifies how far a player has progressed through the courses. It can be used to restrict players to certain courses, and unlock new ones.</p>
+                        <p>A new Parkour player will have a ParkourLevel of 0, but they can receive new levels by completing more courses. Your level will only ever increase, you can not reduce a player's level.</p>
+
+                        <h2 id="rewardParkourLevels">Rewarding ParkourLevels</h2>
+                        <p>There are currently 3 ways to achieve a new ParkourLevel.</p>
+
+                        <h4>/pa rewardlevel (course) (level)</h4>
+                        <p>This means when you complete the specified course, you will receive the specified level. If the player's level is currently higher than the reward level, it will not be changed.</p>
+                        <p>The main purpose of this is incremental courses, so you would have to complete the Level1 course, before you could join the Level2 course, etc.</p>
+
+                        <h4>/pa rewardleveladd (course) (amount)</h4>
+                        <p>This means when you complete the specified course, your level has the amount added to it. So if you had a ParkourLevel of 10, and completed the course which had a rewardLevelAdd of 2, your new ParkourLevel becomes 12.</p>
+                        <p>The main purpose for this is for lobbies where you have to complete all of the courses to unlock a new lobby; If you had an "Easy" lobby with 5 courses, you would set the level requirement for "Medium" to 5, and add a rewardLevelAdd to 1 for each course in Easy, so they can be completed in any order. NOTE: For this you would have to enable <strong>/pa rewardonce (course)</strong> so they only get leveled up once per course.</p>
+
+                        <h4>/pa setlevel (player) (level)</h4>
+                        <p>This can be used by Admins to manually set a player's level. This can be done for VIPs, or simply to quickly test what you've created is working as intended.</p>
+
+                        <h2 id="parkourLevelRestrictions">ParkourLevel Restrictions</h2>
+                        <p>ParkourLevels can be used to apply restrictions to courses and lobbies. The validation will be based on the minimum level requirement. So if a course has a minimum level requirement of 10, and the player has a ParkourLevel of 12, this will work.</p>
+                        <p><strong>/pa setminlevel (course) (level)</strong> set the minimum level of the specified course to the specified level. Any player that now attempts to join this course will be prevented from doing so unless they have a high enough ParkourLevel.</p>
+                        <p><strong>/pa setlobby (name) (level)</strong> create a lobby and set the minimum level requirement for teleportation to the ParkourLevel specified. This is used if you organize your courses into separate lobbies and wish to prevent the player to teleport unless they have a high enough ParkourLevel.</p>
+
+                        <h2 id="parkourRankDescription">What is a ParkourRank?</h2>
+                        <p>A ParkourRank is simply a title a player earns when they reach a certain level.</p>
+                        <p>A basic example could be similar to the following, when they reach each ParkourLevel they get the specified ParkourRank:</p>
+                        <p><strong>TODO make colourful</strong></p>
+                        <ul>
+                            <li>5 = Beginner</li>
+                            <li>10 = Amateur</li>
+                            <li>20 = Professional</li>
+                            <li>30 = Expert</li>
+                            <li>50 = Master</li>
+                        </ul>
+
+                        <h2 id="rewardParkourRanks">Rewarding ParkourRanks</h2>
+                        <p>There are currently 2 ways to achieve a new ParkourRank.</p>
+                        <h4>/pa rewardrank (level) (rank)</h4>
+                        <p>As demonstrated above, this will create a ParkourRank for a corresponding ParkourLevel, when the achieve that level. It can be colour coded, for example <strong>/pa rewardlevel 50 &1Expert</strong>
+                        <h4>/pa setrank (player) (rank)</h4>
+                        <p>This will manually set a player's ParkourRank to the specified rank. Can be used for testing how it will look, or giving to VIPs, etc.</p>
+
+                        <h2 id="parkourRankConfig">ParkourRank Configuration</h2>
+                        <p class="no-margin">By default this functionality is disabled, to avoid interfering with the Server's chat plugin.</p>
+                        <p>To enable, find "Other.Parkour.ChatRankPrefix.Enabled" in the config.yml, and set it to true.</p>
+                        <p>You must decide if you want to use Parkour's chat implementation, or extend your current chat plugin.</p>
+                        <p>If you choose to use Parkour's chat implementation, the chat string format is found in the strings.yml under "Event.Chat"</p>
+                        <p>If you choose to extend your current chat plugin, you must set "Other.Parkour.ChatRankPrefix.OverrideChat" to false in the config.yml. You can then add <strong>%RANK%</strong> to your chat plugin format, which the Parkour plugin will detect and replace with the player's ParkourRank.</p>
+
+                        <h2 id="limitRewards">Delaying / Limiting the Rewards</h2>
+                        <p class="no-margin">You are able to delay the time a reward is given to the player in days. For example the player could receive the prize on their first completion, but may have to wait 2 full days before they are able to receive the prize again.</p>
+                        <p>This is achieved by entering <strong>/pa rewarddelay (course) (days)</strong>.</p>
+                        <p class="no-margin">You can also have the player only be rewarded a single time after they complete a course. This is heavily recommended if you are doing anything advanced with ParkourLevels, such as using rewardleveladd.</p>
+                        <p>This is achieved by entering <strong>/pa rewardonce (course)</strong>.</p>
+
+                        <h2 id="parkoins">Parkoins</h2>
+                        <p class="no-margin">Parkoins are a currency within the Parkour plugin that can be configured like any other prize. </p>
+                        <p>Unfortunately due to time constraints and more important features, this has been underutilized by the plugin itself. Fortunately due to the easy developer API, you can create a plugin that can build on top of Parkour that uses the currency. An example could be requiring a certain amount of Parkoins before a course can be purchased to join.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+
+
+<script src="//code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="js/script.js"></script>
+
+</html>

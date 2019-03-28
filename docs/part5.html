@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link href="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="//fonts.googleapis.com/css?family=Arvo" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet"/>
+    <title>Parkour Tutorials - Part 5</title>
+</head>
+<body>
+<div class="wrapper">
+    <div id="navigation-placeholder"></div>
+
+    <section>
+        <div class="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h1>Part 5 - Administration</h1>
+
+                        <div id="contents-placeholder"></div>
+
+                        <h2 id="deleteCommands">Delete Commands</h2>
+                        <p class="no-margin">Using the delete command, you are able to delete a course, checkpoint, lobby or kit. Using the syntax: <strong>/pa delete (choice) (argument)</strong>.</p>
+                        <p class="italic">All of which you will have to confirm before the action is complete.</p>
+
+                        <h4>Deleting a course</h4>
+                        <p>If you delete a course it will remove all information stored on the server about it, including all references from the database so only use as a last resort. If preferred, you can reset a course which will keep it's structure (start location & checkpoints), but reset all of it's stats and leaderboards.</p>
+                        <img src="https://i.imgur.com/apa5azA.png" alt="Deleting Course" class="img-thumbnail">
+                        <img src="https://i.imgur.com/8ucihM7.png" alt="Delete Confirm" class="img-thumbnail">
+
+                        <h4>Deleting a checkpoint</h4>
+                        <p>If you want to delete a checkpoint, it will start with the highest number and decrease to the lowest, for safety reasons. For example if your course has 5 checkpoints, and you enter <strong>/pa delete checkpoint (course)</strong> it will ask if you want to delete checkpoint 5, if you execute the command again it will ask if you want to delete checkpoint 4, etc.</p>
+                        <p>Note that you may want to overwrite a checkpoint if it needs moving, instead of deleting many. For example if you had 5 checkpoints and wanted to move the location of checkpoint 2, you can enter <strong>/pa checkpoint 2</strong> in the desired location.</p>
+
+                        <h4>Deleting a custom lobby</h4>
+                        <p>If you want to delete a lobby, it will remove all trace of the lobby from the server. To delete a lobby, simply enter <strong>/pa delete lobby (lobby)</strong>.</p>
+                        <p>If there are any courses that are linked to the lobby, it will alert you and you must address these before it can be executed, for safety reasons.</p>
+                        <img src="https://i.imgur.com/wCO9jrU.png" alt="Delete Error" class="img-thumbnail"/>
+                        <p class="italic">You must set the dependent courses to use a different lobby before this change can be made.</p>
+
+                        <h4>Delete ParkourKit</h4>
+                        <a href="part4.html#deleteParkourKit">Click Here</a>
+
+                        <h2 id="resetCommands">Reset Commands</h2>
+                        <p>Using the reset command, you are able to reset a course, player, leaderboard or prize. Using the syntax: <strong>/pa reset (choice) (argument)</strong>.</p>
+                        <p class="italic">All operations will have to be confirmed or cancelled before the change is made.</p>
+                        <img src="https://i.imgur.com/r1gzO05.png" alt="Reset Confirmation" class="img-thumbnail"/>
+
+                        <h4>Resetting a Course</h4>
+                        <p>This will delete all the statistics stored, which includes leaderboards and various Parkour attributes. This will NOT affect the spawn / checkpoints.</p>
+
+                        <h4>Resetting a Player</h4>
+                        <p>This will delete all their leaderboards across all courses and delete all various Parkour attributes.</p>
+
+                        <h4>Resetting a Leaderboard</h4>
+                        <p>Will remove all the leaderboards for a specified course.</p>
+
+                        <h4>Resetting a Prize</h4>
+                        <p>This will reset all the prizes for a course, causing it to use the default prize specified in the config.yml.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+
+
+<script src="//code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="js/script.js"></script>
+
+</html>

@@ -4,17 +4,18 @@ $(function(){
     let contentsPlaceholder = $("#contents-placeholder");
 
     if (contentsPlaceholder) {
-        let contents = "<ol>";
+        let contents = "<ul>";
         $(".col-12 h2").each(function () {
-
             let heading = $(this);
-            let title = heading.text();
-            let link = "#" + heading.attr("id");
+            let id = heading.attr("id");
+            if (id) {
+                let title = heading.text();
+                let link = "#" + id;
 
-            contents += "<li><a href='" + link + "'>" + title + "</a></li>";
+                contents += "<li><a href='" + link + "'>" + title + "</a></li>";
+            }
         });
-        contents += "</ol>";
-
+        contents += "</ul>";
         contentsPlaceholder.html(contents);
     }
 });
