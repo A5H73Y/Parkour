@@ -68,6 +68,12 @@ img {
     -webkit-font-smoothing: antialiased;
 }
 
+.home-menu {
+    text-align: center;
+    width: 50%;
+    margin: 0 auto;
+}
+
 .vertical-menu a {
     background-color: #eee; /* Grey background color */
     color: black; /* Black text color */
