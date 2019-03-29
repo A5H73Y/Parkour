@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link href="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="//fonts.googleapis.com/css?family=Arvo" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet"/>
+    <title>Parkour Tutorials - Developer Tutorials</title>
+</head>
+<body>
+<div class="wrapper">
+    <div id="navigation-placeholder"></div>
+
+    <section>
+        <div class="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h1>Developer Tutorials</h1>
+
+                        <div id="contents-placeholder"></div>
+
+                        <h2>Description</h2>
+                        <p>Are you a developer? Great! You can make the most of out Parkour's functionality to create the perfect experience for your server. I've made the plugin super easy to expand and integrate into, first we will import Parkour project to begin working with it.</p>
+
+                        <h2 id="importParkour">Importing Parkour into your Project</h2>
+                        <p>You will want to add Parkour's repository to the list of repositories so that you can bring in the Parkour project.</p>
+                        <pre><code>
+                            &lt;repository&gt;
+                                &lt;id&gt;a5h73y-repo&lt;/id&gt;
+                                &lt;url&gt;https://dl.bintray.com/a5h73y/repo/&lt;/url&gt;
+                            &lt;/repository&gt;
+                        </code></pre>
+                        <p>Add the following dependency to your list of dependencies and let Maven import the project.</p>
+                        <code>Hello</code>
+                        <p>Maven should now import the Parkour project and its dependencies, make sure your project builds correctly and then continue.</p>
+                        <p>You can also add the Parkour.jar to your classpath if you wish for the same outcome, but Maven makes this stage considerably easier.</p>
+
+                        <h2 id="setupPlugin">Setting up your plugin</h2>
+                        <p>You'll need to decide if your plugin depends on my plugin, or is just an optional dependency. In your plugin.yml enter either of the following:</p>
+                        <code>Hello</code>
+                        <p>This will allow Parkour to fully initialize before you start to use it.</p>
+                        <p>Now you need to check if the Parkour plugin has started correctly within the code, this is for you to check and handle. But will look something like: </p>
+                        <code>Hello</code>
+                        <p>If your Plugin successfully links with Parkour, your plugin can now interact with Parkour and listen to some of the events it fires.</p>
+
+                        <h2 id="parkourEvents">Parkour Events</h2>
+                        <p>There are a list of Events that Parkour creates, that you can listen to:</p>
+                        <ul>
+                            <li>PlayerJoinCourseEvent</li>
+                            <li>PlayerLeaveCourseEvent</li>
+                            <li>PlayerAchieveCheckpointEvent</li>
+                            <li>PlayerDeathEvent</li>
+                            <li>PlayerFinishEvent</li>
+                            <li>PlayerParkourLevelEvent</li>
+                        </ul>
+                        <p>Each of these will give you at least the Player object and the Course name for you to use. The Checkpoint and Level event will give you the relevant values also.</p>
+                        <p>To listen for a Parkour event you must create a Listener class and register it correctly, then create an EventHandler like any normal event:</p>
+                        <code>Hello</code>
+
+                        <h2 id="retrievingInformation">Retrieving Information</h2>
+                        <p>There are helper classes to help you easily find information about the plugin, these are covered under <strong>PlayerInfo</strong> and <strong>CourseInfo</strong>. These will allow you to find out the player's relevant Parkour stored information, as well as everything about the Parkour courses.</p>
+
+                        <div class="card card-body bg-light">
+                            <p class="no-margin">Do you feel like Parkour and its users could benefit from the changes you've made?</p>
+                            <p class="no-margin"><a href="https://github.com/A5H73Y/Parkour/pulls">Create a Pull Request</a> and I will take a look at it.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+
+
+<script src="//code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="js/script.js"></script>
+
+</html>
