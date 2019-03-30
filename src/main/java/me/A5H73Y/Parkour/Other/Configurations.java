@@ -466,6 +466,7 @@ public class Configurations {
         config.addDefault("OnCourse.PreventAttackingEntities", false);
         config.addDefault("OnCourse.PreventJoiningDifferentCourse", false);
         config.addDefault("OnCourse.PreventAllPotionEffects", false);
+        config.addDefault("OnCourse.PreventPlayerCollisions", false);
         config.addDefault("OnCourse.SneakToInteractItems", true);
         config.addDefault("OnCourse.UseParkourKit", true);
         config.addDefault("OnCourse.Trails.Enabled", false);

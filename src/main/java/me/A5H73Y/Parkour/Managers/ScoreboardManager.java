@@ -69,6 +69,13 @@ public class ScoreboardManager {
             return;
 
         Scoreboard board = setupScoreboard(player);
+
+        if (Parkour.getSettings().isPreventPlayerCollisions()) {
+            Team team = board.registerNewTeam("parkour");
+            team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
+            team.addEntry(player.getName());
+        }
+
         player.setScoreboard(board);
     }
 
