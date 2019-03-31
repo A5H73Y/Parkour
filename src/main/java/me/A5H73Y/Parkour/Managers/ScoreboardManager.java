@@ -70,9 +70,9 @@ public class ScoreboardManager {
 
         Scoreboard board = setupScoreboard(player);
 
-        if (Parkour.getSettings().isPreventPlayerCollisions()) {
+        if (Parkour.getSettings().isPreventPlayerCollisions() && !Bukkit.getBukkitVersion().contains("1.8")) {
             Team team = board.registerNewTeam("parkour");
-            team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
+            team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER); 
             team.addEntry(player.getName());
         }
 
