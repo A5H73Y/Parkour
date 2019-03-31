@@ -172,7 +172,7 @@ public class ScoreboardManager {
     private String cropAndColour(String text) {
         text = Utils.colour(text);
         if (Utils.getMinorServerVersion() < 13) {
-            text = text.substring(0, Math.min(15, text.length() - 1));
+            text = text.substring(0, Math.min(15, text.length()));
         }
         return text;
     }
