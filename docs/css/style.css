@@ -1,6 +1,6 @@
 
 /* Headings */
-h1, h2, h3, h4, h5 {
+h1, h2, h3, h4 {
     font-family: 'Arvo', serif;
     display: block;
     border-bottom: 1px solid #ccc;
@@ -44,6 +44,16 @@ img {
 
 .img-thumbnail {
     max-width: 70%;
+}
+
+.img-heading {
+    position: relative;
+    display: inline;
+    margin: 0;
+    padding: 0;
+    vertical-align: text-bottom;
+    text-align: center;
+    width: 80px;
 }
 
 /* Fixed width view */
@@ -99,14 +109,21 @@ img {
     padding: 0.8rem;
 }
 
-pre, code {
-    font-family: monospace, monospace;
-}
 pre {
     overflow: auto;
+    background-color: #f8f9fa;
+    font-size: 13px;
+    color: #333;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    word-wrap: break-word;
+    padding: 6px 10px;
+    line-height: 19px;
+    margin-top: 10px;
 }
-pre > code {
+
+code {
+    font-family: monospace, monospace;
     display: block;
-    padding: 1rem;
     word-wrap: normal;
 }

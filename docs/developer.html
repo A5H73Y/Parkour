@@ -26,23 +26,36 @@
 
                         <h2 id="importParkour">Importing Parkour into your Project</h2>
                         <p>You will want to add Parkour's repository to the list of repositories so that you can bring in the Parkour project.</p>
-                        <pre><code>
-                            &lt;repository&gt;
-                                &lt;id&gt;a5h73y-repo&lt;/id&gt;
-                                &lt;url&gt;https://dl.bintray.com/a5h73y/repo/&lt;/url&gt;
-                            &lt;/repository&gt;
-                        </code></pre>
+                        <pre><code>&lt;repository&gt;
+    &lt;id&gt;a5h73y-repo&lt;/id&gt;
+    &lt;url&gt;https://dl.bintray.com/a5h73y/repo/&lt;/url&gt;
+&lt;/repository&gt;</code></pre>
+
                         <p>Add the following dependency to your list of dependencies and let Maven import the project.</p>
-                        <code>Hello</code>
+                        <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;me.A5H73Y&lt;/groupId&gt;
+    &lt;artifactId&gt;Parkour&lt;/artifactId&gt;
+    &lt;version&gt;(INSERT LATEST VERSION)&lt;/version&gt;
+    &lt;type&gt;jar&lt;/type&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+
                         <p>Maven should now import the Parkour project and its dependencies, make sure your project builds correctly and then continue.</p>
                         <p>You can also add the Parkour.jar to your classpath if you wish for the same outcome, but Maven makes this stage considerably easier.</p>
 
                         <h2 id="setupPlugin">Setting up your plugin</h2>
                         <p>You'll need to decide if your plugin depends on my plugin, or is just an optional dependency. In your plugin.yml enter either of the following:</p>
-                        <code>Hello</code>
+                        <pre><code>depend: [Parkour]
+softdepend: [Parkour]</code></pre>
+
                         <p>This will allow Parkour to fully initialize before you start to use it.</p>
                         <p>Now you need to check if the Parkour plugin has started correctly within the code, this is for you to check and handle. But will look something like: </p>
-                        <code>Hello</code>
+                        <pre><code>Plugin parkour = getServer().getPluginManager().getPlugin("Parkour");
+if (parkour != null && parkour.isEnabled()) {
+    System.out.println("Found Parkour v" + parkour.getDescription().getVersion())
+} else {
+    /* oh no, Parkour isn't installed */
+}</code></pre>
                         <p>If your Plugin successfully links with Parkour, your plugin can now interact with Parkour and listen to some of the events it fires.</p>
 
                         <h2 id="parkourEvents">Parkour Events</h2>
@@ -57,7 +70,13 @@
                         </ul>
                         <p>Each of these will give you at least the Player object and the Course name for you to use. The Checkpoint and Level event will give you the relevant values also.</p>
                         <p>To listen for a Parkour event you must create a Listener class and register it correctly, then create an EventHandler like any normal event:</p>
-                        <code>Hello</code>
+                        <pre><code>@EventHandler
+public void onCourseCompletion(PlayerFinishCourseEvent event) {
+    String completedCourse = event.getCourseName();
+    Player player = event.getPlayer();
+
+    player.sendMessage("You completed " + completedCourse);
+}</code></pre>
 
                         <h2 id="retrievingInformation">Retrieving Information</h2>
                         <p>There are helper classes to help you easily find information about the plugin, these are covered under <strong>PlayerInfo</strong> and <strong>CourseInfo</strong>. These will allow you to find out the player's relevant Parkour stored information, as well as everything about the Parkour courses.</p>
