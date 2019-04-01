@@ -17,108 +17,91 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <h1>Part 6 - Sign Commands</h1>
+                        <h1>Part 6 - Rewarding the Player</h1>
 
                         <div id="contents-placeholder"></div>
 
-                        <div class="card card-body bg-light">
-                            Please note: If Parkour signs aren't working for non-ops, this will be because of an external reason, such as your server properties or a 3rd party plugin, and not because of the Parkour plugin itself.
-                        </div>
+                        <h2>Description</h2>
+                        <p>There are several ways we can reward the player for completing a course. We are able to reward the Player with ParkourLevels that allow them to unlock new courses, or achieve a ParkourRank that showcases how far they've progressed. All can be configured to match any server requirements, and even allow developers to natively add their own functionality.</p>
 
-                        <h2 id="joinCourse">Join Course</h2>
-                        <p>A sign used to join a Parkour course. These should be stored in your Parkour Lobby so they can be easy to find and interact with. Validation will execute when the sign is clicked to make sure the player is allowed to join first before they are teleported away.</p>
-                        <h5>Syntax</h5>
-                        <img src="https://i.imgur.com/uokArkd.png" alt="Join Syntax" class="img-thumbnail">
-                        <h5>Example</h5>
-                        <img src="https://i.imgur.com/bfVf3li.png" alt="Join Example" class="img-thumbnail">
-                        <h5>Additional information</h5>
-                        <p>If the course has a minimum level requirement to join, the level number will be displayed underneath.</p>
-                        <img src="https://i.imgur.com/2uYGWLe.png" alt="Join Requirement" class="img-thumbnail"/>
+                        <h2 id="coursePrizes">Course Prizes</h2>
+                        <p>You can reward the player several ways after they complete a course, this can be configured by starting the Prize conversation which is initiated by entering <strong>/pa prize (course)</strong>.</p>
+                        <p>This will start a conversation of what you want the prize to be, these can be stacked meaning you can have all options happen when the player finishes a course.</p>
+                        <img src="https://i.imgur.com/syeM4Cn.jpg" class="img-thumbnail" alt="Prize menu"/>
+                        <p>This was made to be as simple as possible, breaking the stages up so you answer each question with what you want. Follow each conversation as demonstrated below:</p>
+                        <h4>Material</h4>
+                        <p>You can provide the player with a Material for completing the course, and you can specify the amount. Once the player completes the course, the item and amount will be inserted into their inventory after their original inventory is restored.</p>
+                        <img src="https://i.imgur.com/xgLug6k.jpg" class="img-thumbnail" alt="Material Prize"/>
+                        <h4>Commands</h4>
+                        <p>You are able to execute multiple commands when a player completes the course, (as of Parkour v5.0), simply choose the "command" option and it will ask you for the command to execute. Note that these commands will be run by the server, so will have elevated permission to run anything.</p>
+                        <p>You can use the placeholder <strong>%PLAYER%</strong> to insert the players name at execution, it will have to be exactly that or it will not be recognized by the plugin. As a basic example I have set the command prize to <strong>give %PLAYER% TORCH 10</strong> when they complete, the plugin will give you the option to run the command to test to see if it works correctly, by inserting your name into the placeholder.</p>
+                        <img src="https://i.imgur.com/i9Vfb98.jpg" class="img-thumbnail" alt="Command Prize"/>
+                        <p>You can see that once I entered 'yes', it executed the command which gave the player 10 torches, make sure you use <strong>%PLAYER%</strong> exactly so it replaces that with the actual players name.</p>
+                        <p>You will be able to run this conversation as many times as you want to create a list of commands that get executed once a player completes the course.</p>
+                        <h4>XP</h4>
+                        <p>You can give the player Minecraft XP when they complete the course, which is as simple as entering a positive number into the conversation.</p>
+                        <img src="https://i.imgur.com/43qKmUn.jpg" class="img-thumbnail" alt="XP Prize">
 
-                        <h2 id="finishCourse">Finish Course</h2>
-                        <p>A Finish sign is used as an alternative to a Finish Block. Validation will execute when the sign is clicked to make sure the player is allowed to finish the course before they are teleported away.</p>
-                        <h5>Syntax</h5>
-                        <img src="https://i.imgur.com/h7DE6xn.png" alt="Finish Syntax" class="img-thumbnail">
-                        <h5>Example</h5>
-                        <img src="https://i.imgur.com/dDbkmw4.png" alt="Finish Example" class="img-thumbnail">
+                        <h2 id="parkourLevelsDescription">What are ParkourLevels?</h2>
+                        <p>A ParkourLevel is a value that signifies how far a player has progressed through the courses. It can be used to restrict players to certain courses, and unlock new ones.</p>
+                        <p>A new Parkour player will have a ParkourLevel of 0, but they can receive new levels by completing more courses. Your level will only ever increase, you can not reduce a player's level.</p>
 
-                        <h2 id="parkourLobby">Parkour Lobby</h2>
-                        <p>A Parkour lobby is an area of Parkour Join signs, which you are teleported to when you leave or finish a course. There can be multiple lobbies that are identified by a unique name, these can have a minimum level requirement validation on before they can be teleported to.</p>
-                        <h5>Syntax</h5>
-                        <img src="https://i.imgur.com/6ouLdKC.png" alt="Lobby Syntax" class="img-thumbnail">
-                        <h5>Example</h5>
-                        <img src="https://i.imgur.com/34QGgZ2.png" alt="Lobby Example" class="img-thumbnail">
-                        <h5>Additional information</h5>
-                        <p class="no-margin">If no lobby name is specified the default lobby will be used.</p>
-                        <p>If the lobby has a minimum level requirement to join, the level number will be displayed underneath.</p>
-                        <img src="https://i.imgur.com/45kDF0b.png" alt="Lobby Requirement" class="img-thumbnail"/>
+                        <h2 id="rewardParkourLevels">Rewarding ParkourLevels</h2>
+                        <p>There are currently 3 ways to achieve a new ParkourLevel.</p>
 
-                        <h2 id="leaveCourse">Leave Course</h2>
-                        <p>Create a sign for players to easy leave the course.</p>
-                        <h5>Syntax</h5>
-                        <img src="https://i.imgur.com/Zgnyw6w.png" alt="Leave Syntax" class="img-thumbnail">
+                        <h4>/pa rewardlevel (course) (level)</h4>
+                        <p>This means when you complete the specified course, you will receive the specified level. If the player's level is currently higher than the reward level, it will not be changed.</p>
+                        <p>The main purpose of this is incremental courses, so you would have to complete the Level1 course, before you could join the Level2 course, etc.</p>
 
-                        <h2 id="effects">Effects Signs</h2>
-                        <p><strong>THESE TUTORIALS ARE OUTDATED. Will update soon.</strong></p>
-                        <p>You can apply several affects to the player on the course. These are activated by right clicking the signs whilst on a course.</p>
-                        <p class="no-margin">The effects include: </p>
+                        <h4>/pa rewardleveladd (course) (amount)</h4>
+                        <p>This means when you complete the specified course, your level has the amount added to it. So if you had a ParkourLevel of 10, and completed the course which had a rewardLevelAdd of 2, your new ParkourLevel becomes 12.</p>
+                        <p>The main purpose for this is for lobbies where you have to complete all of the courses to unlock a new lobby; If you had an "Easy" lobby with 5 courses, you would set the level requirement for "Medium" to 5, and add a rewardLevelAdd to 1 for each course in Easy, so they can be completed in any order. NOTE: For this you would have to enable <strong>/pa rewardonce (course)</strong> so they only get leveled up once per course.</p>
+
+                        <h4>/pa setlevel (player) (level)</h4>
+                        <p>This can be used by Admins to manually set a player's level. This can be done for VIPs, or simply to quickly test what you've created is working as intended.</p>
+
+                        <h2 id="parkourLevelRestrictions">ParkourLevel Restrictions</h2>
+                        <p>ParkourLevels can be used to apply restrictions to courses and lobbies. The validation will be based on the minimum level requirement. So if a course has a minimum level requirement of 10, and the player has a ParkourLevel of 12, this will work.</p>
+                        <p><strong>/pa setminlevel (course) (level)</strong> set the minimum level of the specified course to the specified level. Any player that now attempts to join this course will be prevented from doing so unless they have a high enough ParkourLevel.</p>
+                        <p><strong>/pa setlobby (name) (level)</strong> create a lobby and set the minimum level requirement for teleportation to the ParkourLevel specified. This is used if you organize your courses into separate lobbies and wish to prevent the player to teleport unless they have a high enough ParkourLevel.</p>
+
+                        <h2 id="parkourRankDescription">What is a ParkourRank?</h2>
+                        <p>A ParkourRank is simply a title a player earns when they reach a certain level.</p>
+                        <p>A basic example could be similar to the following, when they reach each ParkourLevel they get the specified ParkourRank:</p>
+                        <p><strong>TODO make colourful</strong></p>
                         <ul>
-                            <li>
-                                Heal
-                                <ul><li>Right click to fill the players health to full</li></ul>
-                            </li>
-                            <li>
-                                Jump
-                                <ul><li>Requires a number on the bottom line to apply the strength of the jump potion</li></ul>
-                            </li>
-                            <li>
-                                Speed
-                                <ul><li>Applies a speed potion</li></ul>
-                            </li>
-                            <li>
-                                Pain
-                                <ul><li>Applies damage resistance potion</li></ul>
-                            </li>
-                            <li>
-                                Fire
-                                <ul><li>Applies a fire resistance potion</li></ul>
-                            </li>
-                            <li>
-                                Gamemode
-                                <ul><li>Requires a gamemode on the bottom line to apply the gamemode specified</li></ul>
+                            <li>5 = <span style="color: #4CAF50">Beginner</span></li>
+                            <li>10 = <span style="color: #4c99ff">Amateur</span></li>
+                            <li>20 = <span style="color: #521daf">Professional</span></li>
+                            <li>30 = <span style="color: #af190a">Expert</span></li>
+                            <li>50 =
+                                <span style="color: #17af00">M</span><span style="color: #2b5aaf">a</span><span style="color: #afa805">s</span><span style="color: #af0010">t</span><span style="color: #af00ac">e</span><span style="color: #0a00af">r</span>
                             </li>
                         </ul>
 
-                        <h5>Syntax</h5>
-                        <img src="https://i.imgur.com/7kp3Ll9.png" alt="Effects Syntax" class="img-thumbnail">
-                        <h5>Example</h5>
-                        <img src="https://i.imgur.com/soQ552h.png" alt="Effects Example" class="img-thumbnail">
+                        <h2 id="rewardParkourRanks">Rewarding ParkourRanks</h2>
+                        <p>There are currently 2 ways to achieve a new ParkourRank.</p>
+                        <h4>/pa rewardrank (level) (rank)</h4>
+                        <p>As demonstrated above, this will create a ParkourRank for a corresponding ParkourLevel, when the achieve that level. It can be colour coded, for example <strong>/pa rewardlevel 50 &1Expert</strong>
+                        <h4>/pa setrank (player) (rank)</h4>
+                        <p>This will manually set a player's ParkourRank to the specified rank. Can be used for testing how it will look, or giving to VIPs, etc.</p>
 
-                        <h2 id="courseStats">Course Stats</h2>
-                        <p>Display the course information in the player's chat when they right click the sign.</p>
-                        <h5>Syntax</h5>
-                        <img src="https://i.imgur.com/fhpmUMv.png" alt="Stats Syntax" class="img-thumbnail">
-                        <h5>Example</h5>
-                        <img src="https://i.imgur.com/pdzaWks.png" alt="Stats Example" class="img-thumbnail">
-                        <h5>Additional information</h5>
-                        <p>Each course will display the relevant statistics based on how they are set up. Each course would have a dynamic list of information based on how they are setup. For example if the course has a custom lobby set, that would display also.</p>
-                        <img src="https://i.imgur.com/C1pBaJA.png" alt="Stats Printed" class="img-thumbnail"/>
+                        <h2 id="parkourRankConfig">ParkourRank Configuration</h2>
+                        <p class="no-margin">By default this functionality is disabled, to avoid interfering with the Server's chat plugin.</p>
+                        <p>To enable, find "Other.Parkour.ChatRankPrefix.Enabled" in the config.yml, and set it to true.</p>
+                        <p>You must decide if you want to use Parkour's chat implementation, or extend your current chat plugin.</p>
+                        <p>If you choose to use Parkour's chat implementation, the chat string format is found in the strings.yml under "Event.Chat"</p>
+                        <p>If you choose to extend your current chat plugin, you must set "Other.Parkour.ChatRankPrefix.OverrideChat" to false in the config.yml. You can then add <strong>%RANK%</strong> to your chat plugin format, which the Parkour plugin will detect and replace with the player's ParkourRank.</p>
 
-                        <h2 id="courseLeaderboards">Course Leaderboards</h2>
-                        <p>Display the leaderboards of the course, the amount of results can be placed at the bottom of the sign.</p>
-                        <h5>Syntax</h5>
-                        <img src="https://i.imgur.com/OAQuSgE.png" alt="Leaderboards Syntax" class="img-thumbnail">
-                        <h5>Example</h5>
-                        <img src="https://i.imgur.com/5xFIkaz.png" alt="Leaderboards Example" class="img-thumbnail">
-                        <img src="https://i.imgur.com/2njojiq.png" alt="Leaderboards Printed" class="img-thumbnail">
+                        <h2 id="limitRewards">Delaying / Limiting the Rewards</h2>
+                        <p class="no-margin">You are able to delay the time a reward is given to the player in days. For example the player could receive the prize on their first completion, but may have to wait 2 full days before they are able to receive the prize again.</p>
+                        <p>This is achieved by entering <strong>/pa rewarddelay (course) (days)</strong>.</p>
+                        <p class="no-margin">You can also have the player only be rewarded a single time after they complete a course. This is heavily recommended if you are doing anything advanced with ParkourLevels, such as using rewardleveladd.</p>
+                        <p>This is achieved by entering <strong>/pa rewardonce (course)</strong>.</p>
 
-                        <h2 id="courseCheckpoint">Checkpoint</h2>
-                        <p>You can have a manual checkpoint sign, instead of walking on a pressure-plate. The number must equal the next checkpoint you need to achieve to apply the checkpoint.</p>
-                        <p>These work the same way as previous "SetPoint" signs, they simply load the checkpoint, and do not create one. The checkpoint must be created via <strong>/pa checkpoint</strong> and then the pressure plate can be replaced by the checkpoint sign to activate the loading of the checkpoint. </p>
-                        <h5>Syntax</h5>
-                        <img src="https://i.imgur.com/0QroXwc.png" alt="Checkpoint Syntax" class="img-thumbnail">
-                        <h5>Example</h5>
-                        <img src="https://i.imgur.com/Rp66GzL.png" alt="Checkpoint Example" class="img-thumbnail">
+                        <h2 id="parkoins">Parkoins</h2>
+                        <p class="no-margin">Parkoins are a currency within the Parkour plugin that can be configured like any other prize. </p>
+                        <p>Unfortunately due to time constraints and more important features, this has been underutilized by the plugin itself. Fortunately due to the easy developer API, you can create a plugin that can build on top of Parkour that uses the currency. An example could be requiring a certain amount of Parkoins before a course can be purchased to join.</p>
                     </div>
                 </div>
             </div>

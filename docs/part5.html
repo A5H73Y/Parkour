@@ -17,48 +17,108 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <h1>Part 5 - Administration</h1>
+                        <h1>Part 5 - Sign Commands</h1>
 
                         <div id="contents-placeholder"></div>
 
-                        <h2 id="deleteCommands">Delete Commands</h2>
-                        <p class="no-margin">Using the delete command, you are able to delete a course, checkpoint, lobby or kit. Using the syntax: <strong>/pa delete (choice) (argument)</strong>.</p>
-                        <p class="italic">All of which you will have to confirm before the action is complete.</p>
+                        <div class="card card-body bg-light">
+                            Please note: If Parkour signs aren't working for non-ops, this will be because of an external reason, such as your server properties or a 3rd party plugin, and not because of the Parkour plugin itself.
+                        </div>
 
-                        <h4>Deleting a course</h4>
-                        <p>If you delete a course it will remove all information stored on the server about it, including all references from the database so only use as a last resort. If preferred, you can reset a course which will keep it's structure (start location & checkpoints), but reset all of it's stats and leaderboards.</p>
-                        <img src="https://i.imgur.com/apa5azA.png" alt="Deleting Course" class="img-thumbnail">
-                        <img src="https://i.imgur.com/8ucihM7.png" alt="Delete Confirm" class="img-thumbnail">
+                        <h2 id="joinCourse">Join Course</h2>
+                        <p>A sign used to join a Parkour course. These should be stored in your Parkour Lobby so they can be easy to find and interact with. Validation will execute when the sign is clicked to make sure the player is allowed to join first before they are teleported away.</p>
+                        <h5>Syntax</h5>
+                        <img src="https://i.imgur.com/uokArkd.png" alt="Join Syntax" class="img-thumbnail">
+                        <h5>Example</h5>
+                        <img src="https://i.imgur.com/bfVf3li.png" alt="Join Example" class="img-thumbnail">
+                        <h5>Additional information</h5>
+                        <p>If the course has a minimum level requirement to join, the level number will be displayed underneath.</p>
+                        <img src="https://i.imgur.com/2uYGWLe.png" alt="Join Requirement" class="img-thumbnail"/>
 
-                        <h4>Deleting a checkpoint</h4>
-                        <p>If you want to delete a checkpoint, it will start with the highest number and decrease to the lowest, for safety reasons. For example if your course has 5 checkpoints, and you enter <strong>/pa delete checkpoint (course)</strong> it will ask if you want to delete checkpoint 5, if you execute the command again it will ask if you want to delete checkpoint 4, etc.</p>
-                        <p>Note that you may want to overwrite a checkpoint if it needs moving, instead of deleting many. For example if you had 5 checkpoints and wanted to move the location of checkpoint 2, you can enter <strong>/pa checkpoint 2</strong> in the desired location.</p>
+                        <h2 id="finishCourse">Finish Course</h2>
+                        <p>A Finish sign is used as an alternative to a Finish Block. Validation will execute when the sign is clicked to make sure the player is allowed to finish the course before they are teleported away.</p>
+                        <h5>Syntax</h5>
+                        <img src="https://i.imgur.com/h7DE6xn.png" alt="Finish Syntax" class="img-thumbnail">
+                        <h5>Example</h5>
+                        <img src="https://i.imgur.com/dDbkmw4.png" alt="Finish Example" class="img-thumbnail">
 
-                        <h4>Deleting a custom lobby</h4>
-                        <p>If you want to delete a lobby, it will remove all trace of the lobby from the server. To delete a lobby, simply enter <strong>/pa delete lobby (lobby)</strong>.</p>
-                        <p>If there are any courses that are linked to the lobby, it will alert you and you must address these before it can be executed, for safety reasons.</p>
-                        <img src="https://i.imgur.com/wCO9jrU.png" alt="Delete Error" class="img-thumbnail"/>
-                        <p class="italic">You must set the dependent courses to use a different lobby before this change can be made.</p>
+                        <h2 id="parkourLobby">Parkour Lobby</h2>
+                        <p>A Parkour lobby is an area of Parkour Join signs, which you are teleported to when you leave or finish a course. There can be multiple lobbies that are identified by a unique name, these can have a minimum level requirement validation on before they can be teleported to.</p>
+                        <h5>Syntax</h5>
+                        <img src="https://i.imgur.com/6ouLdKC.png" alt="Lobby Syntax" class="img-thumbnail">
+                        <h5>Example</h5>
+                        <img src="https://i.imgur.com/34QGgZ2.png" alt="Lobby Example" class="img-thumbnail">
+                        <h5>Additional information</h5>
+                        <p class="no-margin">If no lobby name is specified the default lobby will be used.</p>
+                        <p>If the lobby has a minimum level requirement to join, the level number will be displayed underneath.</p>
+                        <img src="https://i.imgur.com/45kDF0b.png" alt="Lobby Requirement" class="img-thumbnail"/>
 
-                        <h4>Delete ParkourKit</h4>
-                        <a href="part4.html#deleteParkourKit">Click Here</a>
+                        <h2 id="leaveCourse">Leave Course</h2>
+                        <p>Create a sign for players to easy leave the course.</p>
+                        <h5>Syntax</h5>
+                        <img src="https://i.imgur.com/Zgnyw6w.png" alt="Leave Syntax" class="img-thumbnail">
 
-                        <h2 id="resetCommands">Reset Commands</h2>
-                        <p>Using the reset command, you are able to reset a course, player, leaderboard or prize. Using the syntax: <strong>/pa reset (choice) (argument)</strong>.</p>
-                        <p class="italic">All operations will have to be confirmed or cancelled before the change is made.</p>
-                        <img src="https://i.imgur.com/r1gzO05.png" alt="Reset Confirmation" class="img-thumbnail"/>
+                        <h2 id="effects">Effects Signs</h2>
+                        <p><strong>THESE TUTORIALS ARE OUTDATED. Will update soon.</strong></p>
+                        <p>You can apply several affects to the player on the course. These are activated by right clicking the signs whilst on a course.</p>
+                        <p class="no-margin">The effects include: </p>
+                        <ul>
+                            <li>
+                                Heal
+                                <ul><li>Right click to fill the players health to full</li></ul>
+                            </li>
+                            <li>
+                                Jump
+                                <ul><li>Requires a number on the bottom line to apply the strength of the jump potion</li></ul>
+                            </li>
+                            <li>
+                                Speed
+                                <ul><li>Applies a speed potion</li></ul>
+                            </li>
+                            <li>
+                                Pain
+                                <ul><li>Applies damage resistance potion</li></ul>
+                            </li>
+                            <li>
+                                Fire
+                                <ul><li>Applies a fire resistance potion</li></ul>
+                            </li>
+                            <li>
+                                Gamemode
+                                <ul><li>Requires a gamemode on the bottom line to apply the gamemode specified</li></ul>
+                            </li>
+                        </ul>
 
-                        <h4>Resetting a Course</h4>
-                        <p>This will delete all the statistics stored, which includes leaderboards and various Parkour attributes. This will NOT affect the spawn / checkpoints.</p>
+                        <h5>Syntax</h5>
+                        <img src="https://i.imgur.com/7kp3Ll9.png" alt="Effects Syntax" class="img-thumbnail">
+                        <h5>Example</h5>
+                        <img src="https://i.imgur.com/soQ552h.png" alt="Effects Example" class="img-thumbnail">
 
-                        <h4>Resetting a Player</h4>
-                        <p>This will delete all their leaderboards across all courses and delete all various Parkour attributes.</p>
+                        <h2 id="courseStats">Course Stats</h2>
+                        <p>Display the course information in the player's chat when they right click the sign.</p>
+                        <h5>Syntax</h5>
+                        <img src="https://i.imgur.com/fhpmUMv.png" alt="Stats Syntax" class="img-thumbnail">
+                        <h5>Example</h5>
+                        <img src="https://i.imgur.com/pdzaWks.png" alt="Stats Example" class="img-thumbnail">
+                        <h5>Additional information</h5>
+                        <p>Each course will display the relevant statistics based on how they are set up. Each course would have a dynamic list of information based on how they are setup. For example if the course has a custom lobby set, that would display also.</p>
+                        <img src="https://i.imgur.com/C1pBaJA.png" alt="Stats Printed" class="img-thumbnail"/>
 
-                        <h4>Resetting a Leaderboard</h4>
-                        <p>Will remove all the leaderboards for a specified course.</p>
+                        <h2 id="courseLeaderboards">Course Leaderboards</h2>
+                        <p>Display the leaderboards of the course, the amount of results can be placed at the bottom of the sign.</p>
+                        <h5>Syntax</h5>
+                        <img src="https://i.imgur.com/OAQuSgE.png" alt="Leaderboards Syntax" class="img-thumbnail">
+                        <h5>Example</h5>
+                        <img src="https://i.imgur.com/5xFIkaz.png" alt="Leaderboards Example" class="img-thumbnail">
+                        <img src="https://i.imgur.com/2njojiq.png" alt="Leaderboards Printed" class="img-thumbnail">
 
-                        <h4>Resetting a Prize</h4>
-                        <p>This will reset all the prizes for a course, causing it to use the default prize specified in the config.yml.</p>
+                        <h2 id="courseCheckpoint">Checkpoint</h2>
+                        <p>You can have a manual checkpoint sign, instead of walking on a pressure-plate. The number must equal the next checkpoint you need to achieve to apply the checkpoint.</p>
+                        <p>These work the same way as previous "SetPoint" signs, they simply load the checkpoint, and do not create one. The checkpoint must be created via <strong>/pa checkpoint</strong> and then the pressure plate can be replaced by the checkpoint sign to activate the loading of the checkpoint. </p>
+                        <h5>Syntax</h5>
+                        <img src="https://i.imgur.com/0QroXwc.png" alt="Checkpoint Syntax" class="img-thumbnail">
+                        <h5>Example</h5>
+                        <img src="https://i.imgur.com/Rp66GzL.png" alt="Checkpoint Example" class="img-thumbnail">
                     </div>
                 </div>
             </div>

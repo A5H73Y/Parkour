@@ -17,34 +17,48 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <h1>Part 8 - Other Plugin support</h1>
+                        <h1>Part 8 - Administration</h1>
 
                         <div id="contents-placeholder"></div>
 
-                        <h2 id="economy">Economy / Vault</h2>
-                        <p>Parkour supports the ability to use <a href="https://dev.bukkit.org/projects/vault">Economy</a> through the Vault plugin, created by Sleaker.</p>
-                        <p class="no-margin">The configuration option in the config.yml is "Other.Economy.Enabled" and must be set to true. When Parkour starts up, it will print a message whether it connected to the Vault plugin successfully.</p>
-                        <p>Once successfully linked, you are able to reward players with an amount of currency, as well as charge them for joining a course.</p>
-                        <p class="no-margin">If there are courses that exist before the plugin was linked with Vault, these need adding to the economy.yml, which is made easy by entering <strong>/pa econ recreate</strong>.</p>
-                        <p>Once the process is complete it will notify you how many courses were updated. At this stage the economy.yml file should contain all the courses on your server, and a prize and fee set to 0. </p>
-                        <p>The joining fee and reward amount can be set in game, using <strong>/pa econ setprize (course) (amount)</strong> and <strong>/pa econ setfee (course) (amount)</strong>. Amount being the amount of currency to add / retract. </p>
+                        <h2 id="deleteCommands">Delete Commands</h2>
+                        <p class="no-margin">Using the delete command, you are able to delete a course, checkpoint, lobby or kit. Using the syntax: <strong>/pa delete (choice) (argument)</strong>.</p>
+                        <p class="italic">All of which you will have to confirm before the action is complete.</p>
 
-                        <h2 id="bountifulAPI">BountifulAPI</h2>
-                        <p>BountifulAPI adds the ability to display titles and various other notifications, rather than printing the messages into the chat.</p>
-                        <img src="https://i.imgur.com/E8BighB.png" alt="Bountiful Example 1" class="img-thumbnail"/>
-                        <img src="https://i.imgur.com/fDsUmHV.png" alt="Bountiful Example 2" class="img-thumbnail"/>
-                        <img src="https://i.imgur.com/bRvhdp8.png" alt="Bountiful Example 3" class="img-thumbnail"/>
-                        <p>Created by connorlinfoot, available here: <a href="https://www.spigotmc.org/resources/bountifulapi-1-8-1-13.1394/">https://www.spigotmc.org/resources/bountifulapi-1-8-1-13.1394/</a></p>
+                        <h4>Deleting a course</h4>
+                        <p>If you delete a course it will remove all information stored on the server about it, including all references from the database so only use as a last resort. If preferred, you can reset a course which will keep it's structure (start location & checkpoints), but reset all of it's stats and leaderboards.</p>
+                        <img src="https://i.imgur.com/apa5azA.png" alt="Deleting Course" class="img-thumbnail">
+                        <img src="https://i.imgur.com/8ucihM7.png" alt="Delete Confirm" class="img-thumbnail">
 
-                        <h2 id="parkourExpansion">Parkour Expansion</h2>
-                        <p>Allows for PlaceholderAPI to be used with the Parkour plugin, provides a large amount of available placeholder values. Can be used to extend to other plugins to allow for powerful compatibility.</p>
-                        <img src="https://i.imgur.com/ONkkWzM.png" alt="Parkour Expansion Example" class="img-thumbnail"/>
-                        <p>Plugin and image created by steve4744, available here: <a href="https://www.spigotmc.org/resources/parkour-expansion.41874/">https://www.spigotmc.org/resources/parkour-expansion.41874/</a></p>
+                        <h4>Deleting a checkpoint</h4>
+                        <p>If you want to delete a checkpoint, it will start with the highest number and decrease to the lowest, for safety reasons. For example if your course has 5 checkpoints, and you enter <strong>/pa delete checkpoint (course)</strong> it will ask if you want to delete checkpoint 5, if you execute the command again it will ask if you want to delete checkpoint 4, etc.</p>
+                        <p>Note that you may want to overwrite a checkpoint if it needs moving, instead of deleting many. For example if you had 5 checkpoints and wanted to move the location of checkpoint 2, you can enter <strong>/pa checkpoint 2</strong> in the desired location.</p>
 
-                        <h2 id="parkourTopTen">Parkour Top Ten</h2>
-                        <p>Allows for the player's Head to be proudly displayed next to their best times, great for a competitive Parkour server.</p>
-                        <img src="https://i.imgur.com/c2n6QUM.png" alt="Parkour Top Ten Example" class="img-thumbnail"/>
-                        <p>Plugin and image created by steve4744, available here: <a href="https://www.spigotmc.org/resources/parkour-top-ten.46268/">https://www.spigotmc.org/resources/parkour-top-ten.46268/</a></p>
+                        <h4>Deleting a custom lobby</h4>
+                        <p>If you want to delete a lobby, it will remove all trace of the lobby from the server. To delete a lobby, simply enter <strong>/pa delete lobby (lobby)</strong>.</p>
+                        <p>If there are any courses that are linked to the lobby, it will alert you and you must address these before it can be executed, for safety reasons.</p>
+                        <img src="https://i.imgur.com/wCO9jrU.png" alt="Delete Error" class="img-thumbnail"/>
+                        <p class="italic">You must set the dependent courses to use a different lobby before this change can be made.</p>
+
+                        <h4>Delete ParkourKit</h4>
+                        <a href="part4.html#deleteParkourKit">Click Here</a>
+
+                        <h2 id="resetCommands">Reset Commands</h2>
+                        <p>Using the reset command, you are able to reset a course, player, leaderboard or prize. Using the syntax: <strong>/pa reset (choice) (argument)</strong>.</p>
+                        <p class="italic">All operations will have to be confirmed or cancelled before the change is made.</p>
+                        <img src="https://i.imgur.com/r1gzO05.png" alt="Reset Confirmation" class="img-thumbnail"/>
+
+                        <h4>Resetting a Course</h4>
+                        <p>This will delete all the statistics stored, which includes leaderboards and various Parkour attributes. This will NOT affect the spawn / checkpoints.</p>
+
+                        <h4>Resetting a Player</h4>
+                        <p>This will delete all their leaderboards across all courses and delete all various Parkour attributes.</p>
+
+                        <h4>Resetting a Leaderboard</h4>
+                        <p>Will remove all the leaderboards for a specified course.</p>
+
+                        <h4>Resetting a Prize</h4>
+                        <p>This will reset all the prizes for a course, causing it to use the default prize specified in the config.yml.</p>
                     </div>
                 </div>
             </div>
