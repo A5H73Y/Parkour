@@ -77,6 +77,9 @@ public class Settings {
 		return getConfig().getBoolean("OnCourse.PreventAttackingEntities");
 	}
 
+	public boolean isPreventPlayerCollisions() {
+		return getConfig().getBoolean("OnCourse.PreventPlayerCollisions");
+	}
 	public boolean isDisplayMilliseconds() {
 		return getConfig().getBoolean("Other.Display.ShowMilliseconds");
 	}

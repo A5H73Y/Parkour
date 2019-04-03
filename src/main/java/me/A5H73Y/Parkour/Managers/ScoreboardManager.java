@@ -69,6 +69,13 @@ public class ScoreboardManager {
             return;
 
         Scoreboard board = setupScoreboard(player);
+
+        if (Parkour.getSettings().isPreventPlayerCollisions() && Utils.getMinorServerVersion() > 8) {
+            Team team = board.registerNewTeam("parkour");
+            team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER); 
+            team.addEntry(player.getName());
+        }
+
         player.setScoreboard(board);
     }
 
@@ -165,7 +172,7 @@ public class ScoreboardManager {
     private String cropAndColour(String text) {
         text = Utils.colour(text);
         if (Utils.getMinorServerVersion() < 13) {
-            text = text.substring(0, Math.min(15, text.length() - 1));
+            text = text.substring(0, Math.min(15, text.length()));
         }
         return text;
     }
