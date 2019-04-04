@@ -2,7 +2,7 @@
 
 [![travis-ci](https://travis-ci.org/A5H73Y/Parkour.svg?branch=master)](https://travis-ci.org/A5H73Y/Parkour/branches)
 [![bStats](https://img.shields.io/badge/statistics-bstats-brightgreen.svg)](https://bstats.org/plugin/bukkit/Parkour)
-[![dev.bukkit](https://img.shields.io/badge/tutorials-dev.bukkit-blue.svg)](https://dev.bukkit.org/projects/parkour/pages/tutorial)
+[![tutorials](https://img.shields.io/badge/tutorials-github-blue.svg)](https://a5h73y.github.io/Parkour/)
 [![license: MIT](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://tldrlegal.com/license/mit-license)
 
 Parkour is the original, most powerful Parkour based plugin available! 
