@@ -8,7 +8,12 @@ import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.conversations.*;
+import org.bukkit.conversations.BooleanPrompt;
+import org.bukkit.conversations.ConversationContext;
+import org.bukkit.conversations.FixedSetPrompt;
+import org.bukkit.conversations.NumericPrompt;
+import org.bukkit.conversations.Prompt;
+import org.bukkit.conversations.StringPrompt;
 
 import java.util.HashMap;
 import java.util.Map;

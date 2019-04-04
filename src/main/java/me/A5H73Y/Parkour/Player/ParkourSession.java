@@ -50,9 +50,10 @@ public class ParkourSession implements Serializable {
 	}
 
 	public void startVisualTimer(final Player player) {
-		if (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.DisplayLiveTime") ||
-				QuietModeManager.isInQuietMode(player.getName()))
+		if (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.DisplayLiveTime")
+				|| QuietModeManager.isInQuietMode(player.getName())) {
 			return;
+		}
 
 		BukkitTask task = new BukkitRunnable() {
 			@Override
@@ -97,7 +98,9 @@ public class ParkourSession implements Serializable {
 	 * Get the current time of the ParkourSession
 	 * @return String in %02d:%02d:%02d format
 	 */
-	public String getLiveTime() { return liveTime; }
+	public String getLiveTime() {
+		return liveTime;
+	}
 
 	public int getDeaths() {
 		return deaths;

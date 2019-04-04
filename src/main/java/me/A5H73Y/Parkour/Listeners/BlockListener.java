@@ -4,6 +4,7 @@ import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -14,32 +15,31 @@ public class BlockListener implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
-            return;
-
-        if (!Utils.hasPermission(event.getPlayer(), "Parkour.Admin") ||
-                (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks")))
-            event.setCancelled(true);
+        handleBlockPlaceBreakEvent(event.getPlayer(), event);
     }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
-            return;
-
-        if (!Utils.hasPermission(event.getPlayer(), "Parkour.Admin") ||
-                (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks")))
-            event.setCancelled(true);
+        handleBlockPlaceBreakEvent(event.getPlayer(), event);
     }
 
     @EventHandler
     public void onHangingBreakByEntity(HangingBreakByEntityEvent event) {
-        if (!(event.getRemover() instanceof Player) ||
-                !PlayerMethods.isPlaying(event.getRemover().getName()))
+        if (!(event.getRemover() instanceof Player)) {
             return;
+        }
 
-        if (!Utils.hasPermission((Player) event.getRemover(), "Parkour.Admin")
-                || (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks")))
+        handleBlockPlaceBreakEvent((Player) event.getRemover(), event);
+    }
+
+    private void handleBlockPlaceBreakEvent(Player player, Cancellable event) {
+        if (!PlayerMethods.isPlaying(player.getName())) {
+            return;
+        }
+
+        if (!Utils.hasPermission(player, "Parkour.Admin")
+                || (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks"))) {
             event.setCancelled(true);
+        }
     }
 }

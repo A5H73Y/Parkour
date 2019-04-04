@@ -9,7 +9,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.*;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.util.HashMap;
 import java.util.List;
@@ -65,8 +69,9 @@ public class ScoreboardManager {
     }
 
     public void addScoreboard(Player player) {
-        if (!this.enabled)
+        if (!this.enabled) {
             return;
+        }
 
         Scoreboard board = setupScoreboard(player);
 
@@ -82,8 +87,9 @@ public class ScoreboardManager {
     public void updateScoreboardTimer(Player player, String liveTime) {
         Scoreboard board = player.getScoreboard();
 
-        if (board == null || !configKey.get(CURRENT_TIME))
+        if (board == null || !configKey.get(CURRENT_TIME)) {
             return;
+        }
 
         board.getTeam(CURRENT_TIME).setPrefix(convertText(liveTime));
     }
@@ -109,15 +115,17 @@ public class ScoreboardManager {
     }
 
     private void addCourseName(PlayerScoreboard playerBoard) {
-        if (!configKey.get(COURSE_NAME))
+        if (!configKey.get(COURSE_NAME)) {
             return;
+        }
 
         print(playerBoard, playerBoard.courseName, COURSE_NAME);
     }
 
     private void addBestTimeEver(PlayerScoreboard playerBoard) {
-        if (!configKey.get(BEST_TIME_EVER))
+        if (!configKey.get(BEST_TIME_EVER)) {
             return;
+        }
 
         List<TimeObject> result = DatabaseMethods.getTopCourseResults(playerBoard.courseName, 1);
         String bestTimeEver = result.size() > 0 ? Utils.displayCurrentTime(result.get(0).getTime()) : translationKey.get("notCompleted");
@@ -125,8 +133,9 @@ public class ScoreboardManager {
     }
 
     private void addBestTimeEverName(PlayerScoreboard playerBoard) {
-        if (!configKey.get(BEST_TIME_EVER_NAME))
+        if (!configKey.get(BEST_TIME_EVER_NAME)) {
             return;
+        }
 
         List<TimeObject> result = DatabaseMethods.getTopCourseResults(playerBoard.courseName, 1);
         String bestTimeName = result.size() > 0 ? result.get(0).getPlayer() : translationKey.get("notCompleted");
@@ -134,8 +143,9 @@ public class ScoreboardManager {
     }
 
     private void addBestTimeEverMe(PlayerScoreboard playerBoard) {
-        if (!configKey.get(BEST_TIME_EVER_ME))
+        if (!configKey.get(BEST_TIME_EVER_ME)) {
             return;
+        }
 
         List<TimeObject> result = DatabaseMethods.getTopPlayerCourseResults(playerBoard.playerName, playerBoard.courseName, 1);
         String bestTime = result.size() > 0 ? Utils.displayCurrentTime(result.get(0).getTime()) : translationKey.get("notCompleted");
@@ -143,8 +153,9 @@ public class ScoreboardManager {
     }
 
     private void addCurrentTime(PlayerScoreboard playerBoard) {
-        if (!configKey.get(CURRENT_TIME))
+        if (!configKey.get(CURRENT_TIME)) {
             return;
+        }
 
         print(playerBoard, "00:00:00", CURRENT_TIME);
     }
@@ -188,11 +199,21 @@ public class ScoreboardManager {
      */
     private int calculateNumberOfRowsNeeded() {
         int rowsNeeded = 0;
-        if (configKey.get(COURSE_NAME)) rowsNeeded += 2;
-        if (configKey.get(BEST_TIME_EVER)) rowsNeeded += 2;
-        if (configKey.get(BEST_TIME_EVER_NAME)) rowsNeeded += 2;
-        if (configKey.get(BEST_TIME_EVER_ME)) rowsNeeded += 2;
-        if (configKey.get(CURRENT_TIME)) rowsNeeded += 2;
+        if (configKey.get(COURSE_NAME)) {
+            rowsNeeded += 2;
+        }
+        if (configKey.get(BEST_TIME_EVER)) {
+            rowsNeeded += 2;
+        }
+        if (configKey.get(BEST_TIME_EVER_NAME)) {
+            rowsNeeded += 2;
+        }
+        if (configKey.get(BEST_TIME_EVER_ME)) {
+            rowsNeeded += 2;
+        }
+        if (configKey.get(CURRENT_TIME)) {
+            rowsNeeded += 2;
+        }
         return rowsNeeded;
     }
 

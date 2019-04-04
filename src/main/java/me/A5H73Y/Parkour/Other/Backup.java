@@ -30,21 +30,25 @@ public class Backup {
 	 * @param message
 	 */
 	public static void backupNow(boolean message) {
-		if (message)
+		if (message) {
 			Utils.log("Beginning backup...");
+		}
 		fileList = new ArrayList<>();
 
 		generateFileList(new File(SOURCE_FOLDER));
 		zipIt();
-		if (message)
+		if (message) {
 			Utils.log("Backup completed!");
+		}
 	}
 
 	private static void zipIt() {
 		byte[] buffer = new byte[1024];
 		try{
 			File outputFolder = new File(SOURCE_FOLDER + File.separator + BACKUPS_FOLDER);
-			if (!outputFolder.exists()) outputFolder.mkdirs();
+			if (!outputFolder.exists()) {
+				outputFolder.mkdirs();
+			}
 
 			FileOutputStream fos = new FileOutputStream(OUTPUT_ZIP_FILE);
 			ZipOutputStream zos = new ZipOutputStream(fos);
@@ -77,9 +81,8 @@ public class Backup {
 	 */
 	private static void generateFileList(File node) {
 		//add file only
-		if (node.isFile()) {
-			if (!node.getName().contains(".zip"))
-				fileList.add(generateZipEntry(node.toString()));
+		if (node.isFile() && !node.getName().contains(".zip")) {
+			fileList.add(generateZipEntry(node.toString()));
 		}
 
 		if (node.isDirectory()) {

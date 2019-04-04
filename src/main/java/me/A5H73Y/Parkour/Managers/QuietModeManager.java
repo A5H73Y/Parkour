@@ -18,8 +18,8 @@ public class QuietModeManager {
     public static QuietModeManager getInstance() {
         if (instance == null) {
             instance = new QuietModeManager();
-
         }
+
         return instance;
     }
 

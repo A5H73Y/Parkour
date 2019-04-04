@@ -143,9 +143,9 @@ public class Configurations {
         invData = YamlConfiguration.loadConfiguration(invFile);
         checkData = YamlConfiguration.loadConfiguration(checkFile);
         kitData = YamlConfiguration.loadConfiguration(kitFile);
-        if (Static.getEconomy())
+        if (Static.getEconomy()) {
             econData = YamlConfiguration.loadConfiguration(econFile);
-
+        }
         validateConfigProperties();
     }
 
@@ -268,8 +268,9 @@ public class Configurations {
      * Done by checking if the generated config.yml exists yet
      */
     private void setFreshInstall() {
-        if (new File(Parkour.getPlugin().getDataFolder().toString() + File.separator + "config.yml").exists())
+        if (new File(Parkour.getPlugin().getDataFolder().toString() + File.separator + "config.yml").exists()) {
             return;
+        }
 
         Utils.log("Fresh install as no previous version was found.");
         freshInstall = true;

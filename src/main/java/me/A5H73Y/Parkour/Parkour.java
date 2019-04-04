@@ -4,7 +4,13 @@ import com.huskehhh.mysql.Database;
 import me.A5H73Y.Parkour.Commands.ParkourAutoTabCompleter;
 import me.A5H73Y.Parkour.Commands.ParkourCommands;
 import me.A5H73Y.Parkour.Commands.ParkourConsoleCommands;
-import me.A5H73Y.Parkour.Listeners.*;
+import me.A5H73Y.Parkour.Listeners.BlockListener;
+import me.A5H73Y.Parkour.Listeners.ChatListener;
+import me.A5H73Y.Parkour.Listeners.PlayerInteractListener;
+import me.A5H73Y.Parkour.Listeners.PlayerInventoryListener;
+import me.A5H73Y.Parkour.Listeners.PlayerListener;
+import me.A5H73Y.Parkour.Listeners.PlayerMoveListener;
+import me.A5H73Y.Parkour.Listeners.SignListener;
 import me.A5H73Y.Parkour.Managers.ScoreboardManager;
 import me.A5H73Y.Parkour.Other.Backup;
 import me.A5H73Y.Parkour.Other.Configurations;
@@ -71,8 +77,9 @@ public class Parkour extends JavaPlugin {
         getCommand("parkour").setExecutor(new ParkourCommands());
         getCommand("paconsole").setExecutor(new ParkourConsoleCommands());
 
-        if (this.getConfig().getBoolean("Other.UseAutoTabCompletion"))
+        if (this.getConfig().getBoolean("Other.UseAutoTabCompletion")) {
             getCommand("parkour").setTabCompleter(new ParkourAutoTabCompleter());
+        }
     }
 
     public static Configurations getParkourConfig() {
@@ -107,7 +114,8 @@ public class Parkour extends JavaPlugin {
     }
 
     private void updatePlugin() {
-        if (Parkour.getPlugin().getConfig().getBoolean("Other.CheckForUpdates"))
+        if (Parkour.getPlugin().getConfig().getBoolean("Other.CheckForUpdates")) {
             new Updater(this, 42615, this.getFile(), Updater.UpdateType.DEFAULT, true);
+        }
     }
 }

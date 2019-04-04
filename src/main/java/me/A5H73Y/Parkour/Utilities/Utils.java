@@ -11,7 +11,11 @@ import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.ParkourKit.ParkourKitInfo;
 import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
@@ -21,10 +25,21 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Stairs;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 public final class Utils {
 
@@ -37,8 +52,9 @@ public final class Utils {
      * @return String of appropriate translation
      */
     public static String getTranslation(String string, boolean prefix) {
-        if (string == null || string.isEmpty())
+        if (string == null || string.isEmpty()) {
             return "Invalid translation.";
+        }
 
         String translated = Parkour.getParkourConfig().getStringData().getString(string);
         translated = translated != null ? colour(translated) : "String not found: " + string;
@@ -56,6 +72,38 @@ public final class Utils {
     }
 
     /**
+     * Check if they have permission without alerting them of failure.
+     * Branch will check example scenarios for "Parkour.Admin", "Delete":
+     * - Parkour.Admin.Delete
+     * - Parkour.Admin.*
+     * - Parkour.*
+     *
+     * @param player
+     * @param permissionBranch
+     * @param permission
+     * @return
+     */
+    public static boolean hasPermissionNoMessage(CommandSender player, String permissionBranch, String permission) {
+        return player.hasPermission(permissionBranch + ".*")
+                || hasPermissionNoMessage(player, permissionBranch + "." + permission);
+    }
+
+    /**
+     * Check if they have permission without alerting them of failure.
+     * Branch will check example scenarios for "Parkour.Admin", "Delete":
+     * - Parkour.Admin
+     * - Parkour.*
+     *
+     * @param player
+     * @param permission
+     * @return
+     */
+    public static boolean hasPermissionNoMessage(CommandSender player, String permission) {
+        return player.hasPermission(permission)
+                || player.hasPermission("Parkour.*");
+    }
+
+    /**
      * Return whether the player has a specific permission.
      * If they don't, a message will be sent alerting them.
      *
@@ -64,8 +112,9 @@ public final class Utils {
      * @return whether they have permission
      */
     public static boolean hasPermission(Player player, String permission) {
-        if (player.hasPermission(permission) || player.hasPermission("Parkour.*"))
+        if (hasPermissionNoMessage(player, permission)) {
             return true;
+        }
 
         player.sendMessage(getTranslation("NoPermission").replace("%PERMISSION%", permission));
         return false;
@@ -81,8 +130,9 @@ public final class Utils {
      * @return whether they have permission
      */
     public static boolean hasPermission(Player player, String permissionBranch, String permission) {
-        if (player.hasPermission(permissionBranch + ".*") || player.hasPermission(permissionBranch + "." + permission) || player.hasPermission("Parkour.*"))
+        if (hasPermissionNoMessage(player, permissionBranch, permission)) {
             return true;
+        }
 
         player.sendMessage(getTranslation("NoPermission").replace("%PERMISSION%", permissionBranch + "." + permission));
         return false;
@@ -103,7 +153,7 @@ public final class Utils {
             player.sendMessage(getTranslation("Error.NoExist").replace("%COURSE%", courseName));
             return false;
 
-        } else if (player.hasPermission(permissionBranch + ".*") || player.hasPermission(permissionBranch + "." + permission) || player.hasPermission("Parkour.*")) {
+        } else if (hasPermissionNoMessage(player, permissionBranch, permission)) {
             return true;
 
         } else if (player.getName().equals(CourseInfo.getCreator(courseName))) {
@@ -282,8 +332,9 @@ public final class Utils {
      * @param message
      */
     public static void logToFile(String message) {
-        if (!Parkour.getPlugin().getConfig().getBoolean("Other.LogToFile"))
+        if (!Parkour.getPlugin().getConfig().getBoolean("Other.LogToFile")) {
             return;
+        }
 
         try {
             File saveTo = new File(Parkour.getParkourConfig().getDataFolder(), "Parkour.log");
@@ -414,8 +465,9 @@ public final class Utils {
      * @param attemptTitle
      */
     public static void sendTitle(Player player, String title, boolean attemptTitle) {
-        if (QuietModeManager.isInQuietMode(player.getName()))
+        if (QuietModeManager.isInQuietMode(player.getName())) {
             return;
+        }
 
         if (Static.getBountifulAPI() && attemptTitle) {
             BountifulAPI.sendTitle(player,
@@ -429,8 +481,9 @@ public final class Utils {
     }
 
     public static void sendFullTitle(Player player, String title, String subTitle, boolean attemptTitle) {
-        if (QuietModeManager.isInQuietMode(player.getName()))
+        if (QuietModeManager.isInQuietMode(player.getName())) {
             return;
+        }
 
         if (Static.getBountifulAPI() && attemptTitle) {
             BountifulAPI.sendTitle(player,
@@ -444,8 +497,9 @@ public final class Utils {
     }
 
     public static void sendSubTitle(Player player, String subTitle, boolean attemptTitle) {
-        if (QuietModeManager.isInQuietMode(player.getName()))
+        if (QuietModeManager.isInQuietMode(player.getName())) {
             return;
+        }
 
         if (Static.getBountifulAPI() && attemptTitle) {
             BountifulAPI.sendTitle(player,
@@ -459,8 +513,9 @@ public final class Utils {
     }
 
     public static void sendActionBar(Player player, String title, boolean attemptTitle) {
-        if (QuietModeManager.isInQuietMode(player.getName()))
+        if (QuietModeManager.isInQuietMode(player.getName())) {
             return;
+        }
 
         if (Static.getBountifulAPI() && attemptTitle) {
             BountifulAPI.sendActionBar(player, title);
@@ -484,8 +539,9 @@ public final class Utils {
                 return;
             }
 
-            if (!ValidationMethods.deleteCourse(args[2], player))
+            if (!ValidationMethods.deleteCourse(args[2], player)) {
                 return;
+            }
 
             QuestionManager.getInstance().askDeleteCourseQuestion(player, args[2]);
 
@@ -510,8 +566,9 @@ public final class Utils {
                 return;
             }
 
-            if (!ValidationMethods.deleteLobby(args[2], player))
+            if (!ValidationMethods.deleteLobby(args[2], player)) {
                 return;
+            }
 
             QuestionManager.getInstance().askDeleteLobbyQuestion(player, args[2]);
 
@@ -521,8 +578,9 @@ public final class Utils {
                 return;
             }
 
-            if (!ValidationMethods.deleteParkourKit(args[2], player))
+            if (!ValidationMethods.deleteParkourKit(args[2], player)) {
                 return;
+            }
 
             QuestionManager.getInstance().askDeleteKitQuestion(player, args[2]);
 
@@ -687,8 +745,9 @@ public final class Utils {
      * @return boolean (wait expired)
      */
     public static boolean delayPlayer(Player player, int secondsToWait, boolean displayMessage) {
-        if (player.isOp())
+        if (player.isOp()) {
             return true;
+        }
 
         if (!Static.getDelay().containsKey(player.getName())) {
             Static.getDelay().put(player.getName(), System.currentTimeMillis());
@@ -703,9 +762,9 @@ public final class Utils {
             return true;
         }
 
-        if (displayMessage && !QuietModeManager.isInQuietMode(player.getName()))
+        if (displayMessage && !QuietModeManager.isInQuietMode(player.getName())) {
             player.sendMessage(getTranslation("Error.Cooldown").replace("%AMOUNT%", String.valueOf(secondsToWait - secondsElapsed)));
-
+        }
         return false;
     }
 
@@ -842,10 +901,11 @@ public final class Utils {
         }
 
         for (Player players : playerScope) {
-            if (enabled)
+            if (enabled) {
                 player.showPlayer(players);
-            else
+            } else {
                 player.hidePlayer(players);
+            }
         }
         if (enabled) {
             Static.removeHidden(player.getName());
@@ -908,19 +968,22 @@ public final class Utils {
     public static boolean hasPrizeCooldownDurationPassed(Player player, String courseName) {
         int rewardDelay = CourseInfo.getRewardDelay(courseName);
 
-        if (rewardDelay <= 0)
+        if (rewardDelay <= 0) {
             return true;
+        }
 
         long lastRewardTime = PlayerInfo.getLastRewardedTime(player, courseName);
 
-        if (lastRewardTime <= 0)
+        if (lastRewardTime <= 0) {
             return true;
+        }
 
         long timeDifference = System.currentTimeMillis() - lastRewardTime;
         long daysDelay = convertDaysToMilliseconds(rewardDelay);
 
-        if (timeDifference > daysDelay)
+        if (timeDifference > daysDelay) {
             return true;
+        }
 
         if (Parkour.getSettings().isDisplayPrizeCooldown()) {
             String timeRemaining = displayTimeRemaining(daysDelay - timeDifference);
@@ -997,8 +1060,9 @@ public final class Utils {
         }
         if (material != null) {
             player.sendMessage(Static.getParkourString() + "Material: " + material.name());
-            if (data != null)
+            if (data != null) {
                 player.sendMessage(Static.getParkourString() + "Data: " + data.toString());
+            }
         } else {
             player.sendMessage(Static.getParkourString() + "Invalid material!");
         }

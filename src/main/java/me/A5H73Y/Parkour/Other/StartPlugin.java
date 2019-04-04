@@ -44,8 +44,9 @@ public class StartPlugin {
     }
 
     private static void setupVault() {
-        if (!Parkour.getPlugin().getConfig().getBoolean("Other.Economy.Enabled"))
+        if (!Parkour.getPlugin().getConfig().getBoolean("Other.Economy.Enabled")) {
             return;
+        }
 
         PluginManager pm = Parkour.getPlugin().getServer().getPluginManager();
         Plugin vault = pm.getPlugin("Vault");
@@ -109,8 +110,9 @@ public class StartPlugin {
     }
 
     private static void setupBountifulAPI() {
-        if (!Parkour.getPlugin().getConfig().getBoolean("Other.BountifulAPI.Enabled"))
+        if (!Parkour.getPlugin().getConfig().getBoolean("Other.BountifulAPI.Enabled")) {
             return;
+        }
 
         Plugin bountifulAPI = Parkour.getPlugin().getServer().getPluginManager()
                 .getPlugin("BountifulAPI");
@@ -126,8 +128,9 @@ public class StartPlugin {
     }
 
     private static void setupPlaceholderAPI() {
-        if (!Parkour.getPlugin().getConfig().getBoolean("Other.PlaceholderAPI.Enabled"))
+        if (!Parkour.getPlugin().getConfig().getBoolean("Other.PlaceholderAPI.Enabled")) {
             return;
+        }
 
         Plugin placeholderAPI = Parkour.getPlugin().getServer().getPluginManager()
                 .getPlugin("PlaceholderAPI");
@@ -148,8 +151,9 @@ public class StartPlugin {
     }
 
     private static void populatePlayers() {
-        if (!new File(Static.PLAYING_BIN_PATH).exists())
+        if (!new File(Static.PLAYING_BIN_PATH).exists()) {
             return;
+        }
 
         try {
             @SuppressWarnings("unchecked")
@@ -160,8 +164,9 @@ public class StartPlugin {
 
             for (Entry<String, ParkourSession> entry : players.entrySet()) {
                 Player playingp = Parkour.getPlugin().getServer().getPlayer(entry.getKey());
-                if (playingp == null)
+                if (playingp == null) {
                     continue;
+                }
 
                 playingp.sendMessage(Utils.getTranslation("Parkour.Continue")
                         .replace("%COURSE%", entry.getValue().getCourse().getName()));
@@ -176,14 +181,16 @@ public class StartPlugin {
      * We only want to update completely, if the config version (previous version) is less than 4.0 (new system)
      */
     private static void checkConvertToLatest() {
-        if (Parkour.getParkourConfig().isFreshInstall())
+        if (Parkour.getParkourConfig().isFreshInstall()) {
             return;
+        }
 
         double configVersion = Parkour.getPlugin().getConfig().getDouble("Version");
         double currentVersion = Double.parseDouble(Parkour.getPlugin().getDescription().getVersion());
 
-        if (configVersion >= currentVersion)
+        if (configVersion >= currentVersion) {
             return;
+        }
 
         boolean fromBeforeVersion4 = configVersion < 4.0;
 

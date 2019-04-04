@@ -15,25 +15,30 @@ public class PlayerInventoryListener implements Listener {
 
     @EventHandler
     public void onInventoryInteract(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player))
+        if (!(event.getWhoClicked() instanceof Player)) {
             return;
+        }
 
-        if (!event.getInventory().getTitle().startsWith(InventoryBuilder.PARKOUR_TITLE))
+        if (!event.getInventory().getTitle().startsWith(InventoryBuilder.PARKOUR_TITLE)) {
             return;
+        }
 
         event.setCancelled(true);
         Player player = (Player) event.getWhoClicked();
 
-        if (event.getCurrentItem() == null)
+        if (event.getCurrentItem() == null) {
             return;
+        }
 
         Material clickedItem = event.getCurrentItem().getType();
 
-        if (clickedItem == null || clickedItem.equals(Material.AIR))
+        if (clickedItem.equals(Material.AIR)) {
             return;
+        }
 
-        if (!event.getCurrentItem().hasItemMeta() || !event.getCurrentItem().getItemMeta().hasLore())
+        if (!event.getCurrentItem().hasItemMeta() || !event.getCurrentItem().getItemMeta().hasLore()) {
             return;
+        }
 
         List<String> metadata = event.getCurrentItem().getItemMeta().getLore();
 

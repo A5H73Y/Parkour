@@ -92,7 +92,9 @@ public class Settings {
 		return getConfig().getBoolean("OnJoin.TreatFirstCheckpointAsStart");
 	}
 
-	public boolean isAutoStartEnabled() { return getConfig().getBoolean("AutoStart.Enabled"); }
+	public boolean isAutoStartEnabled() {
+		return getConfig().getBoolean("AutoStart.Enabled");
+	}
 
 	/* Materials */
 

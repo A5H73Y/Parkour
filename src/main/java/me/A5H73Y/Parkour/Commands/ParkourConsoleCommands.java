@@ -15,12 +15,15 @@ import org.bukkit.command.ConsoleCommandSender;
 public class ParkourConsoleCommands implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase("paconsole"))
+    public boolean onCommand(final CommandSender sender, final Command command,
+                             final String label, final String[] args) {
+        if (!command.getName().equalsIgnoreCase("paconsole")) {
             return false;
+        }
 
-        if (!(sender instanceof ConsoleCommandSender))
+        if (!(sender instanceof ConsoleCommandSender)) {
             return false;
+        }
 
         if (args.length == 0) {
             Utils.log("v" + Static.getVersion() + " installed. Plugin created by A5H73Y.");
@@ -36,68 +39,79 @@ public class ParkourConsoleCommands implements CommandExecutor {
             DatabaseMethods.recreateAllCourses();
 
         } else if (args[0].equalsIgnoreCase("setminlevel")) {
-            if (!Utils.validateArgs(sender, args, 3))
+            if (!Utils.validateArgs(sender, args, 3)) {
                 return false;
+            }
 
             CourseMethods.setMinLevel(args, sender);
 
         } else if (args[0].equalsIgnoreCase("setmaxdeath")) {
-            if (!Utils.validateArgs(sender, args, 3))
+            if (!Utils.validateArgs(sender, args, 3)) {
                 return false;
+            }
 
             CourseMethods.setMaxDeaths(args, sender);
 
         } else if (args[0].equalsIgnoreCase("setmaxtime")) {
-            if (!Utils.validateArgs(sender, args, 3))
+            if (!Utils.validateArgs(sender, args, 3)) {
                 return false;
+            }
 
             CourseMethods.setMaxTime(args, sender);
 
         } else if (args[0].equalsIgnoreCase("setjoinitem")) {
-            if (!Utils.validateArgs(sender, args, 4))
+            if (!Utils.validateArgs(sender, args, 4)) {
                 return false;
+            }
 
             CourseMethods.setJoinItem(args, sender);
 
         } else if (args[0].equalsIgnoreCase("rewardonce")) {
-            if (!Utils.validateArgs(sender, args, 2))
+            if (!Utils.validateArgs(sender, args, 2)) {
                 return false;
+            }
 
             CourseMethods.setRewardOnce(args, sender);
 
         } else if (args[0].equalsIgnoreCase("rewardlevel")) {
-            if (!Utils.validateArgs(sender, args, 3))
+            if (!Utils.validateArgs(sender, args, 3)) {
                 return false;
+            }
 
             CourseMethods.setRewardLevel(args, sender);
 
         } else if (args[0].equalsIgnoreCase("rewardleveladd")) {
-            if (!Utils.validateArgs(sender, args, 3))
+            if (!Utils.validateArgs(sender, args, 3)) {
                 return false;
+            }
 
             CourseMethods.setRewardLevelAdd(args, sender);
 
         } else if (args[0].equalsIgnoreCase("rewardrank")) {
-            if (!Utils.validateArgs(sender, args, 3))
+            if (!Utils.validateArgs(sender, args, 3)) {
                 return false;
+            }
 
             CourseMethods.setRewardRank(args, sender);
 
         } else if (args[0].equalsIgnoreCase("rewardparkoins")) {
-            if (!Utils.validateArgs(sender, args, 3))
+            if (!Utils.validateArgs(sender, args, 3)) {
                 return false;
+            }
 
             CourseMethods.setRewardParkoins(args, sender);
 
         } else if (args[0].equalsIgnoreCase("setlevel")) {
-            if (!Utils.validateArgs(sender, args, 3))
+            if (!Utils.validateArgs(sender, args, 3)) {
                 return false;
+            }
 
             PlayerMethods.setLevel(args, sender);
 
         } else if (args[0].equalsIgnoreCase("setrank")) {
-            if (!Utils.validateArgs(sender, args, 3))
+            if (!Utils.validateArgs(sender, args, 3)) {
                 return false;
+            }
 
             PlayerMethods.setRank(args, sender);
 

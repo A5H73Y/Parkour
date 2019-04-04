@@ -29,8 +29,9 @@ public class ParkourPlaceholders extends EZPlaceholderHook {
         }
 
         // Player specific
-        if (player == null)
+        if (player == null) {
             return "";
+        }
 
         if (message.equalsIgnoreCase("last_completed")) {
             return PlayerInfo.getLastCompletedCourse(player);

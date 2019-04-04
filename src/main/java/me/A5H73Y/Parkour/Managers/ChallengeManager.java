@@ -51,8 +51,10 @@ public class ChallengeManager {
      */
     public Challenge getChallengeForPlayer(String playerName) {
         for (Challenge challenge : challenges) {
-            if (challenge.getReceiverPlayer().equals(playerName) || challenge.getSenderPlayer().equals(playerName))
+            if (challenge.getReceiverPlayer().equals(playerName)
+                    || challenge.getSenderPlayer().equals(playerName)) {
                 return challenge;
+            }
         }
         return null;
     }
@@ -70,7 +72,8 @@ public class ChallengeManager {
 
         if (challenge != null) {
             Player opponent = calculateOpponent(leaver.getName(), challenge);
-            String terminateMessage = Utils.getTranslation("Parkour.Challenge.Terminated").replace("%PLAYER%", leaver.getName());
+            String terminateMessage = Utils.getTranslation("Parkour.Challenge.Terminated")
+                    .replace("%PLAYER%", leaver.getName());
             leaver.sendMessage(terminateMessage);
             opponent.sendMessage(terminateMessage);
             removeChallenge(challenge);

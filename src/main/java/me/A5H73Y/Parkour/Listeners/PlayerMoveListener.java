@@ -27,11 +27,13 @@ public class PlayerMoveListener implements Listener {
 
     @EventHandler
     public void onPlayerMove_Trails(PlayerMoveEvent event) {
-        if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+        if (!PlayerMethods.isPlaying(event.getPlayer().getName())) {
             return;
+        }
 
-        if (!Parkour.getSettings().isTrailsEnabled())
+        if (!Parkour.getSettings().isTrailsEnabled()) {
             return;
+        }
 
         Location loc = event.getPlayer().getLocation().add(0, 0.4, 0);
         event.getPlayer().getWorld().spawnParticle(Parkour.getSettings().getTrailParticle(), loc, 1);
@@ -39,29 +41,34 @@ public class PlayerMoveListener implements Listener {
 
     @EventHandler
     public void onPlayerMove_ParkourMode(PlayerMoveEvent event) {
-        if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+        if (!PlayerMethods.isPlaying(event.getPlayer().getName())) {
             return;
+        }
 
         ParkourSession session = PlayerMethods.getParkourSession(event.getPlayer().getName());
 
-        if (session == null || session.getMode() == ParkourMode.NONE)
+        if (session == null || session.getMode() == ParkourMode.NONE) {
             return;
+        }
 
         if (session.getMode() == ParkourMode.DRUNK) {
-            if (event.getPlayer().hasPotionEffect(PotionEffectType.CONFUSION))
+            if (event.getPlayer().hasPotionEffect(PotionEffectType.CONFUSION)) {
                 return;
+            }
 
             event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 10000, 1));
 
         } else if (session.getMode() == ParkourMode.DARKNESS) {
-            if (event.getPlayer().hasPotionEffect(PotionEffectType.BLINDNESS))
+            if (event.getPlayer().hasPotionEffect(PotionEffectType.BLINDNESS)) {
                 return;
+            }
 
             event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 10000, 1));
 
         } else if (session.getMode() == ParkourMode.MOON) {
-            if (event.getPlayer().hasPotionEffect(PotionEffectType.JUMP))
+            if (event.getPlayer().hasPotionEffect(PotionEffectType.JUMP)) {
                 return;
+            }
 
             event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 10000,
                     Parkour.getPlugin().getConfig().getInt("ParkourModes.Moon.Strength")));
@@ -70,8 +77,9 @@ public class PlayerMoveListener implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+        if (!PlayerMethods.isPlaying(event.getPlayer().getName())) {
             return;
+        }
 
         Player player = event.getPlayer();
         ParkourSession session = PlayerMethods.getParkourSession(player.getName());
@@ -88,14 +96,16 @@ public class PlayerMoveListener implements Listener {
             PlayerMethods.playerDie(player);
         }
 
-        if (!Parkour.getSettings().isUseParkourKit())
+        if (!Parkour.getSettings().isUseParkourKit()) {
             return;
+        }
 
         if (Parkour.getSettings().isAttemptLessChecks()) {
             if (event.getTo().getBlockX() == event.getFrom().getBlockX() &&
                     event.getTo().getBlockY() == event.getFrom().getBlockY() &&
-                    event.getTo().getBlockZ() == event.getFrom().getBlockZ())
+                    event.getTo().getBlockZ() == event.getFrom().getBlockZ()) {
                 return;
+            }
         }
 
         Material belowMaterial = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
@@ -122,19 +132,21 @@ public class PlayerMoveListener implements Listener {
                     break;
 
                 case "bounce":
-                    if (!player.hasPotionEffect(PotionEffectType.JUMP))
+                    if (!player.hasPotionEffect(PotionEffectType.JUMP)) {
                         player.addPotionEffect(
                                 new PotionEffect(PotionEffectType.JUMP,
                                         kit.getDuration(belowMaterial),
                                         kit.getStrength(belowMaterial).intValue()));
+                    }
                     break;
 
                 case "speed":
-                    if (!player.hasPotionEffect(PotionEffectType.SPEED))
+                    if (!player.hasPotionEffect(PotionEffectType.SPEED)) {
                         player.addPotionEffect(
                                 new PotionEffect(PotionEffectType.SPEED,
                                         kit.getDuration(belowMaterial),
                                         kit.getStrength(belowMaterial).intValue()));
+                    }
                     break;
 
                 case "norun":
@@ -142,8 +154,9 @@ public class PlayerMoveListener implements Listener {
                     break;
 
                 case "nopotion":
-                    for (PotionEffect effect : player.getActivePotionEffects())
+                    for (PotionEffect effect : player.getActivePotionEffects()) {
                         player.removePotionEffect(effect.getType());
+                    }
 
                     player.setFireTicks(0);
                     break;

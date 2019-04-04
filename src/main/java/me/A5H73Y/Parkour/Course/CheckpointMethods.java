@@ -6,7 +6,11 @@ import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 import me.A5H73Y.Parkour.Utilities.XMaterial;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -55,8 +59,9 @@ public class CheckpointMethods {
 	 * @param player
 	 */
 	public static void createCheckpoint(String[] args, Player player) {
-		if (!ValidationMethods.createCheckpoint(args, player))
+		if (!ValidationMethods.createCheckpoint(args, player)) {
 			return;
+		}
 
 		String selected = PlayerInfo.getSelected(player);
 		Location location = player.getLocation();
@@ -81,8 +86,9 @@ public class CheckpointMethods {
 			}
 		}
 
-		if (blockUnder.getType().equals(Material.AIR))
+		if (blockUnder.getType().equals(Material.AIR)) {
 			blockUnder.setType(Material.STONE);
+		}
 
 
 		Material pressurePlate = XMaterial.fromString(Parkour.getSettings().getCheckpointMaterial()).parseMaterial();
@@ -166,8 +172,9 @@ public class CheckpointMethods {
 	 * @param player
 	 */
 	public static void deleteCheckpoint(String courseName, Player player) {
-		if (!CourseMethods.exist(courseName))
+		if (!CourseMethods.exist(courseName)) {
 			return;
+		}
 
 		courseName = courseName.toLowerCase();
 		int point = CourseInfo.getCheckpointAmount(courseName);

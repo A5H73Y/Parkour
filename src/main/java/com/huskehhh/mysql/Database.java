@@ -1,50 +1,53 @@
 package com.huskehhh.mysql;
 
+import me.A5H73Y.Parkour.Utilities.Utils;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import me.A5H73Y.Parkour.Utilities.Utils;
-
 /**
- * Abstract Database class, serves as a base for any connection method (MySQL,
- * SQLite, etc.)
- * 
+ * Abstract Database class.
+ * Serves as a base for any connection method (MySQL, SQLite, etc.).
+ *
  * @author -_Husky_-
  * @author tips48
  */
 public abstract class Database {
 
-	protected Connection connection;
+	/**
+	 * Connection to the Database.
+	 */
+	private Connection connection;
 
 	/**
-	 * Creates a new Database
-	 *
+	 * Create a new Database instance.
 	 */
 	protected Database() {
 		this.connection = null;
 	}
 
 	/**
-	 * Opens a connection with the database
-	 * 
+	 * Open a connection to the database.
+	 *
 	 * @return Opened connection
 	 * @throws SQLException
 	 *             if the connection can not be opened
 	 * @throws ClassNotFoundException
 	 *             if the driver cannot be found
 	 */
-	public abstract Connection openConnection() throws SQLException, ClassNotFoundException;
+	public abstract Connection openConnection()
+			throws SQLException, ClassNotFoundException;
 
 	/**
-	 * Checks if a connection is open with the database
-	 * 
+	 * Checks if a connection is open with the database.
+	 *
 	 * @return true if the connection is open
 	 * @throws SQLException
 	 *             if the connection cannot be checked
 	 */
-    protected boolean checkConnection() {
+	protected final boolean checkConnection() {
 		try {
 			return connection != null && !connection.isClosed();
 		} catch (SQLException e) {
@@ -54,22 +57,30 @@ public abstract class Database {
 	}
 
 	/**
-	 * Gets the connection with the database
-	 * 
+	 * Gets the connection with the database.
+	 *
 	 * @return Connection with the database, null if none
 	 */
-	public Connection getConnection() {
+	public final Connection getConnection() {
 		return connection;
 	}
 
 	/**
-	 * Closes the connection with the database
-	 * 
+	 * Set the connection to the database.
+	 * @param connection database connection
+	 */
+	public final void setConnection(final Connection connection) {
+		this.connection = connection;
+	}
+
+	/**
+	 * Closes the connection with the database.
+	 *
 	 * @return true if successful
 	 * @throws SQLException
 	 *             if the connection cannot be closed
 	 */
-	public boolean closeConnection() {
+	public final boolean closeConnection() {
 		if (connection == null) {
 			return false;
 		}
@@ -83,10 +94,10 @@ public abstract class Database {
 
 
 	/**
-	 * Executes a SQL Query<br>
-	 * 
+	 * Executes a SQL Query.
+	 *
 	 * If the connection is closed, it will be opened
-	 * 
+	 *
 	 * @param query
 	 *            Query to be run
 	 * @return the results of the query
@@ -95,22 +106,21 @@ public abstract class Database {
 	 * @throws ClassNotFoundException
 	 *             If the driver cannot be found; see {@link #openConnection()}
 	 */
-	public ResultSet querySQL(String query) throws SQLException,
-	ClassNotFoundException {
+	public final ResultSet querySQL(final String query) throws SQLException,
+			ClassNotFoundException {
 		if (!checkConnection()) {
 			openConnection();
 		}
 
 		Statement statement = connection.createStatement();
-
 		return statement.executeQuery(query);
 	}
 
 	/**
-	 * Executes an Update SQL Query<br>
+	 * Executes an Update SQL Query.
 	 * See {@link java.sql.Statement#executeUpdate(String)}<br>
 	 * If the connection is closed, it will be opened
-	 * 
+	 *
 	 * @param query
 	 *            Query to be run
 	 * @return Result Code, see {@link java.sql.Statement#executeUpdate(String)}
@@ -119,14 +129,13 @@ public abstract class Database {
 	 * @throws ClassNotFoundException
 	 *             If the driver cannot be found; see {@link #openConnection()}
 	 */
-	public int updateSQL(String query) throws SQLException,
-	ClassNotFoundException {
+	public final int updateSQL(final String query) throws SQLException,
+			ClassNotFoundException {
 		if (!checkConnection()) {
 			openConnection();
 		}
 
 		Statement statement = connection.createStatement();
-
 		return statement.executeUpdate(query);
 	}
 }

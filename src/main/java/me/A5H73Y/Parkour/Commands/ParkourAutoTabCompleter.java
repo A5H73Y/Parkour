@@ -8,14 +8,18 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ParkourAutoTabCompleter implements TabCompleter {
 
-	private static final Set<String> basicCmds = new HashSet<>(
+	private static final Set<String> BASIC_CMDS = new HashSet<>(
 			Arrays.asList("challenge", "leaderboard", "invite", "kit", "listkit", "tp", "tpc"));
 
-	private static final Set<String> adminCmds = new HashSet<>(
+	private static final Set<String> ADMIN_CMDS = new HashSet<>(
 			Arrays.asList("setstart", "setlobby", "economy", "createkit", "editkit", "validatekit", "recreate",
 					"sql", "settings", "reload", "rewardrank", "whitelist", "setlevel", "setrank", "delete"));
 
@@ -51,7 +55,7 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 			list.add("cmds");
 
 			if (sender.hasPermission("Parkour.Basic.*") || sender.hasPermission("Parkour.*")) {
-				list.addAll(basicCmds);
+				list.addAll(BASIC_CMDS);
 			} else {
 				if (sender.hasPermission("Parkour.Basic.Create")) {
 					list.add("create");
@@ -78,7 +82,7 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 			}
 
 			if (sender.hasPermission("Parkour.Admin") || sender.hasPermission("Parkour.*")) {
-				list.addAll(adminCmds);
+				list.addAll(ADMIN_CMDS);
 			}
 			if (sender.hasPermission("Parkour.Admin.*") || sender.hasPermission("Parkour.*")) {
 				list.add("test");

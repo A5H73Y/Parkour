@@ -881,8 +881,12 @@ public enum XMaterial {
     static int newV = -1;
 
     public static boolean isNewVersion() {
-        if (newV == 0) return false;
-        if (newV == 1) return true;
+        if (newV == 0) {
+            return false;
+        }
+        if (newV == 1) {
+            return true;
+        }
         Material mat = Material.matchMaterial("RED_WOOL");
         if (mat != null) {
             newV = 1;

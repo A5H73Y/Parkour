@@ -27,9 +27,11 @@ import org.bukkit.inventory.Inventory;
 public class ParkourCommands implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase("parkour"))
+    public boolean onCommand(final CommandSender sender, final Command command,
+                             final String label, final String[] args) {
+        if (!command.getName().equalsIgnoreCase("parkour")) {
             return false;
+        }
 
         if (!(sender instanceof Player)) {
             sender.sendMessage("For console commands, please use: paconsole (command)");
@@ -38,8 +40,10 @@ public class ParkourCommands implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        if (Parkour.getSettings().isPermissionsForCommands() && !Utils.hasPermission(player, "Parkour.Basic", "Commands"))
+        if (Parkour.getSettings().isPermissionsForCommands()
+                && !Utils.hasPermission(player, "Parkour.Basic", "Commands")) {
             return false;
+        }
 
         if (args.length == 0) {
             player.sendMessage(Static.getParkourString() + "Plugin proudly created by " + ChatColor.AQUA + "A5H73Y");
@@ -48,17 +52,19 @@ public class ParkourCommands implements CommandExecutor {
         }
 
         if (args[0].equalsIgnoreCase("join")) {
-            if (!Utils.validateArgs(player, args, 2))
+            if (!Utils.validateArgs(player, args, 2)) {
                 return false;
 
-            if (!Parkour.getPlugin().getConfig().getBoolean("OnJoin.AllowViaCommand"))
+            } else if (!Parkour.getPlugin().getConfig().getBoolean("OnJoin.AllowViaCommand")) {
                 return false;
+            }
 
             CourseMethods.joinCourse(player, args[1]);
 
         } else if (args[0].equalsIgnoreCase("create")) {
-            if (!Utils.hasPermission(player, "Parkour.Basic", "Create"))
+            if (!Utils.hasPermission(player, "Parkour.Basic", "Create")) {
                 return false;
+            }
 
             CourseMethods.createCourse(args, player);
 
@@ -69,8 +75,9 @@ public class ParkourCommands implements CommandExecutor {
             PlayerMethods.displayPlayerInfo(args, player);
 
         } else if (args[0].equalsIgnoreCase("stats") || args[0].equalsIgnoreCase("course")) {
-            if (!Utils.validateArgs(player, args, 2))
+            if (!Utils.validateArgs(player, args, 2)) {
                 return false;
+            }
 
             CourseInfo.displayCourseInfo(args[1], player);
 
@@ -78,26 +85,30 @@ public class ParkourCommands implements CommandExecutor {
             LobbyMethods.joinLobby(args, player);
 
         } else if (args[0].equalsIgnoreCase("setlobby")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
+            }
 
             LobbyMethods.createLobby(args, player);
 
         } else if (args[0].equalsIgnoreCase("setcreator")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
 
-            if (!Utils.validateArgs(player, args, 3))
+            } else if (!Utils.validateArgs(player, args, 3)) {
                 return false;
+            }
 
             CourseMethods.setCreator(args, player);
 
         } else if (args[0].equalsIgnoreCase("checkpoint")) {
-            if (!PlayerInfo.hasSelected(player))
+            if (!PlayerInfo.hasSelected(player)) {
                 return false;
 
-            if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerInfo.getSelected(player)))
+            } else if (!Utils.hasPermissionOrCourseOwnership(
+                    player, "Parkour.Admin", "Course", PlayerInfo.getSelected(player))) {
                 return false;
+            }
 
             CheckpointMethods.createCheckpoint(args, player);
 
@@ -105,179 +116,206 @@ public class ParkourCommands implements CommandExecutor {
             CourseMethods.setFinish(args, player);
 
         } else if (args[0].equalsIgnoreCase("setstart")) {
-            if (!PlayerInfo.hasSelected(player))
+            if (!PlayerInfo.hasSelected(player)) {
                 return false;
 
-            if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerInfo.getSelected(player)))
+            } else if (!Utils.hasPermissionOrCourseOwnership(
+                    player, "Parkour.Admin", "Course", PlayerInfo.getSelected(player))) {
                 return false;
+            }
 
             CourseMethods.setStart(player);
 
         } else if (args[0].equalsIgnoreCase("setautostart")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin", "Course"))
+            if (!Utils.hasPermission(player, "Parkour.Admin", "Course")) {
                 return false;
 
-            if (!Utils.validateArgs(player, args, 2))
+            } else if (!Utils.validateArgs(player, args, 2)) {
                 return false;
+            }
 
             CourseMethods.setAutoStart(args, player);
 
         } else if (args[0].equalsIgnoreCase("prize")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin", "Prize"))
+            if (!Utils.hasPermission(player, "Parkour.Admin", "Prize")) {
                 return false;
 
-            if (!Utils.validateArgs(player, args, 2))
+            } else if (!Utils.validateArgs(player, args, 2)) {
                 return false;
+            }
 
             CourseMethods.setPrize(args, player);
 
-        } else if (args[0].equalsIgnoreCase("like") || args[0].equalsIgnoreCase("dislike")) {
+        } else if (args[0].equalsIgnoreCase("like")
+                || args[0].equalsIgnoreCase("dislike")) {
             CourseMethods.rateCourse(args, player);
 
         } else if (args[0].equalsIgnoreCase("perms")) {
             PlayerMethods.displayPermissions(player);
 
         } else if (args[0].equalsIgnoreCase("kit")) {
-            if (!Utils.hasPermission(player, "Parkour.Basic", "Kit"))
+            if (!Utils.hasPermission(player, "Parkour.Basic", "Kit")) {
                 return false;
+            }
 
             PlayerMethods.givePlayerKit(args, player);
 
         } else if (args[0].equalsIgnoreCase("delete")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin", "Delete"))
+            if (!Utils.hasPermission(player, "Parkour.Admin", "Delete")) {
                 return false;
 
-            if (!Utils.validateArgs(player, args, 3))
+            } else if (!Utils.validateArgs(player, args, 3)) {
                 return false;
+            }
 
             Utils.deleteCommand(args, player);
 
-        } else if (args[0].equalsIgnoreCase("select") || args[0].equalsIgnoreCase("edit")) {
-            if (!Utils.validateArgs(player, args, 2))
+        } else if (args[0].equalsIgnoreCase("select")
+                || args[0].equalsIgnoreCase("edit")) {
+            if (!Utils.validateArgs(player, args, 2)) {
                 return false;
 
-            if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", args[1]))
+            } else if (!Utils.hasPermissionOrCourseOwnership(
+                    player, "Parkour.Admin", "Course", args[1])) {
                 return false;
+            }
 
             CourseMethods.selectCourse(args, player);
 
-        } else if (args[0].equalsIgnoreCase("done") || args[0].equalsIgnoreCase("deselect") || args[0].equalsIgnoreCase("stopselect")) {
+        } else if (args[0].equalsIgnoreCase("done")
+                || args[0].equalsIgnoreCase("deselect")
+                || args[0].equalsIgnoreCase("stopselect")) {
             CourseMethods.deselectCourse(player);
 
-        } else if (args[0].equalsIgnoreCase("tp") || args[0].equalsIgnoreCase("teleport")) {
-            if (!Utils.hasPermission(player, "Parkour.Basic", "TP"))
+        } else if (args[0].equalsIgnoreCase("tp")
+                || args[0].equalsIgnoreCase("teleport")) {
+            if (!Utils.hasPermission(player, "Parkour.Basic", "TP")) {
                 return false;
 
-            if (!Utils.validateArgs(player, args, 2))
+            } else if (!Utils.validateArgs(player, args, 2)) {
                 return false;
+            }
 
             CheckpointMethods.teleportCheckpoint(args, player, false);
 
         } else if (args[0].equalsIgnoreCase("tpc")) {
-            if (!Utils.hasPermission(player, "Parkour.Basic", "TPC"))
+            if (!Utils.hasPermission(player, "Parkour.Basic", "TPC")) {
                 return false;
 
-            if (!Utils.validateArgs(player, args, 3))
+            } else if (!Utils.validateArgs(player, args, 3)) {
                 return false;
+            }
 
             CheckpointMethods.teleportCheckpoint(args, player, true);
 
         } else if (args[0].equalsIgnoreCase("link")) {
-            if (!PlayerInfo.hasSelected(player))
+            if (!PlayerInfo.hasSelected(player)) {
                 return false;
 
-            if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", PlayerInfo.getSelected(player)))
+            } else if (!Utils.hasPermissionOrCourseOwnership(
+                    player, "Parkour.Admin", "Course", PlayerInfo.getSelected(player))) {
                 return false;
+            }
 
             CourseMethods.linkCourse(args, player);
 
         } else if (args[0].equalsIgnoreCase("setminlevel")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
 
-            if (!Utils.validateArgs(player, args, 3))
+            } else if (!Utils.validateArgs(player, args, 3)) {
                 return false;
+            }
 
             CourseMethods.setMinLevel(args, player);
 
         } else if (args[0].equalsIgnoreCase("setmaxdeath")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
 
-            if (!Utils.validateArgs(player, args, 3))
+            } else if (!Utils.validateArgs(player, args, 3)) {
                 return false;
+            }
 
             CourseMethods.setMaxDeaths(args, player);
 
         } else if (args[0].equalsIgnoreCase("setmaxtime")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
 
-            if (!Utils.validateArgs(player, args, 3))
+            } else if (!Utils.validateArgs(player, args, 3)) {
                 return false;
+            }
 
             CourseMethods.setMaxTime(args, player);
 
         } else if (args[0].equalsIgnoreCase("setjoinitem")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
 
-            if (!Utils.validateArgs(player, args, 4))
+            } else if (!Utils.validateArgs(player, args, 4)) {
                 return false;
+            }
 
             CourseMethods.setJoinItem(args, player);
 
         } else if (args[0].equalsIgnoreCase("rewardonce")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
 
-            if (!Utils.validateArgs(player, args, 2))
+            } else if (!Utils.validateArgs(player, args, 2)) {
                 return false;
+            }
 
             CourseMethods.setRewardOnce(args, player);
 
         } else if (args[0].equalsIgnoreCase("rewardlevel")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
 
-            if (!Utils.validateArgs(player, args, 3))
+            } else if (!Utils.validateArgs(player, args, 3)) {
                 return false;
+            }
 
             CourseMethods.setRewardLevel(args, player);
 
         } else if (args[0].equalsIgnoreCase("rewardleveladd")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
 
-            if (!Utils.validateArgs(player, args, 3))
+            } else if (!Utils.validateArgs(player, args, 3)) {
                 return false;
+            }
 
             CourseMethods.setRewardLevelAdd(args, player);
 
         } else if (args[0].equalsIgnoreCase("rewardrank")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
 
-            if (!Utils.validateArgs(player, args, 3))
+            } else if (!Utils.validateArgs(player, args, 3)) {
                 return false;
+            }
 
             CourseMethods.setRewardRank(args, player);
 
         } else if (args[0].equalsIgnoreCase("rewarddelay")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
 
-            if (!Utils.validateArgs(player, args, 3))
+            } else if (!Utils.validateArgs(player, args, 3)) {
                 return false;
+            }
 
             CourseMethods.setRewardDelay(args, player);
 
         } else if (args[0].equalsIgnoreCase("rewardparkoins")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
 
-            if (!Utils.validateArgs(player, args, 3))
+            } else if (!Utils.validateArgs(player, args, 3)) {
                 return false;
+            }
 
             CourseMethods.setRewardParkoins(args, player);
 
@@ -285,80 +323,95 @@ public class ParkourCommands implements CommandExecutor {
             QuietModeManager.toggleQuietMode(player);
 
         } else if (args[0].equalsIgnoreCase("reset")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin", "Reset"))
+            if (!Utils.hasPermission(player, "Parkour.Admin", "Reset")) {
                 return false;
 
-            if (!Utils.validateArgs(player, args, 3))
+            } else if (!Utils.validateArgs(player, args, 3)) {
                 return false;
+            }
 
             Utils.resetCommand(args, player);
 
         } else if (args[0].equalsIgnoreCase("test")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin", "Testmode"))
+            if (!Utils.hasPermission(player, "Parkour.Admin", "Testmode")) {
                 return false;
+            }
 
             PlayerMethods.toggleTestmode(args, player);
 
-        } else if (args[0].equalsIgnoreCase("economy") || args[0].equalsIgnoreCase("econ")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+        } else if (args[0].equalsIgnoreCase("economy")
+                || args[0].equalsIgnoreCase("econ")) {
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
+            }
 
             Help.displayEconomy(args, player);
 
         } else if (args[0].equalsIgnoreCase("invite")) {
-            if (!Utils.hasPermission(player, "Parkour.Basic", "Invite"))
+            if (!Utils.hasPermission(player, "Parkour.Basic", "Invite")) {
                 return false;
 
-            if (!Utils.validateArgs(player, args, 2))
+            } else if (!Utils.validateArgs(player, args, 2)) {
                 return false;
+            }
 
             PlayerMethods.invitePlayer(args, player);
 
         } else if (args[0].equalsIgnoreCase("setmode")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
 
-            if (!Utils.validateArgs(player, args, 2))
+            } else if (!Utils.validateArgs(player, args, 2)) {
                 return false;
+            }
 
             CourseMethods.setCourseMode(args, player);
 
-        } else if (args[0].equalsIgnoreCase("createparkourkit") || args[0].equalsIgnoreCase("createkit")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+        } else if (args[0].equalsIgnoreCase("createparkourkit")
+                || args[0].equalsIgnoreCase("createkit")) {
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
+            }
 
             new CreateParkourKitConversation(player).begin();
 
-        } else if (args[0].equalsIgnoreCase("editparkourkit") || args[0].equalsIgnoreCase("editkit")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+        } else if (args[0].equalsIgnoreCase("editparkourkit")
+                || args[0].equalsIgnoreCase("editkit")) {
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
+            }
 
             new EditParkourKitConversation(player).begin();
 
         } else if (args[0].equalsIgnoreCase("linkkit")) {
-            if (!Utils.validateArgs(player, args, 3))
+            if (!Utils.validateArgs(player, args, 3)) {
                 return false;
 
-            if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", args[1]))
+            } else if (!Utils.hasPermissionOrCourseOwnership(
+                    player, "Parkour.Admin", "Course", args[1])) {
                 return false;
+            }
 
             CourseMethods.linkParkourKit(args, player);
 
         } else if (args[0].equalsIgnoreCase("listkit")) {
-            if (!Utils.hasPermission(player, "Parkour.Basic", "Kit"))
+            if (!Utils.hasPermission(player, "Parkour.Basic", "Kit")) {
                 return false;
+            }
 
             Utils.listParkourKit(args, player);
 
         } else if (args[0].equalsIgnoreCase("validatekit")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
+            }
 
             ParkourKitInfo.validateParkourKit(args, player);
 
         } else if (args[0].equalsIgnoreCase("challenge")) {
-            if (!Utils.hasPermission(player, "Parkour.Basic", "Challenge"))
+            if (!Utils.hasPermission(player, "Parkour.Basic", "Challenge")) {
                 return false;
+            }
 
             CourseMethods.challengePlayer(args, player);
 
@@ -368,49 +421,56 @@ public class ParkourCommands implements CommandExecutor {
         } else if (args[0].equalsIgnoreCase("help")) {
             Help.lookupCommandHelp(args, player);
 
-        } else if (args[0].equalsIgnoreCase("leaderboard") || args[0].equalsIgnoreCase("leaderboards")) {
-            if (!Utils.hasPermission(player, "Parkour.Basic", "Leaderboard"))
+        } else if (args[0].equalsIgnoreCase("leaderboard")
+                || args[0].equalsIgnoreCase("leaderboards")) {
+            if (!Utils.hasPermission(player, "Parkour.Basic", "Leaderboard")) {
                 return false;
+            }
 
             CourseMethods.getLeaderboards(args, player);
 
         } else if (args[0].equalsIgnoreCase("sql")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
+            }
 
             Help.displaySQL(player);
 
         } else if (args[0].equalsIgnoreCase("recreate")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
+            }
 
             player.sendMessage(Static.getParkourString() + "Recreating courses...");
             DatabaseMethods.recreateAllCourses();
 
         } else if (args[0].equalsIgnoreCase("whitelist")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
 
-            if (!Utils.validateArgs(player, args, 2))
+            } else if (!Utils.validateArgs(player, args, 2)) {
                 return false;
+            }
 
             Utils.addWhitelistedCommand(args, player);
 
         } else if (args[0].equalsIgnoreCase("setlevel")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
 
-            if (!Utils.validateArgs(player, args, 3))
+            } else if (!Utils.validateArgs(player, args, 3)) {
                 return false;
+            }
 
             PlayerMethods.setLevel(args, player);
 
         } else if (args[0].equalsIgnoreCase("setrank")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
 
-            if (!Utils.validateArgs(player, args, 3))
+            } else if (!Utils.validateArgs(player, args, 3)) {
                 return false;
+            }
 
             PlayerMethods.setRank(args, player);
 
@@ -418,7 +478,9 @@ public class ParkourCommands implements CommandExecutor {
             Utils.lookupMaterialInformation(args, player);
 
             //Other commands//
-        } else if (args[0].equalsIgnoreCase("about") || args[0].equalsIgnoreCase("ver") || args[0].equalsIgnoreCase("version")) {
+        } else if (args[0].equalsIgnoreCase("about")
+                || args[0].equalsIgnoreCase("ver")
+                || args[0].equalsIgnoreCase("version")) {
             player.sendMessage(Static.getParkourString() + "Server is running Parkour " + ChatColor.GRAY + Static.getVersion());
             player.sendMessage("This plugin was developed by " + ChatColor.GOLD + "A5H73Y");
 
@@ -426,10 +488,11 @@ public class ParkourCommands implements CommandExecutor {
             player.sendMessage(Static.getParkourString() + "For information or help please contact me:");
             player.sendMessage("Bukkit: " + ChatColor.AQUA + "A5H73Y");
             player.sendMessage("Spigot: " + ChatColor.AQUA + "A5H73Y");
-            player.sendMessage("Skype: " + ChatColor.AQUA + "iA5H73Y");
             player.sendMessage("Parkour URL: " + ChatColor.AQUA + "http://dev.bukkit.org/projects/parkour/");
+            player.sendMessage("Discord Server: " + ChatColor.AQUA + "https://discord.gg/Gc8RGYr");
 
-        } else if (args[0].equalsIgnoreCase("request") || args[0].equalsIgnoreCase("bug")) {
+        } else if (args[0].equalsIgnoreCase("request")
+                || args[0].equalsIgnoreCase("bug")) {
             player.sendMessage(Static.getParkourString() + "To Request a feature or to Report a bug...");
             player.sendMessage("Click here: " + ChatColor.DARK_AQUA + "https://github.com/A5H73Y/Parkour/issues");
 
@@ -438,8 +501,9 @@ public class ParkourCommands implements CommandExecutor {
             player.sendMessage("Click here: " + ChatColor.DARK_AQUA + "https://dev.bukkit.org/projects/parkour/pages/tutorial");
 
         } else if (args[0].equalsIgnoreCase("settings")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
+            }
 
             Help.displaySettings(player);
 
@@ -449,12 +513,14 @@ public class ParkourCommands implements CommandExecutor {
         } else if (args[0].equalsIgnoreCase("accept")) {
             ChallengeManager.getInstance().acceptChallenge(player);
 
-        } else if (args[0].equalsIgnoreCase("yes") || args[0].equalsIgnoreCase("no")) {
+        } else if (args[0].equalsIgnoreCase("yes")
+                || args[0].equalsIgnoreCase("no")) {
             player.sendMessage(Utils.getTranslation("Error.NoQuestion"));
 
         } else if (args[0].equalsIgnoreCase("reload")) {
-            if (!Utils.hasPermission(player, "Parkour.Admin"))
+            if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
+            }
 
             Utils.reloadConfig();
             player.sendMessage(Utils.getTranslation("Other.Reload"));

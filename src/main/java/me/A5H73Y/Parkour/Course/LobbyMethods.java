@@ -52,8 +52,9 @@ public class LobbyMethods {
      * @param player
      */
     public static void joinLobby(String[] args, Player player) {
-        if (!ValidationMethods.lobbyJoiningSet(player))
+        if (!ValidationMethods.lobbyJoiningSet(player)) {
             return;
+        }
 
         // if they are on a course, force them to leave, which will ultimately run this method again.
         if (PlayerMethods.isPlaying(player.getName())) {
@@ -65,8 +66,9 @@ public class LobbyMethods {
         Location lobby;
 
         if (customLobby) {
-            if (!ValidationMethods.lobbyJoiningCustom(player, args[1]))
+            if (!ValidationMethods.lobbyJoiningCustom(player, args[1])) {
                 return;
+            }
 
             lobby = getLobby("Lobby." + args[1]);
         } else {
@@ -82,8 +84,9 @@ public class LobbyMethods {
         player.teleport(lobby);
 
         // Only continue if player intentionally joined the lobby e.g /pa lobby
-        if (args == null)
+        if (args == null) {
             return;
+        }
 
         if (customLobby) {
             player.sendMessage(Utils.getTranslation("Parkour.LobbyOther").replace("%LOBBY%", args[1]));

@@ -27,18 +27,23 @@ public class ValidationMethods {
 		if (args.length > 2) {
 			player.sendMessage(Utils.getTranslation("Error.TooMany"));
 			return false;
+
 		} else if (args.length == 1) {
 			player.sendMessage(Utils.getTranslation("Error.TooLittle"));
 			return false;
+
 		} else if (args[1].length() > 15) {
 			player.sendMessage(Static.getParkourString() + "Course name is too long!");
 			return false;
+
 		} else if (args[1].contains(".")) {
 			player.sendMessage(Static.getParkourString() + "Course name can not contain '.'");
 			return false;
+
 		} else if (Utils.isInteger(args[1])) {
 			player.sendMessage(Static.getParkourString() + "Course name can not only be numeric");
 			return false;
+
 		} else if (CourseMethods.exist(args[1])) {
 			player.sendMessage(Utils.getTranslation("Error.Exist"));
 			return false;
@@ -239,8 +244,9 @@ public class ValidationMethods {
 	 * @return boolean
 	 */
 	public static boolean lobbyJoiningSet(Player player) {
-		if (Parkour.getPlugin().getConfig().getBoolean("Lobby.Set"))
+		if (Parkour.getPlugin().getConfig().getBoolean("Lobby.Set")) {
 			return true;
+		}
 
 		if (Utils.hasPermission(player, "Parkour.Admin")) {
 			player.sendMessage(Static.getParkourString() + ChatColor.RED + "Lobby has not been set!");

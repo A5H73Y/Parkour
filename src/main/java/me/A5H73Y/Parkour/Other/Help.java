@@ -293,8 +293,9 @@ public final class Help {
 	private static void displayHelpMessage(CommandSender sender, String title, String syntax, String example, String description) {
 		sender.sendMessage("=== " + ChatColor.AQUA + title + ChatColor.WHITE + " ===");
 		sender.sendMessage(ChatColor.GRAY + " Syntax: " + ChatColor.WHITE + syntax);
-		if (example != null)
+		if (example != null) {
 			sender.sendMessage(ChatColor.GRAY + " Example: " + ChatColor.WHITE + example);
+		}
 		sender.sendMessage("=== " + ChatColor.DARK_AQUA + "Description" + ChatColor.WHITE + " ===");
 		sender.sendMessage(description);
 	}

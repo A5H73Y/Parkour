@@ -18,8 +18,9 @@ public class ChatListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        if (!Parkour.getSettings().isChatPrefix())
+        if (!Parkour.getSettings().isChatPrefix()) {
             return;
+        }
 
         String finalMessage;
         String rank = PlayerInfo.getRank(event.getPlayer());
@@ -60,11 +61,10 @@ public class ChatListener implements Listener {
         }
 
         if (!commandIsPa && PlayerMethods.isPlaying(player.getName())) {
-            if (!Parkour.getSettings().isDisableCommandsOnCourse())
+            if (!Parkour.getSettings().isDisableCommandsOnCourse() ||
+                    Utils.hasPermissionNoMessage(player, "Parkour.Admin")) {
                 return;
-
-            if (player.hasPermission("Parkour.Admin.*") || player.hasPermission("Parkour.*"))
-                return;
+            }
 
             boolean allowed = false;
             for (String word : Parkour.getSettings().getWhitelistedCommands()) {

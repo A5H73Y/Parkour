@@ -31,8 +31,9 @@ public class CourseInfo {
     public static String getLinkedCourse(String courseName) {
         String linkedCourse = Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".LinkedCourse");
 
-        if (CourseMethods.exist(linkedCourse))
+        if (CourseMethods.exist(linkedCourse)) {
             return linkedCourse;
+        }
 
         return null;
     }
@@ -65,8 +66,9 @@ public class CourseInfo {
     public static String getLinkedLobby(String courseName) {
         String linkedLobby = Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".LinkedLobby");
 
-        if (linkedLobby != null && LobbyMethods.getCustomLobbies().contains(linkedLobby))
+        if (linkedLobby != null && LobbyMethods.getCustomLobbies().contains(linkedLobby)) {
             return linkedLobby;
+        }
 
         return null;
     }
@@ -538,38 +540,49 @@ public class CourseInfo {
         player.sendMessage("Creator: " + aqua + creator);
         player.sendMessage("Finished: " + aqua + finished);
 
-        if (minLevel > 0)
+        if (minLevel > 0) {
             player.sendMessage("Level Required: " + aqua + minLevel);
+        }
 
-        if (rewardLevel > 0)
+        if (rewardLevel > 0) {
             player.sendMessage("Level Reward: " + aqua + rewardLevel);
+        }
 
-        if (rewardLevelAdd > 0)
+        if (rewardLevelAdd > 0) {
             player.sendMessage("Level Reward Addon: " + aqua + rewardLevelAdd);
+        }
 
-        if (linkedLobby != null && linkedLobby.length() > 0)
+        if (linkedLobby != null && linkedLobby.length() > 0) {
             player.sendMessage("Linked Lobby: " + aqua + linkedLobby);
+        }
 
-        if (linkedCourse != null && linkedCourse.length() > 0)
+        if (linkedCourse != null && linkedCourse.length() > 0) {
             player.sendMessage("Linked Course: " + aqua + linkedCourse);
+        }
 
-        if (XP > 0)
+        if (XP > 0) {
             player.sendMessage("XP Reward: " + aqua + XP);
+        }
 
-        if (parkoins > 0)
+        if (parkoins > 0) {
             player.sendMessage("Parkoins Reward: " + aqua + parkoins);
+        }
 
-        if (parkourKit != null && parkourKit.length() > 0)
+        if (parkourKit != null && parkourKit.length() > 0) {
             player.sendMessage("ParkourKit: " + aqua + parkourKit);
+        }
 
-        if (mode != null && !"none".equalsIgnoreCase(mode))
+        if (mode != null && !"none".equalsIgnoreCase(mode)) {
             player.sendMessage("ParkourMode: " + aqua + mode);
+        }
 
-        if (maxDeaths > 0)
+        if (maxDeaths > 0) {
             player.sendMessage("Max Deaths: " + aqua + maxDeaths);
+        }
 
-        if (maxTime > 0)
+        if (maxTime > 0) {
             player.sendMessage("Time Limit: " + aqua + Utils.convertSecondsToTime(maxTime));
+        }
 
         if (Static.getEconomy()) {
             int joinFee = Parkour.getParkourConfig().getEconData()
@@ -582,7 +595,8 @@ public class CourseInfo {
 
         double likePercent = Math.round(DatabaseMethods.getVotePercent(courseName));
 
-        if (likePercent > 0)
+        if (likePercent > 0) {
             player.sendMessage("Liked: " + aqua + likePercent + "%");
+        }
     }
 }

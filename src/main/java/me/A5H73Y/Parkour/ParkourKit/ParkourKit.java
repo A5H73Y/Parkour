@@ -6,7 +6,12 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ParkourKit implements Serializable {
 
@@ -124,8 +129,9 @@ public class ParkourKit implements Serializable {
         for (String rawMaterial : rawMaterials) {
             Material material = validateAndGetMaterial(rawMaterial);
 
-            if (material == null)
+            if (material == null) {
                 continue;
+            }
 
             String action = getParkourKitData().getString("ParkourKit." + name + "." + material.name() + ".Action").toLowerCase();
 
@@ -160,6 +166,7 @@ public class ParkourKit implements Serializable {
                 Utils.log("Outdated Material found " + rawMaterial + " found new version " + material.name(), 1);
                 updateOutdatedMaterial(rawMaterial, material.name());
                 Utils.log("Action has been transferred to use " + material.name());
+
             } else {
                 Utils.log("Material " + rawMaterial + " in kit " + name + " is invalid.", 2);
             }

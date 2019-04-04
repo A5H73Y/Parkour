@@ -40,14 +40,16 @@ public class CourseMethods {
      * @return boolean
      */
     public static boolean exist(String courseName) {
-        if (courseName == null || courseName.length() == 0)
+        if (courseName == null || courseName.length() == 0) {
             return false;
+        }
 
         courseName = courseName.trim().toLowerCase();
 
         for (String course : CourseInfo.getAllCourses()) {
-            if (courseName.equals(course))
+            if (courseName.equals(course)) {
                 return true;
+            }
         }
 
         return false;
@@ -62,8 +64,9 @@ public class CourseMethods {
      * @return Course
      */
     public static Course findByName(String courseName) {
-        if (!exist(courseName))
+        if (!exist(courseName)) {
             return null;
+        }
 
         courseName = courseName.toLowerCase();
 
@@ -94,8 +97,9 @@ public class CourseMethods {
      * @return Course
      */
     public static Course findByNumber(int courseNumber) {
-        if (courseNumber <= 0 || courseNumber > CourseInfo.getAllCourses().size())
+        if (courseNumber <= 0 || courseNumber > CourseInfo.getAllCourses().size()) {
             return null;
+        }
 
         String courseName = CourseInfo.getAllCourses().get(courseNumber - 1);
         return findByName(courseName);
@@ -108,8 +112,9 @@ public class CourseMethods {
      * @return
      */
     public static Course findByPlayer(String playerName) {
-        if (!PlayerMethods.isPlaying(playerName))
+        if (!PlayerMethods.isPlaying(playerName)) {
             return null;
+        }
 
         return PlayerMethods.getPlaying().get(playerName).getCourse();
     }
@@ -125,8 +130,9 @@ public class CourseMethods {
      * @param player
      */
     public static void createCourse(String[] args, Player player) {
-        if (!ValidationMethods.courseCreation(args, player))
+        if (!ValidationMethods.courseCreation(args, player)) {
             return;
+        }
 
         String name = args[1].toLowerCase();
         Location location = player.getLocation();
@@ -186,8 +192,9 @@ public class CourseMethods {
             return;
         }
 
-        if (!ValidationMethods.courseJoining(player, course))
+        if (!ValidationMethods.courseJoining(player, course)) {
             return;
+        }
 
         PlayerMethods.playerJoin(player, course);
     }
@@ -310,8 +317,12 @@ public class CourseMethods {
             sb.append(finished ? ChatColor.AQUA : ChatColor.RED);
             sb.append(courseName);
 
-            if (minimumLevel > 0) sb.append(ChatColor.RED + " (" + minimumLevel + ")");
-            if (rewardLevel > 0) sb.append(ChatColor.GREEN + " (" + rewardLevel + ")");
+            if (minimumLevel > 0) {
+                sb.append(ChatColor.RED + " (" + minimumLevel + ")");
+            }
+            if (rewardLevel > 0) {
+                sb.append(ChatColor.GREEN + " (" + rewardLevel + ")");
+            }
 
             sender.sendMessage(sb.toString());
         }
@@ -689,8 +700,9 @@ public class CourseMethods {
             return;
         }
 
-        if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", courseName))
+        if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Course", courseName)) {
             return;
+        }
 
         boolean finished = CourseInfo.getFinished(courseName);
         CourseInfo.setFinished(courseName, !finished);
@@ -763,8 +775,9 @@ public class CourseMethods {
      * @param courseName
      */
     public static void resetCourse(String courseName) {
-        if (!exist(courseName))
+        if (!exist(courseName)) {
             return;
+        }
 
         courseName = courseName.toLowerCase();
         FileConfiguration config = Parkour.getParkourConfig().getCourseData();
@@ -866,11 +879,13 @@ public class CourseMethods {
             return;
         }
 
-        if (!ValidationMethods.challengePlayer(args, player))
+        if (!ValidationMethods.challengePlayer(args, player)) {
             return;
+        }
 
-        if (!Utils.delayPlayer(player, 10, true))
+        if (!Utils.delayPlayer(player, 10, true)) {
             return;
+        }
 
         String wagerString = "";
         Double wager = null;
@@ -931,8 +946,9 @@ public class CourseMethods {
      * @param player
      */
     public static void getLeaderboards(String[] args, Player player) {
-        if (!Utils.delayPlayer(player, 3, true))
+        if (!Utils.delayPlayer(player, 3, true)) {
             return;
+        }
 
         if (args.length == 1) {
             new LeaderboardConversation(player).begin();

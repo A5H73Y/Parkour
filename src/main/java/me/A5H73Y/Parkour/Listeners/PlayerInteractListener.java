@@ -22,19 +22,23 @@ public class PlayerInteractListener implements Listener {
 
     @EventHandler
     public void onInventoryInteract(PlayerInteractEvent event) {
-        if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+        if (!PlayerMethods.isPlaying(event.getPlayer().getName())) {
             return;
+        }
 
         Player player = event.getPlayer();
 
-        if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.getAction().equals(Action.RIGHT_CLICK_AIR))
+        if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
             return;
+        }
 
-        if (!player.isSneaking() && Parkour.getPlugin().getConfig().getBoolean("OnCourse.SneakToInteractItems"))
+        if (!player.isSneaking() && Parkour.getPlugin().getConfig().getBoolean("OnCourse.SneakToInteractItems")) {
             return;
+        }
 
-        if (PlayerMethods.isPlayerInTestmode(player.getName()))
+        if (PlayerMethods.isPlayerInTestmode(player.getName())) {
             return;
+        }
 
         if (Utils.getMaterialInPlayersHand(player) == Parkour.getSettings().getLastCheckpointTool()) {
             if (Utils.delayPlayerEvent(player, 1)) {
@@ -64,22 +68,26 @@ public class PlayerInteractListener implements Listener {
 
     @EventHandler
     public void onInventoryInteract_ParkourMode(PlayerInteractEvent event) {
-        if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+        if (!PlayerMethods.isPlaying(event.getPlayer().getName())) {
             return;
+        }
 
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.getAction().equals(Action.RIGHT_CLICK_AIR)
-                && !event.getAction().equals(Action.LEFT_CLICK_AIR) && !event.getAction().equals(Action.LEFT_CLICK_BLOCK))
+                && !event.getAction().equals(Action.LEFT_CLICK_AIR) && !event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
             return;
+        }
 
         ParkourMode mode = PlayerMethods.getParkourSession(event.getPlayer().getName()).getMode();
 
-        if (mode != ParkourMode.FREEDOM && mode != ParkourMode.ROCKETS)
+        if (mode != ParkourMode.FREEDOM && mode != ParkourMode.ROCKETS) {
             return;
+        }
 
         Player player = event.getPlayer();
 
-        if (PlayerMethods.isPlayerInTestmode(player.getName()))
+        if (PlayerMethods.isPlayerInTestmode(player.getName())) {
             return;
+        }
 
         event.setCancelled(true);
 
@@ -103,33 +111,34 @@ public class PlayerInteractListener implements Listener {
 
     @EventHandler
     public void onCheckpointEvent(PlayerInteractEvent event) {
-        if (event.getAction() != Action.PHYSICAL)
+        if (event.getAction() != Action.PHYSICAL ||
+                !PlayerMethods.isPlaying(event.getPlayer().getName())) {
             return;
+        }
 
-        if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+        if (event.getClickedBlock().getType() !=
+                XMaterial.fromString(Parkour.getSettings().getCheckpointMaterial()).parseMaterial()) {
             return;
-
-        if (event.getClickedBlock().getType() != XMaterial.fromString(Parkour.getSettings().getCheckpointMaterial()).parseMaterial())
-            return;
+        }
 
         Block below = event.getClickedBlock().getRelative(BlockFace.DOWN);
 
-        if (below == null)
-            return;
-
-        if (Parkour.getPlugin().getConfig().getBoolean("OnCourse.PreventPlateStick"))
+        if (Parkour.getPlugin().getConfig().getBoolean("OnCourse.PreventPlateStick")) {
             event.setCancelled(true);
+        }
 
         ParkourSession session = PlayerMethods.getParkourSession(event.getPlayer().getName());
         Course course = session.getCourse();
 
-        if (session.getCheckpoint() == course.getCheckpoints())
+        if (session.getCheckpoint() == course.getCheckpoints()) {
             return;
+        }
 
         Checkpoint check = course.getCurrentCheckpoint();
 
-        if (check == null)
+        if (check == null) {
             return;
+        }
 
         if (check.getNextCheckpointX() == below.getLocation().getBlockX() && check.getNextCheckpointY() == below.getLocation().getBlockY() && check.getNextCheckpointZ() == below.getLocation().getBlockZ()) {
             if (Parkour.getSettings().isFirstCheckAsStart() && session.getCheckpoint() == 0) {
@@ -142,27 +151,33 @@ public class PlayerInteractListener implements Listener {
 
     @EventHandler
     public void onAutoStartEvent(PlayerInteractEvent event) {
-        if (event.getAction() != Action.PHYSICAL)
+        if (event.getAction() != Action.PHYSICAL) {
             return;
+        }
 
-        if (PlayerMethods.isPlaying(event.getPlayer().getName()))
+        if (PlayerMethods.isPlaying(event.getPlayer().getName())) {
             return;
+        }
 
-        if (!Parkour.getSettings().isAutoStartEnabled())
+        if (!Parkour.getSettings().isAutoStartEnabled()) {
             return;
+        }
 
         Block below = event.getClickedBlock().getRelative(BlockFace.DOWN);
 
-        if (below == null || below.getType() != Parkour.getSettings().getAutoStartMaterial())
+        if (below.getType() != Parkour.getSettings().getAutoStartMaterial()) {
             return;
+        }
 
         // Prevent a user spamming the joins
-        if (!Utils.delayPlayer(event.getPlayer(), 3, false))
+        if (!Utils.delayPlayer(event.getPlayer(), 3, false)) {
             return;
+        }
 
         String courseName = CourseMethods.getAutoStartCourse(event.getClickedBlock().getLocation());
 
-        if (courseName != null)
+        if (courseName != null) {
             CourseMethods.joinCourseButDelayed(event.getPlayer(), courseName, Parkour.getSettings().getAutoStartDelay());
+        }
     }
 }

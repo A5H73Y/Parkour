@@ -7,24 +7,24 @@
 	<artifactId>Parkour</artifactId>
 	<version>5.2</version>
 	<packaging>jar</packaging>
-	
+
 	<name>Parkour</name>
 	<description>The ultimate Parkour plugin</description>
 	<url>http://www.mcparkour.co.uk/</url>
 
-    <issueManagement>
-        <url>https://github.com/A5H73Y/Parkour/issues</url>
-        <system>GitHub Issues</system>
-    </issueManagement>
+	<issueManagement>
+		<url>https://github.com/A5H73Y/Parkour/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
 
-    <licenses>
-        <license>
-            <name>MIT License</name>
-            <url>http://www.opensource.org/licenses/mit-license.php</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-    
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>http://www.opensource.org/licenses/mit-license.php</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
 	<repositories>
 		<repository>
 			<id>spigot-repo</id>
@@ -47,7 +47,7 @@
 			<url>https://repo.codemc.org/repository/maven-public</url>
 		</repository>
 	</repositories>
-	
+
 	<dependencies>
 		<!--Spigot API-->
 		<dependency>
@@ -84,7 +84,7 @@
 			<version>2.9.2</version>
 			<scope>provided</scope>
 		</dependency>
-        <!-- bStats -->
+		<!-- bStats -->
 		<dependency>
 			<groupId>org.bstats</groupId>
 			<artifactId>bstats-bukkit</artifactId>
@@ -130,39 +130,40 @@
 				</configuration>
 			</plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.1</version>
-                <configuration>
-                    <artifactSet>
-                        <includes>
-                            <include>org.bstats:*</include>
-                        </includes>
-                    </artifactSet>
-                    <relocations>
-                        <relocation>
-                            <pattern>org.bstats</pattern>
-                            <shadedPattern>me.A5H73Y.Parkour</shadedPattern>
-                        </relocation>
-                    </relocations>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.1.1</version>
+				<configuration>
+					<artifactSet>
+						<includes>
+							<include>org.bstats:*</include>
+						</includes>
+					</artifactSet>
+					<relocations>
+						<relocation>
+							<pattern>org.bstats</pattern>
+							<shadedPattern>me.A5H73Y.Parkour</shadedPattern>
+						</relocation>
+					</relocations>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
-    <distributionManagement>
-        <repository>
-            <id>bintray-a5h73y-repo</id>
-            <name>A5H73Y-repo</name>
-            <url>https://api.bintray.com/maven/a5h73y/repo/Parkour/;publish=1</url>
-        </repository>
-    </distributionManagement>
+
+	<distributionManagement>
+		<repository>
+			<id>bintray-a5h73y-repo</id>
+			<name>A5H73Y-repo</name>
+			<url>https://api.bintray.com/maven/a5h73y/repo/Parkour/;publish=1</url>
+		</repository>
+	</distributionManagement>
 </project>

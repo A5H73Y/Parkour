@@ -67,19 +67,24 @@ public class SignListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onSignBreak(PlayerInteractEvent event) {
-		if (event.getAction() != Action.LEFT_CLICK_BLOCK)
+		if (event.getAction() != Action.LEFT_CLICK_BLOCK) {
 			return;
+		}
 
-		if ((event.getClickedBlock().getType() != Material.SIGN) && (event.getClickedBlock().getType() != Material.WALL_SIGN))
+		if ((event.getClickedBlock().getType() != Material.SIGN)
+				&& (event.getClickedBlock().getType() != Material.WALL_SIGN)) {
 			return;
+		}
 
-		if (!Parkour.getPlugin().getConfig().getBoolean("Other.Parkour.SignProtection"))
+		if (!Parkour.getPlugin().getConfig().getBoolean("Other.Parkour.SignProtection")) {
 			return;
+		}
 
 		String[] lines = ((Sign) event.getClickedBlock().getState()).getLines();
 
-		if (!ChatColor.stripColor(lines[0]).contains(ChatColor.stripColor(Static.getParkourSignString())))
+		if (!ChatColor.stripColor(lines[0]).contains(ChatColor.stripColor(Static.getParkourSignString()))) {
 			return;
+		}
 
 		if (!Utils.hasPermission(event.getPlayer(), "Parkour.Admin")) {
 			event.getPlayer().sendMessage(Utils.getTranslation("Error.SignProtected"));
@@ -93,28 +98,35 @@ public class SignListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onSignInteract(PlayerInteractEvent event) {
-		if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
+		if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
 			return;
+		}
 
-		if ((event.getClickedBlock().getType() != Material.SIGN) && (event.getClickedBlock().getType() != Material.WALL_SIGN))
+		if ((event.getClickedBlock().getType() != Material.SIGN)
+				&& (event.getClickedBlock().getType() != Material.WALL_SIGN)) {
 			return;
+		}
 
 		Sign sign = (Sign) event.getClickedBlock().getState();
 		String[] lines = sign.getLines();
 
 		if (!ChatColor.stripColor(lines[0]).contains(ChatColor.stripColor(Static.getParkourSignString()))) {
-			if (!PlayerMethods.isPlaying(event.getPlayer().getName()))
+			if (!PlayerMethods.isPlaying(event.getPlayer().getName())) {
 				return;
+			}
 
-			if (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.EnforceParkourSigns"))
+			if (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.EnforceParkourSigns")) {
 				return;
+			}
 
 			event.getPlayer().sendMessage(Utils.getTranslation("Error.Sign"));
 			return;
 		}
 
-		if (Parkour.getSettings().isPermissionForSignInteraction() && !Utils.hasPermission(event.getPlayer(), "Parkour.Basic", "Signs"))
+		if (Parkour.getSettings().isPermissionForSignInteraction()
+				&& !Utils.hasPermission(event.getPlayer(), "Parkour.Basic", "Signs")) {
 			return;
+		}
 
 		if (lines[1].equalsIgnoreCase("join")) {
 			if (lines[2].isEmpty() || !CourseMethods.exist(lines[2])) {
@@ -136,23 +148,28 @@ public class SignListener implements Listener {
 
 			ParkourSession session = PlayerMethods.getParkourSession(event.getPlayer().getName());
 
-			if (lines[3].isEmpty() || !Utils.isPositiveInteger(lines[3]))
+			if (lines[3].isEmpty() || !Utils.isPositiveInteger(lines[3])) {
 				return;
+			}
 
-			if (session.getCheckpoint() == session.getCourse().getCheckpoints())
+			if (session.getCheckpoint() == session.getCourse().getCheckpoints()) {
 				return;
+			}
 
-			if (session.getCheckpoint() >= Integer.parseInt(lines[3]))
+			if (session.getCheckpoint() >= Integer.parseInt(lines[3])) {
 				return;
+			}
 
-			if (session.getCheckpoint() + 1 < Integer.parseInt(lines[3]))
+			if (session.getCheckpoint() + 1 < Integer.parseInt(lines[3])) {
 				return;
+			}
 
 			PlayerMethods.increaseCheckpoint(session, event.getPlayer());
 
 		} else if (lines[1].equalsIgnoreCase("lobby")) {
 			if (lines[2].isEmpty()) {
 				LobbyMethods.joinLobby(new String[0], event.getPlayer());
+
 			} else {
 				String[] args = {"", lines[2]};
 				LobbyMethods.joinLobby(args, event.getPlayer());

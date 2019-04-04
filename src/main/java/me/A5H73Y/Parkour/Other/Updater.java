@@ -1,6 +1,19 @@
 package me.A5H73Y.Parkour.Other;
 
-import java.io.*;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -9,13 +22,6 @@ import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
 /**
  * Check for updates on BukkitDev for a given plugin, and download the updates if needed.
@@ -445,13 +451,13 @@ public class Updater {
 			conn.setRequestProperty("User-Agent", "Mozilla/5.0...");
 
 			switch (conn.getResponseCode()) {
-			case HttpURLConnection.HTTP_MOVED_PERM:
-			case HttpURLConnection.HTTP_MOVED_TEMP:
-				redLoc = conn.getHeaderField("Location");
-				base = new URL(location);
-				next = new URL(base, redLoc);  // Deal with relative URLs
-				location = next.toExternalForm();
-				continue;
+				case HttpURLConnection.HTTP_MOVED_PERM:
+				case HttpURLConnection.HTTP_MOVED_TEMP:
+					redLoc = conn.getHeaderField("Location");
+					base = new URL(location);
+					next = new URL(base, redLoc);  // Deal with relative URLs
+					location = next.toExternalForm();
+					continue;
 			}
 			break;
 		}

@@ -77,8 +77,9 @@ public class ParkourKitInfo {
 
                 // try to see if we have a matching legacy version
                 Material matching = Utils.lookupMaterial(material);
-                if (matching != null)
+                if (matching != null) {
                     invalidTypes.add(" Could you have meant: " + matching.name() + "?");
+                }
             } else {
                 String action = Parkour.getParkourConfig().getParkourKitData().getString(path + "." + material + ".Action");
                 if (!ParkourKit.getValidActions().contains(action)) {

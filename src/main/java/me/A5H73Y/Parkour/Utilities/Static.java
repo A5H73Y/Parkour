@@ -33,7 +33,9 @@ public final class Static {
 		return parkourString;
 	}
 
-	public static String getParkourSignString() { return parkourSignString; }
+	public static String getParkourSignString() {
+		return parkourSignString;
+	}
 
 	public static Double getVersion() {
 		return version;

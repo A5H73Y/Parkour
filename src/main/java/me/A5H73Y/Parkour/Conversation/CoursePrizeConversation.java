@@ -5,7 +5,13 @@ import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.conversations.*;
+import org.bukkit.conversations.BooleanPrompt;
+import org.bukkit.conversations.ConversationContext;
+import org.bukkit.conversations.FixedSetPrompt;
+import org.bukkit.conversations.MessagePrompt;
+import org.bukkit.conversations.NumericPrompt;
+import org.bukkit.conversations.Prompt;
+import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
 
 public class CoursePrizeConversation extends ParkourConversation {
@@ -33,14 +39,17 @@ public class CoursePrizeConversation extends ParkourConversation {
 
 		@Override
 		protected Prompt acceptValidatedInput(ConversationContext context, String choice) {
-			if (choice.equalsIgnoreCase("material"))
+			if (choice.equalsIgnoreCase("material")) {
 				return new ChooseBlock();
+			}
 
-			if (choice.equalsIgnoreCase("command"))
+			if (choice.equalsIgnoreCase("command")) {
 				return new ChooseCommand();
+			}
 
-			if (choice.equalsIgnoreCase("xp"))
+			if (choice.equalsIgnoreCase("xp")) {
 				return new ChooseXP();
+			}
 
 			return null;
 		}
@@ -136,12 +145,12 @@ public class CoursePrizeConversation extends ParkourConversation {
 
 		@Override
 		protected Prompt acceptValidatedInput(ConversationContext context, boolean runNow) {
-			if (runNow)
+			if (runNow) {
 				Parkour.getPlugin().getServer().dispatchCommand(
 						Parkour.getPlugin().getServer().getConsoleSender(),
 						context.getSessionData("command").toString()
 								.replace("%PLAYER%", context.getSessionData("playerName").toString()));
-
+			}
 			return new CommandProcessComplete();
 		}
 

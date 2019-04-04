@@ -45,6 +45,6 @@ public class Checkpoint implements Serializable {
 	}
 
 	public Location getLocation() {
-		return new Location(Bukkit.getWorld(world), x, y, z , yaw, pitch);
+		return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
 	}
 }

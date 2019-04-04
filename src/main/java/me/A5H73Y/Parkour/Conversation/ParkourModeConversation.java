@@ -8,7 +8,7 @@ import org.bukkit.conversations.FixedSetPrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 
-public class ParkourModeConversation extends ParkourConversation{
+public class ParkourModeConversation extends ParkourConversation {
 
 	public ParkourModeConversation(Player player) {
 		super(player);

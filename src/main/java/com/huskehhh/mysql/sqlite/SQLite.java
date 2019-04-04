@@ -1,37 +1,38 @@
 package com.huskehhh.mysql.sqlite;
 
+import com.huskehhh.mysql.Database;
+import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.Utilities.Utils;
+
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import com.huskehhh.mysql.Database;
-import me.A5H73Y.Parkour.Parkour;
-import me.A5H73Y.Parkour.Utilities.Utils;
-
 /**
- * Connects to and uses a SQLite database
+ * Connects to and uses a SQLite database.
  *
  * @author tips48
  */
 public class SQLite extends Database {
-	private final String dbLocation;
 
-	/**
-	 * Creates a new SQLite instance
-	 *
-	 * @param dbLocation Location of the Database (Must end in .db)
-	 */
-	public SQLite(String dbLocation) {
-		this.dbLocation = dbLocation;
-	}
+    private final String dbLocation;
 
-	@Override
-	public Connection openConnection() {
-		if (checkConnection()) {
-			return connection;
-		}
+    /**
+     * Creates a new SQLite instance.
+     *
+     * @param dbLocation Location of the Database (Must end in .db)
+     */
+    public SQLite(String dbLocation) {
+        this.dbLocation = dbLocation;
+    }
+
+    @Override
+    public final Connection openConnection() {
+        if (checkConnection()) {
+            return getConnection();
+        }
 
         String pathOverride = Parkour.getPlugin().getConfig().getString("SQLite.PathOverride");
         String path = pathOverride.isEmpty() ? "plugins/Parkour/sqlite-db" : pathOverride;
@@ -52,10 +53,10 @@ public class SQLite extends Database {
 
         try {
             Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dataFolder + "/" + dbLocation);
+            setConnection(DriverManager.getConnection("jdbc:sqlite:" + dataFolder + "/" + dbLocation));
         } catch (SQLException | ClassNotFoundException ex) {
             Utils.log("Error occurred: " + ex.getMessage(), 2);
         }
-        return connection;
-	}
+        return getConnection();
+    }
 }

@@ -59,8 +59,9 @@ public class Course implements Serializable {
 	}
 
 	public void setMaxDeaths(Integer maxDeaths) {
-		if (maxDeaths > 0)
+		if (maxDeaths > 0) {
 			this.maxDeaths = maxDeaths;
+		}
 	}
 
 	/**
@@ -72,8 +73,9 @@ public class Course implements Serializable {
 	}
 
 	public void setMaxTime(Integer maxTime) {
-		if (maxTime > 0)
+		if (maxTime > 0) {
 			this.maxTime = maxTime;
+		}
 	}
 
 	/**

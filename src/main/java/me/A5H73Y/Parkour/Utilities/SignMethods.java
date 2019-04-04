@@ -18,8 +18,9 @@ public class SignMethods {
 	 * @param title
 	 */
 	public void createStandardSign(SignChangeEvent sign, Player player, String title) {
-		if (!Utils.hasSignPermission(player, sign, title))
+		if (!Utils.hasSignPermission(player, sign, title)) {
 			return;
+		}
 
 		sign.setLine(1, title);
 		sign.setLine(2, "");
@@ -41,8 +42,9 @@ public class SignMethods {
 	 * @return
 	 */
 	public boolean createStandardCourseSign(SignChangeEvent sign, Player player, String title, boolean message) {
-		if (!Utils.hasSignPermission(player, sign, title))
+		if (!Utils.hasSignPermission(player, sign, title)) {
 			return false;
+		}
 
 		if (!CourseMethods.exist(sign.getLine(2))) {
 			player.sendMessage(Utils.getTranslation("Error.Unknown"));
@@ -53,8 +55,9 @@ public class SignMethods {
 
 		sign.setLine(1, title);
 
-		if (message)
+		if (message) {
 			player.sendMessage(Static.getParkourString() + ChatColor.DARK_AQUA + title + ChatColor.WHITE + " sign for " + ChatColor.AQUA + sign.getLine(2) + ChatColor.WHITE + " created!");
+		}
 		return true;
 	}
 
@@ -65,13 +68,15 @@ public class SignMethods {
 	 * @param player
 	 */
 	public void createJoinCourseSign(SignChangeEvent sign, Player player) {
-		if (!createStandardCourseSign(sign, player, "Join", false))
+		if (!createStandardCourseSign(sign, player, "Join", false)) {
 			return;
+		}
 
 		int minimumLevel = CourseInfo.getMinimumLevel(sign.getLine(2));
 
-		if (minimumLevel > 0)
+		if (minimumLevel > 0) {
 			sign.setLine(3, ChatColor.RED + "" + minimumLevel);
+		}
 
 		player.sendMessage(Static.getParkourString() + "Join for " + ChatColor.AQUA + sign.getLine(2) + ChatColor.WHITE + " created!");
 	}
@@ -82,8 +87,9 @@ public class SignMethods {
 	 * @param player
 	 */
 	public void createLobbyJoinSign(SignChangeEvent sign, Player player) {
-		if (!Utils.hasSignPermission(player, sign, "Lobby"))
+		if (!Utils.hasSignPermission(player, sign, "Lobby")) {
 			return;
+		}
 
 		sign.setLine(1, "Lobby");
 
@@ -106,8 +112,9 @@ public class SignMethods {
 	}
 
 	public void createEffectSign(SignChangeEvent sign, Player player) {
-		if (!Utils.hasSignPermission(player, sign, "Effect"))
+		if (!Utils.hasSignPermission(player, sign, "Effect")) {
 			return;
+		}
 
 		sign.setLine(1, "Effect");
 
@@ -146,20 +153,23 @@ public class SignMethods {
 	}
 
 	public void createLeaderboardsSign(SignChangeEvent sign, Player player) {
-		if (!createStandardCourseSign(sign, player, "Leaderboards", false))
+		if (!createStandardCourseSign(sign, player, "Leaderboards", false)) {
 			return;
+		}
 
 		if (!sign.getLine(3).isEmpty()) {
-			if (!Utils.isPositiveInteger(sign.getLine(3)))
+			if (!Utils.isPositiveInteger(sign.getLine(3))) {
 				sign.setLine(3, "");
+			}
 		}
 
 		player.sendMessage(Static.getParkourString() + "Leaderboards sign for " + ChatColor.AQUA + sign.getLine(2) + ChatColor.WHITE + " created!");
 	}
 
 	public void createCheckpointSign(SignChangeEvent sign, Player player, String checkpoint) {
-		if (!createStandardCourseSign(sign, player, "Checkpoint", false))
+		if (!createStandardCourseSign(sign, player, "Checkpoint", false)) {
 			return;
+		}
 
 		if (sign.getLine(3).isEmpty() || !Utils.isPositiveInteger(sign.getLine(3))) {
 			sign.getBlock().breakNaturally();

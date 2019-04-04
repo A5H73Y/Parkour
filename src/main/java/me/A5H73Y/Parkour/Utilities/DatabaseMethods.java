@@ -73,9 +73,9 @@ public class DatabaseMethods {
             Parkour.getDatabase().closeConnection();
         }
 
-        if (courseId == 0 && printError)
+        if (courseId == 0 && printError) {
             Utils.log("Course '" + courseName + "' was not found in the database. Run command '/pa recreate' to fix.", 1);
-
+        }
         return courseId;
     }
 
@@ -129,8 +129,9 @@ public class DatabaseMethods {
     private static void insertTime(String courseName, String playerName, long time, int deaths) {
         try {
             int courseId = getCourseId(courseName);
-            if (courseId == 0)
+            if (courseId == 0) {
                 return;
+            }
 
             PreparedStatement ps = Parkour.getDatabase().openConnection()
                     .prepareStatement("INSERT INTO `time` (`courseId`, `player`, `time`, `deaths`) VALUES (?, ?, ?, ?);");
@@ -182,8 +183,9 @@ public class DatabaseMethods {
     public static void insertVote(String courseName, String playerName, Boolean like) {
         try {
             int courseId = getCourseId(courseName);
-            if (courseId == 0)
+            if (courseId == 0) {
                 return;
+            }
 
             PreparedStatement ps = Parkour.getDatabase().openConnection()
                     .prepareStatement("INSERT INTO `vote` (courseId, player, liked) VALUES (?, ?, ?);");
@@ -207,8 +209,9 @@ public class DatabaseMethods {
         double percentage = 0;
         try {
             int courseId = getCourseId(courseName);
-            if (courseId == 0)
+            if (courseId == 0) {
                 return 0;
+            }
 
             PreparedStatement ps = Parkour.getDatabase().openConnection()
                     .prepareStatement("SELECT count(*) AS votes, (SELECT count(*) FROM vote WHERE liked = 1 AND courseId=?) AS likes FROM vote WHERE courseId=?;");
@@ -237,8 +240,9 @@ public class DatabaseMethods {
         boolean voted = true;
         try {
             int courseId = getCourseId(courseName);
-            if (courseId == 0)
+            if (courseId == 0) {
                 return true;
+            }
 
             PreparedStatement ps = Parkour.getDatabase().openConnection()
                     .prepareStatement("SELECT 1 FROM vote WHERE courseId=? AND player=? LIMIT 1;");
@@ -300,8 +304,9 @@ public class DatabaseMethods {
     public static void deleteCourseTimes(String courseName) {
         try {
             int courseId = getCourseId(courseName);
-            if (courseId == 0)
+            if (courseId == 0) {
                 return;
+            }
 
             PreparedStatement ps = Parkour.getDatabase().openConnection()
                     .prepareStatement("DELETE FROM `time` WHERE `courseId`=?;");
@@ -317,8 +322,9 @@ public class DatabaseMethods {
     public static void deletePlayerCourseTimes(String playerName, String courseName) {
         try {
             int courseId = getCourseId(courseName);
-            if (courseId == 0)
+            if (courseId == 0) {
                 return;
+            }
 
             PreparedStatement ps = Parkour.getDatabase().openConnection()
                     .prepareStatement("DELETE FROM `time` WHERE `player`=? AND `courseId`=?;");
@@ -343,8 +349,9 @@ public class DatabaseMethods {
         List<TimeObject> times = new ArrayList<>();
         try {
             int courseId = getCourseId(courseName.toLowerCase());
-            if (courseId == 0)
+            if (courseId == 0) {
                 return times;
+            }
 
             PreparedStatement ps = Parkour.getDatabase().openConnection()
                     .prepareStatement("SELECT player, time, deaths FROM time WHERE courseId=? ORDER BY time LIMIT ?;");
@@ -371,8 +378,9 @@ public class DatabaseMethods {
         List<TimeObject> times = new ArrayList<>();
         try {
             int courseId = getCourseId(courseName.toLowerCase());
-            if (courseId == 0)
+            if (courseId == 0) {
                 return times;
+            }
 
             PreparedStatement ps = Parkour.getDatabase().openConnection()
                     .prepareStatement("SELECT player, time, deaths FROM time WHERE courseId=? AND player=? ORDER BY time LIMIT ?;");
@@ -394,8 +402,9 @@ public class DatabaseMethods {
         boolean completed = true;
         try {
             int courseId = getCourseId(courseName);
-            if (courseId == 0)
+            if (courseId == 0) {
                 return true;
+            }
 
             PreparedStatement ps = Parkour.getDatabase().openConnection()
                     .prepareStatement("SELECT 1 FROM time WHERE courseId=? AND player=? LIMIT 1;");
