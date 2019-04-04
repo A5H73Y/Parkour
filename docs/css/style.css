@@ -40,6 +40,7 @@ img {
     padding: 0;
     vertical-align: middle;
     text-align: center;
+    cursor: pointer;
 }
 
 .img-thumbnail {

@@ -18,4 +18,9 @@ $(function(){
         contents += "</ul>";
         contentsPlaceholder.html(contents);
     }
+
+    $('img').on("click",function(){
+        var url = $(this).attr("src");
+        window.open(url, '_blank');
+    });
 });
