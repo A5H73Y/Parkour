@@ -14,6 +14,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
+import java.util.List;
+
 public class ChatListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -43,13 +45,15 @@ public class ChatListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
-        boolean commandIsPa = event.getMessage().startsWith("/pa ")
-                || event.getMessage().startsWith("/parkour ")
-                || event.getMessage().startsWith("/pkr ");
+        List<String> aliases = Parkour.getPlugin().getCommand("parkour").getAliases();
+
+        // if the command is "parkour" or an alias.
+        boolean isParkourCommand = event.getMessage().startsWith("/parkour")
+                || aliases.stream().anyMatch(alias -> event.getMessage().startsWith("/" + alias));
 
         Player player = event.getPlayer();
 
-        if (commandIsPa && QuestionManager.getInstance().hasPlayerBeenAskedQuestion(player.getName())) {
+        if (isParkourCommand && QuestionManager.getInstance().hasPlayerBeenAskedQuestion(player.getName())) {
             String[] args = event.getMessage().split(" ");
             if (args.length <= 1) {
                 player.sendMessage(Static.getParkourString() + "Invalid answer.");
@@ -60,7 +64,7 @@ public class ChatListener implements Listener {
             event.setCancelled(true);
         }
 
-        if (!commandIsPa && PlayerMethods.isPlaying(player.getName())) {
+        if (!isParkourCommand && PlayerMethods.isPlaying(player.getName())) {
             if (!Parkour.getSettings().isDisableCommandsOnCourse() ||
                     Utils.hasPermissionNoMessage(player, "Parkour.Admin")) {
                 return;

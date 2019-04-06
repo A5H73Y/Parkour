@@ -1,6 +1,6 @@
 package me.A5H73Y.Parkour.Course;
 
-import me.A5H73Y.Parkour.Other.ValidationMethods;
+import me.A5H73Y.Parkour.Other.Validation;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Utilities.Static;
@@ -22,57 +22,63 @@ public class CheckpointMethods {
 	 * Retrieval of next Checkpoint. 
 	 * Each Checkpoint has a Location to teleport back to and an X,Y,Z coordinate for pressureplate detection.
 	 * NOTE: Checkpoint 0 will be made, this is JUST for the joining of the course, the X,Y,Z will be 0.
-	 * @param courseName
+	 * @param courseName the course
+	 * @param currentPoint the current checkpoint number
 	 * @return Checkpoint
 	 */
 	public static Checkpoint getNextCheckpoint(String courseName, int currentPoint) {
 		FileConfiguration courseData = Parkour.getParkourConfig().getCourseData();
 		FileConfiguration checkData = Parkour.getParkourConfig().getCheckData();
 
-		String path = courseName + "." + currentPoint + ".";
+		String checkpointPath = courseName + "." + currentPoint + ".";
 
-		double x = courseData.getDouble(path + "X");
-		double y = courseData.getDouble(path + "Y");
-		double z = courseData.getDouble(path + "Z");
-		float yaw = (float) courseData.getDouble(path + "Yaw");
-		float pitch = (float) courseData.getDouble(path + "Pitch");
+		// the 'current' checkpoint location, i.e. where to teleport back to
+		double x = courseData.getDouble(checkpointPath + "X");
+		double y = courseData.getDouble(checkpointPath + "Y");
+		double z = courseData.getDouble(checkpointPath + "Z");
+		float yaw = (float) courseData.getDouble(checkpointPath + "Yaw");
+		float pitch = (float) courseData.getDouble(checkpointPath + "Pitch");
 		World world = Bukkit.getWorld(courseData.getString(courseName + "." + "World"));
 		Location location = new Location(world, x, y, z, yaw, pitch);
 
-		path = courseName + "." + (currentPoint + 1) + ".";
+		// get the next checkpoint pressure plate location
+		checkpointPath = courseName + "." + (currentPoint + 1) + ".";
 
-		double nCheckX = checkData.getDouble(path + "X");
-		double nCheckY = checkData.getDouble(path + "Y");
-		double nCheckZ = checkData.getDouble(path + "Z");
+		double nCheckX = checkData.getDouble(checkpointPath + "X");
+		double nCheckY = checkData.getDouble(checkpointPath + "Y");
+		double nCheckZ = checkData.getDouble(checkpointPath + "Z");
 
 		return new Checkpoint(location, nCheckX, nCheckY, nCheckZ);
 	}
 
 	/**
-	 * Create a checkpoint
-	 * If valid numeric argument is supplied, will attempt to override the existing checkpoint.
+	 * Create (or overwrite) a checkpoint.
+	 * If valid numeric argument is supplied, will attempt to overwrite the existing checkpoint.
 	 * Otherwise a new checkpoint will be generated.
-	 * The block on which the checkpoint is created must be able to have  a pressure plate
-	 * placed on it.
+	 * The block on which the checkpoint is created must be able to have a pressure plate
+	 * placed on it (if configured).
 	 *
 	 * @param args
 	 * @param player
 	 */
 	public static void createCheckpoint(String[] args, Player player) {
-		if (!ValidationMethods.createCheckpoint(args, player)) {
+		if (!Validation.createCheckpoint(args, player)) {
 			return;
 		}
 
 		String selected = PlayerInfo.getSelected(player);
 		Location location = player.getLocation();
-		int checkpoint = args.length == 2 ? Integer.parseInt(args[1]) :
-				CourseInfo.getCheckpointAmount(selected) + 1;
-
 		Block block = location.getBlock();
 		Block blockUnder = block.getRelative(BlockFace.DOWN);
 
+		// the checkpoint number to overwrite / create
+		int checkpoint = args.length == 2 ? Integer.parseInt(args[1]) :
+				CourseInfo.getCheckpointAmount(selected) + 1;
+
 		if (Parkour.getSettings().isEnforceSafeCheckpoints()) {
 			try {
+				// attempt to check if the player is able to create the checkpoint
+				// on their current location.
 				if (!Utils.isCheckpointSafe(player, block)) {
 					return;
 				}
@@ -90,7 +96,6 @@ public class CheckpointMethods {
 			blockUnder.setType(Material.STONE);
 		}
 
-
 		Material pressurePlate = XMaterial.fromString(Parkour.getSettings().getCheckpointMaterial()).parseMaterial();
 		block.setType(pressurePlate);
 
@@ -99,12 +104,12 @@ public class CheckpointMethods {
 	}
 
 	/**
-	 * Create the actual checkpoint data
+	 * Create and save the checkpoint data.
 	 * The location for the player to teleport to and the location for the pressure plate will be created.
 	 *
-	 * @param selected
-	 * @param location
-	 * @param checkpoint
+	 * @param selected player's selected course
+	 * @param location checkpoint location
+	 * @param checkpoint checkpoint being saved
 	 */
 	private static void createCheckpointData(String selected, Location location, int checkpoint) {
 		FileConfiguration courseData = Parkour.getParkourConfig().getCourseData();
@@ -129,23 +134,23 @@ public class CheckpointMethods {
 	}
 
 	/**
-	 * Teleport the player to a checkpoint
+	 * Teleport player to a checkpoint.
 	 * If the checkpoint flag is false, it will teleport the player to the start.
 	 * Otherwise the player will teleport to the chosen checkpoint.
 	 *
 	 * @param args
 	 * @param player
-	 * @param checkpoint
+	 * @param toCheckpoint
 	 */
-	public static void teleportCheckpoint(String[] args, Player player, boolean checkpoint) {
+	public static void teleportCheckpoint(String[] args, Player player, boolean toCheckpoint) {
 		if (!CourseMethods.exist(args[1])) {
 			player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
 			return;
 		}
 
-		String courseName = args[1].toLowerCase();
 		FileConfiguration courseData = Parkour.getParkourConfig().getCourseData();
-		String path = checkpoint ? courseName + "." + args[2] : courseName + ".0";
+		String courseName = args[1].toLowerCase();
+		String path = toCheckpoint ? courseName + "." + args[2] : courseName + ".0";
 
 		World world = Bukkit.getWorld(courseData.getString(courseName + ".World"));
 		double x = courseData.getDouble(path + ".X");
@@ -161,11 +166,11 @@ public class CheckpointMethods {
 
 		player.teleport(new Location(world, x, y, z, yaw, pitch));
 		String message = Utils.getTranslation("Parkour.Teleport").replace("%COURSE%", args[1]);
-		player.sendMessage(checkpoint ? message + Utils.colour(" &f(&3" + args[2] + "&f)") : message);
+		player.sendMessage(toCheckpoint ? message + Utils.colour(" &f(&3" + args[2] + "&f)") : message);
 	}
 
 	/**
-	 * Delete a checkpoint from the course
+	 * Delete a checkpoint from the course.
 	 * This will only delete the last checkpoint, decreasing the amount of checkpoints.
 	 *
 	 * @param courseName
@@ -199,7 +204,7 @@ public class CheckpointMethods {
 	/**
 	 * Create a new checkpoint based on the players current location.
 	 * @param player
-	 * @return
+	 * @return checkpoint
 	 */
 	public static Checkpoint createCheckpointFromPlayerLocation(Player player) {
 		return new Checkpoint(player.getLocation(),0, 0, 0);

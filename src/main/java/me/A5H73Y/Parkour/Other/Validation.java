@@ -15,7 +15,68 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ValidationMethods {
+public class Validation {
+
+	/**
+	 * Validate if the argument is numeric
+	 * "1" = true, "Hi" = false
+	 *
+	 * @param input
+	 * @return whether the input is numeric
+	 */
+	public static boolean isInteger(String input) {
+		try {
+			Integer.parseInt(input);
+			return true;
+		} catch (Exception e) {}
+		return false;
+	}
+
+	/**
+	 * Validate if the argument is numeric
+	 * "1" = true, "1.0" = true, "Hi" = false
+	 *
+	 * @param input
+	 * @return whether the input is numeric
+	 */
+	public static boolean isDouble(String input) {
+		try {
+			Double.parseDouble(input);
+			return true;
+		} catch (Exception e) {}
+		return false;
+	}
+
+	/**
+	 * Validate if the argument is numeric
+	 * "1" = true, "Hi" = false, "-1" = false
+	 *
+	 * @param input
+	 * @return whether the input is numeric
+	 */
+	public static boolean isPositiveInteger(String input) {
+		return isInteger(input) && Integer.parseInt(input) >= 0;
+	}
+
+	/**
+	 * Validate if the argument is numeric
+	 * "1" = true, "Hi" = false, "-1" = false
+	 *
+	 * @param input
+	 * @return whether the input is numeric
+	 */
+	public static boolean isPositiveDouble(String input) {
+		return isDouble(input) && Double.parseDouble(input) >= 0;
+	}
+
+	/**
+	 * Validate if the input is a populated String
+	 * @param input
+	 * @return whether the input is a valid String
+	 */
+	public static boolean isStringValid(String input) {
+		return input != null && input.trim().length() != 0;
+	}
 
 	/**
 	 * Validate course creation
@@ -40,7 +101,7 @@ public class ValidationMethods {
 			player.sendMessage(Static.getParkourString() + "Course name can not contain '.'");
 			return false;
 
-		} else if (Utils.isInteger(args[1])) {
+		} else if (isInteger(args[1])) {
 			player.sendMessage(Static.getParkourString() + "Course name can not only be numeric");
 			return false;
 
@@ -207,11 +268,11 @@ public class ValidationMethods {
 
 		Player target = Bukkit.getPlayer(targetPlayerName);
 
-		if (!ValidationMethods.courseJoiningNoMessages(player, courseName)) {
+		if (!courseJoiningNoMessages(player, courseName)) {
 			player.sendMessage(Static.getParkourString() + "You are not able to join this course!");
 			return false;
 		}
-		if (!ValidationMethods.courseJoiningNoMessages(target, courseName)) {
+		if (!courseJoiningNoMessages(target, courseName)) {
 			player.sendMessage(Static.getParkourString() + "They are not able to join this course!");
 			return false;
 		}
@@ -221,7 +282,7 @@ public class ValidationMethods {
 			if (!Static.getEconomy()) {
 				player.sendMessage(Static.getParkourString() + "Economy is disabled, no wager will be made.");
 
-			} else if (!Utils.isPositiveDouble(wagerAmount)) {
+			} else if (!isPositiveDouble(wagerAmount)) {
 				player.sendMessage(Static.getParkourString() + "Wager must be a positive number.");
 				return false;
 
@@ -298,7 +359,7 @@ public class ValidationMethods {
 		int pointcount = CourseInfo.getCheckpointAmount(selected) + 1;
 
 		if (!(args.length <= 1)) {
-			if (!Utils.isPositiveInteger(args[1])) {
+			if (!isPositiveInteger(args[1])) {
 				player.sendMessage(Static.getParkourString() + "Checkpoint specified is not numeric!");
 				return false;
 			}

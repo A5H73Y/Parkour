@@ -1,5 +1,6 @@
 package me.A5H73Y.Parkour.ParkourKit;
 
+import me.A5H73Y.Parkour.Other.Validation;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.Material;
@@ -18,7 +19,7 @@ public class ParkourKit implements Serializable {
     private static final long serialVersionUID = 1L;
     private static Map<String, ParkourKit> loaded = new HashMap<>();
 
-    public static final List<String> validActions =
+    public static final List<String> VALID_ACTIONS =
             Arrays.asList("death", "finish", "climb", "launch", "speed", "repulse", "norun", "nopotion", "bounce");
 
     // ParkourKit attributes
@@ -26,7 +27,7 @@ public class ParkourKit implements Serializable {
     private List<Material> materials = new ArrayList<>();
 
     /**
-     * New point of accessing ParkourKit
+     * New point of accessing ParkourKit.
      * If it's already loaded, then just return that, otherwise create the set and load it.
      * Hopefully this is better for performance
      * @param name
@@ -49,15 +50,15 @@ public class ParkourKit implements Serializable {
     }
 
     /**
-     * Get a list of all the action possibilities
+     * Get a list of all the action possibilities.
      * @return List of actions
      */
     public static List<String> getValidActions() {
-        return validActions;
+        return VALID_ACTIONS;
     }
 
     /**
-     * Get the materials that this ParkourKit is made up of
+     * Get the materials that this ParkourKit is made up of.
      * @return List<Material>
      */
     public List<Material> getMaterials() {
@@ -65,7 +66,7 @@ public class ParkourKit implements Serializable {
     }
 
     /**
-     * Get the corresponding action for the material
+     * Get the corresponding action for the material.
      * @param material
      * @return corresponding action for material
      */
@@ -78,7 +79,7 @@ public class ParkourKit implements Serializable {
     }
 
     /**
-     * Get Strength of the ParkourKit action
+     * Get Strength of the ParkourKit action.
      * @param material
      * @return strength double
      */
@@ -91,7 +92,7 @@ public class ParkourKit implements Serializable {
     }
 
     /**
-     * Get Duration of the ParkourKit action
+     * Get Duration of the ParkourKit action.
      * @param material
      * @return
      */
@@ -135,7 +136,7 @@ public class ParkourKit implements Serializable {
 
             String action = getParkourKitData().getString("ParkourKit." + name + "." + material.name() + ".Action").toLowerCase();
 
-            if (!validActions.contains(action)) {
+            if (!VALID_ACTIONS.contains(action)) {
                 Utils.log("Action " + action + " in kit " + name + " is invalid.", 1);
                 continue;
             }
@@ -146,7 +147,7 @@ public class ParkourKit implements Serializable {
     }
 
     /**
-     * Look up the stored material
+     * Look up the stored material.
      * Will check if the Material is invalid and try to replace it with its new version
      * If it can't match, it will be ignored from the kit
      * @param rawMaterial
@@ -182,7 +183,7 @@ public class ParkourKit implements Serializable {
             String matchingValue = getParkourKitData().getString("ParkourKit." + name + "." + oldMaterial + "." + attribute);
 
             getParkourKitData().set("ParkourKit." + name + "." + newMaterial + "." + attribute,
-                    Utils.isInteger(matchingValue) ? Integer.valueOf(matchingValue) : matchingValue);
+                    Validation.isInteger(matchingValue) ? Integer.valueOf(matchingValue) : matchingValue);
         }
 
         // remove the old kit

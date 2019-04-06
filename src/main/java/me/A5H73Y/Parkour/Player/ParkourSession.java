@@ -51,7 +51,7 @@ public class ParkourSession implements Serializable {
 
 	public void startVisualTimer(final Player player) {
 		if (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.DisplayLiveTime")
-				|| QuietModeManager.isInQuietMode(player.getName())) {
+				|| QuietModeManager.getInstance().isInQuietMode(player.getName())) {
 			return;
 		}
 

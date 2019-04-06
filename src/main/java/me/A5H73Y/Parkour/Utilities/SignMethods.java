@@ -2,6 +2,7 @@ package me.A5H73Y.Parkour.Utilities;
 
 import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Course.CourseMethods;
+import me.A5H73Y.Parkour.Other.Validation;
 import me.A5H73Y.Parkour.Parkour;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -158,7 +159,7 @@ public class SignMethods {
 		}
 
 		if (!sign.getLine(3).isEmpty()) {
-			if (!Utils.isPositiveInteger(sign.getLine(3))) {
+			if (!Validation.isPositiveInteger(sign.getLine(3))) {
 				sign.setLine(3, "");
 			}
 		}
@@ -171,7 +172,7 @@ public class SignMethods {
 			return;
 		}
 
-		if (sign.getLine(3).isEmpty() || !Utils.isPositiveInteger(sign.getLine(3))) {
+		if (sign.getLine(3).isEmpty() || !Validation.isPositiveInteger(sign.getLine(3))) {
 			sign.getBlock().breakNaturally();
 			player.sendMessage(Static.getParkourString() + "Please specify checkpoint on bottom line!");
 			return;

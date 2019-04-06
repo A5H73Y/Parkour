@@ -113,7 +113,7 @@ public class ParkourCommands implements CommandExecutor {
             CheckpointMethods.createCheckpoint(args, player);
 
         } else if (args[0].equalsIgnoreCase("finish")) {
-            CourseMethods.setFinish(args, player);
+            CourseMethods.setCompletionStatus(args, player);
 
         } else if (args[0].equalsIgnoreCase("setstart")) {
             if (!PlayerInfo.hasSelected(player)) {
@@ -277,7 +277,7 @@ public class ParkourCommands implements CommandExecutor {
                 return false;
             }
 
-            CourseMethods.setRewardLevel(args, player);
+            CourseMethods.setRewardParkourLevel(args, player);
 
         } else if (args[0].equalsIgnoreCase("rewardleveladd")) {
             if (!Utils.hasPermission(player, "Parkour.Admin")) {
@@ -287,7 +287,7 @@ public class ParkourCommands implements CommandExecutor {
                 return false;
             }
 
-            CourseMethods.setRewardLevelAdd(args, player);
+            CourseMethods.setRewardParkourLevelAddition(args, player);
 
         } else if (args[0].equalsIgnoreCase("rewardrank")) {
             if (!Utils.hasPermission(player, "Parkour.Admin")) {
@@ -297,7 +297,7 @@ public class ParkourCommands implements CommandExecutor {
                 return false;
             }
 
-            CourseMethods.setRewardRank(args, player);
+            CourseMethods.setRewardParkourRank(args, player);
 
         } else if (args[0].equalsIgnoreCase("rewarddelay")) {
             if (!Utils.hasPermission(player, "Parkour.Admin")) {
@@ -320,7 +320,7 @@ public class ParkourCommands implements CommandExecutor {
             CourseMethods.setRewardParkoins(args, player);
 
         } else if (args[0].equalsIgnoreCase("quiet")) {
-            QuietModeManager.toggleQuietMode(player);
+            QuietModeManager.getInstance().toggleQuietMode(player);
 
         } else if (args[0].equalsIgnoreCase("reset")) {
             if (!Utils.hasPermission(player, "Parkour.Admin", "Reset")) {

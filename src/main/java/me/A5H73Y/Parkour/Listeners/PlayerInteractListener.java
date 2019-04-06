@@ -10,6 +10,8 @@ import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Utils;
 import me.A5H73Y.Parkour.Utilities.XMaterial;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -37,6 +39,12 @@ public class PlayerInteractListener implements Listener {
         }
 
         if (PlayerMethods.isPlayerInTestmode(player.getName())) {
+            return;
+        }
+
+        if (event.getClickedBlock() != null
+                && (event.getClickedBlock().getType() == Material.SIGN
+                || event.getClickedBlock().getType() == Material.WALL_SIGN)) {
             return;
         }
 
@@ -121,8 +129,6 @@ public class PlayerInteractListener implements Listener {
             return;
         }
 
-        Block below = event.getClickedBlock().getRelative(BlockFace.DOWN);
-
         if (Parkour.getPlugin().getConfig().getBoolean("OnCourse.PreventPlateStick")) {
             event.setCancelled(true);
         }
@@ -140,7 +146,11 @@ public class PlayerInteractListener implements Listener {
             return;
         }
 
-        if (check.getNextCheckpointX() == below.getLocation().getBlockX() && check.getNextCheckpointY() == below.getLocation().getBlockY() && check.getNextCheckpointZ() == below.getLocation().getBlockZ()) {
+        Location below = event.getClickedBlock().getRelative(BlockFace.DOWN).getLocation();
+
+        if (check.getNextCheckpointX() == below.getBlockX()
+                && check.getNextCheckpointY() == below.getBlockY()
+                && check.getNextCheckpointZ() == below.getBlockZ()) {
             if (Parkour.getSettings().isFirstCheckAsStart() && session.getCheckpoint() == 0) {
                 session.resetTimeStarted();
                 Utils.sendActionBar(event.getPlayer(), Utils.getTranslation("Parkour.TimerStarted", false), true);

@@ -25,18 +25,18 @@ public class QuietModeManager {
 
     private QuietModeManager() {}
 
-    public static void enableQuietMode(Player player) {
-        getInstance().quietPlayers.add(player.getName());
+    public void enableQuietMode(Player player) {
+        quietPlayers.add(player.getName());
         Utils.sendActionBar(player, getInstance().quietOnMessage, true);
     }
 
-    public static void disableQuietMode(Player player) {
-        getInstance().quietPlayers.remove(player.getName());
+    public void disableQuietMode(Player player) {
+        quietPlayers.remove(player.getName());
         Utils.sendActionBar(player, getInstance().quietOffMessage, true);
     }
 
-    public static boolean isInQuietMode(String playerName) {
-        return getInstance().quietPlayers.contains(playerName);
+    public boolean isInQuietMode(String playerName) {
+        return quietPlayers.contains(playerName);
     }
 
     /**
@@ -46,7 +46,7 @@ public class QuietModeManager {
      *
      * @param player
      */
-    public static void toggleQuietMode(Player player) {
+    public void toggleQuietMode(Player player) {
         if (isInQuietMode(player.getName())) {
             enableQuietMode(player);
         } else {

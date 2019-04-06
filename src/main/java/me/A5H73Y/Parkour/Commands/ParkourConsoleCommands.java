@@ -78,21 +78,21 @@ public class ParkourConsoleCommands implements CommandExecutor {
                 return false;
             }
 
-            CourseMethods.setRewardLevel(args, sender);
+            CourseMethods.setRewardParkourLevel(args, sender);
 
         } else if (args[0].equalsIgnoreCase("rewardleveladd")) {
             if (!Utils.validateArgs(sender, args, 3)) {
                 return false;
             }
 
-            CourseMethods.setRewardLevelAdd(args, sender);
+            CourseMethods.setRewardParkourLevelAddition(args, sender);
 
         } else if (args[0].equalsIgnoreCase("rewardrank")) {
             if (!Utils.validateArgs(sender, args, 3)) {
                 return false;
             }
 
-            CourseMethods.setRewardRank(args, sender);
+            CourseMethods.setRewardParkourRank(args, sender);
 
         } else if (args[0].equalsIgnoreCase("rewardparkoins")) {
             if (!Utils.validateArgs(sender, args, 3)) {

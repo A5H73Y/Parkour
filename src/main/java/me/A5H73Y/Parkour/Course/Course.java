@@ -10,7 +10,7 @@ public class Course implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String name;
-	private Checkpoint checkpoint;
+	private Checkpoint currentCheckpoint;
 	private Integer maxDeaths;
 	private Integer maxTime;
 	private int checkpoints;
@@ -20,21 +20,33 @@ public class Course implements Serializable {
 	// ParkourKit will be loaded on startup and set manually
 	private transient ParkourKit parkourKit;
 
+	/**
+	 * Construct a Parkour Course.
+	 * @param name course name
+	 * @param checkpoint starting checkpoint
+	 * @param parkourKit linked ParkourKit
+	 */
 	public Course(String name, Checkpoint checkpoint, ParkourKit parkourKit) {
 		this.name = name;
-		this.checkpoint = checkpoint;
+		this.currentCheckpoint = checkpoint;
 		this.parkourKit = parkourKit;
 		this.checkpoints = CourseInfo.getCheckpointAmount(name);
 		setMaxDeaths(CourseInfo.getMaximumDeaths(name));
 		setMaxTime(CourseInfo.getMaximumTime(name));
 	}
 
+	/**
+	 * Construct a Parkour Course.
+	 * The ParkourKit will use 'default'.
+	 * @param name course name
+	 * @param checkpoint starting checkpoint
+	 */
 	public Course(String name, Checkpoint checkpoint) {
 		this(name, checkpoint, ParkourKit.getParkourKit(Constants.DEFAULT));
 	}
 
 	/**
-	 * Get course's unique name
+	 * Get Course's name.
 	 * This will be lowercase
 	 * @return Course Name
 	 */
@@ -43,14 +55,23 @@ public class Course implements Serializable {
 	}
 
 	/**
-	 * The current checkpoint achieved
+	 * Get the current checkpoint achieved.
 	 * @return Checkpoint
 	 */
 	public Checkpoint getCurrentCheckpoint() {
-		return checkpoint;
+		return currentCheckpoint;
 	}
 
 	/**
+	 * Set the current achieved checkpoint.
+	 * @param checkpoint
+	 */
+	public void setCheckpoint(Checkpoint checkpoint) {
+		this.currentCheckpoint = checkpoint;
+	}
+
+	/**
+	 * Get Course's maximum deaths.
 	 * Maximum number of deaths a player can accumulate before failing the course
 	 * @return maximum deaths for course
 	 */
@@ -58,6 +79,10 @@ public class Course implements Serializable {
 		return maxDeaths;
 	}
 
+	/**
+	 * Set Course's maximum deaths.
+	 * @param maxDeaths
+	 */
 	public void setMaxDeaths(Integer maxDeaths) {
 		if (maxDeaths > 0) {
 			this.maxDeaths = maxDeaths;
@@ -65,6 +90,15 @@ public class Course implements Serializable {
 	}
 
 	/**
+	 * Check if Course has a configured Max Death.
+	 * @return has maximum deaths set
+	 */
+	public boolean hasMaxDeaths() {
+		return maxDeaths != null;
+	}
+
+	/**
+	 * Get Course's maximum time.
 	 * Maximum number of seconds a player has to complete the course
 	 * @return maximum time in seconds
 	 */
@@ -72,6 +106,10 @@ public class Course implements Serializable {
 		return maxTime;
 	}
 
+	/**
+	 * Set Course's maximum time
+	 * @param maxTime
+	 */
 	public void setMaxTime(Integer maxTime) {
 		if (maxTime > 0) {
 			this.maxTime = maxTime;
@@ -79,7 +117,15 @@ public class Course implements Serializable {
 	}
 
 	/**
-	 * ParkourKit for the course
+	 * Check if Course has a configured Max Time.
+	 * @return has maximum time set
+	 */
+	public boolean hasMaxTime() {
+		return maxTime != null;
+	}
+
+	/**
+	 * ParkourKit for the Course.
 	 * This will be loaded when the course object is created
 	 * @return ParkourKit
 	 */
@@ -87,27 +133,19 @@ public class Course implements Serializable {
 		return parkourKit;
 	}
 
+	/**
+	 * Set ParkourKit for the Course.
+	 * @param parkourKit
+	 */
 	public void setParkourKit(ParkourKit parkourKit) {
 		this.parkourKit = parkourKit;
 	}
 
 	/**
-	 * Number of checkpoints on the course
+	 * Number of checkpoints on the course.
 	 * @return Count of Course's checkpoints
 	 */
 	public int getCheckpoints() {
 		return checkpoints;
-	}
-
-	public void setCheckpoint(Checkpoint checkpoint) {
-		this.checkpoint = checkpoint;
-	}
-
-	public boolean hasMaxDeaths() {
-		return maxDeaths != null;
-	}
-
-	public boolean hasMaxTime() {
-		return maxTime != null;
 	}
 }

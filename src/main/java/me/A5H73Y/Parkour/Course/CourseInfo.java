@@ -15,21 +15,22 @@ import java.util.List;
 public class CourseInfo {
 
     /**
-     * Get list of all Parkour courses
-     * @return
+     * Get list of all Parkour course names.
+     * @return List Parkour course names
      */
     public static List<String> getAllCourses() {
         return Parkour.getParkourConfig().getCourseData().getStringList("Courses");
     }
 
     /**
-     * Return the linked course of the specified course
+     * Return the linked Course of the specified course.
      * Will validate it's a valid course before returning
      * @param courseName
      * @return linkedCourse
      */
     public static String getLinkedCourse(String courseName) {
-        String linkedCourse = Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".LinkedCourse");
+        String linkedCourse = Parkour.getParkourConfig().getCourseData()
+                .getString(courseName.toLowerCase() + ".LinkedCourse");
 
         if (CourseMethods.exist(linkedCourse)) {
             return linkedCourse;
@@ -39,32 +40,34 @@ public class CourseInfo {
     }
 
     /**
-     * Does this course have a linked course
+     * Check if Course is linked to another Course.
      * @param courseName
-     * @return
+     * @return if linked course is found
      */
     public static boolean hasLinkedCourse(String courseName) {
         return Parkour.getParkourConfig().getCourseData().contains(courseName.toLowerCase() + ".LinkedCourse");
     }
 
     /**
-     * Set the course to link to another course
+     * Set the Course to link to another Course.
      * @param courseName
      * @param linkedCourse
      */
     public static void setLinkedCourse(String courseName, String linkedCourse) {
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".LinkedCourse", linkedCourse.toLowerCase());
+        Parkour.getParkourConfig().getCourseData()
+                .set(courseName.toLowerCase() + ".LinkedCourse", linkedCourse.toLowerCase());
         Parkour.getParkourConfig().saveCourses();
     }
 
     /**
-     * Return the linked course of the specified lobby
+     * Return the linked lobby of the Course.
      * Will validate it's a valid lobby before returning
      * @param courseName
      * @return linkedLobby
      */
     public static String getLinkedLobby(String courseName) {
-        String linkedLobby = Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".LinkedLobby");
+        String linkedLobby = Parkour.getParkourConfig().getCourseData()
+                .getString(courseName.toLowerCase() + ".LinkedLobby");
 
         if (linkedLobby != null && LobbyMethods.getCustomLobbies().contains(linkedLobby)) {
             return linkedLobby;
@@ -76,7 +79,7 @@ public class CourseInfo {
     /**
      * Does this course have a linked lobby
      * @param courseName
-     * @return
+     * @return if linked lobby is found
      */
     public static boolean hasLinkedLobby(String courseName) {
         return Parkour.getParkourConfig().getCourseData().contains(courseName.toLowerCase() + ".LinkedLobby");

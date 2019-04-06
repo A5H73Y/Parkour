@@ -21,9 +21,8 @@ import java.util.List;
 
 public class PlayerMoveListener implements Listener {
 
-    private static final List<BlockFace> blockFaces =
+    private static final List<BlockFace> BLOCK_FACES =
             Arrays.asList(BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST);
-
 
     @EventHandler
     public void onPlayerMove_Trails(PlayerMoveEvent event) {
@@ -163,7 +162,7 @@ public class PlayerMoveListener implements Listener {
             }
         }
 
-        for (BlockFace blockFace : blockFaces) {
+        for (BlockFace blockFace : BLOCK_FACES) {
             Material material = player.getLocation().getBlock().getRelative(blockFace).getType();
 
             if (kit.getMaterials().contains(material)) {

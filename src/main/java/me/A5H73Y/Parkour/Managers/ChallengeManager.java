@@ -28,7 +28,8 @@ public class ChallengeManager {
     private ChallengeManager() {}
 
     /**
-     * Challenge two players to a course
+     * Challenge two players to a course.
+     *
      * @param senderPlayer
      * @param receiverPlayer
      * @param courseName
@@ -40,12 +41,18 @@ public class ChallengeManager {
         return challenge;
     }
 
+    /**
+     * Remove an instance of a Challenge.
+     *
+     * @param challenge
+     */
     public void removeChallenge(Challenge challenge) {
         challenges.remove(challenge);
     }
 
     /**
      * Find the challenge the recipient senderPlayer has received.
+     *
      * @param playerName
      * @return
      */
@@ -59,12 +66,20 @@ public class ChallengeManager {
         return null;
     }
 
+    /**
+     * Find if the player is currently in a Challenge.
+     *
+     * @param playerName
+     * @return player is in challenge
+     */
     public boolean isPlayerInChallenge(String playerName) {
         return getChallengeForPlayer(playerName) != null;
     }
 
     /**
+     * Terminate a Challenge.
      * In the event that someone leaves the course / server
+     *
      * @param leaver
      */
     public void terminateChallenge(Player leaver) {
@@ -81,7 +96,11 @@ public class ChallengeManager {
     }
 
     /**
-     * The winner has completed the course first
+     * Complete the Challenge.
+     * The winner has completed the course first.
+     * The opponent will be derived from the Challenge.
+     * If a wager is set, it will be deposited & withdrawn here.
+     *
      * @param winner
      */
     public void completeChallenge(Player winner) {
@@ -107,6 +126,13 @@ public class ChallengeManager {
         }
     }
 
+    /**
+     * Derive the opponent from the Challenge.
+     *
+     * @param winner
+     * @param challenge
+     * @return
+     */
     public Player calculateOpponent(String winner, Challenge challenge) {
         String opponent = challenge.getSenderPlayer().equals(winner) ?
                 challenge.getReceiverPlayer() : challenge.getSenderPlayer();
@@ -115,7 +141,7 @@ public class ChallengeManager {
     }
 
     /**
-     * Accept a challenge
+     * Accept a challenge.
      * Executed by the recipient of a challenge invite.
      * Will prepare each player for the challenge.
      *

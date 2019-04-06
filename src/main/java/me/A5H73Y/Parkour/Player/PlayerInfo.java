@@ -1,5 +1,6 @@
 package me.A5H73Y.Parkour.Player;
 
+import me.A5H73Y.Parkour.Other.Validation;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.ParkourEvents.PlayerParkourLevelEvent;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
@@ -34,6 +35,10 @@ public class PlayerInfo {
         Parkour.getParkourConfig().saveUsers();
     }
 
+    /**
+     * Deselect the player's selected course.
+     * @param player
+     */
     public static void setDelected(OfflinePlayer player) {
         Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".Selected", null);
         Parkour.getParkourConfig().saveUsers();
@@ -46,7 +51,7 @@ public class PlayerInfo {
      */
     public static boolean hasSelected(Player player) {
         String selected = getSelected(player);
-        if (selected == null || selected.length() == 0) {
+        if (!Validation.isStringValid(selected)) {
             player.sendMessage(Utils.getTranslation("Error.Selected"));
             player.sendMessage(ChatColor.GRAY + "Usage: " + ChatColor.WHITE + "/pa select " + ChatColor.AQUA + "(course)");
             return false;
@@ -55,7 +60,7 @@ public class PlayerInfo {
     }
 
     /**
-     * Returns the amount of Parkoins a player has accumulated
+     * Returns the amount of Parkoins a player has accumulated.
      * Parkoins allow you to interact with the new store, making purchases etc.
      * Points will be rewarded on course completion etc.
      *
@@ -67,7 +72,7 @@ public class PlayerInfo {
     }
 
     /**
-     * Set the amount of player's Parkoins
+     * Set the amount of player's Parkoins.
      * @param player
      * @param amount
      */
@@ -77,7 +82,7 @@ public class PlayerInfo {
     }
 
     /**
-     * Return the name of the course the player last completed
+     * Return the name of the course the player last completed.
      * @param player
      * @return courseName
      */
@@ -86,7 +91,7 @@ public class PlayerInfo {
     }
 
     /**
-     * Return the name of the course the player last attempted
+     * Return the name of the course the player last attempted.
      * @param player
      * @return courseName
      */
@@ -95,7 +100,7 @@ public class PlayerInfo {
     }
 
     /**
-     * Get the player's ParkourLevel
+     * Get the player's ParkourLevel.
      * @param player
      * @return parkourLevel
      */
@@ -104,7 +109,7 @@ public class PlayerInfo {
     }
 
     /**
-     * Set the player's ParkourLevel
+     * Set the player's ParkourLevel.
      * @param player
      * @param level
      */
@@ -116,7 +121,7 @@ public class PlayerInfo {
     }
 
     /**
-     * Set the last completed course for the player
+     * Set the last completed course for the player.
      * @param player
      * @param courseName
      */
@@ -126,7 +131,7 @@ public class PlayerInfo {
     }
 
     /**
-     * Set the last played course for the player
+     * Set the last played course for the player.
      * @param player
      * @param courseName
      */
@@ -136,7 +141,7 @@ public class PlayerInfo {
     }
 
     /**
-     * Get the player's ParkourRank
+     * Get the player's ParkourRank.
      * If the player has an achieved ParkourRank it will use this,
      * otherwise the default rank will be returned
      * @param player
@@ -148,7 +153,7 @@ public class PlayerInfo {
     }
 
     /**
-     * Set the player's ParkourRank
+     * Set the player's ParkourRank.
      * @param player
      * @param rank
      */
@@ -158,7 +163,7 @@ public class PlayerInfo {
     }
 
     /**
-     * Get the time the player last won the reward for the course
+     * Get the time the player last won the reward for the course.
      * @param player
      * @param courseName
      * @return
@@ -169,7 +174,7 @@ public class PlayerInfo {
     }
 
     /**
-     * Set the time the player wins the reward for the course
+     * Set the time the player wins the reward for the course.
      * @param player
      * @param courseName
      * @param rewardTime
@@ -181,7 +186,7 @@ public class PlayerInfo {
     }
 
     /**
-     * Determine if the Parkour has any saved information about a player
+     * Determine if the plugin has any saved information about a player.
      * @param player
      * @return
      */

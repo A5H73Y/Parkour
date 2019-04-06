@@ -5,7 +5,7 @@ import me.A5H73Y.Parkour.Conversation.LeaderboardConversation;
 import me.A5H73Y.Parkour.Conversation.ParkourModeConversation;
 import me.A5H73Y.Parkour.Enums.ParkourMode;
 import me.A5H73Y.Parkour.Managers.ChallengeManager;
-import me.A5H73Y.Parkour.Other.ValidationMethods;
+import me.A5H73Y.Parkour.Other.Validation;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.ParkourKit.ParkourKit;
 import me.A5H73Y.Parkour.Player.ParkourSession;
@@ -34,13 +34,14 @@ import java.util.stream.Collectors;
 public class CourseMethods {
 
     /**
+     * Does course exist.
      * Check if a course exists on the server
      *
      * @param courseName
-     * @return boolean
+     * @return course found
      */
     public static boolean exist(String courseName) {
-        if (courseName == null || courseName.length() == 0) {
+        if (!Validation.isStringValid(courseName)) {
             return false;
         }
 
@@ -89,7 +90,7 @@ public class CourseMethods {
     }
 
     /**
-     * Retrieve a course based on its unique ID.
+     * Retrieve a course based on its list index.
      * The ID will be based on where it is in the list of courses, meaning it can change.
      * Find the current ID using "/pa list courses"
      *
@@ -120,7 +121,7 @@ public class CourseMethods {
     }
 
     /**
-     * Create a new Parkour course, given a unique name.
+     * Create a new Parkour course.
      * The start of the course is located in courses.yml as checkpoint '0'.
      * The world is assumed once the course is joined, so having 2 different checkpoints in 2 different worlds is not an option.
      * All course names are stored in a string list, which is also held in memory.
@@ -130,7 +131,7 @@ public class CourseMethods {
      * @param player
      */
     public static void createCourse(String[] args, Player player) {
-        if (!ValidationMethods.courseCreation(args, player)) {
+        if (!Validation.courseCreation(args, player)) {
             return;
         }
 
@@ -163,8 +164,8 @@ public class CourseMethods {
     }
 
     /**
-     * Execute the joinCourse after waiting a full second
-     * Needed to prevent interactions preventing teleports for player
+     * Execute the joinCourse after a delay.
+     *
      * @param player
      * @param courseName
      */
@@ -173,6 +174,7 @@ public class CourseMethods {
     }
 
     /**
+     * Join Player to Course.
      * This method serves as validation for the player to join the course.
      * Once validated, the player then joins the course via the PlayerMethods class.
      *
@@ -181,7 +183,7 @@ public class CourseMethods {
      */
     public static void joinCourse(Player player, String courseName) {
         Course course;
-        if (Utils.isPositiveInteger(courseName)) {
+        if (Validation.isPositiveInteger(courseName)) {
             course = findByNumber(Integer.parseInt(courseName));
         } else {
             course = findByName(courseName);
@@ -192,7 +194,7 @@ public class CourseMethods {
             return;
         }
 
-        if (!ValidationMethods.courseJoining(player, course)) {
+        if (!Validation.courseJoining(player, course)) {
             return;
         }
 
@@ -200,7 +202,7 @@ public class CourseMethods {
     }
 
     /**
-     * Delete a course
+     * Delete a course.
      * Remove all information stored on the server about the course, including all references from the database.
      *
      * @param courseName
@@ -217,7 +219,8 @@ public class CourseMethods {
     }
 
     /**
-     * Displays all the Parkour courses or all the players using the plugin.
+     * Displays a list to the player.
+     * Available options: players, courses, ranks & lobbies
      *
      * @param args
      * @param sender
@@ -232,7 +235,7 @@ public class CourseMethods {
             displayPlaying(sender);
 
         } else if (args[1].equalsIgnoreCase("courses")) {
-            int page = (args.length == 3 && args[2] != null && Utils.isPositiveInteger(args[2]) ? Integer.parseInt(args[2]) : 1);
+            int page = (args.length == 3 && args[2] != null && Validation.isPositiveInteger(args[2]) ? Integer.parseInt(args[2]) : 1);
             displayCourses(sender, page);
 
         } else if (args[1].equalsIgnoreCase("ranks")) {
@@ -253,8 +256,11 @@ public class CourseMethods {
     }
 
     /**
-     * Display a list of all the players using the Parkour plugin
-     * Will show the course they are on, the amount of times they've died, as well as how long they've been on the course.
+     * Display a list of all the players on a Course.
+     * Will display:
+     * * the course they are on
+     * * the amount of times they've died
+     * * how long they've been on the course.
      *
      * @param sender
      */
@@ -277,8 +283,8 @@ public class CourseMethods {
     }
 
     /**
-     * Display a list of all the Parkour courses on the server
-     * Prints the name and unique course ID, seperated into pages of 8 results.
+     * Display a list of all the Parkour courses on the server.
+     * Prints the name and unique course ID, separated into pages of 8 results.
      *
      * @param sender
      * @param page
@@ -289,14 +295,15 @@ public class CourseMethods {
             return;
         }
 
-        int results = 8;
-        List<String> courseList = CourseInfo.getAllCourses();
         if (page <= 0) {
             sender.sendMessage(Static.getParkourString() + "Please enter a valid page number.");
             return;
         }
 
+        int results = 8;
         int fromIndex = (page - 1) * results;
+        List<String> courseList = CourseInfo.getAllCourses();
+
         if (courseList.size() <= fromIndex) {
             sender.sendMessage(Static.getParkourString() + "This page doesn't exist.");
             return;
@@ -307,8 +314,8 @@ public class CourseMethods {
 
         for (int i = 0; i < limited.size(); i++) {
             String courseName = limited.get(i);
-            Integer minimumLevel = CourseInfo.getMinimumLevel(courseName);
-            Integer rewardLevel = CourseInfo.getRewardLevel(courseName);
+            int minimumLevel = CourseInfo.getMinimumLevel(courseName);
+            int rewardLevel = CourseInfo.getRewardLevel(courseName);
             boolean finished = CourseInfo.getFinished(courseName);
 
             StringBuilder sb = new StringBuilder();
@@ -318,10 +325,10 @@ public class CourseMethods {
             sb.append(courseName);
 
             if (minimumLevel > 0) {
-                sb.append(ChatColor.RED + " (" + minimumLevel + ")");
+                sb.append(ChatColor.RED).append(" (").append(minimumLevel).append(")");
             }
             if (rewardLevel > 0) {
-                sb.append(ChatColor.GREEN + " (" + rewardLevel + ")");
+                sb.append(ChatColor.GREEN).append(" (").append(rewardLevel).append(")");
             }
 
             sender.sendMessage(sb.toString());
@@ -330,6 +337,7 @@ public class CourseMethods {
         sender.sendMessage("== " + page + " / " + ((courseList.size() + results - 1) / results) + " ==");
     }
 
+    //TODO move me
     private static void displayRanks(CommandSender sender) {
         sender.sendMessage(Utils.getStandardHeading("Parkour Ranks"));
         ConfigurationSection section = Parkour.getParkourConfig().getUsersData().getConfigurationSection("ServerInfo.Levels");
@@ -352,7 +360,7 @@ public class CourseMethods {
     }
 
     /**
-     * Start editing a course
+     * Start editing a course.
      * Used for functions that do not require a course parameter, such as "/pa checkpoint".
      *
      * @param args
@@ -366,13 +374,13 @@ public class CourseMethods {
 
         String courseName = args[1].trim().toLowerCase();
         player.sendMessage(Static.getParkourString() + "Now Editing: " + ChatColor.AQUA + args[1]);
-        Integer pointcount = CourseInfo.getCheckpointAmount(courseName);
+        int pointcount = CourseInfo.getCheckpointAmount(courseName);
         player.sendMessage(Static.getParkourString() + "Checkpoints: " + ChatColor.AQUA + pointcount);
         PlayerInfo.setSelected(player, courseName);
     }
 
     /**
-     * Finish editing a course
+     * Finish editing a course.
      *
      * @param player
      */
@@ -386,9 +394,9 @@ public class CourseMethods {
     }
 
     /**
-     * Set the course prize
+     * Set the course prize.
      * Starts a Prize conversation that allows you to configure what the player gets awarded with when the complete the course.
-     * A course could have every type of Prize if setup.
+     * A course could have every type of Prize if configured so.
      *
      * @param args
      * @param player
@@ -426,9 +434,8 @@ public class CourseMethods {
     }
 
     /**
-     * Create an auto-start for a course
-     * Create an auto-start at the player's location for the specified course.
-     * Save the auto-start coordinates.
+     * Create an AutoStart for a course.
+     * Create an AutoStart pressure plate at the player's location for the specified course.
      *
      * @param args
      * @param player
@@ -456,6 +463,14 @@ public class CourseMethods {
         blockUnder.setType(Parkour.getSettings().getAutoStartMaterial());
     }
 
+    /**
+     * Find matching Course for AutoStart Location.
+     * Triggered when the player walks on a pressure plate matching AutoStart.
+     * Look for matching config entry for location.
+     *
+     * @param location
+     * @return Course name
+     */
     public static String getAutoStartCourse(Location location) {
         FileConfiguration config = Parkour.getParkourConfig().getCourseData();
         String coordinates = location.getBlockX() + "-" + location.getBlockY() + "-" + location.getBlockZ();
@@ -466,7 +481,7 @@ public class CourseMethods {
             // Go through each entry to find matching coordinates, then return the course
             for (String entry : entries.getKeys(false)){
                 if (entry.equals(coordinates)) {
-                    return config.get("CourseInfo.AutoStart." + entry).toString();
+                    return config.getString("CourseInfo.AutoStart." + entry);
                 }
             }
         }
@@ -475,7 +490,7 @@ public class CourseMethods {
     }
 
     /**
-     * Overwrite the creator of the course
+     * Overwrite the creator of the course.
      *
      * @param args
      * @param player
@@ -491,6 +506,7 @@ public class CourseMethods {
     }
 
     /**
+     * Set MaxDeaths for Course.
      * Set the maximum amount of deaths a player can accumulate before failing the course.
      *
      * @param args
@@ -502,7 +518,7 @@ public class CourseMethods {
             return;
         }
 
-        if (!Utils.isPositiveInteger(args[2])) {
+        if (!Validation.isPositiveInteger(args[2])) {
             sender.sendMessage(Static.getParkourString() + "Amount of deaths is not valid.");
             return;
         }
@@ -512,6 +528,7 @@ public class CourseMethods {
     }
 
     /**
+     * Set MaxTime for Course.
      * Set the maximum amount of deaths a player can accumulate before failing the course.
      *
      * @param args
@@ -528,7 +545,7 @@ public class CourseMethods {
             return;
         }
 
-        if (!Utils.isPositiveInteger(args[2])) {
+        if (!Validation.isPositiveInteger(args[2])) {
             sender.sendMessage(Static.getParkourString() + "Amount of seconds is not valid.");
             return;
         }
@@ -549,7 +566,7 @@ public class CourseMethods {
             sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
             return;
         }
-        if (!Utils.isPositiveInteger(args[2])) {
+        if (!Validation.isPositiveInteger(args[2])) {
             sender.sendMessage(Static.getParkourString() + "Minimum level is not valid.");
             return;
         }
@@ -559,19 +576,18 @@ public class CourseMethods {
     }
 
     /**
-     * Set reward level
-     * Reward the player with a Parkour level on course completion.
-     * The original value will not be overwritten if the reward level is smaller.
+     * Set Course's ParkourLevel reward.
+     * Reward the player with the Parkour level on course completion.
      *
      * @param args
      * @param sender
      */
-    public static void setRewardLevel(String[] args, CommandSender sender) {
+    public static void setRewardParkourLevel(String[] args, CommandSender sender) {
         if (!CourseMethods.exist(args[1])) {
             sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
             return;
         }
-        if (!Utils.isPositiveInteger(args[2])) {
+        if (!Validation.isPositiveInteger(args[2])) {
             sender.sendMessage(Static.getParkourString() + "Reward level needs to be numeric.");
             return;
         }
@@ -581,26 +597,28 @@ public class CourseMethods {
     }
 
     /**
-     * Add reward level
-     * Add value to the player Parkour level on course completion.
+     * Set Course's ParkourLevel reward addition.
+     * Increment the player's ParkourLevel by this value on course completion.
      *
      * @param args
      * @param sender
      */
-    public static void setRewardLevelAdd(String[] args, CommandSender sender) {
+    public static void setRewardParkourLevelAddition(String[] args, CommandSender sender) {
         if (!CourseMethods.exist(args[1])) {
             sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
             return;
         }
-        if (!Utils.isPositiveInteger(args[2])) {
-            sender.sendMessage(Static.getParkourString() + "Reward level addon needs to be numeric.");
+        if (!Validation.isPositiveInteger(args[2])) {
+            sender.sendMessage(Static.getParkourString() + "Reward level addition needs to be numeric.");
             return;
         }
 
         CourseInfo.setRewardLevelAdd(args[1], args[2]);
-        sender.sendMessage(Static.getParkourString() + args[1] + "'s reward level addon was set to " + ChatColor.AQUA + args[2]);
+        sender.sendMessage(Static.getParkourString() + args[1] + "'s reward level addition was set to " + ChatColor.AQUA + args[2]);
     }
+
     /**
+     * Set RewardOnce status of Course.
      * Set whether the player only gets the prize for the first time they complete the course.
      *
      * @param args
@@ -614,38 +632,35 @@ public class CourseMethods {
 
         boolean enabled = CourseInfo.getRewardOnce(args[1]);
         CourseInfo.setRewardOnce(args[1], !enabled);
-        if (enabled) {
-            sender.sendMessage(Static.getParkourString() + args[1] + "'s reward one time was set to " + ChatColor.AQUA + "false");
-        } else {
-            sender.sendMessage(Static.getParkourString() + args[1] + "'s reward one time was set to " + ChatColor.AQUA + "true");
-        }
+        sender.sendMessage(Static.getParkourString() + args[1] + "'s reward one time was set to " + ChatColor.AQUA + enabled);
     }
 
     /**
-     * Set a reward rank
+     * Set the Course's ParkourRank reward.
      * Not to be confused with rewardLevel or rewardPrize, this associates a
      * Parkour level with a message prefix. A rank is just a visual prefix. E.g.
-     * Level 10: Pro; Level 99: God
+     * Level 10: Pro, Level 99: God
      *
      * @param args
      * @param sender
      */
-    public static void setRewardRank(String[] args, CommandSender sender) {
-        if (!Utils.isPositiveInteger(args[1])) {
-            sender.sendMessage(Static.getParkourString() + "Reward level needs to be numeric.");
+    public static void setRewardParkourRank(String[] args, CommandSender sender) {
+        if (!Validation.isPositiveInteger(args[1])) {
+            sender.sendMessage(Static.getParkourString() + "ParkourLevel needs to be numeric.");
             return;
         }
 
-        if (args[2] == null || args[2].trim().length() == 0) {
-            sender.sendMessage(Static.getParkourString() + "Rank is not valid.");
+        if (!Validation.isStringValid(args[2])) {
+            sender.sendMessage(Static.getParkourString() + "ParkourRank is not valid.");
             return;
         }
 
         CourseInfo.setRewardRank(Integer.valueOf(args[1]), args[2]);
-        sender.sendMessage(Static.getParkourString() + "Level " + args[1] + "'s rank was set to " + Utils.colour(args[2]));
+        sender.sendMessage(Static.getParkourString() + "ParkourRank for ParkourLevel " + args[1] + " was set to " + Utils.colour(args[2]));
     }
 
     /**
+     * Set Reward delay for course.
      * Set the number of days that have to elapse before the prize can be won again by the same player.
      *
      * @param args
@@ -656,7 +671,7 @@ public class CourseMethods {
             sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
             return;
         }
-        if (!Utils.isPositiveInteger(args[2])) {
+        if (!Validation.isPositiveInteger(args[2])) {
             sender.sendMessage(Static.getParkourString() + "Reward delay needs to be numeric.");
             return;
         }
@@ -666,7 +681,7 @@ public class CourseMethods {
     }
 
     /**
-     * Reward the player with Parkoins on course completions
+     * Reward the player with Parkoins on course completions.
      * Parkoins are then spent in the store for unlockables.
      *
      * @param args
@@ -677,25 +692,27 @@ public class CourseMethods {
             sender.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
             return;
         }
-        if (!Utils.isPositiveInteger(args[2])) {
+        if (!Validation.isPositiveInteger(args[2])) {
             sender.sendMessage(Static.getParkourString() + "Parkoins reward needs to be numeric.");
             return;
         }
 
         CourseInfo.setRewardParkoins(args[1], Integer.parseInt(args[2]));
-        sender.sendMessage(Static.getParkourString() + args[1] + "'s parkoins reward was set to " + ChatColor.AQUA + args[2]);
+        sender.sendMessage(Static.getParkourString() + args[1] + "'s Parkoins reward was set to " + ChatColor.AQUA + args[2]);
     }
 
     /**
-     * Set the course status to Complete
+     * Toggle the Course's completion status.
+     * If a course argument is supplied it will use this, otherwise it will use the player's selected course.
      * A player will not be able to join a course if it's not set to finished.
      *
+     * @param args
      * @param player
      */
-    public static void setFinish(String[] args, Player player) {
+    public static void setCompletionStatus(String[] args, Player player) {
         String courseName = args.length > 1 ? args[1].toLowerCase() : PlayerInfo.getSelected(player);
 
-        if (courseName == null || courseName.length() == 0) {
+        if (!Validation.isStringValid(courseName)) {
             player.sendMessage(Static.getParkourString() + "Please select a course, or provide a course argument");
             return;
         }
@@ -717,7 +734,7 @@ public class CourseMethods {
     }
 
     /**
-     * Link a course to a lobby or another course on completion
+     * Link a course to a lobby or another course on completion.
      *
      * @param args
      * @param player
@@ -800,7 +817,7 @@ public class CourseMethods {
     }
 
     /**
-     * Rate the course
+     * Rate the course.
      * After completion of a course, the player has the ability to vote whether they liked the course or not.
      * These are only used for statistics.
      *
@@ -842,9 +859,8 @@ public class CourseMethods {
     }
 
     /**
-     * Link ParkourKit to a course
-     * Each course can have a different set of ParkourKit.
-     * The name of the ParkourKit set must be specified, then will be applied when a player joins the course.
+     * Link ParkourKit to a course.
+     * The name of the ParkourKit must be specified, then will be applied when a player joins the course.
      *
      * @param args
      * @param player
@@ -867,7 +883,7 @@ public class CourseMethods {
     }
 
     /**
-     * Challenge a player to a course
+     * Challenge a player to a Course.
      * Invites a player to challenge them in a course, must be confirmed by the recipient before the process initiates.
      *
      * @param args
@@ -879,7 +895,7 @@ public class CourseMethods {
             return;
         }
 
-        if (!ValidationMethods.challengePlayer(args, player)) {
+        if (!Validation.challengePlayer(args, player)) {
             return;
         }
 
@@ -890,11 +906,12 @@ public class CourseMethods {
         String wagerString = "";
         Double wager = null;
 
-        if (args.length == 4 && Static.getEconomy() && Utils.isPositiveDouble(args[3])) {
+        if (args.length == 4 && Static.getEconomy() && Validation.isPositiveDouble(args[3])) {
             String currencyName = Parkour.getEconomy().currencyNamePlural() == null ?
                     "" : " " + Parkour.getEconomy().currencyNamePlural();
             wager = Double.valueOf(args[3]);
-            wagerString = Utils.getTranslation("Parkour.Challenge.Wager", false).replace("%AMOUNT%", wager + currencyName);
+            wagerString = Utils.getTranslation("Parkour.Challenge.Wager", false)
+                    .replace("%AMOUNT%", wager + currencyName);
         }
 
         Player target = Bukkit.getPlayer(args[2]);
@@ -911,7 +928,7 @@ public class CourseMethods {
     }
 
     /**
-     * Set Join Item for a course
+     * Set JoinItem for a course.
      * Specify the material and the amount for the course, which will then be given to the player once they join.
      *
      * @param args
@@ -926,7 +943,7 @@ public class CourseMethods {
             sender.sendMessage(Static.getParkourString() + "Invalid material: " + args[2].toUpperCase());
             return;
         }
-        if (!Utils.isPositiveInteger(args[3])) {
+        if (!Validation.isPositiveInteger(args[3])) {
             sender.sendMessage(Static.getParkourString() + "Amount needs to be numeric.");
             return;
         }
@@ -971,7 +988,7 @@ public class CourseMethods {
         }
 
         if (args.length >= 3) {
-            if (!Utils.isPositiveInteger(args[2])) {
+            if (!Validation.isPositiveInteger(args[2])) {
                 player.sendMessage(Static.getParkourString() + "Amount of results needs to be numeric.");
                 return;
             }

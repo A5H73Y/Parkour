@@ -6,7 +6,7 @@ import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Managers.QuestionManager;
 import me.A5H73Y.Parkour.Managers.QuietModeManager;
 import me.A5H73Y.Parkour.Other.TimeObject;
-import me.A5H73Y.Parkour.Other.ValidationMethods;
+import me.A5H73Y.Parkour.Other.Validation;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.ParkourKit.ParkourKitInfo;
 import me.A5H73Y.Parkour.Player.PlayerInfo;
@@ -44,31 +44,32 @@ import java.util.Set;
 public final class Utils {
 
     /**
+     * Get translation of string key.
      * The string parameter will be matched to an entry in the Strings.yml
-     * The boolean will decide to display the Parkour prefix
+     * The boolean will determine whether to display the Parkour prefix
      *
-     * @param string to translate
+     * @param translationKey to translate
      * @param prefix display Parkour prefix
      * @return String of appropriate translation
      */
-    public static String getTranslation(String string, boolean prefix) {
-        if (string == null || string.isEmpty()) {
+    public static String getTranslation(String translationKey, boolean prefix) {
+        if (!Validation.isStringValid(translationKey)) {
             return "Invalid translation.";
         }
 
-        String translated = Parkour.getParkourConfig().getStringData().getString(string);
-        translated = translated != null ? colour(translated) : "String not found: " + string;
+        String translated = Parkour.getParkourConfig().getStringData().getString(translationKey);
+        translated = translated != null ? colour(translated) : "String not found: " + translationKey;
         return prefix ? Static.getParkourString().concat(translated) : translated;
     }
 
     /**
      * Override method, but with a default of an enabled Parkour prefix.
      *
-     * @param string
+     * @param translationKey to translate
      * @return String of appropriate translation
      */
-    public static String getTranslation(String string) {
-        return getTranslation(string, true);
+    public static String getTranslation(String translationKey) {
+        return getTranslation(translationKey, true);
     }
 
     /**
@@ -212,62 +213,10 @@ public final class Utils {
      * @return standardized input
      */
     public static String standardizeText(String text) {
-        if (text == null || text.length() == 0) {
+        if (!Validation.isStringValid(text)) {
             return text;
         }
         return text.substring(0, 1).toUpperCase().concat(text.substring(1).toLowerCase());
-    }
-
-    /**
-     * Check if the argument is numeric
-     * "1" = true, "Hi" = false
-     *
-     * @param input
-     * @return whether the input is numeric
-     */
-    public static boolean isInteger(String input) {
-        try {
-            Integer.parseInt(input);
-            return true;
-        } catch (Exception e) {}
-        return false;
-    }
-
-    /**
-     * Check if the argument is numeric
-     * "1" = true, "1.0" = true, "Hi" = false
-     *
-     * @param input
-     * @return whether the input is numeric
-     */
-    public static boolean isDouble(String input) {
-        try {
-            Double.parseDouble(input);
-            return true;
-        } catch (Exception e) {}
-        return false;
-    }
-
-    /**
-     * Check if the argument is numeric
-     * "1" = true, "Hi" = false, "-1" = false
-     *
-     * @param input
-     * @return whether the input is numeric
-     */
-    public static boolean isPositiveInteger(String input) {
-        return isInteger(input) && Integer.parseInt(input) >= 0;
-    }
-
-    /**
-     * Check if the argument is numeric
-     * "1" = true, "Hi" = false, "-1" = false
-     *
-     * @param input
-     * @return whether the input is numeric
-     */
-    public static boolean isPositiveDouble(String input) {
-        return isDouble(input) && Double.parseDouble(input) >= 0;
     }
 
     /**
@@ -465,7 +414,7 @@ public final class Utils {
      * @param attemptTitle
      */
     public static void sendTitle(Player player, String title, boolean attemptTitle) {
-        if (QuietModeManager.isInQuietMode(player.getName())) {
+        if (QuietModeManager.getInstance().isInQuietMode(player.getName())) {
             return;
         }
 
@@ -481,7 +430,7 @@ public final class Utils {
     }
 
     public static void sendFullTitle(Player player, String title, String subTitle, boolean attemptTitle) {
-        if (QuietModeManager.isInQuietMode(player.getName())) {
+        if (QuietModeManager.getInstance().isInQuietMode(player.getName())) {
             return;
         }
 
@@ -497,7 +446,7 @@ public final class Utils {
     }
 
     public static void sendSubTitle(Player player, String subTitle, boolean attemptTitle) {
-        if (QuietModeManager.isInQuietMode(player.getName())) {
+        if (QuietModeManager.getInstance().isInQuietMode(player.getName())) {
             return;
         }
 
@@ -513,7 +462,7 @@ public final class Utils {
     }
 
     public static void sendActionBar(Player player, String title, boolean attemptTitle) {
-        if (QuietModeManager.isInQuietMode(player.getName())) {
+        if (QuietModeManager.getInstance().isInQuietMode(player.getName())) {
             return;
         }
 
@@ -539,7 +488,7 @@ public final class Utils {
                 return;
             }
 
-            if (!ValidationMethods.deleteCourse(args[2], player)) {
+            if (!Validation.deleteCourse(args[2], player)) {
                 return;
             }
 
@@ -566,7 +515,7 @@ public final class Utils {
                 return;
             }
 
-            if (!ValidationMethods.deleteLobby(args[2], player)) {
+            if (!Validation.deleteLobby(args[2], player)) {
                 return;
             }
 
@@ -578,7 +527,7 @@ public final class Utils {
                 return;
             }
 
-            if (!ValidationMethods.deleteParkourKit(args[2], player)) {
+            if (!Validation.deleteParkourKit(args[2], player)) {
                 return;
             }
 
@@ -762,7 +711,7 @@ public final class Utils {
             return true;
         }
 
-        if (displayMessage && !QuietModeManager.isInQuietMode(player.getName())) {
+        if (displayMessage && !QuietModeManager.getInstance().isInQuietMode(player.getName())) {
             player.sendMessage(getTranslation("Error.Cooldown").replace("%AMOUNT%", String.valueOf(secondsToWait - secondsElapsed)));
         }
         return false;
@@ -1081,7 +1030,7 @@ public final class Utils {
      */
     public static int getMinorServerVersion() {
         String version = Bukkit.getBukkitVersion().split("\\.")[1];
-        return isInteger(version) ? Integer.valueOf(version) : 12;
+        return Validation.isInteger(version) ? Integer.valueOf(version) : 12;
     }
 
     public static boolean doesGameModeEnumExist(String value) {

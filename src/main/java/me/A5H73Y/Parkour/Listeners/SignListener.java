@@ -3,6 +3,7 @@ package me.A5H73Y.Parkour.Listeners;
 import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Course.LobbyMethods;
+import me.A5H73Y.Parkour.Other.Validation;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
@@ -148,7 +149,7 @@ public class SignListener implements Listener {
 
 			ParkourSession session = PlayerMethods.getParkourSession(event.getPlayer().getName());
 
-			if (lines[3].isEmpty() || !Utils.isPositiveInteger(lines[3])) {
+			if (lines[3].isEmpty() || !Validation.isPositiveInteger(lines[3])) {
 				return;
 			}
 

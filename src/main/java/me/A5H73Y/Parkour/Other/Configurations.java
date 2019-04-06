@@ -466,7 +466,6 @@ public class Configurations {
         config.addDefault("OnCourse.PreventOpeningOtherInventories", false);
         config.addDefault("OnCourse.PreventAttackingEntities", false);
         config.addDefault("OnCourse.PreventJoiningDifferentCourse", false);
-        config.addDefault("OnCourse.PreventAllPotionEffects", false);
         config.addDefault("OnCourse.PreventPlayerCollisions", false);
         config.addDefault("OnCourse.SneakToInteractItems", true);
         config.addDefault("OnCourse.UseParkourKit", true);
@@ -572,7 +571,7 @@ public class Configurations {
             try {
                 Particle particle = Particle.valueOf(trail);
                 Parkour.getPlugin().getServer().getWorlds().get(0).spawnParticle(particle, 0, 0, 0, 1);
-            } catch (Exception ex) {
+            } catch (NoClassDefFoundError | Exception ex) {
                 Utils.log("Particle: " + trail + " is invalid. Disabling Trails.", 2);
                 config.set("OnCourse.Trails.Enabled", false);
                 Parkour.getPlugin().saveConfig();

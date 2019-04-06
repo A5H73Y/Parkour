@@ -10,6 +10,7 @@ import me.A5H73Y.Parkour.Managers.ChallengeManager;
 import me.A5H73Y.Parkour.Managers.QuietModeManager;
 import me.A5H73Y.Parkour.Other.Constants;
 import me.A5H73Y.Parkour.Other.TimeObject;
+import me.A5H73Y.Parkour.Other.Validation;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.ParkourEvents.PlayerAchieveCheckpointEvent;
 import me.A5H73Y.Parkour.ParkourEvents.PlayerDeathEvent;
@@ -75,7 +76,7 @@ public class PlayerMethods {
             }
         } else {
             removePlayer(player.getName());
-            if (!QuietModeManager.isInQuietMode(player.getName())) {
+            if (!QuietModeManager.getInstance().isInQuietMode(player.getName())) {
                 player.sendMessage(Utils.getTranslation("Parkour.TimeReset"));
             }
         }
@@ -166,16 +167,16 @@ public class PlayerMethods {
         if (session.getCheckpoint() == 0) {
             if (Parkour.getPlugin().getConfig().getBoolean("OnDie.ResetTimeWithNoCheckpoint")) {
                 session.resetTimeStarted();
-                if (!QuietModeManager.isInQuietMode(player.getName())) {
+                if (!QuietModeManager.getInstance().isInQuietMode(player.getName())) {
                     player.sendMessage(Utils.getTranslation("Parkour.Die1") + Utils.getTranslation("Parkour.TimeReset", false));
                 }
             } else {
-                if (!QuietModeManager.isInQuietMode(player.getName())) {
+                if (!QuietModeManager.getInstance().isInQuietMode(player.getName())) {
                     player.sendMessage(Utils.getTranslation("Parkour.Die1"));
                 }
             }
         } else {
-            if (!QuietModeManager.isInQuietMode(player.getName())) {
+            if (!QuietModeManager.getInstance().isInQuietMode(player.getName())) {
                 player.sendMessage(Utils.getTranslation("Parkour.Die2")
                         .replace("%POINT%", String.valueOf(session.getCheckpoint())));
             }
@@ -1091,7 +1092,7 @@ public class PlayerMethods {
     }
 
     public static void setLevel(String[] args, CommandSender sender) {
-        if (!Utils.isPositiveInteger(args[2])) {
+        if (!Validation.isPositiveInteger(args[2])) {
             sender.sendMessage(Static.getParkourString() + "Minimum level is not valid.");
             return;
         }

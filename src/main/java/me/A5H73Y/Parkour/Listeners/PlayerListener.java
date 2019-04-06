@@ -219,23 +219,4 @@ public class PlayerListener implements Listener {
             event.setCancelled(true);
         }
     }
-
-    @EventHandler
-    public void onPotionEffect(EntityPotionEffectEvent event) {
-        if (!(event.getEntity() instanceof Player)) {
-            return;
-        }
-
-        Player player = (Player) event.getEntity();
-
-        if (!PlayerMethods.isPlaying(player.getName())) {
-            return;
-        }
-
-        if (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.PreventAllPotionEffects")) {
-            return;
-        }
-
-        event.setCancelled(true);
-    }
 }

@@ -1,6 +1,6 @@
 package me.A5H73Y.Parkour.Course;
 
-import me.A5H73Y.Parkour.Other.ValidationMethods;
+import me.A5H73Y.Parkour.Other.Validation;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import java.util.Set;
 
 public class LobbyMethods {
+
     /**
      * Creating or overwriting a Parkour lobby.
      * Optional parameters include a name for a custom lobby, as well as a minimum level requirement.
@@ -28,7 +29,7 @@ public class LobbyMethods {
         setLobby(args, player);
 
         if (args.length > 1) {
-            if (args.length > 2 && Utils.isPositiveInteger(args[2])) {
+            if (args.length > 2 && Validation.isPositiveInteger(args[2])) {
                 created = created.concat(ChatColor.AQUA + args[1] + ChatColor.WHITE + " created, with a required rank of " + ChatColor.DARK_AQUA + Integer.parseInt(args[2]));
                 Parkour.getPlugin().getConfig().set("Lobby." + args[1] + ".Level", Integer.parseInt(args[2]));
             } else {
@@ -52,7 +53,7 @@ public class LobbyMethods {
      * @param player
      */
     public static void joinLobby(String[] args, Player player) {
-        if (!ValidationMethods.lobbyJoiningSet(player)) {
+        if (!Validation.lobbyJoiningSet(player)) {
             return;
         }
 
@@ -66,7 +67,7 @@ public class LobbyMethods {
         Location lobby;
 
         if (customLobby) {
-            if (!ValidationMethods.lobbyJoiningCustom(player, args[1])) {
+            if (!Validation.lobbyJoiningCustom(player, args[1])) {
                 return;
             }
 
@@ -112,7 +113,8 @@ public class LobbyMethods {
     }
 
     /**
-     * Set the lobby, will determine if it's a custom lobby.
+     * Set or overwrite a lobby.
+     * Arguments will determine if it's a custom lobby.
      *
      * @param args
      * @param player
@@ -130,7 +132,7 @@ public class LobbyMethods {
     }
 
     /**
-     * Delete a Parkour lobby
+     * Delete a Parkour lobby.
      *
      * @param lobby
      * @param player
@@ -148,7 +150,8 @@ public class LobbyMethods {
     }
 
     /**
-     * Used for overriding the lobby if custom is desired.
+     * Calculate the location when the player leaves / quits a course.
+     * Used for finding the lobby if a custom is configured.
      *
      * @param player
      * @param session
@@ -160,12 +163,12 @@ public class LobbyMethods {
             lobbyName = CourseInfo.getLinkedLobby(session.getCourse().getName());
         }
         String[] args = new String[]{null, lobbyName};
-        LobbyMethods.joinLobby(args, player);
+        joinLobby(args, player);
     }
 
     /**
-     * Get list of Lobbies
-     * I'm aware this looks like shit, but it's the best solution.
+     * Get list of custom Lobbies.
+     * I'm aware this looks like shit, but it's the best solution without a rewrite of lobbies.
      * @return Set<String>
      */
     public static Set<String> getCustomLobbies() {
@@ -183,6 +186,10 @@ public class LobbyMethods {
         return lobbyListSet;
     }
 
+    /**
+     * Send a list of custom Lobbies to the player.
+     * @param sender
+     */
     public static void displayLobbies(CommandSender sender) {
         sender.sendMessage(Utils.getStandardHeading("Custom Lobbies"));
         getCustomLobbies().forEach(s -> sender.sendMessage("* " + s));

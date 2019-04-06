@@ -1,6 +1,7 @@
 package me.A5H73Y.Parkour.Commands;
 
 import me.A5H73Y.Parkour.Course.CourseInfo;
+import me.A5H73Y.Parkour.Other.Validation;
 import me.A5H73Y.Parkour.ParkourKit.ParkourKitInfo;
 import me.A5H73Y.Parkour.Player.PlayerInfo;
 import org.bukkit.command.Command;
@@ -17,7 +18,7 @@ import java.util.Set;
 public class ParkourAutoTabCompleter implements TabCompleter {
 
 	private static final Set<String> BASIC_CMDS = new HashSet<>(
-			Arrays.asList("challenge", "leaderboard", "invite", "kit", "listkit", "tp", "tpc"));
+			Arrays.asList("create", "challenge", "leaderboard", "invite", "kit", "listkit", "tp", "tpc"));
 
 	private static final Set<String> ADMIN_CMDS = new HashSet<>(
 			Arrays.asList("setstart", "setlobby", "economy", "createkit", "editkit", "validatekit", "recreate",
@@ -195,7 +196,7 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 	private boolean isSelectedCourseOwner(CommandSender sender) {
 		Player player = (Player) sender;
 		String courseName = PlayerInfo.getSelected(player);
-		if (courseName == null) {
+		if (!Validation.isStringValid(courseName)) {
 			return false;
 		}
 		return player.getName().equals(CourseInfo.getCreator(courseName));

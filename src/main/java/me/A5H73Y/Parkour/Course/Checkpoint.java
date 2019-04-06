@@ -16,7 +16,7 @@ public class Checkpoint implements Serializable {
 
 	/**
 	 * The location is used for where the player is physically teleported.
-	 * The nextCheckpoint coordinates are used for the detection of the pressure plate.
+	 * The nextCheckpoint coordinates are used for the detection of the next pressure plate.
 	 * As locations are transient, we must reconstruct the Checkpoints after a reload.
 	 */
 	public Checkpoint(Location location, double nextCheckpointX, double nextCheckpointY, double nextCheckpointZ) {
@@ -34,12 +34,15 @@ public class Checkpoint implements Serializable {
 	public String getWorld() {
 		return world;
 	}
+
 	public double getNextCheckpointX() {
 		return nextCheckpointX;
 	}
+
 	public double getNextCheckpointY() {
 		return nextCheckpointY;
 	}
+
 	public double getNextCheckpointZ() {
 		return nextCheckpointZ;
 	}
