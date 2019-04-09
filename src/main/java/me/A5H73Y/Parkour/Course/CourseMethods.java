@@ -239,13 +239,13 @@ public class CourseMethods {
             displayCourses(sender, page);
 
         } else if (args[1].equalsIgnoreCase("ranks")) {
-            if (sender instanceof Player && !Utils.hasPermission((Player) sender, "Parkour.Admin")) {
+            if (!Utils.hasPermission(sender, "Parkour.Admin")) {
                 return;
             }
             displayRanks(sender);
 
         } else if (args[1].equalsIgnoreCase("lobbies")) {
-            if (sender instanceof Player && !Utils.hasPermission((Player) sender, "Parkour.Admin")) {
+            if (!Utils.hasPermission(sender, "Parkour.Admin")) {
                 return;
             }
             LobbyMethods.displayLobbies(sender);

@@ -392,6 +392,13 @@ public class Configurations {
             stringData.addDefault("Scoreboard.MyBestTimeTitle", "My Best Time:");
             stringData.addDefault("Scoreboard.CurrentTimeTitle", "Current Time:");
 
+            stringData.addDefault("ParkourGUI.NextPage", "&bNext page &f>");
+            stringData.addDefault("ParkourGUI.PreviousPage", "< &bPrevious page");
+            stringData.addDefault("ParkourGUI.AllCourses.Title", "Courses - Page %PAGE%");
+            stringData.addDefault("ParkourGUI.AllCourses.Description", "&fJoin &b%COURSE%");
+            stringData.addDefault("ParkourGUI.AllCourses.Command", "pa join %COURSE%");
+            stringData.addDefault("ParkourGUI.AllCourses.Material", "BOOK");
+
             stringData.addDefault("Economy.Insufficient", "You require at least &b%AMOUNT% &fbefore joining &b%COURSE%");
             stringData.addDefault("Economy.Fee", "&b%AMOUNT% &fhas been deducted from your balance for joining &b%COURSE%");
             stringData.addDefault("Economy.Reward", "You earned &b%AMOUNT% &ffor completing &b%COURSE%&f!");
@@ -522,6 +529,9 @@ public class Configurations {
         config.addDefault("Scoreboard.Display.BestTimeEverName", true);
         config.addDefault("Scoreboard.Display.BestTimeByMe", true);
         config.addDefault("Scoreboard.Display.CurrentTime", true);
+
+        config.addDefault("ParkourGUI.Enabled", false);
+        config.addDefault("ParkourGUI.Rows", 2);
 
         config.addDefault("Other.CheckForUpdates", true);
         config.addDefault("Other.BountifulAPI.Enabled", true);

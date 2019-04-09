@@ -86,13 +86,14 @@ public final class Utils {
      */
     public static boolean hasPermissionNoMessage(CommandSender player, String permissionBranch, String permission) {
         return player.hasPermission(permissionBranch + ".*")
-                || hasPermissionNoMessage(player, permissionBranch + "." + permission);
+                || player.hasPermission(permissionBranch + "." + permission)
+                || player.hasPermission("Parkour.*");
     }
 
     /**
      * Check if they have permission without alerting them of failure.
-     * Branch will check example scenarios for "Parkour.Admin", "Delete":
-     * - Parkour.Admin
+     * Branch will check example scenarios for "Parkour.Admin":
+     * - Parkour.Admin.*
      * - Parkour.*
      *
      * @param player
@@ -100,24 +101,25 @@ public final class Utils {
      * @return
      */
     public static boolean hasPermissionNoMessage(CommandSender player, String permission) {
-        return player.hasPermission(permission)
+        return player.hasPermission(permission + ".*")
                 || player.hasPermission("Parkour.*");
     }
 
     /**
-     * Return whether the player has a specific permission.
+     * Return whether the player has a permission wildcard.
+     * i.e. "Parkour.Basic" becomes "Parkour.Basic.*"
      * If they don't, a message will be sent alerting them.
      *
-     * @param player
+     * @param sender the Player
      * @param permission
      * @return whether they have permission
      */
-    public static boolean hasPermission(Player player, String permission) {
-        if (hasPermissionNoMessage(player, permission)) {
+    public static boolean hasPermission(CommandSender sender, String permission) {
+        if (hasPermissionNoMessage(sender, permission)) {
             return true;
         }
 
-        player.sendMessage(getTranslation("NoPermission").replace("%PERMISSION%", permission));
+        sender.sendMessage(getTranslation("NoPermission").replace("%PERMISSION%", permission));
         return false;
     }
 
@@ -125,17 +127,17 @@ public final class Utils {
      * Return whether the player has a specific permission OR has the branch permission.
      * Example "parkour.basic.join" OR "parkour.basic.*"
      *
-     * @param player
+     * @param sender
      * @param permissionBranch i.e. "parkour.basic"
      * @param permission "join"
      * @return whether they have permission
      */
-    public static boolean hasPermission(Player player, String permissionBranch, String permission) {
-        if (hasPermissionNoMessage(player, permissionBranch, permission)) {
+    public static boolean hasPermission(CommandSender sender, String permissionBranch, String permission) {
+        if (hasPermissionNoMessage(sender, permissionBranch, permission)) {
             return true;
         }
 
-        player.sendMessage(getTranslation("NoPermission").replace("%PERMISSION%", permissionBranch + "." + permission));
+        sender.sendMessage(getTranslation("NoPermission").replace("%PERMISSION%", permissionBranch + "." + permission));
         return false;
     }
 

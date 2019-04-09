@@ -133,7 +133,8 @@ public class Validation {
 		int minimumLevel = CourseInfo.getMinimumLevel(course.getName());
 
 		if (minimumLevel > 0) {
-			if (!player.hasPermission("Parkour.Admin.MinBypass") && !player.hasPermission("Parkour.Level." + minimumLevel)) {
+			if (!Utils.hasPermissionNoMessage(player,"Parkour.Admin", "MinBypass")
+					&& !Utils.hasPermissionNoMessage(player, "Parkour.Level", String.valueOf(minimumLevel))) {
 				int currentLevel = PlayerInfo.getParkourLevel(player);
 
 				if (currentLevel < minimumLevel) {
@@ -205,7 +206,8 @@ public class Validation {
 		int minimumLevel = CourseInfo.getMinimumLevel(courseName);
 
 		if (minimumLevel > 0) {
-			if (!player.hasPermission("Parkour.Admin.MinBypass") && !player.hasPermission("Parkour.Level." + minimumLevel)) {
+			if (!Utils.hasPermissionNoMessage(player,"Parkour.Admin", "MinBypass")
+					&& !Utils.hasPermissionNoMessage(player, "Parkour.Level", String.valueOf(minimumLevel))) {
 				int currentLevel = PlayerInfo.getParkourLevel(player);
 
 				if (currentLevel < minimumLevel) {
@@ -332,7 +334,7 @@ public class Validation {
 
 		int level = Parkour.getPlugin().getConfig().getInt("Lobby." + lobby + ".Level");
 
-		if (level > 0 && !player.hasPermission("Parkour.Admin.MinBypass")) {
+		if (level > 0 && !Utils.hasPermissionNoMessage(player, "Parkour.Admin", "MinBypass")) {
 			if (PlayerInfo.getParkourLevel(player) < level) {
 				player.sendMessage(Utils.getTranslation("Error.RequiredLvl").replace("%LEVEL%", String.valueOf(level)));
 				return false;

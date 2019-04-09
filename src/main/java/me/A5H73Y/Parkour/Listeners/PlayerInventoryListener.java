@@ -2,6 +2,7 @@ package me.A5H73Y.Parkour.Listeners;
 
 import me.A5H73Y.Parkour.GUI.InventoryBuilder;
 import me.A5H73Y.Parkour.GUI.ParkourCoursesInventory;
+import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,7 +20,7 @@ public class PlayerInventoryListener implements Listener {
             return;
         }
 
-        if (!event.getInventory().getTitle().startsWith(InventoryBuilder.PARKOUR_TITLE)) {
+        if (!event.getInventory().getTitle().startsWith(InventoryBuilder.PARKOUR_TITLE_PREFIX)) {
             return;
         }
 
@@ -41,10 +42,12 @@ public class PlayerInventoryListener implements Listener {
         }
 
         List<String> metadata = event.getCurrentItem().getItemMeta().getLore();
+        Material itemMaterial = Material.getMaterial(
+                Utils.getTranslation("ParkourGUI.AllCourses.Material", false)
+        );
 
-        if (clickedItem.equals(Material.BOOK)) {
+        if (clickedItem.equals(itemMaterial)) {
             String command = metadata.get(0);
-
             player.performCommand(command);
 
         } else if (event.getCurrentItem().getType().equals(Material.ARROW)) {

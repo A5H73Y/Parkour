@@ -4,6 +4,7 @@ import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Other.Validation;
 import me.A5H73Y.Parkour.ParkourKit.ParkourKitInfo;
 import me.A5H73Y.Parkour.Player.PlayerInfo;
+import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -22,7 +23,8 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 
 	private static final Set<String> ADMIN_CMDS = new HashSet<>(
 			Arrays.asList("setstart", "setlobby", "economy", "createkit", "editkit", "validatekit", "recreate",
-					"sql", "settings", "reload", "rewardrank", "whitelist", "setlevel", "setrank", "delete"));
+					"sql", "settings", "reload", "rewardrank", "whitelist", "setlevel", "setrank",
+					"test", "reset", "delete", "checkpoint", "link"));
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
@@ -55,7 +57,7 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 			list.add("bug");
 			list.add("cmds");
 
-			if (sender.hasPermission("Parkour.Basic.*") || sender.hasPermission("Parkour.*")) {
+			if (Utils.hasPermissionNoMessage(sender, "Parkour.Basic")) {
 				list.addAll(BASIC_CMDS);
 			} else {
 				if (sender.hasPermission("Parkour.Basic.Create")) {
@@ -82,15 +84,9 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 				}
 			}
 
-			if (sender.hasPermission("Parkour.Admin") || sender.hasPermission("Parkour.*")) {
+			if (Utils.hasPermissionNoMessage(sender, "Parkour.Admin")) {
 				list.addAll(ADMIN_CMDS);
-			}
-			if (sender.hasPermission("Parkour.Admin.*") || sender.hasPermission("Parkour.*")) {
-				list.add("test");
-				list.add("reset");
-				list.add("delete");
-				list.add("checkpoint");
-				list.add("link");
+
 			} else {
 				if (sender.hasPermission("Parkour.Admin.Testmode")) {
 					list.add("test");
