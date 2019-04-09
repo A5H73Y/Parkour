@@ -266,7 +266,7 @@ public class PlayerMethods {
 
         DatabaseMethods.insertOrUpdateTime(courseName, player, timeTaken, session.getDeaths());
 
-        PlayerInfo.setLastCompletedCourse(player, courseName);
+        PlayerInfo.setCompletedCourseInfo(player, courseName);
 
         Utils.forceVisible(player);
         Parkour.getScoreboardManager().removeScoreboard(player);

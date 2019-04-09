@@ -8,7 +8,10 @@ import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 /**
  * Centralize player's information retrieval and modifications
@@ -122,11 +125,25 @@ public class PlayerInfo {
 
     /**
      * Set the last completed course for the player.
+     * Update the completed list of courses for the player.
      * @param player
      * @param courseName
      */
-    public static void setLastCompletedCourse(OfflinePlayer player, String courseName) {
-        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".LastCompleted", courseName.toLowerCase());
+    public static void setCompletedCourseInfo(OfflinePlayer player, String courseName) {
+        Parkour.getParkourConfig().getUsersData()
+                .set("PlayerInfo." + player.getName() + ".LastCompleted", courseName.toLowerCase());
+
+        if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.SaveUserCompletedCourses")) {
+            List<String> completedCourses = Parkour.getParkourConfig().getUsersData()
+                    .getStringList("PlayerInfo." + player.getName() + ".Completed");
+
+            if (!completedCourses.contains(courseName)) {
+                completedCourses.add(courseName);
+                Parkour.getParkourConfig().getUsersData()
+                        .set("PlayerInfo." + player.getName() + ".Completed", completedCourses);
+            }
+        }
+
         Parkour.getParkourConfig().saveUsers();
     }
 
@@ -205,5 +222,25 @@ public class PlayerInfo {
         Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName(), null);
         Parkour.getParkourConfig().saveUsers();
         DatabaseMethods.deleteAllTimesForPlayer(player.getName());
+    }
+
+    /**
+     * Return the number of Parkour courses completed for player.
+     *
+     * @param player
+     * @return results
+     */
+    public static String getNumberOfCoursesCompleted(Player player) {
+        ConfigurationSection completedSection = Parkour.getParkourConfig().getUsersData()
+                .getConfigurationSection("PlayerInfo." + player.getName() + ".Completed");
+
+        String amount = "0";
+
+        if (completedSection != null) {
+            int results = completedSection.getKeys(false).size();
+            amount = String.valueOf(results);
+        }
+
+        return amount;
     }
 }

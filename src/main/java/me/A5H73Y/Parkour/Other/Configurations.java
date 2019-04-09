@@ -486,14 +486,15 @@ public class Configurations {
         config.addDefault("OnFinish.DefaultPrize.Material", "DIAMOND");
         config.addDefault("OnFinish.DefaultPrize.Amount", 1);
         config.addDefault("OnFinish.DefaultPrize.XP", 0);
-        config.addDefault("OnFinish.DisplayStats", true);
-        config.addDefault("OnFinish.EnablePrizes", true);
-        config.addDefault("OnFinish.EnforceCompletion", true);
-        config.addDefault("OnFinish.SetGamemode", 0);
-        config.addDefault("OnFinish.TeleportAway", true);
-        config.addDefault("OnFinish.TeleportDelay", 0);
-        config.addDefault("OnFinish.UpdatePlayerDatabaseTime", false);
-        config.addDefault("OnFinish.DisplayNewRecords", false);
+	    config.addDefault("OnFinish.DisplayNewRecords", false);
+	    config.addDefault("OnFinish.DisplayStats", true);
+	    config.addDefault("OnFinish.EnablePrizes", true);
+	    config.addDefault("OnFinish.EnforceCompletion", true);
+	    config.addDefault("OnFinish.SaveUserCompletedCourses", true); //TODO false
+	    config.addDefault("OnFinish.SetGamemode", 0);
+	    config.addDefault("OnFinish.TeleportAway", true);
+	    config.addDefault("OnFinish.TeleportDelay", 0);
+	    config.addDefault("OnFinish.UpdatePlayerDatabaseTime", false);
 
         config.addDefault("OnLeave.TeleportToLinkedLobby", false);
 
