@@ -231,16 +231,9 @@ public class PlayerInfo {
      * @return results
      */
     public static String getNumberOfCoursesCompleted(Player player) {
-        ConfigurationSection completedSection = Parkour.getParkourConfig().getUsersData()
-                .getConfigurationSection("PlayerInfo." + player.getName() + ".Completed");
+        List<String> completedCourse = Parkour.getParkourConfig().getUsersData()
+                .getStringList("PlayerInfo." + player.getName() + ".Completed");
 
-        String amount = "0";
-
-        if (completedSection != null) {
-            int results = completedSection.getKeys(false).size();
-            amount = String.valueOf(results);
-        }
-
-        return amount;
+        return String.valueOf(completedCourse.size());
     }
 }
