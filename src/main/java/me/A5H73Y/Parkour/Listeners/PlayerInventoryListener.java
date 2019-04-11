@@ -1,5 +1,6 @@
 package me.A5H73Y.Parkour.Listeners;
 
+import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.GUI.InventoryBuilder;
 import me.A5H73Y.Parkour.GUI.ParkourCoursesInventory;
 import me.A5H73Y.Parkour.Utilities.Utils;
@@ -42,9 +43,7 @@ public class PlayerInventoryListener implements Listener {
         }
 
         List<String> metadata = event.getCurrentItem().getItemMeta().getLore();
-        Material itemMaterial = Material.getMaterial(
-                Utils.getTranslation("ParkourGUI.AllCourses.Material", false)
-        );
+        Material itemMaterial = Parkour.getSettings().getGUIMaterial();
 
         if (clickedItem.equals(itemMaterial)) {
             String command = metadata.get(0);
