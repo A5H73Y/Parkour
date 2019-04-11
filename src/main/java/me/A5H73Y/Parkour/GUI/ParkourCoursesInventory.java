@@ -2,6 +2,7 @@ package me.A5H73Y.Parkour.GUI;
 
 import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Utilities.Utils;
+import me.A5H73Y.Parkour.Parkour;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -27,9 +28,7 @@ public class ParkourCoursesInventory extends InventoryBuilder {
     public Inventory buildInventory(Player player, int page) {
         Inventory inventory = super.buildInventory(player, page);
 
-        Material material = Material.valueOf(
-                Utils.getTranslation("ParkourGUI.AllCourses.Material", false)
-        );
+        Material material = Parkour.getSettings().getGUIMaterial();
 
         for (int i = 0; i < getFilteredItems().size(); i++) {
             String course = getFilteredItems().get(i);

@@ -29,7 +29,7 @@ public abstract class InventoryBuilder {
 
         List<String> items = getAllItems();
 
-        int listStartIndex = (page * 9) - 9;
+        int listStartIndex = (page * (inventorySize - 9)) - (inventorySize - 9);
         int remainingItems = Math.min(items.size() - listStartIndex, inventorySize - 9);
         int listEndIndex = listStartIndex + remainingItems;
 

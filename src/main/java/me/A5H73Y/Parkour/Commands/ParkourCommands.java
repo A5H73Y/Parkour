@@ -528,7 +528,7 @@ public class ParkourCommands implements CommandExecutor {
 
             //TODO move me up further, and document me everywhere
         } else if (args[0].equalsIgnoreCase("joinall")) {
-            if (Utils.hasPermission(player, "Parkour.GUI", "JoinAll")) {
+            if (!Utils.hasPermission(player, "Parkour.GUI", "JoinAll")) {
                 return false;
             }
 

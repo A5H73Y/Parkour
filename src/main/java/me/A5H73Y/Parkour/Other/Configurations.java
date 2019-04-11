@@ -397,7 +397,6 @@ public class Configurations {
             stringData.addDefault("ParkourGUI.AllCourses.Title", "Courses - Page %PAGE%");
             stringData.addDefault("ParkourGUI.AllCourses.Description", "&fJoin &b%COURSE%");
             stringData.addDefault("ParkourGUI.AllCourses.Command", "pa join %COURSE%");
-            stringData.addDefault("ParkourGUI.AllCourses.Material", "BOOK");
 
             stringData.addDefault("Economy.Insufficient", "You require at least &b%AMOUNT% &fbefore joining &b%COURSE%");
             stringData.addDefault("Economy.Fee", "&b%AMOUNT% &fhas been deducted from your balance for joining &b%COURSE%");
@@ -533,6 +532,7 @@ public class Configurations {
 
         config.addDefault("ParkourGUI.Enabled", false);
         config.addDefault("ParkourGUI.Rows", 2);
+        config.addDefault("ParkourGUI.Material", "BOOK");
 
         config.addDefault("Other.CheckForUpdates", true);
         config.addDefault("Other.BountifulAPI.Enabled", true);

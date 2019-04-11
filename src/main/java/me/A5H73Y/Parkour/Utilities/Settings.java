@@ -138,6 +138,11 @@ public class Settings {
 		return Utils.lookupMaterial(getConfig().getString("AutoStart.Material"));
 	}
 
+	public Material getGUIMaterial() {
+		Material guiMaterial = Utils.lookupMaterial(getConfig().getString("ParkourGUI.Material"));
+		return guiMaterial == null ? Material.BOOK : guiMaterial;
+	}
+
 	/* Strings */
 
 	public String getCheckpointMaterial() {
