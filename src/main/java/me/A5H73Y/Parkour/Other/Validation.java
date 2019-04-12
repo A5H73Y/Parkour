@@ -80,32 +80,24 @@ public class Validation {
 
 	/**
 	 * Validate course creation
-	 * @param args
+	 * @param courseName
 	 * @param player
 	 * @return
 	 */
-	public static boolean courseCreation(String[] args, Player player) {
-		if (args.length > 2) {
-			player.sendMessage(Utils.getTranslation("Error.TooMany"));
-			return false;
-
-		} else if (args.length == 1) {
-			player.sendMessage(Utils.getTranslation("Error.TooLittle"));
-			return false;
-
-		} else if (args[1].length() > 15) {
+	public static boolean courseCreation(String courseName, Player player) {
+		if (courseName.length() > 15) {
 			player.sendMessage(Static.getParkourString() + "Course name is too long!");
 			return false;
 
-		} else if (args[1].contains(".")) {
+		} else if (courseName.contains(".")) {
 			player.sendMessage(Static.getParkourString() + "Course name can not contain '.'");
 			return false;
 
-		} else if (isInteger(args[1])) {
+		} else if (isInteger(courseName)) {
 			player.sendMessage(Static.getParkourString() + "Course name can not only be numeric");
 			return false;
 
-		} else if (CourseMethods.exist(args[1])) {
+		} else if (CourseMethods.exist(courseName)) {
 			player.sendMessage(Utils.getTranslation("Error.Exist"));
 			return false;
 		}

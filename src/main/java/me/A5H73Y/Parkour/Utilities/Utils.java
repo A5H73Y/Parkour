@@ -208,6 +208,29 @@ public final class Utils {
     }
 
     /**
+     * Validate the range of the arguments before allowing it to be processed further.
+     *
+     * @param sender
+     * @param args
+     * @param minimum args length
+     * @param maximum args length
+     * @return whether the arguments match the criteria
+     */
+    public static boolean validateArgs(CommandSender sender, String[] args, int minimum, int maximum) {
+        if (args.length > maximum) {
+            sender.sendMessage(getTranslation("Error.TooMany") + " (between " + minimum + " and " + maximum + ")");
+            sender.sendMessage(getTranslation("Help.Command").replace("%COMMAND%", standardizeText(args[0])));
+            return false;
+
+        } else if (args.length < minimum) {
+            sender.sendMessage(getTranslation("Error.TooLittle") + " (between " + minimum + " and " + maximum + ")");
+            sender.sendMessage(getTranslation("Help.Command").replace("%COMMAND%", standardizeText(args[0])));
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Format and standardize text to a constant case.
      * Will transform "hElLO" into "Hello"
      *

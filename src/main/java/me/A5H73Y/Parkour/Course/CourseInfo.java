@@ -7,10 +7,12 @@ import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Set;
 
 public class CourseInfo {
 
@@ -488,6 +490,26 @@ public class CourseInfo {
         Parkour.getParkourConfig().getCourseData().set("Courses", courseList);
         Parkour.getParkourConfig().saveCourses();
         DatabaseMethods.deleteCourseAndReferences(courseName);
+
+        if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.SaveUserCompletedCourses")) {
+            FileConfiguration userConfig = Parkour.getParkourConfig().getUsersData();
+            ConfigurationSection playersSection = userConfig.getConfigurationSection("PlayerInfo");
+
+            if (playersSection != null) {
+                Set<String> playerNames = playersSection.getKeys(false);
+
+                for (String playerName : playerNames) {
+                	String completedPath = "PlayerInfo." + playerName + ".Completed";
+                    List<String> completedCourses = userConfig.getStringList(completedPath);
+
+                    if (completedCourses.contains(completedPath)) {
+	                    completedCourses.remove(courseName);
+	                    userConfig.set(completedPath, completedCourses);
+                    }
+                }
+            }
+            Parkour.getParkourConfig().saveUsers();
+        }
     }
 
     public static void resetPrizes(String courseName) {

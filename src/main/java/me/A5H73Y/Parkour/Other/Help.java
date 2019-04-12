@@ -477,11 +477,6 @@ public final class Help {
 			return;
 		}
 
-		if (args.length < 2) {
-			player.sendMessage(Utils.invalidSyntax("econ", "(info / recreate / setprize / setfee)"));
-			return;
-		}
-
 		if (args[1].equalsIgnoreCase("info")) {
 			player.sendMessage(Static.getParkourString() + "Successfully linked with Vault.");
 

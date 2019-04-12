@@ -127,15 +127,15 @@ public class CourseMethods {
      * All course names are stored in a string list, which is also held in memory.
      * Course is entered into the database so leaderboards can be associated with it.
      *
-     * @param args
+     * @param courseName
      * @param player
      */
-    public static void createCourse(String[] args, Player player) {
-        if (!Validation.courseCreation(args, player)) {
+    public static void createCourse(String courseName, Player player) {
+        if (!Validation.courseCreation(courseName, player)) {
             return;
         }
 
-        String name = args[1].toLowerCase();
+        String name = courseName.toLowerCase();
         Location location = player.getLocation();
         FileConfiguration courseData = Parkour.getParkourConfig().getCourseData();
 
@@ -159,7 +159,7 @@ public class CourseMethods {
 
         PlayerInfo.setSelected(player, name);
 
-        player.sendMessage(Utils.getTranslation("Parkour.Created").replace("%COURSE%", args[1]));
+        player.sendMessage(Utils.getTranslation("Parkour.Created").replace("%COURSE%", courseName));
         DatabaseMethods.insertCourse(name, player.getName());
     }
 
@@ -398,16 +398,16 @@ public class CourseMethods {
      * Starts a Prize conversation that allows you to configure what the player gets awarded with when the complete the course.
      * A course could have every type of Prize if configured so.
      *
-     * @param args
+     * @param courseName
      * @param player
      */
-    public static void setPrize(String[] args, Player player) {
-        if (!exist(args[1])) {
-            player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[1]));
+    public static void setPrize(String courseName, Player player) {
+        if (!exist(courseName)) {
+            player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", courseName));
             return;
         }
 
-        new CoursePrizeConversation(player).withCourseName(args[1].toLowerCase()).begin();
+        new CoursePrizeConversation(player).withCourseName(courseName.toLowerCase()).begin();
     }
 
     /**
@@ -730,6 +730,7 @@ public class CourseMethods {
         } else {
             player.sendMessage(Utils.getTranslation("Parkour.Finish").replace("%COURSE%", courseName));
             Utils.logToFile(courseName + " was set to finished by " + player.getName());
+            PlayerInfo.setDelected(player);
         }
     }
 
@@ -740,11 +741,6 @@ public class CourseMethods {
      * @param player
      */
     public static void linkCourse(String[] args, Player player) {
-        if (args.length < 2) {
-            player.sendMessage(Utils.invalidSyntax("Link", "(course / lobby / reset) (courseName / lobbyName)"));
-            return;
-        }
-
         String selected = PlayerInfo.getSelected(player);
 
         if (args.length >= 3 && args[1].equalsIgnoreCase("course")) {
@@ -890,11 +886,6 @@ public class CourseMethods {
      * @param player
      */
     public static void challengePlayer(String[] args, Player player) {
-        if (args.length < 3) {
-            player.sendMessage(Utils.invalidSyntax("challenge", "(player) (course) [wager]"));
-            return;
-        }
-
         if (!Validation.challengePlayer(args, player)) {
             return;
         }

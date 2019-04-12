@@ -61,12 +61,22 @@ public class ParkourCommands implements CommandExecutor {
 
             CourseMethods.joinCourse(player, args[1]);
 
-        } else if (args[0].equalsIgnoreCase("create")) {
-            if (!Utils.hasPermission(player, "Parkour.Basic", "Create")) {
+        } else if (args[0].equalsIgnoreCase("joinall")) {
+            if (!Utils.hasPermission(player, "Parkour.Basic", "JoinAll")) {
                 return false;
             }
 
-            CourseMethods.createCourse(args, player);
+            player.openInventory(new ParkourCoursesInventory().buildInventory(player, 1));
+
+        } else if (args[0].equalsIgnoreCase("create")) {
+            if (!Utils.hasPermission(player, "Parkour.Basic", "Create")) {
+                return false;
+
+            } else if (!Utils.validateArgs(player, args, 2)) {
+                return false;
+            }
+
+            CourseMethods.createCourse(args[1], player);
 
         } else if (args[0].equalsIgnoreCase("leave")) {
             PlayerMethods.playerLeave(player);
@@ -144,7 +154,7 @@ public class ParkourCommands implements CommandExecutor {
                 return false;
             }
 
-            CourseMethods.setPrize(args, player);
+            CourseMethods.setPrize(args[1], player);
 
         } else if (args[0].equalsIgnoreCase("like")
                 || args[0].equalsIgnoreCase("dislike")) {
@@ -209,7 +219,10 @@ public class ParkourCommands implements CommandExecutor {
             CheckpointMethods.teleportCheckpoint(args, player, true);
 
         } else if (args[0].equalsIgnoreCase("link")) {
-            if (!PlayerInfo.hasSelected(player)) {
+            if (!Utils.validateArgs(player, args, 3, 4)) {
+                return false;
+
+            } else if (!PlayerInfo.hasSelected(player)) {
                 return false;
 
             } else if (!Utils.hasPermissionOrCourseOwnership(
@@ -343,6 +356,9 @@ public class ParkourCommands implements CommandExecutor {
                 || args[0].equalsIgnoreCase("econ")) {
             if (!Utils.hasPermission(player, "Parkour.Admin")) {
                 return false;
+
+            } else if (!Utils.validateArgs(player, args, 2, 4)) {
+                return false;
             }
 
             Help.displayEconomy(args, player);
@@ -410,6 +426,9 @@ public class ParkourCommands implements CommandExecutor {
 
         } else if (args[0].equalsIgnoreCase("challenge")) {
             if (!Utils.hasPermission(player, "Parkour.Basic", "Challenge")) {
+                return false;
+
+            } else if (!Utils.validateArgs(player, args, 3, 4)) {
                 return false;
             }
 
@@ -498,7 +517,7 @@ public class ParkourCommands implements CommandExecutor {
 
         } else if (args[0].equalsIgnoreCase("tutorial")) {
             player.sendMessage(Static.getParkourString() + "To follow the official Parkour tutorials...");
-            player.sendMessage("Click here: " + ChatColor.DARK_AQUA + "https://dev.bukkit.org/projects/parkour/pages/tutorial");
+            player.sendMessage("Click here: " + ChatColor.DARK_AQUA + "https://a5h73y.github.io/Parkour/");
 
         } else if (args[0].equalsIgnoreCase("settings")) {
             if (!Utils.hasPermission(player, "Parkour.Admin")) {
@@ -525,15 +544,6 @@ public class ParkourCommands implements CommandExecutor {
             Utils.reloadConfig();
             player.sendMessage(Utils.getTranslation("Other.Reload"));
             Utils.logToFile(player.getName() + " reloaded the Parkour config");
-
-            //TODO move me up further, and document me everywhere
-        } else if (args[0].equalsIgnoreCase("joinall")) {
-            if (!Utils.hasPermission(player, "Parkour.GUI", "JoinAll")) {
-                return false;
-            }
-
-            Inventory inv = new ParkourCoursesInventory().buildInventory(player, 1);
-            player.openInventory(inv);
 
         } else {
             player.sendMessage(Utils.getTranslation("Error.UnknownCommand"));

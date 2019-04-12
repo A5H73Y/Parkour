@@ -26,6 +26,11 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 					"sql", "settings", "reload", "rewardrank", "whitelist", "setlevel", "setrank",
 					"test", "reset", "delete", "checkpoint", "link"));
 
+	private static final Set<String> ADMIN_COURSE_CMDS = new HashSet<>(
+			Arrays.asList("setcreator", "prize", "setmode", "setjoinitem", "setminlevel",
+					"setmaxdeath", "setmaxtime", "rewardonce", "rewardlevel", "rewardleveladd", "rewardparkoins",
+					"rewarddelay", "edit", "linkkit", "setautostart", "finish"));
+
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
 		if (!(sender instanceof Player)) {
@@ -145,8 +150,6 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 
 	private Set<String> getCourseCmds(CommandSender sender) {
 		Set<String> cmds = new HashSet<>();
-		Set<String> adminCourseCmds = new HashSet<>(Arrays.asList("setcreator", "prize", "setmode", "setjoinitem", "setminlevel",
-				"setmaxdeath", "setmaxtime", "rewardonce", "rewardlevel", "rewardleveladd", "rewardparkoins", "rewarddelay"));
 
 		cmds.add("join");
 		cmds.add("joinall");
@@ -154,11 +157,12 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 		cmds.add("course");
 		cmds.add("select"); // so course owner can select own course
 
-		if (sender.hasPermission("Parkour.Basic.*") || sender.hasPermission("Parkour.*")) {
+		if (Utils.hasPermissionNoMessage(sender, "Parkour.Basic")) {
 			cmds.add("challenge");
 			cmds.add("tp");
 			cmds.add("tpc");
 			cmds.add("leaderboard");
+
 		} else {
 			if (sender.hasPermission("Parkour.Basic.Challenge")) {
 				cmds.add("challenge");
@@ -174,18 +178,21 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 			}
 		}
 
-		if (sender.hasPermission("Parkour.Admin") || sender.hasPermission("Parkour.*")) {
-			cmds.addAll(adminCourseCmds);
+		if (Utils.hasPermissionNoMessage(sender, "Parkour.Admin")) {
+			cmds.addAll(ADMIN_COURSE_CMDS);
+
+		} else {
+			if (sender.hasPermission("Parkour.Admin.Course") || isSelectedCourseOwner(sender)) {
+				cmds.add("edit");
+				cmds.add("linkkit");
+				cmds.add("setautostart");
+				cmds.add("finish");
+			}
+			if (sender.hasPermission("Parkour.Admin.Prize")) {
+				cmds.add("prize");
+			}
 		}
-		if (sender.hasPermission("Parkour.Admin.*") || sender.hasPermission("Parkour.*") || sender.hasPermission("Parkour.Admin.Course") || isSelectedCourseOwner(sender)) {
-			cmds.add("edit");
-			cmds.add("linkkit");
-			cmds.add("setautostart");
-			cmds.add("finish");
-		}
-		if (sender.hasPermission("Parkour.Admin.*") || sender.hasPermission("Parkour.Admin.Prize") || sender.hasPermission("Parkour.*")) {
-			cmds.add("prize");
-		}
+
 		return cmds;
 	}
 

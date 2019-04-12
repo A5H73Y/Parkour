@@ -45,7 +45,7 @@ public class PlayerInventoryListener implements Listener {
         List<String> metadata = event.getCurrentItem().getItemMeta().getLore();
         Material itemMaterial = Parkour.getSettings().getGUIMaterial();
 
-        if (clickedItem.equals(itemMaterial)) {
+        if (clickedItem.equals(itemMaterial)) { //&& event.isRightClick()
             String command = metadata.get(0);
             player.performCommand(command);
 

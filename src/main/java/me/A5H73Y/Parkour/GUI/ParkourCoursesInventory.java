@@ -1,15 +1,15 @@
 package me.A5H73Y.Parkour.GUI;
 
 import me.A5H73Y.Parkour.Course.CourseInfo;
-import me.A5H73Y.Parkour.Utilities.Utils;
 import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ParkourCoursesInventory extends InventoryBuilder {
@@ -40,7 +40,7 @@ public class ParkourCoursesInventory extends InventoryBuilder {
                             .replace("%COURSE%", course)
             );
 
-            metadata.setLore(Arrays.asList(
+            metadata.setLore(Collections.singletonList(
                     Utils.getTranslation("ParkourGUI.AllCourses.Command", false)
                             .replace("%COURSE%", course)
             ));
