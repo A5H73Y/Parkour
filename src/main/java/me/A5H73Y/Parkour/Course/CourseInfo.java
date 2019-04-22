@@ -623,5 +623,12 @@ public class CourseInfo {
         if (likePercent > 0) {
             player.sendMessage("Liked: " + aqua + likePercent + "%");
         }
+
+        if (hasRewardDelay(courseName) && Parkour.getSettings().isDisplayPrizeCooldown()) {
+        	player.sendMessage("Reward Cooldown (days): " + aqua + getRewardDelay(courseName));
+        	if (!Utils.hasPrizeCooldownDurationPassed(player, courseName, false)) {
+        		player.sendMessage("Cooldown Remaining: " + aqua + Utils.getTimeRemaining(player, courseName));
+        	}
+        }
     }
 }

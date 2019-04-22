@@ -413,7 +413,7 @@ public class PlayerMethods {
         // Check how often prize can be rewarded
         if (CourseInfo.hasRewardDelay(courseName)) {
             // if we still have to wait, return out of this function
-            if (!Utils.hasPrizeCooldownDurationPassed(player, courseName)) {
+            if (!Utils.hasPrizeCooldownDurationPassed(player, courseName, true)) {
                 return;
             }
             // otherwise make a note of last time rewarded, and let them continue
@@ -638,6 +638,10 @@ public class PlayerMethods {
 
             if (PlayerInfo.getParkoins(target) > 0) {
                 player.sendMessage("Parkoins: " + ChatColor.AQUA + PlayerInfo.getParkoins(target));
+            }
+
+            if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.SaveUserCompletedCourses")) {
+            	player.sendMessage("Courses Completed: " + ChatColor.AQUA + PlayerInfo.getNumberOfCoursesCompleted(player) + " / " + String.valueOf(CourseInfo.getAllCourses().size()));
             }
         }
     }
