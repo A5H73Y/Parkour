@@ -639,6 +639,10 @@ public class PlayerMethods {
             if (PlayerInfo.getParkoins(target) > 0) {
                 player.sendMessage("Parkoins: " + ChatColor.AQUA + PlayerInfo.getParkoins(target));
             }
+
+            if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.SaveUserCompletedCourses")) {
+            	player.sendMessage("Courses Completed: " + ChatColor.AQUA + PlayerInfo.getNumberOfCoursesCompleted(player) + " / " + String.valueOf(CourseInfo.getAllCourses().size()));
+            }
         }
     }
 
