@@ -937,9 +937,10 @@ public final class Utils {
      * Check to see if the minimum amount of time has passed (in days) to allow the plugin to provide the prize again
      * @param player
      * @param courseName
+     * @param displayMessage
      * @return boolean
      */
-    public static boolean hasPrizeCooldownDurationPassed(Player player, String courseName) {
+    public static boolean hasPrizeCooldownDurationPassed(Player player, String courseName, boolean displayMessage) {
         int rewardDelay = CourseInfo.getRewardDelay(courseName);
 
         if (rewardDelay <= 0) {
@@ -959,11 +960,16 @@ public final class Utils {
             return true;
         }
 
-        if (Parkour.getSettings().isDisplayPrizeCooldown()) {
-            String timeRemaining = displayTimeRemaining(daysDelay - timeDifference);
-            player.sendMessage(getTranslation("Error.PrizeCooldown").replace("%TIME%", timeRemaining));
+        if (Parkour.getSettings().isDisplayPrizeCooldown() && displayMessage) {
+            player.sendMessage(getTranslation("Error.PrizeCooldown").replace("%TIME%", getTimeRemaining(player, courseName)));
         }
         return false;
+    }
+
+    public static String getTimeRemaining(Player player, String courseName) {
+    	long daysDelay = convertDaysToMilliseconds(CourseInfo.getRewardDelay(courseName));
+    	long timeDifference = System.currentTimeMillis() - PlayerInfo.getLastRewardedTime(player, courseName);
+    	return displayTimeRemaining(daysDelay - timeDifference);
     }
 
     private static String displayTimeRemaining(long millis) {
