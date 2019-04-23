@@ -490,6 +490,16 @@ public class CourseMethods {
     }
 
     /**
+     * Delete the AutoStart with the given coordinates
+     * @param coordinates
+     * @param player
+     */
+    public static void deleteAutoStart(String coordinates, Player player) {
+        Parkour.getParkourConfig().getCourseData().set("CourseInfo.AutoStart." + coordinates, null);
+        Parkour.getParkourConfig().saveCourses();
+    }
+
+    /**
      * Overwrite the creator of the course.
      *
      * @param args

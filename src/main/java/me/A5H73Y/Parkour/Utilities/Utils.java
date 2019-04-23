@@ -14,6 +14,7 @@ import me.A5H73Y.Parkour.Player.PlayerMethods;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
@@ -500,7 +501,7 @@ public final class Utils {
 
     /**
      * Delete command method
-     * Possible arguments include Course, Checkpoint and Lobby
+     * Possible arguments include Course, Checkpoint, Lobby, Kit and AutoStart
      * This will only add a Question object with the relevant data until the player confirms the action later on.
      *
      * @param args
@@ -558,8 +559,22 @@ public final class Utils {
 
             QuestionManager.getInstance().askDeleteKitQuestion(player, args[2]);
 
+        } else if (args[1].equalsIgnoreCase("autostart")) {
+            Location location = player.getLocation();
+            if (CourseMethods.getAutoStartCourse(location) == null) {
+                player.sendMessage(Static.getParkourString() + "There is no autostart at this location");
+                return;
+            }
+
+            String coordinates = location.getBlockX() + "-" + location.getBlockY() + "-" + location.getBlockZ();
+            if (!Validation.deleteAutoStart(args[2], coordinates, player)) {
+            	return;
+            }
+
+            QuestionManager.getInstance().askDeleteAutoStartQuestion(player, coordinates);
+
         } else {
-            player.sendMessage(invalidSyntax("delete", "(course / checkpoint / lobby / kit) (name)"));
+            player.sendMessage(invalidSyntax("delete", "(course / checkpoint / lobby / kit / autostart) (name)"));
         }
     }
 
