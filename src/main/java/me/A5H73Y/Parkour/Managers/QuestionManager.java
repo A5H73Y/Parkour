@@ -94,6 +94,12 @@ public class QuestionManager {
         askQuestion(player, kitName, QuestionType.DELETE_KIT);
     }
 
+    public void askDeleteAutoStartQuestion(Player player, String coordinates) {
+        player.sendMessage(Static.getParkourString() + "You are about to delete the autostart at this location...");
+        player.sendMessage(ChatColor.GRAY + "Deleting an autostart will remove all information about it from the server.");
+        askQuestion(player, coordinates, QuestionType.DELETE_AUTOSTART);
+    }
+
     public void answerQuestion(Player player, String argument) {
         if (argument.equalsIgnoreCase("yes")) {
             Question question = getInstance().questionMap.get(player.getName());
@@ -155,6 +161,12 @@ public class QuestionManager {
                     player.sendMessage(Static.getParkourString() + "ParkoutKit " + ChatColor.AQUA + argument + ChatColor.WHITE + " deleted...");
                     Utils.logToFile("ParkourKit " + argument + " was deleted by " + player.getName());
                     return;
+
+                case DELETE_AUTOSTART:
+                	CourseMethods.deleteAutoStart(argument, player);
+                	player.sendMessage(Static.getParkourString() + "AutoStart deleted...");
+                    Utils.logToFile("AutoStart at " + argument + " was deleted by " + player.getName());
+                	return;
 
                 case RESET_COURSE:
                     CourseMethods.resetCourse(argument);

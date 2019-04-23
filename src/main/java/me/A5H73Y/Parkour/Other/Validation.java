@@ -424,6 +424,12 @@ public class Validation {
 		return true;
 	}
 
+	/**
+	 * Validate a kit before deleting it
+	 * @param courseName
+	 * @param player
+	 * @return
+	 */
 	public static boolean deleteParkourKit(String parkourKit, Player player) {
 		parkourKit = parkourKit.toLowerCase();
 		List<String> dependentCourses = new ArrayList<>();
@@ -443,4 +449,22 @@ public class Validation {
 
 		return true;
 	}
+
+	/**
+	 * Validate the autostart before deleting it
+	 * @param courseName
+	 * @param coordinates
+	 * @param player
+	 * @return
+	 */
+	public static boolean deleteAutoStart(String courseName, String coordinates, Player player) {
+		courseName = courseName.toLowerCase();
+		if (!Parkour.getParkourConfig().getCourseData().getString("CourseInfo.AutoStart." + coordinates).equalsIgnoreCase(courseName)) {
+			player.sendMessage(Static.getParkourString() + "This autostart can not be deleted as it is not linked to course: " + courseName);
+			return false;
+		}
+
+		return true;
+	}
+
 }

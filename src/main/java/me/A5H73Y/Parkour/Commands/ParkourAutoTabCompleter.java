@@ -119,6 +119,7 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 				list.add("ranks");
 				list.add("lobbies");
 			} else if (args[0].equalsIgnoreCase("delete")) {
+				list.add("autostart");
 				list.add("course");
 				list.add("checkpoint");
 				list.add("lobby");
@@ -132,7 +133,7 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 				list.add("prize");
 			}
 		} else if (args.length == 3) {
-			if ((args[0].equalsIgnoreCase("reset") || args[0].equalsIgnoreCase("delete")) && args[1].equalsIgnoreCase("course")) {
+			if ((args[0].equalsIgnoreCase("reset") || args[0].equalsIgnoreCase("delete")) && (args[1].equalsIgnoreCase("course") || args[1].equalsIgnoreCase("autostart"))) {
 				list.addAll(CourseInfo.getAllCourses());
 			} else if ((args[0].equalsIgnoreCase("delete") && args[1].equalsIgnoreCase("kit")) || args[0].equalsIgnoreCase("linkkit")) {
 				list.addAll(ParkourKitInfo.getParkourKitNames());
