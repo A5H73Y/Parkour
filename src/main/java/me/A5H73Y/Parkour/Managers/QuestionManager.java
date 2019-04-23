@@ -163,10 +163,10 @@ public class QuestionManager {
                     return;
 
                 case DELETE_AUTOSTART:
-                	CourseMethods.deleteAutoStart(argument, player);
-                	player.sendMessage(Static.getParkourString() + "AutoStart deleted...");
+                    CourseMethods.deleteAutoStart(argument, player);
+                    player.sendMessage(Static.getParkourString() + "AutoStart deleted...");
                     Utils.logToFile("AutoStart at " + argument + " was deleted by " + player.getName());
-                	return;
+                    return;
 
                 case RESET_COURSE:
                     CourseMethods.resetCourse(argument);

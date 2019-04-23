@@ -560,7 +560,7 @@ public final class Utils {
             QuestionManager.getInstance().askDeleteKitQuestion(player, args[2]);
 
         } else if (args[1].equalsIgnoreCase("autostart")) {
-        	Location location = player.getLocation();
+            Location location = player.getLocation();
             if (CourseMethods.getAutoStartCourse(location) == null) {
                 player.sendMessage(Static.getParkourString() + "There is no autostart at this location");
                 return;

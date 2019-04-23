@@ -426,7 +426,7 @@ public class Validation {
 
 	/**
 	 * Validate a kit before deleting it
-	 * @param courseName
+	 * @param parkourKit
 	 * @param player
 	 * @return
 	 */
@@ -458,13 +458,13 @@ public class Validation {
 	 * @return
 	 */
 	public static boolean deleteAutoStart(String courseName, String coordinates, Player player) {
-		courseName = courseName.toLowerCase();
-		if (!Parkour.getParkourConfig().getCourseData().getString("CourseInfo.AutoStart." + coordinates).equalsIgnoreCase(courseName)) {
-			player.sendMessage(Static.getParkourString() + "This autostart can not be deleted as it is not linked to course: " + courseName);
-			return false;
-		}
+        courseName = courseName.toLowerCase();
+        if (!Parkour.getParkourConfig().getCourseData().getString("CourseInfo.AutoStart." + coordinates).equalsIgnoreCase(courseName)) {
+            player.sendMessage(Static.getParkourString() + "This autostart can not be deleted as it is not linked to course: " + courseName);
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
 }
