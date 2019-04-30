@@ -706,7 +706,7 @@ public class PlayerMethods {
             player.getInventory().addItem(s);
         }
 
-        ItemStack s = new ItemStack(Material.SIGN);
+        ItemStack s = new ItemStack(XMaterial.OAK_SIGN.parseMaterial());
         ItemMeta m = s.getItemMeta();
         m.setDisplayName(Utils.getTranslation("Kit.Sign", false));
         s.setItemMeta(m);

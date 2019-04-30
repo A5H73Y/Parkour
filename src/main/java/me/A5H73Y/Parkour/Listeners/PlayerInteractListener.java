@@ -11,9 +11,9 @@ import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Utils;
 import me.A5H73Y.Parkour.Utilities.XMaterial;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -43,8 +43,7 @@ public class PlayerInteractListener implements Listener {
         }
 
         if (event.getClickedBlock() != null
-                && (event.getClickedBlock().getType() == Material.SIGN
-                || event.getClickedBlock().getType() == Material.WALL_SIGN)) {
+                && event.getClickedBlock().getState() instanceof Sign) {
             return;
         }
 

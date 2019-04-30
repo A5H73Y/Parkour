@@ -21,7 +21,7 @@ public class PlayerInventoryListener implements Listener {
             return;
         }
 
-        if (!event.getInventory().getTitle().startsWith(InventoryBuilder.PARKOUR_TITLE_PREFIX)) {
+        if (!event.getView().getTitle().startsWith(InventoryBuilder.PARKOUR_TITLE_PREFIX)) {
             return;
         }
 

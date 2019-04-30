@@ -12,7 +12,6 @@ import me.A5H73Y.Parkour.Utilities.SignMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -72,8 +71,8 @@ public class SignListener implements Listener {
 			return;
 		}
 
-		if ((event.getClickedBlock().getType() != Material.SIGN)
-				&& (event.getClickedBlock().getType() != Material.WALL_SIGN)) {
+		if (event.getClickedBlock() == null ||
+				!(event.getClickedBlock().getState() instanceof Sign)) {
 			return;
 		}
 
@@ -103,8 +102,8 @@ public class SignListener implements Listener {
 			return;
 		}
 
-		if ((event.getClickedBlock().getType() != Material.SIGN)
-				&& (event.getClickedBlock().getType() != Material.WALL_SIGN)) {
+		if (event.getClickedBlock() == null ||
+				!(event.getClickedBlock().getState() instanceof Sign)) {
 			return;
 		}
 

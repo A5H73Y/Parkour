@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.A5H73Y</groupId>
 	<artifactId>Parkour</artifactId>
-	<version>5.2</version>
+	<version>5.3</version>
 	<packaging>jar</packaging>
 
 	<name>Parkour</name>
@@ -90,6 +90,13 @@
 			<artifactId>bstats-bukkit</artifactId>
 			<version>1.4</version>
 			<scope>compile</scope>
+		</dependency>
+
+		<!-- Updater -->
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1.1</version>
 		</dependency>
 	</dependencies>
 
