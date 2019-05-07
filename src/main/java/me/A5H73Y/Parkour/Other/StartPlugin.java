@@ -132,16 +132,12 @@ public class StartPlugin {
             return;
         }
 
-        Plugin placeholderAPI = Parkour.getPlugin().getServer().getPluginManager()
-                .getPlugin("PlaceholderAPI");
+        Plugin placeholderAPI = Bukkit.getPluginManager().getPlugin("PlaceholderAPI");
 
         if (placeholderAPI != null && placeholderAPI.isEnabled()) {
             Utils.log("[PlaceholderAPI] Successfully linked. Version: " + placeholderAPI.getDescription().getVersion());
+            new ParkourPlaceholders(Parkour.getPlugin()).register();
             Static.enablePlaceholderAPI();
-
-            if (Static.isPlaceholderAPI()) {
-                new ParkourPlaceholders(Parkour.getPlugin()).hook();
-            }
 
         } else {
             Utils.log("[PlaceholderAPI] Plugin is missing, disabling config option.", 1);

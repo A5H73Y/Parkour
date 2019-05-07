@@ -4,16 +4,40 @@ import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
-import me.clip.placeholderapi.external.EZPlaceholderHook;
+import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 
-public class ParkourPlaceholders extends EZPlaceholderHook {
+public class ParkourPlaceholders extends PlaceholderExpansion {
 
     private Parkour plugin;
 
     public ParkourPlaceholders(Parkour plugin) {
-        super(plugin, "parkour");
         this.plugin = plugin;
+    }
+
+    @Override
+    public String getIdentifier() {
+        return "Parkour";
+    }
+
+    @Override
+    public String getAuthor() {
+        return plugin.getDescription().getAuthors().toString();
+    }
+
+    @Override
+    public String getVersion() {
+        return plugin.getDescription().getVersion();
+    }
+
+    @Override
+    public boolean persist(){
+        return true;
+    }
+
+    @Override
+    public boolean canRegister(){
+        return true;
     }
 
     @Override
@@ -47,6 +71,9 @@ public class ParkourPlaceholders extends EZPlaceholderHook {
 
         } else if (message.equalsIgnoreCase("level")) {
             return String.valueOf(PlayerInfo.getParkourLevel(player));
+
+        } else if (message.equalsIgnoreCase("rank")) {
+            return PlayerInfo.getRank(player);
         }
 
         return null;
