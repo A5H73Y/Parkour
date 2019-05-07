@@ -101,6 +101,11 @@
                         <h2 id="parkoins">Parkoins</h2>
                         <p class="no-margin">Parkoins are a currency within the Parkour plugin that can be configured like any other prize. </p>
                         <p>Unfortunately due to time constraints and more important features, this has been underutilized by the plugin itself. Fortunately due to the easy developer API, you can create a plugin that can build on top of Parkour that uses the currency. An example could be requiring a certain amount of Parkoins before a course can be purchased to join.</p>
+
+                        <h2 id="challengeMode">Challenge Mode</h2>
+                        <p>You are able to challenge a player to a course to see who can complete the course the fastest. This can become competitive when a monetary wager is introduced <span class="italic">(If Economy is enabled)</span>, the winner will have the amount added to the account and the loser will have the amount deducted. <span class="italic">Forfeiting (leaving the course or server) will be treated as a loss and the wager will be deducted.</span>.</p>
+                        <p class="no-margin">To begin you must send the target player a Challenge request using <strong>/pa challenge (player) (course) [wager]</strong> for example <strong>/pa challenge A5H73Y fastrun</strong>.</p>
+                        <p>If the target player accepts using <strong>/pa accept</strong> then both players are teleported to the start of the course and a countdown is initiated. It can be configured for the opponent to be invisible for the duration of the challenge.</p>
                     </div>
                 </div>
             </div>

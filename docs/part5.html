@@ -59,35 +59,21 @@
                         <img src="https://i.imgur.com/Zgnyw6w.png" alt="Leave Syntax" class="img-thumbnail">
 
                         <h2 id="effects">Effects Signs</h2>
-                        <p><strong>THESE TUTORIALS ARE OUTDATED. Will update soon.</strong></p>
-                        <p>You can apply several affects to the player on the course. These are activated by right clicking the signs whilst on a course.</p>
-                        <p class="no-margin">The effects include: </p>
+                        <p class="no-margin">You can apply several effects to the player on the course. These are activated by right clicking the signs whilst on a course.</p>
+                        <p>From v5.2 onwards, the effects are derived from <span class="italic">PotionEffectType</span> available from the server.</p>
+                        <p class="no-margin">There are 2 hardcoded effects, these include: </p>
                         <ul>
                             <li>
                                 Heal
-                                <ul><li>Right click to fill the players health to full</li></ul>
-                            </li>
-                            <li>
-                                Jump
-                                <ul><li>Requires a number on the bottom line to apply the strength of the jump potion</li></ul>
-                            </li>
-                            <li>
-                                Speed
-                                <ul><li>Applies a speed potion</li></ul>
-                            </li>
-                            <li>
-                                Pain
-                                <ul><li>Applies damage resistance potion</li></ul>
-                            </li>
-                            <li>
-                                Fire
-                                <ul><li>Applies a fire resistance potion</li></ul>
+                                <ul><li>Fully restore the player's health.</li></ul>
                             </li>
                             <li>
                                 Gamemode
-                                <ul><li>Requires a gamemode on the bottom line to apply the gamemode specified</li></ul>
+                                <ul><li>Requires a GameMode on the bottom line to apply the GameMode specified.</li></ul>
                             </li>
                         </ul>
+                        <p>For the other effects, you simply put the name of the <span class="italic">PotionEffectType</span> on the second line. For example <strong>JUMP</strong>, then on the bottom line you will put the duration and strength in the format of <strong>duration:strength</strong> for example <strong>1000:6</strong></p>
+                        <p class="italic">For resistance effects that may not fit on the line such as <strong>DAMAGE_RESISTANCE</strong> this can be shortened to <strong>DAMAGE_RESIST</strong>.</p>
 
                         <h5>Syntax</h5>
                         <img src="https://i.imgur.com/7kp3Ll9.png" alt="Effects Syntax" class="img-thumbnail">
