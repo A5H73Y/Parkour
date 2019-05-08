@@ -17,3 +17,4 @@ deploy:
   github_token: $PAT
   file: "target/Parkour.jar"
   skip_cleanup: true
+  api_key: $PAT
