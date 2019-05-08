@@ -10,7 +10,7 @@ cache:
 before_deploy:
   - git config --local user.name "A5H73Y"
   - git config --local user.email "skater.ash@hotmail.com"
-  - export GIT_TAG=Parkour-SNAPSHOT.$TRAVIS_BUILD_NUMBER.$TRAVIS_TAG
+  - export GIT_TAG=Parkour-SNAPSHOT.$TRAVIS_BUILD_NUMBER
   - git tag $GIT_TAG -a -m "Generated from TravisCI for build $TRAVIS_BUILD_NUMBER"
 deploy:
   provider: releases
