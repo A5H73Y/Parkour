@@ -3,7 +3,6 @@ package me.A5H73Y.Parkour.Listeners;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.GUI.InventoryBuilder;
 import me.A5H73Y.Parkour.GUI.ParkourCoursesInventory;
-import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
