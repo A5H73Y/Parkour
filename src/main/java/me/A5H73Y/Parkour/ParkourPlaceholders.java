@@ -20,6 +20,8 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
 
     private Parkour plugin;
 
+    // test
+
     private static final String INVALID_SYNTAX = "Invalid Syntax";
     private static final String NO_TIME_RECORDED = "No time recorded";
 
