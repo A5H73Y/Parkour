@@ -1,24 +1,27 @@
 package me.A5H73Y.Parkour;
 
+import java.util.List;
+
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Other.TimeObject;
 import me.A5H73Y.Parkour.Other.Validation;
+import me.A5H73Y.Parkour.Player.ParkourSession;
 import me.A5H73Y.Parkour.Player.PlayerInfo;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
 import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-
-import java.util.List;
-
 import org.bukkit.entity.Player;
 
 public class ParkourPlaceholders extends PlaceholderExpansion {
 
     private Parkour plugin;
+
+    private static final String INVALID_SYNTAX = "Invalid Syntax";
+    private static final String NO_TIME_RECORDED = "No time recorded";
 
     public ParkourPlaceholders(Parkour plugin) {
         this.plugin = plugin;
@@ -61,49 +64,31 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             return String.valueOf(PlayerMethods.getPlaying().size());
 
         } else if (message.startsWith("course_record")) {
-        	String[] temp = message.split("_");          
-        	if (temp.length != 3) {
-        		return null;
-        	}
-        	String courseName = temp[2];
-        	if (!CourseMethods.exist(courseName)) {
-        		return null;
-        	}
-        	List<TimeObject> time = DatabaseMethods.getTopCourseResults(courseName, 1);
-        	if (time.size() == 0) {
-        		return "No time recorded";
-        	}
-        	return Utils.displayCurrentTime(time.get(0).getTime());
+            String[] temp = message.split("_");
+            if (temp.length != 3) {
+                return INVALID_SYNTAX;
+            }
+
+            TimeObject result = getTopResultForCourse(temp[2]);
+            return result == null ? NO_TIME_RECORDED : Utils.displayCurrentTime(result.getTime());
 
         } else if (message.startsWith("course_record_deaths")) {
-        	String[] temp = message.split("_");          
-        	if (temp.length != 4) {
-        		return null;
-        	}
-        	String courseName = temp[3];
-        	if (!CourseMethods.exist(courseName)) {
-        		return null;
-        	}
-        	List<TimeObject> time = DatabaseMethods.getTopCourseResults(courseName, 1);
-        	if (time.size() == 0) {
-        		return "No time recorded";
-        	}
-        	return String.valueOf(time.get(0).getDeaths());
+            String[] temp = message.split("_");
+            if (temp.length != 4) {
+                return INVALID_SYNTAX;
+            }
+
+	        TimeObject result = getTopResultForCourse(temp[3]);
+	        return result == null ? NO_TIME_RECORDED : String.valueOf(result.getDeaths());
 
         } else if (message.startsWith("leader")) {
-        	String[] temp = message.split("_");          
-        	if (temp.length != 2) {
-        		return null;
-        	}
-        	String courseName = temp[1];
-        	if (!CourseMethods.exist(courseName)) {
-        		return null;
-        	}
-        	List<TimeObject> time = DatabaseMethods.getTopCourseResults(courseName, 1);
-        	if (time.size() == 0) {
-        		return "No time recorded";
-        	}
-        	return String.valueOf(time.get(0).getPlayer());
+            String[] temp = message.split("_");
+            if (temp.length != 2) {
+                return INVALID_SYNTAX;
+            }
+
+	        TimeObject result = getTopResultForCourse(temp[1]);
+	        return result == null ? NO_TIME_RECORDED : result.getPlayer();
         }
 
         // Player specific
@@ -128,136 +113,130 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
 
         } else if (message.equalsIgnoreCase("rank")) {
             return PlayerInfo.getRank(player);
+
         } else if (message.equals("current_course")) {
-        	Course course = CourseMethods.findByPlayer(player.getName());
-        	return course != null ? course.getName() : "";
+            Course course = CourseMethods.findByPlayer(player.getName());
+            return course == null ? "" : course.getName();
 
         } else if (message.equals("current_course_record_deaths")) {
-        	Course course = CourseMethods.findByPlayer(player.getName());
-        	if (course != null) {
-        		List<TimeObject> time = DatabaseMethods.getTopCourseResults(course.getName(), 1);
-        		if (time.size() == 0) {
-        			return "No time recorded";
-        		}
-        		return String.valueOf(time.get(0).getDeaths());
-        	}
-        	return "";
+            Course course = CourseMethods.findByPlayer(player.getName());
+            if (course != null) {
+                TimeObject result = getTopResultForCourse(course.getName());
+                return result == null ? NO_TIME_RECORDED : String.valueOf(result.getDeaths());
+            }
+            return "";
 
         } else if (message.equals("current_course_record")) {
-        	Course course = CourseMethods.findByPlayer(player.getName());
-        	if (course != null) {
-        		List<TimeObject> time = DatabaseMethods.getTopCourseResults(course.getName(), 1);
-        		if (time.size() == 0) {
-        			return "No time recorded";
-        		}
-        		return Utils.displayCurrentTime(time.get(0).getTime());
-        	}
-        	return "";
+            Course course = CourseMethods.findByPlayer(player.getName());
+            if (course != null) {
+	            TimeObject result = getTopResultForCourse(course.getName());
+	            return result == null ? NO_TIME_RECORDED : Utils.displayCurrentTime(result.getTime());
+            }
+            return "";
 
         } else if (message.startsWith("personal_best_deaths")) {
-        	String[] temp = message.split("_");          
-        	if (temp.length != 4) {
-        		return null;
-        	}
-        	String courseName = temp[3];
-        	if (!CourseMethods.exist(courseName)) {
-        		return null;
-        	}
-        	List<TimeObject> time = DatabaseMethods.getTopPlayerCourseResults(player.getName(),courseName, 1);
-        	if (time.size() == 0) {
-        		return "No time recorded";
-        	}
-        	return String.valueOf(time.get(0).getDeaths());
+            String[] temp = message.split("_");
+            if (temp.length != 4) {
+                return INVALID_SYNTAX;
+            }
+
+	        TimeObject result = getTopPlayerResultForCourse(player.getName(), temp[3]);
+	        return result == null ? NO_TIME_RECORDED : String.valueOf(result.getDeaths());
 
         } else if (message.startsWith("personal_best")) {
-        	String[] temp = message.split("_");          
-        	if (temp.length != 3) {
-        		return null;
-        	}
-        	String courseName = temp[2];
-        	if (!CourseMethods.exist(courseName)) {
-        		return null;
-        	}
-        	List<TimeObject> time = DatabaseMethods.getTopPlayerCourseResults(player.getName(),courseName, 1);
-        	if (time.size() == 0) {
-        		return "No time recorded";
-        	}
-        	return Utils.displayCurrentTime(time.get(0).getTime());
+            String[] temp = message.split("_");
+            if (temp.length != 3) {
+                return null;
+            }
+
+	        TimeObject result = getTopPlayerResultForCourse(player.getName(), temp[2]);
+	        return result == null ? NO_TIME_RECORDED : Utils.displayCurrentTime(result.getTime());
 
         } else if (message.equals("current_personal_best_deaths")) {
-        	Course course = CourseMethods.findByPlayer(player.getName());
-        	if (course != null) {
-        		List<TimeObject> time = DatabaseMethods.getTopPlayerCourseResults(player.getName(),course.getName(), 1);
-        		if (time.size() == 0) {
-        			return "No time recorded";
-        		}
-        		return String.valueOf(time.get(0).getDeaths());
-        	}
-        	return "";
+            Course course = CourseMethods.findByPlayer(player.getName());
+            if (course != null) {
+	            TimeObject result = getTopPlayerResultForCourse(player.getName(), course.getName());
+	            return result == null ? NO_TIME_RECORDED : String.valueOf(result.getDeaths());
+            }
+            return "";
 
         } else if (message.equals("current_personal_best")) {
-        	Course course = CourseMethods.findByPlayer(player.getName());
-        	if (course != null) {
-        		List<TimeObject> time = DatabaseMethods.getTopPlayerCourseResults(player.getName(),course.getName(), 1);
-        		if (time.size() == 0) {
-        			return "No time recorded";
-        		}
-        		return Utils.displayCurrentTime(time.get(0).getTime());
-        	}
-        	return "";
+            Course course = CourseMethods.findByPlayer(player.getName());
+            if (course != null) {
+	            TimeObject result = getTopPlayerResultForCourse(player.getName(), course.getName());
+	            return result == null ? NO_TIME_RECORDED : Utils.displayCurrentTime(result.getTime());
+            }
+            return "";
 
         } else if (message.equals("current_course_leader")) {
-        	Course course = CourseMethods.findByPlayer(player.getName());
-        	if (course != null) {
-        		List<TimeObject> time = DatabaseMethods.getTopCourseResults(course.getName(), 1);
-        		if (time.size() == 0) {
-        			return "No time recorded";
-        		}
-        		return String.valueOf(time.get(0).getPlayer());
-        	}
-        	return "";
+            Course course = CourseMethods.findByPlayer(player.getName());
+            if (course != null) {
+	            TimeObject result = getTopResultForCourse(course.getName());
+	            return result == null ? NO_TIME_RECORDED : result.getPlayer();
+            }
+            return "";
 
         } else if (message.equals("current_course_timer")) {
-        	if (PlayerMethods.getParkourSession(player.getName()) != null) {
-        		return PlayerMethods.getParkourSession(player.getName()).getLiveTime();
-        	}
-        	return "";
+	        ParkourSession session = PlayerMethods.getParkourSession(player.getName());
+            return session == null ? "" : session.getLiveTime();
 
         } else if (message.startsWith("topten")) {
-        	String[] temp = message.split("_");
-        	if (temp.length != 3) {
-        		return null;
-        	}
-        	String courseName = temp[1];
-        	if (!CourseMethods.exist(courseName)) {
-        		return null;
-        	}
-        	if (!Validation.isInteger(temp[2])) {
-        		return null;
-        	}
-        	int pos = Integer.parseInt(temp[2]);
-        	if (pos < 1 || pos > 10) {
-        		return null;
-        	}
-        	List<TimeObject> time = DatabaseMethods.getTopCourseResults(courseName, pos);
-        	if (time.size() == 0) {
-        		return "No time recorded";
-        	} else if (pos > time.size()) {
-        		return " ";		
-        	}
-        	if (message.startsWith("toptenx")) {
-        		String nCol = "&f";
-        		String tCol = "&f";
-        		//check if colour codes specified
-        		if (temp[0].length() == 9 && temp[0].substring(7).matches("[0-9a-f]+")) {
-        			nCol = "&" + temp[0].substring(7,8);
-        			tCol = "&" + temp[0].substring(8);
-        		}
-        		return String.valueOf(nCol + time.get(pos - 1).getPlayer() + "&7 - " + tCol + Utils.displayCurrentTime(time.get(pos - 1).getTime()));
-        	}
-        	return String.valueOf("&f" + pos + ") &b" +time.get(pos - 1).getPlayer() + "&f in &a" + Utils.displayCurrentTime(time.get(pos - 1).getTime()) + "&f");
-        }    
+            String[] temp = message.split("_");
+            if (temp.length != 3) {
+                return INVALID_SYNTAX;
+            }
+	        if (!Validation.isInteger(temp[2])) {
+		        return INVALID_SYNTAX;
+	        }
+	        int pos = Integer.parseInt(temp[2]);
+	        if (pos < 1 || pos > 10) {
+		        return INVALID_SYNTAX;
+	        }
+	        String courseName = temp[1];
+	        if (!CourseMethods.exist(courseName)) {
+		        return NO_TIME_RECORDED;
+	        }
+            List<TimeObject> results = DatabaseMethods.getTopCourseResults(courseName, pos);
+            if (results.isEmpty()) {
+                return NO_TIME_RECORDED;
+
+            } else if (pos > results.size()) {
+                return " ";
+            }
+	        TimeObject result = results.get(pos - 1);
+
+            if (message.startsWith("toptenx")) {
+                String nCol = "&f";
+                String tCol = "&f";
+                //check if colour codes specified
+                if (temp[0].length() == 9 && temp[0].substring(7).matches("[0-9a-f]+")) {
+                    nCol = "&" + temp[0].substring(7,8);
+                    tCol = "&" + temp[0].substring(8);
+                }
+                return nCol + result.getPlayer() + "&7 - " + tCol + Utils.displayCurrentTime(result.getTime());
+            }
+            return "&f" + pos + ") &b" + result.getPlayer() + "&f in &a" + Utils.displayCurrentTime(result.getTime()) + "&f";
+        }
 
         return null;
     }
+
+
+    private TimeObject getTopResultForCourse(String courseName) {
+	    if (!CourseMethods.exist(courseName)) {
+		    return null;
+	    }
+
+	    List<TimeObject> time = DatabaseMethods.getTopCourseResults(courseName, 1);
+	    return time.isEmpty() ? null : time.get(0);
+    }
+
+	private TimeObject getTopPlayerResultForCourse(String playerName, String courseName) {
+		if (!CourseMethods.exist(courseName)) {
+			return null;
+		}
+
+		List<TimeObject> time = DatabaseMethods.getTopPlayerCourseResults(playerName, courseName, 1);
+		return time.isEmpty() ? null : time.get(0);
+	}
 }
