@@ -1,5 +1,11 @@
 package me.A5H73Y.Parkour.Course;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import me.A5H73Y.Parkour.Conversation.CoursePrizeConversation;
 import me.A5H73Y.Parkour.Conversation.LeaderboardConversation;
 import me.A5H73Y.Parkour.Conversation.ParkourModeConversation;
@@ -24,12 +30,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class CourseMethods {
 

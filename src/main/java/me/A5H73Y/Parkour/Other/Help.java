@@ -1,5 +1,7 @@
 package me.A5H73Y.Parkour.Other;
 
+import java.io.File;
+
 import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Enums.DatabaseType;
@@ -11,8 +13,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-
-import java.io.File;
 
 public final class Help {
 

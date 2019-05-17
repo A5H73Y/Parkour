@@ -1,5 +1,8 @@
 package me.A5H73Y.Parkour.GUI;
 
+import java.util.Arrays;
+import java.util.List;
+
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.Bukkit;
@@ -8,9 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.Arrays;
-import java.util.List;
 
 public abstract class InventoryBuilder {
 
@@ -25,7 +25,7 @@ public abstract class InventoryBuilder {
     public Inventory buildInventory(Player player, int page) {
         int inventorySize = calculateInventorySize();
         String inventoryTitle = PARKOUR_TITLE_PREFIX + getInventoryTitle()
-		        .replace("%PAGE%", String.valueOf(page));
+                .replace("%PAGE%", String.valueOf(page));
 
         List<String> items = getAllItems();
 
@@ -35,11 +35,11 @@ public abstract class InventoryBuilder {
 
         filteredListItems = items.subList(listStartIndex, listEndIndex);
 
-	    Inventory inv = Bukkit.createInventory(null, inventorySize, inventoryTitle);
+        Inventory inv = Bukkit.createInventory(null, inventorySize, inventoryTitle);
 
         // previous page
         if (page > 1) {
-        	//TODO change Arrow?
+            //TODO change Arrow?
             ItemStack arrow = new ItemStack(Material.ARROW);
             ItemMeta metadata = arrow.getItemMeta();
             metadata.setDisplayName(Utils.getTranslation("ParkourGUI.PreviousPage", false));

@@ -22,9 +22,9 @@ package me.A5H73Y.Parkour.Utilities;
  * DEALINGS IN THE SOFTWARE.
  **/
 
-import org.bukkit.Material;
-
 import java.util.HashMap;
+
+import org.bukkit.Material;
 
 public enum XMaterial {
     ACACIA_BOAT(0, "BOAT_ACACIA"),

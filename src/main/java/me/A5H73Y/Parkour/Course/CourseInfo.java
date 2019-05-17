@@ -1,5 +1,8 @@
 package me.A5H73Y.Parkour.Course;
 
+import java.util.List;
+import java.util.Set;
+
 import me.A5H73Y.Parkour.Other.Constants;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Utilities.DatabaseMethods;
@@ -10,9 +13,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-
-import java.util.List;
-import java.util.Set;
 
 public class CourseInfo {
 
@@ -499,12 +499,12 @@ public class CourseInfo {
                 Set<String> playerNames = playersSection.getKeys(false);
 
                 for (String playerName : playerNames) {
-                	String completedPath = "PlayerInfo." + playerName + ".Completed";
+                    String completedPath = "PlayerInfo." + playerName + ".Completed";
                     List<String> completedCourses = userConfig.getStringList(completedPath);
 
                     if (completedCourses.contains(completedPath)) {
-	                    completedCourses.remove(courseName);
-	                    userConfig.set(completedPath, completedCourses);
+                        completedCourses.remove(courseName);
+                        userConfig.set(completedPath, completedCourses);
                     }
                 }
             }
@@ -625,10 +625,10 @@ public class CourseInfo {
         }
 
         if (hasRewardDelay(courseName) && Parkour.getSettings().isDisplayPrizeCooldown()) {
-        	player.sendMessage("Reward Cooldown (days): " + aqua + getRewardDelay(courseName));
-        	if (!Utils.hasPrizeCooldownDurationPassed(player, courseName, false)) {
-        		player.sendMessage("Cooldown Remaining: " + aqua + Utils.getTimeRemaining(player, courseName));
-        	}
+            player.sendMessage("Reward Cooldown (days): " + aqua + getRewardDelay(courseName));
+            if (!Utils.hasPrizeCooldownDurationPassed(player, courseName, false)) {
+                player.sendMessage("Cooldown Remaining: " + aqua + Utils.getTimeRemaining(player, courseName));
+            }
         }
     }
 }

@@ -1,10 +1,10 @@
 package com.huskehhh.mysql.mysql;
 
-import com.huskehhh.mysql.Database;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
+import com.huskehhh.mysql.Database;
 
 /**
  * Connects to and uses a MySQL database.
@@ -35,7 +35,7 @@ public class MySQL extends Database {
 	 *            Password
 	 */
 	public MySQL(final String hostname, final String port, final String database,
-				 final String username, final String password) {
+	             final String username, final String password) {
 		this.hostname = hostname;
 		this.port = port;
 		this.database = database;

@@ -1,9 +1,9 @@
 package me.A5H73Y.Parkour.Course;
 
+import java.io.Serializable;
+
 import me.A5H73Y.Parkour.Other.Constants;
 import me.A5H73Y.Parkour.ParkourKit.ParkourKit;
-
-import java.io.Serializable;
 
 public class Course implements Serializable {
 

@@ -1,10 +1,10 @@
 package me.A5H73Y.Parkour.Managers;
 
-import me.A5H73Y.Parkour.Utilities.Utils;
-import org.bukkit.entity.Player;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import me.A5H73Y.Parkour.Utilities.Utils;
+import org.bukkit.entity.Player;
 
 public class QuietModeManager {
 

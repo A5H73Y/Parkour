@@ -1,5 +1,8 @@
 package me.A5H73Y.Parkour.GUI;
 
+import java.util.Collections;
+import java.util.List;
+
 import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Utilities.Utils;
@@ -8,9 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.Collections;
-import java.util.List;
 
 public class ParkourCoursesInventory extends InventoryBuilder {
 

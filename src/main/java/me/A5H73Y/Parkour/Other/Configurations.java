@@ -1,5 +1,9 @@
 package me.A5H73Y.Parkour.Other;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.ParkourKit.ParkourKitInfo;
 import me.A5H73Y.Parkour.Utilities.Static;
@@ -7,10 +11,6 @@ import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 
 public class Configurations {
 
@@ -485,15 +485,15 @@ public class Configurations {
         config.addDefault("OnFinish.DefaultPrize.Material", "DIAMOND");
         config.addDefault("OnFinish.DefaultPrize.Amount", 1);
         config.addDefault("OnFinish.DefaultPrize.XP", 0);
-	    config.addDefault("OnFinish.DisplayNewRecords", false);
-	    config.addDefault("OnFinish.DisplayStats", true);
-	    config.addDefault("OnFinish.EnablePrizes", true);
-	    config.addDefault("OnFinish.EnforceCompletion", true);
-	    config.addDefault("OnFinish.SaveUserCompletedCourses", true); //TODO false
-	    config.addDefault("OnFinish.SetGamemode", 0);
-	    config.addDefault("OnFinish.TeleportAway", true);
-	    config.addDefault("OnFinish.TeleportDelay", 0);
-	    config.addDefault("OnFinish.UpdatePlayerDatabaseTime", false);
+        config.addDefault("OnFinish.DisplayNewRecords", false);
+        config.addDefault("OnFinish.DisplayStats", true);
+        config.addDefault("OnFinish.EnablePrizes", true);
+        config.addDefault("OnFinish.EnforceCompletion", true);
+        config.addDefault("OnFinish.SaveUserCompletedCourses", true); //TODO false
+        config.addDefault("OnFinish.SetGamemode", 0);
+        config.addDefault("OnFinish.TeleportAway", true);
+        config.addDefault("OnFinish.TeleportDelay", 0);
+        config.addDefault("OnFinish.UpdatePlayerDatabaseTime", false);
 
         config.addDefault("OnLeave.TeleportToLinkedLobby", false);
 

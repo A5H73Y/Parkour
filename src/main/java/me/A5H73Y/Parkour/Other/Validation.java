@@ -1,5 +1,8 @@
 package me.A5H73Y.Parkour.Other;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Course.CourseMethods;
@@ -11,9 +14,6 @@ import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Validation {
 

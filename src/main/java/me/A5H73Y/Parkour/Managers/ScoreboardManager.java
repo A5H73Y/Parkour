@@ -1,5 +1,9 @@
 package me.A5H73Y.Parkour.Managers;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Other.TimeObject;
 import me.A5H73Y.Parkour.Parkour;
@@ -14,10 +18,6 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class ScoreboardManager {
 
@@ -77,7 +77,7 @@ public class ScoreboardManager {
 
         if (Parkour.getSettings().isPreventPlayerCollisions() && Utils.getMinorServerVersion() > 8) {
             Team team = board.registerNewTeam("parkour");
-            team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER); 
+            team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
             team.addEntry(player.getName());
         }
 

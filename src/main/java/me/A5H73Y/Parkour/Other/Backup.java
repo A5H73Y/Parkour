@@ -1,8 +1,5 @@
 package me.A5H73Y.Parkour.Other;
 
-import me.A5H73Y.Parkour.Parkour;
-import me.A5H73Y.Parkour.Utilities.Utils;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -11,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import me.A5H73Y.Parkour.Parkour;
+import me.A5H73Y.Parkour.Utilities.Utils;
 
 public class Backup {
 

@@ -1,5 +1,7 @@
 package me.A5H73Y.Parkour.Course;
 
+import java.util.Set;
+
 import me.A5H73Y.Parkour.Other.Validation;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Player.ParkourSession;
@@ -12,8 +14,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.Set;
 
 public class LobbyMethods {
 

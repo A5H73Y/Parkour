@@ -1,5 +1,8 @@
 package me.A5H73Y.Parkour.Managers;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import me.A5H73Y.Parkour.Course.CourseMethods;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
@@ -7,9 +10,6 @@ import me.A5H73Y.Parkour.Utilities.Static;
 import me.A5H73Y.Parkour.Utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class ChallengeManager {
 

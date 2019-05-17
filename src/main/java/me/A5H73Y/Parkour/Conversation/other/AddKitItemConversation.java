@@ -1,5 +1,8 @@
 package me.A5H73Y.Parkour.Conversation.other;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import me.A5H73Y.Parkour.Conversation.ParkourConversation;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.ParkourKit.ParkourKit;
@@ -14,9 +17,6 @@ import org.bukkit.conversations.FixedSetPrompt;
 import org.bukkit.conversations.NumericPrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class AddKitItemConversation {
 

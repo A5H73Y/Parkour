@@ -1,5 +1,8 @@
 package me.A5H73Y.Parkour.Managers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Course.CourseMethods;
@@ -14,9 +17,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Manage the questions that require confirmation from the player

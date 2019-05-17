@@ -1,5 +1,7 @@
 package me.A5H73Y.Parkour.Listeners;
 
+import java.util.List;
+
 import me.A5H73Y.Parkour.Managers.QuestionManager;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Player.PlayerInfo;
@@ -13,8 +15,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-
-import java.util.List;
 
 public class ChatListener implements Listener {
 

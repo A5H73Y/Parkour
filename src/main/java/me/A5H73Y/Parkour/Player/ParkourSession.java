@@ -1,5 +1,7 @@
 package me.A5H73Y.Parkour.Player;
 
+import java.io.Serializable;
+
 import me.A5H73Y.Parkour.Course.CheckpointMethods;
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Course.CourseMethods;
@@ -12,8 +14,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-
-import java.io.Serializable;
 
 public class ParkourSession implements Serializable {
 

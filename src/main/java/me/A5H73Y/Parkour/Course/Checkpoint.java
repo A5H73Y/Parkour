@@ -1,9 +1,9 @@
 package me.A5H73Y.Parkour.Course;
 
+import java.io.Serializable;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-
-import java.io.Serializable;
 
 public class Checkpoint implements Serializable {
 

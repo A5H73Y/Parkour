@@ -1,5 +1,21 @@
 package me.A5H73Y.Parkour.Utilities;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
 import com.connorlinfoot.bountifulapi.BountifulAPI;
 import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Course.CourseMethods;
@@ -25,22 +41,6 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Stairs;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 public final class Utils {
 
@@ -568,7 +568,7 @@ public final class Utils {
 
             String coordinates = location.getBlockX() + "-" + location.getBlockY() + "-" + location.getBlockZ();
             if (!Validation.deleteAutoStart(args[2], coordinates, player)) {
-            	return;
+                return;
             }
 
             QuestionManager.getInstance().askDeleteAutoStartQuestion(player, coordinates);
@@ -982,9 +982,9 @@ public final class Utils {
     }
 
     public static String getTimeRemaining(Player player, String courseName) {
-    	long daysDelay = convertDaysToMilliseconds(CourseInfo.getRewardDelay(courseName));
-    	long timeDifference = System.currentTimeMillis() - PlayerInfo.getLastRewardedTime(player, courseName);
-    	return displayTimeRemaining(daysDelay - timeDifference);
+        long daysDelay = convertDaysToMilliseconds(CourseInfo.getRewardDelay(courseName));
+        long timeDifference = System.currentTimeMillis() - PlayerInfo.getLastRewardedTime(player, courseName);
+        return displayTimeRemaining(daysDelay - timeDifference);
     }
 
     private static String displayTimeRemaining(long millis) {

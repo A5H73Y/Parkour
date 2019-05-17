@@ -1,16 +1,16 @@
 package me.A5H73Y.Parkour.Listeners;
 
-import me.A5H73Y.Parkour.Parkour;
+import java.util.List;
+
 import me.A5H73Y.Parkour.GUI.InventoryBuilder;
 import me.A5H73Y.Parkour.GUI.ParkourCoursesInventory;
+import me.A5H73Y.Parkour.Parkour;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-
-import java.util.List;
 
 public class PlayerInventoryListener implements Listener {
 

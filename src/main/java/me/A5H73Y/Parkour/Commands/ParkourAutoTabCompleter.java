@@ -1,5 +1,11 @@
 package me.A5H73Y.Parkour.Commands;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Other.Validation;
 import me.A5H73Y.Parkour.ParkourKit.ParkourKitInfo;
@@ -9,12 +15,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class ParkourAutoTabCompleter implements TabCompleter {
 

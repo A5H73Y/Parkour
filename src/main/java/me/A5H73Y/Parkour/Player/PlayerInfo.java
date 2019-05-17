@@ -1,5 +1,7 @@
 package me.A5H73Y.Parkour.Player;
 
+import java.util.List;
+
 import me.A5H73Y.Parkour.Other.Validation;
 import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.ParkourEvents.PlayerParkourLevelEvent;
@@ -9,8 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-
-import java.util.List;
 
 /**
  * Centralize player's information retrieval and modifications

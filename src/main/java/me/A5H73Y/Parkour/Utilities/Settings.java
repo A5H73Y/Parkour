@@ -1,11 +1,11 @@
 package me.A5H73Y.Parkour.Utilities;
 
+import java.util.List;
+
 import me.A5H73Y.Parkour.Parkour;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
-
-import java.util.List;
 
 /**
  * Quickly access Parkour Settings without knowing the property name

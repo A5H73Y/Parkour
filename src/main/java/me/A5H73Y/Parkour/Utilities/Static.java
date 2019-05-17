@@ -1,12 +1,12 @@
 package me.A5H73Y.Parkour.Utilities;
 
-import me.A5H73Y.Parkour.Parkour;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import me.A5H73Y.Parkour.Parkour;
 
 public final class Static {
 

@@ -1,5 +1,11 @@
 package me.A5H73Y.Parkour.Utilities;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import me.A5H73Y.Parkour.Course.CourseInfo;
 import me.A5H73Y.Parkour.Enums.DatabaseType;
 import me.A5H73Y.Parkour.Other.TimeObject;
@@ -7,12 +13,6 @@ import me.A5H73Y.Parkour.Parkour;
 import me.A5H73Y.Parkour.Player.PlayerMethods;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DatabaseMethods {
 

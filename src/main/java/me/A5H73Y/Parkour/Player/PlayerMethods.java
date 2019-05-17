@@ -1,5 +1,8 @@
 package me.A5H73Y.Parkour.Player;
 
+import java.util.HashMap;
+import java.util.List;
+
 import me.A5H73Y.Parkour.Course.Checkpoint;
 import me.A5H73Y.Parkour.Course.Course;
 import me.A5H73Y.Parkour.Course.CourseInfo;
@@ -36,9 +39,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
-
-import java.util.HashMap;
-import java.util.List;
 
 public class PlayerMethods {
 
@@ -641,7 +641,7 @@ public class PlayerMethods {
             }
 
             if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.SaveUserCompletedCourses")) {
-            	player.sendMessage("Courses Completed: " + ChatColor.AQUA + PlayerInfo.getNumberOfCoursesCompleted(player) + " / " + String.valueOf(CourseInfo.getAllCourses().size()));
+                player.sendMessage("Courses Completed: " + ChatColor.AQUA + PlayerInfo.getNumberOfCoursesCompleted(player) + " / " + String.valueOf(CourseInfo.getAllCourses().size()));
             }
         }
     }
