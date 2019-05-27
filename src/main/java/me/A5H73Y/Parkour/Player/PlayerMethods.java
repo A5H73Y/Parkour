@@ -377,11 +377,12 @@ public class PlayerMethods {
                 .replace("%TIME%", session.displayTime());
 
         switch (Parkour.getPlugin().getConfig().getInt("OnFinish.BroadcastLevel")) {
-        	case 4:
-        		for (Player players : Bukkit.getWorld(player.getName()).getPlayers()) {
-        			players.sendMessage(finishBroadcast);
-        		}
-        	case 3:
+            case 4:
+                for (Player players : player.getWorld().getPlayers()) {
+                    players.sendMessage(finishBroadcast);
+                }
+                return;
+            case 3:
                 for (Player players : Bukkit.getServer().getOnlinePlayers()) {
                     players.sendMessage(finishBroadcast);
                 }
