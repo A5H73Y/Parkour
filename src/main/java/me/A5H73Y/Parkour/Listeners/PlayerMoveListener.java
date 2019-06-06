@@ -108,6 +108,10 @@ public class PlayerMoveListener implements Listener {
         }
 
         Material belowMaterial = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
+        // if player is on half-block or jumping, get actual location.
+        if (player.getLocation().getBlock().getType() != Material.AIR || !player.isOnGround()) {
+            belowMaterial = player.getLocation().getBlock().getType();
+        }
         ParkourKit kit = session.getCourse().getParkourKit();
 
         if (belowMaterial.equals(Material.SPONGE)) {
