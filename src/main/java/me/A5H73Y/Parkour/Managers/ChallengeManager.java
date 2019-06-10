@@ -90,7 +90,9 @@ public class ChallengeManager {
             String terminateMessage = Utils.getTranslation("Parkour.Challenge.Terminated")
                     .replace("%PLAYER%", leaver.getName());
             leaver.sendMessage(terminateMessage);
-            opponent.sendMessage(terminateMessage);
+            if (opponent != null) {
+                opponent.sendMessage(terminateMessage);
+            }
             removeChallenge(challenge);
         }
     }
