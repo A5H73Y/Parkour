@@ -150,7 +150,7 @@
 					<relocations>
 						<relocation>
 							<pattern>org.bstats</pattern>
-							<shadedPattern>me.A5H73Y.Parkour</shadedPattern>
+							<shadedPattern>me.A5H73Y.parkour</shadedPattern>
 						</relocation>
 					</relocations>
 				</configuration>

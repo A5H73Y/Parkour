@@ -1,11 +1,11 @@
 package com.huskehhh.mysql;
 
+import me.A5H73Y.parkour.utilities.Utils;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import me.A5H73Y.Parkour.Utilities.Utils;
 
 /**
  * Abstract Database class.
