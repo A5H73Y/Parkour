@@ -7,8 +7,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import com.huskehhh.mysql.Database;
-import me.A5H73Y.Parkour.Parkour;
-import me.A5H73Y.Parkour.Utilities.Utils;
+import me.A5H73Y.parkour.Parkour;
+import me.A5H73Y.parkour.utilities.Utils;
 
 /**
  * Connects to and uses a SQLite database.
