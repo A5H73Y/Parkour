@@ -1,14 +1,14 @@
 package com.huskehhh.mysql.sqlite;
 
-import com.huskehhh.mysql.Database;
-import me.A5H73Y.parkour.Parkour;
-import me.A5H73Y.parkour.utilities.Utils;
-
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
+import com.huskehhh.mysql.Database;
+import me.A5H73Y.parkour.Parkour;
+import me.A5H73Y.parkour.utilities.Utils;
 
 /**
  * Connects to and uses a SQLite database.

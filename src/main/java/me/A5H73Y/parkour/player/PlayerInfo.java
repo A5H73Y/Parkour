@@ -1,5 +1,7 @@
 package me.A5H73Y.parkour.player;
 
+import java.util.List;
+
 import me.A5H73Y.parkour.Parkour;
 import me.A5H73Y.parkour.event.PlayerParkourLevelEvent;
 import me.A5H73Y.parkour.other.Validation;
@@ -10,8 +12,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 /**
  * Centralize player's information retrieval and modifications
  * Massive thanks to horgeon for the inspiration of this change
@@ -20,6 +20,7 @@ public class PlayerInfo {
 
     /**
      * Retrieve the player's selected course.
+     *
      * @param player
      * @return selected course
      */
@@ -29,6 +30,7 @@ public class PlayerInfo {
 
     /**
      * Set the player's selected course.
+     *
      * @param player
      * @param courseName
      */
@@ -39,6 +41,7 @@ public class PlayerInfo {
 
     /**
      * Deselect the player's selected course.
+     *
      * @param player
      */
     public static void setDelected(OfflinePlayer player) {
@@ -48,6 +51,7 @@ public class PlayerInfo {
 
     /**
      * Returns if the player has selected a course.
+     *
      * @param player
      * @return boolean
      */
@@ -75,6 +79,7 @@ public class PlayerInfo {
 
     /**
      * Set the amount of player's Parkoins.
+     *
      * @param player
      * @param amount
      */
@@ -85,6 +90,7 @@ public class PlayerInfo {
 
     /**
      * Return the name of the course the player last completed.
+     *
      * @param player
      * @return courseName
      */
@@ -94,6 +100,7 @@ public class PlayerInfo {
 
     /**
      * Return the name of the course the player last attempted.
+     *
      * @param player
      * @return courseName
      */
@@ -103,6 +110,7 @@ public class PlayerInfo {
 
     /**
      * Get the player's ParkourLevel.
+     *
      * @param player
      * @return parkourLevel
      */
@@ -112,6 +120,7 @@ public class PlayerInfo {
 
     /**
      * Set the player's ParkourLevel.
+     *
      * @param player
      * @param level
      */
@@ -125,6 +134,7 @@ public class PlayerInfo {
     /**
      * Set the last completed course for the player.
      * Update the completed list of courses for the player.
+     *
      * @param player
      * @param courseName
      */
@@ -148,6 +158,7 @@ public class PlayerInfo {
 
     /**
      * Set the last played course for the player.
+     *
      * @param player
      * @param courseName
      */
@@ -160,6 +171,7 @@ public class PlayerInfo {
      * Get the player's ParkourRank.
      * If the player has an achieved ParkourRank it will use this,
      * otherwise the default rank will be returned
+     *
      * @param player
      * @return
      */
@@ -170,6 +182,7 @@ public class PlayerInfo {
 
     /**
      * Set the player's ParkourRank.
+     *
      * @param player
      * @param rank
      */
@@ -180,6 +193,7 @@ public class PlayerInfo {
 
     /**
      * Get the time the player last won the reward for the course.
+     *
      * @param player
      * @param courseName
      * @return
@@ -191,6 +205,7 @@ public class PlayerInfo {
 
     /**
      * Set the time the player wins the reward for the course.
+     *
      * @param player
      * @param courseName
      * @param rewardTime
@@ -203,6 +218,7 @@ public class PlayerInfo {
 
     /**
      * Determine if the plugin has any saved information about a player.
+     *
      * @param player
      * @return
      */

@@ -14,6 +14,26 @@ import org.bukkit.command.ConsoleCommandSender;
 
 public class ParkourConsoleCommands implements CommandExecutor {
 
+    private static void displayCommands() {
+        Utils.log("pac reload");
+        Utils.log("pac recreate");
+        Utils.log("pac setminlevel (course) (level)");
+        Utils.log("pac setmaxdeath (course) (deaths)");
+        Utils.log("pac setmaxtime (course) (seconds)");
+        Utils.log("pac setjoinitem (course) (item) (amount)");
+        Utils.log("pac rewardonce (course)");
+        Utils.log("pac rewardlevel (course) (level)");
+        Utils.log("pac rewardrank (level) (rank)");
+        Utils.log("pac rewardparkoins (course) (amount)");
+        Utils.log("pac setlevel (player) (level)");
+        Utils.log("pac setrank (player) (rank)");
+        Utils.log("pac list (courses / players)");
+        Utils.log("pac listkit [kit]");
+        Utils.log("pac settings");
+        Utils.log("pac help (command)");
+        Utils.log("pac backup : Create a backup zip of the Parkour config folder");
+    }
+
     @Override
     public boolean onCommand(final CommandSender sender, final Command command,
                              final String label, final String[] args) {
@@ -137,25 +157,5 @@ public class ParkourConsoleCommands implements CommandExecutor {
             Utils.log("Unknown Command. Enter 'pac cmds' to display all console commands.");
         }
         return true;
-    }
-
-    private static void displayCommands() {
-        Utils.log("pac reload");
-        Utils.log("pac recreate");
-        Utils.log("pac setminlevel (course) (level)");
-        Utils.log("pac setmaxdeath (course) (deaths)");
-        Utils.log("pac setmaxtime (course) (seconds)");
-        Utils.log("pac setjoinitem (course) (item) (amount)");
-        Utils.log("pac rewardonce (course)");
-        Utils.log("pac rewardlevel (course) (level)");
-        Utils.log("pac rewardrank (level) (rank)");
-        Utils.log("pac rewardparkoins (course) (amount)");
-        Utils.log("pac setlevel (player) (level)");
-        Utils.log("pac setrank (player) (rank)");
-        Utils.log("pac list (courses / players)");
-        Utils.log("pac listkit [kit]");
-        Utils.log("pac settings");
-        Utils.log("pac help (command)");
-        Utils.log("pac backup : Create a backup zip of the Parkour config folder");
     }
 }

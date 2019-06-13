@@ -1,5 +1,9 @@
 package me.A5H73Y.parkour.other;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map.Entry;
+
 import com.huskehhh.mysql.Database;
 import com.huskehhh.mysql.mysql.MySQL;
 import com.huskehhh.mysql.sqlite.SQLite;
@@ -20,10 +24,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map.Entry;
 
 public class StartPlugin {
 
@@ -76,7 +76,7 @@ public class StartPlugin {
 
         // Only use MySQL if they have enabled it, configured it, and we aren't
         // forcing SQLite (MySQL failed)
-        if (!forceSQLite && config.getBoolean("MySQL.Use") && !config.getString("MySQL.Host").equals("Host") ) {
+        if (!forceSQLite && config.getBoolean("MySQL.Use") && !config.getString("MySQL.Host").equals("Host")) {
             database = new MySQL(config.getString("MySQL.Host"), config.getString("MySQL.Port"), config.getString("MySQL.Database"), config.getString("MySQL.User"), config.getString("MySQL.Password"));
             DatabaseMethods.type = DatabaseType.MySQL;
         } else {

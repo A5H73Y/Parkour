@@ -1,5 +1,10 @@
 package me.A5H73Y.parkour.kit;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import me.A5H73Y.parkour.Parkour;
 import me.A5H73Y.parkour.other.Constants;
 import me.A5H73Y.parkour.utilities.Static;
@@ -10,15 +15,11 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 public class ParkourKitInfo {
 
     /**
      * Get a list of possible ParkourKit
+     *
      * @return Set<String> of ParkourKit names
      */
     public static Set<String> getParkourKitNames() {
@@ -98,6 +99,7 @@ public class ParkourKitInfo {
 
     /**
      * The need to pass config as the plugin has not initialised fully at this stage
+     *
      * @param config
      * @param name
      */

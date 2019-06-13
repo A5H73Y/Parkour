@@ -1,5 +1,8 @@
 package me.A5H73Y.parkour.gui;
 
+import java.util.Arrays;
+import java.util.List;
+
 import me.A5H73Y.parkour.Parkour;
 import me.A5H73Y.parkour.utilities.Utils;
 import org.bukkit.Bukkit;
@@ -9,18 +12,14 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Arrays;
-import java.util.List;
-
 public abstract class InventoryBuilder {
 
     public static final String PARKOUR_TITLE_PREFIX = "Parkour ";
+    private List<String> filteredListItems;
 
     public abstract List<String> getAllItems();
 
     public abstract String getInventoryTitle();
-
-    private List<String> filteredListItems;
 
     public Inventory buildInventory(Player player, int page) {
         int inventorySize = calculateInventorySize();

@@ -1,19 +1,20 @@
 package me.A5H73Y.parkour.manager;
 
-import me.A5H73Y.parkour.utilities.Utils;
-import org.bukkit.entity.Player;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import me.A5H73Y.parkour.utilities.Utils;
+import org.bukkit.entity.Player;
 
 public class QuietModeManager {
 
     private static QuietModeManager instance;
-
-    private List<String> quietPlayers = new ArrayList<>();
-
     private final String quietOnMessage = Utils.getTranslation("Parkour.QuietOn");
     private final String quietOffMessage = Utils.getTranslation("Parkour.QuietOff");
+    private List<String> quietPlayers = new ArrayList<>();
+
+    private QuietModeManager() {
+    }
 
     public static QuietModeManager getInstance() {
         if (instance == null) {
@@ -22,8 +23,6 @@ public class QuietModeManager {
 
         return instance;
     }
-
-    private QuietModeManager() {}
 
     public void enableQuietMode(Player player) {
         quietPlayers.add(player.getName());

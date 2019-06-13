@@ -1,5 +1,8 @@
 package me.A5H73Y.parkour.listener;
 
+import java.util.Arrays;
+import java.util.List;
+
 import me.A5H73Y.parkour.Parkour;
 import me.A5H73Y.parkour.enums.ParkourMode;
 import me.A5H73Y.parkour.kit.ParkourKit;
@@ -15,9 +18,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class PlayerMoveListener implements Listener {
 

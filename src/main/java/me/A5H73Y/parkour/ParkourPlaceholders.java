@@ -1,5 +1,7 @@
 package me.A5H73Y.parkour;
 
+import java.util.List;
+
 import me.A5H73Y.parkour.course.Course;
 import me.A5H73Y.parkour.course.CourseInfo;
 import me.A5H73Y.parkour.course.CourseMethods;
@@ -14,14 +16,11 @@ import me.A5H73Y.parkour.utilities.Utils;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class ParkourPlaceholders extends PlaceholderExpansion {
-
-    private Parkour plugin;
 
     private static final String INVALID_SYNTAX = "Invalid Syntax";
     private static final String NO_TIME_RECORDED = "No time recorded";
+    private Parkour plugin;
 
     public ParkourPlaceholders(Parkour plugin) {
         this.plugin = plugin;
@@ -43,12 +42,12 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     }
 
     @Override
-    public boolean persist(){
+    public boolean persist() {
         return true;
     }
 
     @Override
-    public boolean canRegister(){
+    public boolean canRegister() {
         return true;
     }
 
@@ -210,7 +209,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 String tCol = "&f";
                 //check if colour codes specified
                 if (temp[0].length() == 9 && temp[0].substring(7).matches("[0-9a-f]+")) {
-                    nCol = "&" + temp[0].substring(7,8);
+                    nCol = "&" + temp[0].substring(7, 8);
                     tCol = "&" + temp[0].substring(8);
                 }
                 return nCol + result.getPlayer() + "&7 - " + tCol + Utils.displayCurrentTime(result.getTime());

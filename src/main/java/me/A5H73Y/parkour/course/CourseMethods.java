@@ -1,5 +1,11 @@
 package me.A5H73Y.parkour.course;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import me.A5H73Y.parkour.Parkour;
 import me.A5H73Y.parkour.conversation.CoursePrizeConversation;
 import me.A5H73Y.parkour.conversation.LeaderboardConversation;
@@ -24,12 +30,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class CourseMethods {
 
@@ -479,7 +479,7 @@ public class CourseMethods {
 
         if (entries != null) {
             // Go through each entry to find matching coordinates, then return the course
-            for (String entry : entries.getKeys(false)){
+            for (String entry : entries.getKeys(false)) {
                 if (entry.equals(coordinates)) {
                     return config.getString("CourseInfo.AutoStart." + entry);
                 }
@@ -491,6 +491,7 @@ public class CourseMethods {
 
     /**
      * Delete the AutoStart with the given coordinates
+     *
      * @param coordinates
      * @param player
      */

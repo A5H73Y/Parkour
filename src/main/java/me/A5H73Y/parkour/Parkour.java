@@ -4,7 +4,13 @@ import com.huskehhh.mysql.Database;
 import me.A5H73Y.parkour.commands.ParkourAutoTabCompleter;
 import me.A5H73Y.parkour.commands.ParkourCommands;
 import me.A5H73Y.parkour.commands.ParkourConsoleCommands;
-import me.A5H73Y.parkour.listener.*;
+import me.A5H73Y.parkour.listener.BlockListener;
+import me.A5H73Y.parkour.listener.ChatListener;
+import me.A5H73Y.parkour.listener.PlayerInteractListener;
+import me.A5H73Y.parkour.listener.PlayerInventoryListener;
+import me.A5H73Y.parkour.listener.PlayerListener;
+import me.A5H73Y.parkour.listener.PlayerMoveListener;
+import me.A5H73Y.parkour.listener.SignListener;
 import me.A5H73Y.parkour.manager.ScoreboardManager;
 import me.A5H73Y.parkour.other.Backup;
 import me.A5H73Y.parkour.other.Configurations;
@@ -27,6 +33,41 @@ public class Parkour extends JavaPlugin {
     private Settings settings;
 
     private ScoreboardManager scoreboardManager;
+
+    public static Parkour getPlugin() {
+        return instance;
+    }
+
+    public static Configurations getParkourConfig() {
+        return getPlugin().config;
+    }
+
+    public static Settings getSettings() {
+        return getPlugin().settings;
+    }
+
+    public static Economy getEconomy() {
+        return getPlugin().economy;
+    }
+
+    public static void setEconomy(Economy economy) {
+        getPlugin().economy = economy;
+    }
+
+    public static Database getDatabase() {
+        return getPlugin().database;
+    }
+
+    public static void setDatabase(Database database) {
+        getPlugin().database = database;
+    }
+
+    public static ScoreboardManager getScoreboardManager() {
+        if (getPlugin().scoreboardManager == null) {
+            getPlugin().scoreboardManager = new ScoreboardManager();
+        }
+        return getPlugin().scoreboardManager;
+    }
 
     public void onEnable() {
         instance = this;
@@ -53,17 +94,13 @@ public class Parkour extends JavaPlugin {
         instance = null;
     }
 
-    public static Parkour getPlugin() {
-        return instance;
-    }
-
     private void registerEvents() {
-        getServer().getPluginManager().registerEvents(new BlockListener(),  this);
-        getServer().getPluginManager().registerEvents(new ChatListener(),  this);
-        getServer().getPluginManager().registerEvents(new PlayerInteractListener(),  this);
-        getServer().getPluginManager().registerEvents(new PlayerListener(),  this);
-        getServer().getPluginManager().registerEvents(new PlayerMoveListener(),  this);
-        getServer().getPluginManager().registerEvents(new SignListener(),  this);
+        getServer().getPluginManager().registerEvents(new BlockListener(), this);
+        getServer().getPluginManager().registerEvents(new ChatListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);
+        getServer().getPluginManager().registerEvents(new SignListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerInventoryListener(), this);
     }
 
@@ -74,37 +111,6 @@ public class Parkour extends JavaPlugin {
         if (this.getConfig().getBoolean("Other.UseAutoTabCompletion")) {
             getCommand("parkour").setTabCompleter(new ParkourAutoTabCompleter());
         }
-    }
-
-    public static Configurations getParkourConfig() {
-        return getPlugin().config;
-    }
-
-    public static Settings getSettings() {
-        return getPlugin().settings;
-    }
-
-    public static Economy getEconomy() {
-        return getPlugin().economy;
-    }
-
-    public static Database getDatabase() {
-        return getPlugin().database;
-    }
-
-    public static ScoreboardManager getScoreboardManager() {
-        if (getPlugin().scoreboardManager == null) {
-            getPlugin().scoreboardManager = new ScoreboardManager();
-        }
-        return getPlugin().scoreboardManager;
-    }
-
-    public static void setDatabase(Database database) {
-        getPlugin().database = database;
-    }
-
-    public static void setEconomy(Economy economy) {
-        getPlugin().economy = economy;
     }
 
     private void updatePlugin() {

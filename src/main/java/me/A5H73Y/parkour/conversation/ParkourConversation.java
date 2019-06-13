@@ -3,18 +3,19 @@ package me.A5H73Y.parkour.conversation;
 import me.A5H73Y.parkour.Parkour;
 import me.A5H73Y.parkour.utilities.Static;
 import org.bukkit.ChatColor;
-import org.bukkit.conversations.*;
+import org.bukkit.conversations.Conversation;
+import org.bukkit.conversations.ConversationAbandonedEvent;
+import org.bukkit.conversations.ConversationAbandonedListener;
+import org.bukkit.conversations.ConversationContext;
+import org.bukkit.conversations.ConversationFactory;
+import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 
 public abstract class ParkourConversation implements ConversationAbandonedListener {
 
     private ConversationFactory conversationFactory;
-
-    public abstract Prompt getEntryPrompt();
-
     private String courseName;
     private Player player;
-
     public ParkourConversation(Player player) {
         this.player = player;
 
@@ -28,15 +29,17 @@ public abstract class ParkourConversation implements ConversationAbandonedListen
         player.sendMessage(ChatColor.GRAY + "Note: Enter 'cancel' to quit the conversation.");
     }
 
+    public static void sendErrorMessage(ConversationContext context, String message) {
+        context.getForWhom().sendRawMessage(ChatColor.RED + message + ". Please try again...");
+    }
+
+    public abstract Prompt getEntryPrompt();
+
     @Override
     public void conversationAbandoned(ConversationAbandonedEvent event) {
         if (!event.gracefulExit()) {
             event.getContext().getForWhom().sendRawMessage(Static.getParkourString() + "Conversation aborted...");
         }
-    }
-
-    public static void sendErrorMessage(ConversationContext context, String message) {
-        context.getForWhom().sendRawMessage(ChatColor.RED + message + ". Please try again...");
     }
 
     public ParkourConversation withCourseName(String courseName) {

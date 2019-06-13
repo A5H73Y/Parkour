@@ -1,9 +1,20 @@
 package me.A5H73Y.parkour.player;
 
+import java.util.HashMap;
+import java.util.List;
+
 import me.A5H73Y.parkour.Parkour;
-import me.A5H73Y.parkour.course.*;
+import me.A5H73Y.parkour.course.Checkpoint;
+import me.A5H73Y.parkour.course.Course;
+import me.A5H73Y.parkour.course.CourseInfo;
+import me.A5H73Y.parkour.course.CourseMethods;
+import me.A5H73Y.parkour.course.LobbyMethods;
 import me.A5H73Y.parkour.enums.ParkourMode;
-import me.A5H73Y.parkour.event.*;
+import me.A5H73Y.parkour.event.PlayerAchieveCheckpointEvent;
+import me.A5H73Y.parkour.event.PlayerDeathEvent;
+import me.A5H73Y.parkour.event.PlayerFinishCourseEvent;
+import me.A5H73Y.parkour.event.PlayerJoinCourseEvent;
+import me.A5H73Y.parkour.event.PlayerLeaveCourseEvent;
 import me.A5H73Y.parkour.kit.ParkourKit;
 import me.A5H73Y.parkour.manager.ChallengeManager;
 import me.A5H73Y.parkour.manager.QuietModeManager;
@@ -14,7 +25,12 @@ import me.A5H73Y.parkour.utilities.DatabaseMethods;
 import me.A5H73Y.parkour.utilities.Static;
 import me.A5H73Y.parkour.utilities.Utils;
 import me.A5H73Y.parkour.utilities.XMaterial;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Effect;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
@@ -23,9 +39,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
-
-import java.util.HashMap;
-import java.util.List;
 
 public class PlayerMethods {
 
@@ -262,6 +275,7 @@ public class PlayerMethods {
 
     /**
      * Check if the player's time is a new course or personal record.
+     *
      * @param player
      * @param courseName
      * @param timeTaken
@@ -293,6 +307,7 @@ public class PlayerMethods {
      * Restart the course progress
      * Time and deaths are reset.
      * Will take into account treating the first checkpoint as start
+     *
      * @param player
      */
     public static void restartCourse(Player player) {
@@ -314,6 +329,7 @@ public class PlayerMethods {
     /**
      * Teleport player after course completion
      * Based on the linked course or lobby
+     *
      * @param player
      * @param courseName
      */
@@ -341,6 +357,7 @@ public class PlayerMethods {
     /**
      * Display the course finish information
      * Will send to the chosen amount of players
+     *
      * @param player
      * @param session
      */
@@ -497,6 +514,7 @@ public class PlayerMethods {
 
     /**
      * Increase the amount of Parkoins the player has by the parameter value.
+     *
      * @param player
      * @param parkoins
      */
@@ -514,6 +532,7 @@ public class PlayerMethods {
 
     /**
      * Decrease the amount of Parkoins the player has by the parameter value.
+     *
      * @param player
      * @param parkoins
      */
@@ -531,6 +550,7 @@ public class PlayerMethods {
 
     /**
      * Give the player the economy prize for the course.
+     *
      * @param player
      * @param courseName
      */
@@ -554,6 +574,7 @@ public class PlayerMethods {
 
     /**
      * Retrieve ParkourSession for player based on their name.
+     *
      * @param playerName
      * @return ParkourSession
      */
@@ -567,6 +588,7 @@ public class PlayerMethods {
 
     /**
      * Return if a player is on a course
+     *
      * @param playerName
      * @return boolean
      */
@@ -576,6 +598,7 @@ public class PlayerMethods {
 
     /**
      * Get the Map of players using the plugin
+     *
      * @return HashMap<playerName, ParkourSession>
      */
     public static HashMap<String, ParkourSession> getPlaying() {
@@ -584,6 +607,7 @@ public class PlayerMethods {
 
     /**
      * Overwrite the playing players, populates when the plugin starts
+     *
      * @param players
      */
     public static void setPlaying(HashMap<String, ParkourSession> players) {
@@ -640,6 +664,7 @@ public class PlayerMethods {
 
     /**
      * Add a player and their session to the playing players.
+     *
      * @param playerName
      * @param session
      */
@@ -650,6 +675,7 @@ public class PlayerMethods {
 
     /**
      * Remove a player and their session from the playing players.
+     *
      * @param playerName
      */
     private static void removePlayer(String playerName) {
@@ -713,6 +739,7 @@ public class PlayerMethods {
      * Prepare a player for joining a course
      * Will save and clear the inventory of the player,
      * then populate their inventory with appropriate Parkour tools.
+     *
      * @param player
      * @param courseName
      */
@@ -767,6 +794,7 @@ public class PlayerMethods {
     /**
      * Prepare the player for Parkour
      * Store the player's health and hunger.
+     *
      * @param player
      */
     private static void saveHealth(Player player) {
@@ -778,6 +806,7 @@ public class PlayerMethods {
     /**
      * Prepare the player for Parkour
      * Executed when the player dies, will reset them to a normal state so they can continue.
+     *
      * @param player
      * @param gamemode
      */
@@ -869,6 +898,7 @@ public class PlayerMethods {
         Parkour.getParkourConfig().getInvData().set(player.getName(), null);
         Parkour.getParkourConfig().saveInv();
     }
+
     /**
      * Load the players original health.
      * When they leave or finish a course, their hunger and exhaustion will be restored to them.
@@ -917,6 +947,7 @@ public class PlayerMethods {
 
     /**
      * Invite a player to the current course
+     *
      * @param args
      * @param player
      */
@@ -947,6 +978,7 @@ public class PlayerMethods {
     /**
      * Returns whether the player is in Test Mode.
      * Used for validation, not to be treated as a normal Parkour course.
+     *
      * @param playerName
      * @return boolean
      */
@@ -962,6 +994,7 @@ public class PlayerMethods {
 
     /**
      * Check if the player is currently online
+     *
      * @param playerName
      * @return boolean
      */
@@ -977,6 +1010,7 @@ public class PlayerMethods {
 
     /**
      * Setup the outcome of having a Parkour Mode
+     *
      * @param player
      */
     private static void setupPlayerMode(Player player) {
@@ -1047,6 +1081,7 @@ public class PlayerMethods {
 
     /**
      * Apply an effect to the player
+     *
      * @param lines
      * @param player
      */
@@ -1120,6 +1155,7 @@ public class PlayerMethods {
 
     /**
      * Display the players Parkour permissions.
+     *
      * @param player
      */
     public static void displayPermissions(Player player) {

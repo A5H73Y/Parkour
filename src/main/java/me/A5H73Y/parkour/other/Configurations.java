@@ -1,5 +1,9 @@
 package me.A5H73Y.parkour.other;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import me.A5H73Y.parkour.Parkour;
 import me.A5H73Y.parkour.kit.ParkourKitInfo;
 import me.A5H73Y.parkour.utilities.Static;
@@ -7,10 +11,6 @@ import me.A5H73Y.parkour.utilities.Utils;
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 
 public class Configurations {
 
@@ -108,7 +108,7 @@ public class Configurations {
             }
         }
 
-        try{
+        try {
             courseData.load(courseFile);
             stringData.load(stringFile);
             usersData.load(usersFile);
@@ -281,7 +281,7 @@ public class Configurations {
      * Separated and organised into sections of the plugins
      */
     private void saveStrings() {
-        try{
+        try {
             stringData.addDefault("Parkour.Prefix", "&0[&bParkour&0] &f");
             stringData.addDefault("Parkour.SignHeading", "&0[&bParkour&0]");
             stringData.addDefault("Event.Join", "This server uses &bParkour &3%VERSION%");

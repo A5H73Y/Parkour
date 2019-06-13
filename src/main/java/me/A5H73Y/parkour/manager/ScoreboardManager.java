@@ -1,5 +1,9 @@
 package me.A5H73Y.parkour.manager;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import me.A5H73Y.parkour.Parkour;
 import me.A5H73Y.parkour.course.CourseMethods;
 import me.A5H73Y.parkour.other.TimeObject;
@@ -9,11 +13,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.*;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 public class ScoreboardManager {
 

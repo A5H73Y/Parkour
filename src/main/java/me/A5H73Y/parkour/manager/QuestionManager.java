@@ -1,5 +1,8 @@
 package me.A5H73Y.parkour.manager;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import me.A5H73Y.parkour.course.CheckpointMethods;
 import me.A5H73Y.parkour.course.CourseInfo;
 import me.A5H73Y.parkour.course.CourseMethods;
@@ -15,9 +18,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Manage the questions that require confirmation from the player
  * Usually caused by actions that could change the outcome of the plugin / course
@@ -28,14 +28,15 @@ public class QuestionManager {
 
     private Map<String, Question> questionMap = new HashMap<>();
 
+    private QuestionManager() {
+    }
+
     public static QuestionManager getInstance() {
         if (instance == null) {
             instance = new QuestionManager();
         }
         return instance;
     }
-
-    private QuestionManager() {}
 
     public boolean hasPlayerBeenAskedQuestion(String playerName) {
         return questionMap.containsKey(playerName);

@@ -1,5 +1,8 @@
 package me.A5H73Y.parkour.conversation.other;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import me.A5H73Y.parkour.Parkour;
 import me.A5H73Y.parkour.conversation.ParkourConversation;
 import me.A5H73Y.parkour.kit.ParkourKit;
@@ -8,20 +11,17 @@ import me.A5H73Y.parkour.utilities.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.conversations.*;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.bukkit.conversations.BooleanPrompt;
+import org.bukkit.conversations.ConversationContext;
+import org.bukkit.conversations.FixedSetPrompt;
+import org.bukkit.conversations.NumericPrompt;
+import org.bukkit.conversations.Prompt;
+import org.bukkit.conversations.StringPrompt;
 
 public class AddKitItemConversation {
 
-    private final String[] actionTypes = {"death", "finish", "climb", "launch", "bounce", "speed", "repulse", "norun", "nopotion"};
-
     private final static Map<String, Double> strengthDefault = new HashMap<>();
     private final static Map<String, Integer> durationDefault = new HashMap<>();
-
-    private Prompt endingConversation;
-    private String kitName;
 
     static {
         strengthDefault.put("climb", 0.4);
@@ -32,6 +32,10 @@ public class AddKitItemConversation {
         durationDefault.put("speed", 200);
         durationDefault.put("bounce", 200);
     }
+
+    private final String[] actionTypes = {"death", "finish", "climb", "launch", "bounce", "speed", "repulse", "norun", "nopotion"};
+    private Prompt endingConversation;
+    private String kitName;
 
     public AddKitItemConversation(Prompt endingConversation, String kitName) {
         this.endingConversation = endingConversation;

@@ -1,5 +1,11 @@
 package me.A5H73Y.parkour.utilities;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import me.A5H73Y.parkour.Parkour;
 import me.A5H73Y.parkour.course.CourseInfo;
 import me.A5H73Y.parkour.enums.DatabaseType;
@@ -7,12 +13,6 @@ import me.A5H73Y.parkour.other.TimeObject;
 import me.A5H73Y.parkour.player.PlayerMethods;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DatabaseMethods {
 
@@ -51,6 +51,7 @@ public class DatabaseMethods {
 
     /**
      * Return the course's unique ID based on its name in the database.
+     *
      * @param courseName
      * @return
      * @throws SQLException
@@ -58,13 +59,13 @@ public class DatabaseMethods {
     public static int getCourseId(String courseName, boolean printError) {
         int courseId = 0;
 
-        try{
+        try {
             PreparedStatement ps = Parkour.getDatabase().openConnection().prepareStatement("SELECT courseId FROM course WHERE name = ?;");
             ps.setString(1, courseName);
 
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                courseId =  rs.getInt("courseId");
+                courseId = rs.getInt("courseId");
             }
 
         } catch (SQLException | ClassNotFoundException e) {
@@ -81,11 +82,12 @@ public class DatabaseMethods {
 
     /**
      * Processes a ResultSet and returns a list of TimeObjects
+     *
      * @param rs ResultSet
      * @return
      * @throws SQLException
      */
-    private static List<TimeObject> processTimes(ResultSet rs) throws SQLException{
+    private static List<TimeObject> processTimes(ResultSet rs) throws SQLException {
         List<TimeObject> times = new ArrayList<>();
 
         while (rs.next()) {
@@ -101,6 +103,7 @@ public class DatabaseMethods {
     /**
      * Once a course has been created, a record will be entered into the database, giving it a unique numeric identifier.
      * This identifier is then used to reference the course throughout the database.
+     *
      * @param courseName
      * @param playerName
      */
@@ -121,6 +124,7 @@ public class DatabaseMethods {
     /**
      * Insert a time into the database for the players course Progress.
      * There are no unique constraints on the times table, so the user is able to have many times for many courses
+     *
      * @param courseName
      * @param playerName
      * @param time
@@ -151,6 +155,7 @@ public class DatabaseMethods {
      * Insert or Update player's time on course
      * Based on a config option, whether to insert or update
      * Updating will only apply once the player has beaten their best time
+     *
      * @param courseName
      * @param player
      * @param time
@@ -176,6 +181,7 @@ public class DatabaseMethods {
 
     /**
      * When a player votes whether or not a player likes course.
+     *
      * @param courseName
      * @param playerName
      * @param like
@@ -202,6 +208,7 @@ public class DatabaseMethods {
 
     /**
      * Calculate the percentage of how many players liked the course.
+     *
      * @param courseName
      * @return
      */
@@ -264,6 +271,7 @@ public class DatabaseMethods {
     /**
      * For usage if a player has been banned for cheating etc.
      * May add an option to hook into deleting a player to automatically remove all their times (if configured)
+     *
      * @param playerName
      */
     public static void deleteAllTimesForPlayer(String playerName) {
@@ -282,6 +290,7 @@ public class DatabaseMethods {
     /**
      * For usage if a course has been deleted.
      * Remove the times, votes and actual course from the database.
+     *
      * @param courseName
      */
     public static void deleteCourseAndReferences(String courseName) {
@@ -299,6 +308,7 @@ public class DatabaseMethods {
 
     /**
      * Delete all the times for the course
+     *
      * @param courseName
      */
     public static void deleteCourseTimes(String courseName) {

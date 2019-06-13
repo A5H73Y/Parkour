@@ -1,18 +1,19 @@
 package me.A5H73Y.parkour.utilities;
-/** The MIT License (MIT)
- *
+/**
+ * The MIT License (MIT)
+ * <p>
  * Copyright (c) 2018 Hex_27
- *
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
  * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
- *
+ * <p>
  * The above copyright notice and this permission notice shall be included
  * in all copies or substantial portions of the Software.
- *
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
  * OF * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
@@ -22,14 +23,14 @@ package me.A5H73Y.parkour.utilities;
  * DEALINGS IN THE SOFTWARE.
  **/
 
-import org.bukkit.Material;
-
 import java.util.HashMap;
+
+import org.bukkit.Material;
 
 public enum XMaterial {
     ACACIA_BOAT(0, "BOAT_ACACIA"),
     ACACIA_BUTTON(0, "WOOD_BUTTON"),
-    ACACIA_DOOR(0, "ACACIA_DOOR","ACACIA_DOOR_ITEM"),
+    ACACIA_DOOR(0, "ACACIA_DOOR", "ACACIA_DOOR_ITEM"),
     ACACIA_FENCE(0, "ACACIA_FENCE"),
     ACACIA_FENCE_GATE(0, "ACACIA_FENCE_GATE"),
     ACACIA_LEAVES(0, "LEAVES_2"),
@@ -37,7 +38,7 @@ public enum XMaterial {
     ACACIA_PLANKS(4, "WOOD"),
     ACACIA_PRESSURE_PLATE(0, "WOOD_PLATE"),
     ACACIA_SAPLING(4, "SAPLING"),
-    ACACIA_SLAB(4,"WOODEN_SLAB", "WOOD_STEP", "WOOD_DOUBLE_STEP"),
+    ACACIA_SLAB(4, "WOODEN_SLAB", "WOOD_STEP", "WOOD_DOUBLE_STEP"),
     ACACIA_STAIRS(4, "ACACIA_STAIRS"),
     ACACIA_SIGN(0, "SIGN", "WALL_SIGN"),
     ACACIA_WALL_SIGN(0, "WALL_SIGN"),
@@ -74,7 +75,7 @@ public enum XMaterial {
     BIRCH_PLANKS(2, "WOOD"),
     BIRCH_PRESSURE_PLATE(0, "WOOD_PLATE"),
     BIRCH_SAPLING(2, "SAPLING"),
-    BIRCH_SLAB(2,"WOODEN_SLAB", "WOOD_STEP", "WOOD_DOUBLE_STEP"),
+    BIRCH_SLAB(2, "WOODEN_SLAB", "WOOD_STEP", "WOOD_DOUBLE_STEP"),
     BIRCH_STAIRS(0, "BIRCH_WOOD_STAIRS"),
     BIRCH_TRAPDOOR(0, "TRAP_DOOR"),
     BIRCH_SIGN(0, "SIGN", "WALL_SIGN"),
@@ -205,9 +206,9 @@ public enum XMaterial {
     COW_SPAWN_EGG(0, "MONSTER_EGG"),
     CRACKED_STONE_BRICKS(2, "SMOOTH_BRICK"),
     CRAFTING_TABLE(0, "WORKBENCH"),
-    CREEPER_HEAD(0, "SKULL","SKULL_ITEM"),
+    CREEPER_HEAD(0, "SKULL", "SKULL_ITEM"),
     CREEPER_SPAWN_EGG(0, "MONSTER_EGG"),
-    CREEPER_WALL_HEAD(0, "SKULL","SKULL_ITEM"),
+    CREEPER_WALL_HEAD(0, "SKULL", "SKULL_ITEM"),
     CUT_RED_SANDSTONE(0, "STONE"),
     CUT_SANDSTONE(0, "STONE"),
     CYAN_BANNER(6, "BANNER", "STANDING_BANNER"),
@@ -236,7 +237,7 @@ public enum XMaterial {
     DARK_OAK_PLANKS(5, "WOOD"),
     DARK_OAK_PRESSURE_PLATE(0, "WOOD_PLATE"),
     DARK_OAK_SAPLING(5, "SAPLING"),
-    DARK_OAK_SLAB(0,"WOODEN_SLAB", "WOOD_STEP", "WOOD_DOUBLE_STEP"),
+    DARK_OAK_SLAB(0, "WOODEN_SLAB", "WOOD_STEP", "WOOD_DOUBLE_STEP"),
     DARK_OAK_STAIRS(0, "DARK_OAK_STAIRS"),
     DARK_OAK_TRAPDOOR(0, "TRAP_DOOR"),
     DARK_OAK_WOOD(1, "LOG_2"),
@@ -274,8 +275,8 @@ public enum XMaterial {
     DONKEY_SPAWN_EGG(0, "MONSTER_EGG"),
     DRAGON_BREATH(0, "DRAGONS_BREATH"),
     DRAGON_EGG(0, "DRAGON_EGG"),
-    DRAGON_HEAD(5, "SKULL","SKULL_ITEM"),
-    DRAGON_WALL_HEAD(0, "SKULL","SKULL_ITEM"),
+    DRAGON_HEAD(5, "SKULL", "SKULL_ITEM"),
+    DRAGON_WALL_HEAD(0, "SKULL", "SKULL_ITEM"),
     DRIED_KELP(0, "STONE"),
     DRIED_KELP_BLOCK(0, "STONE"),
     DROPPER(0, "DROPPER"),
@@ -318,7 +319,7 @@ public enum XMaterial {
     FISHING_ROD(0, "FISHING_ROD"),
     FLINT(0, "FLINT"),
     FLINT_AND_STEEL(0, "FLINT_AND_STEEL"),
-    FLOWER_POT(0, "FLOWER_POT","FLOWER_POT_ITEM"),
+    FLOWER_POT(0, "FLOWER_POT", "FLOWER_POT_ITEM"),
     FROSTED_ICE(0, "FROSTED_ICE"),
     FURNACE(0, "FURNACE", "BURNING_FURNACE"),
     FURNACE_MINECART(0, "POWERED_MINECART"),
@@ -426,7 +427,7 @@ public enum XMaterial {
     JUNGLE_PLANKS(3, "WOOD"),
     JUNGLE_PRESSURE_PLATE(0, "WOOD_PLATE"),
     JUNGLE_SAPLING(3, "SAPLING"),
-    JUNGLE_SLAB(3,"WOODEN_SLAB", "WOOD_STEP", "WOOD_DOUBLE_STEP"),
+    JUNGLE_SLAB(3, "WOODEN_SLAB", "WOOD_STEP", "WOOD_DOUBLE_STEP"),
     JUNGLE_STAIRS(0, "JUNGLE_WOOD_STAIRS"),
     JUNGLE_TRAPDOOR(0, "TRAP_DOOR"),
     JUNGLE_SIGN(0, "SIGN", "WALL_SIGN"),
@@ -564,7 +565,7 @@ public enum XMaterial {
     OAK_SAPLING(0, "SAPLING"),
     OAK_SIGN(0, "SIGN", "WALL_SIGN"),
     OAK_WALL_SIGN(0, "WALL_SIGN"),
-    OAK_SLAB(0,"WOODEN_SLAB", "WOOD_STEP", "WOOD_DOUBLE_STEP"),
+    OAK_SLAB(0, "WOODEN_SLAB", "WOOD_STEP", "WOOD_DOUBLE_STEP"),
     OAK_STAIRS(0, "WOOD_STAIRS"),
     OAK_TRAPDOOR(0, "TRAP_DOOR"),
     OAK_WOOD(0, "LOG"),
@@ -611,8 +612,8 @@ public enum XMaterial {
     PINK_WOOL(6, "WOOL"),
     PISTON(0, "PISTON_BASE"),
     PISTON_HEAD(0, "PISTON_EXTENSION"),
-    PLAYER_HEAD(0, "SKULL","SKULL_ITEM"),
-    PLAYER_WALL_HEAD(0, "SKULL","SKULL_ITEM"),
+    PLAYER_HEAD(0, "SKULL", "SKULL_ITEM"),
+    PLAYER_WALL_HEAD(0, "SKULL", "SKULL_ITEM"),
     PODZOL(2, "DIRT"),
     POISONOUS_POTATO(0, "POISONOUS_POTATO"),
     POLAR_BEAR_SPAWN_EGG(0, "MONSTER_EGG"),
@@ -743,9 +744,9 @@ public enum XMaterial {
     SIGN(0, "SIGN"),
     SILVERFISH_SPAWN_EGG(0, "MONSTER_EGG"),
     SKELETON_HORSE_SPAWN_EGG(0, "MONSTER_EGG"),
-    SKELETON_SKULL(0, "SKULL","SKULL_ITEM"),
+    SKELETON_SKULL(0, "SKULL", "SKULL_ITEM"),
     SKELETON_SPAWN_EGG(0, "MONSTER_EGG"),
-    SKELETON_WALL_SKULL(0, "SKULL","SKULL_ITEM"),
+    SKELETON_WALL_SKULL(0, "SKULL", "SKULL_ITEM"),
     SLIME_BALL(0, "SLIME_BALL"),
     SLIME_BLOCK(0, "SLIME_BLOCK"),
     SLIME_SPAWN_EGG(0, "MONSTER_EGG"),
@@ -775,7 +776,7 @@ public enum XMaterial {
     SPRUCE_SAPLING(1, "SAPLING"),
     SPRUCE_SIGN(1, "SIGN", "WALL_SIGN"),
     SPRUCE_WALL_SIGN(1, "WALL_SIGN"),
-    SPRUCE_SLAB(1,"WOODEN_SLAB", "WOOD_STEP", "WOOD_DOUBLE_STEP"),
+    SPRUCE_SLAB(1, "WOODEN_SLAB", "WOOD_STEP", "WOOD_DOUBLE_STEP"),
     SPRUCE_STAIRS(0, "SPRUCE_WOOD_STAIRS"),
     SPRUCE_TRAPDOOR(0, "TRAP_DOOR"),
     SPRUCE_WOOD(1, "LOG"),
@@ -860,9 +861,9 @@ public enum XMaterial {
     WHITE_WALL_BANNER(0, "WALL_BANNER"),
     WHITE_WOOL(0, "WOOL"),
     WITCH_SPAWN_EGG(0, "MONSTER_EGG"),
-    WITHER_SKELETON_SKULL(0, "SKULL","SKULL_ITEM"),
+    WITHER_SKELETON_SKULL(0, "SKULL", "SKULL_ITEM"),
     WITHER_SKELETON_SPAWN_EGG(0, "MONSTER_EGG"),
-    WITHER_SKELETON_WALL_SKULL(0, "SKULL","SKULL_ITEM"),
+    WITHER_SKELETON_WALL_SKULL(0, "SKULL", "SKULL_ITEM"),
     WOLF_SPAWN_EGG(0, "MONSTER_EGG"),
     WOODEN_AXE(0, "WOOD_AXE"),
     WOODEN_HOE(0, "WOOD_HOE"),
@@ -883,31 +884,31 @@ public enum XMaterial {
     YELLOW_TERRACOTTA(4, "STAINED_CLAY"),
     YELLOW_WALL_BANNER(0, "WALL_BANNER"),
     YELLOW_WOOL(4, "WOOL"),
-    ZOMBIE_HEAD(0, "SKULL","SKULL_ITEM"),
+    ZOMBIE_HEAD(0, "SKULL", "SKULL_ITEM"),
     ZOMBIE_HORSE_SPAWN_EGG(0, "MONSTER_EGG"),
     ZOMBIE_PIGMAN_SPAWN_EGG(0, "MONSTER_EGG"),
     ZOMBIE_SPAWN_EGG(0, "MONSTER_EGG"),
     ZOMBIE_VILLAGER_SPAWN_EGG(0, "MONSTER_EGG"),
-    ZOMBIE_WALL_HEAD(0, "SKULL","SKULL_ITEM");
+    ZOMBIE_WALL_HEAD(0, "SKULL", "SKULL_ITEM");
 
     private static HashMap<String, XMaterial> CACHED_SEARCH = new HashMap<>();
 
     String[] m;
     int data;
 
-    XMaterial(int data, String... m){
+    XMaterial(int data, String... m) {
         this.m = m;
         this.data = data;
     }
 
-    public static XMaterial requestXMaterial(String name, byte data){
-        if(CACHED_SEARCH.containsKey(name.toUpperCase()+","+data)){
-            return CACHED_SEARCH.get(name.toUpperCase()+","+data);
+    public static XMaterial requestXMaterial(String name, byte data) {
+        if (CACHED_SEARCH.containsKey(name.toUpperCase() + "," + data)) {
+            return CACHED_SEARCH.get(name.toUpperCase() + "," + data);
         }
-        for(XMaterial mat:XMaterial.values()){
-            for(String test:mat.m){
-                if(name.toUpperCase().equals(test) && ((byte)mat.data) == data){
-                    CACHED_SEARCH.put(test+","+data,mat);
+        for (XMaterial mat : XMaterial.values()) {
+            for (String test : mat.m) {
+                if (name.toUpperCase().equals(test) && ((byte) mat.data) == data) {
+                    CACHED_SEARCH.put(test + "," + data, mat);
                     return mat;
                 }
             }
@@ -937,9 +938,9 @@ public enum XMaterial {
         }
     }
 
-    public Material parseMaterial(){
+    public Material parseMaterial() {
         Material mat = Material.matchMaterial(this.toString());
-        if(mat != null){
+        if (mat != null) {
             return mat;
         }
         return Material.matchMaterial(m[0]);

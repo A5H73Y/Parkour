@@ -1,5 +1,7 @@
 package me.A5H73Y.parkour.course;
 
+import java.util.Set;
+
 import me.A5H73Y.parkour.Parkour;
 import me.A5H73Y.parkour.other.Validation;
 import me.A5H73Y.parkour.player.ParkourSession;
@@ -12,8 +14,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.Set;
 
 public class LobbyMethods {
 
@@ -169,6 +169,7 @@ public class LobbyMethods {
     /**
      * Get list of custom Lobbies.
      * I'm aware this looks like shit, but it's the best solution without a rewrite of lobbies.
+     *
      * @return Set<String>
      */
     public static Set<String> getCustomLobbies() {
@@ -188,6 +189,7 @@ public class LobbyMethods {
 
     /**
      * Send a list of custom Lobbies to the player.
+     *
      * @param sender
      */
     public static void displayLobbies(CommandSender sender) {

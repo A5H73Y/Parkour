@@ -1,5 +1,21 @@
 package me.A5H73Y.parkour.utilities;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
 import com.connorlinfoot.bountifulapi.BountifulAPI;
 import me.A5H73Y.parkour.Parkour;
 import me.A5H73Y.parkour.course.CourseInfo;
@@ -11,7 +27,12 @@ import me.A5H73Y.parkour.other.TimeObject;
 import me.A5H73Y.parkour.other.Validation;
 import me.A5H73Y.parkour.player.PlayerInfo;
 import me.A5H73Y.parkour.player.PlayerMethods;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
@@ -21,11 +42,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Stairs;
 
-import java.io.*;
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
 public final class Utils {
 
     /**
@@ -34,7 +50,7 @@ public final class Utils {
      * The boolean will determine whether to display the Parkour prefix
      *
      * @param translationKey to translate
-     * @param prefix display Parkour prefix
+     * @param prefix         display Parkour prefix
      * @return String of appropriate translation
      */
     public static String getTranslation(String translationKey, boolean prefix) {
@@ -95,7 +111,7 @@ public final class Utils {
      * i.e. "Parkour.Basic" becomes "Parkour.Basic.*"
      * If they don't, a message will be sent alerting them.
      *
-     * @param sender the Player
+     * @param sender     the Player
      * @param permission
      * @return whether they have permission
      */
@@ -114,7 +130,7 @@ public final class Utils {
      *
      * @param sender
      * @param permissionBranch i.e. "parkour.basic"
-     * @param permission "join"
+     * @param permission       "join"
      * @return whether they have permission
      */
     public static boolean hasPermission(CommandSender sender, String permissionBranch, String permission) {
@@ -611,6 +627,7 @@ public final class Utils {
 
     /**
      * Return the standardised heading used for Parkour
+     *
      * @param headingText
      * @return standardised Parkour heading
      */
@@ -663,6 +680,7 @@ public final class Utils {
 
     /**
      * Get an ItemStack for the material with a display name of a translated message
+     *
      * @param material
      * @param itemLabel
      * @return ItemStack
@@ -743,6 +761,7 @@ public final class Utils {
 
     /**
      * Add a whitelisted command
+     *
      * @param args
      * @param player
      */
@@ -809,6 +828,7 @@ public final class Utils {
 
     /**
      * Made because < 1.8
+     *
      * @param player
      * @return
      */
@@ -819,6 +839,7 @@ public final class Utils {
 
     /**
      * Made because < 1.8
+     *
      * @param player
      * @return
      */
@@ -837,6 +858,7 @@ public final class Utils {
 
     /**
      * Get all players that are online and on a course using the plugin
+     *
      * @return List<Player>
      */
     public static List<Player> getOnlineParkourPlayers() {
@@ -934,6 +956,7 @@ public final class Utils {
 
     /**
      * Check to see if the minimum amount of time has passed (in days) to allow the plugin to provide the prize again
+     *
      * @param player
      * @param courseName
      * @param displayMessage
@@ -1002,6 +1025,7 @@ public final class Utils {
      * Lookup the matching Material
      * Use the 1.13 API to lookup the Material,
      * It will fall back to XMaterial if it fails to find it
+     *
      * @param materialName
      * @return matching Material
      */
@@ -1024,6 +1048,7 @@ public final class Utils {
      * Lookup the Material information requested by player
      * Will either lookup the provided argument
      * Or lookup the ItemStack in the players main hand
+     *
      * @param args
      * @param player
      */
@@ -1056,6 +1081,7 @@ public final class Utils {
     /**
      * Basically a fancy way of saying, is the server 1.13+
      * If the Version is weird (like older versions), we can assume it's under 13
+     *
      * @return server version
      */
     public static int getMinorServerVersion() {

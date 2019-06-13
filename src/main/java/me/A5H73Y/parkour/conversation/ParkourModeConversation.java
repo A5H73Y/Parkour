@@ -10,38 +10,38 @@ import org.bukkit.entity.Player;
 
 public class ParkourModeConversation extends ParkourConversation {
 
-	public ParkourModeConversation(Player player) {
-		super(player);
-	}
+    public ParkourModeConversation(Player player) {
+        super(player);
+    }
 
-	@Override
-	public Prompt getEntryPrompt() {
-		return new ChooseParkourMode();
-	}
+    @Override
+    public Prompt getEntryPrompt() {
+        return new ChooseParkourMode();
+    }
 
-	private class ChooseParkourMode extends FixedSetPrompt {
+    private class ChooseParkourMode extends FixedSetPrompt {
 
-		ChooseParkourMode() {
-			super("freedom", "darkness", "drunk", "speedy", "moon", "dropper", "rockets", "none");
-		}
+        ChooseParkourMode() {
+            super("freedom", "darkness", "drunk", "speedy", "moon", "dropper", "rockets", "none");
+        }
 
-		@Override
-		public String getPromptText(ConversationContext context) {
-			return ChatColor.LIGHT_PURPLE + " What type of ParkourMode would you like to set?\n"
-					+ ChatColor.GREEN + formatFixedSet();
-		}
+        @Override
+        public String getPromptText(ConversationContext context) {
+            return ChatColor.LIGHT_PURPLE + " What type of ParkourMode would you like to set?\n"
+                    + ChatColor.GREEN + formatFixedSet();
+        }
 
-		@Override
-		protected Prompt acceptValidatedInput(ConversationContext context, String choice) {
-			String courseName = (String) context.getSessionData("courseName");
+        @Override
+        protected Prompt acceptValidatedInput(ConversationContext context, String choice) {
+            String courseName = (String) context.getSessionData("courseName");
 
-			CourseInfo.setMode(courseName, choice);
+            CourseInfo.setMode(courseName, choice);
 
-			context.getForWhom().sendRawMessage(Utils.getTranslation("Parkour.SetMode")
-					.replace("%COURSE%", courseName)
-					.replace("%MODE%", choice));
+            context.getForWhom().sendRawMessage(Utils.getTranslation("Parkour.SetMode")
+                    .replace("%COURSE%", courseName)
+                    .replace("%MODE%", choice));
 
-			return Prompt.END_OF_CONVERSATION;
-		}
-	}
+            return Prompt.END_OF_CONVERSATION;
+        }
+    }
 }

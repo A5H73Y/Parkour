@@ -18,6 +18,10 @@ public abstract class ParkourEvent extends Event implements Cancellable {
         this.courseName = courseName;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public String getCourseName() {
         return courseName;
     }
@@ -27,10 +31,6 @@ public abstract class ParkourEvent extends Event implements Cancellable {
     }
 
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 

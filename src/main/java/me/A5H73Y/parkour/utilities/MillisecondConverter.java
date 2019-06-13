@@ -10,6 +10,7 @@ public class MillisecondConverter {
 
     /**
      * Convert milliseconds into different divisions
+     *
      * @param millis
      */
     public MillisecondConverter(long millis) {

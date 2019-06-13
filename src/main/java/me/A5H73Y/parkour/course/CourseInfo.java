@@ -1,5 +1,8 @@
 package me.A5H73Y.parkour.course;
 
+import java.util.List;
+import java.util.Set;
+
 import me.A5H73Y.parkour.Parkour;
 import me.A5H73Y.parkour.other.Constants;
 import me.A5H73Y.parkour.utilities.DatabaseMethods;
@@ -11,13 +14,11 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-import java.util.Set;
-
 public class CourseInfo {
 
     /**
      * Get list of all Parkour course names.
+     *
      * @return List Parkour course names
      */
     public static List<String> getAllCourses() {
@@ -27,6 +28,7 @@ public class CourseInfo {
     /**
      * Return the linked Course of the specified course.
      * Will validate it's a valid course before returning
+     *
      * @param courseName
      * @return linkedCourse
      */
@@ -43,6 +45,7 @@ public class CourseInfo {
 
     /**
      * Check if Course is linked to another Course.
+     *
      * @param courseName
      * @return if linked course is found
      */
@@ -52,6 +55,7 @@ public class CourseInfo {
 
     /**
      * Set the Course to link to another Course.
+     *
      * @param courseName
      * @param linkedCourse
      */
@@ -64,6 +68,7 @@ public class CourseInfo {
     /**
      * Return the linked lobby of the Course.
      * Will validate it's a valid lobby before returning
+     *
      * @param courseName
      * @return linkedLobby
      */
@@ -80,6 +85,7 @@ public class CourseInfo {
 
     /**
      * Does this course have a linked lobby
+     *
      * @param courseName
      * @return if linked lobby is found
      */
@@ -89,6 +95,7 @@ public class CourseInfo {
 
     /**
      * Set the course to link to a lobby
+     *
      * @param courseName
      * @param lobbyName
      */
@@ -99,6 +106,7 @@ public class CourseInfo {
 
     /**
      * Get the Mode for the course
+     *
      * @param courseName
      * @return mode
      */
@@ -108,6 +116,7 @@ public class CourseInfo {
 
     /**
      * Set ParkourMode of a course
+     *
      * @param courseName
      * @param mode
      */
@@ -118,6 +127,7 @@ public class CourseInfo {
 
     /**
      * Get amount of checkpoints on a course
+     *
      * @param courseName
      * @return
      */
@@ -127,6 +137,7 @@ public class CourseInfo {
 
     /**
      * Get creator of course
+     *
      * @param courseName
      * @return
      */
@@ -136,6 +147,7 @@ public class CourseInfo {
 
     /**
      * Set creator of course
+     *
      * @param courseName
      * @param playerName
      */
@@ -146,6 +158,7 @@ public class CourseInfo {
 
     /**
      * Get minimum level required to join course
+     *
      * @param courseName
      * @return
      */
@@ -155,6 +168,7 @@ public class CourseInfo {
 
     /**
      * Set minimum level required to join course
+     *
      * @param courseName
      * @param level
      */
@@ -165,6 +179,7 @@ public class CourseInfo {
 
     /**
      * Get ParkourKit set for the course
+     *
      * @param courseName
      * @return
      */
@@ -174,6 +189,7 @@ public class CourseInfo {
 
     /**
      * Does this course have a ParkourKit set
+     *
      * @param courseName
      * @return
      */
@@ -183,6 +199,7 @@ public class CourseInfo {
 
     /**
      * Set ParkourKit for this course
+     *
      * @param courseName
      * @param parkourKitName
      */
@@ -193,6 +210,7 @@ public class CourseInfo {
 
     /**
      * Get the maximum deaths for course
+     *
      * @param courseName
      * @return death count
      */
@@ -202,6 +220,7 @@ public class CourseInfo {
 
     /**
      * Get the maximum time limit for course
+     *
      * @param courseName
      * @return seconds
      */
@@ -211,6 +230,7 @@ public class CourseInfo {
 
     /**
      * Set the maximum deaths for course
+     *
      * @param courseName
      * @param amount
      */
@@ -221,6 +241,7 @@ public class CourseInfo {
 
     /**
      * Set the maximum time limit for course
+     *
      * @param courseName
      * @param seconds
      */
@@ -231,6 +252,7 @@ public class CourseInfo {
 
     /**
      * Returns whether the course is ready or not.
+     *
      * @param courseName
      * @return boolean
      */
@@ -240,6 +262,7 @@ public class CourseInfo {
 
     /**
      * Set the finish status of the course
+     *
      * @param courseName
      * @param finished
      */
@@ -250,6 +273,7 @@ public class CourseInfo {
 
     /**
      * Get the prize commands for the course
+     *
      * @param courseName
      * @return
      */
@@ -259,6 +283,7 @@ public class CourseInfo {
 
     /**
      * Does this course have prize commands
+     *
      * @param courseName
      * @return
      */
@@ -268,6 +293,7 @@ public class CourseInfo {
 
     /**
      * Add a command to the list of prize commands for completing course
+     *
      * @param courseName
      * @param command
      */
@@ -281,6 +307,7 @@ public class CourseInfo {
 
     /**
      * Set the prize material and amount for completing course
+     *
      * @param courseName
      * @param material
      * @param amount
@@ -293,6 +320,7 @@ public class CourseInfo {
 
     /**
      * Get the amount of XP for course
+     *
      * @param courseName
      * @return
      */
@@ -302,6 +330,7 @@ public class CourseInfo {
 
     /**
      * Set the amount of XP for completing course
+     *
      * @param courseName
      * @param amount
      */
@@ -312,6 +341,7 @@ public class CourseInfo {
 
     /**
      * Increase the Complete count of the course
+     *
      * @param courseName
      */
     public static void increaseComplete(String courseName) {
@@ -322,6 +352,7 @@ public class CourseInfo {
 
     /**
      * Increase the amount of views of the course
+     *
      * @param courseName
      */
     public static void increaseView(String courseName) {
@@ -332,6 +363,7 @@ public class CourseInfo {
 
     /**
      * Get the reward level for course
+     *
      * @param courseName
      * @return
      */
@@ -341,6 +373,7 @@ public class CourseInfo {
 
     /**
      * Set the reward level for course
+     *
      * @param courseName
      * @param level
      */
@@ -351,6 +384,7 @@ public class CourseInfo {
 
     /**
      * Get the reward level increase for course
+     *
      * @param courseName
      * @return
      */
@@ -360,6 +394,7 @@ public class CourseInfo {
 
     /**
      * Set the reward level increase for course
+     *
      * @param courseName
      * @param amount
      */
@@ -370,6 +405,7 @@ public class CourseInfo {
 
     /**
      * Get the reward once status for course
+     *
      * @param courseName
      * @return
      */
@@ -379,6 +415,7 @@ public class CourseInfo {
 
     /**
      * Set the reward once status for course
+     *
      * @param courseName
      * @param enabled
      */
@@ -389,6 +426,7 @@ public class CourseInfo {
 
     /**
      * Get RewardRank for a ParkourLevel
+     *
      * @param parkourLevel
      * @return
      */
@@ -398,6 +436,7 @@ public class CourseInfo {
 
     /**
      * Set ParkourRank for a ParkourLevel
+     *
      * @param parkourLevel
      * @param rank
      */

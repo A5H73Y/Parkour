@@ -1,5 +1,8 @@
 package me.A5H73Y.parkour.manager;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import me.A5H73Y.parkour.Parkour;
 import me.A5H73Y.parkour.course.CourseMethods;
 import me.A5H73Y.parkour.player.PlayerMethods;
@@ -8,14 +11,13 @@ import me.A5H73Y.parkour.utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class ChallengeManager {
 
+    private static final Set<Challenge> challenges = new HashSet<>();
     private static ChallengeManager instance;
 
-    private static final Set<Challenge> challenges = new HashSet<>();
+    private ChallengeManager() {
+    }
 
     public static ChallengeManager getInstance() {
         if (instance == null) {
@@ -24,8 +26,6 @@ public class ChallengeManager {
 
         return instance;
     }
-
-    private ChallengeManager() {}
 
     /**
      * Challenge two players to a course.
@@ -181,6 +181,7 @@ public class ChallengeManager {
             int taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(Parkour.getPlugin(), this, 0L, 20L);
 
             int count = Parkour.getPlugin().getConfig().getInt("ParkourModes.Challenge.CountdownFrom") + 1;
+
             @Override
             public void run() {
                 if (count > 1) {
