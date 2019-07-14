@@ -10,9 +10,9 @@ import me.A5H73Y.parkour.enums.ParkourMode;
 import me.A5H73Y.parkour.manager.QuietModeManager;
 import me.A5H73Y.parkour.utilities.Static;
 import me.A5H73Y.parkour.utilities.Utils;
-import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -58,22 +58,15 @@ public class ParkourSession implements Serializable {
             return;
         }
 
-        String snd = "BLOCK_NOTE_BLOCK_PLING";
-        if (Utils.getMinorServerVersion() <= 8) {
-            snd = "NOTE_PLING";
-        } else if (Utils.getMinorServerVersion() <= 12) {
-            snd = "BLOCK_NOTE_PLING";
-        }
-
         if (course.hasMaxTime()) {
             seconds = course.getMaxTime();
         }
-        final String soundName = snd;
+        final String soundName = Utils.getTimerSound();
         BukkitTask task = new BukkitRunnable() {
             @Override
             public void run() {
                 if (course.hasMaxTime()) {
-                    liveTime = Utils.convertSecondsToTime(seconds--);
+                    liveTime = Utils.convertSecondsToTime(--seconds);
                 } else {
                     liveTime = Utils.convertSecondsToTime(++seconds);
                 }

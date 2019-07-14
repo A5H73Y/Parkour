@@ -1100,4 +1100,14 @@ public final class Utils {
         return match;
     }
 
+    public static String getTimerSound() {
+        String snd = "BLOCK_NOTE_BLOCK_PLING";
+        if (getMinorServerVersion() <= 8) {
+            snd = "NOTE_PLING";
+        } else if (getMinorServerVersion() <= 12) {
+            snd = "BLOCK_NOTE_PLING";
+        }
+        return snd;
+    }
+
 }
