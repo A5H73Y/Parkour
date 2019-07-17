@@ -10,7 +10,10 @@ import me.A5H73Y.parkour.enums.ParkourMode;
 import me.A5H73Y.parkour.manager.QuietModeManager;
 import me.A5H73Y.parkour.utilities.Static;
 import me.A5H73Y.parkour.utilities.Utils;
+
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -55,14 +58,26 @@ public class ParkourSession implements Serializable {
             return;
         }
 
+        if (course.hasMaxTime()) {
+            seconds = course.getMaxTime();
+        }
+        final String soundName = Utils.getTimerSound();
         BukkitTask task = new BukkitRunnable() {
             @Override
             public void run() {
-                liveTime = Utils.convertSecondsToTime(++seconds);
+                if (course.hasMaxTime()) {
+                    liveTime = Utils.convertSecondsToTime(--seconds);
+                } else {
+                    liveTime = Utils.convertSecondsToTime(++seconds);
+                }
 
                 if (!player.isOnline()) {
                     cancelVisualTimer();
                     return;
+                }
+                if (course.hasMaxTime() && (seconds <= 5 || seconds == 10)) {
+                    liveTime = ChatColor.RED + liveTime;
+                    player.playSound(player.getLocation(), Sound.valueOf(soundName), 2.0f, 1.75f);
                 }
 
                 boolean useScoreboard = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.CurrentTime");
@@ -75,7 +90,7 @@ public class ParkourSession implements Serializable {
                 }
 
                 if (course.hasMaxTime()) {
-                    if (seconds >= course.getMaxTime()) {
+                    if (seconds == 0) {
                         player.sendMessage(Utils.getTranslation("Parkour.MaxTime")
                                 .replace("%TIME%", Utils.convertSecondsToTime(course.getMaxTime())));
                         PlayerMethods.playerLeave(player);
@@ -122,6 +137,9 @@ public class ParkourSession implements Serializable {
     public void resetTimeStarted() {
         this.timestarted = System.currentTimeMillis();
         seconds = 0;
+        if (course.hasMaxTime()) {
+            seconds = course.getMaxTime();
+        }
     }
 
     public void increaseCheckpoint() {
