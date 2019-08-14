@@ -282,21 +282,23 @@ public class PlayerMethods {
      */
     public static boolean isNewRecord(Player player, String courseName, long timeTaken) {
         List<TimeObject> courseRecord = DatabaseMethods.getTopCourseResults(courseName, 1);
-        if (courseRecord == null || courseRecord.isEmpty()) {
-            return true;
+        TimeObject record = null;
+
+        if (courseRecord != null && !courseRecord.isEmpty()) {
+            record = courseRecord.get(0);
         }
-        TimeObject record = courseRecord.get(0);
-        if (record.getTime() > timeTaken) {
+        if (record == null || record.getTime() > timeTaken) {
             Utils.sendFullTitle(player, Utils.getTranslation("Parkour.CourseRecord", false), Utils.displayCurrentTime(timeTaken), true);
             return true;
         }
 
         List<TimeObject> playerRecord = DatabaseMethods.getTopPlayerCourseResults(player.getName(), courseName, 1);
-        if (playerRecord == null || playerRecord.isEmpty()) {
-            return true;
+        TimeObject result = null;
+
+        if (playerRecord != null && !playerRecord.isEmpty()) {
+            result = playerRecord.get(0);
         }
-        TimeObject result = playerRecord.get(0);
-        if (result.getTime() > timeTaken) {
+        if (result == null || result.getTime() > timeTaken) {
             Utils.sendFullTitle(player, Utils.getTranslation("Parkour.BestTime", false), Utils.displayCurrentTime(timeTaken), true);
             return true;
         }
