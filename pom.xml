@@ -12,6 +12,10 @@
 	<description>The ultimate Parkour plugin</description>
 	<url>https://a5h73y.github.io/Parkour/</url>
 
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
 	<issueManagement>
 		<url>https://github.com/A5H73Y/Parkour/issues</url>
 		<system>GitHub Issues</system>
@@ -35,8 +39,8 @@
 			<url>http://nexus.hc.to/content/repositories/pub_releases</url>
 		</repository>
 		<repository>
-			<id>horgeon-repo</id>
-			<url>https://repo.horgeon.fr/repository/maven-releases/</url>
+			<id>a5h73y-repo</id>
+			<url>https://dl.bintray.com/a5h73y/repo/</url>
 		</repository>
 		<repository>
 			<id>placeholderapi-repo</id>
@@ -53,14 +57,14 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.13.2-R0.1-SNAPSHOT</version>
+			<version>1.14.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<!--Bukkit API-->
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.13.2-R0.1-SNAPSHOT</version>
+			<version>1.14.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<!--Vault API-->
@@ -74,7 +78,7 @@
 		<dependency>
 			<groupId>com.connorlinfoot</groupId>
 			<artifactId>BountifulAPI</artifactId>
-			<version>1.6.2</version>
+			<version>1.6.4</version>
 			<scope>provided</scope>
 		</dependency>
 		<!--Placeholder API-->
