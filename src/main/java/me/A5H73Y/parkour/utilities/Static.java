@@ -10,7 +10,7 @@ import me.A5H73Y.parkour.Parkour;
 
 public final class Static {
 
-    public final static String PLAYING_BIN_PATH = Parkour.getPlugin().getDataFolder() + File.separator + "playing.bin";
+    public static final String PLAYING_BIN_PATH = Parkour.getInstance().getDataFolder() + File.separator + "playing.bin";
     private static List<String> hidden = new ArrayList<>();
     private static Map<String, Long> delay = new HashMap<>();
     private static boolean economy = false;
@@ -21,7 +21,7 @@ public final class Static {
     private static Double version;
 
     public static void initiate() {
-        version = Double.parseDouble(Parkour.getPlugin().getDescription().getVersion());
+        version = Double.parseDouble(Parkour.getInstance().getDescription().getVersion());
         parkourString = Utils.getTranslation("Parkour.Prefix", false);
         parkourSignString = Utils.getTranslation("Parkour.SignHeading", false);
     }
@@ -86,7 +86,7 @@ public final class Static {
     public static void addWhitelistedCommand(String command) {
         List<String> commands = Parkour.getSettings().getWhitelistedCommands();
         commands.add(command);
-        Parkour.getPlugin().getConfig().set("OnCourse.EnforceParkourCommands.Whitelist", commands);
-        Parkour.getPlugin().saveConfig();
+        Parkour.getInstance().getConfig().set("OnCourse.EnforceParkourCommands.Whitelist", commands);
+        Parkour.getInstance().saveConfig();
     }
 }

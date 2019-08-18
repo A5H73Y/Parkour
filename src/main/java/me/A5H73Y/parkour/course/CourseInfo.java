@@ -1,20 +1,27 @@
 package me.A5H73Y.parkour.course;
 
 import java.util.List;
-import java.util.Set;
 
 import me.A5H73Y.parkour.Parkour;
+import me.A5H73Y.parkour.config.ParkourConfiguration;
 import me.A5H73Y.parkour.other.Constants;
+import me.A5H73Y.parkour.player.PlayerInfo;
 import me.A5H73Y.parkour.utilities.DatabaseMethods;
 import me.A5H73Y.parkour.utilities.Static;
 import me.A5H73Y.parkour.utilities.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import static me.A5H73Y.parkour.enums.ConfigType.COURSES;
+import static me.A5H73Y.parkour.enums.ConfigType.ECONOMY;
+
 public class CourseInfo {
+
+    public static ParkourConfiguration getConfig() {
+        return Parkour.getConfig(COURSES);
+    }
 
     /**
      * Get list of all Parkour course names.
@@ -22,7 +29,7 @@ public class CourseInfo {
      * @return List Parkour course names
      */
     public static List<String> getAllCourses() {
-        return Parkour.getParkourConfig().getCourseData().getStringList("Courses");
+        return getConfig().getStringList("Courses");
     }
 
     /**
@@ -33,8 +40,7 @@ public class CourseInfo {
      * @return linkedCourse
      */
     public static String getLinkedCourse(String courseName) {
-        String linkedCourse = Parkour.getParkourConfig().getCourseData()
-                .getString(courseName.toLowerCase() + ".LinkedCourse");
+        String linkedCourse = getConfig().getString(courseName.toLowerCase() + ".LinkedCourse");
 
         if (CourseMethods.exist(linkedCourse)) {
             return linkedCourse;
@@ -50,7 +56,7 @@ public class CourseInfo {
      * @return if linked course is found
      */
     public static boolean hasLinkedCourse(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().contains(courseName.toLowerCase() + ".LinkedCourse");
+        return getConfig().contains(courseName.toLowerCase() + ".LinkedCourse");
     }
 
     /**
@@ -60,9 +66,8 @@ public class CourseInfo {
      * @param linkedCourse
      */
     public static void setLinkedCourse(String courseName, String linkedCourse) {
-        Parkour.getParkourConfig().getCourseData()
-                .set(courseName.toLowerCase() + ".LinkedCourse", linkedCourse.toLowerCase());
-        Parkour.getParkourConfig().saveCourses();
+        getConfig().set(courseName.toLowerCase() + ".LinkedCourse", linkedCourse.toLowerCase());
+        getConfig().save();
     }
 
     /**
@@ -73,8 +78,7 @@ public class CourseInfo {
      * @return linkedLobby
      */
     public static String getLinkedLobby(String courseName) {
-        String linkedLobby = Parkour.getParkourConfig().getCourseData()
-                .getString(courseName.toLowerCase() + ".LinkedLobby");
+        String linkedLobby = getConfig().getString(courseName.toLowerCase() + ".LinkedLobby");
 
         if (linkedLobby != null && LobbyMethods.getCustomLobbies().contains(linkedLobby)) {
             return linkedLobby;
@@ -90,7 +94,7 @@ public class CourseInfo {
      * @return if linked lobby is found
      */
     public static boolean hasLinkedLobby(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().contains(courseName.toLowerCase() + ".LinkedLobby");
+        return getConfig().contains(courseName.toLowerCase() + ".LinkedLobby");
     }
 
     /**
@@ -100,8 +104,8 @@ public class CourseInfo {
      * @param lobbyName
      */
     public static void setLinkedLobby(String courseName, String lobbyName) {
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".LinkedLobby", lobbyName);
-        Parkour.getParkourConfig().saveCourses();
+        getConfig().set(courseName.toLowerCase() + ".LinkedLobby", lobbyName);
+        getConfig().save();
     }
 
     /**
@@ -111,7 +115,7 @@ public class CourseInfo {
      * @return mode
      */
     public static String getMode(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".Mode", "NONE");
+        return getConfig().getString(courseName.toLowerCase() + ".Mode", "NONE");
     }
 
     /**
@@ -121,8 +125,8 @@ public class CourseInfo {
      * @param mode
      */
     public static void setMode(String courseName, String mode) {
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Mode", mode);
-        Parkour.getParkourConfig().saveCourses();
+        getConfig().set(courseName.toLowerCase() + ".Mode", mode);
+        getConfig().save();
     }
 
     /**
@@ -132,7 +136,7 @@ public class CourseInfo {
      * @return
      */
     public static int getCheckpointAmount(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().getInt(courseName.toLowerCase() + ".Points");
+        return getConfig().getInt(courseName.toLowerCase() + ".Points");
     }
 
     /**
@@ -142,7 +146,7 @@ public class CourseInfo {
      * @return
      */
     public static String getCreator(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".Creator");
+        return getConfig().getString(courseName.toLowerCase() + ".Creator");
     }
 
     /**
@@ -152,8 +156,8 @@ public class CourseInfo {
      * @param playerName
      */
     public static void setCreator(String courseName, String playerName) {
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Creator", playerName);
-        Parkour.getParkourConfig().saveCourses();
+        getConfig().set(courseName.toLowerCase() + ".Creator", playerName);
+        getConfig().save();
     }
 
     /**
@@ -163,7 +167,7 @@ public class CourseInfo {
      * @return
      */
     public static int getMinimumLevel(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().getInt(courseName.toLowerCase() + ".MinimumLevel");
+        return getConfig().getInt(courseName.toLowerCase() + ".MinimumLevel");
     }
 
     /**
@@ -173,8 +177,8 @@ public class CourseInfo {
      * @param level
      */
     public static void setMinimumLevel(String courseName, int level) {
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".MinimumLevel", level);
-        Parkour.getParkourConfig().saveCourses();
+        getConfig().set(courseName.toLowerCase() + ".MinimumLevel", level);
+        getConfig().save();
     }
 
     /**
@@ -184,7 +188,7 @@ public class CourseInfo {
      * @return
      */
     public static String getParkourKit(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".ParkourKit", Constants.DEFAULT);
+        return getConfig().getString(courseName.toLowerCase() + ".ParkourKit", Constants.DEFAULT);
     }
 
     /**
@@ -194,7 +198,7 @@ public class CourseInfo {
      * @return
      */
     public static boolean hasParkourKit(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().contains(courseName.toLowerCase() + ".ParkourKit");
+        return getConfig().contains(courseName.toLowerCase() + ".ParkourKit");
     }
 
     /**
@@ -204,8 +208,8 @@ public class CourseInfo {
      * @param parkourKitName
      */
     public static void setParkourKit(String courseName, String parkourKitName) {
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".ParkourKit", parkourKitName.toLowerCase());
-        Parkour.getParkourConfig().saveCourses();
+        getConfig().set(courseName.toLowerCase() + ".ParkourKit", parkourKitName.toLowerCase());
+        getConfig().save();
     }
 
     /**
@@ -215,7 +219,7 @@ public class CourseInfo {
      * @return death count
      */
     public static int getMaximumDeaths(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().getInt(courseName.toLowerCase() + ".MaxDeaths", 0);
+        return getConfig().getInt(courseName.toLowerCase() + ".MaxDeaths", 0);
     }
 
     /**
@@ -225,7 +229,7 @@ public class CourseInfo {
      * @return seconds
      */
     public static int getMaximumTime(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().getInt(courseName.toLowerCase() + ".MaxTime", 0);
+        return getConfig().getInt(courseName.toLowerCase() + ".MaxTime", 0);
     }
 
     /**
@@ -235,8 +239,8 @@ public class CourseInfo {
      * @param amount
      */
     public static void setMaximumDeaths(String courseName, int amount) {
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".MaxDeaths", amount);
-        Parkour.getParkourConfig().saveCourses();
+        getConfig().set(courseName.toLowerCase() + ".MaxDeaths", amount);
+        getConfig().save();
     }
 
     /**
@@ -246,8 +250,8 @@ public class CourseInfo {
      * @param seconds
      */
     public static void setMaximumTime(String courseName, int seconds) {
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".MaxTime", seconds);
-        Parkour.getParkourConfig().saveCourses();
+        getConfig().set(courseName.toLowerCase() + ".MaxTime", seconds);
+        getConfig().save();
     }
 
     /**
@@ -257,7 +261,7 @@ public class CourseInfo {
      * @return boolean
      */
     public static boolean getFinished(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().getBoolean(courseName.toLowerCase() + ".Finished");
+        return getConfig().getBoolean(courseName.toLowerCase() + ".Finished");
     }
 
     /**
@@ -267,8 +271,8 @@ public class CourseInfo {
      * @param finished
      */
     public static void setFinished(String courseName, boolean finished) {
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Finished", finished);
-        Parkour.getParkourConfig().saveCourses();
+        getConfig().set(courseName.toLowerCase() + ".Finished", finished);
+        getConfig().save();
     }
 
     /**
@@ -278,7 +282,7 @@ public class CourseInfo {
      * @return
      */
     public static List<String> getCommandsPrize(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().getStringList(courseName.toLowerCase() + ".Prize.CMD");
+        return getConfig().getStringList(courseName.toLowerCase() + ".Prize.CMD");
     }
 
     /**
@@ -288,7 +292,7 @@ public class CourseInfo {
      * @return
      */
     public static boolean hasCommandPrize(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().contains(courseName.toLowerCase() + ".Prize.CMD");
+        return getConfig().contains(courseName.toLowerCase() + ".Prize.CMD");
     }
 
     /**
@@ -301,8 +305,8 @@ public class CourseInfo {
         List<String> commands = getCommandsPrize(courseName);
         commands.add(command);
 
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Prize.CMD", commands);
-        Parkour.getParkourConfig().saveCourses();
+        getConfig().set(courseName.toLowerCase() + ".Prize.CMD", commands);
+        getConfig().save();
     }
 
     /**
@@ -313,9 +317,9 @@ public class CourseInfo {
      * @param amount
      */
     public static void setMaterialPrize(String courseName, String material, int amount) {
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Prize.Material", material);
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Prize.Amount", amount);
-        Parkour.getParkourConfig().saveCourses();
+        getConfig().set(courseName.toLowerCase() + ".Prize.Material", material);
+        getConfig().set(courseName.toLowerCase() + ".Prize.Amount", amount);
+        getConfig().save();
     }
 
     /**
@@ -325,7 +329,7 @@ public class CourseInfo {
      * @return
      */
     public static int getXPPrize(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().getInt(courseName.toLowerCase() + ".Prize.XP");
+        return getConfig().getInt(courseName.toLowerCase() + ".Prize.XP");
     }
 
     /**
@@ -335,8 +339,8 @@ public class CourseInfo {
      * @param amount
      */
     public static void setXPPrize(String courseName, int amount) {
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Prize.XP", amount);
-        Parkour.getParkourConfig().saveCourses();
+        getConfig().set(courseName.toLowerCase() + ".Prize.XP", amount);
+        getConfig().save();
     }
 
     /**
@@ -345,9 +349,9 @@ public class CourseInfo {
      * @param courseName
      */
     public static void increaseComplete(String courseName) {
-        int completed = Parkour.getParkourConfig().getCourseData().getInt(courseName.toLowerCase() + ".Completed");
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Completed", completed + 1);
-        Parkour.getParkourConfig().saveCourses();
+        int completed = getConfig().getInt(courseName.toLowerCase() + ".Completed");
+        getConfig().set(courseName.toLowerCase() + ".Completed", completed + 1);
+        getConfig().save();
     }
 
     /**
@@ -356,9 +360,9 @@ public class CourseInfo {
      * @param courseName
      */
     public static void increaseView(String courseName) {
-        int views = Parkour.getParkourConfig().getCourseData().getInt(courseName.toLowerCase() + ".Views");
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Views", views + 1);
-        Parkour.getParkourConfig().saveCourses();
+        int views = getConfig().getInt(courseName.toLowerCase() + ".Views");
+        getConfig().set(courseName.toLowerCase() + ".Views", views + 1);
+        getConfig().save();
     }
 
     /**
@@ -368,7 +372,7 @@ public class CourseInfo {
      * @return
      */
     public static int getRewardLevel(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().getInt(courseName.toLowerCase() + ".Level");
+        return getConfig().getInt(courseName.toLowerCase() + ".Level");
     }
 
     /**
@@ -378,8 +382,8 @@ public class CourseInfo {
      * @param level
      */
     public static void setRewardLevel(String courseName, int level) {
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Level", level);
-        Parkour.getParkourConfig().saveCourses();
+        getConfig().set(courseName.toLowerCase() + ".Level", level);
+        getConfig().save();
     }
 
     /**
@@ -389,7 +393,7 @@ public class CourseInfo {
      * @return
      */
     public static int getRewardLevelAdd(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().getInt(courseName.toLowerCase() + ".LevelAdd");
+        return getConfig().getInt(courseName.toLowerCase() + ".LevelAdd");
     }
 
     /**
@@ -399,8 +403,8 @@ public class CourseInfo {
      * @param amount
      */
     public static void setRewardLevelAdd(String courseName, String amount) {
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".LevelAdd", Integer.parseInt(amount));
-        Parkour.getParkourConfig().saveCourses();
+        getConfig().set(courseName.toLowerCase() + ".LevelAdd", Integer.parseInt(amount));
+        getConfig().save();
     }
 
     /**
@@ -410,7 +414,7 @@ public class CourseInfo {
      * @return
      */
     public static boolean getRewardOnce(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().getBoolean(courseName.toLowerCase() + ".RewardOnce");
+        return getConfig().getBoolean(courseName.toLowerCase() + ".RewardOnce");
     }
 
     /**
@@ -420,29 +424,8 @@ public class CourseInfo {
      * @param enabled
      */
     public static void setRewardOnce(String courseName, boolean enabled) {
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".RewardOnce", enabled);
-        Parkour.getParkourConfig().saveCourses();
-    }
-
-    /**
-     * Get RewardRank for a ParkourLevel
-     *
-     * @param parkourLevel
-     * @return
-     */
-    public static String getRewardRank(int parkourLevel) {
-        return Parkour.getParkourConfig().getUsersData().getString("ServerInfo.Levels." + parkourLevel + ".Rank");
-    }
-
-    /**
-     * Set ParkourRank for a ParkourLevel
-     *
-     * @param parkourLevel
-     * @param rank
-     */
-    public static void setRewardRank(int parkourLevel, String rank) {
-        Parkour.getParkourConfig().getUsersData().set("ServerInfo.Levels." + parkourLevel + ".Rank", rank);
-        Parkour.getParkourConfig().saveUsers();
+        getConfig().set(courseName.toLowerCase() + ".RewardOnce", enabled);
+        getConfig().save();
     }
 
     public static boolean hasRewardDelay(String courseName) {
@@ -450,74 +433,65 @@ public class CourseInfo {
     }
 
     public static int getRewardDelay(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().getInt(courseName.toLowerCase() + ".RewardDelay", 0);
+        return getConfig().getInt(courseName.toLowerCase() + ".RewardDelay", 0);
     }
 
     public static void setRewardDelay(String courseName, int rewardDelay) {
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".RewardDelay", rewardDelay);
-        Parkour.getParkourConfig().saveCourses();
+        getConfig().set(courseName.toLowerCase() + ".RewardDelay", rewardDelay);
+        getConfig().save();
     }
 
     public static int getRewardParkoins(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().getInt(courseName.toLowerCase() + ".Parkoins");
+        return getConfig().getInt(courseName.toLowerCase() + ".Parkoins");
     }
 
     public static void setRewardParkoins(String courseName, int parkoins) {
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".Parkoins", parkoins);
-        Parkour.getParkourConfig().saveCourses();
+        getConfig().set(courseName.toLowerCase() + ".Parkoins", parkoins);
+        getConfig().save();
     }
 
     public static Material getJoinItem(String courseName) {
-        return Utils.lookupMaterial(Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".JoinItemMaterial"));
+        return Utils.lookupMaterial(getConfig().getString(courseName.toLowerCase() + ".JoinItemMaterial"));
     }
 
     public static int getJoinItemAmount(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().getInt(courseName.toLowerCase() + ".JoinItemAmount", 1);
+        return getConfig().getInt(courseName.toLowerCase() + ".JoinItemAmount", 1);
     }
 
     public static String getJoinItemLabel(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".JoinItemLabel");
+        return getConfig().getString(courseName.toLowerCase() + ".JoinItemLabel");
     }
 
     public static boolean hasJoinItem(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().contains(courseName.toLowerCase() + ".JoinItemMaterial");
+        return getConfig().contains(courseName.toLowerCase() + ".JoinItemMaterial");
     }
 
     public static void setJoinItem(String courseName, String material, int amount) {
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".JoinItemMaterial", material.toUpperCase());
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".JoinItemAmount", amount);
-        Parkour.getParkourConfig().saveCourses();
-    }
-
-
-    public static int getEconomyFinishReward(String courseName) {
-        return Parkour.getParkourConfig().getEconData().getInt("Price." + courseName.toLowerCase() + ".Finish");
-    }
-
-    public static int getEconomyJoiningFee(String courseName) {
-        return Parkour.getParkourConfig().getEconData().getInt("Price." + courseName.toLowerCase() + ".JoinFee");
+        getConfig().set(courseName.toLowerCase() + ".JoinItemMaterial", material.toUpperCase());
+        getConfig().set(courseName.toLowerCase() + ".JoinItemAmount", amount);
+        getConfig().save();
     }
 
     public static String getWorld(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".World");
+        return getConfig().getString(courseName.toLowerCase() + ".World");
     }
 
     public static Material getMaterialPrize(String courseName) {
-        return Utils.lookupMaterial(Parkour.getParkourConfig().getCourseData().getString(courseName.toLowerCase() + ".Prize.Material"));
+        return Utils.lookupMaterial(getConfig().getString(courseName.toLowerCase() + ".Prize.Material"));
     }
 
     public static int getMaterialPrizeAmount(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().getInt(courseName.toLowerCase() + ".Prize.Amount", 0);
+        return getConfig().getInt(courseName.toLowerCase() + ".Prize.Amount", 0);
     }
 
     public static boolean hasMaterialPrize(String courseName) {
-        return Parkour.getParkourConfig().getCourseData().contains(courseName.toLowerCase() + ".Prize.Material");
+        return getConfig().contains(courseName.toLowerCase() + ".Prize.Material");
     }
 
     public static void resetLinks(String courseName) {
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".LinkedLobby", null);
-        Parkour.getParkourConfig().getCourseData().set(courseName.toLowerCase() + ".LinkedCourse", null);
-        Parkour.getParkourConfig().saveCourses();
+        getConfig().set(courseName.toLowerCase() + ".LinkedLobby", null);
+        getConfig().set(courseName.toLowerCase() + ".LinkedCourse", null);
+        getConfig().save();
     }
 
     public static void deleteCourse(String courseName) {
@@ -525,37 +499,19 @@ public class CourseInfo {
 
         List<String> courseList = getAllCourses();
         courseList.remove(courseName);
-        Parkour.getParkourConfig().getCourseData().set(courseName, null);
-        Parkour.getParkourConfig().getCourseData().set("Courses", courseList);
-        Parkour.getParkourConfig().saveCourses();
+        getConfig().set(courseName, null);
+        getConfig().set("Courses", courseList);
+        getConfig().save();
         DatabaseMethods.deleteCourseAndReferences(courseName);
 
-        if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.SaveUserCompletedCourses")) {
-            FileConfiguration userConfig = Parkour.getParkourConfig().getUsersData();
-            ConfigurationSection playersSection = userConfig.getConfigurationSection("PlayerInfo");
-
-            if (playersSection != null) {
-                Set<String> playerNames = playersSection.getKeys(false);
-
-                for (String playerName : playerNames) {
-                    String completedPath = "PlayerInfo." + playerName + ".Completed";
-                    List<String> completedCourses = userConfig.getStringList(completedPath);
-
-                    if (completedCourses.contains(completedPath)) {
-                        completedCourses.remove(courseName);
-                        userConfig.set(completedPath, completedCourses);
-                    }
-                }
-            }
-            Parkour.getParkourConfig().saveUsers();
-        }
+        PlayerInfo.removeCompletedCourse(courseName);
     }
 
     public static void resetPrizes(String courseName) {
         courseName = courseName.toLowerCase();
 
-        Parkour.getParkourConfig().getCourseData().set(courseName + ".Prize", null);
-        Parkour.getParkourConfig().saveCourses();
+        getConfig().set(courseName + ".Prize", null);
+        getConfig().save();
     }
 
     /**
@@ -573,7 +529,7 @@ public class CourseInfo {
         }
 
         courseName = courseName.toLowerCase();
-        FileConfiguration config = Parkour.getParkourConfig().getCourseData();
+        FileConfiguration config = getConfig();
         ChatColor aqua = ChatColor.AQUA;
 
         int views = config.getInt(courseName + ".Views");
@@ -649,11 +605,13 @@ public class CourseInfo {
         }
 
         if (Static.getEconomy()) {
-            int joinFee = Parkour.getParkourConfig().getEconData()
-                    .getInt("Price." + courseName + ".JoinFee");
-
+            int joinFee = getEconomyFinishReward(courseName);
+            int finishReward = getEconomyFinishReward(courseName);
             if (joinFee > 0) {
                 player.sendMessage("Join Fee: " + aqua + joinFee);
+            }
+            if (finishReward > 0) {
+                player.sendMessage("Economy Reward: " + aqua + finishReward);
             }
         }
 
@@ -669,5 +627,13 @@ public class CourseInfo {
                 player.sendMessage("Cooldown Remaining: " + aqua + Utils.getTimeRemaining(player, courseName));
             }
         }
+    }
+
+    public static int getEconomyFinishReward(String courseName) {
+        return Parkour.getConfig(ECONOMY).getInt("Price." + courseName.toLowerCase() + ".Finish");
+    }
+
+    public static int getEconomyJoiningFee(String courseName) {
+        return Parkour.getConfig(ECONOMY).getInt("Price." + courseName.toLowerCase() + ".JoinFee");
     }
 }

@@ -51,7 +51,7 @@ public class PlayerInventoryListener implements Listener {
         } else if (event.getCurrentItem().getType().equals(Material.ARROW)) {
             player.closeInventory();
 
-            Integer newPage = Integer.valueOf(metadata.get(0));
+            int newPage = Integer.parseInt(metadata.get(0));
             Inventory inv = new ParkourCoursesInventory().buildInventory(player, newPage);
 
             player.openInventory(inv);

@@ -9,20 +9,23 @@ import java.util.Map;
 import java.util.Set;
 
 import me.A5H73Y.parkour.Parkour;
+import me.A5H73Y.parkour.config.ParkourConfiguration;
+import me.A5H73Y.parkour.enums.ConfigType;
 import me.A5H73Y.parkour.other.Validation;
 import me.A5H73Y.parkour.utilities.Utils;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 
 public class ParkourKit implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     public static final List<String> VALID_ACTIONS =
             Arrays.asList("death", "finish", "climb", "launch", "speed", "repulse", "norun", "nopotion", "bounce");
-    private static final long serialVersionUID = 1L;
     private static Map<String, ParkourKit> loaded = new HashMap<>();
+
     // ParkourKit attributes
-    private String name;
-    private List<Material> materials = new ArrayList<>();
+    private final String name;
+    private final List<Material> materials = new ArrayList<>();
 
     /**
      * ParkourKit
@@ -36,8 +39,8 @@ public class ParkourKit implements Serializable {
      */
     private ParkourKit(String name) {
         this.name = name;
-
-        Set<String> rawMaterials = getParkourKitData().getConfigurationSection("ParkourKit." + name).getKeys(false);
+        ParkourConfiguration config = Parkour.getConfig(ConfigType.PARKOURKIT);
+        Set<String> rawMaterials = config.getConfigurationSection("ParkourKit." + name).getKeys(false);
 
         for (String rawMaterial : rawMaterials) {
             Material material = validateAndGetMaterial(rawMaterial);
@@ -46,7 +49,7 @@ public class ParkourKit implements Serializable {
                 continue;
             }
 
-            String action = getParkourKitData().getString("ParkourKit." + name + "." + material.name() + ".Action").toLowerCase();
+            String action = config.getString("ParkourKit." + name + "." + material.name() + ".Action").toLowerCase();
 
             if (!VALID_ACTIONS.contains(action)) {
                 Utils.log("Action " + action + " in kit " + name + " is invalid.", 1);
@@ -59,7 +62,7 @@ public class ParkourKit implements Serializable {
     }
 
     /**
-     * New point of accessing ParkourKit.
+     * Find ParkourKit by name.
      * If it's already loaded, then just return that, otherwise create the set and load it.
      * Hopefully this is better for performance
      *
@@ -100,10 +103,6 @@ public class ParkourKit implements Serializable {
         loaded.remove(kitName);
     }
 
-    private static FileConfiguration getParkourKitData() {
-        return Parkour.getParkourConfig().getParkourKitData();
-    }
-
     /**
      * Get the materials that this ParkourKit is made up of.
      *
@@ -124,7 +123,9 @@ public class ParkourKit implements Serializable {
             return null;
         }
 
-        return getParkourKitData().getString("ParkourKit." + name + "." + material.name() + ".Action").toLowerCase();
+        return Parkour.getConfig(ConfigType.PARKOURKIT)
+                .getString("ParkourKit." + name + "." + material.name() + ".Action")
+                .toLowerCase();
     }
 
     /**
@@ -138,7 +139,8 @@ public class ParkourKit implements Serializable {
             return 0.0;
         }
 
-        return getParkourKitData().getDouble("ParkourKit." + name + "." + material.name() + ".Strength", 1);
+        return Parkour.getConfig(ConfigType.PARKOURKIT)
+                .getDouble("ParkourKit." + name + "." + material.name() + ".Strength", 1);
     }
 
     /**
@@ -152,7 +154,8 @@ public class ParkourKit implements Serializable {
             return 0;
         }
 
-        return getParkourKitData().getInt("ParkourKit." + name + "." + material.name() + ".Duration", 200);
+        return Parkour.getConfig(ConfigType.PARKOURKIT)
+                .getInt("ParkourKit." + name + "." + material.name() + ".Duration", 200);
     }
 
     /**
@@ -186,18 +189,19 @@ public class ParkourKit implements Serializable {
     }
 
     private void updateOutdatedMaterial(String oldMaterial, String newMaterial) {
-        Set<String> oldAction = getParkourKitData().getConfigurationSection("ParkourKit." + name + "." + oldMaterial).getKeys(false);
+        ParkourConfiguration parkourKitConfig = Parkour.getConfig(ConfigType.PARKOURKIT);
+        Set<String> oldAction = parkourKitConfig.getConfigurationSection("ParkourKit." + name + "." + oldMaterial).getKeys(false);
 
         // we copy all of the attributes from the old action (strength, duration, etc)
         for (String attribute : oldAction) {
-            String matchingValue = getParkourKitData().getString("ParkourKit." + name + "." + oldMaterial + "." + attribute);
+            String matchingValue = parkourKitConfig.getString("ParkourKit." + name + "." + oldMaterial + "." + attribute);
 
-            getParkourKitData().set("ParkourKit." + name + "." + newMaterial + "." + attribute,
-                    Validation.isInteger(matchingValue) ? Integer.valueOf(matchingValue) : matchingValue);
+            parkourKitConfig.set("ParkourKit." + name + "." + newMaterial + "." + attribute,
+                    Validation.isInteger(matchingValue) ? Integer.parseInt(matchingValue) : matchingValue);
         }
 
         // remove the old kit
-        getParkourKitData().set("ParkourKit." + name + "." + oldMaterial, null);
-        Parkour.getParkourConfig().saveParkourKit();
+        parkourKitConfig.set("ParkourKit." + name + "." + oldMaterial, null);
+        parkourKitConfig.save();
     }
 }

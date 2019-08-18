@@ -70,7 +70,7 @@ public class PlayerMoveListener implements Listener {
             }
 
             event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 10000,
-                    Parkour.getPlugin().getConfig().getInt("ParkourModes.Moon.Strength")));
+                    Parkour.getInstance().getConfig().getInt("ParkourModes.Moon.Strength")));
         }
     }
 
@@ -91,7 +91,7 @@ public class PlayerMoveListener implements Listener {
         }
 
         if (player.getLocation().getBlock().isLiquid() &&
-                Parkour.getPlugin().getConfig().getBoolean("OnCourse.DieInLiquid")) {
+                Parkour.getInstance().getConfig().getBoolean("OnCourse.DieInLiquid")) {
             PlayerMethods.playerDie(player);
         }
 

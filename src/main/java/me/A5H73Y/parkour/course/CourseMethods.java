@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import me.A5H73Y.parkour.Parkour;
+import me.A5H73Y.parkour.config.ParkourConfiguration;
 import me.A5H73Y.parkour.conversation.CoursePrizeConversation;
 import me.A5H73Y.parkour.conversation.LeaderboardConversation;
 import me.A5H73Y.parkour.conversation.ParkourModeConversation;
@@ -28,8 +29,11 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+
+import static me.A5H73Y.parkour.enums.ConfigType.COURSES;
+import static me.A5H73Y.parkour.enums.ConfigType.PARKOURKIT;
+import static me.A5H73Y.parkour.enums.ConfigType.PLAYERS;
 
 public class CourseMethods {
 
@@ -137,25 +141,25 @@ public class CourseMethods {
 
         String name = courseName.toLowerCase();
         Location location = player.getLocation();
-        FileConfiguration courseData = Parkour.getParkourConfig().getCourseData();
+        ParkourConfiguration courseConfig = Parkour.getConfig(COURSES);
 
-        courseData.set(name + ".Creator", player.getName());
-        courseData.set(name + ".Views", 0);
-        courseData.set(name + ".Completed", 0);
-        courseData.set(name + ".XP", 0);
-        courseData.set(name + ".Points", 0);
-        courseData.set(name + ".World", location.getWorld().getName());
-        courseData.set(name + ".0.X", location.getBlockX() + 0.5);
-        courseData.set(name + ".0.Y", location.getBlockY() + 0.5);
-        courseData.set(name + ".0.Z", location.getBlockZ() + 0.5);
-        courseData.set(name + ".0.Yaw", location.getYaw());
-        courseData.set(name + ".0.Pitch", location.getPitch());
+        courseConfig.set(name + ".Creator", player.getName());
+        courseConfig.set(name + ".Views", 0);
+        courseConfig.set(name + ".Completed", 0);
+        courseConfig.set(name + ".XP", 0);
+        courseConfig.set(name + ".Points", 0);
+        courseConfig.set(name + ".World", location.getWorld().getName());
+        courseConfig.set(name + ".0.X", location.getBlockX() + 0.5);
+        courseConfig.set(name + ".0.Y", location.getBlockY() + 0.5);
+        courseConfig.set(name + ".0.Z", location.getBlockZ() + 0.5);
+        courseConfig.set(name + ".0.Yaw", location.getYaw());
+        courseConfig.set(name + ".0.Pitch", location.getPitch());
 
         List<String> courseList = CourseInfo.getAllCourses();
         courseList.add(name);
         Collections.sort(courseList);
-        courseData.set("Courses", courseList);
-        Parkour.getParkourConfig().saveCourses();
+        courseConfig.set("Courses", courseList);
+        courseConfig.save();
 
         PlayerInfo.setSelected(player, name);
 
@@ -170,7 +174,7 @@ public class CourseMethods {
      * @param courseName
      */
     public static void joinCourseButDelayed(Player player, String courseName, int delay) {
-        Bukkit.getScheduler().scheduleSyncDelayedTask(Parkour.getPlugin(), () -> joinCourse(player, courseName), delay);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(Parkour.getInstance(), () -> joinCourse(player, courseName), delay);
     }
 
     /**
@@ -340,7 +344,8 @@ public class CourseMethods {
     //TODO move me
     private static void displayRanks(CommandSender sender) {
         sender.sendMessage(Utils.getStandardHeading("Parkour Ranks"));
-        ConfigurationSection section = Parkour.getParkourConfig().getUsersData().getConfigurationSection("ServerInfo.Levels");
+        ParkourConfiguration playerConfig = Parkour.getConfig(PLAYERS);
+        ConfigurationSection section = playerConfig.getConfigurationSection("ServerInfo.Levels");
 
         if (section == null) {
             sender.sendMessage(Static.getParkourString() + "No Ranks set.");
@@ -349,7 +354,7 @@ public class CourseMethods {
             List<Integer> orderedLevels = levels.stream().mapToInt(Integer::parseInt).sorted().boxed().collect(Collectors.toList());
 
             for (Integer level : orderedLevels) {
-                String rank = Parkour.getParkourConfig().getUsersData().getString("ServerInfo.Levels." + level + ".Rank");
+                String rank = playerConfig.getString("ServerInfo.Levels." + level + ".Rank");
                 if (rank != null) {
                     sender.sendMessage(Utils.getTranslation("Parkour.RankInfo", false)
                             .replace("%LEVEL%", level.toString())
@@ -424,11 +429,13 @@ public class CourseMethods {
         }
 
         selected = selected.toLowerCase();
-        Parkour.getParkourConfig().getCourseData().set(selected + ".0.X", player.getLocation().getX());
-        Parkour.getParkourConfig().getCourseData().set(selected + ".0.Y", player.getLocation().getY());
-        Parkour.getParkourConfig().getCourseData().set(selected + ".0.Z", player.getLocation().getZ());
-        Parkour.getParkourConfig().getCourseData().set(selected + ".0.Yaw", player.getLocation().getYaw());
-        Parkour.getParkourConfig().getCourseData().set(selected + ".0.Pitch", player.getLocation().getPitch());
+        ParkourConfiguration courseConfig = Parkour.getConfig(COURSES);
+        courseConfig.set(selected + ".0.X", player.getLocation().getX());
+        courseConfig.set(selected + ".0.Y", player.getLocation().getY());
+        courseConfig.set(selected + ".0.Z", player.getLocation().getZ());
+        courseConfig.set(selected + ".0.Yaw", player.getLocation().getYaw());
+        courseConfig.set(selected + ".0.Pitch", player.getLocation().getPitch());
+        courseConfig.save();
         Utils.logToFile(selected + " spawn was reset by " + player.getName());
         player.sendMessage(Static.getParkourString() + "Spawn for " + ChatColor.AQUA + selected + ChatColor.WHITE + " has been set to your position");
     }
@@ -448,14 +455,15 @@ public class CourseMethods {
 
         Block block = player.getLocation().getBlock();
         String coordinates = block.getX() + "-" + block.getY() + "-" + block.getZ();
+        ParkourConfiguration courseConfig = Parkour.getConfig(COURSES);
 
-        if (Parkour.getParkourConfig().getCourseData().contains("CourseInfo.AutoStart." + coordinates)) {
+        if (courseConfig.contains("CourseInfo.AutoStart." + coordinates)) {
             player.sendMessage(Static.getParkourString() + "There is already an AutoStart here!");
             return;
         }
 
-        Parkour.getParkourConfig().getCourseData().set("CourseInfo.AutoStart." + coordinates, args[1].toLowerCase());
-        Parkour.getParkourConfig().saveCourses();
+        courseConfig.set("CourseInfo.AutoStart." + coordinates, args[1].toLowerCase());
+        courseConfig.save();
         player.sendMessage(Static.getParkourString() + "AutoStart for " + args[1] + " created!");
 
         block.setType(XMaterial.STONE_PRESSURE_PLATE.parseMaterial());
@@ -472,16 +480,16 @@ public class CourseMethods {
      * @return Course name
      */
     public static String getAutoStartCourse(Location location) {
-        FileConfiguration config = Parkour.getParkourConfig().getCourseData();
+        ParkourConfiguration courseConfig = Parkour.getConfig(COURSES);
         String coordinates = location.getBlockX() + "-" + location.getBlockY() + "-" + location.getBlockZ();
 
-        ConfigurationSection entries = config.getConfigurationSection("CourseInfo.AutoStart");
+        ConfigurationSection entries = courseConfig.getConfigurationSection("CourseInfo.AutoStart");
 
         if (entries != null) {
             // Go through each entry to find matching coordinates, then return the course
             for (String entry : entries.getKeys(false)) {
                 if (entry.equals(coordinates)) {
-                    return config.getString("CourseInfo.AutoStart." + entry);
+                    return courseConfig.getString("CourseInfo.AutoStart." + entry);
                 }
             }
         }
@@ -496,8 +504,9 @@ public class CourseMethods {
      * @param player
      */
     public static void deleteAutoStart(String coordinates, Player player) {
-        Parkour.getParkourConfig().getCourseData().set("CourseInfo.AutoStart." + coordinates, null);
-        Parkour.getParkourConfig().saveCourses();
+        ParkourConfiguration courseConfig = Parkour.getConfig(COURSES);
+        courseConfig.set("CourseInfo.AutoStart." + coordinates, null);
+        courseConfig.save();
     }
 
     /**
@@ -546,7 +555,7 @@ public class CourseMethods {
      * @param sender
      */
     public static void setMaxTime(String[] args, CommandSender sender) {
-        if (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.DisplayLiveTime")) {
+        if (!Parkour.getInstance().getConfig().getBoolean("OnCourse.DisplayLiveTime")) {
             sender.sendMessage(Static.getParkourString() + "Live Time is disabled!");
             return;
         }
@@ -666,7 +675,7 @@ public class CourseMethods {
             return;
         }
 
-        CourseInfo.setRewardRank(Integer.valueOf(args[1]), args[2]);
+        PlayerInfo.setRewardRank(Integer.parseInt(args[1]), args[2]);
         sender.sendMessage(Static.getParkourString() + "ParkourRank for ParkourLevel " + args[1] + " was set to " + Utils.colour(args[2]));
     }
 
@@ -769,7 +778,7 @@ public class CourseMethods {
             player.sendMessage(Static.getParkourString() + ChatColor.DARK_AQUA + selected + ChatColor.WHITE + " is now linked to " + ChatColor.AQUA + args[2]);
 
         } else if (args.length >= 3 && args[1].equalsIgnoreCase("lobby")) {
-            if (!Parkour.getPlugin().getConfig().contains("Lobby." + args[2] + ".World")) { // TODO
+            if (!Parkour.getInstance().getConfig().contains("Lobby." + args[2] + ".World")) { // TODO
                 player.sendMessage(Static.getParkourString() + "Lobby " + args[2] + " does not exist.");
                 return;
             }
@@ -804,22 +813,25 @@ public class CourseMethods {
         }
 
         courseName = courseName.toLowerCase();
-        FileConfiguration config = Parkour.getParkourConfig().getCourseData();
+        ParkourConfiguration courseConfig = Parkour.getConfig(COURSES);
 
-        config.set(courseName + ".Views", 0);
-        config.set(courseName + ".Completed", 0);
-        config.set(courseName + ".Finished", false);
-        config.set(courseName + ".XP", null);
-        config.set(courseName + ".Level", null);
-        config.set(courseName + ".MinimumLevel", null);
-        config.set(courseName + ".LevelAdd", null);
-        config.set(courseName + ".MaxDeaths", null);
-        config.set(courseName + ".Parkoins", null);
-        config.set(courseName + ".LinkedLobby", null);
-        config.set(courseName + ".LinkedCourse", null);
-        config.set(courseName + ".ParkourKit", null);
-        config.set(courseName + ".Mode", null);
-        Parkour.getParkourConfig().saveCourses();
+        courseConfig.set(courseName + ".Views", 0);
+        courseConfig.set(courseName + ".Completed", 0);
+        courseConfig.set(courseName + ".Finished", false);
+        courseConfig.set(courseName + ".XP", null);
+        courseConfig.set(courseName + ".Level", null);
+        courseConfig.set(courseName + ".MinimumLevel", null);
+        courseConfig.set(courseName + ".LevelAdd", null);
+        courseConfig.set(courseName + ".MaxDeaths", null);
+        courseConfig.set(courseName + ".Parkoins", null);
+        courseConfig.set(courseName + ".LinkedLobby", null);
+        courseConfig.set(courseName + ".LinkedCourse", null);
+        courseConfig.set(courseName + ".ParkourKit", null);
+        courseConfig.set(courseName + ".Mode", null);
+
+        //TODO go through ConfigSection, setting each value to null (except for structural)
+
+        courseConfig.save();
         DatabaseMethods.deleteCourseTimes(courseName);
     }
 
@@ -877,7 +889,7 @@ public class CourseMethods {
             player.sendMessage(Utils.getTranslation("Error.Unknown"));
             return;
         }
-        if (!Parkour.getParkourConfig().getParkourKitData().contains("ParkourKit." + args[2].toLowerCase())) {
+        if (!Parkour.getConfig(PARKOURKIT).contains("ParkourKit." + args[2].toLowerCase())) {
             player.sendMessage(Static.getParkourString() + "ParkourKit doesn't exist!");
             return;
         }
@@ -911,7 +923,7 @@ public class CourseMethods {
         if (args.length == 4 && Static.getEconomy() && Validation.isPositiveDouble(args[3])) {
             String currencyName = Parkour.getEconomy().currencyNamePlural() == null ?
                     "" : " " + Parkour.getEconomy().currencyNamePlural();
-            wager = Double.valueOf(args[3]);
+            wager = Double.parseDouble(args[3]);
             wagerString = Utils.getTranslation("Parkour.Challenge.Wager", false)
                     .replace("%AMOUNT%", wager + currencyName);
         }

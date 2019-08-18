@@ -53,7 +53,7 @@ public class ParkourSession implements Serializable {
     }
 
     public void startVisualTimer(final Player player) {
-        if (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.DisplayLiveTime")
+        if (!Parkour.getInstance().getConfig().getBoolean("OnCourse.DisplayLiveTime")
                 || QuietModeManager.getInstance().isInQuietMode(player.getName())) {
             return;
         }
@@ -80,7 +80,7 @@ public class ParkourSession implements Serializable {
                     player.playSound(player.getLocation(), Sound.valueOf(soundName), 2.0f, 1.75f);
                 }
 
-                boolean useScoreboard = Parkour.getPlugin().getConfig().getBoolean("Scoreboard.Display.CurrentTime");
+                boolean useScoreboard = Parkour.getInstance().getConfig().getBoolean("Scoreboard.Display.CurrentTime");
 
                 if (Parkour.getScoreboardManager().isEnabled() && useScoreboard) {
                     Parkour.getScoreboardManager().updateScoreboardTimer(player, liveTime);
@@ -97,7 +97,7 @@ public class ParkourSession implements Serializable {
                     }
                 }
             }
-        }.runTaskTimer(Parkour.getPlugin(), 20, 20);
+        }.runTaskTimer(Parkour.getInstance(), 20, 20);
 
         taskId = task.getTaskId();
     }

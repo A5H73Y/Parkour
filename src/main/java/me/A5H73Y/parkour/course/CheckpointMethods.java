@@ -1,6 +1,7 @@
 package me.A5H73Y.parkour.course;
 
 import me.A5H73Y.parkour.Parkour;
+import me.A5H73Y.parkour.config.ParkourConfiguration;
 import me.A5H73Y.parkour.other.Validation;
 import me.A5H73Y.parkour.player.PlayerInfo;
 import me.A5H73Y.parkour.utilities.Static;
@@ -13,8 +14,10 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+
+import static me.A5H73Y.parkour.enums.ConfigType.CHECKPOINTS;
+import static me.A5H73Y.parkour.enums.ConfigType.COURSES;
 
 public class CheckpointMethods {
 
@@ -28,26 +31,26 @@ public class CheckpointMethods {
      * @return Checkpoint
      */
     public static Checkpoint getNextCheckpoint(String courseName, int currentPoint) {
-        FileConfiguration courseData = Parkour.getParkourConfig().getCourseData();
-        FileConfiguration checkData = Parkour.getParkourConfig().getCheckData();
+        ParkourConfiguration courseConfig = Parkour.getConfig(COURSES);
+        ParkourConfiguration checkConfig = Parkour.getConfig(CHECKPOINTS);
 
         String checkpointPath = courseName + "." + currentPoint + ".";
 
         // the 'current' checkpoint location, i.e. where to teleport back to
-        double x = courseData.getDouble(checkpointPath + "X");
-        double y = courseData.getDouble(checkpointPath + "Y");
-        double z = courseData.getDouble(checkpointPath + "Z");
-        float yaw = (float) courseData.getDouble(checkpointPath + "Yaw");
-        float pitch = (float) courseData.getDouble(checkpointPath + "Pitch");
-        World world = Bukkit.getWorld(courseData.getString(courseName + "." + "World"));
+        double x = courseConfig.getDouble(checkpointPath + "X");
+        double y = courseConfig.getDouble(checkpointPath + "Y");
+        double z = courseConfig.getDouble(checkpointPath + "Z");
+        float yaw = (float) courseConfig.getDouble(checkpointPath + "Yaw");
+        float pitch = (float) courseConfig.getDouble(checkpointPath + "Pitch");
+        World world = Bukkit.getWorld(courseConfig.getString(courseName + "." + "World"));
         Location location = new Location(world, x, y, z, yaw, pitch);
 
         // get the next checkpoint pressure plate location
         checkpointPath = courseName + "." + (currentPoint + 1) + ".";
 
-        double nCheckX = checkData.getDouble(checkpointPath + "X");
-        double nCheckY = checkData.getDouble(checkpointPath + "Y");
-        double nCheckZ = checkData.getDouble(checkpointPath + "Z");
+        double nCheckX = checkConfig.getDouble(checkpointPath + "X");
+        double nCheckY = checkConfig.getDouble(checkpointPath + "Y");
+        double nCheckZ = checkConfig.getDouble(checkpointPath + "Z");
 
         return new Checkpoint(location, nCheckX, nCheckY, nCheckZ);
     }
@@ -86,10 +89,10 @@ public class CheckpointMethods {
             } catch (NoSuchFieldError ex) {
                 // using an older version of server - disable the option to stop error appearing
                 Utils.log("Safe Checkpoints has been disabled due to old server", 2);
-                Parkour.getPlugin().getConfig().set("Other.EnforceSafeCheckpoints", false);
-                Parkour.getPlugin().saveConfig();
+                Parkour.getInstance().getConfig().set("Other.EnforceSafeCheckpoints", false);
+                Parkour.getInstance().saveConfig();
 
-                Utils.reloadConfig();
+                Parkour.getInstance().reloadConfigurations();
             }
         }
 
@@ -113,25 +116,25 @@ public class CheckpointMethods {
      * @param checkpoint checkpoint being saved
      */
     private static void createCheckpointData(String selected, Location location, int checkpoint) {
-        FileConfiguration courseData = Parkour.getParkourConfig().getCourseData();
-        FileConfiguration checkData = Parkour.getParkourConfig().getCheckData();
+        ParkourConfiguration courseConfig = Parkour.getConfig(COURSES);
+        ParkourConfiguration checkConfig = Parkour.getConfig(CHECKPOINTS);
 
-        int points = courseData.getInt(selected + ".Points");
-        int pointmax = points >= checkpoint ? points : checkpoint;
+        int points = courseConfig.getInt(selected + ".Points");
+        int pointmax = Math.max(points, checkpoint);
 
-        courseData.set(selected + ".Points", pointmax);
-        courseData.set(selected + "." + checkpoint + ".X", location.getBlockX() + 0.5);
-        courseData.set(selected + "." + checkpoint + ".Y", location.getBlockY() + 0.5);
-        courseData.set(selected + "." + checkpoint + ".Z", location.getBlockZ() + 0.5);
-        courseData.set(selected + "." + checkpoint + ".Yaw", location.getYaw());
-        courseData.set(selected + "." + checkpoint + ".Pitch", location.getPitch());
+        courseConfig.set(selected + ".Points", pointmax);
+        courseConfig.set(selected + "." + checkpoint + ".X", location.getBlockX() + 0.5);
+        courseConfig.set(selected + "." + checkpoint + ".Y", location.getBlockY() + 0.5);
+        courseConfig.set(selected + "." + checkpoint + ".Z", location.getBlockZ() + 0.5);
+        courseConfig.set(selected + "." + checkpoint + ".Yaw", location.getYaw());
+        courseConfig.set(selected + "." + checkpoint + ".Pitch", location.getPitch());
 
-        checkData.set(selected + "." + checkpoint + ".X", location.getBlockX());
-        checkData.set(selected + "." + checkpoint + ".Y", location.getBlockY() - 1);
-        checkData.set(selected + "." + checkpoint + ".Z", location.getBlockZ());
+        checkConfig.set(selected + "." + checkpoint + ".X", location.getBlockX());
+        checkConfig.set(selected + "." + checkpoint + ".Y", location.getBlockY() - 1);
+        checkConfig.set(selected + "." + checkpoint + ".Z", location.getBlockZ());
 
-        Parkour.getParkourConfig().saveCheck();
-        Parkour.getParkourConfig().saveCourses();
+        courseConfig.save();
+        checkConfig.save();
     }
 
     /**
@@ -149,16 +152,16 @@ public class CheckpointMethods {
             return;
         }
 
-        FileConfiguration courseData = Parkour.getParkourConfig().getCourseData();
+        ParkourConfiguration courseConfig = Parkour.getConfig(COURSES);
         String courseName = args[1].toLowerCase();
         String path = toCheckpoint ? courseName + "." + args[2] : courseName + ".0";
 
-        World world = Bukkit.getWorld(courseData.getString(courseName + ".World"));
-        double x = courseData.getDouble(path + ".X");
-        double y = courseData.getDouble(path + ".Y");
-        double z = courseData.getDouble(path + ".Z");
-        float yaw = courseData.getInt(path + ".Yaw");
-        float pitch = courseData.getInt(path + ".Pitch");
+        World world = Bukkit.getWorld(courseConfig.getString(courseName + ".World"));
+        double x = courseConfig.getDouble(path + ".X");
+        double y = courseConfig.getDouble(path + ".Y");
+        double z = courseConfig.getDouble(path + ".Z");
+        float yaw = courseConfig.getInt(path + ".Yaw");
+        float pitch = courseConfig.getInt(path + ".Pitch");
 
         if (x == 0 && y == 0 && z == 0) {
             player.sendMessage(Static.getParkourString() + ChatColor.RED + "ERROR: " + ChatColor.WHITE + "This checkpoint is invalid or doesn't exist!");
@@ -189,11 +192,15 @@ public class CheckpointMethods {
             return;
         }
 
-        Parkour.getParkourConfig().getCourseData().set(courseName + "." + point, null);
-        Parkour.getParkourConfig().getCourseData().set(courseName + ".Points", point - 1);
-        Parkour.getParkourConfig().getCheckData().set(courseName + "." + point, null);
-        Parkour.getParkourConfig().saveCourses();
-        Parkour.getParkourConfig().saveCheck();
+        ParkourConfiguration courseConfig = Parkour.getConfig(COURSES);
+        ParkourConfiguration checkConfig = Parkour.getConfig(COURSES);
+
+        courseConfig.set(courseName + "." + point, null);
+        courseConfig.set(courseName + ".Points", point - 1);
+        checkConfig.set(courseName + "." + point, null);
+
+        courseConfig.save();
+        checkConfig.save();
 
         player.sendMessage(Utils.getTranslation("Parkour.DeleteCheckpoint")
                 .replace("%CHECKPOINT%", String.valueOf(point))

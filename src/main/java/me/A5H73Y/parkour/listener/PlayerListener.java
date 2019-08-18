@@ -65,7 +65,7 @@ public class PlayerListener implements Listener {
         }
 
         if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
-            if (Parkour.getPlugin().getConfig().getBoolean("OnCourse.DieInVoid")) {
+            if (Parkour.getInstance().getConfig().getBoolean("OnCourse.DieInVoid")) {
                 PlayerMethods.playerDie(player);
                 return;
             }
@@ -108,7 +108,7 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        if (Parkour.getPlugin().getConfig().getBoolean("OnCourse.DisableItemDrop")) {
+        if (Parkour.getInstance().getConfig().getBoolean("OnCourse.DisableItemDrop")) {
             event.setCancelled(true);
         }
     }
@@ -119,7 +119,7 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        if (Parkour.getPlugin().getConfig().getBoolean("OnCourse.DisableItemPickup")) {
+        if (Parkour.getInstance().getConfig().getBoolean("OnCourse.DisableItemPickup")) {
             event.setCancelled(true);
         }
     }
@@ -140,7 +140,7 @@ public class PlayerListener implements Listener {
 
         Parkour.getScoreboardManager().addScoreboard(event.getPlayer());
 
-        if (Parkour.getPlugin().getConfig().getBoolean("OnLeaveServer.TeleportToLastCheckpoint")) {
+        if (Parkour.getInstance().getConfig().getBoolean("OnLeaveServer.TeleportToLastCheckpoint")) {
             PlayerMethods.playerDie(event.getPlayer());
         }
 
@@ -193,7 +193,7 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        if (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.DisableFly")) {
+        if (!Parkour.getInstance().getConfig().getBoolean("OnCourse.DisableFly")) {
             return;
         }
 
@@ -210,7 +210,7 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        if (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.PreventOpeningOtherInventories")) {
+        if (!Parkour.getInstance().getConfig().getBoolean("OnCourse.PreventOpeningOtherInventories")) {
             return;
         }
 

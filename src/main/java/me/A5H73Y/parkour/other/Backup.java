@@ -14,7 +14,7 @@ import me.A5H73Y.parkour.utilities.Utils;
 
 public class Backup {
 
-    private static final String SOURCE_FOLDER = Parkour.getPlugin().getDataFolder().toString();
+    private static final String SOURCE_FOLDER = Parkour.getInstance().getDataFolder().toString();
     private static final String BACKUPS_FOLDER = "backups";
     private static final String OUTPUT_ZIP_FILE = SOURCE_FOLDER + File.separator + BACKUPS_FOLDER + File.separator
             + "[" + Utils.getDate() + "] Backup.zip";

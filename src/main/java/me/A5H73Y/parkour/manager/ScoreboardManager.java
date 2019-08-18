@@ -5,13 +5,14 @@ import java.util.List;
 import java.util.Map;
 
 import me.A5H73Y.parkour.Parkour;
+import me.A5H73Y.parkour.config.ParkourConfiguration;
 import me.A5H73Y.parkour.course.CourseMethods;
+import me.A5H73Y.parkour.enums.ConfigType;
 import me.A5H73Y.parkour.other.TimeObject;
 import me.A5H73Y.parkour.utilities.DatabaseMethods;
 import me.A5H73Y.parkour.utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -39,8 +40,8 @@ public class ScoreboardManager {
     private Map<String, String> translationKey = new HashMap<>();
 
     public ScoreboardManager() {
-        FileConfiguration defaultConfig = Parkour.getPlugin().getConfig();
-        FileConfiguration stringsConfig = Parkour.getParkourConfig().getStringData();
+        ParkourConfiguration defaultConfig = Parkour.getConfig(ConfigType.DEFAULT);
+        ParkourConfiguration stringsConfig = Parkour.getConfig(ConfigType.STRINGS);
 
         this.enabled = defaultConfig.getBoolean("Scoreboard.Enabled");
         this.titleFormat = stringsConfig.getString("Scoreboard.TitleFormat");
@@ -198,6 +199,8 @@ public class ScoreboardManager {
      * Each row needs a heading and a text entry
      */
     private int calculateNumberOfRowsNeeded() {
+
+        // for each key add 2
         int rowsNeeded = 0;
         if (configKey.get(COURSE_NAME)) {
             rowsNeeded += 2;

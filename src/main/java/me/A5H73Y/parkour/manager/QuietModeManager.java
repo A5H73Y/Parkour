@@ -9,8 +9,8 @@ import org.bukkit.entity.Player;
 public class QuietModeManager {
 
     private static QuietModeManager instance;
-    private final String quietOnMessage = Utils.getTranslation("Parkour.QuietOn");
-    private final String quietOffMessage = Utils.getTranslation("Parkour.QuietOff");
+    private final String quietOnMessage = Utils.getTranslation("Parkour.QuietOn", false);
+    private final String quietOffMessage = Utils.getTranslation("Parkour.QuietOff", false);
     private List<String> quietPlayers = new ArrayList<>();
 
     private QuietModeManager() {
@@ -25,8 +25,8 @@ public class QuietModeManager {
     }
 
     public void enableQuietMode(Player player) {
-        quietPlayers.add(player.getName());
         Utils.sendActionBar(player, getInstance().quietOnMessage, true);
+        quietPlayers.add(player.getName());
     }
 
     public void disableQuietMode(Player player) {
@@ -47,9 +47,9 @@ public class QuietModeManager {
      */
     public void toggleQuietMode(Player player) {
         if (isInQuietMode(player.getName())) {
-            enableQuietMode(player);
-        } else {
             disableQuietMode(player);
+        } else {
+            enableQuietMode(player);
         }
     }
 }

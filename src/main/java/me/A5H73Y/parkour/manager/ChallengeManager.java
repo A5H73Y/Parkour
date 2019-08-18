@@ -33,7 +33,7 @@ public class ChallengeManager {
      * @param senderPlayer
      * @param receiverPlayer
      * @param courseName
-     * @return
+     * @return new Challenge
      */
     public Challenge createChallenge(String senderPlayer, String receiverPlayer, String courseName, Double wager) {
         Challenge challenge = new Challenge(senderPlayer, receiverPlayer, courseName, wager);
@@ -136,8 +136,8 @@ public class ChallengeManager {
      * @return
      */
     public Player calculateOpponent(String winner, Challenge challenge) {
-        String opponent = challenge.getSenderPlayer().equals(winner) ?
-                challenge.getReceiverPlayer() : challenge.getSenderPlayer();
+        String opponent = challenge.getSenderPlayer().equals(winner)
+                ? challenge.getReceiverPlayer() : challenge.getSenderPlayer();
 
         return Bukkit.getPlayer(opponent);
     }
@@ -163,7 +163,7 @@ public class ChallengeManager {
 
         final Player senderPlayer = Bukkit.getPlayer(challenge.getSenderPlayer());
 
-        if (Parkour.getPlugin().getConfig().getBoolean("ParkourModes.Challenge.hidePlayers")) {
+        if (Parkour.getInstance().getConfig().getBoolean("ParkourModes.Challenge.hidePlayers")) {
             senderPlayer.hidePlayer(receiverPlayer);
             receiverPlayer.hidePlayer(senderPlayer);
         }
@@ -178,9 +178,9 @@ public class ChallengeManager {
         receiverPlayer.setWalkSpeed(0f);
 
         new Runnable() {
-            int taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(Parkour.getPlugin(), this, 0L, 20L);
+            int taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(Parkour.getInstance(), this, 0L, 20L);
 
-            int count = Parkour.getPlugin().getConfig().getInt("ParkourModes.Challenge.CountdownFrom") + 1;
+            int count = Parkour.getInstance().getConfig().getInt("ParkourModes.Challenge.CountdownFrom") + 1;
 
             @Override
             public void run() {

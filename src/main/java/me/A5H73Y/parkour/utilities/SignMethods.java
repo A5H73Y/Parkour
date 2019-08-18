@@ -101,9 +101,9 @@ public class SignMethods {
             player.sendMessage(Static.getParkourString() + "Lobby shortcut created!");
 
         } else {
-            if (Parkour.getPlugin().getConfig().contains("Lobby." + sign.getLine(2))) {
-                if (Parkour.getPlugin().getConfig().contains("Lobby." + sign.getLine(2) + ".Level")) {
-                    sign.setLine(3, ChatColor.RED + Parkour.getPlugin().getConfig().getString("Lobby." + sign.getLine(2) + ".Level"));
+            if (Parkour.getInstance().getConfig().contains("Lobby." + sign.getLine(2))) {
+                if (Parkour.getInstance().getConfig().contains("Lobby." + sign.getLine(2) + ".Level")) {
+                    sign.setLine(3, ChatColor.RED + Parkour.getInstance().getConfig().getString("Lobby." + sign.getLine(2) + ".Level"));
                 }
                 player.sendMessage(Static.getParkourString() + "Lobby " + sign.getLine(2) + " shortcut created!");
             } else {

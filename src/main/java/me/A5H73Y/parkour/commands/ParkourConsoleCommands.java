@@ -1,5 +1,6 @@
 package me.A5H73Y.parkour.commands;
 
+import me.A5H73Y.parkour.Parkour;
 import me.A5H73Y.parkour.course.CourseMethods;
 import me.A5H73Y.parkour.other.Backup;
 import me.A5H73Y.parkour.other.Help;
@@ -51,110 +52,133 @@ public class ParkourConsoleCommands implements CommandExecutor {
             return true;
         }
 
-        if (args[0].equalsIgnoreCase("reload")) {
-            Utils.reloadConfig();
-            Utils.log("Config reloaded!");
+        String firstArg = args[0].toLowerCase();
 
-        } else if (args[0].equalsIgnoreCase("recreate")) {
-            DatabaseMethods.recreateAllCourses();
+        switch (firstArg) {
+            case "reload":
+                Parkour.getInstance().reloadConfigurations();
+                Utils.log("Config reloaded!");
+                break;
 
-        } else if (args[0].equalsIgnoreCase("setminlevel")) {
-            if (!Utils.validateArgs(sender, args, 3)) {
-                return false;
-            }
+            case "recreate":
+                DatabaseMethods.recreateAllCourses();
+                break;
 
-            CourseMethods.setMinLevel(args, sender);
+            case "setminlevel":
+                if (!Utils.validateArgs(sender, args, 3)) {
+                    return false;
+                }
 
-        } else if (args[0].equalsIgnoreCase("setmaxdeath")) {
-            if (!Utils.validateArgs(sender, args, 3)) {
-                return false;
-            }
+                CourseMethods.setMinLevel(args, sender);
+                break;
 
-            CourseMethods.setMaxDeaths(args, sender);
+            case "setmaxdeath":
+                if (!Utils.validateArgs(sender, args, 3)) {
+                    return false;
+                }
 
-        } else if (args[0].equalsIgnoreCase("setmaxtime")) {
-            if (!Utils.validateArgs(sender, args, 3)) {
-                return false;
-            }
+                CourseMethods.setMaxDeaths(args, sender);
+                break;
 
-            CourseMethods.setMaxTime(args, sender);
+            case "setmaxtime":
+                if (!Utils.validateArgs(sender, args, 3)) {
+                    return false;
+                }
 
-        } else if (args[0].equalsIgnoreCase("setjoinitem")) {
-            if (!Utils.validateArgs(sender, args, 4)) {
-                return false;
-            }
+                CourseMethods.setMaxTime(args, sender);
+                break;
 
-            CourseMethods.setJoinItem(args, sender);
+            case "setjoinitem":
+                if (!Utils.validateArgs(sender, args, 4)) {
+                    return false;
+                }
 
-        } else if (args[0].equalsIgnoreCase("rewardonce")) {
-            if (!Utils.validateArgs(sender, args, 2)) {
-                return false;
-            }
+                CourseMethods.setJoinItem(args, sender);
+                break;
 
-            CourseMethods.setRewardOnce(args, sender);
+            case "rewardonce":
+                if (!Utils.validateArgs(sender, args, 2)) {
+                    return false;
+                }
 
-        } else if (args[0].equalsIgnoreCase("rewardlevel")) {
-            if (!Utils.validateArgs(sender, args, 3)) {
-                return false;
-            }
+                CourseMethods.setRewardOnce(args, sender);
+                break;
 
-            CourseMethods.setRewardParkourLevel(args, sender);
+            case "rewardlevel":
+                if (!Utils.validateArgs(sender, args, 3)) {
+                    return false;
+                }
 
-        } else if (args[0].equalsIgnoreCase("rewardleveladd")) {
-            if (!Utils.validateArgs(sender, args, 3)) {
-                return false;
-            }
+                CourseMethods.setRewardParkourLevel(args, sender);
+                break;
 
-            CourseMethods.setRewardParkourLevelAddition(args, sender);
+            case "rewardleveladd":
+                if (!Utils.validateArgs(sender, args, 3)) {
+                    return false;
+                }
 
-        } else if (args[0].equalsIgnoreCase("rewardrank")) {
-            if (!Utils.validateArgs(sender, args, 3)) {
-                return false;
-            }
+                CourseMethods.setRewardParkourLevelAddition(args, sender);
+                break;
 
-            CourseMethods.setRewardParkourRank(args, sender);
+            case "rewardrank":
+                if (!Utils.validateArgs(sender, args, 3)) {
+                    return false;
+                }
 
-        } else if (args[0].equalsIgnoreCase("rewardparkoins")) {
-            if (!Utils.validateArgs(sender, args, 3)) {
-                return false;
-            }
+                CourseMethods.setRewardParkourRank(args, sender);
+                break;
 
-            CourseMethods.setRewardParkoins(args, sender);
+            case "rewardparkoins":
+                if (!Utils.validateArgs(sender, args, 3)) {
+                    return false;
+                }
 
-        } else if (args[0].equalsIgnoreCase("setlevel")) {
-            if (!Utils.validateArgs(sender, args, 3)) {
-                return false;
-            }
+                CourseMethods.setRewardParkoins(args, sender);
+                break;
 
-            PlayerMethods.setLevel(args, sender);
+            case "setlevel":
+                if (!Utils.validateArgs(sender, args, 3)) {
+                    return false;
+                }
 
-        } else if (args[0].equalsIgnoreCase("setrank")) {
-            if (!Utils.validateArgs(sender, args, 3)) {
-                return false;
-            }
+                PlayerMethods.setLevel(args, sender);
+                break;
 
-            PlayerMethods.setRank(args, sender);
+            case "setrank":
+                if (!Utils.validateArgs(sender, args, 3)) {
+                    return false;
+                }
 
-        } else if (args[0].equalsIgnoreCase("list")) {
-            CourseMethods.displayList(args, sender);
+                PlayerMethods.setRank(args, sender);
+                break;
 
-        } else if (args[0].equalsIgnoreCase("listkit")) {
-            Utils.listParkourKit(args, sender);
+            case "list":
+                CourseMethods.displayList(args, sender);
+                break;
 
-        } else if (args[0].equalsIgnoreCase("settings")) {
-            Help.displaySettings(sender);
+            case "listkit":
+                Utils.listParkourKit(args, sender);
+                break;
 
-        } else if (args[0].equalsIgnoreCase("help")) {
-            Help.lookupCommandHelp(args, sender);
+            case "settings":
+                Help.displaySettings(sender);
+                break;
 
-        } else if (args[0].equalsIgnoreCase("cmds")) {
-            ParkourConsoleCommands.displayCommands();
+            case "help":
+                Help.lookupCommandHelp(args, sender);
+                break;
 
-        } else if (args[0].equalsIgnoreCase("backup")) {
-            Backup.backupNow(true);
+            case "cmds":
+                ParkourConsoleCommands.displayCommands();
+                break;
 
-        } else {
-            Utils.log("Unknown Command. Enter 'pac cmds' to display all console commands.");
+            case "backup":
+                Backup.backupNow(true);
+                break;
+
+            default:
+                Utils.log("Unknown Command. Enter 'pac cmds' to display all console commands.");
+                break;
         }
         return true;
     }

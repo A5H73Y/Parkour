@@ -1,7 +1,9 @@
 package me.A5H73Y.parkour.conversation;
 
 import me.A5H73Y.parkour.Parkour;
+import me.A5H73Y.parkour.config.ParkourConfiguration;
 import me.A5H73Y.parkour.conversation.other.AddKitItemConversation;
+import me.A5H73Y.parkour.enums.ConfigType;
 import me.A5H73Y.parkour.kit.ParkourKit;
 import me.A5H73Y.parkour.kit.ParkourKitInfo;
 import me.A5H73Y.parkour.utilities.Static;
@@ -84,8 +86,8 @@ public class EditParkourKitConversation extends ParkourConversation {
         protected Prompt acceptValidatedInput(ConversationContext context, String material) {
             String kitName = (String) context.getSessionData("kit");
 
-            Parkour.getParkourConfig().getParkourKitData().set("ParkourKit." + kitName + "." + material, null);
-            Parkour.getParkourConfig().saveParkourKit();
+	        Parkour.getConfig(ConfigType.PARKOURKIT).set("ParkourKit." + kitName + "." + material, null);
+	        Parkour.getConfig(ConfigType.PARKOURKIT).save();
             ParkourKit.clearMemory(kitName);
             context.getForWhom().sendRawMessage(Static.getParkourString() + material + " removed from " + kitName);
             return new ChooseOption(true);

@@ -563,7 +563,7 @@ public class Updater {
      * @return true if Updater should consider the remote version an update, false if not.
      */
     public boolean shouldUpdate(String localVersion, String remoteVersion) {
-        return !(Double.valueOf(localVersion) >= Double.valueOf(remoteVersion));
+        return !(Double.parseDouble(localVersion) >= Double.parseDouble(remoteVersion));
     }
 
     /**

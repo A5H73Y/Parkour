@@ -34,7 +34,7 @@ public class SQLite extends Database {
             return getConnection();
         }
 
-        String pathOverride = Parkour.getPlugin().getConfig().getString("SQLite.PathOverride");
+        String pathOverride = Parkour.getInstance().getConfig().getString("SQLite.PathOverride");
         String path = pathOverride.isEmpty() ? "plugins/Parkour/sqlite-db" : pathOverride;
 
         File dataFolder = new File(path);

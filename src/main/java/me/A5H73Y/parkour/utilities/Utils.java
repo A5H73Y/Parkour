@@ -42,6 +42,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Stairs;
 
+import static me.A5H73Y.parkour.enums.ConfigType.STRINGS;
+
 public final class Utils {
 
     /**
@@ -58,7 +60,7 @@ public final class Utils {
             return "Invalid translation.";
         }
 
-        String translated = Parkour.getParkourConfig().getStringData().getString(translationKey);
+        String translated = Parkour.getConfig(STRINGS).getString(translationKey);
         translated = translated != null ? colour(translated) : "String not found: " + translationKey;
         return prefix ? Static.getParkourString().concat(translated) : translated;
     }
@@ -278,14 +280,14 @@ public final class Utils {
     public static void log(String message, int severity) {
         switch (severity) {
             case 1:
-                Parkour.getPlugin().getLogger().warning(message);
+                Parkour.getInstance().getLogger().warning(message);
                 break;
             case 2:
-                Parkour.getPlugin().getLogger().severe("! " + message);
+                Parkour.getInstance().getLogger().severe("! " + message);
                 break;
             case 0:
             default:
-                Parkour.getPlugin().getLogger().info(message);
+                Parkour.getInstance().getLogger().info(message);
                 break;
         }
     }
@@ -307,12 +309,12 @@ public final class Utils {
      * @param message
      */
     public static void logToFile(String message) {
-        if (!Parkour.getPlugin().getConfig().getBoolean("Other.LogToFile")) {
+        if (!Parkour.getInstance().getConfig().getBoolean("Other.LogToFile")) {
             return;
         }
 
         try {
-            File saveTo = new File(Parkour.getParkourConfig().getDataFolder(), "Parkour.log");
+            File saveTo = new File(Parkour.getInstance().getDataFolder(), "Parkour.log");
             if (!saveTo.exists()) {
                 saveTo.createNewFile();
             }
@@ -536,7 +538,7 @@ public final class Utils {
             QuestionManager.getInstance().askDeleteCheckpointQuestion(player, args[2], checkpoints);
 
         } else if (args[1].equalsIgnoreCase("lobby")) {
-            if (!Parkour.getPlugin().getConfig().contains("Lobby." + args[2].toLowerCase() + ".World")) {
+            if (!Parkour.getInstance().getConfig().contains("Lobby." + args[2].toLowerCase() + ".World")) {
                 player.sendMessage(Static.getParkourString() + "This lobby does not exist!");
                 return;
             }
@@ -644,7 +646,7 @@ public final class Utils {
      */
     public static int parseMaterialAmount(String amountString) {
         int amount = Integer.parseInt(amountString);
-        return amount < 1 ? 1 : amount > 64 ? 64 : amount;
+        return amount < 1 ? 1 : Math.min(amount, 64);
     }
 
     /**
@@ -832,7 +834,6 @@ public final class Utils {
      * @param player
      * @return
      */
-    @SuppressWarnings("deprecation")
     public static Material getMaterialInPlayersHand(Player player) {
         return getItemStackInPlayersHand(player).getType();
     }
@@ -889,7 +890,7 @@ public final class Utils {
         boolean enabled = override || Static.containsHidden(player.getName());
         List<Player> playerScope;
 
-        if (Parkour.getPlugin().getConfig().getBoolean("OnJoin.Item.HideAll.Global") || override) {
+        if (Parkour.getInstance().getConfig().getBoolean("OnJoin.Item.HideAll.Global") || override) {
             playerScope = (List<Player>) Bukkit.getOnlinePlayers();
         } else {
             playerScope = getOnlineParkourPlayers();
@@ -934,7 +935,7 @@ public final class Utils {
         }
 
         //check if player is standing in a half-block
-        if (!block.getType().equals(Material.AIR) && !block.getType().equals(lookupMaterial(Parkour.getPlugin().getConfig().getString("OnCourse.CheckpointMaterial")))) {
+        if (!block.getType().equals(Material.AIR) && !block.getType().equals(lookupMaterial(Parkour.getInstance().getConfig().getString("OnCourse.CheckpointMaterial")))) {
             player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + block.getType());
             return false;
         }
@@ -1072,12 +1073,6 @@ public final class Utils {
         }
     }
 
-    public static void reloadConfig() {
-        Parkour.getParkourConfig().reload();
-        Parkour.getSettings().resetSettings();
-        Static.initiate();
-    }
-
     /**
      * Basically a fancy way of saying, is the server 1.13+
      * If the Version is weird (like older versions), we can assume it's under 13
@@ -1086,7 +1081,7 @@ public final class Utils {
      */
     public static int getMinorServerVersion() {
         String version = Bukkit.getBukkitVersion().split("\\.")[1];
-        return Validation.isInteger(version) ? Integer.valueOf(version) : 12;
+        return Validation.isInteger(version) ? Integer.parseInt(version) : 12;
     }
 
     public static boolean doesGameModeEnumExist(String value) {
@@ -1094,9 +1089,8 @@ public final class Utils {
         try {
             GameMode.valueOf(value.toUpperCase());
             match = true;
-        } catch (IllegalArgumentException ex) {
-            // yum
-        }
+        } catch (IllegalArgumentException ignore) {}
+
         return match;
     }
 

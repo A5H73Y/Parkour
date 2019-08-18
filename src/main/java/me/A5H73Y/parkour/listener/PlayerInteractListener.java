@@ -34,7 +34,7 @@ public class PlayerInteractListener implements Listener {
             return;
         }
 
-        if (!player.isSneaking() && Parkour.getPlugin().getConfig().getBoolean("OnCourse.SneakToInteractItems")) {
+        if (!player.isSneaking() && Parkour.getInstance().getConfig().getBoolean("OnCourse.SneakToInteractItems")) {
             return;
         }
 
@@ -128,7 +128,7 @@ public class PlayerInteractListener implements Listener {
             return;
         }
 
-        if (Parkour.getPlugin().getConfig().getBoolean("OnCourse.PreventPlateStick")) {
+        if (Parkour.getInstance().getConfig().getBoolean("OnCourse.PreventPlateStick")) {
             event.setCancelled(true);
         }
 

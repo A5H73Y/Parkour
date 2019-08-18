@@ -6,13 +6,14 @@ import java.util.List;
 import java.util.Set;
 
 import me.A5H73Y.parkour.Parkour;
+import me.A5H73Y.parkour.config.ParkourConfiguration;
+import me.A5H73Y.parkour.enums.ConfigType;
 import me.A5H73Y.parkour.other.Constants;
 import me.A5H73Y.parkour.utilities.Static;
 import me.A5H73Y.parkour.utilities.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class ParkourKitInfo {
@@ -40,13 +41,9 @@ public class ParkourKitInfo {
         return getParkourKitData().getString("ParkourKit." + kitName + "." + material + ".Action");
     }
 
-    private static FileConfiguration getParkourKitData() {
-        return Parkour.getParkourConfig().getParkourKitData();
-    }
-
     public static void deleteKit(String argument) {
-        Parkour.getParkourConfig().getParkourKitData().set("ParkourKit." + argument, null);
-        Parkour.getParkourConfig().saveParkourKit();
+        getParkourKitData().set("ParkourKit." + argument, null);
+        getParkourKitData().save();
         ParkourKit.clearMemory(argument);
     }
 
@@ -82,7 +79,7 @@ public class ParkourKitInfo {
                     invalidTypes.add(" Could you have meant: " + matching.name() + "?");
                 }
             } else {
-                String action = Parkour.getParkourConfig().getParkourKitData().getString(path + "." + material + ".Action");
+                String action = getParkourKitData().getString(path + "." + material + ".Action");
                 if (!ParkourKit.getValidActions().contains(action)) {
                     invalidTypes.add("Material: " + material + ", Unknown Action: " + action);
                 }
@@ -97,44 +94,7 @@ public class ParkourKitInfo {
         }
     }
 
-    /**
-     * The need to pass config as the plugin has not initialised fully at this stage
-     *
-     * @param config
-     * @param name
-     */
-    public static void createStandardKit(FileConfiguration config, String name) {
-        //TODO is there a better way to do this, because it's nasty
-        Material matching = Utils.lookupMaterial("SMOOTH_BRICK");
-        config.set("ParkourKit." + name + "." + matching.name() + ".Action", "death");
-        matching = Utils.lookupMaterial("BRICKS");
-        config.set("ParkourKit." + name + "." + matching.name() + ".Action", "climb");
-        config.set("ParkourKit." + name + "." + matching.name() + ".Strength", 0.4);
-        matching = Utils.lookupMaterial("EMERALD_BLOCK");
-        config.set("ParkourKit." + name + "." + matching.name() + ".Action", "launch");
-        config.set("ParkourKit." + name + "." + matching.name() + ".Strength", 1.2);
-        matching = Utils.lookupMaterial("MOSSY_COBBLESTONE");
-        config.set("ParkourKit." + name + "." + matching.name() + ".Action", "bounce");
-        config.set("ParkourKit." + name + "." + matching.name() + ".Strength", (double) 5);
-        config.set("ParkourKit." + name + "." + matching.name() + ".Duration", 200);
-        matching = Utils.lookupMaterial("OBSIDIAN");
-        config.set("ParkourKit." + name + "." + matching.name() + ".Action", "speed");
-        config.set("ParkourKit." + name + "." + matching.name() + ".Strength", (double) 5);
-        config.set("ParkourKit." + name + "." + matching.name() + ".Duration", 200);
-        matching = Utils.lookupMaterial("ENDER_STONE");
-        config.set("ParkourKit." + name + "." + matching.name() + ".Action", "repulse");
-        config.set("ParkourKit." + name + "." + matching.name() + ".Strength", 0.4);
-        matching = Utils.lookupMaterial("GOLD_BLOCK");
-        config.set("ParkourKit." + name + "." + matching.name() + ".Action", "norun");
-
-        if (Utils.getMinorServerVersion() <= 12) {
-            config.set("ParkourKit." + name + ".HUGE_MUSHROOM_2.Action", "finish");
-            config.set("ParkourKit." + name + ".HUGE_MUSHROOM_1.Action", "nopotion");
-        } else {
-            matching = Utils.lookupMaterial("RED_MUSHROOM_BLOCK");
-            config.set("ParkourKit." + name + "." + matching.name() + ".Action", "finish");
-            matching = Utils.lookupMaterial("BROWN_MUSHROOM_BLOCK");
-            config.set("ParkourKit." + name + "." + matching.name() + ".Action", "nopotion");
-        }
+    private static ParkourConfiguration getParkourKitData() {
+        return Parkour.getConfig(ConfigType.PARKOURKIT);
     }
 }

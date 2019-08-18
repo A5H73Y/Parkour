@@ -96,7 +96,7 @@ public class LeaderboardConversation extends ParkourConversation {
             final Integer amount = (Integer) context.getSessionData("amount");
             final Player player = Bukkit.getPlayer((String) context.getSessionData("playerName"));
 
-            Bukkit.getScheduler().runTaskLaterAsynchronously(Parkour.getPlugin(), () -> {
+            Bukkit.getScheduler().runTaskLaterAsynchronously(Parkour.getInstance(), () -> {
                 if (leaderboardType.equals("personal")) {
                     Utils.displayLeaderboard(player, DatabaseMethods.getTopPlayerCourseResults(player.getName(), courseName, amount), courseName);
                 } else if (leaderboardType.equals("global")) {

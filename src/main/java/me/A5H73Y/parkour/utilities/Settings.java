@@ -16,7 +16,7 @@ public class Settings {
     private Particle trailParticle;
 
     private FileConfiguration getConfig() {
-        return Parkour.getPlugin().getConfig();
+        return Parkour.getInstance().getConfig();
     }
 
     /* booleans */
@@ -105,7 +105,7 @@ public class Settings {
     }
 
     public int getLastCheckPointToolSlot() {
-        return Parkour.getPlugin().getConfig().getInt("OnJoin.Item.LastCheckpoint.Slot", 0);
+        return Parkour.getInstance().getConfig().getInt("OnJoin.Item.LastCheckpoint.Slot", 0);
     }
 
     public Material getHideallTool() {
@@ -114,7 +114,7 @@ public class Settings {
     }
 
     public int getHideallToolSlot() {
-        return Parkour.getPlugin().getConfig().getInt("OnJoin.Item.HideAll.Slot", 1);
+        return Parkour.getInstance().getConfig().getInt("OnJoin.Item.HideAll.Slot", 1);
     }
 
     public Material getLeaveTool() {
@@ -123,7 +123,7 @@ public class Settings {
     }
 
     public int getLeaveToolSlot() {
-        return Parkour.getPlugin().getConfig().getInt("OnJoin.Item.Leave.Slot", 2);
+        return Parkour.getInstance().getConfig().getInt("OnJoin.Item.Leave.Slot", 2);
     }
 
     public Material getRestartTool() {
@@ -132,7 +132,7 @@ public class Settings {
     }
 
     public int getRestartToolSlot() {
-        return Parkour.getPlugin().getConfig().getInt("OnJoin.Item.Restart.Slot", 3);
+        return Parkour.getInstance().getConfig().getInt("OnJoin.Item.Restart.Slot", 3);
     }
 
     public Material getAutoStartMaterial() {
@@ -147,7 +147,7 @@ public class Settings {
     /* Strings */
 
     public String getCheckpointMaterial() {
-        return Parkour.getPlugin().getConfig().getString("OnCourse.CheckpointMaterial");
+        return Parkour.getInstance().getConfig().getString("OnCourse.CheckpointMaterial");
     }
 
     /* Lists */

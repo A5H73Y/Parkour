@@ -16,10 +16,13 @@ public abstract class ParkourConversation implements ConversationAbandonedListen
     private ConversationFactory conversationFactory;
     private String courseName;
     private Player player;
+
+    public abstract Prompt getEntryPrompt();
+
     public ParkourConversation(Player player) {
         this.player = player;
 
-        conversationFactory = new ConversationFactory(Parkour.getPlugin())
+        conversationFactory = new ConversationFactory(Parkour.getInstance())
                 .withEscapeSequence("cancel")
                 .withTimeout(30)
                 .thatExcludesNonPlayersWithMessage("This is only possible in game, sorry.")
@@ -32,8 +35,6 @@ public abstract class ParkourConversation implements ConversationAbandonedListen
     public static void sendErrorMessage(ConversationContext context, String message) {
         context.getForWhom().sendRawMessage(ChatColor.RED + message + ". Please try again...");
     }
-
-    public abstract Prompt getEntryPrompt();
 
     @Override
     public void conversationAbandoned(ConversationAbandonedEvent event) {

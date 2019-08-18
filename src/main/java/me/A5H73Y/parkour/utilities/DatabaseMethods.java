@@ -163,9 +163,9 @@ public class DatabaseMethods {
      */
     public static void insertOrUpdateTime(String courseName, Player player, long time, int deaths) {
         boolean isNewRecord = false;
-        boolean updatePlayerTime = Parkour.getPlugin().getConfig().getBoolean("OnFinish.UpdatePlayerDatabaseTime");
+        boolean updatePlayerTime = Parkour.getInstance().getConfig().getBoolean("OnFinish.UpdatePlayerDatabaseTime");
 
-        if (Parkour.getPlugin().getConfig().getBoolean("OnFinish.DisplayNewRecords") || updatePlayerTime) {
+        if (Parkour.getInstance().getConfig().getBoolean("OnFinish.DisplayNewRecords") || updatePlayerTime) {
             isNewRecord = PlayerMethods.isNewRecord(player, courseName, time);
         }
 
@@ -434,7 +434,7 @@ public class DatabaseMethods {
     }
 
     public static void recreateAllCourses() {
-        Bukkit.getScheduler().runTaskLaterAsynchronously(Parkour.getPlugin(), () -> {
+        Bukkit.getScheduler().runTaskLaterAsynchronously(Parkour.getInstance(), () -> {
             Utils.logToFile("Started courses recreation.");
             Utils.log("Starting recreation of courses process...");
             int changes = 0;

@@ -38,7 +38,7 @@ public class BlockListener implements Listener {
         }
 
         if (!Utils.hasPermission(player, "Parkour.Admin")
-                || (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks"))) {
+                || (!Parkour.getInstance().getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks"))) {
             event.setCancelled(true);
         }
     }

@@ -45,7 +45,7 @@ public class ChatListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
-        List<String> aliases = Parkour.getPlugin().getCommand("parkour").getAliases();
+        List<String> aliases = Parkour.getInstance().getCommand("parkour").getAliases();
 
         // if the command is "parkour" or an alias.
         boolean isParkourCommand = event.getMessage().startsWith("/parkour")

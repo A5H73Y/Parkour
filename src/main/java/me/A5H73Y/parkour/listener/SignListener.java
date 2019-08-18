@@ -76,7 +76,7 @@ public class SignListener implements Listener {
             return;
         }
 
-        if (!Parkour.getPlugin().getConfig().getBoolean("Other.Parkour.SignProtection")) {
+        if (!Parkour.getInstance().getConfig().getBoolean("Other.Parkour.SignProtection")) {
             return;
         }
 
@@ -115,7 +115,7 @@ public class SignListener implements Listener {
                 return;
             }
 
-            if (!Parkour.getPlugin().getConfig().getBoolean("OnCourse.EnforceParkourSigns")) {
+            if (!Parkour.getInstance().getConfig().getBoolean("OnCourse.EnforceParkourSigns")) {
                 return;
             }
 
@@ -208,7 +208,7 @@ public class SignListener implements Listener {
                 event.getPlayer().sendMessage(Utils.getTranslation("Error.Unknown"));
 
             } else if (Utils.delayPlayer(event.getPlayer(), 4, true)) {
-                int amount = lines[3].isEmpty() ? 5 : Integer.valueOf(lines[3]);
+                int amount = lines[3].isEmpty() ? 5 : Integer.parseInt(lines[3]);
 
                 Utils.displayLeaderboard(event.getPlayer(),
                         DatabaseMethods.getTopCourseResults(lines[2], amount), lines[2]);

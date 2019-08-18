@@ -65,7 +65,7 @@ public abstract class InventoryBuilder {
     }
 
     private int calculateInventorySize() {
-        int rows = Parkour.getPlugin().getConfig().getInt("ParkourGUI.Rows", 2);
+        int rows = Parkour.getInstance().getConfig().getInt("ParkourGUI.Rows", 2);
 
         rows = Math.max(1, rows);
         rows = Math.min(rows, 5);

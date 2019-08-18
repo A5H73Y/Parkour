@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.A5H73Y.parkour.Parkour;
+import me.A5H73Y.parkour.config.ParkourConfiguration;
 import me.A5H73Y.parkour.conversation.ParkourConversation;
 import me.A5H73Y.parkour.kit.ParkourKit;
 import me.A5H73Y.parkour.utilities.Static;
 import me.A5H73Y.parkour.utilities.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.conversations.BooleanPrompt;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.FixedSetPrompt;
@@ -18,19 +18,21 @@ import org.bukkit.conversations.NumericPrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 
+import static me.A5H73Y.parkour.enums.ConfigType.PARKOURKIT;
+
 public class AddKitItemConversation {
 
-    private final static Map<String, Double> strengthDefault = new HashMap<>();
-    private final static Map<String, Integer> durationDefault = new HashMap<>();
+    private static final Map<String, Double> STRENGTH_DEFAULT = new HashMap<>();
+    private static final Map<String, Integer> DURATION_DEFAULT = new HashMap<>();
 
     static {
-        strengthDefault.put("climb", 0.4);
-        strengthDefault.put("launch", 1.2);
-        strengthDefault.put("bounce", 5.0);
-        strengthDefault.put("speed", 5.0);
-        strengthDefault.put("repulse", 0.4);
-        durationDefault.put("speed", 200);
-        durationDefault.put("bounce", 200);
+        STRENGTH_DEFAULT.put("climb", 0.4);
+        STRENGTH_DEFAULT.put("launch", 1.2);
+        STRENGTH_DEFAULT.put("bounce", 5.0);
+        STRENGTH_DEFAULT.put("speed", 5.0);
+        STRENGTH_DEFAULT.put("repulse", 0.4);
+        DURATION_DEFAULT.put("speed", 200);
+        DURATION_DEFAULT.put("bounce", 200);
     }
 
     private final String[] actionTypes = {"death", "finish", "climb", "launch", "bounce", "speed", "repulse", "norun", "nopotion"};
@@ -43,10 +45,10 @@ public class AddKitItemConversation {
     }
 
     public StringPrompt startConversation() {
-        return new chooseMaterial();
+        return new ChooseMaterial();
     }
 
-    private class chooseMaterial extends StringPrompt {
+    private class ChooseMaterial extends StringPrompt {
         @Override
         public String getPromptText(ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " What Material do you want to choose?";
@@ -60,26 +62,26 @@ public class AddKitItemConversation {
                 ParkourConversation.sendErrorMessage(context, message.toUpperCase() + " is not a valid Material");
                 return this;
             }
-            if (Parkour.getParkourConfig().getParkourKitData().contains("ParkourKit." + kitName + "." + material.name())) {
+            if (Parkour.getInstance().getConfig().contains("ParkourKit." + kitName + "." + material.name())) {
                 ParkourConversation.sendErrorMessage(context, "You've already used this Material");
                 return this;
             }
 
             context.setSessionData("material", material.name());
-            return new chooseAction();
+            return new ChooseAction();
         }
     }
 
-    private class chooseAction extends FixedSetPrompt {
+    private class ChooseAction extends FixedSetPrompt {
 
-        chooseAction() {
+        ChooseAction() {
             super(actionTypes);
         }
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.LIGHT_PURPLE + " What Action should " + context.getSessionData("material") + " do?\n" +
-                    ChatColor.GREEN + formatFixedSet();
+            return ChatColor.LIGHT_PURPLE + " What Action should " + context.getSessionData("material") + " do?\n"
+                    + ChatColor.GREEN + formatFixedSet();
         }
 
         @Override
@@ -99,7 +101,7 @@ public class AddKitItemConversation {
         @Override
         public String getPromptText(ConversationContext context) {
             String action = context.getSessionData("action").toString();
-            Double defaultValue = strengthDefault.get(action);
+            Double defaultValue = STRENGTH_DEFAULT.get(action);
             return ChatColor.LIGHT_PURPLE + String.format(" What strength should the action be? (default: %.2f)", defaultValue);
         }
 
@@ -131,7 +133,7 @@ public class AddKitItemConversation {
         @Override
         public String getPromptText(ConversationContext context) {
             String action = context.getSessionData("action").toString();
-            Integer defaultValue = durationDefault.get(action);
+            Integer defaultValue = DURATION_DEFAULT.get(action);
             return ChatColor.LIGHT_PURPLE + String.format(" What duration do you want the action to last? (default: %d)", defaultValue);
         }
 
@@ -166,24 +168,24 @@ public class AddKitItemConversation {
             boolean hasStrength = context.getSessionData("strength") != null;
             boolean hasDuration = context.getSessionData("duration") != null;
 
-            FileConfiguration config = Parkour.getParkourConfig().getParkourKitData();
+            ParkourConfiguration parkourKitConfig = Parkour.getConfig(PARKOURKIT);
             String path = "ParkourKit." + kitName + "." + material;
 
-            config.set(path + ".Action", action);
+            parkourKitConfig.set(path + ".Action", action);
 
             if (hasStrength) {
-                config.set(path + ".Strength", context.getSessionData("strength"));
+                parkourKitConfig.set(path + ".Strength", context.getSessionData("strength"));
             }
             if (hasDuration) {
-                config.set(path + ".Duration", context.getSessionData("duration"));
+                parkourKitConfig.set(path + ".Duration", context.getSessionData("duration"));
             }
 
-            Parkour.getParkourConfig().saveParkourKit();
+            parkourKitConfig.save();
 
             if (addAnother) {
                 context.setSessionData("strength", null);
                 context.setSessionData("duration", null);
-                return new chooseMaterial();
+                return new ChooseMaterial();
             }
 
             context.getForWhom().sendRawMessage(Static.getParkourString() + kitName + " ParkourKit has been successfully saved.");

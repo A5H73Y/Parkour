@@ -31,15 +31,15 @@ public class LobbyMethods {
         if (args.length > 1) {
             if (args.length > 2 && Validation.isPositiveInteger(args[2])) {
                 created = created.concat(ChatColor.AQUA + args[1] + ChatColor.WHITE + " created, with a required rank of " + ChatColor.DARK_AQUA + Integer.parseInt(args[2]));
-                Parkour.getPlugin().getConfig().set("Lobby." + args[1] + ".Level", Integer.parseInt(args[2]));
+                Parkour.getInstance().getConfig().set("Lobby." + args[1] + ".Level", Integer.parseInt(args[2]));
             } else {
                 created = created.concat(ChatColor.AQUA + args[1] + ChatColor.WHITE + " created");
             }
         } else {
-            Parkour.getPlugin().getConfig().set("Lobby.Set", true);
+            Parkour.getInstance().getConfig().set("Lobby.Set", true);
             created = created.concat("was successfully created!");
         }
-        Parkour.getPlugin().saveConfig();
+        Parkour.getInstance().saveConfig();
         player.sendMessage(Static.getParkourString() + created);
     }
 
@@ -76,7 +76,7 @@ public class LobbyMethods {
             lobby = getLobby("Lobby");
         }
 
-        if (Parkour.getPlugin().getConfig().getBoolean("Lobby.EnforceWorld") &&
+        if (Parkour.getInstance().getConfig().getBoolean("Lobby.EnforceWorld") &&
                 !lobby.getWorld().getName().equals(player.getWorld().getName())) {
             player.sendMessage(Utils.getTranslation("Error.WrongWorld"));
             return;
@@ -103,12 +103,12 @@ public class LobbyMethods {
      * @return Location
      */
     private static Location getLobby(String path) {
-        World world = Bukkit.getWorld(Parkour.getPlugin().getConfig().getString(path + ".World"));
-        double x = Parkour.getPlugin().getConfig().getDouble(path + ".X");
-        double y = Parkour.getPlugin().getConfig().getDouble(path + ".Y");
-        double z = Parkour.getPlugin().getConfig().getDouble(path + ".Z");
-        float yaw = Parkour.getPlugin().getConfig().getInt(path + ".Yaw");
-        float pitch = Parkour.getPlugin().getConfig().getInt(path + ".Pitch");
+        World world = Bukkit.getWorld(Parkour.getInstance().getConfig().getString(path + ".World"));
+        double x = Parkour.getInstance().getConfig().getDouble(path + ".X");
+        double y = Parkour.getInstance().getConfig().getDouble(path + ".Y");
+        double z = Parkour.getInstance().getConfig().getDouble(path + ".Z");
+        float yaw = Parkour.getInstance().getConfig().getInt(path + ".Yaw");
+        float pitch = Parkour.getInstance().getConfig().getInt(path + ".Pitch");
         return new Location(world, x, y, z, yaw, pitch);
     }
 
@@ -122,12 +122,12 @@ public class LobbyMethods {
     private static void setLobby(String[] args, Player player) {
         Location loc = player.getLocation();
         String path = args.length > 1 ? "Lobby." + args[1] : "Lobby";
-        Parkour.getPlugin().getConfig().set(path + ".World", loc.getWorld().getName());
-        Parkour.getPlugin().getConfig().set(path + ".X", loc.getX());
-        Parkour.getPlugin().getConfig().set(path + ".Y", loc.getY());
-        Parkour.getPlugin().getConfig().set(path + ".Z", loc.getZ());
-        Parkour.getPlugin().getConfig().set(path + ".Pitch", loc.getPitch());
-        Parkour.getPlugin().getConfig().set(path + ".Yaw", loc.getYaw());
+        Parkour.getInstance().getConfig().set(path + ".World", loc.getWorld().getName());
+        Parkour.getInstance().getConfig().set(path + ".X", loc.getX());
+        Parkour.getInstance().getConfig().set(path + ".Y", loc.getY());
+        Parkour.getInstance().getConfig().set(path + ".Z", loc.getZ());
+        Parkour.getInstance().getConfig().set(path + ".Pitch", loc.getPitch());
+        Parkour.getInstance().getConfig().set(path + ".Yaw", loc.getYaw());
         Utils.logToFile(path + " was set by " + player.getName());
     }
 
@@ -138,13 +138,13 @@ public class LobbyMethods {
      * @param player
      */
     public static void deleteLobby(String lobby, Player player) {
-        if (!Parkour.getPlugin().getConfig().contains("Lobby." + lobby + ".World")) {
+        if (!Parkour.getInstance().getConfig().contains("Lobby." + lobby + ".World")) {
             player.sendMessage(Static.getParkourString() + "This lobby does not exist!");
             return;
         }
 
-        Parkour.getPlugin().getConfig().set("Lobby." + lobby, null);
-        Parkour.getPlugin().saveConfig();
+        Parkour.getInstance().getConfig().set("Lobby." + lobby, null);
+        Parkour.getInstance().saveConfig();
 
         player.sendMessage(Static.getParkourString() + "Lobby " + lobby + " was deleted successfully.");
     }
@@ -159,7 +159,7 @@ public class LobbyMethods {
     public static void teleportToLeaveDestination(Player player, ParkourSession session) {
         String lobbyName = null;
 
-        if (Parkour.getPlugin().getConfig().getBoolean("OnLeave.TeleportToLinkedLobby")) {
+        if (Parkour.getInstance().getConfig().getBoolean("OnLeave.TeleportToLinkedLobby")) {
             lobbyName = CourseInfo.getLinkedLobby(session.getCourse().getName());
         }
         String[] args = new String[]{null, lobbyName};
@@ -173,7 +173,7 @@ public class LobbyMethods {
      * @return Set<String>
      */
     public static Set<String> getCustomLobbies() {
-        Set<String> lobbyListSet = Parkour.getPlugin().getConfig().getConfigurationSection("Lobby").getKeys(false);
+        Set<String> lobbyListSet = Parkour.getInstance().getConfig().getConfigurationSection("Lobby").getKeys(false);
 
         lobbyListSet.remove("Set");
         lobbyListSet.remove("World");

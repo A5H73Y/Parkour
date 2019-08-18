@@ -29,7 +29,6 @@ public class StartPlugin {
 
     public static void run() {
         checkConvertToLatest();
-        Parkour.getParkourConfig().setupConfig();
         Static.initiate();
         initiateSQL();
         setupExternalPlugins();
@@ -44,25 +43,24 @@ public class StartPlugin {
     }
 
     private static void setupVault() {
-        if (!Parkour.getPlugin().getConfig().getBoolean("Other.Economy.Enabled")) {
+        if (!Parkour.getInstance().getConfig().getBoolean("Other.Economy.Enabled")) {
             return;
         }
 
-        PluginManager pm = Parkour.getPlugin().getServer().getPluginManager();
+        PluginManager pm = Parkour.getInstance().getServer().getPluginManager();
         Plugin vault = pm.getPlugin("Vault");
         if (vault != null && vault.isEnabled()) {
             if (setupEconomy()) {
                 Utils.log("[Vault] Successfully linked. Version: " + vault.getDescription().getVersion());
-                Parkour.getParkourConfig().initiateEconomy();
             } else {
                 Utils.log("[Vault] Attempted to link with Vault, but something went wrong.", 2);
-                Parkour.getPlugin().getConfig().set("Other.Economy.Enabled", false);
-                Parkour.getPlugin().saveConfig();
+                Parkour.getInstance().getConfig().set("Other.Economy.Enabled", false);
+                Parkour.getInstance().saveConfig();
             }
         } else {
             Utils.log("[Vault] Plugin is missing, disabling Economy Use.", 1);
-            Parkour.getPlugin().getConfig().set("Other.Economy.Enabled", false);
-            Parkour.getPlugin().saveConfig();
+            Parkour.getInstance().getConfig().set("Other.Economy.Enabled", false);
+            Parkour.getInstance().saveConfig();
         }
     }
 
@@ -72,7 +70,7 @@ public class StartPlugin {
 
     private static void initiateSQL(boolean forceSQLite) {
         Database database;
-        FileConfiguration config = Parkour.getPlugin().getConfig();
+        FileConfiguration config = Parkour.getInstance().getConfig();
 
         // Only use MySQL if they have enabled it, configured it, and we aren't
         // forcing SQLite (MySQL failed)
@@ -96,13 +94,13 @@ public class StartPlugin {
     private static void failedSQL(Exception ex) {
         Utils.log("[SQL] Connection problem: " + ex.getMessage(), 2);
         Utils.log("[SQL] Defaulting to SQLite...", 1);
-        Parkour.getPlugin().getConfig().set("MySQL.Use", false);
-        Parkour.getPlugin().saveConfig();
+        Parkour.getInstance().getConfig().set("MySQL.Use", false);
+        Parkour.getInstance().saveConfig();
         initiateSQL(true);
     }
 
     private static boolean setupEconomy() {
-        RegisteredServiceProvider<Economy> economyProvider = Parkour.getPlugin().getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+        RegisteredServiceProvider<Economy> economyProvider = Parkour.getInstance().getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
         if (economyProvider != null) {
             Parkour.setEconomy(economyProvider.getProvider());
         }
@@ -110,11 +108,11 @@ public class StartPlugin {
     }
 
     private static void setupBountifulAPI() {
-        if (!Parkour.getPlugin().getConfig().getBoolean("Other.BountifulAPI.Enabled")) {
+        if (!Parkour.getInstance().getConfig().getBoolean("Other.BountifulAPI.Enabled")) {
             return;
         }
 
-        Plugin bountifulAPI = Parkour.getPlugin().getServer().getPluginManager()
+        Plugin bountifulAPI = Parkour.getInstance().getServer().getPluginManager()
                 .getPlugin("BountifulAPI");
 
         if (bountifulAPI != null && bountifulAPI.isEnabled()) {
@@ -122,13 +120,13 @@ public class StartPlugin {
             Static.enableBountifulAPI();
         } else {
             Utils.log("[BountifulAPI] Plugin is missing, disabling config option.", 1);
-            Parkour.getPlugin().getConfig().set("Other.BountifulAPI.Enabled", false);
-            Parkour.getPlugin().saveConfig();
+            Parkour.getInstance().getConfig().set("Other.BountifulAPI.Enabled", false);
+            Parkour.getInstance().saveConfig();
         }
     }
 
     private static void setupPlaceholderAPI() {
-        if (!Parkour.getPlugin().getConfig().getBoolean("Other.PlaceholderAPI.Enabled")) {
+        if (!Parkour.getInstance().getConfig().getBoolean("Other.PlaceholderAPI.Enabled")) {
             return;
         }
 
@@ -136,13 +134,13 @@ public class StartPlugin {
 
         if (placeholderAPI != null && placeholderAPI.isEnabled()) {
             Utils.log("[PlaceholderAPI] Successfully linked. Version: " + placeholderAPI.getDescription().getVersion());
-            new ParkourPlaceholders(Parkour.getPlugin()).register();
+            new ParkourPlaceholders(Parkour.getInstance()).register();
             Static.enablePlaceholderAPI();
 
         } else {
             Utils.log("[PlaceholderAPI] Plugin is missing, disabling config option.", 1);
-            Parkour.getPlugin().getConfig().set("Other.PlaceholderAPI.Enabled", false);
-            Parkour.getPlugin().saveConfig();
+            Parkour.getInstance().getConfig().set("Other.PlaceholderAPI.Enabled", false);
+            Parkour.getInstance().saveConfig();
         }
     }
 
@@ -159,7 +157,7 @@ public class StartPlugin {
             PlayerMethods.setPlaying(players);
 
             for (Entry<String, ParkourSession> entry : players.entrySet()) {
-                Player playingp = Parkour.getPlugin().getServer().getPlayer(entry.getKey());
+                Player playingp = Parkour.getInstance().getServer().getPlayer(entry.getKey());
                 if (playingp == null) {
                     continue;
                 }
@@ -177,12 +175,15 @@ public class StartPlugin {
      * We only want to update completely, if the config version (previous version) is less than 4.0 (new system)
      */
     private static void checkConvertToLatest() {
-        if (Parkour.getParkourConfig().isFreshInstall()) {
-            return;
-        }
+//        if (Parkour.getInstance().getConfig().isFreshInstall()) {
+//            return;
+//        }
+	    // TODO complete rewrite of upgrade system
+	    // see UpgradeParkour class
+        if (true) return;
 
-        double configVersion = Parkour.getPlugin().getConfig().getDouble("Version");
-        double currentVersion = Double.parseDouble(Parkour.getPlugin().getDescription().getVersion());
+        double configVersion = Parkour.getInstance().getConfig().getDouble("Version");
+        double currentVersion = Double.parseDouble(Parkour.getInstance().getDescription().getVersion());
 
         if (configVersion >= currentVersion) {
             return;
@@ -197,13 +198,13 @@ public class StartPlugin {
             Utils.log("Your config is too outdated.", 2);
             Utils.log("You must update the plugin to v4.8, and then to " + currentVersion, 2);
             Utils.log("Disabling the plugin to prevent corruption.", 2);
-            Bukkit.getPluginManager().disablePlugin(Parkour.getPlugin());
+            Bukkit.getPluginManager().disablePlugin(Parkour.getInstance());
             return;
         }
 
         Utils.log("[Backup] Updating config to " + currentVersion + "...");
-        Parkour.getPlugin().getConfig().set("Version", currentVersion);
-        Parkour.getPlugin().saveConfig();
+        Parkour.getInstance().getConfig().set("Version", currentVersion);
+        Parkour.getInstance().saveConfig();
     }
 
     private static void fixParkourBlocks(HashMap<String, ParkourSession> players) {

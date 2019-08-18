@@ -15,6 +15,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import static me.A5H73Y.parkour.enums.ConfigType.COURSES;
+
 public class Validation {
 
     /**
@@ -143,7 +145,7 @@ public class Validation {
 
         /* Course isn't finished */
         if (!CourseInfo.getFinished(course.getName())) {
-            if (Parkour.getPlugin().getConfig().getBoolean("OnJoin.EnforceFinished")) {
+            if (Parkour.getInstance().getConfig().getBoolean("OnJoin.EnforceFinished")) {
                 if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Bypass", course.getName())) {
                     player.sendMessage(Utils.getTranslation("Error.Finished1"));
                     return false;
@@ -175,7 +177,7 @@ public class Validation {
         }
 
         /* Check if the player is allowed to leave the course for another */
-        if (Parkour.getPlugin().getConfig().getBoolean("OnCourse.PreventJoiningDifferentCourse")) {
+        if (Parkour.getInstance().getConfig().getBoolean("OnCourse.PreventJoiningDifferentCourse")) {
             if (PlayerMethods.isPlaying(player.getName())) {
                 player.sendMessage(Utils.getTranslation("Error.JoiningAnotherCourse"));
                 return false;
@@ -216,7 +218,7 @@ public class Validation {
 
         /* Course isn't finished */
         if (!CourseInfo.getFinished(courseName)) {
-            if (Parkour.getPlugin().getConfig().getBoolean("OnJoin.EnforceFinished")) {
+            if (Parkour.getInstance().getConfig().getBoolean("OnJoin.EnforceFinished")) {
                 if (!Utils.hasPermissionOrCourseOwnership(player, "Parkour.Admin", "Bypass", courseName)) {
                     return false;
                 }
@@ -285,11 +287,11 @@ public class Validation {
                 player.sendMessage(Static.getParkourString() + "Wager must be a positive number.");
                 return false;
 
-            } else if (!Parkour.getEconomy().has(player, Double.valueOf(wagerAmount))) {
+            } else if (!Parkour.getEconomy().has(player, Double.parseDouble(wagerAmount))) {
                 player.sendMessage(Static.getParkourString() + "You do not have enough funds for this wager.");
                 return false;
 
-            } else if (!Parkour.getEconomy().has(target, Double.valueOf(wagerAmount))) {
+            } else if (!Parkour.getEconomy().has(target, Double.parseDouble(wagerAmount))) {
                 player.sendMessage(Static.getParkourString() + "They do not have enough funds for this wager.");
                 return false;
             }
@@ -305,7 +307,7 @@ public class Validation {
      * @return boolean
      */
     public static boolean lobbyJoiningSet(Player player) {
-        if (Parkour.getPlugin().getConfig().getBoolean("Lobby.Set")) {
+        if (Parkour.getInstance().getConfig().getBoolean("Lobby.Set")) {
             return true;
         }
 
@@ -326,12 +328,12 @@ public class Validation {
      * @return
      */
     public static boolean lobbyJoiningCustom(Player player, String lobby) {
-        if (!Parkour.getPlugin().getConfig().contains("Lobby." + lobby + ".World")) {
+        if (!Parkour.getInstance().getConfig().contains("Lobby." + lobby + ".World")) {
             player.sendMessage(Static.getParkourString() + "Lobby does not exist!");
             return false;
         }
 
-        int level = Parkour.getPlugin().getConfig().getInt("Lobby." + lobby + ".Level");
+        int level = Parkour.getInstance().getConfig().getInt("Lobby." + lobby + ".Level");
 
         if (level > 0 && !Utils.hasPermissionNoMessage(player, "Parkour.Admin", "MinBypass")) {
             if (PlayerInfo.getParkourLevel(player) < level) {
@@ -471,7 +473,7 @@ public class Validation {
      */
     public static boolean deleteAutoStart(String courseName, String coordinates, Player player) {
         courseName = courseName.toLowerCase();
-        if (!Parkour.getParkourConfig().getCourseData().getString("CourseInfo.AutoStart." + coordinates).equalsIgnoreCase(courseName)) {
+        if (!Parkour.getConfig(COURSES).getString("CourseInfo.AutoStart." + coordinates).equalsIgnoreCase(courseName)) {
             player.sendMessage(Static.getParkourString() + "This autostart can not be deleted as it is not linked to course: " + courseName);
             return false;
         }

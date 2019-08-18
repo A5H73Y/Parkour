@@ -19,6 +19,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 /**
+ * Question Manager.
  * Manage the questions that require confirmation from the player
  * Usually caused by actions that could change the outcome of the plugin / course
  */

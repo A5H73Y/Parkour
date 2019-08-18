@@ -3,6 +3,7 @@ package me.A5H73Y.parkour.other;
 import java.io.File;
 
 import me.A5H73Y.parkour.Parkour;
+import me.A5H73Y.parkour.config.ParkourConfiguration;
 import me.A5H73Y.parkour.course.CourseInfo;
 import me.A5H73Y.parkour.course.CourseMethods;
 import me.A5H73Y.parkour.enums.DatabaseType;
@@ -11,8 +12,9 @@ import me.A5H73Y.parkour.utilities.Static;
 import me.A5H73Y.parkour.utilities.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+
+import static me.A5H73Y.parkour.enums.ConfigType.ECONOMY;
 
 public final class Help {
 
@@ -482,6 +484,8 @@ public final class Help {
             return;
         }
 
+        ParkourConfiguration econConfig = Parkour.getConfig(ECONOMY);
+
         if (args[1].equalsIgnoreCase("info")) {
             player.sendMessage(Static.getParkourString() + "Successfully linked with Vault.");
 
@@ -499,8 +503,8 @@ public final class Help {
                 return;
             }
 
-            Parkour.getParkourConfig().getEconData().set("Price." + args[2].toLowerCase() + ".Finish", Integer.parseInt(args[3]));
-            Parkour.getParkourConfig().saveEcon();
+            econConfig.set("Price." + args[2].toLowerCase() + ".Finish", Integer.parseInt(args[3]));
+            econConfig.save();
             player.sendMessage(Static.getParkourString() + "Prize for " + args[2] + " set to " + args[3]);
 
         } else if (args[1].equalsIgnoreCase("setfee")) {
@@ -517,8 +521,8 @@ public final class Help {
                 return;
             }
 
-            Parkour.getParkourConfig().getEconData().set("Price." + args[2].toLowerCase() + ".JoinFee", Integer.parseInt(args[3]));
-            Parkour.getParkourConfig().saveEcon();
+            econConfig.set("Price." + args[2].toLowerCase() + ".JoinFee", Integer.parseInt(args[3]));
+            econConfig.save();
             player.sendMessage(Static.getParkourString() + "Fee for " + args[2] + " set to " + args[3]);
 
         } else if (args[1].equalsIgnoreCase("recreate")) {
@@ -538,24 +542,24 @@ public final class Help {
      * @return int
      */
     private static int recreateEconomy() {
-        FileConfiguration econ = Parkour.getParkourConfig().getEconData();
+        ParkourConfiguration econConfig = Parkour.getConfig(ECONOMY);
 
         int updated = 0;
         for (String course : CourseInfo.getAllCourses()) {
             try {
-                if (!(Parkour.getParkourConfig().getEconData().contains("Price." + course + ".JoinFee"))) {
+                if (!(econConfig.contains("Price." + course + ".JoinFee"))) {
                     updated++;
-                    econ.set("Price." + course + ".JoinFee", 0);
+                    econConfig.set("Price." + course + ".JoinFee", 0);
                 }
-                if (!(Parkour.getParkourConfig().getEconData().contains("Price." + course + ".Finish"))) {
-                    econ.set("Price." + course + ".Finish", 0);
+                if (!(econConfig.contains("Price." + course + ".Finish"))) {
+                    econConfig.set("Price." + course + ".Finish", 0);
                 }
             } catch (Exception ex) {
                 Utils.log(Utils.getTranslation("Error.Something", false).replace("%ERROR%", ex.getMessage()));
             }
         }
 
-        Parkour.getParkourConfig().saveEcon();
+        econConfig.save();
         return updated;
     }
 
@@ -564,7 +568,7 @@ public final class Help {
         player.sendMessage("Type: " + DatabaseMethods.type);
         player.sendMessage("Connected: " + (Parkour.getDatabase().getConnection() != null));
         if (DatabaseMethods.type == DatabaseType.SQLite) {
-            player.sendMessage("Database location: " + Parkour.getPlugin().getDataFolder() + File.separator + "sqlite-db" + File.separator + "parkour.db");
+            player.sendMessage("Database location: " + Parkour.getInstance().getDataFolder() + File.separator + "sqlite-db" + File.separator + "parkour.db");
         }
     }
 

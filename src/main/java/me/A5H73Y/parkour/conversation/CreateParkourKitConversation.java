@@ -1,8 +1,8 @@
 package me.A5H73Y.parkour.conversation;
 
 import me.A5H73Y.parkour.Parkour;
+import me.A5H73Y.parkour.config.impl.ParkourKitFile;
 import me.A5H73Y.parkour.conversation.other.AddKitItemConversation;
-import me.A5H73Y.parkour.kit.ParkourKitInfo;
 import me.A5H73Y.parkour.utilities.Static;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.BooleanPrompt;
@@ -10,6 +10,8 @@ import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
+
+import static me.A5H73Y.parkour.enums.ConfigType.PARKOURKIT;
 
 public class CreateParkourKitConversation extends ParkourConversation {
 
@@ -40,7 +42,7 @@ public class CreateParkourKitConversation extends ParkourConversation {
 
             name = name.toLowerCase();
 
-            if (Parkour.getParkourConfig().getParkourKitData().contains("ParkourKit." + name)) {
+            if (Parkour.getConfig(PARKOURKIT).contains("ParkourKit." + name)) {
                 ParkourConversation.sendErrorMessage(context, "This ParkourKit already exists");
                 return this;
             }
@@ -61,11 +63,12 @@ public class CreateParkourKitConversation extends ParkourConversation {
         @Override
         protected Prompt acceptValidatedInput(ConversationContext context, boolean input) {
             String name = context.getSessionData("name").toString();
+            ParkourKitFile parkourKitFile = (ParkourKitFile) Parkour.getConfig(PARKOURKIT);
 
             if (input) {
                 context.getForWhom().sendRawMessage(Static.getParkourString() + name + " will use standard blocks...");
-                ParkourKitInfo.createStandardKit(Parkour.getParkourConfig().getParkourKitData(), name);
-                Parkour.getParkourConfig().saveParkourKit();
+                parkourKitFile.createStandardKit(name);
+                parkourKitFile.save();
             }
 
             return new AddKitItemConversation(Prompt.END_OF_CONVERSATION, name).startConversation();

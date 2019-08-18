@@ -927,8 +927,7 @@ public enum XMaterial {
 
         key = key.toUpperCase();
         try {
-            final XMaterial xmat = XMaterial.valueOf(key);
-            return xmat;
+            return XMaterial.valueOf(key);
         } catch (IllegalArgumentException e) {
             String[] split = key.split(":");
             XMaterial result = split.length == 1 ? requestXMaterial(key, (byte) 0)

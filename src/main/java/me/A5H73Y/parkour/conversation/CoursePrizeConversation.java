@@ -146,8 +146,8 @@ public class CoursePrizeConversation extends ParkourConversation {
         @Override
         protected Prompt acceptValidatedInput(ConversationContext context, boolean runNow) {
             if (runNow) {
-                Parkour.getPlugin().getServer().dispatchCommand(
-                        Parkour.getPlugin().getServer().getConsoleSender(),
+                Parkour.getInstance().getServer().dispatchCommand(
+                        Parkour.getInstance().getServer().getConsoleSender(),
                         context.getSessionData("command").toString()
                                 .replace("%PLAYER%", context.getSessionData("playerName").toString()));
             }
