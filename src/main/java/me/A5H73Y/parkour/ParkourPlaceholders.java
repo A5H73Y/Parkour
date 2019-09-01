@@ -215,11 +215,19 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return nCol + result.getPlayer() + "&7 - " + tCol + Utils.displayCurrentTime(result.getTime());
             }
             return "&f" + pos + ") &b" + result.getPlayer() + "&f in &a" + Utils.displayCurrentTime(result.getTime()) + "&f";
+        } else if (message.startsWith("course_prize_delay")) {
+            String[] temp = message.split("_");
+            if (temp.length != 4) {
+                return null;
+            }
+            if (!CourseInfo.hasRewardDelay(temp[3]) || Utils.hasPrizeCooldownDurationPassed(player, temp[3], false)) {
+                return "0";
+            }
+            return Utils.getTimeRemaining(player, temp[3]);
         }
 
         return null;
     }
-
 
     private TimeObject getTopResultForCourse(String courseName) {
         if (!CourseMethods.exist(courseName)) {
