@@ -94,6 +94,8 @@ public class LobbyMethods {
 
         if (customLobby) {
             player.sendMessage(Utils.getTranslation("Parkour.LobbyOther").replace("%LOBBY%", args[1]));
+        } else if (Parkour.getSettings().isTeleportToJoinLocation()) {
+        	player.sendMessage(Utils.getTranslation("Parkour.JoinLocation"));
         } else {
             player.sendMessage(Utils.getTranslation("Parkour.Lobby"));
         }

@@ -38,6 +38,7 @@ public class StringsFile extends ParkourConfiguration {
 		this.addDefault("Parkour.FinishCourse2", "In %TIME%, dying %DEATHS% times");
 		this.addDefault("Parkour.Lobby", "You have joined the lobby");
 		this.addDefault("Parkour.LobbyOther", "You have joined the &b%LOBBY% &flobby");
+		this.addDefault("Parkour.JoinLocation", "You have returned to your original location");
 		this.addDefault("Parkour.Continue", "Continuing Parkour on &b%COURSE%");
 		this.addDefault("Parkour.TimeReset", "&fYour time has been restarted!");
 		this.addDefault("Parkour.Teleport", "You have teleported to &b%COURSE%");
