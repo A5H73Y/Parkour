@@ -258,6 +258,7 @@ public class PlayerInfo {
     }
 
     /**
+<<<<<<< Updated upstream
      * Get RewardRank for a ParkourLevel
      *
      * @param parkourLevel
@@ -317,15 +318,14 @@ public class PlayerInfo {
             }
             getConfig().save();
         }
-    }
-
-    /** Set the location from which the player has joined a course.
+=======
+     * Set the location from which the player has joined a course.
      * 
      * @param player
      */
     public static void setJoinLocation(Player player) {
-        getConfig().set("PlayerInfo." + player.getName() + ".JoinLocation", player.getLocation());
-        getConfig().save();
+        Parkour.getParkourConfig().getUsersData().set("PlayerInfo." + player.getName() + ".JoinLocation", player.getLocation());
+        Parkour.getParkourConfig().saveUsers();
     }
 
     /**
@@ -336,6 +336,7 @@ public class PlayerInfo {
      * @return location
      */
     public static Location getJoinLocation(Player player) {
-        return (Location) getConfig().get("PlayerInfo." + player.getName() + ".JoinLocation");
+        return (Location) Parkour.getParkourConfig().getUsersData().get("PlayerInfo." + player.getName() + ".JoinLocation");
+>>>>>>> Stashed changes
     }
 }

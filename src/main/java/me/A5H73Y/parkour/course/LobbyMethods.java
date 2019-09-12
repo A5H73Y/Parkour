@@ -5,6 +5,7 @@ import java.util.Set;
 import me.A5H73Y.parkour.Parkour;
 import me.A5H73Y.parkour.other.Validation;
 import me.A5H73Y.parkour.player.ParkourSession;
+import me.A5H73Y.parkour.player.PlayerInfo;
 import me.A5H73Y.parkour.player.PlayerMethods;
 import me.A5H73Y.parkour.utilities.Static;
 import me.A5H73Y.parkour.utilities.Utils;
@@ -72,6 +73,8 @@ public class LobbyMethods {
             }
 
             lobby = getLobby("Lobby." + args[1]);
+        } else if (Parkour.getSettings().isTeleportToJoinLocation()) {
+            lobby = PlayerInfo.getJoinLocation(player);
         } else {
             lobby = getLobby("Lobby");
         }

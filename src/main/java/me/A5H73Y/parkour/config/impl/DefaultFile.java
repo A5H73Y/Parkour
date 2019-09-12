@@ -69,6 +69,7 @@ public class DefaultFile extends ParkourConfiguration {
 		this.addDefault("OnFinish.SetGamemode", 0);
 		this.addDefault("OnFinish.TeleportAway", true);
 		this.addDefault("OnFinish.TeleportDelay", 0);
+		this.addDefault("OnFinish.TeleportToJoinLocation", false);
 		this.addDefault("OnFinish.UpdatePlayerDatabaseTime", false);
 
 		this.addDefault("OnLeave.TeleportToLinkedLobby", false);

@@ -97,6 +97,10 @@ public class Settings {
         return getConfig().getBoolean("AutoStart.Enabled");
     }
 
+    public boolean isTeleportToJoinLocation() {
+        return getConfig().getBoolean("OnFinish.TeleportToJoinLocation");
+    }
+
     /* Materials */
 
     public Material getLastCheckpointTool() {
