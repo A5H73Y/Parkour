@@ -59,6 +59,9 @@ public class PlayerMethods {
      * @param course
      */
     public static void playerJoin(Player player, Course course) {
+        if (Parkour.getSettings().isTeleportToJoinLocation()) {
+            PlayerInfo.setJoinLocation(player);
+        }
         player.teleport(course.getCurrentCheckpoint().getLocation());
         prepareJoinPlayer(player, course.getName());
         CourseInfo.increaseView(course.getName());

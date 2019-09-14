@@ -1,5 +1,6 @@
 package me.A5H73Y.parkour.player;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -11,6 +12,7 @@ import me.A5H73Y.parkour.utilities.DatabaseMethods;
 import me.A5H73Y.parkour.utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -282,19 +284,19 @@ public class PlayerInfo {
      * @param player
      */
     public static void saveInventoryArmor(Player player) {
-        getConfig().set(player.getName() + ".Inventory", player.getInventory().getContents());
-        getConfig().set(player.getName() + ".Armor", player.getInventory().getArmorContents());
-        getConfig().save();
+        Parkour.getConfig(INVENTORY).set(player.getName() + ".Inventory", Arrays.asList(player.getInventory().getContents()));
+        Parkour.getConfig(INVENTORY).set(player.getName() + ".Armor", Arrays.asList(player.getInventory().getArmorContents()));
+        Parkour.getConfig(INVENTORY).save();
     }
 
     public static ItemStack[] getSavedInventoryContents(Player player) {
         List<ItemStack> contents = (List<ItemStack>) Parkour.getConfig(INVENTORY).getList(player.getName() + ".Inventory");
-        return contents != null ? contents.toArray(new ItemStack[0]) : null;
+        return contents != null ? contents.toArray(new ItemStack[contents.size()]) : null;
     }
 
     public static ItemStack[] getSavedArmorContents(Player player) {
         List<ItemStack> contents = (List<ItemStack>) Parkour.getConfig(INVENTORY).getList(player.getName() + ".Armor");
-        return contents != null ? contents.toArray(new ItemStack[0]) : null;
+        return contents != null ? contents.toArray(new ItemStack[contents.size()]) : null;
     }
 
     public static void removeCompletedCourse(String courseName) {
@@ -316,5 +318,25 @@ public class PlayerInfo {
             }
             getConfig().save();
         }
+    }
+
+    /** Set the location from which the player has joined a course.
+     * 
+     * @param player
+     */
+    public static void setJoinLocation(Player player) {
+        getConfig().set("PlayerInfo." + player.getName() + ".JoinLocation", player.getLocation());
+        getConfig().save();
+    }
+
+    /**
+     * Get the location from which the player joined the course.
+     * This is used to return the player to their original location on course completion.
+     * 
+     * @param player
+     * @return location
+     */
+    public static Location getJoinLocation(Player player) {
+        return (Location) getConfig().get("PlayerInfo." + player.getName() + ".JoinLocation");
     }
 }
