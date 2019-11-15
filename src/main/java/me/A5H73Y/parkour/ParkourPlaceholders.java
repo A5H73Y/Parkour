@@ -179,6 +179,10 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             ParkourSession session = PlayerMethods.getParkourSession(player.getName());
             return session == null ? "" : session.getLiveTime();
 
+        } else if (message.equals("current_course_deaths")) {
+            ParkourSession session = PlayerMethods.getParkourSession(player.getName());
+            return session == null ? "" : String.valueOf(session.getDeaths());
+
         } else if (message.startsWith("topten")) {
             String[] temp = message.split("_");
             if (temp.length != 3) {
