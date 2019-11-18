@@ -152,6 +152,8 @@ public class PlayerMethods {
         ParkourSession session = getParkourSession(player.getName());
         session.increaseDeath();
 
+        Parkour.getScoreboardManager().updateScoreboardDeaths(player, String.valueOf(session.getDeaths()));
+
         if (session.getCourse().hasMaxDeaths()) {
             if (session.getCourse().getMaxDeaths() > session.getDeaths()) {
                 int remainingLives = session.getCourse().getMaxDeaths() - session.getDeaths();
@@ -325,6 +327,8 @@ public class PlayerMethods {
 
         ParkourSession session = getParkourSession(player.getName());
         session.restartSession();
+
+        Parkour.getScoreboardManager().updateScoreboardDeaths(player, String.valueOf(session.getDeaths()));
 
         if (Parkour.getSettings().isFirstCheckAsStart()) {
             session.increaseCheckpoint();

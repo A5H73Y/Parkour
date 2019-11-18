@@ -29,6 +29,7 @@ public class ScoreboardManager {
     private final String BEST_TIME_EVER_NAME = ChatColor.BLUE.toString();
     private final String BEST_TIME_EVER_ME = ChatColor.DARK_AQUA.toString();
     private final String CURRENT_TIME = ChatColor.DARK_BLUE.toString();
+    private final String CURRENT_DEATHS = ChatColor.DARK_GREEN.toString();
 
     private final String titleFormat;
     private final String textFormat;
@@ -53,6 +54,7 @@ public class ScoreboardManager {
         configKey.put(BEST_TIME_EVER_ME, defaultConfig.getBoolean("Scoreboard.Display.BestTimeByMe"));
         configKey.put(CURRENT_TIME, defaultConfig.getBoolean("Scoreboard.Display.CurrentTime")
                 && defaultConfig.getBoolean("OnCourse.DisplayLiveTime"));
+        configKey.put(CURRENT_DEATHS, defaultConfig.getBoolean("Scoreboard.Display.CurrentDeaths"));
 
         translationKey.put("mainHeading", stringsConfig.getString("Scoreboard.MainHeading"));
         translationKey.put("notCompleted", stringsConfig.getString("Scoreboard.NotCompleted"));
@@ -61,6 +63,7 @@ public class ScoreboardManager {
         translationKey.put(BEST_TIME_EVER_NAME, stringsConfig.getString("Scoreboard.BestTimeNameTitle"));
         translationKey.put(BEST_TIME_EVER_ME, stringsConfig.getString("Scoreboard.MyBestTimeTitle"));
         translationKey.put(CURRENT_TIME, stringsConfig.getString("Scoreboard.CurrentTimeTitle"));
+        translationKey.put(CURRENT_DEATHS, stringsConfig.getString("Scoreboard.CurrentDeathsTitle"));
 
         this.numberOfRowsNeeded = calculateNumberOfRowsNeeded();
     }
@@ -95,6 +98,16 @@ public class ScoreboardManager {
         board.getTeam(CURRENT_TIME).setPrefix(convertText(liveTime));
     }
 
+    public void updateScoreboardDeaths(Player player, String deaths) {
+        Scoreboard board = player.getScoreboard();
+
+        if (board == null || !configKey.get(CURRENT_DEATHS)) {
+            return;
+        }
+
+        board.getTeam(CURRENT_DEATHS).setPrefix(convertText(deaths));
+    }
+
     private Scoreboard setupScoreboard(Player player) {
         String mainHeading = Utils.colour(translationKey.get("mainHeading"));
 
@@ -111,6 +124,7 @@ public class ScoreboardManager {
         addBestTimeEverName(playerScoreboard);
         addBestTimeEverMe(playerScoreboard);
         addCurrentTime(playerScoreboard);
+        addCurrentDeaths(playerScoreboard);
 
         return board;
     }
@@ -159,6 +173,14 @@ public class ScoreboardManager {
         }
 
         print(playerBoard, "00:00:00", CURRENT_TIME);
+    }
+
+    private void addCurrentDeaths(PlayerScoreboard playerBoard) {
+        if (!configKey.get(CURRENT_DEATHS)) {
+            return;
+        }
+
+        print(playerBoard, "0", CURRENT_DEATHS);
     }
 
     private void print(PlayerScoreboard playerBoard, String result, String scoreboardKey) {
@@ -215,6 +237,9 @@ public class ScoreboardManager {
             rowsNeeded += 2;
         }
         if (configKey.get(CURRENT_TIME)) {
+            rowsNeeded += 2;
+        }
+        if (configKey.get(CURRENT_DEATHS)) {
             rowsNeeded += 2;
         }
         return rowsNeeded;

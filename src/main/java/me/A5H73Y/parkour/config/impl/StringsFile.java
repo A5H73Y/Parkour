@@ -123,6 +123,7 @@ public class StringsFile extends ParkourConfiguration {
 		this.addDefault("Scoreboard.BestTimeNameTitle", "Best Player:");
 		this.addDefault("Scoreboard.MyBestTimeTitle", "My Best Time:");
 		this.addDefault("Scoreboard.CurrentTimeTitle", "Current Time:");
+		this.addDefault("Scoreboard.CurrentDeathsTitle", "Current Deaths:");
 
 		this.addDefault("ParkourGUI.NextPage", "&bNext page &f>");
 		this.addDefault("ParkourGUI.PreviousPage", "< &bPrevious page");
