@@ -3,7 +3,7 @@
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>me.A5H73Y</groupId>
+	<groupId>io.github.a5h73y</groupId>
 	<artifactId>Parkour</artifactId>
 	<version>6.0</version>
 	<packaging>jar</packaging>
@@ -154,7 +154,7 @@
 					<relocations>
 						<relocation>
 							<pattern>org.bstats</pattern>
-							<shadedPattern>me.A5H73Y.parkour</shadedPattern>
+							<shadedPattern>io.github.a5h73y</shadedPattern>
 						</relocation>
 					</relocations>
 				</configuration>

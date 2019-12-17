@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import me.A5H73Y.parkour.utilities.Utils;
+import io.github.a5h73y.utilities.Utils;
 
 /**
  * Abstract Database class.
