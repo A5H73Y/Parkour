@@ -152,7 +152,9 @@ public class PlayerMethods {
         ParkourSession session = getParkourSession(player.getName());
         session.increaseDeath();
 
-        Parkour.getScoreboardManager().updateScoreboardDeaths(player, String.valueOf(session.getDeaths()));
+        if (Parkour.getScoreboardManager().isEnabled()) {
+            Parkour.getScoreboardManager().updateScoreboardDeaths(player, String.valueOf(session.getDeaths()));
+        }
 
         if (session.getCourse().hasMaxDeaths()) {
             if (session.getCourse().getMaxDeaths() > session.getDeaths()) {
@@ -328,7 +330,10 @@ public class PlayerMethods {
         ParkourSession session = getParkourSession(player.getName());
         session.restartSession();
 
-        Parkour.getScoreboardManager().updateScoreboardDeaths(player, String.valueOf(session.getDeaths()));
+        if (Parkour.getScoreboardManager().isEnabled()) {
+        	    Parkour.getScoreboardManager().updateScoreboardDeaths(player, String.valueOf(session.getDeaths()));
+        	    Parkour.getScoreboardManager().updateScoreboardCheckpoints(player, String.valueOf(session.getCheckpoint() + " / " + session.getCourse().getCheckpoints()));
+        }
 
         if (Parkour.getSettings().isFirstCheckAsStart()) {
             session.increaseCheckpoint();
@@ -1063,6 +1068,10 @@ public class PlayerMethods {
      */
     public static void increaseCheckpoint(ParkourSession session, Player player) {
         session.increaseCheckpoint();
+
+        if (Parkour.getScoreboardManager().isEnabled()) {
+            Parkour.getScoreboardManager().updateScoreboardCheckpoints(player, String.valueOf(session.getCheckpoint() + " / " + session.getCourse().getCheckpoints()));
+        }
 
         boolean showTitle = Parkour.getInstance().getConfig().getBoolean("DisplayTitle.Checkpoint");
         if (session.getCourse().getCheckpoints() == session.getCheckpoint()) {

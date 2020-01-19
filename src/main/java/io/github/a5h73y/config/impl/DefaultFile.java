@@ -108,6 +108,7 @@ public class DefaultFile extends ParkourConfiguration {
 		this.addDefault("Scoreboard.Display.BestTimeByMe", true);
 		this.addDefault("Scoreboard.Display.CurrentTime", true);
 		this.addDefault("Scoreboard.Display.CurrentDeaths", true);
+		this.addDefault("Scoreboard.Display.Checkpoints", true);
 
 		this.addDefault("ParkourGUI.Enabled", false);
 		this.addDefault("ParkourGUI.Rows", 2);

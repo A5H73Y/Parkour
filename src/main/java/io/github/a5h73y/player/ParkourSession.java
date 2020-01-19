@@ -82,9 +82,7 @@ public class ParkourSession implements Serializable {
                     }
                 }
 
-                boolean useScoreboard = Parkour.getInstance().getConfig().getBoolean("Scoreboard.Display.CurrentTime");
-
-                if (Parkour.getScoreboardManager().isEnabled() && useScoreboard) {
+                if (Parkour.getScoreboardManager().isEnabled()) {
                     Parkour.getScoreboardManager().updateScoreboardTimer(player, liveTime);
 
                 } else if (Static.getBountifulAPI()) {
