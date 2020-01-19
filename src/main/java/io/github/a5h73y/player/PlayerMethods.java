@@ -330,13 +330,13 @@ public class PlayerMethods {
         ParkourSession session = getParkourSession(player.getName());
         session.restartSession();
 
+        if (Parkour.getSettings().isFirstCheckAsStart()) {
+            session.increaseCheckpoint();
+        }
+
         if (Parkour.getScoreboardManager().isEnabled()) {
         	    Parkour.getScoreboardManager().updateScoreboardDeaths(player, String.valueOf(session.getDeaths()));
         	    Parkour.getScoreboardManager().updateScoreboardCheckpoints(player, String.valueOf(session.getCheckpoint() + " / " + session.getCourse().getCheckpoints()));
-        }
-
-        if (Parkour.getSettings().isFirstCheckAsStart()) {
-            session.increaseCheckpoint();
         }
 
         player.sendMessage(Utils.getTranslation("Parkour.Restarting"));
