@@ -672,7 +672,7 @@ public class PlayerMethods {
             }
 
             if (Parkour.getInstance().getConfig().getBoolean("OnFinish.SaveUserCompletedCourses")) {
-                player.sendMessage("Courses Completed: " + ChatColor.AQUA + PlayerInfo.getNumberOfCoursesCompleted(player) + " / " + CourseInfo.getAllCourses().size());
+                player.sendMessage("Courses Completed: " + ChatColor.AQUA + PlayerInfo.getNumberOfCoursesCompleted(target) + " / " + CourseInfo.getAllCourses().size());
             }
         }
     }
