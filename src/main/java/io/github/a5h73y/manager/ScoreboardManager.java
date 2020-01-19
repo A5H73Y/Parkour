@@ -9,6 +9,7 @@ import io.github.a5h73y.config.ParkourConfiguration;
 import io.github.a5h73y.course.CourseMethods;
 import io.github.a5h73y.enums.ConfigType;
 import io.github.a5h73y.other.TimeObject;
+import io.github.a5h73y.player.PlayerMethods;
 import io.github.a5h73y.utilities.DatabaseMethods;
 import io.github.a5h73y.utilities.Utils;
 import org.bukkit.Bukkit;
@@ -30,6 +31,7 @@ public class ScoreboardManager {
     private final String BEST_TIME_EVER_ME = ChatColor.DARK_AQUA.toString();
     private final String CURRENT_TIME = ChatColor.DARK_BLUE.toString();
     private final String CURRENT_DEATHS = ChatColor.DARK_GREEN.toString();
+    private final String CHECKPOINTS = ChatColor.DARK_RED.toString();
 
     private final String titleFormat;
     private final String textFormat;
@@ -55,6 +57,7 @@ public class ScoreboardManager {
         configKey.put(CURRENT_TIME, defaultConfig.getBoolean("Scoreboard.Display.CurrentTime")
                 && defaultConfig.getBoolean("OnCourse.DisplayLiveTime"));
         configKey.put(CURRENT_DEATHS, defaultConfig.getBoolean("Scoreboard.Display.CurrentDeaths"));
+        configKey.put(CHECKPOINTS, defaultConfig.getBoolean("Scoreboard.Display.Checkpoints"));
 
         translationKey.put("mainHeading", stringsConfig.getString("Scoreboard.MainHeading"));
         translationKey.put("notCompleted", stringsConfig.getString("Scoreboard.NotCompleted"));
@@ -64,6 +67,7 @@ public class ScoreboardManager {
         translationKey.put(BEST_TIME_EVER_ME, stringsConfig.getString("Scoreboard.MyBestTimeTitle"));
         translationKey.put(CURRENT_TIME, stringsConfig.getString("Scoreboard.CurrentTimeTitle"));
         translationKey.put(CURRENT_DEATHS, stringsConfig.getString("Scoreboard.CurrentDeathsTitle"));
+        translationKey.put(CHECKPOINTS, stringsConfig.getString("Scoreboard.CheckpointsTitle"));
 
         this.numberOfRowsNeeded = calculateNumberOfRowsNeeded();
     }
@@ -91,7 +95,7 @@ public class ScoreboardManager {
     public void updateScoreboardTimer(Player player, String liveTime) {
         Scoreboard board = player.getScoreboard();
 
-        if (board == null || !configKey.get(CURRENT_TIME) || board.getTeam(CURRENT_TIME) == null) {
+        if (board == null || !configKey.get(CURRENT_TIME)) {
             return;
         }
 
@@ -106,6 +110,16 @@ public class ScoreboardManager {
         }
 
         board.getTeam(CURRENT_DEATHS).setPrefix(convertText(deaths));
+    }
+
+    public void updateScoreboardCheckpoints(Player player, String checkpoints) {
+        Scoreboard board = player.getScoreboard();
+
+        if (board == null || !configKey.get(CHECKPOINTS)) {
+            return;
+        }
+
+        board.getTeam(CHECKPOINTS).setPrefix(convertText(checkpoints));
     }
 
     private Scoreboard setupScoreboard(Player player) {
@@ -125,6 +139,7 @@ public class ScoreboardManager {
         addBestTimeEverMe(playerScoreboard);
         addCurrentTime(playerScoreboard);
         addCurrentDeaths(playerScoreboard);
+        addCheckpoints(playerScoreboard);
 
         return board;
     }
@@ -181,6 +196,15 @@ public class ScoreboardManager {
         }
 
         print(playerBoard, "0", CURRENT_DEATHS);
+    }
+
+    private void addCheckpoints(PlayerScoreboard playerBoard) {
+        if (!configKey.get(CHECKPOINTS)) {
+            return;
+        }
+
+        int total_chkpts = PlayerMethods.getParkourSession(playerBoard.playerName).getCourse().getCheckpoints();
+        print(playerBoard, "0 / " + String.valueOf(total_chkpts), CHECKPOINTS);
     }
 
     private void print(PlayerScoreboard playerBoard, String result, String scoreboardKey) {
@@ -240,6 +264,9 @@ public class ScoreboardManager {
             rowsNeeded += 2;
         }
         if (configKey.get(CURRENT_DEATHS)) {
+            rowsNeeded += 2;
+        }
+        if (configKey.get(CHECKPOINTS)) {
             rowsNeeded += 2;
         }
         return rowsNeeded;
