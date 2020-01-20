@@ -52,6 +52,7 @@ public class StartPlugin {
         if (vault != null && vault.isEnabled()) {
             if (setupEconomy()) {
                 Utils.log("[Vault] Successfully linked. Version: " + vault.getDescription().getVersion());
+                Static.enableEconomy();
             } else {
                 Utils.log("[Vault] Attempted to link with Vault, but something went wrong.", 2);
                 Parkour.getInstance().getConfig().set("Other.Economy.Enabled", false);
