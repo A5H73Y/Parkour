@@ -251,7 +251,7 @@ public class PlayerInfo {
      * @param player
      * @return results
      */
-    public static String getNumberOfCoursesCompleted(Player player) {
+    public static String getNumberOfCoursesCompleted(OfflinePlayer player) {
         List<String> completedCourse = getConfig().getStringList("PlayerInfo." + player.getName() + ".Completed");
         return String.valueOf(completedCourse.size());
     }
