@@ -621,6 +621,16 @@ public class CourseInfo {
             player.sendMessage("Liked: " + aqua + likePercent + "%");
         }
 
+        if (hasMaterialPrize(courseName) && getMaterialPrizeAmount(courseName) > 0) {
+            player.sendMessage("Material Prize: " + aqua + getMaterialPrize(courseName) + " x " + getMaterialPrizeAmount(courseName));
+        }
+        if (hasCommandPrize(courseName)) {
+            player.sendMessage("Command Prize: " + aqua + getCommandsPrize(courseName));
+        }
+        if (getXPPrize(courseName) > 0) {
+            player.sendMessage("XP Prize: " + aqua + getXPPrize(courseName));
+        }
+
         if (hasRewardDelay(courseName) && Parkour.getSettings().isDisplayPrizeCooldown()) {
             player.sendMessage("Reward Cooldown (days): " + aqua + getRewardDelay(courseName));
             if (!Utils.hasPrizeCooldownDurationPassed(player, courseName, false)) {

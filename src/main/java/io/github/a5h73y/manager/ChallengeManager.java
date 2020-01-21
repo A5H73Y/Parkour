@@ -230,7 +230,7 @@ public class ChallengeManager {
         private final String courseName;
 
         private final Double wager;
-		private boolean forfeited;
+        private boolean forfeited;
 
         /**
          * Challenge player
