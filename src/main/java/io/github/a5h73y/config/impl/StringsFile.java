@@ -69,6 +69,8 @@ public class StringsFile extends ParkourConfiguration {
 		this.addDefault("Parkour.Challenge.Send", "You have challenged &b%PLAYER% &fto course &b%COURSE%");
 		this.addDefault("Parkour.Challenge.Wager", " &fwith a wager of &b%AMOUNT%");
 		this.addDefault("Parkour.Challenge.Terminated", "&b%PLAYER% &fhas terminated the challenge!");
+		this.addDefault("Parkour.Challenge.Forfeited", "&b%PLAYER% &fhas forfeited the challenge. Complete the course to win!");
+		this.addDefault("Parkour.Challenge.Quit", "You have forfeited the challenge. &b%PLAYER% &fmust complete the course to win!");
 		this.addDefault("Parkour.Challenge.Winner", "Congratulations! You beat &b%PLAYER% &fat &b%COURSE%!");
 		this.addDefault("Parkour.Challenge.Loser", "&b%PLAYER% &fhas completed &b%COURSE% &fbefore you!");
 
