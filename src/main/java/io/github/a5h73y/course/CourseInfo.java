@@ -540,7 +540,6 @@ public class CourseInfo {
         int minLevel = config.getInt(courseName + ".MinimumLevel");
         int rewardLevel = config.getInt(courseName + ".Level");
         int rewardLevelAdd = config.getInt(courseName + ".LevelAdd");
-        int XP = config.getInt(courseName + ".XP");
         int parkoins = config.getInt(courseName + ".Parkoins");
 
         String linkedLobby = config.getString(courseName + ".LinkedLobby");
@@ -578,10 +577,6 @@ public class CourseInfo {
 
         if (linkedCourse != null && linkedCourse.length() > 0) {
             player.sendMessage("Linked Course: " + aqua + linkedCourse);
-        }
-
-        if (XP > 0) {
-            player.sendMessage("XP Reward: " + aqua + XP);
         }
 
         if (parkoins > 0) {
