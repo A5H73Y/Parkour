@@ -91,23 +91,26 @@ public class ChallengeManager {
         if (challenge != null) {
             Player opponent = calculateOpponent(leaver.getName(), challenge);
 
+            // if no player has forfeited yet
             if (!challenge.isForfeited()) {
-                challenge.forfeited = true;
+                challenge.setForfeited(true);
+
                 leaver.sendMessage(Utils.getTranslation("Parkour.Challenge.Quit")
                         .replace("%PLAYER%", opponent.getName()));
                 opponent.sendMessage(Utils.getTranslation("Parkour.Challenge.Forfeited")
                         .replace("%PLAYER%", leaver.getName()));
-                return;
-            }
 
-            String terminateMessage = Utils.getTranslation("Parkour.Challenge.Terminated")
-                    .replace("%PLAYER%", leaver.getName());
-            leaver.sendMessage(terminateMessage);
+            } else {
+                // otherwise the challenge is completely terminated
+                String terminateMessage = Utils.getTranslation("Parkour.Challenge.Terminated")
+                        .replace("%PLAYER%", leaver.getName());
+                leaver.sendMessage(terminateMessage);
 
-            if (opponent != null) {
-                opponent.sendMessage(terminateMessage);
+                if (opponent != null) {
+                    opponent.sendMessage(terminateMessage);
+                }
+                removeChallenge(challenge);
             }
-            removeChallenge(challenge);
         }
     }
 
@@ -133,9 +136,9 @@ public class ChallengeManager {
                     .replace("%PLAYER%", winner.getName())
                     .replace("%COURSE%", challenge.getCourseName()));
 
-            if (challenge.wager != null) {
-                Parkour.getEconomy().depositPlayer(winner, challenge.wager);
-                Parkour.getEconomy().withdrawPlayer(opponent, challenge.wager);
+            if (challenge.getWager() != null) {
+                Parkour.getEconomy().depositPlayer(winner, challenge.getWager());
+                Parkour.getEconomy().withdrawPlayer(opponent, challenge.getWager());
             }
 
             if (!challenge.isForfeited()) {
@@ -223,7 +226,12 @@ public class ChallengeManager {
         };
     }
 
-    public class Challenge {
+    /**
+     * The Challenge Model.
+     * Contains the initial sender and receiver, and the course requested.
+     * If a Wager is specified, this will only be processed if one of the players completes the course.
+     */
+    public static class Challenge {
 
         private final String senderPlayer;
         private final String receiverPlayer;
@@ -266,6 +274,10 @@ public class ChallengeManager {
 
         public boolean isForfeited() {
             return forfeited;
+        }
+
+        public void setForfeited(boolean forfeited) {
+            this.forfeited = forfeited;
         }
 
     }
