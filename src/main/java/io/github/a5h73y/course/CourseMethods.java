@@ -146,7 +146,6 @@ public class CourseMethods {
         courseConfig.set(name + ".Creator", player.getName());
         courseConfig.set(name + ".Views", 0);
         courseConfig.set(name + ".Completed", 0);
-        courseConfig.set(name + ".XP", 0);
         courseConfig.set(name + ".Points", 0);
         courseConfig.set(name + ".World", location.getWorld().getName());
         courseConfig.set(name + ".0.X", location.getBlockX() + 0.5);
@@ -818,7 +817,6 @@ public class CourseMethods {
         courseConfig.set(courseName + ".Views", 0);
         courseConfig.set(courseName + ".Completed", 0);
         courseConfig.set(courseName + ".Finished", false);
-        courseConfig.set(courseName + ".XP", null);
         courseConfig.set(courseName + ".Level", null);
         courseConfig.set(courseName + ".MinimumLevel", null);
         courseConfig.set(courseName + ".LevelAdd", null);

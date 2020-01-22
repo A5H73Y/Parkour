@@ -540,7 +540,6 @@ public class CourseInfo {
         int minLevel = config.getInt(courseName + ".MinimumLevel");
         int rewardLevel = config.getInt(courseName + ".Level");
         int rewardLevelAdd = config.getInt(courseName + ".LevelAdd");
-        int XP = config.getInt(courseName + ".XP");
         int parkoins = config.getInt(courseName + ".Parkoins");
 
         String linkedLobby = config.getString(courseName + ".LinkedLobby");
@@ -580,10 +579,6 @@ public class CourseInfo {
             player.sendMessage("Linked Course: " + aqua + linkedCourse);
         }
 
-        if (XP > 0) {
-            player.sendMessage("XP Reward: " + aqua + XP);
-        }
-
         if (parkoins > 0) {
             player.sendMessage("Parkoins Reward: " + aqua + parkoins);
         }
@@ -619,6 +614,16 @@ public class CourseInfo {
 
         if (likePercent > 0) {
             player.sendMessage("Liked: " + aqua + likePercent + "%");
+        }
+
+        if (hasMaterialPrize(courseName) && getMaterialPrizeAmount(courseName) > 0) {
+            player.sendMessage("Material Prize: " + aqua + getMaterialPrize(courseName) + " x " + getMaterialPrizeAmount(courseName));
+        }
+        if (hasCommandPrize(courseName)) {
+            player.sendMessage("Command Prize: " + aqua + getCommandsPrize(courseName));
+        }
+        if (getXPPrize(courseName) > 0) {
+            player.sendMessage("XP Prize: " + aqua + getXPPrize(courseName));
         }
 
         if (hasRewardDelay(courseName) && Parkour.getSettings().isDisplayPrizeCooldown()) {

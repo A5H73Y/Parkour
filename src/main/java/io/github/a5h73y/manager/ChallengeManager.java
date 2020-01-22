@@ -78,7 +78,10 @@ public class ChallengeManager {
 
     /**
      * Terminate a Challenge.
-     * In the event that someone leaves the course / server
+     * In the event that someone leaves the course / server or
+     * exceeds the maximum deaths set for the course. The first player to
+     * leave forfeits the challenge. The remaining player must complete
+     * the course to win the challenge.
      *
      * @param leaver
      */
@@ -87,9 +90,20 @@ public class ChallengeManager {
 
         if (challenge != null) {
             Player opponent = calculateOpponent(leaver.getName(), challenge);
+
+            if (!challenge.isForfeited()) {
+                challenge.forfeited = true;
+                leaver.sendMessage(Utils.getTranslation("Parkour.Challenge.Quit")
+                        .replace("%PLAYER%", opponent.getName()));
+                opponent.sendMessage(Utils.getTranslation("Parkour.Challenge.Forfeited")
+                        .replace("%PLAYER%", leaver.getName()));
+                return;
+            }
+
             String terminateMessage = Utils.getTranslation("Parkour.Challenge.Terminated")
                     .replace("%PLAYER%", leaver.getName());
             leaver.sendMessage(terminateMessage);
+
             if (opponent != null) {
                 opponent.sendMessage(terminateMessage);
             }
@@ -124,7 +138,9 @@ public class ChallengeManager {
                 Parkour.getEconomy().withdrawPlayer(opponent, challenge.wager);
             }
 
-            PlayerMethods.playerLeave(opponent);
+            if (!challenge.isForfeited()) {
+                PlayerMethods.playerLeave(opponent);
+            }
         }
     }
 
@@ -214,10 +230,11 @@ public class ChallengeManager {
         private final String courseName;
 
         private final Double wager;
+        private boolean forfeited;
 
         /**
          * Challenge player
-         * Created to manage who started the challenge, who's the receiver and which on course.
+         * Created to manage who started the challenge, who's the receiver and on which course.
          *
          * @param senderPlayer
          * @param receiverPlayer
@@ -228,6 +245,7 @@ public class ChallengeManager {
             this.receiverPlayer = receiverPlayer;
             this.courseName = courseName;
             this.wager = wager;
+            this.forfeited = false;
         }
 
         public String getSenderPlayer() {
@@ -244,6 +262,10 @@ public class ChallengeManager {
 
         public Double getWager() {
             return wager;
+        }
+
+        public boolean isForfeited() {
+            return forfeited;
         }
 
     }
