@@ -46,7 +46,7 @@ public class MySQL extends Database {
 
         String connectionURL = "jdbc:mysql://" + this.hostname + ":" + this.port;
         if (database != null) {
-            connectionURL += "/" + this.database;
+            connectionURL += "/" + this.database + "?useSSL=false";
         }
 
         try {
