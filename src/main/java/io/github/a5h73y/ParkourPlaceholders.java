@@ -228,6 +228,17 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return "0";
             }
             return Utils.getTimeRemaining(player, temp[3]);
+
+        } else if (message.startsWith("course_global_completions")) {
+            String[] temp = message.split("_");
+            if (temp.length != 4) {
+                return null;
+            }
+            String courseName = temp[3];
+            if (!CourseMethods.exist(courseName)) {
+                return null;
+            }
+            return String.valueOf(CourseInfo.getCompletions(courseName));
         }
 
         return null;
