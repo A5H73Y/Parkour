@@ -162,7 +162,7 @@ public class StringsFile extends ParkourConfiguration {
 
 		this.addDefault("NoPermission", "You do not have Permission: &b%PERMISSION%");
 
-		this.addDefault("Placeholder.InvalidSyntax", "Invalild syntax");
+		this.addDefault("Placeholder.InvalidSyntax", "Invalid syntax");
 		this.addDefault("Placeholder.NoTimeRecorded", "No time recorded");
 
 		this.options().copyDefaults(true);
