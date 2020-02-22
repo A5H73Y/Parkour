@@ -355,6 +355,15 @@ public class CourseInfo {
     }
 
     /**
+     * Get the number of times the course has been completed
+     * @param courseName
+     * @return amount
+     */
+    public static int getCompletions(String courseName) {
+        return getConfig().getInt(courseName + ".Completed", 0);
+    }
+
+    /**
      * Increase the amount of views of the course
      *
      * @param courseName
