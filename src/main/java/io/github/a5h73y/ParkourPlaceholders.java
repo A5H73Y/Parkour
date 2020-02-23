@@ -18,8 +18,8 @@ import org.bukkit.entity.Player;
 
 public class ParkourPlaceholders extends PlaceholderExpansion {
 
-    private static final String INVALID_SYNTAX = "Invalid Syntax";
-    private static final String NO_TIME_RECORDED = "No time recorded";
+    private static final String INVALID_SYNTAX = Utils.getTranslation("Placeholder.InvalidSyntax");
+    private static final String NO_TIME_RECORDED = Utils.getTranslation("Placeholder.NoTimeRecorded");
     private Parkour plugin;
 
     public ParkourPlaceholders(Parkour plugin) {
