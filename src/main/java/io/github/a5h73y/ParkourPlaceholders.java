@@ -224,10 +224,14 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             if (temp.length != 4) {
                 return null;
             }
-            if (!CourseInfo.hasRewardDelay(temp[3]) || Utils.hasPrizeCooldownDurationPassed(player, temp[3], false)) {
+            String courseName = temp[3];
+            if (!CourseMethods.exist(courseName)) {
+                return null;
+            }
+            if (!CourseInfo.hasRewardDelay(courseName) || Utils.hasPrizeCooldownDurationPassed(player, courseName, false)) {
                 return "0";
             }
-            return Utils.getTimeRemaining(player, temp[3]);
+            return Utils.getTimeRemaining(player, courseName);
 
         } else if (message.startsWith("course_global_completions")) {
             String[] temp = message.split("_");
