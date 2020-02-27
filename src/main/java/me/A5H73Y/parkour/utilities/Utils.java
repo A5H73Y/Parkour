@@ -1,21 +1,5 @@
 package me.A5H73Y.parkour.utilities;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
 import com.connorlinfoot.bountifulapi.BountifulAPI;
 import me.A5H73Y.parkour.Parkour;
 import me.A5H73Y.parkour.course.CourseInfo;
@@ -27,12 +11,7 @@ import me.A5H73Y.parkour.other.TimeObject;
 import me.A5H73Y.parkour.other.Validation;
 import me.A5H73Y.parkour.player.PlayerInfo;
 import me.A5H73Y.parkour.player.PlayerMethods;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
@@ -41,6 +20,11 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Stairs;
+
+import java.io.*;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public final class Utils {
 
@@ -912,9 +896,11 @@ public final class Utils {
     }
 
     public static void forceVisible(Player player) {
-        for (Player players : Bukkit.getOnlinePlayers()) {
-            players.showPlayer(player);
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (Static.containsHidden(p.getName())) continue;
+            p.showPlayer(player);
         }
+
     }
 
     public static boolean isCheckpointSafe(Player player, Block block) {
