@@ -1,46 +1,43 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link href="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link href="//fonts.googleapis.com/css?family=Arvo" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" id="theme_link" href="//cdnjs.cloudflare.com/ajax/libs/bootswatch/4.3.1/flatly/bootstrap.min.css">
+    <link rel="stylesheet" href="css/navbar-fixed-left.min.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
     <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" />
-    <title>Parkour Tutorials - Part 9</title>
+    <title>Parkour Tutorials</title>
 </head>
+
 <body>
-<div class="wrapper">
-    <div id="navigation-placeholder"></div>
+<div id="navigation-placeholder"></div>
 
-    <section>
-        <div class="content">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <h1>Part 9 - Plugin Configuration</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-xl-8">
+            <h1>Part 9: Plugin Configuration</h1>
 
-                        <div id="contents-placeholder"></div>
+            <div id="contents-placeholder"></div>
 
-                        <h2 id="config">config.yml</h2>
-                        <p>This configuration file is very large and can look daunting at first, but each section is broken up into logical section with clear names to hopefully make it easier.</p>
-                        <p>To make changes, edit to the value you want, save the file, then enter <strong>/pa reload</strong> into game or the console.</p>
-                        <p>Some properties require the server to restart to apply the changes, these include changes to scoreboard, adding 3rd party plugin support, etc.</p>
-                        <img src="https://i.imgur.com/jP8p9GY.png" alt="Config.yml" class="img-thumbnail"/>
+            <h2 id="config">config.yml</h2>
+            <p>This configuration file is very large and can look daunting at first, but each section is broken up into logical section with clear names to hopefully make it easier.</p>
+            <p>To make changes, edit to the value you want, save the file, then enter <strong>/pa reload</strong> into game or the console.</p>
+            <p>Some properties require the server to restart to apply the changes, these include changes to scoreboard, adding 3rd party plugin support, etc.</p>
+            <img src="https://i.imgur.com/jP8p9GY.png" alt="Config.yml" class="img-thumbnail"/>
 
-                        <p class="no-margin">View the raw annotated configuration file here: <a href="https://pastebin.com/eQGLqpVD">https://pastebin.com/eQGLqpVD</a>.</p>
-                        <p class="italic">This is correct as of Parkour v5.1</p>
+            <p class="no-margin">View the raw annotated configuration file here: <a href="https://pastebin.com/eQGLqpVD">https://pastebin.com/eQGLqpVD</a>.</p>
+            <p class="italic">This is correct as of Parkour v5.1</p>
 
-                        <h2 id="strings">strings.yml</h2>
-                        <p>You are able to modify the contents of this file, then enter <strong>/pa reload</strong> for the changes to immediately apply.</p>
-                        <p>If you are having problems, it may be because the yml is considered invalid if it requires <strong>'</strong> either side of the string, when using certain characters such as <strong>%</strong>.</p>
-                    </div>
-                </div>
-            </div>
+            <h2 id="strings">strings.yml</h2>
+            <p>You are able to modify the contents of this file, then enter <strong>/pa reload</strong> for the changes to immediately apply.</p>
+            <p>If you are having problems, it may be because the yml is considered invalid if it requires <strong>'</strong> either side of the string, when using certain characters such as <strong>%</strong>.</p>
         </div>
-    </section>
+    </div>
 </div>
 
-<script src="//code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="//code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script src="js/script.js"></script>
 </body>
 

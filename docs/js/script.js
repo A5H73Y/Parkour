@@ -1,4 +1,4 @@
-$(function(){
+$(function() {
     $("#navigation-placeholder").load("templates/nav.html");
 
     let contentsPlaceholder = $("#contents-placeholder");
@@ -20,7 +20,7 @@ $(function(){
     }
 
     $('img').on("click",function(){
-        var url = $(this).attr("src");
+        let url = $(this).attr("src");
         window.open(url, '_blank');
     });
 });

@@ -1,7 +1,34 @@
+.navbar {
+    padding: 0;
+}
+
+.nav-item a {
+    padding: 0.6rem;
+    padding-left: 1rem !important;
+}
+
+.nav-item a:hover {
+    background-color: #6085a4;
+}
+
+.navbar-brand {
+    padding: 1rem;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link:focus {
+    color: #fff;
+}
 
 /* Headings */
+h1, .h1 {
+    font-size: 2.3rem;
+}
+
+h2, .h2 {
+    font-size: 2rem;
+}
+
 h1, h2, h3, h4 {
-    font-family: 'Arvo', serif;
     display: block;
     border-bottom: 1px solid #ccc;
     padding-bottom: 5px;
@@ -55,55 +82,6 @@ img {
     vertical-align: text-bottom;
     text-align: center;
     width: 55px;
-}
-
-/* Fixed width view */
-.wrapper {
-    width: 1050px;
-}
-
-/* Navigation */
-.navigation {
-    width: 270px;
-    float: left;
-    position: fixed;
-    -webkit-font-smoothing: antialiased;
-    height: 100%;
-    background-color: #eee;
-}
-
-.home-menu {
-    text-align: center;
-    width: 50%;
-    margin: 0 auto;
-}
-
-.vertical-menu {
-    padding-top: 30px;
-}
-
-.vertical-menu a {
-    background-color: #eee; /* Grey background color */
-    color: black; /* Black text color */
-    display: block; /* Make the links appear below each other */
-    padding: 12px; /* Add some padding */
-    text-decoration: none; /* Remove underline from links */
-}
-
-.vertical-menu a:hover {
-    background-color: #ccc; /* Dark grey background on mouse-over */
-}
-
-.vertical-menu a.active {
-    background-color: #4CAF50; /* Add a green color to the "active/current" link */
-    color: white;
-}
-
-/* Page content */
-.content {
-    width: 750px;
-    float: right;
-    padding-bottom: 50px;
 }
 
 .card-body {
