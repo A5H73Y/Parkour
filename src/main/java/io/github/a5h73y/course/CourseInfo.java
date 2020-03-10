@@ -609,7 +609,7 @@ public class CourseInfo {
         }
 
         if (Static.getEconomy()) {
-            int joinFee = getEconomyFinishReward(courseName);
+            int joinFee = getEconomyJoiningFee(courseName);
             int finishReward = getEconomyFinishReward(courseName);
             if (joinFee > 0) {
                 player.sendMessage("Join Fee: " + aqua + joinFee);
