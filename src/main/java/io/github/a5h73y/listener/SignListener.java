@@ -15,6 +15,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
@@ -96,7 +97,7 @@ public class SignListener implements Listener {
         event.getPlayer().sendMessage(Static.getParkourString() + "Sign Removed!");
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onSignInteract(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
@@ -120,6 +121,7 @@ public class SignListener implements Listener {
             }
 
             event.getPlayer().sendMessage(Utils.getTranslation("Error.Sign"));
+            event.setCancelled(true);
             return;
         }
 

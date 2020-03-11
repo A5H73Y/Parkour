@@ -131,12 +131,19 @@ public class ParkourAutoTabCompleter implements TabCompleter {
                 list.add("player");
                 list.add("leaderboard");
                 list.add("prize");
+            } else if (args[0].equalsIgnoreCase("economy")) {
+                list.add("setprize");
+                list.add("info");
+                list.add("recreate");
+                list.add("setfee");
             }
         } else if (args.length == 3) {
             if ((args[0].equalsIgnoreCase("reset") || args[0].equalsIgnoreCase("delete")) && (args[1].equalsIgnoreCase("course") || args[1].equalsIgnoreCase("autostart"))) {
                 list.addAll(CourseInfo.getAllCourses());
             } else if ((args[0].equalsIgnoreCase("delete") && args[1].equalsIgnoreCase("kit")) || args[0].equalsIgnoreCase("linkkit")) {
                 list.addAll(ParkourKitInfo.getParkourKitNames());
+            } else if (args[0].equalsIgnoreCase("economy") && (args[1].equalsIgnoreCase("setprize") || args[1].equalsIgnoreCase("setfee"))) {
+                list.addAll(CourseInfo.getAllCourses());
             }
         }
 

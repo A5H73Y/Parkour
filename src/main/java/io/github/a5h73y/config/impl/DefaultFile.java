@@ -134,6 +134,7 @@ public class DefaultFile extends ParkourConfiguration {
 		this.addDefault("Other.Display.ShowMilliseconds", false);
 		this.addDefault("Other.Display.PrizeCooldown", true);
 		this.addDefault("Other.OnServerShutdown.BackupFiles", false);
+		this.addDefault("Other.Leaderboard.MaxEntries", 20);
 
 		this.addDefault("SQLite.PathOverride", "");
 		this.addDefault("MySQL.Use", false);

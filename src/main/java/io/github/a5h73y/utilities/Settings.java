@@ -186,6 +186,10 @@ public class Settings {
         return getConfig().getInt("AutoStart.TickDelay");
     }
 
+    public int getLeaderboardMaxEntries() {
+        return getConfig().getInt("Other.Leaderboard.MaxEntries");
+    }
+
     public void resetSettings() {
         trailParticle = null;
     }

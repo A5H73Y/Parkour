@@ -354,7 +354,8 @@ public class DatabaseMethods {
     }
 
     public static List<TimeObject> getTopCourseResults(String courseName, int limit) {
-        limit = limit < 1 ? 1 : limit > 20 ? 20 : limit;
+        int maxEntries = Parkour.getSettings().getLeaderboardMaxEntries();
+        limit = limit < 1 ? 1 : limit > maxEntries ? maxEntries : limit;
 
         List<TimeObject> times = new ArrayList<>();
         try {
@@ -383,7 +384,8 @@ public class DatabaseMethods {
     }
 
     public static List<TimeObject> getTopPlayerCourseResults(String playerName, String courseName, int limit) {
-        limit = limit < 1 ? 1 : limit > 20 ? 20 : limit;
+        int maxEntries = Parkour.getSettings().getLeaderboardMaxEntries();
+        limit = limit < 1 ? 1 : limit > maxEntries ? maxEntries : limit;
 
         List<TimeObject> times = new ArrayList<>();
         try {
