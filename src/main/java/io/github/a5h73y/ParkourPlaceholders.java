@@ -192,7 +192,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return INVALID_SYNTAX;
             }
             int pos = Integer.parseInt(temp[2]);
-            if (pos < 1 || pos > 10) {
+            if (pos < 1 || pos > Parkour.getSettings().getLeaderboardMaxEntries()) {
                 return INVALID_SYNTAX;
             }
             String courseName = temp[1];
