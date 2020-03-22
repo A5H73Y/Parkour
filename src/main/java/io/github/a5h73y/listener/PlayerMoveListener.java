@@ -8,6 +8,8 @@ import io.github.a5h73y.enums.ParkourMode;
 import io.github.a5h73y.kit.ParkourKit;
 import io.github.a5h73y.player.ParkourSession;
 import io.github.a5h73y.player.PlayerMethods;
+import io.github.a5h73y.utilities.XMaterial;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -109,7 +111,7 @@ public class PlayerMoveListener implements Listener {
 
         Material belowMaterial = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
         // if player is on half-block or jumping, get actual location.
-        if (player.getLocation().getBlock().getType() != Material.AIR || !player.isOnGround()) {
+        if ((player.getLocation().getBlock().getType() != Material.AIR && player.getLocation().getBlock().getType() != XMaterial.CAVE_AIR.parseMaterial()) || !player.isOnGround()) {
             belowMaterial = player.getLocation().getBlock().getType();
         }
         ParkourKit kit = session.getCourse().getParkourKit();
