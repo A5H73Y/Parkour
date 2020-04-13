@@ -2,7 +2,6 @@ package io.github.a5h73y.conversation;
 
 import io.github.a5h73y.Parkour;
 import io.github.a5h73y.course.CourseInfo;
-import io.github.a5h73y.utilities.DatabaseMethods;
 import io.github.a5h73y.utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -98,9 +97,11 @@ public class LeaderboardConversation extends ParkourConversation {
 
             Bukkit.getScheduler().runTaskLaterAsynchronously(Parkour.getInstance(), () -> {
                 if (leaderboardType.equals("personal")) {
-                    Utils.displayLeaderboard(player, DatabaseMethods.getTopPlayerCourseResults(player.getName(), courseName, amount), courseName);
+                    Utils.displayLeaderboard(player,
+                            Parkour.getDatabase().getTopPlayerCourseResults(player.getName(), courseName, amount), courseName);
                 } else if (leaderboardType.equals("global")) {
-                    Utils.displayLeaderboard(player, DatabaseMethods.getTopCourseResults(courseName, amount), courseName);
+                    Utils.displayLeaderboard(player,
+                            Parkour.getDatabase().getTopCourseResults(courseName, amount), courseName);
                 }
             }, 3);
 

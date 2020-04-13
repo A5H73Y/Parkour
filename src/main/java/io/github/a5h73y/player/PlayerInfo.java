@@ -9,7 +9,6 @@ import io.github.a5h73y.config.ParkourConfiguration;
 import io.github.a5h73y.enums.ConfigType;
 import io.github.a5h73y.event.PlayerParkourLevelEvent;
 import io.github.a5h73y.other.Validation;
-import io.github.a5h73y.utilities.DatabaseMethods;
 import io.github.a5h73y.utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -242,7 +241,7 @@ public class PlayerInfo {
     public static void resetPlayer(OfflinePlayer player) {
         getConfig().set("PlayerInfo." + player.getName(), null);
         getConfig().save();
-        DatabaseMethods.deleteAllTimesForPlayer(player.getName());
+        Parkour.getDatabase().deletePlayerTimes(player.getName());
     }
 
     /**

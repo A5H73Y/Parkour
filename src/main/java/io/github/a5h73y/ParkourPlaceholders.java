@@ -5,12 +5,11 @@ import java.util.List;
 import io.github.a5h73y.course.Course;
 import io.github.a5h73y.course.CourseInfo;
 import io.github.a5h73y.course.CourseMethods;
-import io.github.a5h73y.other.TimeObject;
+import io.github.a5h73y.database.TimeObject;
 import io.github.a5h73y.other.Validation;
 import io.github.a5h73y.player.ParkourSession;
 import io.github.a5h73y.player.PlayerInfo;
 import io.github.a5h73y.player.PlayerMethods;
-import io.github.a5h73y.utilities.DatabaseMethods;
 import io.github.a5h73y.utilities.Static;
 import io.github.a5h73y.utilities.Utils;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -199,7 +198,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             if (!CourseMethods.exist(courseName)) {
                 return NO_TIME_RECORDED;
             }
-            List<TimeObject> results = DatabaseMethods.getTopCourseResults(courseName, pos);
+            List<TimeObject> results = Parkour.getDatabase().getTopCourseResults(courseName, pos);
             if (results.isEmpty()) {
                 return NO_TIME_RECORDED;
 
@@ -253,7 +252,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             return null;
         }
 
-        List<TimeObject> time = DatabaseMethods.getTopCourseResults(courseName, 1);
+        List<TimeObject> time = Parkour.getDatabase().getTopCourseResults(courseName, 1);
         return time.isEmpty() ? null : time.get(0);
     }
 
@@ -262,7 +261,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             return null;
         }
 
-        List<TimeObject> time = DatabaseMethods.getTopPlayerCourseResults(playerName, courseName, 1);
+        List<TimeObject> time = Parkour.getDatabase().getTopPlayerCourseResults(playerName, courseName, 1);
         return time.isEmpty() ? null : time.get(0);
     }
 }

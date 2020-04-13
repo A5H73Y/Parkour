@@ -7,7 +7,6 @@ import io.github.a5h73y.course.LobbyMethods;
 import io.github.a5h73y.other.Validation;
 import io.github.a5h73y.player.ParkourSession;
 import io.github.a5h73y.player.PlayerMethods;
-import io.github.a5h73y.utilities.DatabaseMethods;
 import io.github.a5h73y.utilities.SignMethods;
 import io.github.a5h73y.utilities.Static;
 import io.github.a5h73y.utilities.Utils;
@@ -213,7 +212,7 @@ public class SignListener implements Listener {
                 int amount = lines[3].isEmpty() ? 5 : Integer.parseInt(lines[3]);
 
                 Utils.displayLeaderboard(event.getPlayer(),
-                        DatabaseMethods.getTopCourseResults(lines[2], amount), lines[2]);
+                        Parkour.getDatabase().getTopCourseResults(lines[2], amount), lines[2]);
             }
 
         } else {

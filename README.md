@@ -1,5 +1,6 @@
 <p align="center"><img src="http://i.imgur.com/OayXKol.png" alt="Parkour Logo"></p>
 
+[![discord server](https://img.shields.io/discord/328154925949517824.svg)](https://discord.gg/h9d2fSd)
 [![travis-ci](https://travis-ci.org/A5H73Y/Parkour.svg?branch=master)](https://travis-ci.org/A5H73Y/Parkour/branches)
 [![tutorials](https://img.shields.io/badge/tutorials-github-brightgreen.svg)](https://a5h73y.github.io/Parkour/)
 [![bStats](https://img.shields.io/badge/statistics-bstats-brightgreen.svg)](https://bstats.org/plugin/bukkit/Parkour)

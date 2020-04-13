@@ -134,7 +134,7 @@ public class DefaultFile extends ParkourConfiguration {
 		this.addDefault("Other.Display.ShowMilliseconds", false);
 		this.addDefault("Other.Display.PrizeCooldown", true);
 		this.addDefault("Other.OnServerShutdown.BackupFiles", false);
-		this.addDefault("Other.Leaderboard.MaxEntries", 20);
+		this.addDefault("Other.Leaderboard.MaxEntries", 5);
 
 		this.addDefault("SQLite.PathOverride", "");
 		this.addDefault("MySQL.Use", false);
@@ -143,7 +143,7 @@ public class DefaultFile extends ParkourConfiguration {
 		this.addDefault("MySQL.User", "Username");
 		this.addDefault("MySQL.Password", "Password");
 		this.addDefault("MySQL.Database", "Database");
-		this.addDefault("MySQL.Table", "Table");
+		this.addDefault("MySQL.Params", "?useSSL=false");
 
 		this.addDefault("Version", Double.parseDouble(Parkour.getInstance().getDescription().getVersion()));
 

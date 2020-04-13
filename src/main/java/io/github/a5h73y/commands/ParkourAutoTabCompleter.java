@@ -49,8 +49,6 @@ public class ParkourAutoTabCompleter implements TabCompleter {
             list.add("version");
             list.add("material");
             list.add("quiet");
-            list.add("like");
-            list.add("dislike");
             list.add("list");
             list.add("lobby");
             list.add("perms");

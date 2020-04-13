@@ -1,11 +1,11 @@
 package io.github.a5h73y;
 
-import com.huskehhh.mysql.Database;
 import io.github.a5h73y.commands.ParkourAutoTabCompleter;
 import io.github.a5h73y.commands.ParkourCommands;
 import io.github.a5h73y.commands.ParkourConsoleCommands;
 import io.github.a5h73y.config.ConfigManager;
 import io.github.a5h73y.config.ParkourConfiguration;
+import io.github.a5h73y.database.ParkourDatabase;
 import io.github.a5h73y.enums.ConfigType;
 import io.github.a5h73y.listener.BlockListener;
 import io.github.a5h73y.listener.ChatListener;
@@ -30,59 +30,26 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Parkour extends JavaPlugin {
 
     private static Parkour instance;
+
     private ConfigManager configManager;
-    private Database database;
+    private ParkourDatabase database;
     private Economy economy;
     private Settings settings;
 
     private ScoreboardManager scoreboardManager;
-
-    public static Parkour getInstance() {
-        return instance;
-    }
-
-    public static Settings getSettings() {
-        return getInstance().settings;
-    }
-
-    public static Economy getEconomy() {
-        return getInstance().economy;
-    }
-
-    public static void setEconomy(Economy economy) {
-        getInstance().economy = economy;
-    }
-
-    public static Database getDatabase() {
-        return getInstance().database;
-    }
-
-    public static void setDatabase(Database database) {
-        getInstance().database = database;
-    }
-
-    public static ScoreboardManager getScoreboardManager() {
-        if (getInstance().scoreboardManager == null) {
-            getInstance().scoreboardManager = new ScoreboardManager();
-        }
-        return getInstance().scoreboardManager;
-    }
-
-    public static ParkourConfiguration getConfig(ConfigType type) {
-        return instance.configManager.get(type);
-    }
 
     @Override
     public void onEnable() {
         instance = this;
         configManager = new ConfigManager();
         StartPlugin.run();
+        database = new ParkourDatabase(this);
         settings = new Settings();
 
         registerEvents();
         registerCommands();
 
-        new Metrics(this);
+        new Metrics(this, 42615);
         updatePlugin();
 
         Utils.log("v6.0 is currently a very unstable build, expect problems to occur and please raise them in the Discord server.", 2);
@@ -94,8 +61,7 @@ public class Parkour extends JavaPlugin {
         if (getConfig().getBoolean("Other.OnServerShutdown.BackupFiles")) {
             Backup.backupNow();
         }
-        database.closeConnection();
-	    // configManager.reloadConfigs(); TODO needed?
+        // configManager.reloadConfigs(); TODO needed?
         Utils.log("Disabled Parkour v" + Static.getVersion());
         instance = null;
     }
@@ -108,6 +74,47 @@ public class Parkour extends JavaPlugin {
     @Override
     public void saveConfig() {
         getConfig(ConfigType.DEFAULT).save();
+    }
+
+    public static Parkour getInstance() {
+        return instance;
+    }
+
+    public static Settings getSettings() {
+        return instance.settings;
+    }
+
+    public static Economy getEconomy() {
+        return instance.economy;
+    }
+
+    public static void setEconomy(Economy economy) {
+        instance.economy = economy;
+    }
+
+    public static ParkourDatabase getDatabase() {
+        return instance.database;
+    }
+
+    public static void setDatabase(ParkourDatabase database) {
+        instance.database = database;
+    }
+
+    public static ScoreboardManager getScoreboardManager() {
+        if (instance.scoreboardManager == null) {
+            instance.scoreboardManager = new ScoreboardManager();
+        }
+        return instance.scoreboardManager;
+    }
+
+    public static ParkourConfiguration getConfig(ConfigType type) {
+        return instance.configManager.get(type);
+    }
+
+    public void reloadConfigurations() {
+        configManager.reloadConfigs();
+        settings.resetSettings();
+        Static.initiate();
     }
 
     private void registerEvents() {
@@ -127,12 +134,6 @@ public class Parkour extends JavaPlugin {
         if (this.getConfig().getBoolean("Other.UseAutoTabCompletion")) {
             getCommand("parkour").setTabCompleter(new ParkourAutoTabCompleter());
         }
-    }
-
-    public void reloadConfigurations() {
-        configManager.reloadConfigs();
-        settings.resetSettings();
-        Static.initiate();
     }
 
     private void updatePlugin() {

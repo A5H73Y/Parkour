@@ -24,7 +24,7 @@ import io.github.a5h73y.enums.ConfigType;
 import io.github.a5h73y.kit.ParkourKitInfo;
 import io.github.a5h73y.manager.QuestionManager;
 import io.github.a5h73y.manager.QuietModeManager;
-import io.github.a5h73y.other.TimeObject;
+import io.github.a5h73y.database.TimeObject;
 import io.github.a5h73y.other.Validation;
 import io.github.a5h73y.player.PlayerInfo;
 import io.github.a5h73y.player.PlayerMethods;
@@ -284,10 +284,24 @@ public final class Utils {
             case 2:
                 Parkour.getInstance().getLogger().severe("! " + message);
                 break;
+            case 3:
+                Parkour.getInstance().getLogger().info("~ " + message);
+                break;
             case 0:
             default:
                 Parkour.getInstance().getLogger().info(message);
                 break;
+        }
+    }
+
+    /**
+     * Debug a message to the console.
+     * Has to be manually enabled in the config.
+     * @param message
+     */
+    public static void debug(String message) {
+        if (Parkour.getInstance().getConfig().getBoolean("Debug", false)) {
+            log(message, 3);
         }
     }
 

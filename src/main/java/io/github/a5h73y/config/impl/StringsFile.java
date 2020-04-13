@@ -99,10 +99,10 @@ public class StringsFile extends ParkourConfiguration {
 		this.addDefault("Error.Cheating2", "&lYou must achieve all &4%AMOUNT% &f&lcheckpoints!");
 		this.addDefault("Error.Cooldown", "Slow down! Please wait &b%AMOUNT% &fmore seconds.");
 		this.addDefault("Error.NotCompleted", "You have not yet completed &b%COURSE%&f!");
-		this.addDefault("Error.AlreadyVoted", "You have already voted for &b%COURSE%&f!");
 		this.addDefault("Error.PrizeCooldown", "You have to wait &b%TIME% &fbefore you can receive this prize again!");
 		this.addDefault("Error.NoQuestion", "You have not been asked a question!");
 		this.addDefault("Error.JoiningAnotherCourse", "You can not join another course while on a course.");
+		this.addDefault("Error.AllowViaCommand", "Joining a course via the command has been disabled.");
 
 		this.addDefault("Help.Command", "&7/pa help &9%COMMAND% &0: &7To learn more about this command.");
 		this.addDefault("Help.Commands", "&3/pa &bcmds &8: &fTo display the Parkour commands menu.");

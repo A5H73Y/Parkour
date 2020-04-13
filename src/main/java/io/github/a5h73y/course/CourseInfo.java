@@ -6,7 +6,6 @@ import io.github.a5h73y.Parkour;
 import io.github.a5h73y.config.ParkourConfiguration;
 import io.github.a5h73y.other.Constants;
 import io.github.a5h73y.player.PlayerInfo;
-import io.github.a5h73y.utilities.DatabaseMethods;
 import io.github.a5h73y.utilities.Static;
 import io.github.a5h73y.utilities.Utils;
 import org.bukkit.ChatColor;
@@ -511,7 +510,7 @@ public class CourseInfo {
         getConfig().set(courseName, null);
         getConfig().set("Courses", courseList);
         getConfig().save();
-        DatabaseMethods.deleteCourseAndReferences(courseName);
+        Parkour.getDatabase().deleteCourseAndReferences(courseName);
 
         PlayerInfo.removeCompletedCourse(courseName);
     }
@@ -617,12 +616,6 @@ public class CourseInfo {
             if (finishReward > 0) {
                 player.sendMessage("Economy Reward: " + aqua + finishReward);
             }
-        }
-
-        double likePercent = Math.round(DatabaseMethods.getVotePercent(courseName));
-
-        if (likePercent > 0) {
-            player.sendMessage("Liked: " + aqua + likePercent + "%");
         }
 
         if (hasMaterialPrize(courseName) && getMaterialPrizeAmount(courseName) > 0) {

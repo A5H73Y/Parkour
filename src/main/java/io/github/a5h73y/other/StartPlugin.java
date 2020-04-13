@@ -4,22 +4,16 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import com.huskehhh.mysql.Database;
-import com.huskehhh.mysql.mysql.MySQL;
-import com.huskehhh.mysql.sqlite.SQLite;
 import io.github.a5h73y.Parkour;
 import io.github.a5h73y.ParkourPlaceholders;
 import io.github.a5h73y.course.CourseInfo;
-import io.github.a5h73y.enums.DatabaseType;
 import io.github.a5h73y.kit.ParkourKit;
 import io.github.a5h73y.player.ParkourSession;
 import io.github.a5h73y.player.PlayerMethods;
-import io.github.a5h73y.utilities.DatabaseMethods;
 import io.github.a5h73y.utilities.Static;
 import io.github.a5h73y.utilities.Utils;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -30,7 +24,6 @@ public class StartPlugin {
     public static void run() {
         checkConvertToLatest();
         Static.initiate();
-        initiateSQL();
         setupExternalPlugins();
         populatePlayers();
         Utils.log("Enabled Parkour v" + Static.getVersion());
@@ -63,41 +56,6 @@ public class StartPlugin {
             Parkour.getInstance().getConfig().set("Other.Economy.Enabled", false);
             Parkour.getInstance().saveConfig();
         }
-    }
-
-    private static void initiateSQL() {
-        initiateSQL(false);
-    }
-
-    private static void initiateSQL(boolean forceSQLite) {
-        Database database;
-        FileConfiguration config = Parkour.getInstance().getConfig();
-
-        // Only use MySQL if they have enabled it, configured it, and we aren't
-        // forcing SQLite (MySQL failed)
-        if (!forceSQLite && config.getBoolean("MySQL.Use") && !config.getString("MySQL.Host").equals("Host")) {
-            database = new MySQL(config.getString("MySQL.Host"), config.getString("MySQL.Port"), config.getString("MySQL.Database"), config.getString("MySQL.User"), config.getString("MySQL.Password"));
-            DatabaseMethods.type = DatabaseType.MySQL;
-        } else {
-            database = new SQLite("parkour.db");
-            DatabaseMethods.type = DatabaseType.SQLite;
-        }
-
-        try {
-            database.openConnection();
-            Parkour.setDatabase(database);
-            DatabaseMethods.setupTables();
-        } catch (Exception ex) {
-            failedSQL(ex);
-        }
-    }
-
-    private static void failedSQL(Exception ex) {
-        Utils.log("[SQL] Connection problem: " + ex.getMessage(), 2);
-        Utils.log("[SQL] Defaulting to SQLite...", 1);
-        Parkour.getInstance().getConfig().set("MySQL.Use", false);
-        Parkour.getInstance().saveConfig();
-        initiateSQL(true);
     }
 
     private static boolean setupEconomy() {

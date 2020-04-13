@@ -1,7 +1,6 @@
 package io.github.a5h73y.player;
 
 import java.util.HashMap;
-import java.util.List;
 
 import io.github.a5h73y.Parkour;
 import io.github.a5h73y.config.ParkourConfiguration;
@@ -20,9 +19,7 @@ import io.github.a5h73y.kit.ParkourKit;
 import io.github.a5h73y.manager.ChallengeManager;
 import io.github.a5h73y.manager.QuietModeManager;
 import io.github.a5h73y.other.Constants;
-import io.github.a5h73y.other.TimeObject;
 import io.github.a5h73y.other.Validation;
-import io.github.a5h73y.utilities.DatabaseMethods;
 import io.github.a5h73y.utilities.Static;
 import io.github.a5h73y.utilities.Utils;
 import io.github.a5h73y.utilities.XMaterial;
@@ -203,7 +200,7 @@ public class PlayerMethods {
     }
 
     /**
-     * Player finishes a course
+     * Player finishes a course.
      * This will be called when the player completes the course.
      * Their reward will be given here, as well as a time entry to the database.
      * Inventory is restored before the player is teleported. If the teleport is delayed,
@@ -222,7 +219,6 @@ public class PlayerMethods {
 
         ParkourSession session = getParkourSession(player.getName());
         final String courseName = session.getCourse().getName();
-        final long timeTaken = session.getTime();
 
         if (Parkour.getInstance().getConfig().getBoolean("OnFinish.EnforceCompletion")
                 && session.getCheckpoint() != (session.getCourse().getCheckpoints())) {
@@ -274,7 +270,9 @@ public class PlayerMethods {
             }, delay);
         }
 
-        DatabaseMethods.insertOrUpdateTime(courseName, player, timeTaken, session.getDeaths());
+        boolean recordTime = isNewRecord(player, session);
+        Parkour.getDatabase().insertOrUpdateTime(
+                courseName, player.getName(), session.getTime(), session.getDeaths(), recordTime);
 
         PlayerInfo.setCompletedCourseInfo(player, courseName);
 
@@ -287,29 +285,25 @@ public class PlayerMethods {
      * Check if the player's time is a new course or personal record.
      *
      * @param player
-     * @param courseName
-     * @param timeTaken
+     * @param session
      */
-    public static boolean isNewRecord(Player player, String courseName, long timeTaken) {
-        List<TimeObject> courseRecord = DatabaseMethods.getTopCourseResults(courseName, 1);
-        TimeObject record = null;
-
-        if (courseRecord != null && !courseRecord.isEmpty()) {
-            record = courseRecord.get(0);
+    public static boolean isNewRecord(Player player, ParkourSession session) {
+        // if they aren't updating the row, it will be inserted whether or not it's their best time
+        // for sake of performance, if we don't care if it's their best time just return
+        if (!Parkour.getInstance().getConfig().getBoolean("OnFinish.DisplayNewRecords") &&
+                !Parkour.getInstance().getConfig().getBoolean("OnFinish.UpdatePlayerDatabaseTime")) {
+            return false;
         }
-        if (record == null || record.getTime() > timeTaken) {
-            Utils.sendFullTitle(player, Utils.getTranslation("Parkour.CourseRecord", false), Utils.displayCurrentTime(timeTaken), true);
+
+        if (Parkour.getDatabase().isBestCourseTime(session.getCourse().getName(), session.getTime())) {
+            Utils.sendFullTitle(player, Utils.getTranslation("Parkour.CourseRecord", false),
+                    Utils.displayCurrentTime(session.getTime()), true);
             return true;
         }
 
-        List<TimeObject> playerRecord = DatabaseMethods.getTopPlayerCourseResults(player.getName(), courseName, 1);
-        TimeObject result = null;
-
-        if (playerRecord != null && !playerRecord.isEmpty()) {
-            result = playerRecord.get(0);
-        }
-        if (result == null || result.getTime() > timeTaken) {
-            Utils.sendFullTitle(player, Utils.getTranslation("Parkour.BestTime", false), Utils.displayCurrentTime(timeTaken), true);
+        if (Parkour.getDatabase().isBestPlayerTime(player.getName(), session.getCourse().getName(), session.getTime())) {
+            Utils.sendFullTitle(player, Utils.getTranslation("Parkour.BestTime", false),
+                    Utils.displayCurrentTime(session.getTime()), true);
             return true;
         }
         return false;
@@ -335,8 +329,8 @@ public class PlayerMethods {
         }
 
         if (Parkour.getScoreboardManager().isEnabled()) {
-        	    Parkour.getScoreboardManager().updateScoreboardDeaths(player, String.valueOf(session.getDeaths()));
-        	    Parkour.getScoreboardManager().updateScoreboardCheckpoints(player, String.valueOf(session.getCheckpoint() + " / " + session.getCourse().getCheckpoints()));
+            Parkour.getScoreboardManager().updateScoreboardDeaths(player, String.valueOf(session.getDeaths()));
+            Parkour.getScoreboardManager().updateScoreboardCheckpoints(player, String.valueOf(session.getCheckpoint() + " / " + session.getCourse().getCheckpoints()));
         }
 
         player.sendMessage(Utils.getTranslation("Parkour.Restarting"));
@@ -432,7 +426,7 @@ public class PlayerMethods {
         }
 
         if (CourseInfo.getRewardOnce(courseName) &&
-                DatabaseMethods.hasPlayerCompleted(player.getName(), courseName)) {
+                Parkour.getDatabase().hasPlayerAchievedTime(player.getName(), courseName)) {
             return;
         }
 

@@ -8,9 +8,8 @@ import io.github.a5h73y.Parkour;
 import io.github.a5h73y.config.ParkourConfiguration;
 import io.github.a5h73y.course.CourseMethods;
 import io.github.a5h73y.enums.ConfigType;
-import io.github.a5h73y.other.TimeObject;
+import io.github.a5h73y.database.TimeObject;
 import io.github.a5h73y.player.PlayerMethods;
-import io.github.a5h73y.utilities.DatabaseMethods;
 import io.github.a5h73y.utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -135,7 +134,6 @@ public class ScoreboardManager {
 
         addCourseName(playerScoreboard);
         addBestTimeEver(playerScoreboard);
-        addBestTimeEverName(playerScoreboard);
         addBestTimeEverMe(playerScoreboard);
         addCurrentTime(playerScoreboard);
         addCurrentDeaths(playerScoreboard);
@@ -153,23 +151,21 @@ public class ScoreboardManager {
     }
 
     private void addBestTimeEver(PlayerScoreboard playerBoard) {
-        if (!configKey.get(BEST_TIME_EVER)) {
+        if (!configKey.get(BEST_TIME_EVER) && !configKey.get(BEST_TIME_EVER_NAME)) {
             return;
         }
 
-        List<TimeObject> result = DatabaseMethods.getTopCourseResults(playerBoard.courseName, 1);
-        String bestTimeEver = result.size() > 0 ? Utils.displayCurrentTime(result.get(0).getTime()) : translationKey.get("notCompleted");
-        print(playerBoard, bestTimeEver, BEST_TIME_EVER);
-    }
+        List<TimeObject> results = Parkour.getDatabase().getTopCourseResults(playerBoard.courseName, 1);
+        TimeObject result = results.size() > 0 ? results.get(0) : null;
 
-    private void addBestTimeEverName(PlayerScoreboard playerBoard) {
-        if (!configKey.get(BEST_TIME_EVER_NAME)) {
-            return;
+        if (configKey.get(BEST_TIME_EVER)) {
+            String bestTimeEver = result != null ? Utils.displayCurrentTime(result.getTime()) : translationKey.get("notCompleted");
+            print(playerBoard, bestTimeEver, BEST_TIME_EVER);
         }
-
-        List<TimeObject> result = DatabaseMethods.getTopCourseResults(playerBoard.courseName, 1);
-        String bestTimeName = result.size() > 0 ? result.get(0).getPlayer() : translationKey.get("notCompleted");
-        print(playerBoard, bestTimeName, BEST_TIME_EVER_NAME);
+        if (configKey.get(BEST_TIME_EVER_NAME)) {
+            String bestTimeName = result != null ? result.getPlayer() : translationKey.get("notCompleted");
+            print(playerBoard, bestTimeName, BEST_TIME_EVER_NAME);
+        }
     }
 
     private void addBestTimeEverMe(PlayerScoreboard playerBoard) {
@@ -177,7 +173,7 @@ public class ScoreboardManager {
             return;
         }
 
-        List<TimeObject> result = DatabaseMethods.getTopPlayerCourseResults(playerBoard.playerName, playerBoard.courseName, 1);
+        List<TimeObject> result = Parkour.getDatabase().getTopPlayerCourseResults(playerBoard.playerName, playerBoard.courseName, 1);
         String bestTime = result.size() > 0 ? Utils.displayCurrentTime(result.get(0).getTime()) : translationKey.get("notCompleted");
         print(playerBoard, bestTime, BEST_TIME_EVER_ME);
     }

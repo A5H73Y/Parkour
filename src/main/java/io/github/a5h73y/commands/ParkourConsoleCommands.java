@@ -5,7 +5,6 @@ import io.github.a5h73y.course.CourseMethods;
 import io.github.a5h73y.other.Backup;
 import io.github.a5h73y.other.Help;
 import io.github.a5h73y.player.PlayerMethods;
-import io.github.a5h73y.utilities.DatabaseMethods;
 import io.github.a5h73y.utilities.Static;
 import io.github.a5h73y.utilities.Utils;
 import org.bukkit.command.Command;
@@ -61,7 +60,7 @@ public class ParkourConsoleCommands implements CommandExecutor {
                 break;
 
             case "recreate":
-                DatabaseMethods.recreateAllCourses();
+                Parkour.getDatabase().recreateAllCourses();
                 break;
 
             case "setminlevel":

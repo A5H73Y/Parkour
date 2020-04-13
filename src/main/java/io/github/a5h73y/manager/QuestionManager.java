@@ -3,6 +3,7 @@ package io.github.a5h73y.manager;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.a5h73y.Parkour;
 import io.github.a5h73y.course.CheckpointMethods;
 import io.github.a5h73y.course.CourseInfo;
 import io.github.a5h73y.course.CourseMethods;
@@ -10,7 +11,6 @@ import io.github.a5h73y.course.LobbyMethods;
 import io.github.a5h73y.enums.QuestionType;
 import io.github.a5h73y.kit.ParkourKitInfo;
 import io.github.a5h73y.player.PlayerInfo;
-import io.github.a5h73y.utilities.DatabaseMethods;
 import io.github.a5h73y.utilities.Static;
 import io.github.a5h73y.utilities.Utils;
 import org.bukkit.Bukkit;
@@ -189,7 +189,7 @@ public class QuestionManager {
                     return;
 
                 case RESET_LEADERBOARD:
-                    DatabaseMethods.deleteCourseTimes(argument);
+                    Parkour.getDatabase().deleteCourseTimes(argument);
                     player.sendMessage(Static.getParkourString() + ChatColor.AQUA + argument + ChatColor.WHITE + " leaderboards have been reset.");
                     Utils.logToFile(argument + " leaderboards were reset by " + player.getName());
                     return;

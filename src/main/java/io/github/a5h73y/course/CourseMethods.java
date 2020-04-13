@@ -18,7 +18,6 @@ import io.github.a5h73y.other.Validation;
 import io.github.a5h73y.player.ParkourSession;
 import io.github.a5h73y.player.PlayerInfo;
 import io.github.a5h73y.player.PlayerMethods;
-import io.github.a5h73y.utilities.DatabaseMethods;
 import io.github.a5h73y.utilities.Static;
 import io.github.a5h73y.utilities.Utils;
 import io.github.a5h73y.utilities.XMaterial;
@@ -163,7 +162,7 @@ public class CourseMethods {
         PlayerInfo.setSelected(player, name);
 
         player.sendMessage(Utils.getTranslation("Parkour.Created").replace("%COURSE%", courseName));
-        DatabaseMethods.insertCourse(name, player.getName());
+        Parkour.getDatabase().insertCourse(name, player.getName());
     }
 
     /**
@@ -830,49 +829,7 @@ public class CourseMethods {
         //TODO go through ConfigSection, setting each value to null (except for structural)
 
         courseConfig.save();
-        DatabaseMethods.deleteCourseTimes(courseName);
-    }
-
-    /**
-     * Rate the course.
-     * After completion of a course, the player has the ability to vote whether they liked the course or not.
-     * These are only used for statistics.
-     *
-     * @param args
-     * @param player
-     */
-    public static void rateCourse(String[] args, Player player) {
-        String courseName;
-
-        if (args.length > 1) {
-            courseName = args[1].toLowerCase();
-        } else {
-            courseName = PlayerInfo.getLastCompletedCourse(player);
-        }
-
-        if (!CourseMethods.exist(courseName)) {
-            player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", courseName));
-            return;
-        }
-
-        if (!DatabaseMethods.hasPlayerCompleted(player.getName(), courseName)) {
-            player.sendMessage(Utils.getTranslation("Error.NotCompleted").replace("%COURSE%", courseName));
-            return;
-        }
-
-        if (DatabaseMethods.hasVoted(courseName, player.getName())) {
-            player.sendMessage(Utils.getTranslation("Error.AlreadyVoted").replace("%COURSE%", courseName));
-            return;
-        }
-
-        boolean liked = args[0].equalsIgnoreCase("like");
-        DatabaseMethods.insertVote(courseName, player.getName(), liked);
-
-        if (liked) {
-            player.sendMessage(Static.getParkourString() + "You " + ChatColor.GREEN + "liked " + ChatColor.WHITE + courseName);
-        } else {
-            player.sendMessage(Static.getParkourString() + "You " + ChatColor.RED + "disliked " + ChatColor.WHITE + courseName);
-        }
+        Parkour.getDatabase().deleteCourseTimes(courseName);
     }
 
     /**
@@ -1008,9 +965,9 @@ public class CourseMethods {
         }
 
         if (personal) {
-            Utils.displayLeaderboard(player, DatabaseMethods.getTopPlayerCourseResults(player.getName(), args[1], limit), args[1]);
+            Utils.displayLeaderboard(player, Parkour.getDatabase().getTopPlayerCourseResults(player.getName(), args[1], limit), args[1]);
         } else {
-            Utils.displayLeaderboard(player, DatabaseMethods.getTopCourseResults(args[1], limit), args[1]);
+            Utils.displayLeaderboard(player, Parkour.getDatabase().getTopCourseResults(args[1], limit), args[1]);
         }
     }
 

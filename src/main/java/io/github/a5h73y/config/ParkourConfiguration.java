@@ -10,7 +10,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public abstract class ParkourConfiguration extends YamlConfiguration {
 
-	private static File dataFolder = Parkour.getInstance().getDataFolder();
+	private static final File dataFolder = Parkour.getInstance().getDataFolder();
 
 	protected File file;
 

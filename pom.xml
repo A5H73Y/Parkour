@@ -30,69 +30,86 @@
 	</licenses>
 
 	<repositories>
+		<!-- Spigot API Repo -->
 		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
 		</repository>
+		<!-- Vault Repo -->
 		<repository>
 			<id>vault-repo</id>
-			<url>http://nexus.hc.to/content/repositories/pub_releases</url>
+			<url>https://jitpack.io/</url>
 		</repository>
+		<!-- bStats Repo -->
+		<repository>
+			<id>CodeMC</id>
+			<url>https://repo.codemc.org/repository/maven-public/</url>
+		</repository>
+		<!-- My Bintray Repo -->
 		<repository>
 			<id>a5h73y-repo</id>
 			<url>https://dl.bintray.com/a5h73y/repo/</url>
 		</repository>
+		<!-- Placeholder API Repo -->
 		<repository>
 			<id>placeholderapi-repo</id>
 			<url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
 		</repository>
+		<!-- MySQL database Repo -->
 		<repository>
-			<id>CodeMC</id>
-			<url>https://repo.codemc.org/repository/maven-public</url>
+			<id>husk</id>
+			<url>https://maven.husk.pro/repository/maven-public/</url>
 		</repository>
 	</repositories>
 
 	<dependencies>
-		<!--Spigot API-->
+		<!-- Spigot API -->
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
 			<version>1.15.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
-		<!--Bukkit API-->
+		<!-- Bukkit API -->
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
 			<version>1.15.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
-		<!--Vault API-->
+		<!-- Vault API -->
 		<dependency>
 			<groupId>net.milkbowl.vault</groupId>
 			<artifactId>VaultAPI</artifactId>
 			<version>1.7</version>
 			<scope>provided</scope>
 		</dependency>
-		<!--Bountiful API-->
+		<!-- bStats -->
+		<dependency>
+			<groupId>org.bstats</groupId>
+			<artifactId>bstats-bukkit</artifactId>
+			<version>1.7</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- Bountiful API -->
 		<dependency>
 			<groupId>com.connorlinfoot</groupId>
 			<artifactId>BountifulAPI</artifactId>
 			<version>1.6.4</version>
 			<scope>provided</scope>
 		</dependency>
-		<!--Placeholder API-->
+		<!-- Placeholder API -->
 		<dependency>
 			<groupId>me.clip</groupId>
 			<artifactId>placeholderapi</artifactId>
-			<version>2.10.1</version>
+			<version>2.10.5</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- bStats -->
+		<!-- MySQL Database -->
 		<dependency>
-			<groupId>org.bstats</groupId>
-			<artifactId>bstats-bukkit</artifactId>
-			<version>1.4</version>
+			<groupId>pro.husk</groupId>
+			<artifactId>mysql</artifactId>
+			<version>1.3.4</version>
 			<scope>compile</scope>
 		</dependency>
 
@@ -133,7 +150,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>3.1.1</version>
+				<version>3.2.0</version>
 				<configuration>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
@@ -149,6 +166,9 @@
 					<artifactSet>
 						<includes>
 							<include>org.bstats:*</include>
+							<include>pro.husk:*</include>
+							<include>com.zaxxer:*</include>
+							<include>org.slf4j:*</include>
 						</includes>
 					</artifactSet>
 					<relocations>

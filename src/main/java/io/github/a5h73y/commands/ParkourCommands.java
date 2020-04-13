@@ -14,7 +14,6 @@ import io.github.a5h73y.manager.QuietModeManager;
 import io.github.a5h73y.other.Help;
 import io.github.a5h73y.player.PlayerInfo;
 import io.github.a5h73y.player.PlayerMethods;
-import io.github.a5h73y.utilities.DatabaseMethods;
 import io.github.a5h73y.utilities.Static;
 import io.github.a5h73y.utilities.Utils;
 import org.bukkit.ChatColor;
@@ -58,6 +57,7 @@ public class ParkourCommands implements CommandExecutor {
                     return false;
 
                 } else if (!Parkour.getInstance().getConfig().getBoolean("OnJoin.AllowViaCommand")) {
+                    player.sendMessage(Utils.getTranslation("Error.AllowViaCommand"));
                     return false;
                 }
 
@@ -171,11 +171,6 @@ public class ParkourCommands implements CommandExecutor {
                 }
 
                 CourseMethods.setPrize(args[1], player);
-                break;
-
-            case "like":
-            case "dislike":
-                CourseMethods.rateCourse(args, player);
                 break;
 
             case "perms":
@@ -499,21 +494,13 @@ public class ParkourCommands implements CommandExecutor {
                 CourseMethods.getLeaderboards(args, player);
                 break;
 
-            case "sql":
-                if (!Utils.hasPermission(player, "Parkour.Admin")) {
-                    return false;
-                }
-
-                Help.displaySQL(player);
-                break;
-
             case "recreate":
                 if (!Utils.hasPermission(player, "Parkour.Admin")) {
                     return false;
                 }
 
                 player.sendMessage(Static.getParkourString() + "Recreating courses...");
-                DatabaseMethods.recreateAllCourses();
+                Parkour.getDatabase().recreateAllCourses();
                 break;
 
             case "whitelist":

@@ -24,7 +24,7 @@ public class ParkourSession implements Serializable {
     private int deaths;
     private int checkpoint;
     private long timestarted;
-    private Course course;
+    private final Course course;
     private ParkourMode mode;
     private int seconds;
 
