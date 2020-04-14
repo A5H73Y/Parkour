@@ -230,6 +230,7 @@ public class PlayerMethods {
             return;
         }
 
+        session.setTime();
         preparePlayer(player, Parkour.getInstance().getConfig().getInt("OnFinish.SetGamemode"));
 
         if (Static.containsHidden(player.getName())) {
