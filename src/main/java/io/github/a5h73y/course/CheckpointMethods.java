@@ -94,7 +94,7 @@ public class CheckpointMethods {
             }
         }
 
-        if (blockUnder.getType().equals(Material.AIR)) {
+        if (blockUnder.getType().equals(Material.AIR) || blockUnder.getType().equals(XMaterial.CAVE_AIR.parseMaterial())) {
             blockUnder.setType(Material.STONE);
         }
 

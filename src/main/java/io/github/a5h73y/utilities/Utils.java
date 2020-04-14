@@ -938,7 +938,7 @@ public final class Utils {
         Block blockUnder = block.getRelative(BlockFace.DOWN);
 
         List<Material> validMaterials = new ArrayList<>();
-        Collections.addAll(validMaterials, Material.AIR, Material.REDSTONE_BLOCK,
+        Collections.addAll(validMaterials, Material.AIR, XMaterial.CAVE_AIR.parseMaterial(), Material.REDSTONE_BLOCK,
                 XMaterial.ACACIA_SLAB.parseMaterial(), XMaterial.BIRCH_SLAB.parseMaterial(), XMaterial.BRICK_SLAB.parseMaterial(),
                 XMaterial.COBBLESTONE_SLAB.parseMaterial(), XMaterial.DARK_OAK_SLAB.parseMaterial(), XMaterial.DARK_PRISMARINE_SLAB.parseMaterial(),
                 XMaterial.JUNGLE_SLAB.parseMaterial(), XMaterial.NETHER_BRICK_SLAB.parseMaterial(), XMaterial.OAK_SLAB.parseMaterial(),
@@ -951,7 +951,7 @@ public final class Utils {
         }
 
         //check if player is standing in a half-block
-        if (!block.getType().equals(Material.AIR) && !block.getType().equals(lookupMaterial(Parkour.getInstance().getConfig().getString("OnCourse.CheckpointMaterial")))) {
+        if (!block.getType().equals(Material.AIR) && !block.getType().equals(XMaterial.CAVE_AIR.parseMaterial()) && !block.getType().equals(lookupMaterial(Parkour.getInstance().getConfig().getString("OnCourse.CheckpointMaterial")))) {
             player.sendMessage(Static.getParkourString() + "Invalid block for checkpoint: " + ChatColor.AQUA + block.getType());
             return false;
         }
