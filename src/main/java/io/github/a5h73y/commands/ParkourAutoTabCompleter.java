@@ -31,6 +31,12 @@ public class ParkourAutoTabCompleter implements TabCompleter {
                     "setmaxdeath", "setmaxtime", "rewardonce", "rewardlevel", "rewardleveladd", "rewardparkoins",
                     "rewarddelay", "edit", "linkkit", "setautostart", "finish"));
 
+    private static final Set<String> RESET_ARGS = new HashSet<>(
+            Arrays.asList("course", "leaderboard", "prize"));
+
+    private static final Set<String> DELETE_ARGS = new HashSet<>(
+            Arrays.asList("autostart", "checkpoint", "course"));
+
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
         if (!(sender instanceof Player)) {
@@ -136,7 +142,9 @@ public class ParkourAutoTabCompleter implements TabCompleter {
                 list.add("setfee");
             }
         } else if (args.length == 3) {
-            if ((args[0].equalsIgnoreCase("reset") || args[0].equalsIgnoreCase("delete")) && (args[1].equalsIgnoreCase("course") || args[1].equalsIgnoreCase("autostart"))) {
+            if (args[0].equalsIgnoreCase("reset") && RESET_ARGS.contains(args[1])) {
+                list.addAll(CourseInfo.getAllCourses());
+            } else if (args[0].equalsIgnoreCase("delete") && DELETE_ARGS.contains(args[1])) {
                 list.addAll(CourseInfo.getAllCourses());
             } else if ((args[0].equalsIgnoreCase("delete") && args[1].equalsIgnoreCase("kit")) || args[0].equalsIgnoreCase("linkkit")) {
                 list.addAll(ParkourKitInfo.getParkourKitNames());
