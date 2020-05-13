@@ -23,10 +23,10 @@ public class ParkourSession implements Serializable {
 
     private int deaths;
     private int checkpoint;
-    private long timestarted;
-    private long timefinished;
+    private long timeStarted;
+    private long timeFinished;
     private final Course course;
-    private ParkourMode mode;
+    private final ParkourMode mode;
     private int seconds;
 
     private String liveTime;
@@ -47,8 +47,8 @@ public class ParkourSession implements Serializable {
     public ParkourSession(Course course) {
         this.deaths = 0;
         this.checkpoint = 0;
-        this.timestarted = System.currentTimeMillis();
-        this.timefinished = 0;
+        this.timeStarted = System.currentTimeMillis();
+        this.timeFinished = 0;
         this.course = course;
         this.mode = CourseMethods.getCourseMode(course.getName());
     }
@@ -86,8 +86,9 @@ public class ParkourSession implements Serializable {
 
                 if (Parkour.getScoreboardManager().isEnabled()) {
                     Parkour.getScoreboardManager().updateScoreboardTimer(player, liveTime);
+                }
 
-                } else if (Static.getBountifulAPI()) {
+                if (Static.getBountifulAPI()) {
                     Utils.sendActionBar(player, liveTime, true);
                 }
 
@@ -137,7 +138,7 @@ public class ParkourSession implements Serializable {
     }
 
     public void resetTimeStarted() {
-        this.timestarted = System.currentTimeMillis();
+        this.timeStarted = System.currentTimeMillis();
         seconds = 0;
         if (course.hasMaxTime()) {
             seconds = course.getMaxTime();
@@ -153,24 +154,24 @@ public class ParkourSession implements Serializable {
         deaths++;
     }
 
-    public void setTime() {
-        timefinished = System.currentTimeMillis() - timestarted;
+    public void setTimeFinished() {
+        timeFinished = getCurrentTime();
     }
 
-    public long getTime() {
-        return timefinished;
+    public long getTimeFinished() {
+        return timeFinished;
+    }
+
+    public long getCurrentTime() {
+        return System.currentTimeMillis() - timeStarted;
     }
 
     public String displayTime() {
-        return Utils.displayCurrentTime(getTime());
+        return Utils.displayCurrentTime(getCurrentTime());
     }
 
     public ParkourMode getMode() {
         return mode;
-    }
-
-    public void setMode(ParkourMode mode) {
-        this.mode = mode;
     }
 
     public void restartSession() {

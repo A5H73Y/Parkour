@@ -10,8 +10,8 @@ public abstract class ParkourEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled = false;
 
-    private String courseName;
-    private Player player;
+    private final String courseName;
+    private final Player player;
 
     public ParkourEvent(final Player player, final String courseName) {
         this.player = player;

@@ -648,9 +648,10 @@ public class CourseMethods {
             return;
         }
 
-        boolean enabled = CourseInfo.getRewardOnce(args[1]);
-        CourseInfo.setRewardOnce(args[1], !enabled);
-        sender.sendMessage(Static.getParkourString() + args[1] + "'s reward one time was set to " + ChatColor.AQUA + enabled);
+        // invert the existing value
+        boolean isEnabled = !CourseInfo.getRewardOnce(args[1]);
+        CourseInfo.setRewardOnce(args[1], isEnabled);
+        sender.sendMessage(Static.getParkourString() + args[1] + "'s reward one time was set to " + ChatColor.AQUA + isEnabled);
     }
 
     /**

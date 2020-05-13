@@ -230,7 +230,7 @@ public class PlayerMethods {
             return;
         }
 
-        session.setTime();
+        session.setTimeFinished();
         preparePlayer(player, Parkour.getInstance().getConfig().getInt("OnFinish.SetGamemode"));
 
         if (Static.containsHidden(player.getName())) {
@@ -273,7 +273,7 @@ public class PlayerMethods {
 
         boolean recordTime = isNewRecord(player, session);
         Parkour.getDatabase().insertOrUpdateTime(
-                courseName, player.getName(), session.getTime(), session.getDeaths(), recordTime);
+                courseName, player.getName(), session.getTimeFinished(), session.getDeaths(), recordTime);
 
         PlayerInfo.setCompletedCourseInfo(player, courseName);
 
@@ -296,15 +296,15 @@ public class PlayerMethods {
             return false;
         }
 
-        if (Parkour.getDatabase().isBestCourseTime(session.getCourse().getName(), session.getTime())) {
+        if (Parkour.getDatabase().isBestCourseTime(session.getCourse().getName(), session.getTimeFinished())) {
             Utils.sendFullTitle(player, Utils.getTranslation("Parkour.CourseRecord", false),
-                    Utils.displayCurrentTime(session.getTime()), true);
+                    Utils.displayCurrentTime(session.getTimeFinished()), true);
             return true;
         }
 
-        if (Parkour.getDatabase().isBestPlayerTime(player.getName(), session.getCourse().getName(), session.getTime())) {
+        if (Parkour.getDatabase().isBestPlayerTime(player.getName(), session.getCourse().getName(), session.getTimeFinished())) {
             Utils.sendFullTitle(player, Utils.getTranslation("Parkour.BestTime", false),
-                    Utils.displayCurrentTime(session.getTime()), true);
+                    Utils.displayCurrentTime(session.getTimeFinished()), true);
             return true;
         }
         return false;

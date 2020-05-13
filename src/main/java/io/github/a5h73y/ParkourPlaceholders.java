@@ -19,7 +19,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
 
     private static final String INVALID_SYNTAX = Utils.getTranslation("Placeholder.InvalidSyntax", false);
     private static final String NO_TIME_RECORDED = Utils.getTranslation("Placeholder.NoTimeRecorded", false);
-    private Parkour plugin;
+    private final Parkour plugin;
 
     public ParkourPlaceholders(Parkour plugin) {
         this.plugin = plugin;
