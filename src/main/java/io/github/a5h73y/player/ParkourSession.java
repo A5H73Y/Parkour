@@ -24,6 +24,7 @@ public class ParkourSession implements Serializable {
     private int deaths;
     private int checkpoint;
     private long timestarted;
+    private long timefinished;
     private final Course course;
     private ParkourMode mode;
     private int seconds;
@@ -47,6 +48,7 @@ public class ParkourSession implements Serializable {
         this.deaths = 0;
         this.checkpoint = 0;
         this.timestarted = System.currentTimeMillis();
+        this.timefinished = 0;
         this.course = course;
         this.mode = CourseMethods.getCourseMode(course.getName());
     }
@@ -151,8 +153,12 @@ public class ParkourSession implements Serializable {
         deaths++;
     }
 
+    public void setTime() {
+        timefinished = System.currentTimeMillis() - timestarted;
+    }
+
     public long getTime() {
-        return System.currentTimeMillis() - timestarted;
+        return timefinished;
     }
 
     public String displayTime() {

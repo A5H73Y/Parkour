@@ -1,5 +1,7 @@
 package io.github.a5h73y.manager;
 
+import static io.github.a5h73y.enums.ConfigType.COURSES;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -183,7 +185,12 @@ public class ScoreboardManager {
             return;
         }
 
-        print(playerBoard, "00:00:00", CURRENT_TIME);
+        String courseName = CourseMethods.findByPlayer(playerBoard.playerName).getName();
+        String start = "00:00:00";
+        if (Parkour.getConfig(COURSES).contains(courseName + ".MaxTime")) {
+            start = Utils.convertSecondsToTime(Parkour.getConfig(COURSES).getInt(courseName + ".MaxTime", 0));
+        }
+        print(playerBoard, start, CURRENT_TIME);
     }
 
     private void addCurrentDeaths(PlayerScoreboard playerBoard) {
