@@ -93,12 +93,13 @@ public class PlayerMethods {
     }
 
     /**
-     * Leave a course
+     * Leave a course.
      * Will remove the player from the players, which will also dispose of their course session.
      *
-     * @param player
+     * @param player requesting player
+     * @param teleport teleport the player away
      */
-    public static void playerLeave(Player player) {
+    public static void playerLeave(Player player, boolean teleport) {
         if (!isPlaying(player.getName())) {
             player.sendMessage(Utils.getTranslation("Error.NotOnAnyCourse"));
             return;
@@ -123,7 +124,9 @@ public class PlayerMethods {
             player.setLevel(0);
         }
 
-        LobbyMethods.teleportToLeaveDestination(player, session);
+        if (teleport) {
+            LobbyMethods.teleportToLeaveDestination(player, session);
+        }
 
         if (Static.containsHidden(player.getName())) {
             Utils.toggleVisibility(player, true);
@@ -132,6 +135,17 @@ public class PlayerMethods {
         Utils.forceVisible(player);
         Parkour.getScoreboardManager().removeScoreboard(player);
         Bukkit.getServer().getPluginManager().callEvent(new PlayerLeaveCourseEvent(player, session.getCourse().getName()));
+    }
+
+    /**
+     * Leave a course.
+     * Will remove the player from the players, which will also dispose of their course session.
+     * Will teleport the player to the appropriate location.
+     *
+     * @param player requesting player
+     */
+    public static void playerLeave(Player player) {
+        playerLeave(player, true);
     }
 
     /**

@@ -568,7 +568,7 @@ public final class Help {
         sender.sendMessage("Economy: " + ChatColor.AQUA + Static.getEconomy());
         sender.sendMessage("BountifulAPI: " + ChatColor.AQUA + Static.getBountifulAPI());
         sender.sendMessage("Disable Commands: " + ChatColor.AQUA + Parkour.getSettings().isDisableCommandsOnCourse());
-        sender.sendMessage("Enforce world: " + ChatColor.AQUA + Parkour.getSettings().isEnforceWorld());
+        sender.sendMessage("Enforce world: " + ChatColor.AQUA + Parkour.getSettings().isJoinEnforceWorld());
         sender.sendMessage("Less checks: " + ChatColor.AQUA + Parkour.getSettings().isAttemptLessChecks());
 
         sender.sendMessage(ChatColor.GRAY + "If you want more settings displayed, please ask");

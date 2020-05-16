@@ -120,7 +120,7 @@ public class Validation {
     public static boolean courseJoining(Player player, Course course) {
 
         /* Player in wrong world */
-        if (Parkour.getSettings().isEnforceWorld()) {
+        if (Parkour.getSettings().isJoinEnforceWorld()) {
             if (!player.getLocation().getWorld().getName().equals(course.getCurrentCheckpoint().getWorld())) {
                 player.sendMessage(Utils.getTranslation("Error.WrongWorld"));
                 return false;
@@ -195,7 +195,7 @@ public class Validation {
      */
     public static boolean courseJoiningNoMessages(Player player, String courseName) {
         /* Player in wrong world */
-        if (Parkour.getSettings().isEnforceWorld()) {
+        if (Parkour.getSettings().isJoinEnforceWorld()) {
             if (!player.getLocation().getWorld().getName().equals(CourseInfo.getWorld(courseName))) {
                 return false;
             }

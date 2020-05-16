@@ -24,7 +24,7 @@ import io.github.a5h73y.enums.ConfigType;
 import io.github.a5h73y.kit.ParkourKitInfo;
 import io.github.a5h73y.manager.QuestionManager;
 import io.github.a5h73y.manager.QuietModeManager;
-import io.github.a5h73y.database.TimeObject;
+import io.github.a5h73y.database.TimeEntry;
 import io.github.a5h73y.other.Validation;
 import io.github.a5h73y.player.PlayerInfo;
 import io.github.a5h73y.player.PlayerMethods;
@@ -625,7 +625,11 @@ public final class Utils {
                 return;
             }
 
-            QuestionManager.getInstance().askResetLeaderboardQuestion(player, args[2]);
+            if (args.length > 3) {
+                QuestionManager.getInstance().askResetPlayerLeaderboardQuestion(player, args[2], args[3]);
+            } else {
+                QuestionManager.getInstance().askResetLeaderboardQuestion(player, args[2]);
+            }
 
         } else if (args[1].equalsIgnoreCase("prize")) {
             if (!CourseMethods.exist(args[2])) {
@@ -670,7 +674,7 @@ public final class Utils {
      * @param player
      * @param courseName
      */
-    public static void displayLeaderboard(Player player, List<TimeObject> times, String courseName) {
+    public static void displayLeaderboard(Player player, List<TimeEntry> times, String courseName) {
         if (times.isEmpty()) {
             player.sendMessage(Static.getParkourString() + "No results were found!");
             return;

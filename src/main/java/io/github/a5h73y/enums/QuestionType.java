@@ -9,5 +9,6 @@ public enum QuestionType {
     RESET_COURSE,
     RESET_PLAYER,
     RESET_LEADERBOARD,
+    RESET_PLAYER_LEADERBOARD,
     RESET_PRIZES
 }

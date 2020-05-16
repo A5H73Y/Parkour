@@ -10,7 +10,7 @@ import io.github.a5h73y.Parkour;
 import io.github.a5h73y.config.ParkourConfiguration;
 import io.github.a5h73y.course.CourseMethods;
 import io.github.a5h73y.enums.ConfigType;
-import io.github.a5h73y.database.TimeObject;
+import io.github.a5h73y.database.TimeEntry;
 import io.github.a5h73y.player.PlayerMethods;
 import io.github.a5h73y.utilities.Utils;
 import org.bukkit.Bukkit;
@@ -157,8 +157,8 @@ public class ScoreboardManager {
             return;
         }
 
-        List<TimeObject> results = Parkour.getDatabase().getTopCourseResults(playerBoard.courseName, 1);
-        TimeObject result = results.size() > 0 ? results.get(0) : null;
+        List<TimeEntry> results = Parkour.getDatabase().getTopCourseResults(playerBoard.courseName, 1);
+        TimeEntry result = results.size() > 0 ? results.get(0) : null;
 
         if (configKey.get(BEST_TIME_EVER)) {
             String bestTimeEver = result != null ? Utils.displayCurrentTime(result.getTime()) : translationKey.get("notCompleted");
@@ -175,7 +175,7 @@ public class ScoreboardManager {
             return;
         }
 
-        List<TimeObject> result = Parkour.getDatabase().getTopPlayerCourseResults(playerBoard.playerName, playerBoard.courseName, 1);
+        List<TimeEntry> result = Parkour.getDatabase().getTopPlayerCourseResults(playerBoard.playerName, playerBoard.courseName, 1);
         String bestTime = result.size() > 0 ? Utils.displayCurrentTime(result.get(0).getTime()) : translationKey.get("notCompleted");
         print(playerBoard, bestTime, BEST_TIME_EVER_ME);
     }

@@ -5,7 +5,7 @@ import java.util.List;
 import io.github.a5h73y.course.Course;
 import io.github.a5h73y.course.CourseInfo;
 import io.github.a5h73y.course.CourseMethods;
-import io.github.a5h73y.database.TimeObject;
+import io.github.a5h73y.database.TimeEntry;
 import io.github.a5h73y.other.Validation;
 import io.github.a5h73y.player.ParkourSession;
 import io.github.a5h73y.player.PlayerInfo;
@@ -67,7 +67,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return INVALID_SYNTAX;
             }
 
-            TimeObject result = getTopResultForCourse(temp[2]);
+            TimeEntry result = getTopResultForCourse(temp[2]);
             return result == null ? NO_TIME_RECORDED : Utils.displayCurrentTime(result.getTime());
 
         } else if (message.startsWith("course_record_deaths")) {
@@ -76,7 +76,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return INVALID_SYNTAX;
             }
 
-            TimeObject result = getTopResultForCourse(temp[3]);
+            TimeEntry result = getTopResultForCourse(temp[3]);
             return result == null ? NO_TIME_RECORDED : String.valueOf(result.getDeaths());
 
         } else if (message.startsWith("leader")) {
@@ -85,7 +85,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return INVALID_SYNTAX;
             }
 
-            TimeObject result = getTopResultForCourse(temp[1]);
+            TimeEntry result = getTopResultForCourse(temp[1]);
             return result == null ? NO_TIME_RECORDED : result.getPlayer();
         }
 
@@ -119,7 +119,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
         } else if (message.equals("current_course_record_deaths")) {
             Course course = CourseMethods.findByPlayer(player.getName());
             if (course != null) {
-                TimeObject result = getTopResultForCourse(course.getName());
+                TimeEntry result = getTopResultForCourse(course.getName());
                 return result == null ? NO_TIME_RECORDED : String.valueOf(result.getDeaths());
             }
             return "";
@@ -127,7 +127,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
         } else if (message.equals("current_course_record")) {
             Course course = CourseMethods.findByPlayer(player.getName());
             if (course != null) {
-                TimeObject result = getTopResultForCourse(course.getName());
+                TimeEntry result = getTopResultForCourse(course.getName());
                 return result == null ? NO_TIME_RECORDED : Utils.displayCurrentTime(result.getTime());
             }
             return "";
@@ -138,7 +138,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return INVALID_SYNTAX;
             }
 
-            TimeObject result = getTopPlayerResultForCourse(player.getName(), temp[3]);
+            TimeEntry result = getTopPlayerResultForCourse(player.getName(), temp[3]);
             return result == null ? NO_TIME_RECORDED : String.valueOf(result.getDeaths());
 
         } else if (message.startsWith("personal_best")) {
@@ -147,13 +147,13 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return null;
             }
 
-            TimeObject result = getTopPlayerResultForCourse(player.getName(), temp[2]);
+            TimeEntry result = getTopPlayerResultForCourse(player.getName(), temp[2]);
             return result == null ? NO_TIME_RECORDED : Utils.displayCurrentTime(result.getTime());
 
         } else if (message.equals("current_personal_best_deaths")) {
             Course course = CourseMethods.findByPlayer(player.getName());
             if (course != null) {
-                TimeObject result = getTopPlayerResultForCourse(player.getName(), course.getName());
+                TimeEntry result = getTopPlayerResultForCourse(player.getName(), course.getName());
                 return result == null ? NO_TIME_RECORDED : String.valueOf(result.getDeaths());
             }
             return "";
@@ -161,7 +161,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
         } else if (message.equals("current_personal_best")) {
             Course course = CourseMethods.findByPlayer(player.getName());
             if (course != null) {
-                TimeObject result = getTopPlayerResultForCourse(player.getName(), course.getName());
+                TimeEntry result = getTopPlayerResultForCourse(player.getName(), course.getName());
                 return result == null ? NO_TIME_RECORDED : Utils.displayCurrentTime(result.getTime());
             }
             return "";
@@ -169,7 +169,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
         } else if (message.equals("current_course_leader")) {
             Course course = CourseMethods.findByPlayer(player.getName());
             if (course != null) {
-                TimeObject result = getTopResultForCourse(course.getName());
+                TimeEntry result = getTopResultForCourse(course.getName());
                 return result == null ? NO_TIME_RECORDED : result.getPlayer();
             }
             return "";
@@ -191,21 +191,19 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return INVALID_SYNTAX;
             }
             int pos = Integer.parseInt(temp[2]);
-            if (pos < 1 || pos > Parkour.getSettings().getLeaderboardMaxEntries()) {
+            if (pos < 1) {
                 return INVALID_SYNTAX;
             }
             String courseName = temp[1];
             if (!CourseMethods.exist(courseName)) {
                 return NO_TIME_RECORDED;
             }
-            List<TimeObject> results = Parkour.getDatabase().getTopCourseResults(courseName, pos);
-            if (results.isEmpty()) {
-                return NO_TIME_RECORDED;
 
-            } else if (pos > results.size()) {
-                return " ";
+            TimeEntry result = Parkour.getDatabase().getNthBestTime(courseName, pos);
+
+            if (result == null) {
+                return NO_TIME_RECORDED;
             }
-            TimeObject result = results.get(pos - 1);
 
             if (message.startsWith("toptenx")) {
                 String nCol = "&f";
@@ -247,21 +245,21 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
         return null;
     }
 
-    private TimeObject getTopResultForCourse(String courseName) {
+    private TimeEntry getTopResultForCourse(String courseName) {
         if (!CourseMethods.exist(courseName)) {
             return null;
         }
 
-        List<TimeObject> time = Parkour.getDatabase().getTopCourseResults(courseName, 1);
+        List<TimeEntry> time = Parkour.getDatabase().getTopCourseResults(courseName, 1);
         return time.isEmpty() ? null : time.get(0);
     }
 
-    private TimeObject getTopPlayerResultForCourse(String playerName, String courseName) {
+    private TimeEntry getTopPlayerResultForCourse(String playerName, String courseName) {
         if (!CourseMethods.exist(courseName)) {
             return null;
         }
 
-        List<TimeObject> time = Parkour.getDatabase().getTopPlayerCourseResults(playerName, courseName, 1);
+        List<TimeEntry> time = Parkour.getDatabase().getTopPlayerCourseResults(playerName, courseName, 1);
         return time.isEmpty() ? null : time.get(0);
     }
 }

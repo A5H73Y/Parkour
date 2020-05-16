@@ -20,7 +20,8 @@ public class ParkourDatabase {
     private final Parkour parkour;
     private Database database;
 
-    private Map<String, Integer> courseIdCache = new HashMap<>();
+    private final Map<String, Integer> courseIdCache = new HashMap<>();
+    private final Map<String, List<TimeEntry>> resultsCache = new HashMap<>();
 
     public ParkourDatabase(final Parkour parkour) {
         this.parkour = parkour;
@@ -80,8 +81,8 @@ public class ParkourDatabase {
      * @param limit
      * @return Time Objects
      */
-    public List<TimeObject> getTopCourseResults(String courseName, int limit) {
-        List<TimeObject> times = new ArrayList<>();
+    public List<TimeEntry> getTopCourseResults(String courseName, int limit) {
+        List<TimeEntry> times = new ArrayList<>();
         int maxEntries = calculateResultsLimit(limit);
         int courseId = getCourseId(courseName.toLowerCase());
         Utils.debug("Getting top " + maxEntries + " results for " + courseName);
@@ -111,8 +112,8 @@ public class ParkourDatabase {
      * @param limit
      * @return Time Objects
      */
-    public List<TimeObject> getTopPlayerCourseResults(String playerName, String courseName, int limit) {
-        List<TimeObject> times = new ArrayList<>();
+    public List<TimeEntry> getTopPlayerCourseResults(String playerName, String courseName, int limit) {
+        List<TimeEntry> times = new ArrayList<>();
         int maxEntries = calculateResultsLimit(limit);
         int courseId = getCourseId(courseName.toLowerCase());
         Utils.debug("Getting top " + maxEntries + " results for " + playerName + " on " + courseName);
@@ -254,6 +255,7 @@ public class ParkourDatabase {
 
         try {
             database.updateAsync(insertTimeUpdate).get();
+            resultsCache.remove(courseName.toLowerCase());
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
@@ -313,6 +315,7 @@ public class ParkourDatabase {
         Utils.debug("Deleting all Course times for " + courseName);
         try {
             database.updateAsync("DELETE FROM time WHERE courseId=" + courseId).get();
+            resultsCache.remove(courseName.toLowerCase());
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
@@ -334,6 +337,7 @@ public class ParkourDatabase {
         try {
             database.updateAsync("DELETE FROM time"
                     + " WHERE player='" + playerName + "' AND courseId=" + courseId).get();
+            resultsCache.remove(courseName.toLowerCase());
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
@@ -350,6 +354,7 @@ public class ParkourDatabase {
         Utils.debug("Completely deleting course " + courseName);
         try {
             database.updateAsync("DELETE FROM course WHERE name='" + courseName + "'").get();
+            resultsCache.remove(courseName.toLowerCase());
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
@@ -472,11 +477,11 @@ public class ParkourDatabase {
      * @return time object results
      * @throws SQLException
      */
-    private List<TimeObject> processTimes(ResultSet rs) throws SQLException {
-        List<TimeObject> times = new ArrayList<>();
+    private List<TimeEntry> processTimes(ResultSet rs) throws SQLException {
+        List<TimeEntry> times = new ArrayList<>();
 
         while (rs.next()) {
-            TimeObject time = new TimeObject(
+            TimeEntry time = new TimeEntry(
                     rs.getString("player"),
                     rs.getLong("time"),
                     rs.getInt("deaths"));
@@ -494,5 +499,24 @@ public class ParkourDatabase {
      */
     private int calculateResultsLimit(int limit) {
         return Math.max(1, Math.min(limit, Parkour.getSettings().getLeaderboardMaxEntries()));
+    }
+
+    /**
+     * Find the nth best time for the course.
+     * Uses cache to quickly find the result based on position in the list.
+     *
+     * @param courseName course
+     * @param position position
+     * @return matching {@link TimeEntry}
+     */
+    public TimeEntry getNthBestTime(String courseName, int position) {
+        if (!resultsCache.containsKey(courseName.toLowerCase())) {
+            Utils.debug("Populating times cache for " + courseName);
+            resultsCache.put(courseName.toLowerCase(),
+                    getTopCourseResults(courseName, Parkour.getSettings().getLeaderboardMaxEntries()));
+        }
+
+        List<TimeEntry> cachedResults = resultsCache.get(courseName.toLowerCase());
+        return position > cachedResults.size() ? null : cachedResults.get(position - 1);
     }
 }

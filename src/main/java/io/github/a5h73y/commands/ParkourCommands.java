@@ -371,7 +371,7 @@ public class ParkourCommands implements CommandExecutor {
                 if (!Utils.hasPermission(player, "Parkour.Admin", "Reset")) {
                     return false;
 
-                } else if (!Utils.validateArgs(player, args, 3)) {
+                } else if (!Utils.validateArgs(player, args, 3, 4)) {
                     return false;
                 }
 

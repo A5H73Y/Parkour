@@ -63,6 +63,13 @@ public class QuestionManager {
         askQuestion(player, courseName, QuestionType.RESET_LEADERBOARD);
     }
 
+    public void askResetPlayerLeaderboardQuestion(Player player, String courseName, String targetPlayerName) {
+        courseName = courseName.toLowerCase();
+        player.sendMessage(Static.getParkourString() + "You are about to reset " + ChatColor.AQUA + targetPlayerName + ChatColor.WHITE + " leaderboards on course " + ChatColor.AQUA + "...");
+        player.sendMessage(ChatColor.GRAY + "Resetting the player's leaderboards will remove all times they have from the database for this course. This will NOT affect the player or course in any other way.");
+        askQuestion(player, targetPlayerName+ ";" + courseName, QuestionType.RESET_PLAYER_LEADERBOARD);
+    }
+
     public void askResetPrizeQuestion(Player player, String courseName) {
         courseName = courseName.toLowerCase();
         player.sendMessage(Static.getParkourString() + "You are about to reset the prizes for " + ChatColor.AQUA + courseName + ChatColor.WHITE + "...");
@@ -125,8 +132,8 @@ public class QuestionManager {
 
     private class Question {
 
-        private QuestionType type;
-        private String argument;
+        private final QuestionType type;
+        private final String argument;
 
         public Question(QuestionType type, String argument) {
             this.type = type;
@@ -192,6 +199,12 @@ public class QuestionManager {
                     Parkour.getDatabase().deleteCourseTimes(argument);
                     player.sendMessage(Static.getParkourString() + ChatColor.AQUA + argument + ChatColor.WHITE + " leaderboards have been reset.");
                     Utils.logToFile(argument + " leaderboards were reset by " + player.getName());
+                    return;
+
+                case RESET_PLAYER_LEADERBOARD:
+                    String[] arguments = argument.split(";");
+                    Parkour.getDatabase().deletePlayerCourseTimes(arguments[0], arguments[1]);
+                    Utils.logToFile(arguments[0] + " leaderboards were reset on course + " + arguments[1] + " by " + player.getName());
                     return;
 
                 case RESET_PRIZES:

@@ -49,8 +49,16 @@ public class Settings {
         return getConfig().getBoolean("OnLeaveServer.LeaveCourse");
     }
 
-    public boolean isEnforceWorld() {
+    public boolean isJoinEnforceWorld() {
         return getConfig().getBoolean("OnJoin.EnforceWorld");
+    }
+
+    public boolean isCourseEnforceWorld() {
+        return getConfig().getBoolean("OnCourse.EnforceWorld.Enabled");
+    }
+
+    public boolean isCourseEnforceWorldLeaveCourse() {
+        return getConfig().getBoolean("OnCourse.EnforceWorld.LeaveCourse");
     }
 
     public boolean isDisableCommandsOnCourse() {

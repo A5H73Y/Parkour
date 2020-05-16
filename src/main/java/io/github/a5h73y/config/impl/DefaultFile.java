@@ -43,6 +43,8 @@ public class DefaultFile extends ParkourConfiguration {
 		this.addDefault("OnCourse.DisableFly", true);
 		this.addDefault("OnCourse.DisplayLiveTime", false);
 		this.addDefault("OnCourse.EnforceParkourSigns", true);
+		this.addDefault("OnCourse.EnforceWorld.Enabled", true);
+		this.addDefault("OnCourse.EnforceWorld.LeaveCourse", false);
 		this.addDefault("OnCourse.MaxFallTicks", 80);
 		this.addDefault("OnCourse.PreventPlateStick", false);
 		this.addDefault("OnCourse.PreventOpeningOtherInventories", false);
@@ -134,7 +136,7 @@ public class DefaultFile extends ParkourConfiguration {
 		this.addDefault("Other.Display.ShowMilliseconds", false);
 		this.addDefault("Other.Display.PrizeCooldown", true);
 		this.addDefault("Other.OnServerShutdown.BackupFiles", false);
-		this.addDefault("Other.Leaderboard.MaxEntries", 5);
+		this.addDefault("Other.Leaderboard.MaxEntries", 10);
 
 		this.addDefault("SQLite.PathOverride", "");
 		this.addDefault("MySQL.Use", false);

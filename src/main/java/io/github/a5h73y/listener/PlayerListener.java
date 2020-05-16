@@ -6,7 +6,6 @@ import io.github.a5h73y.manager.ChallengeManager;
 import io.github.a5h73y.player.PlayerMethods;
 import io.github.a5h73y.utilities.Static;
 import io.github.a5h73y.utilities.Utils;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
@@ -171,20 +170,18 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        if (event.getTo().getBlockX() == 0 && event.getTo().getBlockY() == 0 && event.getTo().getBlockZ() == 0) {
-            event.getPlayer().sendMessage(Static.getParkourString() + ChatColor.RED + "This checkpoint is invalid. For safety you have been teleported to the lobby.");
-            event.setCancelled(true);
-            PlayerMethods.playerLeave(event.getPlayer());
-            return;
-        }
-
-        if (!Parkour.getSettings().isEnforceWorld()) {
+        if (!Parkour.getSettings().isCourseEnforceWorld()) {
             return;
         }
 
         if (event.getFrom().getWorld() != event.getTo().getWorld()) {
-            event.setCancelled(true);
-            event.getPlayer().sendMessage(Utils.getTranslation("Error.WorldTeleport"));
+            if (Parkour.getSettings().isCourseEnforceWorldLeaveCourse()) {
+                PlayerMethods.playerLeave(event.getPlayer(), false);
+
+            } else {
+                event.setCancelled(true);
+                event.getPlayer().sendMessage(Utils.getTranslation("Error.WorldTeleport"));
+            }
         }
     }
 
