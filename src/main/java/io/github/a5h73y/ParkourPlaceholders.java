@@ -78,7 +78,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             TimeEntry result = getTopResultForCourse(temp[3]);
             return result == null ? NO_TIME_RECORDED : String.valueOf(result.getDeaths());
 
-        } else if (message.startsWith("leader")) {
+        } else if (message.startsWith("leader_")) {
             String[] temp = message.split("_");
             if (temp.length != 2) {
                 return INVALID_SYNTAX;
