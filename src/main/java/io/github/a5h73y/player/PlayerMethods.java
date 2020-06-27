@@ -1209,4 +1209,8 @@ public class PlayerMethods {
         player.setVelocity(velocity);
         player.getWorld().playEffect(player.getLocation(), Effect.SMOKE, 500);
     }
+
+    public static boolean isOnGround(Player player) {
+        return !player.isFlying() && player.getLocation().subtract(0, 0.1, 0).getBlock().getType().isSolid();
+    }
 }
