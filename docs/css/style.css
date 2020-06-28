@@ -19,6 +19,11 @@
     color: #fff;
 }
 
+.content {
+    padding-top: 10px;
+    padding-bottom: 40px;
+}
+
 /* Headings */
 h1, .h1 {
     font-size: 2.3rem;
@@ -40,19 +45,27 @@ h5 {
     margin: 10px 0 10px;
 }
 
+small {
+    font-size: 70%;
+}
+
 /* Large gap between paragraphs */
 p {
     margin: 0 0 18px;
+}
+
+li > ul > li {
+    margin-bottom: 10px;
+}
+
+.list-group-item-action {
+    color: #2C3E50 !important;
 }
 
 a {
     color: #C30000;
     font-weight: 200;
     text-decoration: none;
-}
-
-.italic {
-    font-style: italic;
 }
 
 .no-margin {
@@ -74,14 +87,8 @@ img {
     max-width: 70%;
 }
 
-.img-heading {
-    position: relative;
+.img-inline {
     display: inline;
-    margin: 0;
-    padding: 0;
-    vertical-align: text-bottom;
-    text-align: center;
-    width: 55px;
 }
 
 .card-body {
@@ -103,6 +110,9 @@ pre {
 
 code {
     font-family: monospace, monospace;
-    display: block;
     word-wrap: normal;
+}
+
+code.block {
+    display: block;
 }

@@ -1,91 +1,100 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" id="theme_link" href="//cdnjs.cloudflare.com/ajax/libs/bootswatch/4.3.1/flatly/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/flatly/bootstrap.min.css" integrity="sha384-mhpbKVUOPCSocLzx2ElRISIORFRwr1ZbO9bAlowgM5kO7hnpRBe+brVj8NNPUiFs" crossorigin="anonymous">
     <link rel="stylesheet" href="css/navbar-fixed-left.min.css"/>
     <link rel="stylesheet" href="css/style.css"/>
     <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" />
-    <title>Parkour Tutorials</title>
+    <meta name="description" content="The ultimate Parkour plugin." />
+    <meta property="og:site_name" content="Parkour Tutorials" />
+    <meta property="og:image" content="https://a5h73y.github.io/Parkour/img/logo.jpg" />
+    <meta property="og:url" content="https://a5h73y.github.io/Parkour/part8.html" />
+    <meta property="og:title" content="Part 8: Administration" />
+    <meta name="theme-color" content="#FFFF00">
+    <meta name="msapplication-TileColor" content="#FFFF00">
+    <title>Parkour Tutorials - Part 8: Administration</title>
 </head>
 
 <body>
 <div id="navigation-placeholder"></div>
 
-<div class="container">
-    <div class="row">
-        <div class="col-12 col-xl-8">
-            <h1>Part 8: Administration</h1>
+<div class="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-xl-8">
+                <h1>Part 8: Administration</h1>
 
-            <div id="contents-placeholder"></div>
+                <div id="contents-placeholder"></div>
 
-            <h2 id="deleteCommands">Delete Commands</h2>
-            <p class="no-margin">Using the delete command, you are able to delete a course, checkpoint, lobby or kit. Using the syntax: <strong>/pa delete (choice) (argument)</strong>.</p>
-            <p class="italic">All of which you will have to confirm before the action is complete.</p>
+                <h2 id="deleteCommands">Delete Commands</h2>
+                <p class="no-margin">Using the delete command, you are able to delete a course, checkpoint, lobby or kit. Using the syntax: <strong>/pa delete (choice) (argument)</strong>.</p>
+                <p class="italic">All of which you will have to confirm before the action is complete.</p>
 
-            <h4>Deleting a course</h4>
-            <p>If you delete a course it will remove all information stored on the server about it, including all references from the database so only use as a last resort. If preferred, you can reset a course which will keep it's structure (start location & checkpoints), but reset all of it's stats and leaderboards.</p>
-            <img src="https://i.imgur.com/apa5azA.png" alt="Deleting Course" class="img-thumbnail">
-            <img src="https://i.imgur.com/8ucihM7.png" alt="Delete Confirm" class="img-thumbnail">
+                <h4>Deleting a course</h4>
+                <p>If you delete a course it will remove all information stored on the server about it, including all references from the database so only use as a last resort. If preferred, you can reset a course which will keep it's structure (start location & checkpoints), but reset all of it's stats and leaderboards.</p>
+                <img src="https://i.imgur.com/apa5azA.png" alt="Deleting Course" class="img-thumbnail">
+                <img src="https://i.imgur.com/8ucihM7.png" alt="Delete Confirm" class="img-thumbnail">
 
-            <h4>Deleting a checkpoint</h4>
-            <p>If you want to delete a checkpoint, it will start with the highest number and decrease to the lowest, for safety reasons. For example if your course has 5 checkpoints, and you enter <strong>/pa delete checkpoint (course)</strong> it will ask if you want to delete checkpoint 5, if you execute the command again it will ask if you want to delete checkpoint 4, etc.</p>
-            <p>Note that you may want to overwrite a checkpoint if it needs moving, instead of deleting many. For example if you had 5 checkpoints and wanted to move the location of checkpoint 2, you can enter <strong>/pa checkpoint 2</strong> in the desired location.</p>
+                <h4>Deleting a checkpoint</h4>
+                <p>If you want to delete a checkpoint, it will start with the highest number and decrease to the lowest, for safety reasons. For example if your course has 5 checkpoints, and you enter <strong>/pa delete checkpoint (course)</strong> it will ask if you want to delete checkpoint 5, if you execute the command again it will ask if you want to delete checkpoint 4, etc.</p>
+                <p>Note that you may want to overwrite a checkpoint if it needs moving, instead of deleting many. For example if you had 5 checkpoints and wanted to move the location of checkpoint 2, you can enter <strong>/pa checkpoint 2</strong> in the desired location.</p>
 
-            <h4>Deleting a custom lobby</h4>
-            <p>If you want to delete a lobby, it will remove all trace of the lobby from the server. To delete a lobby, simply enter <strong>/pa delete lobby (lobby)</strong>.</p>
-            <p>If there are any courses that are linked to the lobby, it will alert you and you must address these before it can be executed, for safety reasons.</p>
-            <img src="https://i.imgur.com/wCO9jrU.png" alt="Delete Error" class="img-thumbnail"/>
-            <p class="italic">You must set the dependent courses to use a different lobby before this change can be made.</p>
+                <h4>Deleting a custom lobby</h4>
+                <p>If you want to delete a lobby, it will remove all trace of the lobby from the server. To delete a lobby, simply enter <strong>/pa delete lobby (lobby)</strong>.</p>
+                <p>If there are any courses that are linked to the lobby, it will alert you and you must address these before it can be executed, for safety reasons.</p>
+                <img src="https://i.imgur.com/wCO9jrU.png" alt="Delete Error" class="img-thumbnail"/>
+                <p class="italic">You must set the dependent courses to use a different lobby before this change can be made.</p>
 
-            <h4>Delete ParkourKit</h4>
-            <a href="part4.html#deleteParkourKit">Click Here</a>
+                <h4>Delete ParkourKit</h4>
+                <a href="part4.html#deleteParkourKit">Click Here</a>
 
-            <h4>Deleting an AutoStart</h4>
-            <p>If you want to delete an AutoStart, it will remove the ability to use the location as an AutoStart for the course.</p>
-            <p>You must break the pressureplate, then stand it its place and enter <strong>/pa delete autostart (course)</strong>.</p>
+                <h4>Deleting an AutoStart</h4>
+                <p>If you want to delete an AutoStart, it will remove the ability to use the location as an AutoStart for the course.</p>
+                <p>You must break the pressureplate, then stand it its place and enter <strong>/pa delete autostart (course)</strong>.</p>
 
-            <h2 id="resetCommands">Reset Commands</h2>
-            <p>Using the reset command, you are able to reset a course, player, leaderboard or prize. Using the syntax: <strong>/pa reset (choice) (argument)</strong>.</p>
-            <p class="italic">All operations will have to be confirmed or cancelled before the change is made.</p>
-            <img src="https://i.imgur.com/r1gzO05.png" alt="Reset Confirmation" class="img-thumbnail"/>
+                <h2 id="resetCommands">Reset Commands</h2>
+                <p>Using the reset command, you are able to reset a course, player, leaderboard or prize. Using the syntax: <strong>/pa reset (choice) (argument)</strong>.</p>
+                <p class="italic">All operations will have to be confirmed or cancelled before the change is made.</p>
+                <img src="https://i.imgur.com/r1gzO05.png" alt="Reset Confirmation" class="img-thumbnail"/>
 
-            <h4>Resetting a Course</h4>
-            <p>This will delete all the statistics stored, which includes leaderboards and various Parkour attributes. This will NOT affect the spawn / checkpoints.</p>
+                <h4>Resetting a Course</h4>
+                <p>This will delete all the statistics stored, which includes leaderboards and various Parkour attributes. This will NOT affect the spawn / checkpoints.</p>
 
-            <h4>Resetting a Player</h4>
-            <p>This will delete all their leaderboards across all courses and delete all various Parkour attributes.</p>
+                <h4>Resetting a Player</h4>
+                <p>This will delete all their leaderboards across all courses and delete all various Parkour attributes.</p>
 
-            <h4>Resetting a Leaderboard</h4>
-            <p>Will remove all the leaderboards for a specified course.</p>
+                <h4>Resetting a Leaderboard</h4>
+                <p>Will remove all the leaderboards for a specified course.</p>
 
-            <h4>Resetting a Prize</h4>
-            <p>This will reset all the prizes for a course, causing it to use the default prize specified in the config.yml.</p>
+                <h4>Resetting a Prize</h4>
+                <p>This will reset all the prizes for a course, causing it to use the default prize specified in the config.yml.</p>
 
-            <h2 id="database">Database Information</h2>
-            <p>You have the choice of MySQL or SQLite for the database implementation. If you are unsure what your plugin has configured, enter <strong>/pa sql</strong> to view a summary.</p>
-            <h4>MySQL</h4>
-            <p class="no-margin">MySQL is typically a remote connection and will usually be given to you if you have a online server management system, it is generally more powerful but can come of a cost of speed if the connection is poor.</p>
-            <p>The connection properties are found in the <span class="italic">config.yml</span>. The server will require a restart if you have made any changes.</p>
+                <h2 id="database">Database Information</h2>
+                <p>You have the choice of MySQL or SQLite for the database implementation. If you are unsure what your plugin has configured, enter <strong>/pa sql</strong> to view a summary.</p>
+                <h4>MySQL</h4>
+                <p class="no-margin">MySQL is typically a remote connection and will usually be given to you if you have a online server management system, it is generally more powerful but can come of a cost of speed if the connection is poor.</p>
+                <p>The connection properties are found in the <span class="italic">config.yml</span>. The server will require a restart if you have made any changes.</p>
 
-            <h4>SQLite</h4>
-            <p class="no-margin">SQLite is stored locally on the server and exists in <span class="italic">"plugins/Parkour/sqlite-db/parkour.db"</span>. This is the default choice when you first install Parkour but can be configured at any point to change it. If you want to view the contents of the database you must use a 3rd party software, I would recommend <a href="https://sqlitebrowser.org">SQLite Browser</a>.</p>
-            <p class="italic">You are able to modify the path of the SQLite location in the config.yml, but only do this if you know what you are doing.</p>
-            <p>If you are going to modify the contents of the database, I strongly suggest you stop the server, make your changes and then start your server again to avoid any problems.</p>
+                <h4>SQLite</h4>
+                <p class="no-margin">SQLite is stored locally on the server and exists in <span class="italic">"plugins/Parkour/sqlite-db/parkour.db"</span>. This is the default choice when you first install Parkour but can be configured at any point to change it. If you want to view the contents of the database you must use a 3rd party software, I would recommend <a href="https://sqlitebrowser.org">SQLite Browser</a>.</p>
+                <p class="italic">You are able to modify the path of the SQLite location in the config.yml, but only do this if you know what you are doing.</p>
+                <p>If you are going to modify the contents of the database, I strongly suggest you stop the server, make your changes and then start your server again to avoid any problems.</p>
 
-            <h2 id="databaseTroubles">Database Troubleshooting</h2>
-            <h4>MySQL won't connect</h4>
-            <p>If your MySQL connection fails, there will be an error in the server console for you to read. It will typically be incorrect login details, so make sure you enter them exactly into the config.yml.</p>
+                <h2 id="databaseTroubles">Database Troubleshooting</h2>
+                <h4>MySQL won't connect</h4>
+                <p>If your MySQL connection fails, there will be an error in the server console for you to read. It will typically be incorrect login details, so make sure you enter them exactly into the config.yml.</p>
 
-            <h4>No times are appearing</h4>
-            <p>Sometimes Parkour gets a bit confused, especially when swapping from SQLite to MySQL and vice versa. Luckily there is a command <strong>/pa recreate</strong> that forces the database to populate the entries of all the courses that exist on to the server.</p>
+                <h4>No times are appearing</h4>
+                <p>Sometimes Parkour gets a bit confused, especially when swapping from SQLite to MySQL and vice versa. Luckily there is a command <strong>/pa recreate</strong> that forces the database to populate the entries of all the courses that exist on to the server.</p>
+            </div>
         </div>
     </div>
 </div>
 
-<script src="//code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-<script src="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 <script src="js/script.js"></script>
 </body>
 
