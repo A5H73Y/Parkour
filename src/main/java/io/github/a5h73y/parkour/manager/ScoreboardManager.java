@@ -53,8 +53,7 @@ public class ScoreboardManager {
         configKey.put(BEST_TIME_EVER, defaultConfig.getBoolean("Scoreboard.Display.BestTimeEver"));
         configKey.put(BEST_TIME_EVER_NAME, defaultConfig.getBoolean("Scoreboard.Display.BestTimeEverName"));
         configKey.put(BEST_TIME_EVER_ME, defaultConfig.getBoolean("Scoreboard.Display.BestTimeByMe"));
-        configKey.put(CURRENT_TIME, defaultConfig.getBoolean("Scoreboard.Display.CurrentTime")
-                && defaultConfig.getBoolean("OnCourse.DisplayLiveTime"));
+        configKey.put(CURRENT_TIME, defaultConfig.getBoolean("Scoreboard.Display.CurrentTime"));
         configKey.put(CURRENT_DEATHS, defaultConfig.getBoolean("Scoreboard.Display.CurrentDeaths"));
         configKey.put(CHECKPOINTS, defaultConfig.getBoolean("Scoreboard.Display.Checkpoints"));
 

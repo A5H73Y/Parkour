@@ -28,6 +28,9 @@ import io.github.a5h73y.parkour.database.TimeEntry;
 import io.github.a5h73y.parkour.other.Validation;
 import io.github.a5h73y.parkour.player.PlayerInfo;
 import io.github.a5h73y.parkour.player.PlayerMethods;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -507,8 +510,8 @@ public final class Utils {
             return;
         }
 
-        if (Static.getBountifulAPI() && attemptTitle) {
-            BountifulAPI.sendActionBar(player, title);
+        if (attemptTitle) {
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(title));
         } else {
             player.sendMessage(Static.getParkourString() + title);
         }
