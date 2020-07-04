@@ -9,7 +9,6 @@ import io.github.a5h73y.parkour.course.CourseMethods;
 import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.manager.QuietModeManager;
 import io.github.a5h73y.parkour.utilities.Utils;
-import io.github.a5h73y.parkour.utilities.Static;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -53,9 +52,16 @@ public class ParkourSession implements Serializable {
         this.mode = CourseMethods.getCourseMode(course.getName());
     }
 
+    /**
+     * Start the visual timer either on the ActionBar if DisplayLiveTime is true, or in the scoreboard
+     * if the scoreboard is enabled and the display current time option is true.
+     */
     public void startVisualTimer(final Player player) {
-        if (!Parkour.getInstance().getConfig().getBoolean("OnCourse.DisplayLiveTime")
-                || QuietModeManager.getInstance().isInQuietMode(player.getName())) {
+        if (QuietModeManager.getInstance().isInQuietMode(player.getName()) ) {
+            return;
+        }
+        if (!Parkour.getInstance().getConfig().getBoolean("OnCourse.DisplayLiveTime") && (!Parkour.getScoreboardManager().isEnabled()
+                    || !Parkour.getInstance().getConfig().getBoolean("Scoreboard.Display.CurrentTime"))) {
             return;
         }
 
@@ -88,7 +94,7 @@ public class ParkourSession implements Serializable {
                     Parkour.getScoreboardManager().updateScoreboardTimer(player, liveTime);
                 }
 
-                if (Static.getBountifulAPI()) {
+                if (Parkour.getInstance().getConfig().getBoolean("OnCourse.DisplayLiveTime")) {
                     Utils.sendActionBar(player, liveTime, true);
                 }
 
