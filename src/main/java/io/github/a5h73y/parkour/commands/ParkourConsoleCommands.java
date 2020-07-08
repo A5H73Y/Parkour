@@ -7,10 +7,12 @@ import io.github.a5h73y.parkour.other.Help;
 import io.github.a5h73y.parkour.player.PlayerMethods;
 import io.github.a5h73y.parkour.utilities.Static;
 import io.github.a5h73y.parkour.utilities.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 
 public class ParkourConsoleCommands implements CommandExecutor {
 
@@ -46,8 +48,8 @@ public class ParkourConsoleCommands implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            Utils.log("v" + Static.getVersion() + " installed. Plugin created by A5H73Y.");
-            Utils.log("Enter 'pac cmds' to display all console commands.");
+            sender.sendMessage("v" + Static.getVersion() + " installed. Plugin created by A5H73Y & steve4744.");
+            sender.sendMessage("Enter 'pac cmds' to display all console commands.");
             return true;
         }
 
@@ -56,7 +58,22 @@ public class ParkourConsoleCommands implements CommandExecutor {
         switch (firstArg) {
             case "reload":
                 Parkour.getInstance().reloadConfigurations();
-                Utils.log("Config reloaded!");
+                sender.sendMessage("Config reloaded!");
+                break;
+
+            case "join":
+                if (!Utils.validateArgs(sender, args, 3)) {
+                    return false;
+                }
+
+                Player player = Bukkit.getPlayer(args[2]);
+
+                if (player == null) {
+                    sender.sendMessage("Player is not online");
+                    return false;
+                }
+
+                CourseMethods.joinCourse(player, args[1]);
                 break;
 
             case "recreate":
@@ -176,7 +193,7 @@ public class ParkourConsoleCommands implements CommandExecutor {
                 break;
 
             default:
-                Utils.log("Unknown Command. Enter 'pac cmds' to display all console commands.");
+                sender.sendMessage("Unknown Command. Enter 'pac cmds' to display all console commands.");
                 break;
         }
         return true;

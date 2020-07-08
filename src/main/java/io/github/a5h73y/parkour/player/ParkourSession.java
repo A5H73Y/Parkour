@@ -94,7 +94,10 @@ public class ParkourSession implements Serializable {
                     Parkour.getScoreboardManager().updateScoreboardTimer(player, liveTime);
                 }
 
-                if (Parkour.getInstance().getConfig().getBoolean("OnCourse.DisplayLiveTime")) {
+                // TODO check config flag,
+                // if it's true, check server version, if unsupported action bar message, check for BountifulAPI
+                if (Utils.getMinorServerVersion() > 13
+                        && Parkour.getInstance().getConfig().getBoolean("OnCourse.DisplayLiveTime")) {
                     Utils.sendActionBar(player, liveTime, true);
                 }
 

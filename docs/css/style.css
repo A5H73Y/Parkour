@@ -19,11 +19,6 @@
     color: #fff;
 }
 
-.content {
-    padding-top: 10px;
-    padding-bottom: 40px;
-}
-
 /* Headings */
 h1, .h1 {
     font-size: 2.3rem;
@@ -58,8 +53,16 @@ li > ul > li {
     margin-bottom: 10px;
 }
 
+#contents-placeholder {
+    font-size: 1rem;
+}
+
 .list-group-item-action {
     color: #2C3E50 !important;
+}
+
+.list-group-item {
+    padding: 0.5rem 2rem;
 }
 
 a {

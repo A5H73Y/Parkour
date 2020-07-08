@@ -44,7 +44,7 @@ public class ParkourCommands implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            player.sendMessage(Static.getParkourString() + "Plugin proudly created by " + ChatColor.AQUA + "A5H73Y");
+            player.sendMessage(Static.getParkourString() + "Plugin proudly created by " + ChatColor.AQUA + "A5H73Y & steve4744");
             player.sendMessage(Utils.getTranslation("Help.Commands", false));
             return true;
         }
@@ -545,14 +545,13 @@ public class ParkourCommands implements CommandExecutor {
             case "ver":
             case "version":
                 player.sendMessage(Static.getParkourString() + "Server is running Parkour " + ChatColor.GRAY + Static.getVersion());
-                player.sendMessage("This plugin was developed by " + ChatColor.GOLD + "A5H73Y");
+                player.sendMessage("This plugin was developed by " + ChatColor.GOLD + "A5H73Y & steve4744");
                 break;
 
             case "contact":
                 player.sendMessage(Static.getParkourString() + "For information or help please contact me:");
-                player.sendMessage("Bukkit: " + ChatColor.AQUA + "A5H73Y");
                 player.sendMessage("Spigot: " + ChatColor.AQUA + "A5H73Y");
-                player.sendMessage("Parkour URL: " + ChatColor.AQUA + "http://dev.bukkit.org/projects/parkour/");
+                player.sendMessage("Project Page: " + ChatColor.AQUA + "https://www.spigotmc.org/resources/parkour.23685/");
                 player.sendMessage("Discord Server: " + ChatColor.AQUA + "https://discord.gg/Gc8RGYr");
                 break;
 

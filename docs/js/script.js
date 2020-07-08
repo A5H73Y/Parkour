@@ -1,26 +1,26 @@
 $(function() {
-    $("#navigation-placeholder").load("templates/nav.html");
+    $('#navigation-placeholder').load('templates/nav.html');
 
-    let contentsPlaceholder = $("#contents-placeholder");
+    let contentsPlaceholder = $('#contents-placeholder');
 
     if (contentsPlaceholder) {
-        let contents = "<ul>";
-        $(".col-12 h2").each(function () {
+        let contents = '<ul class="list-group list-group-flush">'
+        $('.col-12 h2').each(function() {
             let heading = $(this);
-            let id = heading.attr("id");
+            let id = heading.attr('id');
             if (id) {
                 let title = heading.text();
-                let link = "#" + id;
+                let link = '#' + id;
 
-                contents += "<li><a href='" + link + "'>" + title + "</a></li>";
+                contents += `<li class="list-group-item"><a href="${link}">${title}</a></li>`;
             }
         });
-        contents += "</ul>";
+        contents += '</ul>';
         contentsPlaceholder.html(contents);
     }
 
-    $('img').on("click",function(){
-        let url = $(this).attr("src");
+    $('img').on('click',function(){
+        let url = $(this).attr('src');
         window.open(url, '_blank');
     });
 });

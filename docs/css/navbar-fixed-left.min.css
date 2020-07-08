@@ -2,10 +2,11 @@
 
 body {
     padding-top:50px;
+    padding-bottom:30px;
 }
 @media (min-width:768px) {
     body {
-        padding-top: 20px;
+        padding-top:0;
     }
 }
 @media (min-width:768px) {
