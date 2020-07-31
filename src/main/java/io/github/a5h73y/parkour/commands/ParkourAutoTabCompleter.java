@@ -1,22 +1,27 @@
 package io.github.a5h73y.parkour.commands;
 
+import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.course.CourseInfo;
+import io.github.a5h73y.parkour.enums.Permission;
+import io.github.a5h73y.parkour.kit.ParkourKitInfo;
+import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
+import io.github.a5h73y.parkour.other.Validation;
+import io.github.a5h73y.parkour.player.PlayerInfo;
+import io.github.a5h73y.parkour.utility.PermissionUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import io.github.a5h73y.parkour.course.CourseInfo;
-import io.github.a5h73y.parkour.kit.ParkourKitInfo;
-import io.github.a5h73y.parkour.other.Validation;
-import io.github.a5h73y.parkour.player.PlayerInfo;
-import io.github.a5h73y.parkour.utilities.Utils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-public class ParkourAutoTabCompleter implements TabCompleter {
+/**
+ * Tab auto-completion for Parkour commands.
+ */
+public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements TabCompleter {
 
     private static final Set<String> BASIC_CMDS = new HashSet<>(
             Arrays.asList("create", "challenge", "leaderboard", "invite", "kit", "listkit", "tp", "tpc"));
@@ -37,6 +42,14 @@ public class ParkourAutoTabCompleter implements TabCompleter {
     private static final Set<String> DELETE_ARGS = new HashSet<>(
             Arrays.asList("autostart", "checkpoint", "course"));
 
+    public ParkourAutoTabCompleter(Parkour parkour) {
+        super(parkour);
+    }
+
+    /**
+     * List of commands will be built based on the configuration and player permissions.
+     * {@inheritDoc}
+     */
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
         if (!(sender instanceof Player)) {
@@ -66,8 +79,9 @@ public class ParkourAutoTabCompleter implements TabCompleter {
             list.add("bug");
             list.add("cmds");
 
-            if (Utils.hasPermissionNoMessage(sender, "Parkour.Basic")) {
+            if (PermissionUtils.hasPermission(sender, Permission.BASIC_ALL, false)) {
                 list.addAll(BASIC_CMDS);
+
             } else {
                 if (sender.hasPermission("Parkour.Basic.Create")) {
                     list.add("create");
@@ -93,7 +107,7 @@ public class ParkourAutoTabCompleter implements TabCompleter {
                 }
             }
 
-            if (Utils.hasPermissionNoMessage(sender, "Parkour.Admin")) {
+            if (PermissionUtils.hasPermission(sender, Permission.ADMIN_ALL, false)) {
                 list.addAll(ADMIN_CMDS);
 
             } else {
@@ -117,24 +131,29 @@ public class ParkourAutoTabCompleter implements TabCompleter {
         } else if (args.length == 2) {
             if (courseCmds.contains(args[0])) {
                 list.addAll(CourseInfo.getAllCourses());
+
             } else if (args[0].equalsIgnoreCase("list")) {
                 list.add("courses");
                 list.add("players");
                 list.add("ranks");
                 list.add("lobbies");
+
             } else if (args[0].equalsIgnoreCase("delete")) {
                 list.add("autostart");
                 list.add("course");
                 list.add("checkpoint");
                 list.add("lobby");
                 list.add("kit");
+
             } else if (args[0].equalsIgnoreCase("kit") || args[0].equalsIgnoreCase("listkit") || args[0].equalsIgnoreCase("validatekit")) {
                 list.addAll(ParkourKitInfo.getParkourKitNames());
+
             } else if (args[0].equalsIgnoreCase("reset")) {
                 list.add("course");
                 list.add("player");
                 list.add("leaderboard");
                 list.add("prize");
+
             } else if (args[0].equalsIgnoreCase("economy")) {
                 list.add("setprize");
                 list.add("info");
@@ -144,10 +163,13 @@ public class ParkourAutoTabCompleter implements TabCompleter {
         } else if (args.length == 3) {
             if (args[0].equalsIgnoreCase("reset") && RESET_ARGS.contains(args[1])) {
                 list.addAll(CourseInfo.getAllCourses());
+
             } else if (args[0].equalsIgnoreCase("delete") && DELETE_ARGS.contains(args[1])) {
                 list.addAll(CourseInfo.getAllCourses());
+
             } else if ((args[0].equalsIgnoreCase("delete") && args[1].equalsIgnoreCase("kit")) || args[0].equalsIgnoreCase("linkkit")) {
                 list.addAll(ParkourKitInfo.getParkourKitNames());
+
             } else if (args[0].equalsIgnoreCase("economy") && (args[1].equalsIgnoreCase("setprize") || args[1].equalsIgnoreCase("setfee"))) {
                 list.addAll(CourseInfo.getAllCourses());
             }
@@ -171,7 +193,7 @@ public class ParkourAutoTabCompleter implements TabCompleter {
         cmds.add("course");
         cmds.add("select"); // so course owner can select own course
 
-        if (Utils.hasPermissionNoMessage(sender, "Parkour.Basic")) {
+        if (PermissionUtils.hasPermission(sender, Permission.BASIC_ALL, false)) {
             cmds.add("challenge");
             cmds.add("tp");
             cmds.add("tpc");
@@ -192,7 +214,7 @@ public class ParkourAutoTabCompleter implements TabCompleter {
             }
         }
 
-        if (Utils.hasPermissionNoMessage(sender, "Parkour.Admin")) {
+        if (PermissionUtils.hasPermission(sender, Permission.ADMIN_ALL, false)) {
             cmds.addAll(ADMIN_COURSE_CMDS);
 
         } else {
@@ -212,7 +234,7 @@ public class ParkourAutoTabCompleter implements TabCompleter {
 
     private boolean isSelectedCourseOwner(CommandSender sender) {
         Player player = (Player) sender;
-        String courseName = PlayerInfo.getSelected(player);
+        String courseName = PlayerInfo.getSelectedCourse(player);
         if (!Validation.isStringValid(courseName)) {
             return false;
         }

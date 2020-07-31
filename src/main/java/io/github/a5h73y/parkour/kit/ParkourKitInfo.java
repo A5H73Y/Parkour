@@ -1,18 +1,18 @@
 package io.github.a5h73y.parkour.kit;
 
+import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
+import io.github.a5h73y.parkour.enums.ConfigType;
+import io.github.a5h73y.parkour.other.Constants;
+import io.github.a5h73y.parkour.utility.MaterialUtils;
+import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.config.ParkourConfiguration;
-import io.github.a5h73y.parkour.enums.ConfigType;
-import io.github.a5h73y.parkour.other.Constants;
-import io.github.a5h73y.parkour.utilities.Static;
-import io.github.a5h73y.parkour.utilities.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -58,7 +58,7 @@ public class ParkourKitInfo {
         String kitName = (args.length == 2 ? args[1].toLowerCase() : Constants.DEFAULT);
 
         if (!doesParkourKitExist(kitName)) {
-            player.sendMessage(Static.getParkourString() + kitName + " ParkourKit does not exist!");
+            player.sendMessage(Parkour.getPrefix() + kitName + " ParkourKit does not exist!");
             return;
         }
 
@@ -74,7 +74,7 @@ public class ParkourKitInfo {
                 invalidTypes.add("Unknown Material: " + material);
 
                 // try to see if we have a matching legacy version
-                Material matching = Utils.lookupMaterial(material);
+                Material matching = MaterialUtils.lookupMaterial(material);
                 if (matching != null) {
                     invalidTypes.add(" Could you have meant: " + matching.name() + "?");
                 }
@@ -86,10 +86,46 @@ public class ParkourKitInfo {
             }
         }
 
-        player.sendMessage(Static.getParkourString() + invalidTypes.size() + " problems with " + ChatColor.AQUA + kitName + ChatColor.WHITE + " found.");
+        player.sendMessage(Parkour.getPrefix() + invalidTypes.size() + " problems with " + ChatColor.AQUA + kitName + ChatColor.WHITE + " found.");
         if (invalidTypes.size() > 0) {
             for (String type : invalidTypes) {
                 player.sendMessage(ChatColor.RED + type);
+            }
+        }
+    }
+
+    /**
+     * Display ParkourKit
+     * Can either display all the ParkourKit available
+     * Or specify which ParkourKit you want to see and which materials are used and their corresponding action
+     *
+     * @param args
+     * @param sender
+     */
+    public static void listParkourKit(String[] args, CommandSender sender) {
+        Set<String> parkourKit = ParkourKitInfo.getParkourKitNames();
+
+        // specifying a kit
+        if (args.length == 2) {
+            String kitName = args[1].toLowerCase();
+            if (!parkourKit.contains(kitName)) {
+                sender.sendMessage(Parkour.getPrefix() + "This ParkourKit set does not exist!");
+                return;
+            }
+
+            TranslationUtils.sendHeading("ParkourKit: " + kitName, sender);
+            Set<String> materials = ParkourKitInfo.getParkourKitContents(kitName);
+
+            for (String material : materials) {
+                String action = ParkourKitInfo.getActionForMaterial(kitName, material);
+                sender.sendMessage(material + ": " + ChatColor.GRAY + action);
+            }
+
+        } else {
+            //displaying all available kits
+            TranslationUtils.sendHeading(parkourKit.size() + " ParkourKits found", sender);
+            for (String kit : parkourKit) {
+                sender.sendMessage("* " + kit);
             }
         }
     }

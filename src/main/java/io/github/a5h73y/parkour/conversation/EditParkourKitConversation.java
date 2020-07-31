@@ -5,7 +5,6 @@ import io.github.a5h73y.parkour.conversation.other.AddKitItemConversation;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.kit.ParkourKit;
 import io.github.a5h73y.parkour.kit.ParkourKitInfo;
-import io.github.a5h73y.parkour.utilities.Static;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.FixedSetPrompt;
@@ -85,10 +84,10 @@ public class EditParkourKitConversation extends ParkourConversation {
         protected Prompt acceptValidatedInput(ConversationContext context, String material) {
             String kitName = (String) context.getSessionData("kit");
 
-	        Parkour.getConfig(ConfigType.PARKOURKIT).set("ParkourKit." + kitName + "." + material, null);
-	        Parkour.getConfig(ConfigType.PARKOURKIT).save();
+            Parkour.getConfig(ConfigType.PARKOURKIT).set("ParkourKit." + kitName + "." + material, null);
+            Parkour.getConfig(ConfigType.PARKOURKIT).save();
             ParkourKit.clearMemory(kitName);
-            context.getForWhom().sendRawMessage(Static.getParkourString() + material + " removed from " + kitName);
+            context.getForWhom().sendRawMessage(Parkour.getPrefix() + material + " removed from " + kitName);
             return new ChooseOption(true);
         }
     }

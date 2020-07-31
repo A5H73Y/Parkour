@@ -1,5 +1,11 @@
 package io.github.a5h73y.parkour.kit;
 
+import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
+import io.github.a5h73y.parkour.enums.ConfigType;
+import io.github.a5h73y.parkour.other.Validation;
+import io.github.a5h73y.parkour.utility.MaterialUtils;
+import io.github.a5h73y.parkour.utility.PluginUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,12 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.config.ParkourConfiguration;
-import io.github.a5h73y.parkour.enums.ConfigType;
-import io.github.a5h73y.parkour.other.Validation;
-import io.github.a5h73y.parkour.utilities.Utils;
 import org.bukkit.Material;
 
 public class ParkourKit implements Serializable {
@@ -21,7 +21,7 @@ public class ParkourKit implements Serializable {
 
     public static final List<String> VALID_ACTIONS =
             Arrays.asList("death", "finish", "climb", "launch", "speed", "repulse", "norun", "nopotion", "bounce");
-    private static Map<String, ParkourKit> loaded = new HashMap<>();
+    private static final Map<String, ParkourKit> loaded = new HashMap<>();
 
     // ParkourKit attributes
     private final String name;
@@ -52,7 +52,7 @@ public class ParkourKit implements Serializable {
             String action = config.getString("ParkourKit." + name + "." + material.name() + ".Action").toLowerCase();
 
             if (!VALID_ACTIONS.contains(action)) {
-                Utils.log("Action " + action + " in kit " + name + " is invalid.", 1);
+                PluginUtils.log("Action " + action + " in kit " + name + " is invalid.", 1);
                 continue;
             }
 
@@ -173,16 +173,16 @@ public class ParkourKit implements Serializable {
         if (material == null) {
 
             // if that fails, try our custom lookup
-            material = Utils.lookupMaterial(rawMaterial);
+            material = MaterialUtils.lookupMaterial(rawMaterial);
 
             if (material != null) {
                 // if we find a old matching version, replace it with the new version
-                Utils.log("Outdated Material found " + rawMaterial + " found new version " + material.name(), 1);
+                PluginUtils.log("Outdated Material found " + rawMaterial + " found new version " + material.name(), 1);
                 updateOutdatedMaterial(rawMaterial, material.name());
-                Utils.log("Action has been transferred to use " + material.name());
+                PluginUtils.log("Action has been transferred to use " + material.name());
 
             } else {
-                Utils.log("Material " + rawMaterial + " in kit " + name + " is invalid.", 2);
+                PluginUtils.log("Material " + rawMaterial + " in kit " + name + " is invalid.", 2);
             }
         }
         return material;

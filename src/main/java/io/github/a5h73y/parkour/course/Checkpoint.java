@@ -9,10 +9,16 @@ public class Checkpoint implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private double x, y, z;
-    private float pitch, yaw;
-    private String world;
-    private double nextCheckpointX, nextCheckpointY, nextCheckpointZ;
+    private final double x;
+    private final double y;
+    private final double z;
+    private final float pitch;
+    private final float yaw;
+    private final String world;
+
+    private final double nextCheckpointX;
+    private final double nextCheckpointY;
+    private final double nextCheckpointZ;
 
     /**
      * The location is used for where the player is physically teleported.

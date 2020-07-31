@@ -7,7 +7,7 @@ authors:
   - steve4744
 main: io.github.a5h73y.parkour.Parkour
 api-version: "1.13"
-website: https://a5h73y.github.io/Parkour/
+website: "https://a5h73y.github.io/Parkour/"
 commands:
   parkour:
     aliases: [pa, pkr]

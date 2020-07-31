@@ -10,7 +10,8 @@ import java.util.concurrent.ExecutionException;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.course.CourseInfo;
-import io.github.a5h73y.parkour.utilities.Utils;
+import io.github.a5h73y.parkour.utility.PluginUtils;
+import io.github.a5h73y.parkour.utility.Utils;
 import org.bukkit.Bukkit;
 import pro.husk.Database;
 import pro.husk.mysql.MySQL;
@@ -48,11 +49,11 @@ public class ParkourDatabase {
      */
     public int getCourseId(String courseName, boolean printError) {
         if (courseIdCache.containsKey(courseName.toLowerCase())) {
-            Utils.debug("Cached value found for " + courseName);
+            PluginUtils.debug("Cached value found for " + courseName);
             return courseIdCache.get(courseName.toLowerCase());
         }
 
-        Utils.debug("Finding course ID for " + courseName);
+        PluginUtils.debug("Finding course ID for " + courseName);
         int courseId = -1;
 
         String courseIdQuery = "SELECT courseId FROM course WHERE name = '" + courseName + "';";
@@ -67,10 +68,10 @@ public class ParkourDatabase {
         }
 
         if (courseId == -1 && printError) {
-            Utils.log("Course '" + courseName + "' was not found in the database. "
+            PluginUtils.log("Course '" + courseName + "' was not found in the database. "
                     + "Run command '/pa recreate' to fix.", 1);
         }
-        Utils.debug("Found " + courseId);
+        PluginUtils.debug("Found " + courseId);
         return courseId;
     }
 
@@ -85,7 +86,7 @@ public class ParkourDatabase {
         List<TimeEntry> times = new ArrayList<>();
         int maxEntries = calculateResultsLimit(limit);
         int courseId = getCourseId(courseName.toLowerCase());
-        Utils.debug("Getting top " + maxEntries + " results for " + courseName);
+        PluginUtils.debug("Getting top " + maxEntries + " results for " + courseName);
 
         if (courseId == -1) {
             return times;
@@ -116,7 +117,7 @@ public class ParkourDatabase {
         List<TimeEntry> times = new ArrayList<>();
         int maxEntries = calculateResultsLimit(limit);
         int courseId = getCourseId(courseName.toLowerCase());
-        Utils.debug("Getting top " + maxEntries + " results for " + playerName + " on " + courseName);
+        PluginUtils.debug("Getting top " + maxEntries + " results for " + playerName + " on " + courseName);
 
         if (courseId == -1) {
             return times;
@@ -179,7 +180,7 @@ public class ParkourDatabase {
 
         String bestPlayerQuery = "SELECT 1 FROM time"
                 + " WHERE player='" + playerName + "' AND courseId=" + courseId + " AND time < " + time + ";";
-        Utils.debug("Checking is best player time: " + bestPlayerQuery);
+        PluginUtils.debug("Checking is best player time: " + bestPlayerQuery);
 
         try (ResultSet rs = database.query(bestPlayerQuery)) {
             bestPlayerTime = !rs.next();
@@ -188,6 +189,33 @@ public class ParkourDatabase {
             logSQLException(e);
         }
         return bestPlayerTime;
+    }
+
+    /**
+     * TODO .
+     *
+     * @param courseName
+     * @param time
+     * @return is players best time
+     */
+    public int getPositionOnLeaderboard(String courseName, long time) {
+        int courseId = getCourseId(courseName);
+        if (courseId == -1) {
+            return -1;
+        }
+
+        int position = 1;
+        String leaderboardPositionQuery = "SELECT 1 FROM time"
+                + " WHERE courseId=" + courseId + " AND time < " + time + ";";
+        PluginUtils.debug("Checking leaderboard position for: " + leaderboardPositionQuery);
+
+        try (ResultSet rs = database.query(leaderboardPositionQuery)) {
+            while (rs.next()) position++;
+            rs.getStatement().close();
+        } catch (SQLException e) {
+            logSQLException(e);
+        }
+        return position;
     }
 
     /**
@@ -206,7 +234,7 @@ public class ParkourDatabase {
 
         String bestCourseQuery = "SELECT 1 FROM time"
                 + " WHERE courseId=" + courseId + " AND time < " + time + ";";
-        Utils.debug("Checking is best course time: " + bestCourseQuery);
+        PluginUtils.debug("Checking is best course time: " + bestCourseQuery);
 
         try (ResultSet rs = database.query(bestCourseQuery)) {
             bestCourseTime = !rs.next();
@@ -226,7 +254,7 @@ public class ParkourDatabase {
      */
     public void insertCourse(String courseName, String playerName) {
         String insertCourseUpdate = "INSERT INTO course (name, author) VALUES ('" + courseName + "', '" + playerName + "');";
-        Utils.debug("Inserted course: " + insertCourseUpdate);
+        PluginUtils.debug("Inserted course: " + insertCourseUpdate);
 
         try {
             database.update(insertCourseUpdate);
@@ -251,7 +279,7 @@ public class ParkourDatabase {
 
         String insertTimeUpdate = "INSERT INTO time (courseId, player, time, deaths) "
                 + "VALUES (" + courseId + ", '" + playerName + "', " + time + ", " + deaths + ");";
-        Utils.debug("Inserting time: " + insertTimeUpdate);
+        PluginUtils.debug("Inserting time: " + insertTimeUpdate);
 
         try {
             database.updateAsync(insertTimeUpdate).get();
@@ -273,15 +301,15 @@ public class ParkourDatabase {
      */
     public void insertOrUpdateTime(String courseName, String playerName, long time, int deaths, boolean isNewRecord) {
         boolean updatePlayerTime = parkour.getConfig().getBoolean("OnFinish.UpdatePlayerDatabaseTime");
-        Utils.debug("Potentially Inserting or Updating Time for player: " + playerName + ", isNewRecord: " + isNewRecord + ", updatePlayerTime: " + updatePlayerTime);
+        PluginUtils.debug("Potentially Inserting or Updating Time for player: " + playerName + ", isNewRecord: " + isNewRecord + ", updatePlayerTime: " + updatePlayerTime);
 
         if (isNewRecord && updatePlayerTime) {
-            Utils.debug("Updating the Time for player " + playerName);
+            PluginUtils.debug("Updating the Time for player " + playerName);
             deletePlayerCourseTimes(playerName, courseName);
             insertTime(courseName, playerName, time, deaths);
 
         } else if (!updatePlayerTime) {
-            Utils.debug("Inserting a Time for player " + playerName);
+            PluginUtils.debug("Inserting a Time for player " + playerName);
             insertTime(courseName, playerName, time, deaths);
         }
     }
@@ -293,7 +321,7 @@ public class ParkourDatabase {
      * @param playerName
      */
     public void deletePlayerTimes(String playerName) {
-        Utils.debug("Deleting all Player times for " + playerName);
+        PluginUtils.debug("Deleting all Player times for " + playerName);
         try {
             database.updateAsync("DELETE FROM time WHERE player='" + playerName + "'").get();
         } catch (InterruptedException | ExecutionException e) {
@@ -312,7 +340,7 @@ public class ParkourDatabase {
             return;
         }
 
-        Utils.debug("Deleting all Course times for " + courseName);
+        PluginUtils.debug("Deleting all Course times for " + courseName);
         try {
             database.updateAsync("DELETE FROM time WHERE courseId=" + courseId).get();
             resultsCache.remove(courseName.toLowerCase());
@@ -333,7 +361,7 @@ public class ParkourDatabase {
             return;
         }
 
-        Utils.debug("Deleting all times for player " + playerName + " for course " + courseName);
+        PluginUtils.debug("Deleting all times for player " + playerName + " for course " + courseName);
         try {
             database.updateAsync("DELETE FROM time"
                     + " WHERE player='" + playerName + "' AND courseId=" + courseId).get();
@@ -351,7 +379,7 @@ public class ParkourDatabase {
      * @param courseName
      */
     public void deleteCourseAndReferences(String courseName) {
-        Utils.debug("Completely deleting course " + courseName);
+        PluginUtils.debug("Completely deleting course " + courseName);
         try {
             database.updateAsync("DELETE FROM course WHERE name='" + courseName + "'").get();
             resultsCache.remove(courseName.toLowerCase());
@@ -368,8 +396,8 @@ public class ParkourDatabase {
      * Times cannot be stored until the course exists in the database.
      */
     public void recreateAllCourses() {
-        Bukkit.getScheduler().runTaskLaterAsynchronously(Parkour.getInstance(), () -> {
-            Utils.log("Starting recreation of courses process...");
+        Bukkit.getScheduler().runTaskLaterAsynchronously(parkour, () -> {
+            PluginUtils.log("Starting recreation of courses process...");
             int changes = 0;
             for (String courseName : CourseInfo.getAllCourses()) {
                 if (getCourseId(courseName, false) == -1) {
@@ -377,9 +405,9 @@ public class ParkourDatabase {
                     changes++;
                 }
             }
-            Utils.log("Process complete. Courses recreated: " + changes);
+            PluginUtils.log("Process complete. Courses recreated: " + changes);
             if (changes > 0) {
-                Utils.logToFile("Courses recreated: " + changes);
+                PluginUtils.logToFile("Courses recreated: " + changes);
             }
         }, 1);
     }
@@ -389,7 +417,7 @@ public class ParkourDatabase {
      * Performed on server shutdown.
      */
     public void closeConnection() {
-        Utils.debug("Closing the SQL connection.");
+        PluginUtils.debug("Closing the SQL connection.");
         try {
             this.database.closeConnection();
         } catch (SQLException e) {
@@ -402,10 +430,10 @@ public class ParkourDatabase {
      * SQLite will be the default (and fallback) unless MySQL is correctly configured.
      */
     private void initiateConnection() {
-        Utils.debug("Initialising SQL Connection.");
+        PluginUtils.debug("Initialising SQL Connection.");
         if (parkour.getConfig().getBoolean("MySQL.Use")
                 && !parkour.getConfig().getString("MySQL.Host").equals("Host")) {
-            Utils.debug("Opting to use MySQL.");
+            PluginUtils.debug("Opting to use MySQL.");
 
             this.database = new MySQL(
                     parkour.getConfig().getString("MySQL.Host"),
@@ -415,8 +443,8 @@ public class ParkourDatabase {
                     parkour.getConfig().getString("MySQL.Password"),
                     parkour.getConfig().getString("MySQL.Params"));
         } else {
-            Utils.debug("Opting to use SQLite.");
-            String pathOverride = Parkour.getInstance().getConfig().getString("SQLite.PathOverride", "");
+            PluginUtils.debug("Opting to use SQLite.");
+            String pathOverride = parkour.getConfig().getString("SQLite.PathOverride", "");
             String path = pathOverride.isEmpty() ? parkour.getDataFolder() + "/sqlite-db/" : pathOverride;
 
             this.database = new SQLite(path, "parkour.db");
@@ -442,31 +470,31 @@ public class ParkourDatabase {
             createTimesTable = createTimesTable.replace("AUTO_INCREMENT", "AUTOINCREMENT");
         }
 
-        Utils.debug("Attempting to create necessary tables.");
+        PluginUtils.debug("Attempting to create necessary tables.");
         database.update(createCourseTable);
         database.update(createTimesTable);
         database.closeConnection();
-        Utils.debug("Successfully created necessary tables.");
+        PluginUtils.debug("Successfully created necessary tables.");
     }
 
     private void logSQLConnectionException(SQLException e) {
-        Utils.log("[SQL] Connection problem: " + e.getMessage(), 2);
+        PluginUtils.log("[SQL] Connection problem: " + e.getMessage(), 2);
         e.printStackTrace();
 
         // if they were trying to use MySQL
         if (parkour.getConfig().getBoolean("MySQL.Use")) {
-            Parkour.getInstance().getConfig().set("MySQL.Use", false);
-            Parkour.getInstance().saveConfig();
+            parkour.getConfig().set("MySQL.Use", false);
+            parkour.saveConfig();
 
-            Utils.log("[SQL] Defaulting to SQLite...", 1);
+            PluginUtils.log("[SQL] Defaulting to SQLite...", 1);
             initiateConnection();
         } else {
-            Utils.log("[SQL] Failed to connect to SQLite.", 2);
+            PluginUtils.log("[SQL] Failed to connect to SQLite.", 2);
         }
     }
 
     private void logSQLException(SQLException e) {
-        Utils.log("[SQL] Error occurred: " + e.getMessage(), 2);
+        PluginUtils.log("[SQL] Error occurred: " + e.getMessage(), 2);
         e.printStackTrace();
     }
 
@@ -498,7 +526,7 @@ public class ParkourDatabase {
      * @return amount of results
      */
     private int calculateResultsLimit(int limit) {
-        return Math.max(1, Math.min(limit, Parkour.getSettings().getLeaderboardMaxEntries()));
+        return Math.max(1, Math.min(limit, parkour.getConfig().getLeaderboardMaxEntries()));
     }
 
     /**
@@ -511,9 +539,9 @@ public class ParkourDatabase {
      */
     public TimeEntry getNthBestTime(String courseName, int position) {
         if (!resultsCache.containsKey(courseName.toLowerCase())) {
-            Utils.debug("Populating times cache for " + courseName);
+            PluginUtils.debug("Populating times cache for " + courseName);
             resultsCache.put(courseName.toLowerCase(),
-                    getTopCourseResults(courseName, Parkour.getSettings().getLeaderboardMaxEntries()));
+                    getTopCourseResults(courseName, parkour.getConfig().getLeaderboardMaxEntries()));
         }
 
         List<TimeEntry> cachedResults = resultsCache.get(courseName.toLowerCase());

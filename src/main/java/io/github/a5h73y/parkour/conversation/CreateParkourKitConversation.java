@@ -1,10 +1,9 @@
 package io.github.a5h73y.parkour.conversation;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.config.impl.ParkourKitFile;
+import io.github.a5h73y.parkour.configuration.impl.ParkourKitConfig;
 import io.github.a5h73y.parkour.conversation.other.AddKitItemConversation;
 import io.github.a5h73y.parkour.enums.ConfigType;
-import io.github.a5h73y.parkour.utilities.Static;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.BooleanPrompt;
 import org.bukkit.conversations.ConversationContext;
@@ -62,10 +61,10 @@ public class CreateParkourKitConversation extends ParkourConversation {
         @Override
         protected Prompt acceptValidatedInput(ConversationContext context, boolean input) {
             String name = context.getSessionData("name").toString();
-            ParkourKitFile parkourKitFile = (ParkourKitFile) Parkour.getConfig(ConfigType.PARKOURKIT);
+            ParkourKitConfig parkourKitFile = (ParkourKitConfig) Parkour.getConfig(ConfigType.PARKOURKIT);
 
             if (input) {
-                context.getForWhom().sendRawMessage(Static.getParkourString() + name + " will use standard blocks...");
+                context.getForWhom().sendRawMessage(Parkour.getPrefix() + name + " will use standard blocks...");
                 parkourKitFile.createStandardKit(name);
                 parkourKitFile.save();
             }

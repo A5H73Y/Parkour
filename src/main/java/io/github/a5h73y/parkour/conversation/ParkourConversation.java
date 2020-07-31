@@ -1,7 +1,6 @@
 package io.github.a5h73y.parkour.conversation;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.utilities.Static;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
@@ -39,7 +38,7 @@ public abstract class ParkourConversation implements ConversationAbandonedListen
     @Override
     public void conversationAbandoned(ConversationAbandonedEvent event) {
         if (!event.gracefulExit()) {
-            event.getContext().getForWhom().sendRawMessage(Static.getParkourString() + "Conversation aborted...");
+            event.getContext().getForWhom().sendRawMessage(Parkour.getPrefix() + "Conversation aborted...");
         }
     }
 

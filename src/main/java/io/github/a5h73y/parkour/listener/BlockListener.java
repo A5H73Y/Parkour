@@ -1,8 +1,9 @@
 package io.github.a5h73y.parkour.listener;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.player.PlayerMethods;
-import io.github.a5h73y.parkour.utilities.Utils;
+import io.github.a5h73y.parkour.enums.Permission;
+import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
+import io.github.a5h73y.parkour.utility.PermissionUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
@@ -11,7 +12,11 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 
-public class BlockListener implements Listener {
+public class BlockListener extends AbstractPluginReceiver implements Listener {
+
+    public BlockListener(final Parkour parkour) {
+        super(parkour);
+    }
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
@@ -33,12 +38,12 @@ public class BlockListener implements Listener {
     }
 
     private void handleBlockPlaceBreakEvent(Player player, Cancellable event) {
-        if (!PlayerMethods.isPlaying(player.getName())) {
+        if (!parkour.getPlayerManager().isPlaying(player.getName())) {
             return;
         }
 
-        if (!Utils.hasPermission(player, "Parkour.Admin")
-                || (!Parkour.getInstance().getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks"))) {
+        if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL, false)
+                || (!parkour.getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks"))) {
             event.setCancelled(true);
         }
     }

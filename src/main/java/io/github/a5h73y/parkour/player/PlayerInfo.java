@@ -1,15 +1,14 @@
 package io.github.a5h73y.parkour.player;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.config.ParkourConfiguration;
+import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.event.PlayerParkourLevelEvent;
 import io.github.a5h73y.parkour.other.Validation;
-import io.github.a5h73y.parkour.utilities.Utils;
+import io.github.a5h73y.parkour.utility.TranslationUtils;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -23,9 +22,13 @@ import org.bukkit.inventory.ItemStack;
  * Massive thanks to horgeon for the inspiration of this change
  */
 public class PlayerInfo {
-    
+
     public static ParkourConfiguration getConfig() {
         return Parkour.getConfig(ConfigType.PLAYERS);
+    }
+
+    public static void persistChanges() {
+        getConfig().save();
     }
 
     /**
@@ -34,7 +37,7 @@ public class PlayerInfo {
      * @param player
      * @return selected course
      */
-    public static String getSelected(OfflinePlayer player) {
+    public static String getSelectedCourse(OfflinePlayer player) {
         return getConfig().getString("PlayerInfo." + player.getName() + ".Selected");
     }
 
@@ -44,9 +47,8 @@ public class PlayerInfo {
      * @param player
      * @param courseName
      */
-    public static void setSelected(OfflinePlayer player, String courseName) {
+    public static void setSelectedCourse(OfflinePlayer player, String courseName) {
         getConfig().set("PlayerInfo." + player.getName() + ".Selected", courseName.toLowerCase());
-        getConfig().save();
     }
 
     /**
@@ -56,7 +58,6 @@ public class PlayerInfo {
      */
     public static void setDelected(OfflinePlayer player) {
         getConfig().set("PlayerInfo." + player.getName() + ".Selected", null);
-        getConfig().save();
     }
 
     /**
@@ -66,9 +67,9 @@ public class PlayerInfo {
      * @return boolean
      */
     public static boolean hasSelected(Player player) {
-        String selected = getSelected(player);
+        String selected = getSelectedCourse(player);
         if (!Validation.isStringValid(selected)) {
-            player.sendMessage(Utils.getTranslation("Error.Selected"));
+            TranslationUtils.sendTranslation("Error.Selected", player);
             player.sendMessage(ChatColor.GRAY + "Usage: " + ChatColor.WHITE + "/pa select " + ChatColor.AQUA + "(course)");
             return false;
         }
@@ -95,7 +96,6 @@ public class PlayerInfo {
      */
     public static void setParkoins(OfflinePlayer player, int amount) {
         getConfig().set("PlayerInfo." + player.getName() + ".Parkoins", amount);
-        getConfig().save();
     }
 
     /**
@@ -136,8 +136,6 @@ public class PlayerInfo {
      */
     public static void setParkourLevel(OfflinePlayer player, int level) {
         getConfig().set("PlayerInfo." + player.getName() + ".Level", level);
-        getConfig().save();
-
         Bukkit.getServer().getPluginManager().callEvent(new PlayerParkourLevelEvent((Player) player, null, level));
     }
 
@@ -159,8 +157,6 @@ public class PlayerInfo {
                 getConfig().set("PlayerInfo." + player.getName() + ".Completed", completedCourses);
             }
         }
-
-        getConfig().save();
     }
 
     /**
@@ -171,7 +167,6 @@ public class PlayerInfo {
      */
     public static void setLastPlayedCourse(OfflinePlayer player, String courseName) {
         getConfig().set("PlayerInfo." + player.getName() + ".LastPlayed", courseName.toLowerCase());
-        getConfig().save();
     }
 
     /**
@@ -184,7 +179,7 @@ public class PlayerInfo {
      */
     public static String getRank(OfflinePlayer player) {
         String rank = getConfig().getString("PlayerInfo." + player.getName() + ".Rank");
-        return rank == null ? Utils.getTranslation("Event.DefaultRank", false) : rank;
+        return rank == null ? TranslationUtils.getTranslation("Event.DefaultRank", false) : rank;
     }
 
     /**
@@ -195,7 +190,6 @@ public class PlayerInfo {
      */
     public static void setRank(OfflinePlayer player, String rank) {
         getConfig().set("PlayerInfo." + player.getName() + ".Rank", rank);
-        getConfig().save();
     }
 
     /**
@@ -218,7 +212,6 @@ public class PlayerInfo {
      */
     public static void setLastRewardedTime(OfflinePlayer player, String courseName, long rewardTime) {
         getConfig().set("PlayerInfo." + player.getName() + ".LastRewarded." + courseName.toLowerCase(), rewardTime);
-        getConfig().save();
     }
 
     /**
@@ -240,8 +233,7 @@ public class PlayerInfo {
      */
     public static void resetPlayer(OfflinePlayer player) {
         getConfig().set("PlayerInfo." + player.getName(), null);
-        getConfig().save();
-        Parkour.getDatabase().deletePlayerTimes(player.getName());
+        Parkour.getInstance().getDatabase().deletePlayerTimes(player.getName());
     }
 
     /**
@@ -273,7 +265,6 @@ public class PlayerInfo {
      */
     public static void setRewardRank(int parkourLevel, String rank) {
         getConfig().set("ServerInfo.Levels." + parkourLevel + ".Rank", rank);
-        getConfig().save();
     }
 
     /**
@@ -281,9 +272,10 @@ public class PlayerInfo {
      * @param player
      */
     public static void saveInventoryArmor(Player player) {
-        Parkour.getConfig(ConfigType.INVENTORY).set(player.getName() + ".Inventory", Arrays.asList(player.getInventory().getContents()));
-        Parkour.getConfig(ConfigType.INVENTORY).set(player.getName() + ".Armor", Arrays.asList(player.getInventory().getArmorContents()));
-        Parkour.getConfig(ConfigType.INVENTORY).save();
+        ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
+        inventoryConfig.set(player.getName() + ".Inventory", Arrays.asList(player.getInventory().getContents()));
+        inventoryConfig.set(player.getName() + ".Armor", Arrays.asList(player.getInventory().getArmorContents()));
+        inventoryConfig.save();
     }
 
     public static ItemStack[] getSavedInventoryContents(Player player) {
@@ -318,18 +310,17 @@ public class PlayerInfo {
     }
 
     /** Set the location from which the player has joined a course.
-     * 
+     *
      * @param player
      */
     public static void setJoinLocation(Player player) {
         getConfig().set("PlayerInfo." + player.getName() + ".JoinLocation", player.getLocation());
-        getConfig().save();
     }
 
     /**
      * Get the location from which the player joined the course.
      * This is used to return the player to their original location on course completion.
-     * 
+     *
      * @param player
      * @return location
      */

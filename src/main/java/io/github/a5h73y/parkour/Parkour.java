@@ -3,28 +3,33 @@ package io.github.a5h73y.parkour;
 import io.github.a5h73y.parkour.commands.ParkourAutoTabCompleter;
 import io.github.a5h73y.parkour.commands.ParkourCommands;
 import io.github.a5h73y.parkour.commands.ParkourConsoleCommands;
-import io.github.a5h73y.parkour.config.ConfigManager;
-import io.github.a5h73y.parkour.config.ParkourConfiguration;
+import io.github.a5h73y.parkour.configuration.ConfigManager;
+import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
+import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
+import io.github.a5h73y.parkour.course.CheckpointManager;
+import io.github.a5h73y.parkour.course.CourseManager;
+import io.github.a5h73y.parkour.course.LobbyManager;
 import io.github.a5h73y.parkour.database.ParkourDatabase;
 import io.github.a5h73y.parkour.enums.ConfigType;
+import io.github.a5h73y.parkour.gui.ParkourGuiManager;
 import io.github.a5h73y.parkour.listener.BlockListener;
 import io.github.a5h73y.parkour.listener.ChatListener;
 import io.github.a5h73y.parkour.listener.PlayerInteractListener;
-import io.github.a5h73y.parkour.listener.PlayerInventoryListener;
 import io.github.a5h73y.parkour.listener.PlayerListener;
 import io.github.a5h73y.parkour.listener.PlayerMoveListener;
 import io.github.a5h73y.parkour.listener.SignListener;
+import io.github.a5h73y.parkour.manager.ChallengeManager;
+import io.github.a5h73y.parkour.manager.QuestionManager;
 import io.github.a5h73y.parkour.manager.ScoreboardManager;
 import io.github.a5h73y.parkour.other.Backup;
 import io.github.a5h73y.parkour.other.ParkourUpdater;
-import io.github.a5h73y.parkour.other.StartPlugin;
-import io.github.a5h73y.parkour.player.PlayerMethods;
-import io.github.a5h73y.parkour.utilities.Settings;
-import io.github.a5h73y.parkour.utilities.Static;
-import io.github.a5h73y.parkour.utilities.Utils;
-import net.milkbowl.vault.economy.Economy;
-import org.bstats.bukkit.MetricsLite;
-import org.bukkit.configuration.file.FileConfiguration;
+import io.github.a5h73y.parkour.player.PlayerManager;
+import io.github.a5h73y.parkour.plugin.BountifulApi;
+import io.github.a5h73y.parkour.plugin.EconomyApi;
+import io.github.a5h73y.parkour.plugin.PlaceholderApi;
+import io.github.a5h73y.parkour.utility.PluginUtils;
+import io.github.a5h73y.parkour.utility.TranslationUtils;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Parkour extends JavaPlugin {
@@ -33,12 +38,21 @@ public class Parkour extends JavaPlugin {
     private static final int SPIGOT_PLUGIN_ID = 23685;
     private static Parkour instance;
 
+    private BountifulApi bountifulApi;
+    private EconomyApi economyApi;
+    private PlaceholderApi placeholderApi;
+
     private ConfigManager configManager;
     private ParkourDatabase database;
-    private Economy economy;
-    private Settings settings;
 
     private ScoreboardManager scoreboardManager;
+    private ChallengeManager challengeManager;
+    private QuestionManager questionManager;
+    private PlayerManager playerManager;
+    private CourseManager courseManager;
+    private CheckpointManager checkpointManager;
+    private LobbyManager lobbyManager;
+    private ParkourGuiManager guiManager;
 
     /**
      * Get the plugin's instance.
@@ -55,99 +69,168 @@ public class Parkour extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        configManager = new ConfigManager();
-        StartPlugin.run();
-        database = new ParkourDatabase(this);
-        settings = new Settings();
 
-        registerEvents();
+        registerManagers();
         registerCommands();
+        registerEvents();
 
-        new MetricsLite(this, BUKKIT_PLUGIN_ID);
-        updatePlugin();
+        setupPlugins();
 
-        Utils.log("v6.0 is currently a very unstable build, expect problems to occur and please raise them in the Discord server.", 2);
+        getLogger().info("Enabled Parkour v" + getDescription().getVersion());
+        new Metrics(this, BUKKIT_PLUGIN_ID);
+        checkForUpdates();
+
+        PluginUtils.log("v6.0 is currently a very unstable build, expect problems to occur and please raise them in the Discord server.", 2);
     }
 
+    /**
+     * Shutdown the plugin.
+     */
     @Override
     public void onDisable() {
-        Utils.saveAllPlaying(PlayerMethods.getPlaying(), Static.PLAYING_BIN_PATH);
+//        PluginUtils.saveAllPlaying(playerManager.getPlaying(), Static.PLAYING_BIN_PATH);
         if (getConfig().getBoolean("Other.OnServerShutdown.BackupFiles")) {
             Backup.backupNow();
         }
-        // configManager.reloadConfigs(); TODO needed?
-        Utils.log("Disabled Parkour v" + Static.getVersion());
+        PluginUtils.log("Disabled Parkour v" + getDescription().getVersion());
         instance = null;
     }
 
+    /**
+     * Get the Default config.
+     * Overrides the default getConfig() method.
+     *
+     * @return default config
+     */
     @Override
-    public FileConfiguration getConfig() {
-        return getConfig(ConfigType.DEFAULT);
+    public DefaultConfig getConfig() {
+        return (DefaultConfig) this.configManager.get(ConfigType.DEFAULT);
     }
 
     @Override
     public void saveConfig() {
-        getConfig(ConfigType.DEFAULT).save();
+        this.configManager.get(ConfigType.DEFAULT).save();
     }
 
-    public static Settings getSettings() {
-        return instance.settings;
-    }
-
-    public static Economy getEconomy() {
-        return instance.economy;
-    }
-
-    public static void setEconomy(Economy economy) {
-        instance.economy = economy;
-    }
-
-    public static ParkourDatabase getDatabase() {
-        return instance.database;
-    }
-
-    public static void setDatabase(ParkourDatabase database) {
-        instance.database = database;
-    }
-
-    public static ScoreboardManager getScoreboardManager() {
-        if (instance.scoreboardManager == null) {
-            instance.scoreboardManager = new ScoreboardManager();
-        }
-        return instance.scoreboardManager;
-    }
-
+    /**
+     * Get the matching {@link ParkourConfiguration} for the given {@link ConfigType}.
+     *
+     * @param type {@link ConfigType}
+     * @return matching {@link ParkourConfiguration}
+     */
     public static ParkourConfiguration getConfig(ConfigType type) {
         return instance.configManager.get(type);
     }
 
-    public void reloadConfigurations() {
-        configManager.reloadConfigs();
-        settings.resetSettings();
-        Static.initiate();
+    /**
+     * Get the default config.yml file.
+     *
+     * @return {@link DefaultConfig}
+     */
+    public static DefaultConfig getDefaultConfig() {
+        return instance.getConfig();
     }
 
-    private void registerEvents() {
-        getServer().getPluginManager().registerEvents(new BlockListener(), this);
-        getServer().getPluginManager().registerEvents(new ChatListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);
-        getServer().getPluginManager().registerEvents(new SignListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerInventoryListener(), this);
+    /**
+     * The Parkour message prefix.
+     *
+     * @return parkour prefix from the config.
+     */
+    public static String getPrefix() {
+        return TranslationUtils.getTranslation("Parkour.Prefix", false);
+    }
+
+    public ConfigManager getConfigManager() {
+        return configManager;
+    }
+
+    public ParkourDatabase getDatabase() {
+        return database;
+    }
+
+    public ScoreboardManager getScoreboardManager() {
+        return scoreboardManager;
+    }
+
+    public ChallengeManager getChallengeManager() {
+        return challengeManager;
+    }
+
+    public QuestionManager getQuestionManager() {
+        return questionManager;
+    }
+
+    public PlayerManager getPlayerManager() {
+        return playerManager;
+    }
+
+    public CourseManager getCourseManager() {
+        return courseManager;
+    }
+
+    public CheckpointManager getCheckpointManager() {
+        return checkpointManager;
+    }
+
+    public LobbyManager getLobbyManager() {
+        return lobbyManager;
+    }
+
+    public ParkourGuiManager getGuiManager() {
+        return guiManager;
+    }
+
+    public BountifulApi getBountifulApi() {
+        return bountifulApi;
+    }
+
+    public EconomyApi getEconomyApi() {
+        return economyApi;
+    }
+
+    public PlaceholderApi getPlaceholderApi() {
+        return placeholderApi;
+    }
+
+    private void setupPlugins() {
+        bountifulApi = new BountifulApi();
+        economyApi = new EconomyApi();
+        placeholderApi = new PlaceholderApi();
+    }
+
+    private void registerManagers() {
+        configManager = new ConfigManager(this.getDataFolder());
+        database = new ParkourDatabase(this);
+        scoreboardManager = new ScoreboardManager(this);
+        challengeManager = new ChallengeManager(this);
+        questionManager = new QuestionManager();
+        playerManager = new PlayerManager(this);
+        courseManager = new CourseManager(this);
+        checkpointManager = new CheckpointManager(this);
+        lobbyManager = new LobbyManager(this);
+        guiManager = new ParkourGuiManager(this);
     }
 
     private void registerCommands() {
-        getCommand("parkour").setExecutor(new ParkourCommands());
-        getCommand("paconsole").setExecutor(new ParkourConsoleCommands());
+        getCommand("parkour").setExecutor(new ParkourCommands(this));
+        getCommand("paconsole").setExecutor(new ParkourConsoleCommands(this));
 
         if (this.getConfig().getBoolean("Other.UseAutoTabCompletion")) {
-            getCommand("parkour").setTabCompleter(new ParkourAutoTabCompleter());
+            getCommand("parkour").setTabCompleter(new ParkourAutoTabCompleter(this));
         }
     }
 
-    private void updatePlugin() {
-        if (Parkour.getInstance().getConfig().getBoolean("Other.CheckForUpdates")) {
+    private void registerEvents() {
+        getServer().getPluginManager().registerEvents(new BlockListener(this), this);
+        getServer().getPluginManager().registerEvents(new ChatListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerInteractListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
+        getServer().getPluginManager().registerEvents(new SignListener(this), this);
+    }
+
+    private void checkForUpdates() {
+        if (getConfig().getBoolean("Other.CheckForUpdates")) {
             new ParkourUpdater(this, SPIGOT_PLUGIN_ID).checkForUpdateAsync();
         }
     }

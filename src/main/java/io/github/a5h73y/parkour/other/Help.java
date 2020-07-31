@@ -1,12 +1,7 @@
 package io.github.a5h73y.parkour.other;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.config.ParkourConfiguration;
-import io.github.a5h73y.parkour.course.CourseInfo;
-import io.github.a5h73y.parkour.course.CourseMethods;
-import io.github.a5h73y.parkour.enums.ConfigType;
-import io.github.a5h73y.parkour.utilities.Utils;
-import io.github.a5h73y.parkour.utilities.Static;
+import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -21,11 +16,11 @@ public final class Help {
      */
     public static void lookupCommandHelp(String[] args, CommandSender sender) {
         if (args.length == 1) {
-            sender.sendMessage(Static.getParkourString() + "Find helpful information about any Parkour command:");
+            sender.sendMessage(Parkour.getPrefix() + "Find helpful information about any Parkour command:");
             sender.sendMessage("             /pa help " + ChatColor.AQUA + "(command)");
             return;
         }
-        
+
         String command = args[1].toLowerCase();
 
         if (command.equals("join")) {
@@ -75,7 +70,6 @@ public final class Help {
         } else if (command.equals("challenge")) {
             displayHelpMessage(sender, "Challenge a player to a course", "/pa challenge (course) (player) [wager]", "/pa challenge tutorial A5H73Y",
                     " You are able to challenge a player to compete for who can complete a course the fastest. Simply execute the command above to send a challenge to the player, if they accept using '/pa accept' then you'll both be teleported to the beginning of the course and a countdown will initiate. When the counter reaches 0 the race will begin. The visibility of each player is configurable. You are able to specify a wager amount which will be rewarded to the winner and deducted from the loser's economy balance.");
-
 
         } else if (command.equals("checkpoint")) {
             displayHelpMessage(sender, "Create a checkpoint", "/pa checkpoint [number]", "/pa checkpoint 1",
@@ -246,7 +240,7 @@ public final class Help {
                     " You are able to manually set a player's Parkour Rank. This will instantly update their chat prefix.");
 
         } else {
-            sender.sendMessage(Static.getParkourString() + "Unrecognised command. Please find all available commands using '/pa cmds'");
+            sender.sendMessage(Parkour.getPrefix() + "Unrecognised command. Please find all available commands using '/pa cmds'");
         }
     }
 
@@ -324,7 +318,7 @@ public final class Help {
             displaySignCommands(player);
 
         } else {
-            player.sendMessage(Static.getParkourString() + "Invalid page!");
+            player.sendMessage(Parkour.getPrefix() + "Invalid page!");
             displayCommandsIndex(player);
         }
     }
@@ -335,7 +329,7 @@ public final class Help {
      * @param player
      */
     private static void displayCommandsIndex(Player player) {
-        player.sendMessage(Utils.getStandardHeading("Parkour Commands Menu"));
+        TranslationUtils.sendHeading("Parkour Commands Menu", player);
 
         player.sendMessage("Please choose the desired command type:");
         player.sendMessage(" 1" + ChatColor.DARK_GRAY + " : " + ChatColor.GRAY + "Basics");
@@ -354,7 +348,7 @@ public final class Help {
      * @param player
      */
     private static void displayBasicCommands(Player player) {
-        player.sendMessage(Utils.getStandardHeading("Basic Commands"));
+        TranslationUtils.sendHeading("Basic Commands", player);
 
         displayCommandUsage(player, "join", "(course / courseId)", "Join the course");
         displayCommandUsage(player, "leave", null, "Leave the course");
@@ -377,7 +371,7 @@ public final class Help {
      * @param player
      */
     private static void displayCreatingCommands(Player player) {
-        player.sendMessage(Utils.getStandardHeading("Create Commands"));
+        TranslationUtils.sendHeading("Create Commands", player);
 
         displayCommandUsage(player, "create", "(course)", "Create and select a course");
         displayCommandUsage(player, "checkpoint", "[point]", "Create (or overwrite) a checkpoint");
@@ -401,7 +395,7 @@ public final class Help {
      * @param player
      */
     private static void displayConfigureCommands(Player player) {
-        player.sendMessage(Utils.getStandardHeading("Configure Commands"));
+        TranslationUtils.sendHeading("Configuration Commands", player);
 
         displayCommandUsage(player, "tp / tpc", "(course)", "Teleport to course / checkpoint");
         displayCommandUsage(player, "link", "(argument) (argument)", "Link a course");
@@ -426,7 +420,7 @@ public final class Help {
      * @param player
      */
     private static void displayAdminCommands(Player player) {
-        player.sendMessage(Utils.getStandardHeading("Admin Commands"));
+        TranslationUtils.sendHeading("Admin Commands", player);
 
         displayCommandUsage(player, "recreate", null, "Fix course database");
         displayCommandUsage(player, "delete", "(feature) (argument)", "Delete various features");
@@ -449,7 +443,7 @@ public final class Help {
      * @param player
      */
     private static void displaySignCommands(Player player) {
-        player.sendMessage(Utils.getStandardHeading("Parkour Sign Commands"));
+        TranslationUtils.sendHeading("Parkour Sign Commands", player);
 
         player.sendMessage(ChatColor.DARK_AQUA + "[pa]");
         displaySignCommandUsage(player, "Join", "(j)", "Join sign for a Parkour course");
@@ -465,113 +459,20 @@ public final class Help {
     }
 
     /**
-     * Display the economy information
-     * Menu is displayed and relevant action will be executed on parameters.
-     *
-     * @param args
-     * @param player
-     */
-    public static void displayEconomy(String[] args, Player player) {
-        if (!Static.getEconomy()) {
-            player.sendMessage(Static.getParkourString() + "Vault has not been linked.");
-            return;
-        }
-
-        ParkourConfiguration econConfig = Parkour.getConfig(ConfigType.ECONOMY);
-
-        if (args[1].equalsIgnoreCase("info")) {
-            player.sendMessage(Static.getParkourString() + "Successfully linked with Vault.");
-
-        } else if (args[1].equalsIgnoreCase("setprize")) {
-            if (args.length != 4) {
-                player.sendMessage(Utils.invalidSyntax("econ", "setprize (course) (amount)"));
-                return;
-            }
-            if (!CourseMethods.exist(args[2])) {
-                player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[2]));
-                return;
-            }
-            if (!Validation.isPositiveInteger(args[3])) {
-                player.sendMessage(Static.getParkourString() + "Amount needs to be numeric.");
-                return;
-            }
-
-            econConfig.set("Price." + args[2].toLowerCase() + ".Finish", Integer.parseInt(args[3]));
-            econConfig.save();
-            player.sendMessage(Static.getParkourString() + "Prize for " + args[2] + " set to " + args[3]);
-
-        } else if (args[1].equalsIgnoreCase("setfee")) {
-            if (args.length != 4) {
-                player.sendMessage(Utils.invalidSyntax("econ", "setfee (course) (amount)"));
-                return;
-            }
-            if (!CourseMethods.exist(args[2])) {
-                player.sendMessage(Utils.getTranslation("Error.NoExist").replace("%COURSE%", args[2]));
-                return;
-            }
-            if (!Validation.isPositiveInteger(args[3])) {
-                player.sendMessage(Static.getParkourString() + "Amount needs to be numeric.");
-                return;
-            }
-
-            econConfig.set("Price." + args[2].toLowerCase() + ".JoinFee", Integer.parseInt(args[3]));
-            econConfig.save();
-            player.sendMessage(Static.getParkourString() + "Fee for " + args[2] + " set to " + args[3]);
-
-        } else if (args[1].equalsIgnoreCase("recreate")) {
-            player.sendMessage(Static.getParkourString() + "Starting Recreation...");
-            int changed = recreateEconomy();
-            player.sendMessage(Static.getParkourString() + "Process Complete! " + changed + " courses updated.");
-
-        } else {
-            player.sendMessage(Utils.invalidSyntax("econ", "(info / recreate / setprize / setfee)"));
-        }
-    }
-
-    /**
-     * Recreate the courses economy information
-     * This includes the cost to join and the finish prize
-     *
-     * @return int
-     */
-    private static int recreateEconomy() {
-        ParkourConfiguration econConfig = Parkour.getConfig(ConfigType.ECONOMY);
-
-        int updated = 0;
-        for (String course : CourseInfo.getAllCourses()) {
-            try {
-                if (!(econConfig.contains("Price." + course + ".JoinFee"))) {
-                    updated++;
-                    econConfig.set("Price." + course + ".JoinFee", 0);
-                }
-                if (!(econConfig.contains("Price." + course + ".Finish"))) {
-                    econConfig.set("Price." + course + ".Finish", 0);
-                }
-            } catch (Exception ex) {
-                Utils.log(Utils.getTranslation("Error.Something", false).replace("%ERROR%", ex.getMessage()));
-            }
-        }
-
-        econConfig.save();
-        return updated;
-    }
-
-    /**
      * Display all relevant Parkour settings
      *
      * @param sender
      */
     public static void displaySettings(CommandSender sender) {
-        sender.sendMessage(Utils.getStandardHeading("Parkour Settings"));
+        TranslationUtils.sendHeading("Parkour Settings", sender);
+        Parkour parkour = Parkour.getInstance();
 
-        sender.sendMessage("Version: " + ChatColor.AQUA + Static.getVersion());
-        sender.sendMessage("Economy: " + ChatColor.AQUA + Static.getEconomy());
-        sender.sendMessage("BountifulAPI: " + ChatColor.AQUA + Static.getBountifulAPI());
-        sender.sendMessage("Disable Commands: " + ChatColor.AQUA + Parkour.getSettings().isDisableCommandsOnCourse());
-        sender.sendMessage("Enforce world: " + ChatColor.AQUA + Parkour.getSettings().isJoinEnforceWorld());
-        sender.sendMessage("Less checks: " + ChatColor.AQUA + Parkour.getSettings().isAttemptLessChecks());
-
-        sender.sendMessage(ChatColor.GRAY + "If you want more settings displayed, please ask");
+        sender.sendMessage("Version: " + ChatColor.AQUA + parkour.getDescription().getVersion());
+        sender.sendMessage("Economy: " + ChatColor.AQUA + parkour.getEconomyApi().isEnabled());
+        sender.sendMessage("BountifulAPI: " + ChatColor.AQUA + parkour.getBountifulApi().isEnabled());
+        sender.sendMessage("PlaceholderAPI: " + ChatColor.AQUA + parkour.getPlaceholderApi().isEnabled());
+        sender.sendMessage("Disable Commands: " + ChatColor.AQUA + Parkour.getDefaultConfig().isDisableCommandsOnCourse());
+        sender.sendMessage("Enforce world: " + ChatColor.AQUA + Parkour.getDefaultConfig().isJoinEnforceWorld());
+        sender.sendMessage("Less checks: " + ChatColor.AQUA + Parkour.getDefaultConfig().isAttemptLessChecks());
     }
-
 }

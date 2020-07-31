@@ -1,15 +1,13 @@
 package io.github.a5h73y.parkour.conversation.other;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.config.ParkourConfiguration;
+import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.conversation.ParkourConversation;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.kit.ParkourKit;
-import io.github.a5h73y.parkour.utilities.Static;
-import io.github.a5h73y.parkour.utilities.Utils;
+import io.github.a5h73y.parkour.utility.MaterialUtils;
+import java.util.HashMap;
+import java.util.Map;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.conversations.BooleanPrompt;
@@ -55,7 +53,7 @@ public class AddKitItemConversation {
 
         @Override
         public Prompt acceptInput(ConversationContext context, String message) {
-            Material material = Utils.lookupMaterial(message.toUpperCase());
+            Material material = MaterialUtils.lookupMaterial(message.toUpperCase());
 
             if (material == null) {
                 ParkourConversation.sendErrorMessage(context, message.toUpperCase() + " is not a valid Material");
@@ -187,7 +185,7 @@ public class AddKitItemConversation {
                 return new ChooseMaterial();
             }
 
-            context.getForWhom().sendRawMessage(Static.getParkourString() + kitName + " ParkourKit has been successfully saved.");
+            context.getForWhom().sendRawMessage(Parkour.getPrefix() + kitName + " ParkourKit has been successfully saved.");
             ParkourKit.clearMemory(kitName);
             return endingConversation;
         }

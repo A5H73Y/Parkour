@@ -1,39 +1,29 @@
 package io.github.a5h73y.parkour.manager;
 
+import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
+import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.HashSet;
 import java.util.Set;
-
-import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.course.CourseMethods;
-import io.github.a5h73y.parkour.player.PlayerMethods;
-import io.github.a5h73y.parkour.utilities.Static;
-import io.github.a5h73y.parkour.utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class ChallengeManager {
+public class ChallengeManager extends AbstractPluginReceiver {
 
     private static final Set<Challenge> challenges = new HashSet<>();
-    private static ChallengeManager instance;
 
-    private ChallengeManager() {
-    }
-
-    public static ChallengeManager getInstance() {
-        if (instance == null) {
-            instance = new ChallengeManager();
-        }
-
-        return instance;
+    public ChallengeManager(final Parkour parkour) {
+        super(parkour);
     }
 
     /**
      * Challenge two players to a course.
      *
-     * @param senderPlayer
-     * @param receiverPlayer
-     * @param courseName
-     * @return new Challenge
+     * @param senderPlayer sending player
+     * @param receiverPlayer receiving player
+     * @param courseName course name
+     * @param wager challenge wager
+     * @return populated {@link Challenge}
      */
     public Challenge createChallenge(String senderPlayer, String receiverPlayer, String courseName, Double wager) {
         Challenge challenge = new Challenge(senderPlayer, receiverPlayer, courseName, wager);
@@ -44,7 +34,7 @@ public class ChallengeManager {
     /**
      * Remove an instance of a Challenge.
      *
-     * @param challenge
+     * @param challenge {@link Challenge}
      */
     public void removeChallenge(Challenge challenge) {
         challenges.remove(challenge);
@@ -53,8 +43,8 @@ public class ChallengeManager {
     /**
      * Find the challenge the recipient senderPlayer has received.
      *
-     * @param playerName
-     * @return
+     * @param playerName target player name
+     * @return matching {@link Challenge}
      */
     public Challenge getChallengeForPlayer(String playerName) {
         for (Challenge challenge : challenges) {
@@ -67,9 +57,9 @@ public class ChallengeManager {
     }
 
     /**
-     * Find if the player is currently in a Challenge.
+     * Determine if the player is currently in a Challenge.
      *
-     * @param playerName
+     * @param playerName target player name
      * @return player is in challenge
      */
     public boolean isPlayerInChallenge(String playerName) {
@@ -83,32 +73,27 @@ public class ChallengeManager {
      * leave forfeits the challenge. The remaining player must complete
      * the course to win the challenge.
      *
-     * @param leaver
+     * @param player terminating player
      */
-    public void terminateChallenge(Player leaver) {
-        Challenge challenge = getChallengeForPlayer(leaver.getName());
+    public void terminateChallenge(Player player) {
+        Challenge challenge = getChallengeForPlayer(player.getName());
 
         if (challenge != null) {
-            Player opponent = calculateOpponent(leaver.getName(), challenge);
+            Player opponent = calculateOpponent(player.getName(), challenge);
 
             // if no player has forfeited yet
             if (!challenge.isForfeited()) {
                 challenge.setForfeited(true);
 
-                leaver.sendMessage(Utils.getTranslation("Parkour.Challenge.Quit")
-                        .replace("%PLAYER%", opponent.getName()));
-                opponent.sendMessage(Utils.getTranslation("Parkour.Challenge.Forfeited")
-                        .replace("%PLAYER%", leaver.getName()));
+                TranslationUtils.sendValueTranslation("Parkour.Challenge.Forfeited",
+                        opponent.getName(), player);
+                TranslationUtils.sendValueTranslation("Parkour.Challenge.Forfeited",
+                        player.getName(), opponent);
 
             } else {
                 // otherwise the challenge is completely terminated
-                String terminateMessage = Utils.getTranslation("Parkour.Challenge.Terminated")
-                        .replace("%PLAYER%", leaver.getName());
-                leaver.sendMessage(terminateMessage);
-
-                if (opponent != null) {
-                    opponent.sendMessage(terminateMessage);
-                }
+                TranslationUtils.sendValueTranslation("Parkour.Challenge.Terminated",
+                        player.getName(), player, opponent);
                 removeChallenge(challenge);
             }
         }
@@ -117,10 +102,9 @@ public class ChallengeManager {
     /**
      * Complete the Challenge.
      * The winner has completed the course first.
-     * The opponent will be derived from the Challenge.
      * If a wager is set, it will be deposited & withdrawn here.
      *
-     * @param winner
+     * @param winner winning player
      */
     public void completeChallenge(Player winner) {
         Challenge challenge = getChallengeForPlayer(winner.getName());
@@ -129,33 +113,33 @@ public class ChallengeManager {
             Player opponent = calculateOpponent(winner.getName(), challenge);
             removeChallenge(challenge);
 
-            winner.sendMessage(Utils.getTranslation("Parkour.Challenge.Winner")
+            winner.sendMessage(TranslationUtils.getTranslation("Parkour.Challenge.Winner")
                     .replace("%PLAYER%", opponent.getName())
                     .replace("%COURSE%", challenge.getCourseName()));
-            opponent.sendMessage(Utils.getTranslation("Parkour.Challenge.Loser")
+            opponent.sendMessage(TranslationUtils.getTranslation("Parkour.Challenge.Loser")
                     .replace("%PLAYER%", winner.getName())
                     .replace("%COURSE%", challenge.getCourseName()));
 
             if (challenge.getWager() != null) {
-                Parkour.getEconomy().depositPlayer(winner, challenge.getWager());
-                Parkour.getEconomy().withdrawPlayer(opponent, challenge.getWager());
+                parkour.getEconomyApi().rewardPlayer(winner, challenge.getWager());
+                parkour.getEconomyApi().chargePlayer(opponent, challenge.getWager());
             }
 
             if (!challenge.isForfeited()) {
-                PlayerMethods.playerLeave(opponent);
+                parkour.getPlayerManager().leaveCourse(opponent);
             }
         }
     }
 
     /**
-     * Derive the opponent from the Challenge.
+     * Derive the opponent player from the Challenge.
      *
-     * @param winner
-     * @param challenge
-     * @return
+     * @param playerName target player name
+     * @param challenge {@link Challenge}
+     * @return opponent player
      */
-    public Player calculateOpponent(String winner, Challenge challenge) {
-        String opponent = challenge.getSenderPlayer().equals(winner)
+    public Player calculateOpponent(String playerName, Challenge challenge) {
+        String opponent = challenge.getSenderPlayer().equals(playerName)
                 ? challenge.getReceiverPlayer() : challenge.getSenderPlayer();
 
         return Bukkit.getPlayer(opponent);
@@ -166,61 +150,57 @@ public class ChallengeManager {
      * Executed by the recipient of a challenge invite.
      * Will prepare each player for the challenge.
      *
-     * @param receiverPlayer
+     * @param receivingPlayer receiving player
      */
-    public void acceptChallenge(final Player receiverPlayer) {
-        Challenge challenge = ChallengeManager.getInstance().getChallengeForPlayer(receiverPlayer.getName());
+    public void acceptChallenge(final Player receivingPlayer) {
+        Challenge challenge = getChallengeForPlayer(receivingPlayer.getName());
 
         if (challenge == null) {
-            receiverPlayer.sendMessage(Static.getParkourString() + "You have not been invited!");
+            receivingPlayer.sendMessage(Parkour.getPrefix() + "You have not been invited!");
             return;
         }
-        if (!PlayerMethods.isPlayerOnline(challenge.getSenderPlayer())) {
-            receiverPlayer.sendMessage(Static.getParkourString() + "Player is not online!");
+        if (Bukkit.getPlayer(challenge.getSenderPlayer()) == null) {
+            receivingPlayer.sendMessage(Parkour.getPrefix() + "Player is not online!");
             return;
         }
 
         final Player senderPlayer = Bukkit.getPlayer(challenge.getSenderPlayer());
 
-        if (Parkour.getInstance().getConfig().getBoolean("ParkourModes.Challenge.hidePlayers")) {
-            senderPlayer.hidePlayer(receiverPlayer);
-            receiverPlayer.hidePlayer(senderPlayer);
+        if (parkour.getConfig().getBoolean("ParkourModes.Challenge.hidePlayers")) {
+            senderPlayer.hidePlayer(parkour, receivingPlayer);
+            receivingPlayer.hidePlayer(parkour, senderPlayer);
         }
 
-        CourseMethods.joinCourse(senderPlayer, challenge.getCourseName());
-        CourseMethods.joinCourse(receiverPlayer, challenge.getCourseName());
+        parkour.getPlayerManager().joinCourse(senderPlayer, challenge.getCourseName());
+        parkour.getPlayerManager().joinCourse(receivingPlayer, challenge.getCourseName());
 
         final float playerSpeed = senderPlayer.getWalkSpeed();
-        final float targetSpeed = receiverPlayer.getWalkSpeed();
+        final float targetSpeed = receivingPlayer.getWalkSpeed();
 
         senderPlayer.setWalkSpeed(0f);
-        receiverPlayer.setWalkSpeed(0f);
+        receivingPlayer.setWalkSpeed(0f);
 
         new Runnable() {
-            int taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(Parkour.getInstance(), this, 0L, 20L);
+            final int taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(parkour, this, 0L, 20L);
 
-            int count = Parkour.getInstance().getConfig().getInt("ParkourModes.Challenge.CountdownFrom") + 1;
+            int count = parkour.getConfig().getInt("ParkourModes.Challenge.CountdownFrom") + 1;
 
             @Override
             public void run() {
                 if (count > 1) {
                     count--;
-
-                    String translation = Utils.getTranslation("Parkour.Countdown", false).replace("%AMOUNT%", String.valueOf(count));
-                    senderPlayer.sendMessage(translation);
-                    receiverPlayer.sendMessage(translation);
+                    TranslationUtils.sendValueTranslation("Parkour.Countdown", String.valueOf(count),
+                            senderPlayer, receivingPlayer);
 
                 } else {
                     Bukkit.getScheduler().cancelTask(taskID);
 
-                    String translation = Utils.getTranslation("Parkour.Go", false);
-                    senderPlayer.sendMessage(translation);
-                    receiverPlayer.sendMessage(translation);
+                    TranslationUtils.sendTranslation("Parkour.Go", senderPlayer, receivingPlayer);
                     senderPlayer.setWalkSpeed(playerSpeed);
-                    receiverPlayer.setWalkSpeed(targetSpeed);
+                    receivingPlayer.setWalkSpeed(targetSpeed);
 
-                    PlayerMethods.getParkourSession(senderPlayer.getName()).resetTimeStarted();
-                    PlayerMethods.getParkourSession(receiverPlayer.getName()).resetTimeStarted();
+                    parkour.getPlayerManager().getParkourSession(senderPlayer.getName()).resetTimeStarted();
+                    parkour.getPlayerManager().getParkourSession(receivingPlayer.getName()).resetTimeStarted();
                 }
             }
         };
@@ -241,12 +221,12 @@ public class ChallengeManager {
         private boolean forfeited;
 
         /**
-         * Challenge player
+         * Parkour Challenge.
          * Created to manage who started the challenge, who's the receiver and on which course.
          *
-         * @param senderPlayer
-         * @param receiverPlayer
-         * @param courseName
+         * @param senderPlayer sending player
+         * @param receiverPlayer receiving player
+         * @param courseName course name
          */
         private Challenge(String senderPlayer, String receiverPlayer, String courseName, Double wager) {
             this.senderPlayer = senderPlayer;

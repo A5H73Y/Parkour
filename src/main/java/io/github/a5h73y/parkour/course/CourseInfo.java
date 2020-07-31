@@ -1,23 +1,33 @@
 package io.github.a5h73y.parkour.course;
 
-import java.util.List;
-
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.config.ParkourConfiguration;
-import io.github.a5h73y.parkour.other.Constants;
+import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.ConfigType;
-import io.github.a5h73y.parkour.utilities.Utils;
+import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.player.PlayerInfo;
-import io.github.a5h73y.parkour.utilities.Static;
+import io.github.a5h73y.parkour.utility.DateTimeUtils;
+import io.github.a5h73y.parkour.utility.MaterialUtils;
+import io.github.a5h73y.parkour.utility.StringUtils;
+import io.github.a5h73y.parkour.utility.TranslationUtils;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class CourseInfo {
 
-    public static ParkourConfiguration getConfig() {
+    public static ParkourConfiguration getCourseConfig() {
         return Parkour.getConfig(ConfigType.COURSES);
+    }
+
+    public static void persistChanges() {
+        getCourseConfig().save();
     }
 
     /**
@@ -26,7 +36,7 @@ public class CourseInfo {
      * @return List Parkour course names
      */
     public static List<String> getAllCourses() {
-        return getConfig().getStringList("Courses");
+        return getCourseConfig().getStringList("Courses");
     }
 
     /**
@@ -37,13 +47,7 @@ public class CourseInfo {
      * @return linkedCourse
      */
     public static String getLinkedCourse(String courseName) {
-        String linkedCourse = getConfig().getString(courseName.toLowerCase() + ".LinkedCourse");
-
-        if (CourseMethods.exist(linkedCourse)) {
-            return linkedCourse;
-        }
-
-        return null;
+        return getCourseConfig().getString(courseName.toLowerCase() + ".LinkedCourse");
     }
 
     /**
@@ -53,7 +57,7 @@ public class CourseInfo {
      * @return if linked course is found
      */
     public static boolean hasLinkedCourse(String courseName) {
-        return getConfig().contains(courseName.toLowerCase() + ".LinkedCourse");
+        return getCourseConfig().contains(courseName.toLowerCase() + ".LinkedCourse");
     }
 
     /**
@@ -63,8 +67,7 @@ public class CourseInfo {
      * @param linkedCourse
      */
     public static void setLinkedCourse(String courseName, String linkedCourse) {
-        getConfig().set(courseName.toLowerCase() + ".LinkedCourse", linkedCourse.toLowerCase());
-        getConfig().save();
+        getCourseConfig().set(courseName.toLowerCase() + ".LinkedCourse", linkedCourse.toLowerCase());
     }
 
     /**
@@ -75,13 +78,7 @@ public class CourseInfo {
      * @return linkedLobby
      */
     public static String getLinkedLobby(String courseName) {
-        String linkedLobby = getConfig().getString(courseName.toLowerCase() + ".LinkedLobby");
-
-        if (linkedLobby != null && LobbyMethods.getCustomLobbies().contains(linkedLobby)) {
-            return linkedLobby;
-        }
-
-        return null;
+        return getCourseConfig().getString(courseName.toLowerCase() + ".LinkedLobby");
     }
 
     /**
@@ -91,7 +88,7 @@ public class CourseInfo {
      * @return if linked lobby is found
      */
     public static boolean hasLinkedLobby(String courseName) {
-        return getConfig().contains(courseName.toLowerCase() + ".LinkedLobby");
+        return getCourseConfig().contains(courseName.toLowerCase() + ".LinkedLobby");
     }
 
     /**
@@ -101,8 +98,7 @@ public class CourseInfo {
      * @param lobbyName
      */
     public static void setLinkedLobby(String courseName, String lobbyName) {
-        getConfig().set(courseName.toLowerCase() + ".LinkedLobby", lobbyName);
-        getConfig().save();
+        getCourseConfig().set(courseName.toLowerCase() + ".LinkedLobby", lobbyName);
     }
 
     /**
@@ -112,7 +108,7 @@ public class CourseInfo {
      * @return mode
      */
     public static String getMode(String courseName) {
-        return getConfig().getString(courseName.toLowerCase() + ".Mode", "NONE");
+        return getCourseConfig().getString(courseName.toLowerCase() + ".Mode", "NONE");
     }
 
     /**
@@ -122,8 +118,7 @@ public class CourseInfo {
      * @param mode
      */
     public static void setMode(String courseName, String mode) {
-        getConfig().set(courseName.toLowerCase() + ".Mode", mode);
-        getConfig().save();
+        getCourseConfig().set(courseName.toLowerCase() + ".Mode", mode);
     }
 
     /**
@@ -133,7 +128,7 @@ public class CourseInfo {
      * @return
      */
     public static int getCheckpointAmount(String courseName) {
-        return getConfig().getInt(courseName.toLowerCase() + ".Points");
+        return Parkour.getConfig(ConfigType.CHECKPOINTS).getInt(courseName.toLowerCase() + ".Checkpoints");
     }
 
     /**
@@ -143,7 +138,7 @@ public class CourseInfo {
      * @return
      */
     public static String getCreator(String courseName) {
-        return getConfig().getString(courseName.toLowerCase() + ".Creator");
+        return getCourseConfig().getString(courseName.toLowerCase() + ".Creator");
     }
 
     /**
@@ -153,8 +148,7 @@ public class CourseInfo {
      * @param playerName
      */
     public static void setCreator(String courseName, String playerName) {
-        getConfig().set(courseName.toLowerCase() + ".Creator", playerName);
-        getConfig().save();
+        getCourseConfig().set(courseName.toLowerCase() + ".Creator", playerName);
     }
 
     /**
@@ -164,7 +158,7 @@ public class CourseInfo {
      * @return
      */
     public static int getMinimumLevel(String courseName) {
-        return getConfig().getInt(courseName.toLowerCase() + ".MinimumLevel");
+        return getCourseConfig().getInt(courseName.toLowerCase() + ".MinimumLevel");
     }
 
     /**
@@ -174,8 +168,7 @@ public class CourseInfo {
      * @param level
      */
     public static void setMinimumLevel(String courseName, int level) {
-        getConfig().set(courseName.toLowerCase() + ".MinimumLevel", level);
-        getConfig().save();
+        getCourseConfig().set(courseName.toLowerCase() + ".MinimumLevel", level);
     }
 
     /**
@@ -185,7 +178,7 @@ public class CourseInfo {
      * @return
      */
     public static String getParkourKit(String courseName) {
-        return getConfig().getString(courseName.toLowerCase() + ".ParkourKit", Constants.DEFAULT);
+        return getCourseConfig().getString(courseName.toLowerCase() + ".ParkourKit", Constants.DEFAULT);
     }
 
     /**
@@ -195,7 +188,7 @@ public class CourseInfo {
      * @return
      */
     public static boolean hasParkourKit(String courseName) {
-        return getConfig().contains(courseName.toLowerCase() + ".ParkourKit");
+        return getCourseConfig().contains(courseName.toLowerCase() + ".ParkourKit");
     }
 
     /**
@@ -205,8 +198,7 @@ public class CourseInfo {
      * @param parkourKitName
      */
     public static void setParkourKit(String courseName, String parkourKitName) {
-        getConfig().set(courseName.toLowerCase() + ".ParkourKit", parkourKitName.toLowerCase());
-        getConfig().save();
+        getCourseConfig().set(courseName.toLowerCase() + ".ParkourKit", parkourKitName.toLowerCase());
     }
 
     /**
@@ -216,7 +208,7 @@ public class CourseInfo {
      * @return death count
      */
     public static int getMaximumDeaths(String courseName) {
-        return getConfig().getInt(courseName.toLowerCase() + ".MaxDeaths", 0);
+        return getCourseConfig().getInt(courseName.toLowerCase() + ".MaxDeaths", -1);
     }
 
     /**
@@ -226,7 +218,7 @@ public class CourseInfo {
      * @return seconds
      */
     public static int getMaximumTime(String courseName) {
-        return getConfig().getInt(courseName.toLowerCase() + ".MaxTime", 0);
+        return getCourseConfig().getInt(courseName.toLowerCase() + ".MaxTime", -1);
     }
 
     /**
@@ -236,8 +228,7 @@ public class CourseInfo {
      * @param amount
      */
     public static void setMaximumDeaths(String courseName, int amount) {
-        getConfig().set(courseName.toLowerCase() + ".MaxDeaths", amount);
-        getConfig().save();
+        getCourseConfig().set(courseName.toLowerCase() + ".MaxDeaths", amount);
     }
 
     /**
@@ -247,8 +238,7 @@ public class CourseInfo {
      * @param seconds
      */
     public static void setMaximumTime(String courseName, int seconds) {
-        getConfig().set(courseName.toLowerCase() + ".MaxTime", seconds);
-        getConfig().save();
+        getCourseConfig().set(courseName.toLowerCase() + ".MaxTime", seconds);
     }
 
     /**
@@ -258,7 +248,7 @@ public class CourseInfo {
      * @return boolean
      */
     public static boolean getFinished(String courseName) {
-        return getConfig().getBoolean(courseName.toLowerCase() + ".Finished");
+        return getCourseConfig().getBoolean(courseName.toLowerCase() + ".Finished");
     }
 
     /**
@@ -268,8 +258,7 @@ public class CourseInfo {
      * @param finished
      */
     public static void setFinished(String courseName, boolean finished) {
-        getConfig().set(courseName.toLowerCase() + ".Finished", finished);
-        getConfig().save();
+        getCourseConfig().set(courseName.toLowerCase() + ".Finished", finished);
     }
 
     /**
@@ -279,7 +268,7 @@ public class CourseInfo {
      * @return
      */
     public static List<String> getCommandsPrize(String courseName) {
-        return getConfig().getStringList(courseName.toLowerCase() + ".Prize.CMD");
+        return getCourseConfig().getStringList(courseName.toLowerCase() + ".Prize.CMD");
     }
 
     /**
@@ -289,7 +278,7 @@ public class CourseInfo {
      * @return
      */
     public static boolean hasCommandPrize(String courseName) {
-        return getConfig().contains(courseName.toLowerCase() + ".Prize.CMD");
+        return getCourseConfig().contains(courseName.toLowerCase() + ".Prize.CMD");
     }
 
     /**
@@ -302,8 +291,7 @@ public class CourseInfo {
         List<String> commands = getCommandsPrize(courseName);
         commands.add(command);
 
-        getConfig().set(courseName.toLowerCase() + ".Prize.CMD", commands);
-        getConfig().save();
+        getCourseConfig().set(courseName.toLowerCase() + ".Prize.CMD", commands);
     }
 
     /**
@@ -314,9 +302,8 @@ public class CourseInfo {
      * @param amount
      */
     public static void setMaterialPrize(String courseName, String material, int amount) {
-        getConfig().set(courseName.toLowerCase() + ".Prize.Material", material);
-        getConfig().set(courseName.toLowerCase() + ".Prize.Amount", amount);
-        getConfig().save();
+        getCourseConfig().set(courseName.toLowerCase() + ".Prize.Material", material);
+        getCourseConfig().set(courseName.toLowerCase() + ".Prize.Amount", amount);
     }
 
     /**
@@ -326,7 +313,7 @@ public class CourseInfo {
      * @return
      */
     public static int getXPPrize(String courseName) {
-        return getConfig().getInt(courseName.toLowerCase() + ".Prize.XP");
+        return getCourseConfig().getInt(courseName.toLowerCase() + ".Prize.XP");
     }
 
     /**
@@ -336,8 +323,7 @@ public class CourseInfo {
      * @param amount
      */
     public static void setXPPrize(String courseName, int amount) {
-        getConfig().set(courseName.toLowerCase() + ".Prize.XP", amount);
-        getConfig().save();
+        getCourseConfig().set(courseName.toLowerCase() + ".Prize.XP", amount);
     }
 
     /**
@@ -346,9 +332,8 @@ public class CourseInfo {
      * @param courseName
      */
     public static void increaseComplete(String courseName) {
-        int completed = getConfig().getInt(courseName.toLowerCase() + ".Completed");
-        getConfig().set(courseName.toLowerCase() + ".Completed", completed + 1);
-        getConfig().save();
+        int completed = getCourseConfig().getInt(courseName.toLowerCase() + ".Completed");
+        getCourseConfig().set(courseName.toLowerCase() + ".Completed", completed + 1);
     }
 
     /**
@@ -357,7 +342,7 @@ public class CourseInfo {
      * @return amount
      */
     public static int getCompletions(String courseName) {
-        return getConfig().getInt(courseName + ".Completed", 0);
+        return getCourseConfig().getInt(courseName + ".Completed", 0);
     }
 
     /**
@@ -366,9 +351,8 @@ public class CourseInfo {
      * @param courseName
      */
     public static void increaseView(String courseName) {
-        int views = getConfig().getInt(courseName.toLowerCase() + ".Views");
-        getConfig().set(courseName.toLowerCase() + ".Views", views + 1);
-        getConfig().save();
+        int views = getCourseConfig().getInt(courseName.toLowerCase() + ".Views");
+        getCourseConfig().set(courseName.toLowerCase() + ".Views", views + 1);
     }
 
     /**
@@ -378,7 +362,7 @@ public class CourseInfo {
      * @return
      */
     public static int getRewardLevel(String courseName) {
-        return getConfig().getInt(courseName.toLowerCase() + ".Level");
+        return getCourseConfig().getInt(courseName.toLowerCase() + ".Level");
     }
 
     /**
@@ -388,8 +372,7 @@ public class CourseInfo {
      * @param level
      */
     public static void setRewardLevel(String courseName, int level) {
-        getConfig().set(courseName.toLowerCase() + ".Level", level);
-        getConfig().save();
+        getCourseConfig().set(courseName.toLowerCase() + ".Level", level);
     }
 
     /**
@@ -399,7 +382,7 @@ public class CourseInfo {
      * @return
      */
     public static int getRewardLevelAdd(String courseName) {
-        return getConfig().getInt(courseName.toLowerCase() + ".LevelAdd");
+        return getCourseConfig().getInt(courseName.toLowerCase() + ".LevelAdd");
     }
 
     /**
@@ -409,8 +392,7 @@ public class CourseInfo {
      * @param amount
      */
     public static void setRewardLevelAdd(String courseName, String amount) {
-        getConfig().set(courseName.toLowerCase() + ".LevelAdd", Integer.parseInt(amount));
-        getConfig().save();
+        getCourseConfig().set(courseName.toLowerCase() + ".LevelAdd", Integer.parseInt(amount));
     }
 
     /**
@@ -420,7 +402,7 @@ public class CourseInfo {
      * @return
      */
     public static boolean getRewardOnce(String courseName) {
-        return getConfig().getBoolean(courseName.toLowerCase() + ".RewardOnce");
+        return getCourseConfig().getBoolean(courseName.toLowerCase() + ".RewardOnce");
     }
 
     /**
@@ -430,8 +412,7 @@ public class CourseInfo {
      * @param enabled
      */
     public static void setRewardOnce(String courseName, boolean enabled) {
-        getConfig().set(courseName.toLowerCase() + ".RewardOnce", enabled);
-        getConfig().save();
+        getCourseConfig().set(courseName.toLowerCase() + ".RewardOnce", enabled);
     }
 
     public static boolean hasRewardDelay(String courseName) {
@@ -439,65 +420,79 @@ public class CourseInfo {
     }
 
     public static int getRewardDelay(String courseName) {
-        return getConfig().getInt(courseName.toLowerCase() + ".RewardDelay", 0);
+        return getCourseConfig().getInt(courseName.toLowerCase() + ".RewardDelay", 0);
     }
 
     public static void setRewardDelay(String courseName, int rewardDelay) {
-        getConfig().set(courseName.toLowerCase() + ".RewardDelay", rewardDelay);
-        getConfig().save();
+        getCourseConfig().set(courseName.toLowerCase() + ".RewardDelay", rewardDelay);
     }
 
     public static int getRewardParkoins(String courseName) {
-        return getConfig().getInt(courseName.toLowerCase() + ".Parkoins");
+        return getCourseConfig().getInt(courseName.toLowerCase() + ".Parkoins");
     }
 
     public static void setRewardParkoins(String courseName, int parkoins) {
-        getConfig().set(courseName.toLowerCase() + ".Parkoins", parkoins);
-        getConfig().save();
+        getCourseConfig().set(courseName.toLowerCase() + ".Parkoins", parkoins);
     }
 
-    public static Material getJoinItem(String courseName) {
-        return Utils.lookupMaterial(getConfig().getString(courseName.toLowerCase() + ".JoinItemMaterial"));
+    public static List<ItemStack> getJoinItems(String courseName) {
+        List<ItemStack> joinItems = new ArrayList<>();
+        ConfigurationSection joinItemStack = getCourseConfig().getConfigurationSection(courseName.toLowerCase() + ".JoinItems");
+
+        if (joinItemStack != null) {
+            Set<String> materials = joinItemStack.getKeys(false);
+
+            for (String materialName : materials) {
+                Material material = MaterialUtils.lookupMaterial(materialName);
+                if (material == null) {
+                    continue;
+                }
+
+                int amount = joinItemStack.getInt(materialName + ".Amount");
+                String displayName = joinItemStack.getString(materialName + ".Label");
+                boolean unbreakable = joinItemStack.getBoolean(materialName + ".Unbreakable", false);
+
+                ItemStack itemStack = new ItemStack(material, amount);
+                ItemMeta itemMeta = itemStack.getItemMeta();
+                if (displayName != null) {
+                    itemMeta.setDisplayName(displayName);
+                }
+                itemMeta.setUnbreakable(unbreakable);
+                itemStack.setItemMeta(itemMeta);
+                joinItems.add(itemStack);
+            }
+        }
+
+        return joinItems;
     }
 
-    public static int getJoinItemAmount(String courseName) {
-        return getConfig().getInt(courseName.toLowerCase() + ".JoinItemAmount", 1);
-    }
+    public static void addJoinItem(String courseName, String material, int amount, String label, boolean unbreakable) {
+        courseName = courseName.toLowerCase();
 
-    public static String getJoinItemLabel(String courseName) {
-        return getConfig().getString(courseName.toLowerCase() + ".JoinItemLabel");
-    }
-
-    public static boolean hasJoinItem(String courseName) {
-        return getConfig().contains(courseName.toLowerCase() + ".JoinItemMaterial");
-    }
-
-    public static void setJoinItem(String courseName, String material, int amount) {
-        getConfig().set(courseName.toLowerCase() + ".JoinItemMaterial", material.toUpperCase());
-        getConfig().set(courseName.toLowerCase() + ".JoinItemAmount", amount);
-        getConfig().save();
+        getCourseConfig().set(courseName + ".JoinItems." + material + ".Amount", amount);
+        getCourseConfig().set(courseName + ".JoinItems." + material + ".Label", label);
+        getCourseConfig().set(courseName + ".JoinItems." + material + ".Unbreakable", unbreakable);
     }
 
     public static String getWorld(String courseName) {
-        return getConfig().getString(courseName.toLowerCase() + ".World");
+        return getCourseConfig().getString(courseName.toLowerCase() + ".World");
     }
 
     public static Material getMaterialPrize(String courseName) {
-        return Utils.lookupMaterial(getConfig().getString(courseName.toLowerCase() + ".Prize.Material"));
+        return MaterialUtils.lookupMaterial(getCourseConfig().getString(courseName.toLowerCase() + ".Prize.Material"));
     }
 
     public static int getMaterialPrizeAmount(String courseName) {
-        return getConfig().getInt(courseName.toLowerCase() + ".Prize.Amount", 0);
+        return getCourseConfig().getInt(courseName.toLowerCase() + ".Prize.Amount", 0);
     }
 
     public static boolean hasMaterialPrize(String courseName) {
-        return getConfig().contains(courseName.toLowerCase() + ".Prize.Material");
+        return getCourseConfig().contains(courseName.toLowerCase() + ".Prize.Material");
     }
 
     public static void resetLinks(String courseName) {
-        getConfig().set(courseName.toLowerCase() + ".LinkedLobby", null);
-        getConfig().set(courseName.toLowerCase() + ".LinkedCourse", null);
-        getConfig().save();
+        getCourseConfig().set(courseName.toLowerCase() + ".LinkedLobby", null);
+        getCourseConfig().set(courseName.toLowerCase() + ".LinkedCourse", null);
     }
 
     public static void deleteCourse(String courseName) {
@@ -505,19 +500,16 @@ public class CourseInfo {
 
         List<String> courseList = getAllCourses();
         courseList.remove(courseName);
-        getConfig().set(courseName, null);
-        getConfig().set("Courses", courseList);
-        getConfig().save();
-        Parkour.getDatabase().deleteCourseAndReferences(courseName);
+        getCourseConfig().set(courseName, null);
+        getCourseConfig().set("Courses", courseList);
+
+        Parkour.getInstance().getDatabase().deleteCourseAndReferences(courseName);
 
         PlayerInfo.removeCompletedCourse(courseName);
     }
 
     public static void resetPrizes(String courseName) {
-        courseName = courseName.toLowerCase();
-
-        getConfig().set(courseName + ".Prize", null);
-        getConfig().save();
+        getCourseConfig().set(courseName.toLowerCase() + ".Prize", null);
     }
 
     /**
@@ -529,18 +521,17 @@ public class CourseInfo {
      * @param player
      */
     public static void displayCourseInfo(String courseName, Player player) {
-        if (!CourseMethods.exist(courseName)) {
-            player.sendMessage(Utils.getTranslation("Error.Unknown"));
+        if (!Parkour.getInstance().getCourseManager().courseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
             return;
         }
 
         courseName = courseName.toLowerCase();
-        FileConfiguration config = getConfig();
+        FileConfiguration config = getCourseConfig();
         ChatColor aqua = ChatColor.AQUA;
 
         int views = config.getInt(courseName + ".Views");
         int completed = config.getInt(courseName + ".Completed");
-        int checkpoints = config.getInt(courseName + ".Points");
         int maxDeaths = config.getInt(courseName + ".MaxDeaths");
         int maxTime = config.getInt(courseName + ".MaxTime");
         int minLevel = config.getInt(courseName + ".MinimumLevel");
@@ -556,12 +547,11 @@ public class CourseInfo {
         String mode = config.getString(courseName + ".Mode");
 
         double completePercent = Math.round((completed * 1.0 / views) * 100);
-
-        player.sendMessage(Utils.getStandardHeading(Utils.standardizeText(courseName) + " statistics"));
+        TranslationUtils.sendHeading(StringUtils.standardizeText(courseName) + " statistics", player);
 
         player.sendMessage("Views: " + aqua + views);
         player.sendMessage("Completed: " + aqua + completed + " times (" + completePercent + "%)");
-        player.sendMessage("Checkpoints: " + aqua + checkpoints);
+        player.sendMessage("Checkpoints: " + aqua + getCheckpointAmount(courseName));
         player.sendMessage("Creator: " + aqua + creator);
         player.sendMessage("Finished: " + aqua + finished);
 
@@ -602,10 +592,10 @@ public class CourseInfo {
         }
 
         if (maxTime > 0) {
-            player.sendMessage("Time Limit: " + aqua + Utils.convertSecondsToTime(maxTime));
+            player.sendMessage("Time Limit: " + aqua + DateTimeUtils.convertSecondsToTime(maxTime));
         }
 
-        if (Static.getEconomy()) {
+        if (Parkour.getInstance().getEconomyApi().isEnabled()) {
             int joinFee = getEconomyJoiningFee(courseName);
             int finishReward = getEconomyFinishReward(courseName);
             if (joinFee > 0) {
@@ -626,10 +616,10 @@ public class CourseInfo {
             player.sendMessage("XP Prize: " + aqua + getXPPrize(courseName));
         }
 
-        if (hasRewardDelay(courseName) && Parkour.getSettings().isDisplayPrizeCooldown()) {
+        if (hasRewardDelay(courseName) && Parkour.getDefaultConfig().isDisplayPrizeCooldown()) {
             player.sendMessage("Reward Cooldown (days): " + aqua + getRewardDelay(courseName));
-            if (!Utils.hasPrizeCooldownDurationPassed(player, courseName, false)) {
-                player.sendMessage("Cooldown Remaining: " + aqua + Utils.getTimeRemaining(player, courseName));
+            if (!Parkour.getInstance().getPlayerManager().hasPrizeCooldownDurationPassed(player, courseName, false)) {
+                player.sendMessage("Cooldown Remaining: " + aqua + DateTimeUtils.getTimeRemaining(player, courseName));
             }
         }
     }

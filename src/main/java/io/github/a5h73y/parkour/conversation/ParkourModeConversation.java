@@ -1,7 +1,8 @@
 package io.github.a5h73y.parkour.conversation;
 
 import io.github.a5h73y.parkour.course.CourseInfo;
-import io.github.a5h73y.parkour.utilities.Utils;
+import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.utility.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.FixedSetPrompt;
@@ -37,7 +38,7 @@ public class ParkourModeConversation extends ParkourConversation {
 
             CourseInfo.setMode(courseName, choice);
 
-            context.getForWhom().sendRawMessage(Utils.getTranslation("Parkour.SetMode")
+            context.getForWhom().sendRawMessage(TranslationUtils.getTranslation("Parkour.SetMode")
                     .replace("%COURSE%", courseName)
                     .replace("%MODE%", choice));
 

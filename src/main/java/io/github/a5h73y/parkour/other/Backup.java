@@ -1,5 +1,8 @@
 package io.github.a5h73y.parkour.other;
 
+import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.utility.DateTimeUtils;
+import io.github.a5h73y.parkour.utility.PluginUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -9,15 +12,12 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.utilities.Utils;
-
 public class Backup {
 
     private static final String SOURCE_FOLDER = Parkour.getInstance().getDataFolder().toString();
     private static final String BACKUPS_FOLDER = "backups";
     private static final String OUTPUT_ZIP_FILE = SOURCE_FOLDER + File.separator + BACKUPS_FOLDER + File.separator
-            + "[" + Utils.getDate() + "] Backup.zip";
+            + "[" + DateTimeUtils.getDisplayDate() + "] Backup.zip";
     private static List<String> fileList;
 
     public static void backupNow() {
@@ -32,14 +32,14 @@ public class Backup {
      */
     public static void backupNow(boolean message) {
         if (message) {
-            Utils.log("Beginning backup...");
+            PluginUtils.log("Beginning backup...");
         }
         fileList = new ArrayList<>();
 
         generateFileList(new File(SOURCE_FOLDER));
         zipIt();
         if (message) {
-            Utils.log("Backup completed!");
+            PluginUtils.log("Backup completed!");
         }
     }
 

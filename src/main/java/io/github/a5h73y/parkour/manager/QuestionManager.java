@@ -1,18 +1,15 @@
 package io.github.a5h73y.parkour.manager;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.course.CheckpointMethods;
+import io.github.a5h73y.parkour.course.CheckpointManager;
 import io.github.a5h73y.parkour.course.CourseInfo;
-import io.github.a5h73y.parkour.course.CourseMethods;
-import io.github.a5h73y.parkour.course.LobbyMethods;
 import io.github.a5h73y.parkour.enums.QuestionType;
 import io.github.a5h73y.parkour.kit.ParkourKitInfo;
-import io.github.a5h73y.parkour.utilities.Utils;
 import io.github.a5h73y.parkour.player.PlayerInfo;
-import io.github.a5h73y.parkour.utilities.Static;
+import io.github.a5h73y.parkour.utility.PluginUtils;
+import io.github.a5h73y.parkour.utility.TranslationUtils;
+import java.util.HashMap;
+import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -25,102 +22,90 @@ import org.bukkit.entity.Player;
  */
 public class QuestionManager {
 
-    private static QuestionManager instance;
-
-    private Map<String, Question> questionMap = new HashMap<>();
-
-    private QuestionManager() {
-    }
-
-    public static QuestionManager getInstance() {
-        if (instance == null) {
-            instance = new QuestionManager();
-        }
-        return instance;
-    }
+    private final Map<String, Question> questionMap = new HashMap<>();
 
     public boolean hasPlayerBeenAskedQuestion(String playerName) {
         return questionMap.containsKey(playerName);
     }
 
     public void askResetPlayerQuestion(Player player, String targetName) {
-        player.sendMessage(Static.getParkourString() + "You are about to reset player " + ChatColor.AQUA + targetName + ChatColor.WHITE + "...");
+        player.sendMessage(Parkour.getPrefix() + "You are about to reset player " + ChatColor.AQUA + targetName + ChatColor.WHITE + "...");
         player.sendMessage(ChatColor.GRAY + "Resetting a player will delete all their times across all courses and delete all various Parkour attributes.");
         askQuestion(player, targetName, QuestionType.RESET_PLAYER);
     }
 
     public void askResetCourseQuestion(Player player, String courseName) {
         courseName = courseName.toLowerCase();
-        player.sendMessage(Static.getParkourString() + "You are about to reset " + ChatColor.AQUA + courseName + ChatColor.WHITE + "...");
+        player.sendMessage(Parkour.getPrefix() + "You are about to reset " + ChatColor.AQUA + courseName + ChatColor.WHITE + "...");
         player.sendMessage(ChatColor.GRAY + "Resetting a course will delete all the statistics stored, which includes leaderboards and various Parkour attributes. This will NOT affect the spawn or checkpoints.");
         askQuestion(player, courseName, QuestionType.RESET_COURSE);
     }
 
     public void askResetLeaderboardQuestion(Player player, String courseName) {
         courseName = courseName.toLowerCase();
-        player.sendMessage(Static.getParkourString() + "You are about to reset " + ChatColor.AQUA + courseName + ChatColor.WHITE + " leaderboards...");
+        player.sendMessage(Parkour.getPrefix() + "You are about to reset " + ChatColor.AQUA + courseName + ChatColor.WHITE + " leaderboards...");
         player.sendMessage(ChatColor.GRAY + "Resetting the leaderboards will remove all times from the database for this course. This will NOT affect the course in any other way.");
         askQuestion(player, courseName, QuestionType.RESET_LEADERBOARD);
     }
 
     public void askResetPlayerLeaderboardQuestion(Player player, String courseName, String targetPlayerName) {
         courseName = courseName.toLowerCase();
-        player.sendMessage(Static.getParkourString() + "You are about to reset " + ChatColor.AQUA + targetPlayerName + ChatColor.WHITE + " leaderboards on course " + ChatColor.AQUA + "...");
+        player.sendMessage(Parkour.getPrefix() + "You are about to reset " + ChatColor.AQUA + targetPlayerName + ChatColor.WHITE + " leaderboards on course " + ChatColor.AQUA + "...");
         player.sendMessage(ChatColor.GRAY + "Resetting the player's leaderboards will remove all times they have from the database for this course. This will NOT affect the player or course in any other way.");
         askQuestion(player, targetPlayerName+ ";" + courseName, QuestionType.RESET_PLAYER_LEADERBOARD);
     }
 
     public void askResetPrizeQuestion(Player player, String courseName) {
         courseName = courseName.toLowerCase();
-        player.sendMessage(Static.getParkourString() + "You are about to reset the prizes for " + ChatColor.AQUA + courseName + ChatColor.WHITE + "...");
+        player.sendMessage(Parkour.getPrefix() + "You are about to reset the prizes for " + ChatColor.AQUA + courseName + ChatColor.WHITE + "...");
         player.sendMessage(ChatColor.GRAY + "Resetting the prizes for this course will set the prize to the default prize found in the main configuration file.");
         askQuestion(player, courseName, QuestionType.RESET_PRIZES);
     }
 
     public void askDeleteCourseQuestion(Player player, String courseName) {
         courseName = courseName.toLowerCase();
-        player.sendMessage(Static.getParkourString() + "You are about to delete course " + ChatColor.AQUA + courseName + ChatColor.WHITE + "...");
+        player.sendMessage(Parkour.getPrefix() + "You are about to delete course " + ChatColor.AQUA + courseName + ChatColor.WHITE + "...");
         player.sendMessage(ChatColor.GRAY + "This will remove all information about the course ever existing, which includes all leaderboard data, course statistics and everything else the plugin knows about it.");
         askQuestion(player, courseName, QuestionType.DELETE_COURSE);
     }
 
     public void askDeleteCheckpointQuestion(Player player, String courseName, int checkpoint) {
         courseName = courseName.toLowerCase();
-        player.sendMessage(Static.getParkourString() + "You are about to delete checkpoint " + ChatColor.AQUA + checkpoint + ChatColor.WHITE + " for course " + ChatColor.AQUA + courseName + ChatColor.WHITE + "...");
+        player.sendMessage(Parkour.getPrefix() + "You are about to delete checkpoint " + ChatColor.AQUA + checkpoint + ChatColor.WHITE + " for course " + ChatColor.AQUA + courseName + ChatColor.WHITE + "...");
         player.sendMessage(ChatColor.GRAY + "Deleting a checkpoint will impact everybody that is currently playing on " + courseName + ". You should not set a course to finished and then continue to make changes.");
         askQuestion(player, courseName, QuestionType.DELETE_CHECKPOINT);
     }
 
     public void askDeleteLobbyQuestion(Player player, String lobbyName) {
-        player.sendMessage(Static.getParkourString() + "You are about to delete lobby " + ChatColor.AQUA + lobbyName + ChatColor.WHITE + "...");
+        player.sendMessage(Parkour.getPrefix() + "You are about to delete lobby " + ChatColor.AQUA + lobbyName + ChatColor.WHITE + "...");
         player.sendMessage(ChatColor.GRAY + "Deleting a lobby will remove all information about it from the server.");
         askQuestion(player, lobbyName, QuestionType.DELETE_LOBBY);
     }
 
     public void askDeleteKitQuestion(Player player, String kitName) {
-        player.sendMessage(Static.getParkourString() + "You are about to delete ParkourKit " + ChatColor.AQUA + kitName + ChatColor.WHITE + "...");
+        player.sendMessage(Parkour.getPrefix() + "You are about to delete ParkourKit " + ChatColor.AQUA + kitName + ChatColor.WHITE + "...");
         player.sendMessage(ChatColor.GRAY + "Deleting a ParkourKit will remove all information about it from the server.");
         askQuestion(player, kitName, QuestionType.DELETE_KIT);
     }
 
     public void askDeleteAutoStartQuestion(Player player, String coordinates) {
-        player.sendMessage(Static.getParkourString() + "You are about to delete the autostart at this location...");
+        player.sendMessage(Parkour.getPrefix() + "You are about to delete the autostart at this location...");
         player.sendMessage(ChatColor.GRAY + "Deleting an autostart will remove all information about it from the server.");
         askQuestion(player, coordinates, QuestionType.DELETE_AUTOSTART);
     }
 
     public void answerQuestion(Player player, String argument) {
         if (argument.equalsIgnoreCase("yes")) {
-            Question question = getInstance().questionMap.get(player.getName());
+            Question question = questionMap.get(player.getName());
             question.confirm(player, question.getType(), question.getArgument());
-            getInstance().questionMap.remove(player.getName());
+            questionMap.remove(player.getName());
 
         } else if (argument.equalsIgnoreCase("no")) {
-            player.sendMessage(Static.getParkourString() + "Question cancelled!");
-            getInstance().questionMap.remove(player.getName());
+            player.sendMessage(Parkour.getPrefix() + "Question cancelled!");
+            questionMap.remove(player.getName());
 
         } else {
-            player.sendMessage(Static.getParkourString() + ChatColor.RED + "Invalid question answer.");
+            player.sendMessage(Parkour.getPrefix() + ChatColor.RED + "Invalid question answer.");
             player.sendMessage("Please use either " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " or " + ChatColor.AQUA + "/pa no");
         }
     }
@@ -130,7 +115,7 @@ public class QuestionManager {
         questionMap.put(player.getName(), new Question(type, argument));
     }
 
-    private class Question {
+    private static class Question {
 
         private final QuestionType type;
         private final String argument;
@@ -151,36 +136,36 @@ public class QuestionManager {
         private void confirm(Player player, QuestionType type, String argument) {
             switch (type) {
                 case DELETE_COURSE:
-                    CourseMethods.deleteCourse(argument, player);
-                    Utils.logToFile(argument + " was deleted by " + player.getName());
+                    Parkour.getInstance().getCourseManager().deleteCourse(argument, player);
+                    PluginUtils.logToFile(argument + " was deleted by " + player.getName());
                     return;
 
                 case DELETE_CHECKPOINT:
-                    CheckpointMethods.deleteCheckpoint(argument, player);
-                    Utils.logToFile(argument + "'s checkpoint " + CourseInfo.getCheckpointAmount(argument) + " was deleted by " + player.getName());
+                    Parkour.getInstance().getCheckpointManager().deleteCheckpoint(argument, player);
+                    PluginUtils.logToFile(argument + "'s checkpoint " + CourseInfo.getCheckpointAmount(argument) + " was deleted by " + player.getName());
                     return;
 
                 case DELETE_LOBBY:
-                    LobbyMethods.deleteLobby(argument, player);
-                    Utils.logToFile("lobby " + argument + " was deleted by " + player.getName());
+                    Parkour.getInstance().getLobbyManager().deleteLobby(argument, player);
+                    PluginUtils.logToFile("lobby " + argument + " was deleted by " + player.getName());
                     return;
 
                 case DELETE_KIT:
                     ParkourKitInfo.deleteKit(argument);
-                    player.sendMessage(Static.getParkourString() + "ParkoutKit " + ChatColor.AQUA + argument + ChatColor.WHITE + " deleted...");
-                    Utils.logToFile("ParkourKit " + argument + " was deleted by " + player.getName());
+                    player.sendMessage(Parkour.getPrefix() + "ParkoutKit " + ChatColor.AQUA + argument + ChatColor.WHITE + " deleted...");
+                    PluginUtils.logToFile("ParkourKit " + argument + " was deleted by " + player.getName());
                     return;
 
                 case DELETE_AUTOSTART:
-                    CourseMethods.deleteAutoStart(argument, player);
-                    player.sendMessage(Static.getParkourString() + "AutoStart deleted...");
-                    Utils.logToFile("AutoStart at " + argument + " was deleted by " + player.getName());
+                    Parkour.getInstance().getCourseManager().deleteAutoStart(argument, player);
+                    player.sendMessage(Parkour.getPrefix() + "AutoStart deleted...");
+                    PluginUtils.logToFile("AutoStart at " + argument + " was deleted by " + player.getName());
                     return;
 
                 case RESET_COURSE:
-                    CourseMethods.resetCourse(argument);
-                    player.sendMessage(Utils.getTranslation("Parkour.Reset").replace("%COURSE%", argument));
-                    Utils.logToFile(argument + " was reset by " + player.getName());
+                    Parkour.getInstance().getCourseManager().resetCourse(argument);
+                    TranslationUtils.sendValueTranslation("Parkour.Reset", argument, player);
+                    PluginUtils.logToFile(argument + " was reset by " + player.getName());
                     return;
 
                 case RESET_PLAYER:
@@ -188,29 +173,29 @@ public class QuestionManager {
 
                     if (target != null) {
                         PlayerInfo.resetPlayer(target);
-                        player.sendMessage(Static.getParkourString() + ChatColor.AQUA + argument + ChatColor.WHITE + " has been reset.");
-                        Utils.logToFile("player " + argument + " was reset by " + player.getName());
+                        player.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + argument + ChatColor.WHITE + " has been reset.");
+                        PluginUtils.logToFile("player " + argument + " was reset by " + player.getName());
                     } else {
-                        player.sendMessage(Static.getParkourString() + ChatColor.AQUA + argument + ChatColor.WHITE + " does not exist.");
+                        player.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + argument + ChatColor.WHITE + " does not exist.");
                     }
                     return;
 
                 case RESET_LEADERBOARD:
-                    Parkour.getDatabase().deleteCourseTimes(argument);
-                    player.sendMessage(Static.getParkourString() + ChatColor.AQUA + argument + ChatColor.WHITE + " leaderboards have been reset.");
-                    Utils.logToFile(argument + " leaderboards were reset by " + player.getName());
+                    Parkour.getInstance().getDatabase().deleteCourseTimes(argument);
+                    player.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + argument + ChatColor.WHITE + " leaderboards have been reset.");
+                    PluginUtils.logToFile(argument + " leaderboards were reset by " + player.getName());
                     return;
 
                 case RESET_PLAYER_LEADERBOARD:
                     String[] arguments = argument.split(";");
-                    Parkour.getDatabase().deletePlayerCourseTimes(arguments[0], arguments[1]);
-                    Utils.logToFile(arguments[0] + " leaderboards were reset on course + " + arguments[1] + " by " + player.getName());
+                    Parkour.getInstance().getDatabase().deletePlayerCourseTimes(arguments[0], arguments[1]);
+                    PluginUtils.logToFile(arguments[0] + " leaderboards were reset on course + " + arguments[1] + " by " + player.getName());
                     return;
 
                 case RESET_PRIZES:
                     CourseInfo.resetPrizes(argument);
-                    player.sendMessage(Static.getParkourString() + ChatColor.AQUA + argument + ChatColor.WHITE + " prizes have been reset.");
-                    Utils.logToFile(argument + " prizes were reset by " + player.getName());
+                    player.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + argument + ChatColor.WHITE + " prizes have been reset.");
+                    PluginUtils.logToFile(argument + " prizes were reset by " + player.getName());
                     return;
             }
         }

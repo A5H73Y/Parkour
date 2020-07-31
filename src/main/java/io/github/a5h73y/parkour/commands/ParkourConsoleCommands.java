@@ -1,12 +1,12 @@
 package io.github.a5h73y.parkour.commands;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.course.CourseMethods;
+import io.github.a5h73y.parkour.kit.ParkourKitInfo;
+import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Backup;
 import io.github.a5h73y.parkour.other.Help;
-import io.github.a5h73y.parkour.player.PlayerMethods;
-import io.github.a5h73y.parkour.utilities.Static;
-import io.github.a5h73y.parkour.utilities.Utils;
+import io.github.a5h73y.parkour.utility.PluginUtils;
+import io.github.a5h73y.parkour.utility.ValidationUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,26 +14,30 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-public class ParkourConsoleCommands implements CommandExecutor {
+public class ParkourConsoleCommands extends AbstractPluginReceiver implements CommandExecutor {
+
+    public ParkourConsoleCommands(final Parkour parkour) {
+        super(parkour);
+    }
 
     private static void displayCommands() {
-        Utils.log("pac reload");
-        Utils.log("pac recreate");
-        Utils.log("pac setminlevel (course) (level)");
-        Utils.log("pac setmaxdeath (course) (deaths)");
-        Utils.log("pac setmaxtime (course) (seconds)");
-        Utils.log("pac setjoinitem (course) (item) (amount)");
-        Utils.log("pac rewardonce (course)");
-        Utils.log("pac rewardlevel (course) (level)");
-        Utils.log("pac rewardrank (level) (rank)");
-        Utils.log("pac rewardparkoins (course) (amount)");
-        Utils.log("pac setlevel (player) (level)");
-        Utils.log("pac setrank (player) (rank)");
-        Utils.log("pac list (courses / players)");
-        Utils.log("pac listkit [kit]");
-        Utils.log("pac settings");
-        Utils.log("pac help (command)");
-        Utils.log("pac backup : Create a backup zip of the Parkour config folder");
+        PluginUtils.log("pac reload");
+        PluginUtils.log("pac recreate");
+        PluginUtils.log("pac setminlevel (course) (level)");
+        PluginUtils.log("pac setmaxdeath (course) (deaths)");
+        PluginUtils.log("pac setmaxtime (course) (seconds)");
+        PluginUtils.log("pac setjoinitem (course) (item) (amount)");
+        PluginUtils.log("pac rewardonce (course)");
+        PluginUtils.log("pac rewardlevel (course) (level)");
+        PluginUtils.log("pac rewardrank (level) (rank)");
+        PluginUtils.log("pac rewardparkoins (course) (amount)");
+        PluginUtils.log("pac setlevel (player) (level)");
+        PluginUtils.log("pac setrank (player) (rank)");
+        PluginUtils.log("pac list (courses / players)");
+        PluginUtils.log("pac listkit [kit]");
+        PluginUtils.log("pac settings");
+        PluginUtils.log("pac help (command)");
+        PluginUtils.log("pac backup : Create a backup zip of the Parkour config folder");
     }
 
     @Override
@@ -48,7 +52,7 @@ public class ParkourConsoleCommands implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            sender.sendMessage("v" + Static.getVersion() + " installed. Plugin created by A5H73Y & steve4744.");
+            sender.sendMessage("v" + parkour.getDescription().getVersion() + " installed. Plugin created by A5H73Y & steve4744.");
             sender.sendMessage("Enter 'pac cmds' to display all console commands.");
             return true;
         }
@@ -57,12 +61,12 @@ public class ParkourConsoleCommands implements CommandExecutor {
 
         switch (firstArg) {
             case "reload":
-                Parkour.getInstance().reloadConfigurations();
+                parkour.getConfigManager().reloadConfigs();
                 sender.sendMessage("Config reloaded!");
                 break;
 
             case "join":
-                if (!Utils.validateArgs(sender, args, 3)) {
+                if (!ValidationUtils.validateArgs(sender, args, 3)) {
                     return false;
                 }
 
@@ -73,107 +77,107 @@ public class ParkourConsoleCommands implements CommandExecutor {
                     return false;
                 }
 
-                CourseMethods.joinCourse(player, args[1]);
+                parkour.getPlayerManager().joinCourse(player, args[1]);
                 break;
 
             case "recreate":
-                Parkour.getDatabase().recreateAllCourses();
+                parkour.getDatabase().recreateAllCourses();
                 break;
 
             case "setminlevel":
-                if (!Utils.validateArgs(sender, args, 3)) {
+                if (!ValidationUtils.validateArgs(sender, args, 3)) {
                     return false;
                 }
 
-                CourseMethods.setMinLevel(args, sender);
+                parkour.getCourseManager().setMinLevel(args, sender);
                 break;
 
             case "setmaxdeath":
-                if (!Utils.validateArgs(sender, args, 3)) {
+                if (!ValidationUtils.validateArgs(sender, args, 3)) {
                     return false;
                 }
 
-                CourseMethods.setMaxDeaths(args, sender);
+                parkour.getCourseManager().setMaxDeaths(args, sender);
                 break;
 
             case "setmaxtime":
-                if (!Utils.validateArgs(sender, args, 3)) {
+                if (!ValidationUtils.validateArgs(sender, args, 3)) {
                     return false;
                 }
 
-                CourseMethods.setMaxTime(args, sender);
+                parkour.getCourseManager().setMaxTime(args, sender);
                 break;
 
             case "setjoinitem":
-                if (!Utils.validateArgs(sender, args, 4)) {
+                if (!ValidationUtils.validateArgs(sender, args, 4)) {
                     return false;
                 }
 
-                CourseMethods.setJoinItem(args, sender);
+                parkour.getCourseManager().addJoinItem(args, sender);
                 break;
 
             case "rewardonce":
-                if (!Utils.validateArgs(sender, args, 2)) {
+                if (!ValidationUtils.validateArgs(sender, args, 2)) {
                     return false;
                 }
 
-                CourseMethods.setRewardOnce(args, sender);
+                parkour.getCourseManager().setRewardOnce(args, sender);
                 break;
 
             case "rewardlevel":
-                if (!Utils.validateArgs(sender, args, 3)) {
+                if (!ValidationUtils.validateArgs(sender, args, 3)) {
                     return false;
                 }
 
-                CourseMethods.setRewardParkourLevel(args, sender);
+                parkour.getCourseManager().setRewardParkourLevel(args, sender);
                 break;
 
             case "rewardleveladd":
-                if (!Utils.validateArgs(sender, args, 3)) {
+                if (!ValidationUtils.validateArgs(sender, args, 3)) {
                     return false;
                 }
 
-                CourseMethods.setRewardParkourLevelAddition(args, sender);
+                parkour.getCourseManager().setRewardParkourLevelAddition(args, sender);
                 break;
 
             case "rewardrank":
-                if (!Utils.validateArgs(sender, args, 3)) {
+                if (!ValidationUtils.validateArgs(sender, args, 3)) {
                     return false;
                 }
 
-                CourseMethods.setRewardParkourRank(args, sender);
+                parkour.getCourseManager().setRewardParkourRank(args, sender);
                 break;
 
             case "rewardparkoins":
-                if (!Utils.validateArgs(sender, args, 3)) {
+                if (!ValidationUtils.validateArgs(sender, args, 3)) {
                     return false;
                 }
 
-                CourseMethods.setRewardParkoins(args, sender);
+                parkour.getCourseManager().setRewardParkoins(args, sender);
                 break;
 
             case "setlevel":
-                if (!Utils.validateArgs(sender, args, 3)) {
+                if (!ValidationUtils.validateArgs(sender, args, 3)) {
                     return false;
                 }
 
-                PlayerMethods.setLevel(args, sender);
+                parkour.getPlayerManager().setParkourLevel(args, sender);
                 break;
 
             case "setrank":
-                if (!Utils.validateArgs(sender, args, 3)) {
+                if (!ValidationUtils.validateArgs(sender, args, 3)) {
                     return false;
                 }
 
-                PlayerMethods.setRank(args, sender);
+                parkour.getPlayerManager().setParkourRank(args, sender);
                 break;
 
             case "list":
-                CourseMethods.displayList(args, sender);
+                parkour.getCourseManager().displayList(args, sender);
                 break;
 
             case "listkit":
-                Utils.listParkourKit(args, sender);
+                ParkourKitInfo.listParkourKit(args, sender);
                 break;
 
             case "settings":

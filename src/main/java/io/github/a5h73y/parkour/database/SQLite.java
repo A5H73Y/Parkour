@@ -6,7 +6,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import io.github.a5h73y.parkour.utilities.Utils;
+import io.github.a5h73y.parkour.utility.PluginUtils;
+import io.github.a5h73y.parkour.utility.Utils;
 import pro.husk.Database;
 
 /**
@@ -46,7 +47,7 @@ public class SQLite extends Database {
                 try {
                     dbLocationFolder.createNewFile();
                 } catch (IOException e) {
-                    Utils.log("Unable to create database: " + e.getMessage(), 2);
+                    PluginUtils.log("Unable to create database: " + e.getMessage(), 2);
                     e.printStackTrace();
                 }
             }
@@ -54,7 +55,7 @@ public class SQLite extends Database {
             try {
                 Class.forName("org.sqlite.JDBC");
             } catch (ClassNotFoundException e) {
-                Utils.log("Unable to load sqlite class: " + e.getMessage(), 2);
+                PluginUtils.log("Unable to load sqlite class: " + e.getMessage(), 2);
                 e.printStackTrace();
             }
             this.connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile);

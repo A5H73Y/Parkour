@@ -8,4 +8,9 @@ public class UpgradeParkour {
 	// ???
 	// profit
 
+
+	// go through each string, if there are two instances of "%", then replace the contents with "VALUE".
+	// change gamemode numbers to words
+
+
 }

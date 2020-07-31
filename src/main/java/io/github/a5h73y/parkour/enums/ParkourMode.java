@@ -2,11 +2,14 @@ package io.github.a5h73y.parkour.enums;
 
 public enum ParkourMode {
     NONE,
-    DRUNK,
-    DARKNESS,
     SPEEDY,
-    MOON,
     FREEDOM,
     DROPPER,
-    ROCKETS
+    ROCKETS,
+    NO_RUN, // cancel run toggle event
+    POTION_EFFECT
+        // has PotionEffectType (BLINDNESS)
+        // has duration (10000)
+        // has strength (1)
+        // has optional join text (i.e. "It suddenly becomes dark...")
 }

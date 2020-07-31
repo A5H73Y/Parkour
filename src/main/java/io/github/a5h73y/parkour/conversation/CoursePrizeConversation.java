@@ -2,7 +2,8 @@ package io.github.a5h73y.parkour.conversation;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.course.CourseInfo;
-import io.github.a5h73y.parkour.utilities.Utils;
+import io.github.a5h73y.parkour.utility.MaterialUtils;
+import io.github.a5h73y.parkour.utility.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.conversations.BooleanPrompt;
@@ -64,7 +65,7 @@ public class CoursePrizeConversation extends ParkourConversation {
 
         @Override
         public Prompt acceptInput(ConversationContext context, String message) {
-            Material material = Utils.lookupMaterial(message.toUpperCase());
+            Material material = MaterialUtils.lookupMaterial(message.toUpperCase());
 
             if (material == null) {
                 sendErrorMessage(context, "This is not a valid material");

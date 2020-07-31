@@ -2,7 +2,7 @@ package io.github.a5h73y.parkour.conversation;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.course.CourseInfo;
-import io.github.a5h73y.parkour.utilities.Utils;
+import io.github.a5h73y.parkour.utility.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
@@ -72,12 +72,12 @@ public class LeaderboardConversation extends ParkourConversation {
 
         @Override
         protected boolean isNumberValid(ConversationContext context, Number input) {
-            return input.intValue() > 0 && input.intValue() <= Parkour.getSettings().getLeaderboardMaxEntries();
+            return input.intValue() > 0 && input.intValue() <= Parkour.getDefaultConfig().getLeaderboardMaxEntries();
         }
 
         @Override
         protected String getFailedValidationText(ConversationContext context, Number invalidInput) {
-            return "Amount must be between 1 and " + Parkour.getSettings().getLeaderboardMaxEntries() + ".";
+            return "Amount must be between 1 and " + Parkour.getDefaultConfig().getLeaderboardMaxEntries() + ".";
         }
 
         @Override
@@ -98,10 +98,10 @@ public class LeaderboardConversation extends ParkourConversation {
             Bukkit.getScheduler().runTaskLaterAsynchronously(Parkour.getInstance(), () -> {
                 if (leaderboardType.equals("personal")) {
                     Utils.displayLeaderboard(player,
-                            Parkour.getDatabase().getTopPlayerCourseResults(player.getName(), courseName, amount), courseName);
+                            Parkour.getInstance().getDatabase().getTopPlayerCourseResults(player.getName(), courseName, amount), courseName);
                 } else if (leaderboardType.equals("global")) {
                     Utils.displayLeaderboard(player,
-                            Parkour.getDatabase().getTopCourseResults(courseName, amount), courseName);
+                            Parkour.getInstance().getDatabase().getTopCourseResults(courseName, amount), courseName);
                 }
             }, 3);
 

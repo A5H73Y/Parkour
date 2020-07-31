@@ -1,16 +1,17 @@
 package io.github.a5h73y.parkour.manager;
 
+import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
+import io.github.a5h73y.parkour.course.CourseManager;
+import io.github.a5h73y.parkour.database.TimeEntry;
+import io.github.a5h73y.parkour.enums.ConfigType;
+import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
+import io.github.a5h73y.parkour.utility.DateTimeUtils;
+import io.github.a5h73y.parkour.utility.PluginUtils;
+import io.github.a5h73y.parkour.utility.StringUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.config.ParkourConfiguration;
-import io.github.a5h73y.parkour.course.CourseMethods;
-import io.github.a5h73y.parkour.enums.ConfigType;
-import io.github.a5h73y.parkour.database.TimeEntry;
-import io.github.a5h73y.parkour.player.PlayerMethods;
-import io.github.a5h73y.parkour.utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -20,7 +21,7 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-public class ScoreboardManager {
+public class ScoreboardManager extends AbstractPluginReceiver {
 
     // For some reason the Scoreboard API is so stupid you have to use a blank string to identify the objective.
     // So each objective has a unique ChatColor for identifying it, which will be overwritten anyway
@@ -38,10 +39,11 @@ public class ScoreboardManager {
     private final boolean enabled;
     private final int numberOfRowsNeeded;
 
-    private Map<String, Boolean> configKey = new HashMap<>();
-    private Map<String, String> translationKey = new HashMap<>();
+    private final Map<String, Boolean> configKey = new HashMap<>();
+    private final Map<String, String> translationKey = new HashMap<>();
 
-    public ScoreboardManager() {
+    public ScoreboardManager(Parkour parkour) {
+        super(parkour);
         ParkourConfiguration defaultConfig = Parkour.getConfig(ConfigType.DEFAULT);
         ParkourConfiguration stringsConfig = Parkour.getConfig(ConfigType.STRINGS);
 
@@ -81,7 +83,7 @@ public class ScoreboardManager {
 
         Scoreboard board = setupScoreboard(player);
 
-        if (Parkour.getSettings().isPreventPlayerCollisions() && Utils.getMinorServerVersion() > 8) {
+        if (Parkour.getDefaultConfig().isPreventPlayerCollisions() && PluginUtils.getMinorServerVersion() > 8) {
             Team team = board.registerNewTeam("parkour");
             team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
             team.addEntry(player.getName());
@@ -121,7 +123,7 @@ public class ScoreboardManager {
     }
 
     private Scoreboard setupScoreboard(Player player) {
-        String mainHeading = Utils.colour(translationKey.get("mainHeading"));
+        String mainHeading = StringUtils.colour(translationKey.get("mainHeading"));
 
         // Set up the scoreboard itself
         Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -154,11 +156,11 @@ public class ScoreboardManager {
             return;
         }
 
-        List<TimeEntry> results = Parkour.getDatabase().getTopCourseResults(playerBoard.courseName, 1);
+        List<TimeEntry> results = Parkour.getInstance().getDatabase().getTopCourseResults(playerBoard.courseName, 1);
         TimeEntry result = results.size() > 0 ? results.get(0) : null;
 
         if (configKey.get(BEST_TIME_EVER)) {
-            String bestTimeEver = result != null ? Utils.displayCurrentTime(result.getTime()) : translationKey.get("notCompleted");
+            String bestTimeEver = result != null ? DateTimeUtils.displayCurrentTime(result.getTime()) : translationKey.get("notCompleted");
             print(playerBoard, bestTimeEver, BEST_TIME_EVER);
         }
         if (configKey.get(BEST_TIME_EVER_NAME)) {
@@ -172,8 +174,8 @@ public class ScoreboardManager {
             return;
         }
 
-        List<TimeEntry> result = Parkour.getDatabase().getTopPlayerCourseResults(playerBoard.playerName, playerBoard.courseName, 1);
-        String bestTime = result.size() > 0 ? Utils.displayCurrentTime(result.get(0).getTime()) : translationKey.get("notCompleted");
+        List<TimeEntry> result = Parkour.getInstance().getDatabase().getTopPlayerCourseResults(playerBoard.playerName, playerBoard.courseName, 1);
+        String bestTime = result.size() > 0 ? DateTimeUtils.displayCurrentTime(result.get(0).getTime()) : translationKey.get("notCompleted");
         print(playerBoard, bestTime, BEST_TIME_EVER_ME);
     }
 
@@ -182,10 +184,10 @@ public class ScoreboardManager {
             return;
         }
 
-        String courseName = CourseMethods.findByPlayer(playerBoard.playerName).getName();
+        String courseName = parkour.getCourseManager().findByPlayer(playerBoard.playerName).getName();
         String start = "00:00:00";
         if (Parkour.getConfig(ConfigType.COURSES).contains(courseName + ".MaxTime")) {
-            start = Utils.convertSecondsToTime(Parkour.getConfig(ConfigType.COURSES).getInt(courseName + ".MaxTime", 0));
+            start = DateTimeUtils.convertSecondsToTime(Parkour.getConfig(ConfigType.COURSES).getInt(courseName + ".MaxTime", 0));
         }
         print(playerBoard, start, CURRENT_TIME);
     }
@@ -203,8 +205,8 @@ public class ScoreboardManager {
             return;
         }
 
-        int total_chkpts = PlayerMethods.getParkourSession(playerBoard.playerName).getCourse().getCheckpoints();
-        print(playerBoard, "0 / " + String.valueOf(total_chkpts), CHECKPOINTS);
+        int checkpoints = parkour.getPlayerManager().getParkourSession(playerBoard.playerName).getCourse().getNumberOfCheckpoints();
+        print(playerBoard, "0 / " + checkpoints, CHECKPOINTS);
     }
 
     private void print(PlayerScoreboard playerBoard, String result, String scoreboardKey) {
@@ -228,8 +230,8 @@ public class ScoreboardManager {
     }
 
     private String cropAndColour(String text) {
-        text = Utils.colour(text);
-        if (Utils.getMinorServerVersion() < 13) {
+        text = StringUtils.colour(text);
+        if (PluginUtils.getMinorServerVersion() < 13) {
             text = text.substring(0, Math.min(15, text.length()));
         }
         return text;
@@ -246,7 +248,7 @@ public class ScoreboardManager {
      */
     private int calculateNumberOfRowsNeeded() {
 
-        // for each key add 2
+        // TODO for each key add 2
         int rowsNeeded = 0;
         if (configKey.get(COURSE_NAME)) {
             rowsNeeded += 2;
@@ -278,12 +280,12 @@ public class ScoreboardManager {
         private final String courseName;
 
         private int scoreboardCount = numberOfRowsNeeded;
-        private Scoreboard scoreboard;
-        private Objective objective;
+        private final Scoreboard scoreboard;
+        private final Objective objective;
 
         public PlayerScoreboard(String playerName, Scoreboard scoreboard, Objective objective) {
             this.playerName = playerName;
-            this.courseName = CourseMethods.findByPlayer(playerName).getName();
+            this.courseName = parkour.getCourseManager().findByPlayer(playerName).getName();
             this.scoreboard = scoreboard;
             this.objective = objective;
         }

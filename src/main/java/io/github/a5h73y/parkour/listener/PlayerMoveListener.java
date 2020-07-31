@@ -1,16 +1,13 @@
 package io.github.a5h73y.parkour.listener;
 
-import java.util.Arrays;
-import java.util.List;
-
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.kit.ParkourKit;
+import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.player.ParkourSession;
-import io.github.a5h73y.parkour.player.PlayerMethods;
-import io.github.a5h73y.parkour.utilities.XMaterial;
-
-import org.bukkit.Location;
+import io.github.a5h73y.parkour.utility.support.XMaterial;
+import java.util.Arrays;
+import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -21,87 +18,58 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-public class PlayerMoveListener implements Listener {
+public class PlayerMoveListener extends AbstractPluginReceiver implements Listener {
 
     private static final List<BlockFace> BLOCK_FACES =
             Arrays.asList(BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST);
 
-    @EventHandler
-    public void onPlayerMove_Trails(PlayerMoveEvent event) {
-        if (!PlayerMethods.isPlaying(event.getPlayer().getName())) {
-            return;
-        }
-
-        if (!Parkour.getSettings().isTrailsEnabled()) {
-            return;
-        }
-
-        Location loc = event.getPlayer().getLocation().add(0, 0.4, 0);
-        event.getPlayer().getWorld().spawnParticle(Parkour.getSettings().getTrailParticle(), loc, 1);
+    public PlayerMoveListener(final Parkour parkour) {
+        super(parkour);
     }
 
     @EventHandler
     public void onPlayerMove_ParkourMode(PlayerMoveEvent event) {
-        if (!PlayerMethods.isPlaying(event.getPlayer().getName())) {
+        if (!parkour.getPlayerManager().isPlaying(event.getPlayer().getName())) {
             return;
         }
 
-        ParkourSession session = PlayerMethods.getParkourSession(event.getPlayer().getName());
+        ParkourMode courseMode = parkour.getPlayerManager().getParkourSession(event.getPlayer().getName()).getParkourMode();
 
-        if (session == null || session.getMode() == ParkourMode.NONE) {
+        if (courseMode == ParkourMode.NONE) {
             return;
         }
 
-        if (session.getMode() == ParkourMode.DRUNK) {
-            if (event.getPlayer().hasPotionEffect(PotionEffectType.CONFUSION)) {
-                return;
-            }
-
-            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 10000, 1));
-
-        } else if (session.getMode() == ParkourMode.DARKNESS) {
-            if (event.getPlayer().hasPotionEffect(PotionEffectType.BLINDNESS)) {
-                return;
-            }
-
-            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 10000, 1));
-
-        } else if (session.getMode() == ParkourMode.MOON) {
-            if (event.getPlayer().hasPotionEffect(PotionEffectType.JUMP)) {
-                return;
-            }
-
-            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 10000,
-                    Parkour.getInstance().getConfig().getInt("ParkourModes.Moon.Strength")));
+        if (courseMode == ParkourMode.POTION_EFFECT) {
+            // check they still have the potion effect, if not reapply it
         }
     }
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (!PlayerMethods.isPlaying(event.getPlayer().getName())) {
+        if (!parkour.getPlayerManager().isPlaying(event.getPlayer().getName())) {
             return;
         }
 
         Player player = event.getPlayer();
-        ParkourSession session = PlayerMethods.getParkourSession(player.getName());
+        ParkourSession session = parkour.getPlayerManager().getParkourSession(player.getName());
 
         // Only do fall checks if mode is not 'dropper' course
-        if (session.getMode() != ParkourMode.DROPPER &&
-                player.getFallDistance() > Parkour.getSettings().getMaxFallTicks()) {
-            PlayerMethods.playerDie(player);
+        if (session.getParkourMode() != ParkourMode.DROPPER
+                && player.getFallDistance() > parkour.getConfig().getMaxFallTicks()) {
+            parkour.getPlayerManager().playerDie(player);
             return;
         }
 
-        if (player.getLocation().getBlock().isLiquid() &&
-                Parkour.getInstance().getConfig().getBoolean("OnCourse.DieInLiquid")) {
-            PlayerMethods.playerDie(player);
+        if (player.getLocation().getBlock().isLiquid()
+                && parkour.getConfig().getBoolean("OnCourse.DieInLiquid")) {
+            parkour.getPlayerManager().playerDie(player);
         }
 
-        if (!Parkour.getSettings().isUseParkourKit()) {
+        if (!parkour.getConfig().isUseParkourKit()) {
             return;
         }
 
-        if (Parkour.getSettings().isAttemptLessChecks()) {
+        if (parkour.getConfig().isAttemptLessChecks()) {
             if (event.getTo().getBlockX() == event.getFrom().getBlockX() &&
                     event.getTo().getBlockY() == event.getFrom().getBlockY() &&
                     event.getTo().getBlockZ() == event.getFrom().getBlockZ()) {
@@ -112,7 +80,9 @@ public class PlayerMoveListener implements Listener {
         Material belowMaterial = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
 
         // if player is on half-block or jumping, get actual location.
-        if ((player.getLocation().getBlock().getType() != Material.AIR && player.getLocation().getBlock().getType() != XMaterial.CAVE_AIR.parseMaterial()) || !PlayerMethods.isOnGround(player)) {
+        if ((player.getLocation().getBlock().getType() != Material.AIR
+                && player.getLocation().getBlock().getType() != XMaterial.CAVE_AIR.parseMaterial())
+                || !player.isOnGround()) {
             belowMaterial = player.getLocation().getBlock().getType();
         }
 
@@ -127,11 +97,11 @@ public class PlayerMoveListener implements Listener {
 
             switch (action) {
                 case "finish":
-                    PlayerMethods.playerFinish(player);
+                    parkour.getPlayerManager().finishCourse(player);
                     break;
 
                 case "death":
-                    PlayerMethods.playerDie(player);
+                    parkour.getPlayerManager().playerDie(player);
                     break;
 
                 case "launch":
