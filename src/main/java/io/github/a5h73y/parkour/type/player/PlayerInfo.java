@@ -1,4 +1,4 @@
-package io.github.a5h73y.parkour.player;
+package io.github.a5h73y.parkour.type.player;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;

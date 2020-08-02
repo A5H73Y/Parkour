@@ -1,11 +1,10 @@
 package io.github.a5h73y.parkour.manager;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.course.CheckpointManager;
-import io.github.a5h73y.parkour.course.CourseInfo;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.enums.QuestionType;
-import io.github.a5h73y.parkour.kit.ParkourKitInfo;
-import io.github.a5h73y.parkour.player.PlayerInfo;
+import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
+import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.HashMap;
@@ -151,7 +150,7 @@ public class QuestionManager {
                     return;
 
                 case DELETE_KIT:
-                    ParkourKitInfo.deleteKit(argument);
+                    Parkour.getInstance().getParkourKitManager().deleteKit(argument);
                     player.sendMessage(Parkour.getPrefix() + "ParkoutKit " + ChatColor.AQUA + argument + ChatColor.WHITE + " deleted...");
                     PluginUtils.logToFile("ParkourKit " + argument + " was deleted by " + player.getName());
                     return;

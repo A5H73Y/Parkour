@@ -2,9 +2,10 @@ package io.github.a5h73y.parkour.listener;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.ParkourMode;
-import io.github.a5h73y.parkour.kit.ParkourKit;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.player.ParkourSession;
+import io.github.a5h73y.parkour.type.kit.ParkourKit;
+import io.github.a5h73y.parkour.type.kit.ParkourKitAction;
+import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.utility.support.XMaterial;
 import java.util.Arrays;
 import java.util.List;
@@ -92,45 +93,45 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
             player.setFallDistance(0);
         }
 
-        if (kit.getMaterials().contains(belowMaterial)) {
-            String action = kit.getAction(belowMaterial);
+        ParkourKitAction kitAction = kit.getAction(belowMaterial);
 
-            switch (action) {
-                case "finish":
+        if (kitAction != null) {
+            switch (kitAction.getActionType()) {
+                case FINISH:
                     parkour.getPlayerManager().finishCourse(player);
                     break;
 
-                case "death":
+                case DEATH:
                     parkour.getPlayerManager().playerDie(player);
                     break;
 
-                case "launch":
-                    player.setVelocity(new Vector(0, kit.getStrength(belowMaterial), 0));
+                case LAUNCH:
+                    player.setVelocity(new Vector(0, kitAction.getStrength(), 0));
                     break;
 
-                case "bounce":
+                case BOUNCE:
                     if (!player.hasPotionEffect(PotionEffectType.JUMP)) {
                         player.addPotionEffect(
                                 new PotionEffect(PotionEffectType.JUMP,
-                                        kit.getDuration(belowMaterial),
-                                        kit.getStrength(belowMaterial).intValue()));
+                                        kitAction.getDuration(),
+                                        (int) kitAction.getStrength()));
                     }
                     break;
 
-                case "speed":
+                case SPEED:
                     if (!player.hasPotionEffect(PotionEffectType.SPEED)) {
                         player.addPotionEffect(
                                 new PotionEffect(PotionEffectType.SPEED,
-                                        kit.getDuration(belowMaterial),
-                                        kit.getStrength(belowMaterial).intValue()));
+                                        kitAction.getDuration(),
+                                        (int) kitAction.getStrength()));
                     }
                     break;
 
-                case "norun":
+                case NORUN:
                     player.setSprinting(false);
                     break;
 
-                case "nopotion":
+                case NOPOTION:
                     for (PotionEffect effect : player.getActivePotionEffects()) {
                         player.removePotionEffect(effect.getType());
                     }
@@ -138,29 +139,29 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
                     player.setFireTicks(0);
                     break;
             }
-        }
+        } else {
+            for (BlockFace blockFace : BLOCK_FACES) {
+                Material material = player.getLocation().getBlock().getRelative(blockFace).getType();
+                kitAction = kit.getAction(material);
 
-        for (BlockFace blockFace : BLOCK_FACES) {
-            Material material = player.getLocation().getBlock().getRelative(blockFace).getType();
+                if (kitAction != null) {
+                    switch (kitAction.getActionType()) {
+                        case CLIMB:
+                            if (!player.isSneaking()) {
+                                player.setVelocity(new Vector(0, kitAction.getStrength(), 0));
+                            }
+                            break;
 
-            if (kit.getMaterials().contains(material)) {
-                String action = kit.getAction(material);
+                        case REPULSE:
+                            double strength = kitAction.getStrength();
+                            double x = blockFace == BlockFace.NORTH || blockFace == BlockFace.SOUTH ? 0
+                                    : blockFace == BlockFace.EAST ? -strength : strength;
+                            double z = blockFace == BlockFace.EAST || blockFace == BlockFace.WEST ? 0
+                                    : blockFace == BlockFace.NORTH ? strength : -strength;
 
-                switch (action) {
-                    case "climb":
-                        if (!player.isSneaking()) {
-                            player.setVelocity(new Vector(0, kit.getStrength(material), 0));
-                        }
-                        break;
-                    case "repulse":
-                        double strength = kit.getStrength(material);
-                        double x = blockFace == BlockFace.NORTH || blockFace == BlockFace.SOUTH ? 0
-                                : blockFace == BlockFace.EAST ? -strength : strength;
-                        double z = blockFace == BlockFace.EAST || blockFace == BlockFace.WEST ? 0
-                                : blockFace == BlockFace.NORTH ? strength : -strength;
-
-                        player.setVelocity(new Vector(x, 0.1, z));
-                        break;
+                            player.setVelocity(new Vector(x, 0.1, z));
+                            break;
+                    }
                 }
             }
         }

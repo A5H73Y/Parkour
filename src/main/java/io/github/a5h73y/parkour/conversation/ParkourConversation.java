@@ -12,9 +12,9 @@ import org.bukkit.entity.Player;
 
 public abstract class ParkourConversation implements ConversationAbandonedListener {
 
-    private ConversationFactory conversationFactory;
+    private final ConversationFactory conversationFactory;
+    private final Player player;
     private String courseName;
-    private Player player;
 
     public abstract Prompt getEntryPrompt();
 

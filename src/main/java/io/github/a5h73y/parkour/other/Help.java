@@ -63,10 +63,6 @@ public final class Help {
             displayHelpMessage(sender, "Toggle Quiet mode", "/pa quiet", null,
                     " If the Parkour messages are becoming annoying i.e. Seeing 'You died! ...' regularly, you can toggle visibility of these messages using this command.");
 
-        } else if (command.equals("invite")) {
-            displayHelpMessage(sender, "Invite a player to a course", "/pa invite (player)", "/pa invite A5H73Y",
-                    " If another player is interested in which course you are currently on, simply send them an invite and it will instruct them on how to join. If you want to challenge each other, check out the '/pa challenge' command.");
-
         } else if (command.equals("challenge")) {
             displayHelpMessage(sender, "Challenge a player to a course", "/pa challenge (course) (player) [wager]", "/pa challenge tutorial A5H73Y",
                     " You are able to challenge a player to compete for who can complete a course the fastest. Simply execute the command above to send a challenge to the player, if they accept using '/pa accept' then you'll both be teleported to the beginning of the course and a countdown will initiate. When the counter reaches 0 the race will begin. The visibility of each player is configurable. You are able to specify a wager amount which will be rewarded to the winner and deducted from the loser's economy balance.");
@@ -358,7 +354,6 @@ public final class Help {
         displayCommandUsage(player, "perms", null, "Display your Parkour permissions");
         displayCommandUsage(player, "list", "(type)", "Display appropriate list");
         displayCommandUsage(player, "quiet", null, "Toggle visibility of Parkour messages");
-        displayCommandUsage(player, "invite", "(player)", "Invite the player to the course");
         displayCommandUsage(player, "challenge", "(course) (player) [wager]", "Challenge player to course");
         displayCommandUsage(player, "joinall", null, "Join All Courses Menu");
         displayCommandUsage(player, "help | contact", null, "To get help or contact me");

@@ -1,8 +1,8 @@
 package io.github.a5h73y.parkour.utility;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.course.CourseInfo;
-import io.github.a5h73y.parkour.player.PlayerInfo;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
+import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

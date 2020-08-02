@@ -1,12 +1,11 @@
 package io.github.a5h73y.parkour.listener;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.course.Checkpoint;
-import io.github.a5h73y.parkour.course.CheckpointManager;
-import io.github.a5h73y.parkour.course.Course;
+import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
+import io.github.a5h73y.parkour.type.course.Course;
 import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.player.ParkourSession;
+import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.support.XMaterial;

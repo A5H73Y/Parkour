@@ -1,11 +1,10 @@
-package io.github.a5h73y.parkour.player;
+package io.github.a5h73y.parkour.type.player;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
-import io.github.a5h73y.parkour.course.Checkpoint;
-import io.github.a5h73y.parkour.course.CheckpointManager;
-import io.github.a5h73y.parkour.course.Course;
-import io.github.a5h73y.parkour.course.CourseInfo;
+import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
+import io.github.a5h73y.parkour.type.course.Course;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.enums.Permission;
@@ -14,10 +13,11 @@ import io.github.a5h73y.parkour.event.PlayerDeathEvent;
 import io.github.a5h73y.parkour.event.PlayerFinishCourseEvent;
 import io.github.a5h73y.parkour.event.PlayerJoinCourseEvent;
 import io.github.a5h73y.parkour.event.PlayerLeaveCourseEvent;
-import io.github.a5h73y.parkour.kit.ParkourKit;
+import io.github.a5h73y.parkour.type.kit.ParkourKit;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.other.Validation;
+import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
@@ -604,36 +604,6 @@ public class PlayerManager extends AbstractPluginReceiver {
 		parkour.getLobbyManager().joinLobby(null, player);
 	}
 
-	/**
-	 * Invite a player to the current course
-	 *
-	 * @param args
-	 * @param player
-	 */
-	public void invitePlayer(String[] args, Player player) {
-		if (!isPlaying(player.getName())) {
-			TranslationUtils.sendTranslation("Error.NotOnAnyCourse", player);
-			return;
-		}
-
-		Course course = parkour.getCourseManager().findByPlayer(player.getName());
-		Player target = Bukkit.getPlayer(args[1]);
-
-		if (course == null || target == null || isPlayerInTestMode(player.getName())) {
-			player.sendMessage(Parkour.getPrefix() + "You are unable to invite right now.");
-			return;
-		}
-
-		player.sendMessage(TranslationUtils.getTranslation("Parkour.Invite.Send")
-				.replace("%COURSE%", course.getName())
-				.replace("%TARGET%", target.getName()));
-		target.sendMessage(TranslationUtils.getTranslation("Parkour.Invite.Receive1")
-				.replace("%COURSE%", course.getName())
-				.replace("%PLAYER%", player.getName()));
-
-		TranslationUtils.sendValueTranslation("Parkour.Invite.Receive2", course.getName(), target);
-	}
-
 	public void rocketLaunchPlayer(Player player) {
 		Vector velocity = player.getLocation().getDirection().normalize();
 		velocity = velocity.multiply(-1.5);
@@ -1057,7 +1027,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		String kitName = args != null && args.length == 2 ? args[1] : Constants.DEFAULT;
-		ParkourKit kit = ParkourKit.getParkourKit(kitName);
+		ParkourKit kit = parkour.getParkourKitManager().getParkourKit(kitName);
 
 		if (kit == null) {
 			player.sendMessage(Parkour.getPrefix() + "Invalid ParkourKit: " + ChatColor.RED + kitName);
@@ -1065,26 +1035,24 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		for (Material material : kit.getMaterials()) {
-			String action = kit.getAction(material);
+			String actionName = ParkourKitInfo.getActionTypeForMaterial(kitName, material.name());
 
-			if (action == null) {
+			if (actionName == null) {
 				continue;
 			}
 
-			action = StringUtils.standardizeText(action);
+			actionName = StringUtils.standardizeText(actionName);
 
-			ItemStack itemStack = new ItemStack(material);
-			ItemMeta itemMeta = itemStack.getItemMeta();
-			itemMeta.setDisplayName(TranslationUtils.getTranslation("Kit." + action, false));
-			itemStack.setItemMeta(itemMeta);
+			ItemStack itemStack = MaterialUtils.createItemStack(material,
+					TranslationUtils.getTranslation("Kit." + actionName, false));
 			player.getInventory().addItem(itemStack);
 		}
 
-		ItemStack itemStack = new ItemStack(XMaterial.OAK_SIGN.parseMaterial());
-		ItemMeta itemMeta = itemStack.getItemMeta();
-		itemMeta.setDisplayName(TranslationUtils.getTranslation("Kit.Sign", false));
-		itemStack.setItemMeta(itemMeta);
-		player.getInventory().addItem(itemStack);
+		if (parkour.getConfig().getBoolean("Other.ParkourKit.GiveSign")) {
+			ItemStack itemStack = MaterialUtils.createItemStack(XMaterial.OAK_SIGN.parseMaterial(),
+					TranslationUtils.getTranslation("Kit.Sign", false));
+			player.getInventory().addItem(itemStack);
+		}
 
 		player.updateInventory();
 		player.sendMessage(TranslationUtils.getTranslation("Other.Kit"));
@@ -1109,7 +1077,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			}
 		} else {
 			String kitName = args.length == 2 ? args[1].toLowerCase() : Constants.DEFAULT;
-			ParkourKit kit = ParkourKit.getParkourKit(kitName);
+			ParkourKit kit = parkour.getParkourKitManager().getParkourKit(kitName);
 
 			if (kit == null) {
 				player.sendMessage(Parkour.getPrefix() + "ParkourKit " + kitName + " doesn't exist!");

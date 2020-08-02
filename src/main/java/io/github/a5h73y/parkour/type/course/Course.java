@@ -1,7 +1,8 @@
-package io.github.a5h73y.parkour.course;
+package io.github.a5h73y.parkour.type.course;
 
+import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.enums.ParkourMode;
-import io.github.a5h73y.parkour.kit.ParkourKit;
+import io.github.a5h73y.parkour.type.kit.ParkourKit;
 import java.io.Serializable;
 import java.util.List;
 

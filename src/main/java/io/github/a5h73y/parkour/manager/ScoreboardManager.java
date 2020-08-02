@@ -2,7 +2,6 @@ package io.github.a5h73y.parkour.manager;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
-import io.github.a5h73y.parkour.course.CourseManager;
 import io.github.a5h73y.parkour.database.TimeEntry;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;

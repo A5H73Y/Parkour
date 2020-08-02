@@ -1,7 +1,6 @@
 package io.github.a5h73y.parkour.commands;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.kit.ParkourKitInfo;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Backup;
 import io.github.a5h73y.parkour.other.Help;
@@ -177,7 +176,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 break;
 
             case "listkit":
-                ParkourKitInfo.listParkourKit(args, sender);
+                parkour.getParkourKitManager().listParkourKit(args, sender);
                 break;
 
             case "settings":

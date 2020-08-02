@@ -40,9 +40,6 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Parkour.Continue", "Continuing Parkour on &b%VALUE%");
 		this.addDefault("Parkour.TimeReset", "Your time has been restarted!");
 		this.addDefault("Parkour.Teleport", "You have teleported to &b%VALUE%");
-		this.addDefault("Parkour.Invite.Send", "Invitation to &b%COURSE% &fsent to &b%TARGET%");
-		this.addDefault("Parkour.Invite.Receive1", "&b%PLAYER% &fhas invited you to &b%COURSE%");
-		this.addDefault("Parkour.Invite.Receive2", "To accept, type &3/pa join %VALUE%");
 		this.addDefault("Parkour.MaxDeaths", "Sorry, you reached the maximum amount of deaths: &b%VALUE%");
 		this.addDefault("Parkour.MaxTime", "Sorry, you have reached the maximum time limit of %VALUE%!");
 		this.addDefault("Parkour.Die1", "You died! Going back to the start!");

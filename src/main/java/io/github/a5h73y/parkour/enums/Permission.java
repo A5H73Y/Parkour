@@ -16,7 +16,6 @@ public enum Permission {
 	BASIC_TELEPORT("Parkour.Basic", "TP"),
 	BASIC_TELEPORT_CHECKPOINT("Parkour.Basic", "TPC"),
 	BASIC_LEADERBOARD("Parkour.Basic", "Leaderboard"),
-	BASIC_INVITE("Parkour.Basic", "Invite"),
 	BASIC_SIGNS("Parkour.Basic", "Signs"),
 	BASIC_JOINALL("Parkour.Basic", "JoinAll"),
 	BASIC_COMMANDS("Parkour.Basic", "Commands"),

@@ -1,12 +1,12 @@
 package io.github.a5h73y.parkour.commands;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.course.CourseInfo;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.enums.Permission;
-import io.github.a5h73y.parkour.kit.ParkourKitInfo;
+import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Validation;
-import io.github.a5h73y.parkour.player.PlayerInfo;
+import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +24,7 @@ import org.bukkit.entity.Player;
 public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements TabCompleter {
 
     private static final Set<String> BASIC_CMDS = new HashSet<>(
-            Arrays.asList("create", "challenge", "leaderboard", "invite", "kit", "listkit", "tp", "tpc"));
+            Arrays.asList("create", "challenge", "leaderboard", "kit", "listkit", "tp", "tpc"));
 
     private static final Set<String> ADMIN_CMDS = new HashSet<>(
             Arrays.asList("setstart", "setlobby", "economy", "createkit", "editkit", "validatekit", "recreate",
@@ -85,9 +85,6 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             } else {
                 if (sender.hasPermission("Parkour.Basic.Create")) {
                     list.add("create");
-                }
-                if (sender.hasPermission("Parkour.Basic.Invite")) {
-                    list.add("invite");
                 }
                 if (sender.hasPermission("Parkour.Basic.Kit")) {
                     list.add("kit");

@@ -1,4 +1,4 @@
-package io.github.a5h73y.parkour.course;
+package io.github.a5h73y.parkour.type.checkpoint;
 
 import java.io.Serializable;
 

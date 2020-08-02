@@ -1,9 +1,8 @@
 package io.github.a5h73y.parkour.conversation;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.course.CourseInfo;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
-import io.github.a5h73y.parkour.utility.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.conversations.BooleanPrompt;

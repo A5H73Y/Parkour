@@ -132,6 +132,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("Other.EnforceSafeCheckpoints", true);
 		this.addDefault("Other.UseAutoTabCompletion", true);
 		this.addDefault("Other.ParkourKit.ReplaceInventory", true);
+		this.addDefault("Other.ParkourKit.GiveSign", true);
 		this.addDefault("Other.Parkour.ChatRankPrefix.Enabled", false);
 		this.addDefault("Other.Parkour.ChatRankPrefix.OverrideChat", true);
 		this.addDefault("Other.Parkour.SignProtection", true);

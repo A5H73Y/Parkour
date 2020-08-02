@@ -6,9 +6,10 @@ import io.github.a5h73y.parkour.commands.ParkourConsoleCommands;
 import io.github.a5h73y.parkour.configuration.ConfigManager;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
-import io.github.a5h73y.parkour.course.CheckpointManager;
-import io.github.a5h73y.parkour.course.CourseManager;
-import io.github.a5h73y.parkour.course.LobbyManager;
+import io.github.a5h73y.parkour.type.checkpoint.CheckpointManager;
+import io.github.a5h73y.parkour.type.course.CourseManager;
+import io.github.a5h73y.parkour.type.kit.ParkourKitManager;
+import io.github.a5h73y.parkour.type.lobby.LobbyManager;
 import io.github.a5h73y.parkour.database.ParkourDatabase;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.gui.ParkourGuiManager;
@@ -23,7 +24,7 @@ import io.github.a5h73y.parkour.manager.QuestionManager;
 import io.github.a5h73y.parkour.manager.ScoreboardManager;
 import io.github.a5h73y.parkour.other.Backup;
 import io.github.a5h73y.parkour.other.ParkourUpdater;
-import io.github.a5h73y.parkour.player.PlayerManager;
+import io.github.a5h73y.parkour.type.player.PlayerManager;
 import io.github.a5h73y.parkour.plugin.BountifulApi;
 import io.github.a5h73y.parkour.plugin.EconomyApi;
 import io.github.a5h73y.parkour.plugin.PlaceholderApi;
@@ -52,6 +53,7 @@ public class Parkour extends JavaPlugin {
     private CourseManager courseManager;
     private CheckpointManager checkpointManager;
     private LobbyManager lobbyManager;
+    private ParkourKitManager parkourKitManager;
     private ParkourGuiManager guiManager;
 
     /**
@@ -176,6 +178,10 @@ public class Parkour extends JavaPlugin {
         return lobbyManager;
     }
 
+    public ParkourKitManager getParkourKitManager() {
+        return parkourKitManager;
+    }
+
     public ParkourGuiManager getGuiManager() {
         return guiManager;
     }
@@ -208,6 +214,7 @@ public class Parkour extends JavaPlugin {
         courseManager = new CourseManager(this);
         checkpointManager = new CheckpointManager(this);
         lobbyManager = new LobbyManager(this);
+        parkourKitManager = new ParkourKitManager(this);
         guiManager = new ParkourGuiManager(this);
     }
 

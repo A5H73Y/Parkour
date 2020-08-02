@@ -4,7 +4,6 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.conversation.ParkourConversation;
 import io.github.a5h73y.parkour.enums.ConfigType;
-import io.github.a5h73y.parkour.kit.ParkourKit;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +32,8 @@ public class AddKitItemConversation {
     }
 
     private final String[] actionTypes = {"death", "finish", "climb", "launch", "bounce", "speed", "repulse", "norun", "nopotion"};
-    private Prompt endingConversation;
-    private String kitName;
+    private final Prompt endingConversation;
+    private final String kitName;
 
     public AddKitItemConversation(Prompt endingConversation, String kitName) {
         this.endingConversation = endingConversation;
@@ -186,7 +185,7 @@ public class AddKitItemConversation {
             }
 
             context.getForWhom().sendRawMessage(Parkour.getPrefix() + kitName + " ParkourKit has been successfully saved.");
-            ParkourKit.clearMemory(kitName);
+            Parkour.getInstance().getParkourKitManager().clearMemory(kitName);
             return endingConversation;
         }
     }

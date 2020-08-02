@@ -1,11 +1,12 @@
-package io.github.a5h73y.parkour.course;
+package io.github.a5h73y.parkour.type.checkpoint;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Validation;
-import io.github.a5h73y.parkour.player.PlayerInfo;
+import io.github.a5h73y.parkour.type.player.PlayerInfo;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;

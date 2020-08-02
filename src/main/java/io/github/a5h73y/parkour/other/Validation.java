@@ -1,11 +1,11 @@
 package io.github.a5h73y.parkour.other;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.course.Course;
-import io.github.a5h73y.parkour.course.CourseInfo;
+import io.github.a5h73y.parkour.type.course.Course;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.enums.Permission;
-import io.github.a5h73y.parkour.player.PlayerInfo;
+import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.plugin.EconomyApi;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;

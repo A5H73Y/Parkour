@@ -3,13 +3,12 @@ package io.github.a5h73y.parkour.commands;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.conversation.CreateParkourKitConversation;
 import io.github.a5h73y.parkour.conversation.EditParkourKitConversation;
-import io.github.a5h73y.parkour.course.CourseInfo;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.enums.GuiMenu;
 import io.github.a5h73y.parkour.enums.Permission;
-import io.github.a5h73y.parkour.kit.ParkourKitInfo;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Help;
-import io.github.a5h73y.parkour.player.PlayerInfo;
+import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
@@ -407,17 +406,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getEconomyApi().processEconomyCommand(args, player);
                 break;
 
-            case "invite":
-                if (!PermissionUtils.hasPermission(player, Permission.BASIC_INVITE)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 2)) {
-                    return false;
-                }
-
-                parkour.getPlayerManager().invitePlayer(args, player);
-                break;
-
             case "setmode":
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
                     return false;
@@ -464,7 +452,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                ParkourKitInfo.listParkourKit(args, player);
+                parkour.getParkourKitManager().listParkourKit(args, player);
                 break;
 
             case "validatekit":
@@ -472,7 +460,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                ParkourKitInfo.validateParkourKit(args, player);
+                parkour.getParkourKitManager().validateParkourKit(args, player);
                 break;
 
             case "challenge":

@@ -1,18 +1,19 @@
-package io.github.a5h73y.parkour.course;
+package io.github.a5h73y.parkour.type.course;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.conversation.CoursePrizeConversation;
 import io.github.a5h73y.parkour.conversation.LeaderboardConversation;
 import io.github.a5h73y.parkour.conversation.ParkourModeConversation;
+import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.enums.Permission;
-import io.github.a5h73y.parkour.kit.ParkourKit;
+import io.github.a5h73y.parkour.type.kit.ParkourKit;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Validation;
-import io.github.a5h73y.parkour.player.ParkourSession;
-import io.github.a5h73y.parkour.player.PlayerInfo;
+import io.github.a5h73y.parkour.type.player.ParkourSession;
+import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
@@ -107,7 +108,7 @@ public class CourseManager extends AbstractPluginReceiver {
     private Course populateCourse(String courseName) {
         courseName = courseName.toLowerCase();
         String parkourKitName = CourseInfo.getParkourKit(courseName);
-        ParkourKit parkourKit = ParkourKit.getParkourKit(parkourKitName);
+        ParkourKit parkourKit = parkour.getParkourKitManager().getParkourKit(parkourKitName);
         ParkourMode parkourMode = getCourseMode(courseName);
         List<Checkpoint> checkpoints = parkour.getCheckpointManager().getCheckpoints(courseName);
 

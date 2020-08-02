@@ -890,10 +890,10 @@ public enum XMaterial {
     ZOMBIE_VILLAGER_SPAWN_EGG(0, "MONSTER_EGG"),
     ZOMBIE_WALL_HEAD(0, "SKULL", "SKULL_ITEM");
 
-    private static HashMap<String, XMaterial> CACHED_SEARCH = new HashMap<>();
+    private final static HashMap<String, XMaterial> CACHED_SEARCH = new HashMap<>();
 
-    String[] m;
-    int data;
+    private final String[] m;
+    private final int data;
 
     XMaterial(int data, String... m) {
         this.m = m;

@@ -1,12 +1,11 @@
 package io.github.a5h73y.parkour.listener;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.course.CourseInfo;
-import io.github.a5h73y.parkour.course.LobbyManager;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Validation;
-import io.github.a5h73y.parkour.player.ParkourSession;
+import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
 import io.github.a5h73y.parkour.utility.SignUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;

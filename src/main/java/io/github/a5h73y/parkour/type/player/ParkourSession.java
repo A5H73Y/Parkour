@@ -1,7 +1,7 @@
-package io.github.a5h73y.parkour.player;
+package io.github.a5h73y.parkour.type.player;
 
-import io.github.a5h73y.parkour.course.Checkpoint;
-import io.github.a5h73y.parkour.course.Course;
+import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
+import io.github.a5h73y.parkour.type.course.Course;
 import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import java.io.Serializable;

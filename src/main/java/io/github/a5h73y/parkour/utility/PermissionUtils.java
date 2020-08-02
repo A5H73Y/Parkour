@@ -1,8 +1,7 @@
 package io.github.a5h73y.parkour.utility;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.course.CourseInfo;
-import io.github.a5h73y.parkour.course.CourseManager;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.enums.Permission;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

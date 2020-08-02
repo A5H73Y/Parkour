@@ -9,9 +9,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.course.CourseInfo;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.PluginUtils;
-import io.github.a5h73y.parkour.utility.Utils;
 import org.bukkit.Bukkit;
 import pro.husk.Database;
 import pro.husk.mysql.MySQL;

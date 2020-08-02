@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 public class PlayerParkourLevelEvent extends ParkourEvent {
 
-    private Integer newLevel;
+    private final Integer newLevel;
 
     public PlayerParkourLevelEvent(Player player, String courseName, Integer newLevel) {
         super(player, courseName);

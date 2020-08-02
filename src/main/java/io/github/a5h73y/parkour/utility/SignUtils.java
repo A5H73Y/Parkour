@@ -1,7 +1,7 @@
 package io.github.a5h73y.parkour.utility;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.course.CourseInfo;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.other.Validation;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
