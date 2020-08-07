@@ -44,7 +44,7 @@ public final class Utils {
 //            QuestionManager.getInstance().askDeleteCheckpointQuestion(player, args[2], checkpoints);
 //
 //        } else if (args[1].equalsIgnoreCase("lobby")) {
-//            if (!Parkour.getInstance().getConfig().contains("Lobby." + args[2].toLowerCase() + ".World")) {
+//            if (!Parkour.getDefaultConfig().contains("Lobby." + args[2].toLowerCase() + ".World")) {
 //                player.sendMessage(Parkour.getPrefix() + "This lobby does not exist!");
 //                return;
 //            }

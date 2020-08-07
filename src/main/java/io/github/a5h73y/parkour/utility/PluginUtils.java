@@ -75,7 +75,7 @@ public class PluginUtils {
      * @param message message to log
      */
     public static void debug(String message) {
-        if (Parkour.getInstance().getConfig().getBoolean("Debug", false)) {
+        if (Parkour.getDefaultConfig().getBoolean("Debug", false)) {
             log(message, 3);
         }
     }
@@ -88,7 +88,7 @@ public class PluginUtils {
      * @param message message to log
      */
     public static void logToFile(String message) {
-        if (!Parkour.getInstance().getConfig().getBoolean("Other.LogToFile")) {
+        if (!Parkour.getDefaultConfig().getBoolean("Other.LogToFile")) {
             return;
         }
 
@@ -188,7 +188,7 @@ public class PluginUtils {
     public static void addWhitelistedCommand(String command) {
         List<String> commands = Parkour.getDefaultConfig().getWhitelistedCommands();
         commands.add(command);
-        Parkour.getInstance().getConfig().set("OnCourse.EnforceParkourCommands.Whitelist", commands);
-        Parkour.getInstance().saveConfig();
+        Parkour.getDefaultConfig().set("OnCourse.EnforceParkourCommands.Whitelist", commands);
+        Parkour.getDefaultConfig().save();
     }
 }

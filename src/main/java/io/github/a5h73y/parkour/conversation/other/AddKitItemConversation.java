@@ -58,7 +58,8 @@ public class AddKitItemConversation {
                 ParkourConversation.sendErrorMessage(context, message.toUpperCase() + " is not a valid Material");
                 return this;
             }
-            if (Parkour.getInstance().getConfig().contains("ParkourKit." + kitName + "." + material.name())) {
+
+            if (Parkour.getDefaultConfig().contains("ParkourKit." + kitName + "." + material.name())) {
                 ParkourConversation.sendErrorMessage(context, "You've already used this Material");
                 return this;
             }

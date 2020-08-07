@@ -1,16 +1,16 @@
 package io.github.a5h73y.parkour;
 
-import io.github.a5h73y.parkour.type.course.Course;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.database.TimeEntry;
 import io.github.a5h73y.parkour.other.Validation;
+import io.github.a5h73y.parkour.type.course.Course;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.List;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 
 /**
  * Parkour's implementation of {@link PlaceholderExpansion}.
@@ -48,7 +48,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     }
 
     @Override
-    public String onPlaceholderRequest(Player player, String command) {
+    public String onRequest(OfflinePlayer player, String command) {
         command = command.toLowerCase();
         String[] arguments = command.split("_");
 
@@ -112,6 +112,10 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
         } else if (command.equals("current_course")) {
             Course course = parkour.getCourseManager().findByPlayer(player.getName());
             return course == null ? "" : course.getName();
+
+        } else if (command.equals("current_checkpoint")) {
+            ParkourSession session = parkour.getPlayerManager().getParkourSession(player.getName());
+            return session == null ? "" : String.valueOf(session.getCurrentCheckpoint());
 
         } else if (command.equals("current_course_record_deaths")) {
             Course course = parkour.getCourseManager().findByPlayer(player.getName());
@@ -274,12 +278,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     }
 
     private TimeEntry getTopResultForCourse(String courseName) {
-        if (!parkour.getCourseManager().courseExists(courseName)) {
-            return null;
-        }
-
-        List<TimeEntry> time = parkour.getDatabase().getTopCourseResults(courseName, 1);
-        return time.isEmpty() ? null : time.get(0);
+        return parkour.getDatabase().getNthBestTime(courseName, 1);
     }
 
     private TimeEntry getTopPlayerResultForCourse(String playerName, String courseName) {

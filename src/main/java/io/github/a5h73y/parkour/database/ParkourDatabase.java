@@ -430,17 +430,12 @@ public class ParkourDatabase {
      */
     private void initiateConnection() {
         PluginUtils.debug("Initialising SQL Connection.");
-        if (parkour.getConfig().getBoolean("MySQL.Use")
-                && !parkour.getConfig().getString("MySQL.Host").equals("Host")) {
+        if (parkour.getConfig().getBoolean("MySQL.Use")) {
             PluginUtils.debug("Opting to use MySQL.");
-
-            this.database = new MySQL(
-                    parkour.getConfig().getString("MySQL.Host"),
-                    parkour.getConfig().getString("MySQL.Port"),
-                    parkour.getConfig().getString("MySQL.Database"),
-                    parkour.getConfig().getString("MySQL.User"),
+            this.database = new MySQL(parkour.getConfig().getString("MySQL.URL"),
+                    parkour.getConfig().getString("MySQL.Username"),
                     parkour.getConfig().getString("MySQL.Password"),
-                    parkour.getConfig().getString("MySQL.Params"));
+                    parkour.getConfig().getBoolean("MySQL.LegacyDriver"));
         } else {
             PluginUtils.debug("Opting to use SQLite.");
             String pathOverride = parkour.getConfig().getString("SQLite.PathOverride", "");

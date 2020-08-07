@@ -101,7 +101,11 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         Course course = populateCourse(courseName);
-        courseCache.put(courseName, course);
+        // if course is finished, cache it.
+        if (CourseInfo.getFinished(courseName)) {
+            courseCache.put(courseName, course);
+        }
+
         return course;
     }
 
@@ -199,6 +203,14 @@ public class CourseManager extends AbstractPluginReceiver {
 
         CourseInfo.deleteCourse(courseName);
         TranslationUtils.sendValueTranslation("Parkour.Delete", courseName, player);
+    }
+
+    public void clearCache(String courseName) {
+        courseCache.remove(courseName.toLowerCase());
+    }
+
+    public void clearCache() {
+        courseCache.clear();
     }
 
     /**
@@ -529,7 +541,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param sender
      */
     public void setMaxTime(String[] args, CommandSender sender) {
-        if (!Parkour.getInstance().getConfig().getBoolean("OnCourse.DisplayLiveTime")) {
+        if (!Parkour.getDefaultConfig().getBoolean("OnCourse.DisplayLiveTime")) {
             sender.sendMessage(Parkour.getPrefix() + "Live Time is disabled!");
             return;
         }
@@ -758,7 +770,7 @@ public class CourseManager extends AbstractPluginReceiver {
             player.sendMessage(Parkour.getPrefix() + ChatColor.DARK_AQUA + selected + ChatColor.WHITE + " is now linked to " + ChatColor.AQUA + args[2]);
 
         } else if (args.length >= 3 && args[1].equalsIgnoreCase("lobby")) {
-            if (!Parkour.getInstance().getConfig().contains("Lobby." + args[2] + ".World")) { // TODO
+            if (!Parkour.getDefaultConfig().contains("Lobby." + args[2] + ".World")) { // TODO
                 player.sendMessage(Parkour.getPrefix() + "Lobby " + args[2] + " does not exist.");
                 return;
             }

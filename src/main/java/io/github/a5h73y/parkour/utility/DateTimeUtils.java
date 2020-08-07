@@ -6,7 +6,7 @@ import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 
 /**
  * Date Time Utility methods.
@@ -66,7 +66,7 @@ public class DateTimeUtils {
 		return String.format(HH_MM_SS, hours, minutes, seconds);
 	}
 
-	public static String getTimeRemaining(Player player, String courseName) {
+	public static String getTimeRemaining(OfflinePlayer player, String courseName) {
 		long daysDelay = convertDaysToMilliseconds(CourseInfo.getRewardDelay(courseName));
 		long timeDifference = System.currentTimeMillis() - PlayerInfo.getLastRewardedTime(player, courseName);
 		return displayTimeRemaining(daysDelay - timeDifference);

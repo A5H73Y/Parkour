@@ -114,9 +114,9 @@ public class SignUtils {
             TranslationUtils.sendValueTranslation("Parkour.SignCreated", "Lobby");
 
         } else {
-            if (Parkour.getInstance().getConfig().contains("Lobby." + signEvent.getLine(2))) {
-                if (Parkour.getInstance().getConfig().contains("Lobby." + signEvent.getLine(2) + ".Level")) {
-                    signEvent.setLine(3, ChatColor.RED + Parkour.getInstance().getConfig().getString("Lobby." + signEvent.getLine(2) + ".Level"));
+            if (Parkour.getDefaultConfig().contains("Lobby." + signEvent.getLine(2))) {
+                if (Parkour.getDefaultConfig().contains("Lobby." + signEvent.getLine(2) + ".Level")) {
+                    signEvent.setLine(3, ChatColor.RED + Parkour.getDefaultConfig().getString("Lobby." + signEvent.getLine(2) + ".Level"));
                 }
                 TranslationUtils.sendValueTranslation("Parkour.SignCreated", "Lobby");
 

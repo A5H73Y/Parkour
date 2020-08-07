@@ -40,6 +40,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("OnJoin.Item.Restart.Slot", 3);
 		this.addDefault("OnJoin.SetGameMode", "SURVIVAL");
 		this.addDefault("OnJoin.TreatFirstCheckpointAsStart", false);
+		this.addDefault("OnJoin.PerCoursePermission", false);
 
 		this.addDefault("OnCourse.AdminPlaceBreakBlocks", true);
 		this.addDefault("OnCourse.AttemptLessChecks", false);
@@ -148,12 +149,10 @@ public class DefaultConfig extends ParkourConfiguration {
 
 		this.addDefault("SQLite.PathOverride", "");
 		this.addDefault("MySQL.Use", false);
-		this.addDefault("MySQL.Host", "Host");
-		this.addDefault("MySQL.Port", 3306);
-		this.addDefault("MySQL.User", "Username");
+		this.addDefault("MySQL.URL", "jdbc:mysql://(HOST):(PORT)/(DATABASE)?useSSL=false");
+		this.addDefault("MySQL.Username", "Username");
 		this.addDefault("MySQL.Password", "Password");
-		this.addDefault("MySQL.Database", "Database");
-		this.addDefault("MySQL.Params", "?useSSL=false");
+		this.addDefault("MySQL.LegacyDriver", false);
 
 		this.addDefault("Version", Double.parseDouble(Parkour.getInstance().getDescription().getVersion()));
 

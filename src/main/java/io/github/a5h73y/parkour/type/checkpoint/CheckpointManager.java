@@ -80,6 +80,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
         block.setType(pressurePlate);
 
         createCheckpointData(selectedCourse, location, checkpoint);
+        parkour.getCourseManager().clearCache(selectedCourse);
         player.sendMessage(Parkour.getPrefix() + "Checkpoint " + ChatColor.DARK_AQUA + checkpoint + ChatColor.WHITE + " set on " + ChatColor.AQUA + selectedCourse);
     }
 

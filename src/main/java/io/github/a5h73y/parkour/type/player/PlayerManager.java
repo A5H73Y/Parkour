@@ -841,7 +841,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param displayMessage
 	 * @return boolean
 	 */
-	public boolean hasPrizeCooldownDurationPassed(Player player, String courseName, boolean displayMessage) {
+	public boolean hasPrizeCooldownDurationPassed(OfflinePlayer player, String courseName, boolean displayMessage) {
 		int rewardDelay = CourseInfo.getRewardDelay(courseName);
 
 		if (rewardDelay <= 0) {
@@ -863,7 +863,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		if (parkour.getConfig().isDisplayPrizeCooldown() && displayMessage) {
 			TranslationUtils.sendValueTranslation("Error.PrizeCooldown",
-					DateTimeUtils.getTimeRemaining(player, courseName), player);
+					DateTimeUtils.getTimeRemaining(player, courseName), player.getPlayer());
 		}
 		return false;
 	}

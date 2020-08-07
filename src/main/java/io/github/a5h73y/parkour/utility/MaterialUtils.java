@@ -159,7 +159,8 @@ public class MaterialUtils {
 		}
 
 		//check if player is standing in a half-block
-		if (!block.getType().equals(Material.AIR) && !block.getType().equals(XMaterial.CAVE_AIR.parseMaterial()) && !block.getType().equals(lookupMaterial(Parkour.getInstance().getConfig().getString("OnCourse.CheckpointMaterial")))) {
+		if (!block.getType().equals(Material.AIR) && !block.getType().equals(XMaterial.CAVE_AIR.parseMaterial())
+				&& !block.getType().equals(lookupMaterial(Parkour.getDefaultConfig().getString("OnCourse.CheckpointMaterial")))) {
 			player.sendMessage(Parkour.getPrefix() + "Invalid block for checkpoint: " + ChatColor.AQUA + block.getType());
 			return false;
 		}
