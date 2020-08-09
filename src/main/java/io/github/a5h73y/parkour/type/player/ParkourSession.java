@@ -11,7 +11,7 @@ public class ParkourSession implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String liveTime; //TODO what do?
+//    private String liveTime; //TODO what do?
 
     private int deaths;
     private int currentCheckpoint;
@@ -122,10 +122,10 @@ public class ParkourSession implements Serializable {
      * Get the current time of the ParkourSession
      *
      * @return String in %02d:%02d:%02d format
-     */
-    public String getLiveTime() {
-        return liveTime;
-    }
+//     */
+//    public String getLiveTime() {
+//        return liveTime;
+//    }
 
     public int getDeaths() {
         return deaths;

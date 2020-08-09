@@ -147,7 +147,7 @@ public class CourseManager extends AbstractPluginReceiver {
             return null;
         }
 
-        return parkour.getPlayerManager().getPlaying().get(playerName).getCourse();
+        return parkour.getPlayerManager().getParkourSession(playerName).getCourse();
     }
 
     /**
@@ -227,7 +227,7 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         if (args[1].equalsIgnoreCase("players")) {
-            displayPlaying(sender);
+            parkour.getPlayerManager().displayParkourPlayers(sender);
 
         } else if (args[1].equalsIgnoreCase("courses")) {
             int page = (args.length == 3 && args[2] != null && Validation.isPositiveInteger(args[2]) ? Integer.parseInt(args[2]) : 1);
@@ -247,33 +247,6 @@ public class CourseManager extends AbstractPluginReceiver {
 
         } else {
             TranslationUtils.sendInvalidSyntax(sender, "list", "(players / courses / ranks / lobbies)");
-        }
-    }
-
-    /**
-     * Display a list of all the players on a Course.
-     * Will display:
-     * * the course they are on
-     * * the amount of times they've died
-     * * how long they've been on the course.
-     *
-     * @param sender
-     */
-    private void displayPlaying(CommandSender sender) {
-        if (parkour.getPlayerManager().getPlaying().size() == 0) {
-            sender.sendMessage(Parkour.getPrefix() + "Nobody is playing Parkour!");
-            return;
-        }
-
-        sender.sendMessage(Parkour.getPrefix() + parkour.getPlayerManager().getPlaying().size() + " players using Parkour: ");
-
-        String playingTemplate = TranslationUtils.getTranslation("Parkour.Playing", false);
-        for (Map.Entry<String, ParkourSession> entry : parkour.getPlayerManager().getPlaying().entrySet()) {
-            sender.sendMessage(playingTemplate
-                    .replace("%PLAYER%", entry.getKey())
-                    .replace("%COURSE%", entry.getValue().getCourse().getName())
-                    .replace("%DEATHS%", String.valueOf(entry.getValue().getDeaths()))
-                    .replace("%TIME%", entry.getValue().displayTime()));
         }
     }
 

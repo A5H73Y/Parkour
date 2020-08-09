@@ -59,7 +59,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             return String.valueOf(CourseInfo.getAllCourses().size());
 
         } else if (command.equals("player_count")) {
-            return String.valueOf(parkour.getPlayerManager().getPlaying().size());
+            return String.valueOf(parkour.getPlayerManager().getNumberOfParkourPlayer());
 
         } else if (command.startsWith("course_record")) {
             if (arguments.length != 3) {
@@ -175,7 +175,8 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
 
         } else if (command.equals("current_course_timer")) {
             ParkourSession session = parkour.getPlayerManager().getParkourSession(player.getName());
-            return session == null ? "" : session.getLiveTime();
+//            return session == null ? "" : session.getLiveTime(); TODO
+            return "";
 
         } else if (command.equals("current_course_deaths")) {
             ParkourSession session = parkour.getPlayerManager().getParkourSession(player.getName());

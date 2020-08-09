@@ -1,5 +1,6 @@
 package io.github.a5h73y.parkour.database;
 
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -439,7 +440,7 @@ public class ParkourDatabase {
         } else {
             PluginUtils.debug("Opting to use SQLite.");
             String pathOverride = parkour.getConfig().getString("SQLite.PathOverride", "");
-            String path = pathOverride.isEmpty() ? parkour.getDataFolder() + "/sqlite-db/" : pathOverride;
+            String path = pathOverride.isEmpty() ? parkour.getDataFolder() + File.separator + "sqlite-db" + File.separator : pathOverride;
 
             this.database = new SQLite(path, "parkour.db");
         }

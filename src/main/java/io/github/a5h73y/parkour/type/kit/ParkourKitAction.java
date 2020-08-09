@@ -1,8 +1,11 @@
 package io.github.a5h73y.parkour.type.kit;
 
 import io.github.a5h73y.parkour.enums.ActionType;
+import java.io.Serializable;
 
-public class ParkourKitAction {
+public class ParkourKitAction implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private final ActionType actionType;
 	private final double strength;

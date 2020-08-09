@@ -101,7 +101,8 @@ public class PluginUtils {
             }
         }
 
-        try (FileWriter writer = new FileWriter(saveTo, true); BufferedWriter bw = new BufferedWriter(writer)) {
+        try (FileWriter writer = new FileWriter(saveTo, true);
+             BufferedWriter bw = new BufferedWriter(writer)) {
             bw.write(DateTimeUtils.getDisplayDateTime() + " " + message + System.lineSeparator());
         } catch (IOException e) {
             System.err.format("IOException: %s%n", e);

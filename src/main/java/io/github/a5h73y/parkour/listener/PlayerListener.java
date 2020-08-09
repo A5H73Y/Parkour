@@ -134,6 +134,8 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
             TranslationUtils.sendValueTranslation("Event.Join", parkour.getDescription().getVersion(), event.getPlayer());
         }
 
+        parkour.getPlayerManager().loadParkourSession(event.getPlayer());
+
         if (!parkour.getPlayerManager().isPlaying(event.getPlayer().getName())) {
             return;
         }
@@ -159,6 +161,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         }
 
         parkour.getChallengeManager().terminateChallenge(event.getPlayer());
+        parkour.getPlayerManager().storeParkourSession(event.getPlayer());
     }
 
     @EventHandler

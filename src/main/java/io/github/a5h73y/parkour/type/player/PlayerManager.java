@@ -2,9 +2,6 @@ package io.github.a5h73y.parkour.type.player;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
-import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
-import io.github.a5h73y.parkour.type.course.Course;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.enums.Permission;
@@ -13,10 +10,13 @@ import io.github.a5h73y.parkour.event.PlayerDeathEvent;
 import io.github.a5h73y.parkour.event.PlayerFinishCourseEvent;
 import io.github.a5h73y.parkour.event.PlayerJoinCourseEvent;
 import io.github.a5h73y.parkour.event.PlayerLeaveCourseEvent;
-import io.github.a5h73y.parkour.type.kit.ParkourKit;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.other.Validation;
+import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
+import io.github.a5h73y.parkour.type.course.Course;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
+import io.github.a5h73y.parkour.type.kit.ParkourKit;
 import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
@@ -25,6 +25,11 @@ import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.support.XMaterial;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,7 +45,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
@@ -121,12 +125,11 @@ public class PlayerManager extends AbstractPluginReceiver {
 	}
 
 	/**
-	 * Get the Parkour Players Map.
-	 *
-	 * @return HashMap<playerName, ParkourSession>
+	 * Get the number of Parkour players.
+	 * @return parkour players
 	 */
-	public HashMap<String, ParkourSession> getPlaying() {
-		return parkourPlayers;
+	public int getNumberOfParkourPlayer() {
+		return parkourPlayers.size();
 	}
 
 	public void joinCourse(Player player, String courseName) {
@@ -1170,6 +1173,94 @@ public class PlayerManager extends AbstractPluginReceiver {
 		sender.sendMessage(Parkour.getPrefix() + target.getName() + "'s Rank was set to " + args[2]);
 	}
 
+	public void storeParkourSession(Player player) {
+		saveParkourSession(player);
+		parkourPlayers.remove(player.getName());
+	}
+
+	public void saveParkourSession(Player player) {
+		if (!getSessionsPath().exists()) {
+			getSessionsPath().mkdirs();
+		}
+
+		ParkourSession session = getParkourSession(player.getName());
+
+		if (session != null) {
+			File sessionFile = new File(getSessionsPath(), player.getUniqueId().toString());
+
+			if (!sessionFile.exists()) {
+				try {
+					sessionFile.createNewFile();
+				} catch (IOException e) {
+					PluginUtils.log("Player's session couldn't be created: " + e.getMessage(), 2);
+					e.printStackTrace();
+				}
+			}
+
+			try (
+					FileOutputStream fout = new FileOutputStream(sessionFile);
+					ObjectOutputStream oos = new ObjectOutputStream(fout)
+			) {
+				oos.writeObject(session);
+			} catch (IOException e) {
+				PluginUtils.log("Player's session couldn't be saved: " + e.getMessage(), 2);
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public ParkourSession loadParkourSession(Player player) {
+		ParkourSession session = null;
+		File sessionFile = new File(getSessionsPath(), player.getUniqueId().toString());
+
+		if (sessionFile.exists()) {
+			try (
+					FileInputStream fout = new FileInputStream(sessionFile);
+					ObjectInputStream oos = new ObjectInputStream(fout)
+			) {
+				session = (ParkourSession) oos.readObject();
+				if (session != null) {
+					parkourPlayers.put(player.getName(), session);
+				}
+			} catch (IOException | ClassNotFoundException e) {
+				PluginUtils.log("Player's session couldn't be loaded: " + e.getMessage(), 2);
+				e.printStackTrace();
+			}
+		}
+		return session;
+	}
+
+	/**
+	 * Display a list of all the players on a Course.
+	 * Will display:
+	 * * the course they are on
+	 * * the amount of times they've died
+	 * * how long they've been on the course.
+	 *
+	 * @param sender
+	 */
+	public void displayParkourPlayers(CommandSender sender) {
+		if (getNumberOfParkourPlayer() == 0) {
+			sender.sendMessage(Parkour.getPrefix() + "Nobody is playing Parkour!");
+			return;
+		}
+
+		sender.sendMessage(Parkour.getPrefix() + getNumberOfParkourPlayer() + " players using Parkour: ");
+
+		String playingTemplate = TranslationUtils.getTranslation("Parkour.Playing", false);
+		for (Map.Entry<String, ParkourSession> entry : parkourPlayers.entrySet()) {
+			sender.sendMessage(playingTemplate
+					.replace("%PLAYER%", entry.getKey())
+					.replace("%COURSE%", entry.getValue().getCourse().getName())
+					.replace("%DEATHS%", String.valueOf(entry.getValue().getDeaths()))
+					.replace("%TIME%", entry.getValue().displayTime()));
+		}
+	}
+
+	private File getSessionsPath() {
+		return new File(parkour.getDataFolder() + File.separator + "sessions" + File.separator);
+	}
+
 	/**
 	 * Display the course finish information
 	 * Will send to the chosen amount of players
@@ -1254,7 +1345,6 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		return false;
 	}
-
 
 	/**
 	 * Prepare a player for joining a course

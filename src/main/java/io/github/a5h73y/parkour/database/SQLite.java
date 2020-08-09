@@ -55,7 +55,7 @@ public class SQLite extends Database {
             try {
                 Class.forName("org.sqlite.JDBC");
             } catch (ClassNotFoundException e) {
-                PluginUtils.log("Unable to load sqlite class: " + e.getMessage(), 2);
+                PluginUtils.log("Unable to load SQLite class: " + e.getMessage(), 2);
                 e.printStackTrace();
             }
             this.connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile);
