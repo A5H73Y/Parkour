@@ -31,25 +31,23 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player) {
-            if (parkour.getPlayerManager().isPlaying(event.getEntity().getName())) {
+            if (parkour.getPlayerManager().isPlaying((Player) event.getEntity())) {
                 event.setCancelled(true);
             }
 
         } else if (event.getDamager() instanceof Player) {
-            if (parkour.getPlayerManager().isPlaying(event.getDamager().getName())) {
-                if (parkour.getConfig().isPreventAttackingEntities()) {
-                    event.setCancelled(true);
-                }
+            if (parkour.getPlayerManager().isPlaying((Player) event.getDamager())
+                    && parkour.getConfig().isPreventAttackingEntities()) {
+                event.setCancelled(true);
             }
         }
     }
 
     @EventHandler
     public void onEntityCombust(EntityCombustEvent event) {
-        if (event.getEntity() instanceof Player) {
-            if (parkour.getPlayerManager().isPlaying(event.getEntity().getName())) {
+        if (event.getEntity() instanceof Player
+                && parkour.getPlayerManager().isPlaying((Player) event.getEntity())) {
                 event.setCancelled(true);
-            }
         }
     }
 
@@ -61,7 +59,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
 
         Player player = (Player) event.getEntity();
 
-        if (!parkour.getPlayerManager().isPlaying(player.getName())) {
+        if (!parkour.getPlayerManager().isPlaying(player)) {
             return;
         }
 
@@ -73,7 +71,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
 
         if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
             if (parkour.getConfig().getBoolean("OnCourse.DisableFallDamage") ||
-                    (parkour.getPlayerManager().getParkourSession(player.getName()).getParkourMode() == ParkourMode.DROPPER
+                    (parkour.getPlayerManager().getParkourSession(player).getParkourMode() == ParkourMode.DROPPER
                             && !parkour.getConfig().getBoolean("ParkourModes.Dropper.FallDamage"))) {
                 event.setDamage(0);
                 event.setCancelled(true);
@@ -101,14 +99,14 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        if (parkour.getPlayerManager().isPlaying(event.getEntity().getName())) {
+        if (parkour.getPlayerManager().isPlaying((Player) event.getEntity())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
-        if (!parkour.getPlayerManager().isPlaying(event.getPlayer().getName())) {
+        if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
             return;
         }
 
@@ -119,7 +117,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
 
     @EventHandler
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
-        if (!parkour.getPlayerManager().isPlaying(event.getPlayer().getName())) {
+        if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
             return;
         }
 
@@ -136,11 +134,11 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
 
         parkour.getPlayerManager().loadParkourSession(event.getPlayer());
 
-        if (!parkour.getPlayerManager().isPlaying(event.getPlayer().getName())) {
+        if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
             return;
         }
 
-        String currentCourse = parkour.getPlayerManager().getParkourSession(event.getPlayer().getName()).getCourse().getName();
+        String currentCourse = parkour.getPlayerManager().getParkourSession(event.getPlayer()).getCourse().getName();
         TranslationUtils.sendValueTranslation("Parkour.Continue", currentCourse, event.getPlayer());
 
         parkour.getScoreboardManager().addScoreboard(event.getPlayer());
@@ -156,21 +154,20 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
 
     @EventHandler
     public void onPlayerDisconnect(PlayerQuitEvent event) {
-        if (!parkour.getPlayerManager().isPlaying(event.getPlayer().getName())) {
+        if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
             return;
         }
 
-        parkour.getChallengeManager().terminateChallenge(event.getPlayer());
-        parkour.getPlayerManager().storeParkourSession(event.getPlayer());
+        parkour.getPlayerManager().teardownParkourPlayer(event.getPlayer());
     }
 
     @EventHandler
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (!parkour.getPlayerManager().isPlaying(event.getPlayer().getName())) {
+        if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
             return;
         }
 
-        if (parkour.getPlayerManager().isPlayerInTestMode(event.getPlayer().getName())) {
+        if (parkour.getPlayerManager().isPlayerInTestMode(event.getPlayer())) {
             return;
         }
 
@@ -191,7 +188,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
 
     @EventHandler
     public void onPlayerToggleFlight(PlayerToggleFlightEvent event) {
-        if (!parkour.getPlayerManager().isPlaying(event.getPlayer().getName())) {
+        if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
             return;
         }
 
@@ -208,7 +205,11 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
 
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent event) {
-        if (!parkour.getPlayerManager().isPlaying(event.getPlayer().getName())) {
+        if (!(event.getPlayer() instanceof Player)) {
+            return;
+        }
+
+        if (!parkour.getPlayerManager().isPlaying((Player) event.getPlayer())) {
             return;
         }
 

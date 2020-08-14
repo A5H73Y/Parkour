@@ -5,14 +5,14 @@ import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.conversation.CoursePrizeConversation;
 import io.github.a5h73y.parkour.conversation.LeaderboardConversation;
 import io.github.a5h73y.parkour.conversation.ParkourModeConversation;
-import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
+import io.github.a5h73y.parkour.database.TimeEntry;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.enums.Permission;
-import io.github.a5h73y.parkour.type.kit.ParkourKit;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Validation;
-import io.github.a5h73y.parkour.type.player.ParkourSession;
+import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
+import io.github.a5h73y.parkour.type.kit.ParkourKit;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
@@ -20,7 +20,6 @@ import io.github.a5h73y.parkour.utility.PermissionUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
-import io.github.a5h73y.parkour.utility.Utils;
 import io.github.a5h73y.parkour.utility.support.XMaterial;
 import java.util.Collections;
 import java.util.HashMap;
@@ -101,8 +100,8 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         Course course = populateCourse(courseName);
-        // if course is finished, cache it.
-        if (CourseInfo.getFinished(courseName)) {
+        // if course is ready, cache it.
+        if (CourseInfo.getReadyStatus(courseName)) {
             courseCache.put(courseName, course);
         }
 
@@ -139,15 +138,15 @@ public class CourseManager extends AbstractPluginReceiver {
     /**
      * Retrieve a course based on the ParkourSession for a player.
      *
-     * @param playerName
+     * @param player
      * @return
      */
-    public Course findByPlayer(String playerName) {
-        if (!parkour.getPlayerManager().isPlaying(playerName)) {
+    public Course findByPlayer(Player player) {
+        if (!parkour.getPlayerManager().isPlaying(player)) {
             return null;
         }
 
-        return parkour.getPlayerManager().getParkourSession(playerName).getCourse();
+        return parkour.getPlayerManager().getParkourSession(player).getCourse();
     }
 
     /**
@@ -165,27 +164,27 @@ public class CourseManager extends AbstractPluginReceiver {
             return;
         }
 
-        String name = courseName.toLowerCase();
+        courseName = courseName.toLowerCase();
         Location location = player.getLocation();
         ParkourConfiguration courseConfig = Parkour.getConfig(ConfigType.COURSES);
 
-        courseConfig.set(name + ".Creator", player.getName());
-        courseConfig.set(name + ".Views", 0);
-        courseConfig.set(name + ".Completed", 0);
-        courseConfig.set(name + ".World", location.getWorld().getName());
+        courseConfig.set(courseName + ".Creator", player.getName());
+        courseConfig.set(courseName + ".Views", 0);
+        courseConfig.set(courseName + ".Completed", 0);
+        courseConfig.set(courseName + ".World", location.getWorld().getName());
 
-        parkour.getCheckpointManager().createCheckpointData(name, player.getLocation(), 0);
+        parkour.getCheckpointManager().createCheckpointData(courseName, player.getLocation(), 0);
 
         List<String> courseList = CourseInfo.getAllCourses();
-        courseList.add(name);
+        courseList.add(courseName);
         Collections.sort(courseList);
         courseConfig.set("Courses", courseList);
         courseConfig.save();
 
-        PlayerInfo.setSelectedCourse(player, name);
+        PlayerInfo.setSelectedCourse(player, courseName);
 
         TranslationUtils.sendValueTranslation("Parkour.Created", courseName, player);
-        Parkour.getInstance().getDatabase().insertCourse(name, player.getName());
+        parkour.getDatabase().insertCourse(courseName);
     }
 
     /**
@@ -284,12 +283,12 @@ public class CourseManager extends AbstractPluginReceiver {
             String courseName = limited.get(i);
             int minimumLevel = CourseInfo.getMinimumLevel(courseName);
             int rewardLevel = CourseInfo.getRewardLevel(courseName);
-            boolean finished = CourseInfo.getFinished(courseName);
+            boolean ready = CourseInfo.getReadyStatus(courseName);
 
             StringBuilder sb = new StringBuilder();
             sb.append(((fromIndex) + (i + 1)));
             sb.append(") ");
-            sb.append(finished ? ChatColor.AQUA : ChatColor.RED);
+            sb.append(ready ? ChatColor.AQUA : ChatColor.RED);
             sb.append(courseName);
 
             if (minimumLevel > 0) {
@@ -686,14 +685,14 @@ public class CourseManager extends AbstractPluginReceiver {
     }
 
     /**
-     * Toggle the Course's completion status.
+     * Toggle the Course's ready status.
      * If a course argument is supplied it will use this, otherwise it will use the player's selected course.
-     * A player will not be able to join a course if it's not set to finished.
+     * A player will not be able to join a course if it's not ready.
      *
      * @param args
      * @param player
      */
-    public void setCompletionStatus(String[] args, Player player) {
+    public void setCourseReadyStatus(String[] args, Player player) {
         String courseName = args.length > 1 ? args[1].toLowerCase() : PlayerInfo.getSelectedCourse(player);
 
         if (!Validation.isStringValid(courseName)) {
@@ -705,16 +704,16 @@ public class CourseManager extends AbstractPluginReceiver {
             return;
         }
 
-        boolean finished = CourseInfo.getFinished(courseName);
-        CourseInfo.setFinished(courseName, !finished);
+        boolean ready = CourseInfo.getReadyStatus(courseName);
+        CourseInfo.setReadyStatus(courseName, !ready);
 
-        if (finished) {
-            player.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + courseName + ChatColor.WHITE + " has been set to unfinished!");
-            PluginUtils.logToFile(courseName + " was set to unfinished by " + player.getName());
+        if (ready) {
+            player.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + courseName + ChatColor.WHITE + " has been set to not ready!");
+            PluginUtils.logToFile(courseName + " was set to not ready by " + player.getName());
 
         } else {
-            TranslationUtils.sendValueTranslation("Parkour.Finish", courseName, player);
-            PluginUtils.logToFile(courseName + " was set to finished by " + player.getName());
+            TranslationUtils.sendValueTranslation("Parkour.Ready", courseName, player);
+            PluginUtils.logToFile(courseName + " was set to ready by " + player.getName());
             PlayerInfo.setDelected(player);
         }
     }
@@ -782,10 +781,10 @@ public class CourseManager extends AbstractPluginReceiver {
 
         courseConfig.set(courseName + ".Views", 0);
         courseConfig.set(courseName + ".Completed", 0);
-        courseConfig.set(courseName + ".Finished", false);
-        courseConfig.set(courseName + ".Level", null);
+        courseConfig.set(courseName + ".Ready", false);
+        courseConfig.set(courseName + ".RewardLevel", null);
         courseConfig.set(courseName + ".MinimumLevel", null);
-        courseConfig.set(courseName + ".LevelAdd", null);
+        courseConfig.set(courseName + ".RewardLevelAdd", null);
         courseConfig.set(courseName + ".MaxDeaths", null);
         courseConfig.set(courseName + ".Parkoins", null);
         courseConfig.set(courseName + ".LinkedLobby", null);
@@ -796,7 +795,7 @@ public class CourseManager extends AbstractPluginReceiver {
         //TODO go through ConfigSection, setting each value to null (except for structural)
 
         courseConfig.save();
-        Parkour.getInstance().getDatabase().deleteCourseTimes(courseName);
+        parkour.getDatabase().deleteCourseTimes(courseName);
     }
 
     /**
@@ -842,8 +841,8 @@ public class CourseManager extends AbstractPluginReceiver {
         String wagerString = "";
         Double wager = null;
 
-        if (args.length == 4 && Parkour.getInstance().getEconomyApi().isEnabled() && Validation.isPositiveDouble(args[3])) {
-            String currencyName = Parkour.getInstance().getEconomyApi().getCurrencyName();
+        if (args.length == 4 && parkour.getEconomyApi().isEnabled() && Validation.isPositiveDouble(args[3])) {
+            String currencyName = parkour.getEconomyApi().getCurrencyName();
             wager = Double.parseDouble(args[3]);
             wagerString = TranslationUtils.getValueTranslation("Parkour.Challenge.Wager", wager + currencyName, false);
         }
@@ -859,7 +858,7 @@ public class CourseManager extends AbstractPluginReceiver {
         player.sendMessage(TranslationUtils.getTranslation("Parkour.Challenge.Send")
                 .replace("%PLAYER%", target.getName())
                 .replace("%COURSE%", courseName) + wagerString);
-        Parkour.getInstance().getChallengeManager().createChallenge(player.getName(), target.getName(), courseName, wager);
+        parkour.getChallengeManager().createChallenge(player.getName(), target.getName(), courseName, wager);
     }
 
     /**
@@ -937,13 +936,13 @@ public class CourseManager extends AbstractPluginReceiver {
             limit = Integer.parseInt(args[2]);
         }
 
+        List<TimeEntry> results;
         if (personal) {
-            Utils.displayLeaderboard(player, Parkour.getInstance().getDatabase()
-                    .getTopPlayerCourseResults(player.getName(), args[1], limit), args[1]);
+            results = parkour.getDatabase().getTopPlayerCourseResults(player, args[1], limit);
         } else {
-            Utils.displayLeaderboard(player, Parkour.getInstance().getDatabase()
-                    .getTopCourseResults(args[1], limit), args[1]);
+            results = parkour.getDatabase().getTopCourseResults(args[1], limit);
         }
+        parkour.getDatabase().displayTimeEntries(player, args[1], results);
     }
 
     /**

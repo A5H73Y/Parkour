@@ -138,37 +138,6 @@ public final class Utils {
     }
 
     /**
-     * Display Leaderboards
-     * Present the course times to the player.
-     *
-     * @param times
-     * @param player
-     * @param courseName
-     */
-    public static void displayLeaderboard(Player player, List<TimeEntry> times, String courseName) {
-//        if (times.isEmpty()) {
-//            player.sendMessage(Parkour.getPrefix() + "No results were found!");
-//            return;
-//        }
-//
-//        String heading = getTranslation("Parkour.LeaderboardHeading", false)
-//                .replace("%COURSE%", courseName)
-//                .replace("%AMOUNT%", String.valueOf(times.size()));
-//
-//        player.sendMessage(getStandardHeading(heading));
-//
-//        for (int i = 0; i < times.size(); i++) {
-//            String translation = getTranslation("Parkour.LeaderboardEntry", false)
-//                    .replace("%POSITION%", String.valueOf(i + 1))
-//                    .replace("%PLAYER%", times.get(i).getPlayer())
-//                    .replace("%TIME%", displayCurrentTime(times.get(i).getTime()))
-//                    .replace("%DEATHS%", String.valueOf(times.get(i).getDeaths()));
-//
-//            player.sendMessage(translation);
-//        }
-    }
-
-    /**
      * Add a whitelisted command
      *
      * @param args

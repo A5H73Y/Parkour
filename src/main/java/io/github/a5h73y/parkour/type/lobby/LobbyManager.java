@@ -33,16 +33,18 @@ public class LobbyManager extends AbstractPluginReceiver {
         String created = "Lobby ";
         setLobby(args, player);
 
+        // TODO rewrite all of this, make it translatable
+        // 'required rank' whut?
         if (args.length > 1) {
             if (args.length > 2 && Validation.isPositiveInteger(args[2])) {
                 created = created.concat(ChatColor.AQUA + args[1] + ChatColor.WHITE + " created, with a required rank of " + ChatColor.DARK_AQUA + Integer.parseInt(args[2]));
-                parkour.getConfig().set("Lobby." + args[1] + ".Level", Integer.parseInt(args[2]));
+                parkour.getConfig().set("Lobby." + args[1] + ".RequiredLevel", Integer.parseInt(args[2]));
             } else {
                 created = created.concat(ChatColor.AQUA + args[1] + ChatColor.WHITE + " created");
             }
         } else {
             parkour.getConfig().set("Lobby.Set", true);
-            created = created.concat("was successfully created!");
+            created = created.concat("was created");
         }
         parkour.saveConfig();
         player.sendMessage(Parkour.getPrefix() + created);
@@ -63,7 +65,7 @@ public class LobbyManager extends AbstractPluginReceiver {
         }
 
         // if they are on a course, force them to leave, which will ultimately run this method again.
-        if (parkour.getPlayerManager().isPlaying(player.getName())) {
+        if (parkour.getPlayerManager().isPlaying(player)) {
             parkour.getPlayerManager().leaveCourse(player);
             return;
         }

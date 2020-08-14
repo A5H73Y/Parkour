@@ -143,8 +143,8 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getCheckpointManager().createCheckpoint(args, player);
                 break;
 
-            case "finish":
-                parkour.getCourseManager().setCompletionStatus(args, player);
+            case "ready":
+                parkour.getCourseManager().setCourseReadyStatus(args, player);
                 break;
 
             case "setstart":

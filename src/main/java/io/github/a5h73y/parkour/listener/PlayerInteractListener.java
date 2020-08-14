@@ -27,7 +27,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
 
     @EventHandler
     public void onInventoryInteract(PlayerInteractEvent event) {
-        if (!parkour.getPlayerManager().isPlaying(event.getPlayer().getName())) {
+        if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
             return;
         }
 
@@ -41,7 +41,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             return;
         }
 
-        if (parkour.getPlayerManager().isPlayerInTestMode(player.getName())) {
+        if (parkour.getPlayerManager().isPlayerInTestMode(player)) {
             return;
         }
 
@@ -78,7 +78,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
 
     @EventHandler
     public void onInventoryInteract_ParkourMode(PlayerInteractEvent event) {
-        if (!parkour.getPlayerManager().isPlaying(event.getPlayer().getName())) {
+        if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
             return;
         }
 
@@ -87,7 +87,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             return;
         }
 
-        ParkourMode mode = parkour.getPlayerManager().getParkourSession(event.getPlayer().getName()).getParkourMode();
+        ParkourMode mode = parkour.getPlayerManager().getParkourSession(event.getPlayer()).getParkourMode();
 
         if (mode != ParkourMode.FREEDOM && mode != ParkourMode.ROCKETS) {
             return;
@@ -95,7 +95,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
 
         Player player = event.getPlayer();
 
-        if (parkour.getPlayerManager().isPlayerInTestMode(player.getName())) {
+        if (parkour.getPlayerManager().isPlayerInTestMode(player)) {
             return;
         }
 
@@ -103,12 +103,12 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
 
         if (mode == ParkourMode.FREEDOM && MaterialUtils.getMaterialInPlayersHand(player) == XMaterial.REDSTONE_TORCH.parseMaterial()) {
             if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
-                parkour.getPlayerManager().getParkourSession(player.getName())
+                parkour.getPlayerManager().getParkourSession(player)
                         .setFreedomLocation(parkour.getCheckpointManager().createCheckpointFromPlayerLocation(player).getLocation());
                 TranslationUtils.sendTranslation("Mode.Freedom.Save", player);
 
             } else {
-                player.teleport(parkour.getPlayerManager().getParkourSession(player.getName()).getFreedomLocation());
+                player.teleport(parkour.getPlayerManager().getParkourSession(player).getFreedomLocation());
                 TranslationUtils.sendTranslation("Mode.Freedom.Load", player);
             }
 
@@ -124,7 +124,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
     @EventHandler
     public void onCheckpointEvent(PlayerInteractEvent event) {
         if (event.getAction() != Action.PHYSICAL ||
-                !parkour.getPlayerManager().isPlaying(event.getPlayer().getName())) {
+                !parkour.getPlayerManager().isPlaying(event.getPlayer())) {
             return;
         }
 
@@ -137,7 +137,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             event.setCancelled(true);
         }
 
-        ParkourSession session = parkour.getPlayerManager().getParkourSession(event.getPlayer().getName());
+        ParkourSession session = parkour.getPlayerManager().getParkourSession(event.getPlayer());
         Course course = session.getCourse();
 
         if (session.hasAchievedAllCheckpoints()) {
@@ -165,7 +165,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             return;
         }
 
-        if (parkour.getPlayerManager().isPlaying(event.getPlayer().getName())) {
+        if (parkour.getPlayerManager().isPlaying(event.getPlayer())) {
             return;
         }
 

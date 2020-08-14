@@ -1,15 +1,14 @@
 package io.github.a5h73y.parkour.listener;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Validation;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
 import io.github.a5h73y.parkour.utility.SignUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
-import io.github.a5h73y.parkour.utility.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -123,8 +122,8 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        if (event.getClickedBlock() == null ||
-                !(event.getClickedBlock().getState() instanceof Sign)) {
+        if (event.getClickedBlock() == null
+                || !(event.getClickedBlock().getState() instanceof Sign)) {
             return;
         }
 
@@ -132,7 +131,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
         String[] lines = sign.getLines();
 
         if (!ChatColor.stripColor(lines[0]).equalsIgnoreCase(parkour.getConfig().getStrippedSignHeader())) {
-            if (!parkour.getPlayerManager().isPlaying(event.getPlayer().getName())) {
+            if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
                 return;
             }
 
@@ -168,12 +167,12 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                     TranslationUtils.sendValueTranslation("Error.NoExist", lines[2], player);
                     return;
 
-                } else if (!parkour.getPlayerManager().isPlaying(player.getName())) {
+                } else if (!parkour.getPlayerManager().isPlaying(player)) {
                     TranslationUtils.sendTranslation("Error.NotOnCourse", player);
                     return;
                 }
 
-                ParkourSession session = parkour.getPlayerManager().getParkourSession(player.getName());
+                ParkourSession session = parkour.getPlayerManager().getParkourSession(player);
 
                 if (lines[3].isEmpty() || !Validation.isPositiveInteger(lines[3])) {
                     return;
@@ -221,10 +220,10 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 if (lines[2].isEmpty() || !parkour.getCourseManager().courseExists(lines[2])) {
                     TranslationUtils.sendValueTranslation("Error.NoExist", lines[2], player);
 
-                } else if (!parkour.getPlayerManager().isPlaying(player.getName())) {
+                } else if (!parkour.getPlayerManager().isPlaying(player)) {
                     TranslationUtils.sendTranslation("Error.NotOnCourse", player);
 
-                } else if (!parkour.getPlayerManager().getParkourSession(player.getName()).getCourse().getName().equals(lines[2].toLowerCase())) {
+                } else if (!parkour.getPlayerManager().getParkourSession(player).getCourse().getName().equals(lines[2].toLowerCase())) {
                     TranslationUtils.sendTranslation("Error.NotOnCourse", player);
 
                 } else {
@@ -242,9 +241,8 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
 
                 } else if (parkour.getPlayerManager().delayPlayer(player, 4, true)) {
                     int amount = lines[3].isEmpty() ? 5 : Integer.parseInt(lines[3]);
-
-                    Utils.displayLeaderboard(player,
-                            parkour.getDatabase().getTopCourseResults(lines[2], amount), lines[2]);
+                    parkour.getDatabase().displayTimeEntries(player, lines[2],
+                            parkour.getDatabase().getTopCourseResults(lines[2], amount));
                 }
                 break;
 

@@ -5,12 +5,14 @@ package io.github.a5h73y.parkour.database;
  */
 public class TimeEntry {
 
-    private final String player;
+    private final String playerId;
+    private final String playerName;
     private final long time;
     private final int deaths;
 
-    public TimeEntry(String player, long time, int deaths) {
-        this.player = player;
+    public TimeEntry(String playerId, String playerName, long time, int deaths) {
+        this.playerId = playerId;
+        this.playerName = playerName;
         this.time = time;
         this.deaths = deaths;
     }
@@ -19,8 +21,12 @@ public class TimeEntry {
      * The player of the time result.
      * @return player name
      */
-    public String getPlayer() {
-        return player;
+    public String getPlayerId() {
+        return playerId;
+    }
+
+    public String getPlayerName() {
+        return playerName;
     }
 
     /**

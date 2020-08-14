@@ -199,8 +199,8 @@ public class ChallengeManager extends AbstractPluginReceiver {
                     senderPlayer.setWalkSpeed(playerSpeed);
                     receivingPlayer.setWalkSpeed(targetSpeed);
 
-                    parkour.getPlayerManager().getParkourSession(senderPlayer.getName()).resetTimeStarted();
-                    parkour.getPlayerManager().getParkourSession(receivingPlayer.getName()).resetTimeStarted();
+                    parkour.getPlayerManager().getParkourSession(senderPlayer).resetTimeStarted();
+                    parkour.getPlayerManager().getParkourSession(receivingPlayer).resetTimeStarted();
                 }
             }
         };

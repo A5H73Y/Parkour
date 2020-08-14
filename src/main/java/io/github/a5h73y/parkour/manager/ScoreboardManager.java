@@ -5,6 +5,7 @@ import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.database.TimeEntry;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
+import io.github.a5h73y.parkour.type.course.Course;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
@@ -130,7 +131,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
         objective.setDisplayName(mainHeading);
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-        PlayerScoreboard playerScoreboard = new PlayerScoreboard(player.getName(), board, objective);
+        PlayerScoreboard playerScoreboard = new PlayerScoreboard(player, board, objective);
 
         addCourseName(playerScoreboard);
         addBestTimeEver(playerScoreboard);
@@ -147,7 +148,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
             return;
         }
 
-        print(playerBoard, playerBoard.courseName, COURSE_NAME);
+        print(playerBoard, playerBoard.getCourseName(), COURSE_NAME);
     }
 
     private void addBestTimeEver(PlayerScoreboard playerBoard) {
@@ -155,15 +156,16 @@ public class ScoreboardManager extends AbstractPluginReceiver {
             return;
         }
 
-        List<TimeEntry> results = Parkour.getInstance().getDatabase().getTopCourseResults(playerBoard.courseName, 1);
-        TimeEntry result = results.size() > 0 ? results.get(0) : null;
+        TimeEntry result = Parkour.getInstance().getDatabase().getNthBestTime(playerBoard.getCourseName(), 1);
 
         if (configKey.get(BEST_TIME_EVER)) {
-            String bestTimeEver = result != null ? DateTimeUtils.displayCurrentTime(result.getTime()) : translationKey.get("notCompleted");
+            String bestTimeEver = result != null ? DateTimeUtils.displayCurrentTime(result.getTime())
+                    : translationKey.get("notCompleted");
             print(playerBoard, bestTimeEver, BEST_TIME_EVER);
         }
         if (configKey.get(BEST_TIME_EVER_NAME)) {
-            String bestTimeName = result != null ? result.getPlayer() : translationKey.get("notCompleted");
+            String bestTimeName = result != null ? result.getPlayerName() :
+                    translationKey.get("notCompleted");
             print(playerBoard, bestTimeName, BEST_TIME_EVER_NAME);
         }
     }
@@ -173,7 +175,8 @@ public class ScoreboardManager extends AbstractPluginReceiver {
             return;
         }
 
-        List<TimeEntry> result = Parkour.getInstance().getDatabase().getTopPlayerCourseResults(playerBoard.playerName, playerBoard.courseName, 1);
+        List<TimeEntry> result = Parkour.getInstance().getDatabase()
+                .getTopPlayerCourseResults(playerBoard.getPlayer(), playerBoard.getCourseName(), 1);
         String bestTime = result.size() > 0 ? DateTimeUtils.displayCurrentTime(result.get(0).getTime()) : translationKey.get("notCompleted");
         print(playerBoard, bestTime, BEST_TIME_EVER_ME);
     }
@@ -183,10 +186,10 @@ public class ScoreboardManager extends AbstractPluginReceiver {
             return;
         }
 
-        String courseName = parkour.getCourseManager().findByPlayer(playerBoard.playerName).getName();
         String start = "00:00:00";
-        if (Parkour.getConfig(ConfigType.COURSES).contains(courseName + ".MaxTime")) {
-            start = DateTimeUtils.convertSecondsToTime(Parkour.getConfig(ConfigType.COURSES).getInt(courseName + ".MaxTime", 0));
+        if (Parkour.getConfig(ConfigType.COURSES).contains(playerBoard.getCourseName() + ".MaxTime")) {
+            start = DateTimeUtils.convertSecondsToTime(
+                    Parkour.getConfig(ConfigType.COURSES).getInt(playerBoard.getCourseName() + ".MaxTime", 0));
         }
         print(playerBoard, start, CURRENT_TIME);
     }
@@ -204,7 +207,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
             return;
         }
 
-        int checkpoints = parkour.getPlayerManager().getParkourSession(playerBoard.playerName).getCourse().getNumberOfCheckpoints();
+        int checkpoints = playerBoard.getCourse().getNumberOfCheckpoints();
         print(playerBoard, "0 / " + checkpoints, CHECKPOINTS);
     }
 
@@ -230,7 +233,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
 
     private String cropAndColour(String text) {
         text = StringUtils.colour(text);
-        if (PluginUtils.getMinorServerVersion() < 13) {
+        if (PluginUtils.getMinorServerVersion() < 10) {
             text = text.substring(0, Math.min(15, text.length()));
         }
         return text;
@@ -275,22 +278,34 @@ public class ScoreboardManager extends AbstractPluginReceiver {
 
     private class PlayerScoreboard {
 
-        private final String playerName;
-        private final String courseName;
+        private final Player player;
+        private final Course course;
 
         private int scoreboardCount = numberOfRowsNeeded;
         private final Scoreboard scoreboard;
         private final Objective objective;
 
-        public PlayerScoreboard(String playerName, Scoreboard scoreboard, Objective objective) {
-            this.playerName = playerName;
-            this.courseName = parkour.getCourseManager().findByPlayer(playerName).getName();
+        public PlayerScoreboard(Player player, Scoreboard scoreboard, Objective objective) {
+            this.player = player;
+            this.course = parkour.getPlayerManager().getParkourSession(player).getCourse();
             this.scoreboard = scoreboard;
             this.objective = objective;
         }
 
         public int getDecreaseCount() {
             return --scoreboardCount;
+        }
+
+        public Player getPlayer() {
+            return player;
+        }
+
+        public Course getCourse() {
+            return course;
+        }
+
+        public String getCourseName() {
+            return course.getName();
         }
     }
 }

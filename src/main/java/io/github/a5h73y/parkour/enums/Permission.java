@@ -22,7 +22,7 @@ public enum Permission {
 
 	// Parkour Admins
 	ADMIN_ALL("Parkour.Admin", "*"),
-	ADMIN_FINISH_BYPASS("Parkour.Admin", "FinishBypass"),
+	ADMIN_READY_BYPASS("Parkour.Admin", "ReadyBypass"),
 	ADMIN_LEVEL_BYPASS("Parkour.Admin", "LevelBypass"),
 	ADMIN_COURSE("Parkour.Admin", "Course"),
 	ADMIN_PRIZE("Parkour.Admin", "Prize"),

@@ -34,7 +34,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
     private static final Set<String> ADMIN_COURSE_CMDS = new HashSet<>(
             Arrays.asList("setcreator", "prize", "setmode", "setjoinitem", "setminlevel",
                     "setmaxdeath", "setmaxtime", "rewardonce", "rewardlevel", "rewardleveladd", "rewardparkoins",
-                    "rewarddelay", "edit", "linkkit", "setautostart", "finish"));
+                    "rewarddelay", "edit", "linkkit", "setautostart", "ready"));
 
     private static final Set<String> RESET_ARGS = new HashSet<>(
             Arrays.asList("course", "leaderboard", "prize"));
@@ -219,7 +219,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
                 cmds.add("edit");
                 cmds.add("linkkit");
                 cmds.add("setautostart");
-                cmds.add("finish");
+                cmds.add("ready");
             }
             if (sender.hasPermission("Parkour.Admin.Prize")) {
                 cmds.add("prize");

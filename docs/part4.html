@@ -31,42 +31,42 @@
                 <h2 id="whatParkourKit">What is a ParkourKit?</h2>
                 <p>Parkour brings a whole new level to the kits, now referred to as <strong>ParkourKits</strong>. Each course can now have it's own set of blocks to make each unique. You are able to specify exactly what you want the ParkourKit to consist of, allowing you to have as many of each type of action as you'd like. For example you could have 10 death blocks and a finish block, or have 3 of each type of action... it's completely configurable.</p>
                 <img src="https://i.imgur.com/cYWhkHN.jpg" alt="Example ParkourKit" class="img-thumbnail">
-                <p>If you wish to create your own ParkourKit, you can start the setup conversation by entering <strong>/pa createKit</strong>. You will need to give the Kit a unique name which is used later on to link a course to it, or by retrieving the kit contents by using <strong>/pa kit (Kit name)</strong>.</p>
+                <p>If you wish to create your own ParkourKit, you can start the setup conversation by entering <code>/pa createKit</code>. You will need to give the Kit a unique name which is used later on to link a course to it, or by retrieving the kit contents by using <code>/pa kit (Kit name)</code>.</p>
                 <p>There is a "default" kit that each course will use automatically by default, although you are still able to modify this kit, which we will cover later.</p>
 
                 <h2 id="createParkourKit">Creating a ParkourKit</h2>
                 <p>You are able to create a ParkourKit to be as customized as you'd like. Each ParkourKit must have a unique name to refer to them, this is used to link it to a course, or to simulate using Test Mode. You are now able to choose as many or as little of each type of action; 'Action' meaning the result of walking on the specified Material.</p>
                 <p>For example, I could choose the Material TNT, and when I walk on it I want the action to be "death". </p>
-                <p>To start the conversation of creating a new ParkourKit, enter <strong>/pa createKit</strong>. The first step is providing a unique name for the Kit. Then followed by specifying a Material and the corresponding action you want it to be.</p>
+                <p>To start the conversation of creating a new ParkourKit, enter <code>/pa createKit</code>. The first step is providing a unique name for the Kit. Then followed by specifying a Material and the corresponding action you want it to be.</p>
                 <img src="https://i.imgur.com/TTlhZ6W.png" alt="ParkourKit Conversation" class="img-thumbnail"/>
                 <p>Some actions require you to provide more information, for example a Speed block must have a strength, so it knows how fast to make you, and a duration for the effect to last. The default values for each will be presented so you can choose if it should be more / less powerful or duration lasting.</p>
                 <img src="https://i.imgur.com/WEDf8pU.png" alt="ParkourKit Strength" class="img-thumbnail"/>
-                <p>Once successfully created, we can enter <strong>/pa kit [Kit name]</strong> to populate our hotbar with the material that make up the ParkourKit we created. If no kit argument is specified, it will display the "default" ParkourKit.</p>
+                <p>Once successfully created, we can enter <code>/pa kit [Kit name]</code> to populate our hotbar with the material that make up the ParkourKit we created. If no kit argument is specified, it will display the "default" ParkourKit.</p>
                 <img src="https://i.imgur.com/TO0xVYi.png" alt="ParkourKit HotBar" class="img-thumbnail"/>
-                <p class="italic">A Sign is always provided to your inventory after retrieving a kit, to allow you to easily create Parkour signs for your course.</p>
+                <p class="font-italic">A Sign is always provided to your inventory after retrieving a kit, to allow you to easily create Parkour signs for your course.</p>
                 <p>If something has gone wrong with your Kit and errors are appearing or Materials are missing, there is a validation command that will check your Kit for problems and display them.</p>
-                <p>This is achieved by entering <strong>/pa validateKit [Kit name]</strong></p>
+                <p>This is achieved by entering <code>/pa validateKit [Kit name]</code></p>
                 <p><strong>Do not manually edit the ParkourKits from the config, as this is the main cause of problems. Instead edit them using the following tutorials.</strong></p>
 
                 <h2 id="editParkourKit">Editing a ParkourKit</h2>
-                <p>You are able to modify the contents of a ParkourKit at any point, including the default kit. This is done using the command <strong>/pa editKit</strong> then specifying the name of the ParkourKit.</p>
+                <p>You are able to modify the contents of a ParkourKit at any point, including the default kit. This is done using the command <code>/pa editKit</code> then specifying the name of the ParkourKit.</p>
                 <p>You will have the option to add or remove a material. If you choose to add a material you will go through the the process of adding an material and a corresponding action, then you will have the option to continue editing the kit.</p>
                 <img src="https://i.imgur.com/yikde5m.png" alt="Edit ParkourKit" class="img-thumbnail"/>
                 <p>Similarly, if you choose to remove a Material from a ParkourKit, it will ask which Material to remove from the ParkourKit.</p>
-                <p class="italic">Anybody using the ParkourKit before it was edited will not have the changes updated until they leave / join a course that uses the kit.</p>
+                <p class="font-italic">Anybody using the ParkourKit before it was edited will not have the changes updated until they leave / join a course that uses the kit.</p>
 
                 <h2 id="linkParkourKit">Linking a ParkourKit to a Course</h2>
-                <p>Once we've created a ParkourKit, we can link this to as many courses as we want. To achieve this, simply enter <strong>/pa linkKit (course) (Kit name)</strong>.</p>
+                <p>Once we've created a ParkourKit, we can link this to as many courses as we want. To achieve this, simply enter <code>/pa linkKit (course) (Kit name)</code>.</p>
                 <img src="https://i.imgur.com/FGUy2aE.png" alt="Link Example" class="img-thumbnail"/>
                 <img src="https://i.imgur.com/ENk3xiW.png" alt="Link Success" class="img-thumbnail"/>
                 <p>Now when you join the "test" course, it will be using the "example" ParkourKit, meaning that the Death block will now be TNT (for this example).</p>
 
                 <h2 id="viewParkourKits">Viewing ParkourKits available</h2>
-                <p>To view all the created ParkourKits, you can enter <strong>/pa listKit</strong>, which will display a list of the names of the ParkourKits; if you want to see the materials that make up the set, you can add an argument for the name using <strong>/pa listKit (Kit name)</strong>.</p>
+                <p>To view all the created ParkourKits, you can enter <code>/pa listKit</code>, which will display a list of the names of the ParkourKits; if you want to see the materials that make up the set, you can add an argument for the name using <code>/pa listKit (Kit name)</code>.</p>
                 <img src="https://i.imgur.com/7pQS7BO.png" alt="View ParkourKits" class="img-thumbnail"/>
 
                 <h2 id="deleteParkourKit">Deleting a ParkourKit</h2>
-                <p>You can delete a ParkourKit by using the command <strong>/pa delete kit (kit name)</strong> this will preform validation to check to see if any courses are using this kit, that would break if the course were to be deleted.</p>
+                <p>You can delete a ParkourKit by using the command <code>/pa delete kit (kit name)</code> this will preform validation to check to see if any courses are using this kit, that would break if the course were to be deleted.</p>
                 <p>If there are any courses still using this kit it will error and present a list of courses still dependent on this kit. You must link these courses to a different kit before you are able to delete it.</p>
 
                 <h2 id="parkourBlocks">The ParkourBlocks</h2>

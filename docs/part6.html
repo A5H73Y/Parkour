@@ -32,7 +32,7 @@
                 <p>There are several ways we can reward the player for completing a course. We are able to reward the Player with ParkourLevels that allow them to unlock new courses, or achieve a ParkourRank that showcases how far they've progressed. All can be configured to match any server requirements, and even allow developers to natively add their own functionality.</p>
 
                 <h2 id="coursePrizes">Course Prizes</h2>
-                <p>You can reward the player several ways after they complete a course, this can be configured by starting the Prize conversation which is initiated by entering <strong>/pa prize (course)</strong>.</p>
+                <p>You can reward the player several ways after they complete a course, this can be configured by starting the Prize conversation which is initiated by entering <code>/pa prize (course)</code>.</p>
                 <p>This will start a conversation of what you want the prize to be, these can be stacked meaning you can have all options happen when the player finishes a course.</p>
                 <img src="https://i.imgur.com/syeM4Cn.jpg" class="img-thumbnail" alt="Prize menu"/>
                 <p>This was made to be as simple as possible, breaking the stages up so you answer each question with what you want. Follow each conversation as demonstrated below:</p>
@@ -62,15 +62,15 @@
 
                 <h4>/pa rewardleveladd (course) (amount)</h4>
                 <p>This means when you complete the specified course, your level has the amount added to it. So if you had a ParkourLevel of 10, and completed the course which had a rewardLevelAdd of 2, your new ParkourLevel becomes 12.</p>
-                <p>The main purpose for this is for lobbies where you have to complete all of the courses to unlock a new lobby; If you had an "Easy" lobby with 5 courses, you would set the level requirement for "Medium" to 5, and add a rewardLevelAdd to 1 for each course in Easy, so they can be completed in any order. NOTE: For this you would have to enable <strong>/pa rewardonce (course)</strong> so they only get leveled up once per course.</p>
+                <p>The main purpose for this is for lobbies where you have to complete all of the courses to unlock a new lobby; If you had an "Easy" lobby with 5 courses, you would set the level requirement for "Medium" to 5, and add a rewardLevelAdd to 1 for each course in Easy, so they can be completed in any order. NOTE: For this you would have to enable <code>/pa rewardonce (course)</code> so they only get leveled up once per course.</p>
 
                 <h4>/pa setlevel (player) (level)</h4>
                 <p>This can be used by Admins to manually set a player's level. This can be done for VIPs, or simply to quickly test what you've created is working as intended.</p>
 
                 <h2 id="parkourLevelRestrictions">ParkourLevel Restrictions</h2>
                 <p>ParkourLevels can be used to apply restrictions to courses and lobbies. The validation will be based on the minimum level requirement. So if a course has a minimum level requirement of 10, and the player has a ParkourLevel of 12, this will work.</p>
-                <p><strong>/pa setminlevel (course) (level)</strong> set the minimum level of the specified course to the specified level. Any player that now attempts to join this course will be prevented from doing so unless they have a high enough ParkourLevel.</p>
-                <p><strong>/pa setlobby (name) (level)</strong> create a lobby and set the minimum level requirement for teleportation to the ParkourLevel specified. This is used if you organize your courses into separate lobbies and wish to prevent the player to teleport unless they have a high enough ParkourLevel.</p>
+                <p><code>/pa setminlevel (course) (level)</code> set the minimum level of the specified course to the specified level. Any player that now attempts to join this course will be prevented from doing so unless they have a high enough ParkourLevel.</p>
+                <p><code>/pa setlobby (name) (level)</code> create a lobby and set the minimum level requirement for teleportation to the ParkourLevel specified. This is used if you organize your courses into separate lobbies and wish to prevent the player to teleport unless they have a high enough ParkourLevel.</p>
 
                 <h2 id="parkourRankDescription">What is a ParkourRank?</h2>
                 <p>A ParkourRank is simply a title a player earns when they reach a certain level.</p>
@@ -88,7 +88,7 @@
                 <h2 id="rewardParkourRanks">Rewarding ParkourRanks</h2>
                 <p>There are currently 2 ways to achieve a new ParkourRank.</p>
                 <h4>/pa rewardrank (level) (rank)</h4>
-                <p>As demonstrated above, this will create a ParkourRank for a corresponding ParkourLevel, when the achieve that level. It can be colour coded, for example <strong>/pa rewardlevel 50 &1Expert</strong>
+                <p>As demonstrated above, this will create a ParkourRank for a corresponding ParkourLevel, when the achieve that level. It can be colour coded, for example <code>/pa rewardlevel 50 &1Expert</code>
                 <h4>/pa setrank (player) (rank)</h4>
                 <p>This will manually set a player's ParkourRank to the specified rank. Can be used for testing how it will look, or giving to VIPs, etc.</p>
 
@@ -101,18 +101,18 @@
 
                 <h2 id="limitRewards">Delaying / Limiting the Rewards</h2>
                 <p class="no-margin">You are able to delay the time a reward is given to the player in days. For example the player could receive the prize on their first completion, but may have to wait 2 full days before they are able to receive the prize again.</p>
-                <p>This is achieved by entering <strong>/pa rewarddelay (course) (days)</strong>.</p>
+                <p>This is achieved by entering <code>/pa rewarddelay (course) (days)</code>.</p>
                 <p class="no-margin">You can also have the player only be rewarded a single time after they complete a course. This is heavily recommended if you are doing anything advanced with ParkourLevels, such as using rewardleveladd.</p>
-                <p>This is achieved by entering <strong>/pa rewardonce (course)</strong>.</p>
+                <p>This is achieved by entering <code>/pa rewardonce (course)</code>.</p>
 
                 <h2 id="parkoins">Parkoins</h2>
                 <p class="no-margin">Parkoins are a currency within the Parkour plugin that can be configured like any other prize. </p>
                 <p>Unfortunately due to time constraints and more important features, this has been underutilized by the plugin itself. Fortunately due to the easy developer API, you can create a plugin that can build on top of Parkour that uses the currency. An example could be requiring a certain amount of Parkoins before a course can be purchased to join.</p>
 
                 <h2 id="challengeMode">Challenge Mode</h2>
-                <p>You are able to challenge a player to a course to see who can complete the course the fastest. This can become competitive when a monetary wager is introduced <span class="italic">(If Economy is enabled)</span>, the winner will have the amount added to the account and the loser will have the amount deducted. <span class="italic">Forfeiting (leaving the course or server) will be treated as a loss and the wager will be deducted.</span>.</p>
-                <p class="no-margin">To begin you must send the target player a Challenge request using <strong>/pa challenge (player) (course) [wager]</strong> for example <strong>/pa challenge A5H73Y fastrun</strong>.</p>
-                <p>If the target player accepts using <strong>/pa accept</strong> then both players are teleported to the start of the course and a countdown is initiated. It can be configured for the opponent to be invisible for the duration of the challenge.</p>
+                <p>You are able to challenge a player to a course to see who can complete the course the fastest. This can become competitive when a monetary wager is introduced <span class="font-italic">(If Economy is enabled)</span>, the winner will have the amount added to the account and the loser will have the amount deducted. <span class="font-italic">Forfeiting (leaving the course or server) will be treated as a loss and the wager will be deducted.</span>.</p>
+                <p class="no-margin">To begin you must send the target player a Challenge request using <code>/pa challenge (player) (course) [wager]</code> for example <code>/pa challenge A5H73Y fastrun</code>.</p>
+                <p>If the target player accepts using <code>/pa accept</code> then both players are teleported to the start of the course and a countdown is initiated. It can be configured for the opponent to be invisible for the duration of the challenge.</p>
             </div>
         </div>
     </div>

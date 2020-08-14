@@ -30,11 +30,11 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
 
     @EventHandler
     public void onPlayerMove_ParkourMode(PlayerMoveEvent event) {
-        if (!parkour.getPlayerManager().isPlaying(event.getPlayer().getName())) {
+        if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
             return;
         }
 
-        ParkourMode courseMode = parkour.getPlayerManager().getParkourSession(event.getPlayer().getName()).getParkourMode();
+        ParkourMode courseMode = parkour.getPlayerManager().getParkourSession(event.getPlayer()).getParkourMode();
 
         if (courseMode == ParkourMode.NONE) {
             return;
@@ -47,12 +47,12 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (!parkour.getPlayerManager().isPlaying(event.getPlayer().getName())) {
+        if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
             return;
         }
 
         Player player = event.getPlayer();
-        ParkourSession session = parkour.getPlayerManager().getParkourSession(player.getName());
+        ParkourSession session = parkour.getPlayerManager().getParkourSession(player);
 
         // Only do fall checks if mode is not 'dropper' course
         if (session.getParkourMode() != ParkourMode.DROPPER

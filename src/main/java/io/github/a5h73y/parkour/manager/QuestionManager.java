@@ -71,7 +71,7 @@ public class QuestionManager {
     public void askDeleteCheckpointQuestion(Player player, String courseName, int checkpoint) {
         courseName = courseName.toLowerCase();
         player.sendMessage(Parkour.getPrefix() + "You are about to delete checkpoint " + ChatColor.AQUA + checkpoint + ChatColor.WHITE + " for course " + ChatColor.AQUA + courseName + ChatColor.WHITE + "...");
-        player.sendMessage(ChatColor.GRAY + "Deleting a checkpoint will impact everybody that is currently playing on " + courseName + ". You should not set a course to finished and then continue to make changes.");
+        player.sendMessage(ChatColor.GRAY + "Deleting a checkpoint will impact everybody that is currently playing on " + courseName + ". You should not set a course to ready and then continue to make changes.");
         askQuestion(player, courseName, QuestionType.DELETE_CHECKPOINT);
     }
 
@@ -169,7 +169,6 @@ public class QuestionManager {
 
                 case RESET_PLAYER:
                     OfflinePlayer target = Bukkit.getOfflinePlayer(argument);
-
                     if (target != null) {
                         PlayerInfo.resetPlayer(target);
                         player.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + argument + ChatColor.WHITE + " has been reset.");
@@ -187,8 +186,13 @@ public class QuestionManager {
 
                 case RESET_PLAYER_LEADERBOARD:
                     String[] arguments = argument.split(";");
-                    Parkour.getInstance().getDatabase().deletePlayerCourseTimes(arguments[0], arguments[1]);
-                    PluginUtils.logToFile(arguments[0] + " leaderboards were reset on course + " + arguments[1] + " by " + player.getName());
+                    target = Bukkit.getOfflinePlayer(arguments[0]);
+                    if (target != null) {
+                        Parkour.getInstance().getDatabase().deletePlayerCourseTimes(target, arguments[1]);
+                        PluginUtils.logToFile(arguments[0] + " leaderboards were reset on course + " + arguments[1] + " by " + player.getName());
+                    } else {
+                        player.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + arguments[1] + ChatColor.WHITE + " does not exist.");
+                    }
                     return;
 
                 case RESET_PRIZES:

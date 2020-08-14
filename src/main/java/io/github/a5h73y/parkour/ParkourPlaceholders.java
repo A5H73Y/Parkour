@@ -11,6 +11,7 @@ import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.List;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 /**
  * Parkour's implementation of {@link PlaceholderExpansion}.
@@ -48,7 +49,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     }
 
     @Override
-    public String onRequest(OfflinePlayer player, String command) {
+    public String onRequest(OfflinePlayer offlinePlayer, String command) {
         command = command.toLowerCase();
         String[] arguments = command.split("_");
 
@@ -83,42 +84,49 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             }
 
             TimeEntry result = getTopResultForCourse(arguments[1]);
-            return result == null ? NO_TIME_RECORDED : result.getPlayer();
+            return result == null ? NO_TIME_RECORDED : result.getPlayerName();
         }
 
-        // Player specific
-        if (player == null) {
+        // OfflinePlayer specific
+        if (offlinePlayer == null) {
             return "";
         }
 
         if (command.equals("last_completed")) {
-            return PlayerInfo.getLastCompletedCourse(player);
+            return PlayerInfo.getLastCompletedCourse(offlinePlayer);
 
         } else if (command.equals("courses_completed")) {
-            return PlayerInfo.getNumberOfCoursesCompleted(player);
+            return PlayerInfo.getNumberOfCoursesCompleted(offlinePlayer);
 
         } else if (command.equals("last_played")) {
-            return PlayerInfo.getLastPlayedCourse(player);
+            return PlayerInfo.getLastPlayedCourse(offlinePlayer);
 
         } else if (command.equals("parkoins")) {
-            return String.valueOf(PlayerInfo.getParkoins(player));
+            return String.valueOf(PlayerInfo.getParkoins(offlinePlayer));
 
         } else if (command.equals("level")) {
-            return String.valueOf(PlayerInfo.getParkourLevel(player));
+            return String.valueOf(PlayerInfo.getParkourLevel(offlinePlayer));
 
         } else if (command.equals("rank")) {
-            return PlayerInfo.getRank(player);
+            return PlayerInfo.getRank(offlinePlayer);
+        }
 
-        } else if (command.equals("current_course")) {
-            Course course = parkour.getCourseManager().findByPlayer(player.getName());
+        // online player specific
+        Player player = offlinePlayer.getPlayer();
+        if (player == null) {
+            return "";
+        }
+
+        if (command.equals("current_course")) {
+            Course course = parkour.getCourseManager().findByPlayer(player);
             return course == null ? "" : course.getName();
 
         } else if (command.equals("current_checkpoint")) {
-            ParkourSession session = parkour.getPlayerManager().getParkourSession(player.getName());
+            ParkourSession session = parkour.getPlayerManager().getParkourSession(player);
             return session == null ? "" : String.valueOf(session.getCurrentCheckpoint());
 
         } else if (command.equals("current_course_record_deaths")) {
-            Course course = parkour.getCourseManager().findByPlayer(player.getName());
+            Course course = parkour.getCourseManager().findByPlayer(player);
             if (course != null) {
                 TimeEntry result = getTopResultForCourse(course.getName());
                 return result == null ? NO_TIME_RECORDED : String.valueOf(result.getDeaths());
@@ -126,7 +134,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             return "";
 
         } else if (command.equals("current_course_record")) {
-            Course course = parkour.getCourseManager().findByPlayer(player.getName());
+            Course course = parkour.getCourseManager().findByPlayer(player);
             if (course != null) {
                 TimeEntry result = getTopResultForCourse(course.getName());
                 return result == null ? NO_TIME_RECORDED : DateTimeUtils.displayCurrentTime(result.getTime());
@@ -138,7 +146,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return INVALID_SYNTAX;
             }
 
-            TimeEntry result = getTopPlayerResultForCourse(player.getName(), arguments[3]);
+            TimeEntry result = getTopPlayerResultForCourse(player, arguments[3]);
             return result == null ? NO_TIME_RECORDED : String.valueOf(result.getDeaths());
 
         } else if (command.startsWith("personal_best")) {
@@ -146,40 +154,40 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return INVALID_SYNTAX;
             }
 
-            TimeEntry result = getTopPlayerResultForCourse(player.getName(), arguments[2]);
+            TimeEntry result = getTopPlayerResultForCourse(player, arguments[2]);
             return result == null ? NO_TIME_RECORDED : DateTimeUtils.displayCurrentTime(result.getTime());
 
         } else if (command.equals("current_personal_best_deaths")) {
-            Course course = parkour.getCourseManager().findByPlayer(player.getName());
+            Course course = parkour.getCourseManager().findByPlayer(player);
             if (course != null) {
-                TimeEntry result = getTopPlayerResultForCourse(player.getName(), course.getName());
+                TimeEntry result = getTopPlayerResultForCourse(player, course.getName());
                 return result == null ? NO_TIME_RECORDED : String.valueOf(result.getDeaths());
             }
             return "";
 
         } else if (command.equals("current_personal_best")) {
-            Course course = parkour.getCourseManager().findByPlayer(player.getName());
+            Course course = parkour.getCourseManager().findByPlayer(player);
             if (course != null) {
-                TimeEntry result = getTopPlayerResultForCourse(player.getName(), course.getName());
+                TimeEntry result = getTopPlayerResultForCourse(player, course.getName());
                 return result == null ? NO_TIME_RECORDED : DateTimeUtils.displayCurrentTime(result.getTime());
             }
             return "";
 
         } else if (command.equals("current_course_leader")) {
-            Course course = parkour.getCourseManager().findByPlayer(player.getName());
+            Course course = parkour.getCourseManager().findByPlayer(player);
             if (course != null) {
                 TimeEntry result = getTopResultForCourse(course.getName());
-                return result == null ? NO_TIME_RECORDED : result.getPlayer();
+                return result == null ? NO_TIME_RECORDED : result.getPlayerName();
             }
             return "";
 
         } else if (command.equals("current_course_timer")) {
-            ParkourSession session = parkour.getPlayerManager().getParkourSession(player.getName());
+            ParkourSession session = parkour.getPlayerManager().getParkourSession(player);
 //            return session == null ? "" : session.getLiveTime(); TODO
             return "";
 
         } else if (command.equals("current_course_deaths")) {
-            ParkourSession session = parkour.getPlayerManager().getParkourSession(player.getName());
+            ParkourSession session = parkour.getPlayerManager().getParkourSession(player);
             return session == null ? "" : String.valueOf(session.getDeaths());
 
         } else if (command.startsWith("topten")) {
@@ -212,9 +220,9 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                     nCol = "&" + arguments[0].substring(7, 8);
                     tCol = "&" + arguments[0].substring(8);
                 }
-                return nCol + result.getPlayer() + "&7 - " + tCol + DateTimeUtils.displayCurrentTime(result.getTime());
+                return nCol + result.getPlayerName() + "&7 - " + tCol + DateTimeUtils.displayCurrentTime(result.getTime());
             }
-            return "&f" + pos + ") &b" + result.getPlayer() + "&f in &a" + DateTimeUtils.displayCurrentTime(result.getTime()) + "&f";
+            return "&f" + pos + ") &b" + result.getPlayerName() + "&f in &a" + DateTimeUtils.displayCurrentTime(result.getTime()) + "&f";
 
         } else if (command.startsWith("course_prize_delay")) {
             if (arguments.length != 4) {
@@ -262,7 +270,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
 
             switch (arguments[2]) {
                 case "player":
-                    return result.getPlayer();
+                    return result.getPlayerName();
 
                 case "time":
                     return DateTimeUtils.displayCurrentTime(result.getTime());
@@ -282,12 +290,12 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
         return parkour.getDatabase().getNthBestTime(courseName, 1);
     }
 
-    private TimeEntry getTopPlayerResultForCourse(String playerName, String courseName) {
+    private TimeEntry getTopPlayerResultForCourse(Player player, String courseName) {
         if (!parkour.getCourseManager().courseExists(courseName)) {
             return null;
         }
 
-        List<TimeEntry> time = parkour.getDatabase().getTopPlayerCourseResults(playerName, courseName, 1);
+        List<TimeEntry> time = parkour.getDatabase().getTopPlayerCourseResults(player, courseName, 1);
         return time.isEmpty() ? null : time.get(0);
     }
 }

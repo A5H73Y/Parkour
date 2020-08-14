@@ -60,7 +60,7 @@ public class BountifulApi extends PluginWrapper {
 	 * @param attemptTitle attempt to show the title
 	 */
 	public void sendFullTitle(Player player, String title, String subTitle, boolean attemptTitle) {
-		if (Parkour.getInstance().getPlayerManager().isInQuietMode(player.getName())) {
+		if (Parkour.getInstance().getPlayerManager().isInQuietMode(player)) {
 			return;
 		}
 
@@ -77,7 +77,7 @@ public class BountifulApi extends PluginWrapper {
 	}
 
 	public void sendActionBar(Player player, String title, boolean attemptTitle) {
-		if (Parkour.getInstance().getPlayerManager().isInQuietMode(player.getName())) {
+		if (Parkour.getInstance().getPlayerManager().isInQuietMode(player)) {
 			return;
 		}
 

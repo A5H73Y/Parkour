@@ -1,5 +1,10 @@
 package io.github.a5h73y.parkour.database;
 
+import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
+import io.github.a5h73y.parkour.utility.DateTimeUtils;
+import io.github.a5h73y.parkour.utility.PluginUtils;
+import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,11 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-
-import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
-import io.github.a5h73y.parkour.utility.PluginUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import pro.husk.Database;
 import pro.husk.mysql.MySQL;
 
@@ -92,7 +95,7 @@ public class ParkourDatabase {
             return times;
         }
 
-        String courseResultsQuery = "SELECT player, time, deaths FROM time"
+        String courseResultsQuery = "SELECT * FROM time"
                 + " WHERE courseId=" + courseId + " ORDER BY time LIMIT " + maxEntries;
 
         try (ResultSet rs = database.query(courseResultsQuery)) {
@@ -108,23 +111,23 @@ public class ParkourDatabase {
     /**
      * Find the top player results for a course.
      *
-     * @param playerName
+     * @param player
      * @param courseName
      * @param limit
      * @return Time Objects
      */
-    public List<TimeEntry> getTopPlayerCourseResults(String playerName, String courseName, int limit) {
+    public List<TimeEntry> getTopPlayerCourseResults(OfflinePlayer player, String courseName, int limit) {
         List<TimeEntry> times = new ArrayList<>();
         int maxEntries = calculateResultsLimit(limit);
         int courseId = getCourseId(courseName.toLowerCase());
-        PluginUtils.debug("Getting top " + maxEntries + " results for " + playerName + " on " + courseName);
+        PluginUtils.debug("Getting top " + maxEntries + " results for " + player.getName() + " on " + courseName);
 
         if (courseId == -1) {
             return times;
         }
 
-        String playerResultsQuery = "SELECT player, time, deaths FROM time"
-                + " WHERE courseId=" + courseId + " AND player='" + playerName + "' ORDER BY time LIMIT " + maxEntries;
+        String playerResultsQuery = "SELECT * FROM time"
+                + " WHERE courseId=" + courseId + " AND playerId='" + getPlayerId(player) + "' ORDER BY time LIMIT " + maxEntries;
 
         try (ResultSet rs = database.query(playerResultsQuery)) {
             times = processTimes(rs);
@@ -139,11 +142,11 @@ public class ParkourDatabase {
     /**
      * Determine if the player has a time record for the course.
      *
-     * @param playerName
+     * @param player
      * @param courseName
      * @return record found
      */
-    public boolean hasPlayerAchievedTime(String playerName, String courseName) {
+    public boolean hasPlayerAchievedTime(Player player, String courseName) {
         boolean timeExists = false;
         int courseId = getCourseId(courseName.toLowerCase());
 
@@ -152,7 +155,7 @@ public class ParkourDatabase {
         }
 
         String timeExistsQuery = "SELECT 1 FROM time" +
-                " WHERE courseId=" + courseId + " AND player='" + playerName + "' LIMIT 1;";
+                " WHERE courseId=" + courseId + " AND playerId='" + getPlayerId(player) + "' LIMIT 1;";
 
         try (ResultSet rs = database.query(timeExistsQuery)) {
             timeExists = rs.next();
@@ -166,12 +169,12 @@ public class ParkourDatabase {
     /**
      * Determine if this is the best time for the player.
      *
-     * @param playerName
+     * @param player
      * @param courseName
      * @param time
      * @return is players best time
      */
-    public boolean isBestPlayerTime(String playerName, String courseName, long time) {
+    public boolean isBestPlayerTime(OfflinePlayer player, String courseName, long time) {
         boolean bestPlayerTime = false;
         int courseId = getCourseId(courseName);
         if (courseId == -1) {
@@ -179,7 +182,7 @@ public class ParkourDatabase {
         }
 
         String bestPlayerQuery = "SELECT 1 FROM time"
-                + " WHERE player='" + playerName + "' AND courseId=" + courseId + " AND time < " + time + ";";
+                + " WHERE playerId='" + getPlayerId(player) + "' AND courseId=" + courseId + " AND time < " + time + ";";
         PluginUtils.debug("Checking is best player time: " + bestPlayerQuery);
 
         try (ResultSet rs = database.query(bestPlayerQuery)) {
@@ -250,10 +253,9 @@ public class ParkourDatabase {
      * This identifier is then used to reference the course throughout the database.
      *
      * @param courseName
-     * @param playerName
      */
-    public void insertCourse(String courseName, String playerName) {
-        String insertCourseUpdate = "INSERT INTO course (name, author) VALUES ('" + courseName + "', '" + playerName + "');";
+    public void insertCourse(String courseName) {
+        String insertCourseUpdate = "INSERT INTO course (name) VALUES ('" + courseName + "');";
         PluginUtils.debug("Inserted course: " + insertCourseUpdate);
 
         try {
@@ -267,18 +269,18 @@ public class ParkourDatabase {
      * Insert a time record into the database for the player's time.
      *
      * @param courseName
-     * @param playerName
+     * @param player
      * @param time
      * @param deaths
      */
-    private void insertTime(String courseName, String playerName, long time, int deaths) {
+    private void insertTime(String courseName, Player player, long time, int deaths) {
         int courseId = getCourseId(courseName);
         if (courseId == -1) {
             return;
         }
 
-        String insertTimeUpdate = "INSERT INTO time (courseId, player, time, deaths) "
-                + "VALUES (" + courseId + ", '" + playerName + "', " + time + ", " + deaths + ");";
+        String insertTimeUpdate = "INSERT INTO time (courseId, playerId, playerName, time, deaths) "
+                + "VALUES (" + courseId + ", '" + getPlayerId(player) + "', '" + player.getName() + "', " + time + ", " + deaths + ");";
         PluginUtils.debug("Inserting time: " + insertTimeUpdate);
 
         try {
@@ -295,22 +297,22 @@ public class ParkourDatabase {
      * Updating will only apply once the player has beaten their best time.
      *
      * @param courseName
-     * @param playerName
+     * @param player
      * @param time
      * @param deaths
      */
-    public void insertOrUpdateTime(String courseName, String playerName, long time, int deaths, boolean isNewRecord) {
+    public void insertOrUpdateTime(String courseName, Player player, long time, int deaths, boolean isNewRecord) {
         boolean updatePlayerTime = parkour.getConfig().getBoolean("OnFinish.UpdatePlayerDatabaseTime");
-        PluginUtils.debug("Potentially Inserting or Updating Time for player: " + playerName + ", isNewRecord: " + isNewRecord + ", updatePlayerTime: " + updatePlayerTime);
+        PluginUtils.debug("Potentially Inserting or Updating Time for player: " + player.getName() + ", isNewRecord: " + isNewRecord + ", updatePlayerTime: " + updatePlayerTime);
 
         if (isNewRecord && updatePlayerTime) {
-            PluginUtils.debug("Updating the Time for player " + playerName);
-            deletePlayerCourseTimes(playerName, courseName);
-            insertTime(courseName, playerName, time, deaths);
+            PluginUtils.debug("Updating the Time for player " + player.getName());
+            deletePlayerCourseTimes(player, courseName);
+            insertTime(courseName, player, time, deaths);
 
         } else if (!updatePlayerTime) {
-            PluginUtils.debug("Inserting a Time for player " + playerName);
-            insertTime(courseName, playerName, time, deaths);
+            PluginUtils.debug("Inserting a Time for player " + player);
+            insertTime(courseName, player, time, deaths);
         }
     }
 
@@ -318,12 +320,12 @@ public class ParkourDatabase {
      * Delete all Players leaderboard times.
      * For usage if a player has been banned for cheating etc.
      *
-     * @param playerName
+     * @param player
      */
-    public void deletePlayerTimes(String playerName) {
-        PluginUtils.debug("Deleting all Player times for " + playerName);
+    public void deletePlayerTimes(OfflinePlayer player) {
+        PluginUtils.debug("Deleting all Player times for " + player.getName());
         try {
-            database.updateAsync("DELETE FROM time WHERE player='" + playerName + "'").get();
+            database.updateAsync("DELETE FROM time WHERE playerId='" + getPlayerId(player) + "'").get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
@@ -352,19 +354,19 @@ public class ParkourDatabase {
     /**
      * Delete player times from a certain course.
      *
-     * @param playerName
+     * @param player
      * @param courseName
      */
-    public void deletePlayerCourseTimes(String playerName, String courseName) {
+    public void deletePlayerCourseTimes(OfflinePlayer player, String courseName) {
         int courseId = getCourseId(courseName);
         if (courseId == -1) {
             return;
         }
 
-        PluginUtils.debug("Deleting all times for player " + playerName + " for course " + courseName);
+        PluginUtils.debug("Deleting all times for player " + player.getName() + " for course " + courseName);
         try {
             database.updateAsync("DELETE FROM time"
-                    + " WHERE player='" + playerName + "' AND courseId=" + courseId).get();
+                    + " WHERE playerId='" + getPlayerId(player) + "' AND courseId=" + courseId).get();
             resultsCache.remove(courseName.toLowerCase());
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
@@ -401,7 +403,7 @@ public class ParkourDatabase {
             int changes = 0;
             for (String courseName : CourseInfo.getAllCourses()) {
                 if (getCourseId(courseName, false) == -1) {
-                    insertCourse(courseName, CourseInfo.getCreator(courseName));
+                    insertCourse(courseName);
                     changes++;
                 }
             }
@@ -422,6 +424,38 @@ public class ParkourDatabase {
             this.database.closeConnection();
         } catch (SQLException e) {
             logSQLException(e);
+        }
+    }
+
+    /**
+     * Display Leaderboards
+     * Present the course times to the player.
+     *
+     * @param times
+     * @param player
+     * @param courseName
+     */
+    public void displayTimeEntries(Player player, String courseName, List<TimeEntry> times) {
+        if (times.isEmpty()) {
+            player.sendMessage(Parkour.getPrefix() + "No results were found!");
+            return;
+        }
+
+        String heading = TranslationUtils.getTranslation("Parkour.LeaderboardHeading", false)
+                .replace("%COURSE%", courseName)
+                .replace("%AMOUNT%", String.valueOf(times.size()));
+
+        TranslationUtils.sendHeading(heading, player);
+
+        for (int i = 0; i < times.size(); i++) {
+            TimeEntry entry = times.get(i);
+            String translation = TranslationUtils.getTranslation("Parkour.LeaderboardEntry", false)
+                    .replace("%POSITION%", String.valueOf(i + 1))
+                    .replace("%PLAYER%", entry.getPlayerName())
+                    .replace("%TIME%", DateTimeUtils.displayCurrentTime(entry.getTime()))
+                    .replace("%DEATHS%", String.valueOf(entry.getDeaths()));
+
+            player.sendMessage(translation);
         }
     }
 
@@ -456,13 +490,25 @@ public class ParkourDatabase {
     }
 
     private void setupTables() throws SQLException {
-        String createCourseTable = "CREATE TABLE IF NOT EXISTS course (courseId INTEGER PRIMARY KEY AUTO_INCREMENT, name VARCHAR(15) NOT NULL UNIQUE, author VARCHAR(20) NOT NULL, created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL);";
-        String createTimesTable = "CREATE TABLE IF NOT EXISTS time (timeId INTEGER PRIMARY KEY AUTO_INCREMENT, courseId INTEGER NOT NULL, player VARCHAR(20) NOT NULL, time DECIMAL(13,0) NOT NULL, deaths INT(5) NOT NULL, FOREIGN KEY (courseId) REFERENCES course(courseId) ON DELETE CASCADE ON UPDATE CASCADE);";
+        String createCourseTable = "CREATE TABLE IF NOT EXISTS course (" +
+                "courseId INTEGER PRIMARY KEY AUTO_INCREMENT, " +
+                "name VARCHAR(15) NOT NULL UNIQUE, " +
+                "created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL);";
+
+        String createTimesTable = "CREATE TABLE IF NOT EXISTS time (" +
+                "timeId INTEGER PRIMARY KEY AUTO_INCREMENT, " +
+                "courseId INTEGER NOT NULL, " +
+                "playerId CHAR(36) CHARACTER SET ascii NOT NULL, " +
+                "playerName VARCHAR(16) NOT NULL, " +
+                "time DECIMAL(13,0) NOT NULL, " +
+                "deaths INT(5) NOT NULL, " +
+                "FOREIGN KEY (courseId) REFERENCES course(courseId) ON DELETE CASCADE ON UPDATE CASCADE);";
 
         // seems to be the only syntactic difference between them
         if (database instanceof SQLite) {
             createCourseTable = createCourseTable.replace("AUTO_INCREMENT", "AUTOINCREMENT");
-            createTimesTable = createTimesTable.replace("AUTO_INCREMENT", "AUTOINCREMENT");
+            createTimesTable = createTimesTable.replace("AUTO_INCREMENT", "AUTOINCREMENT")
+                    .replace("CHARACTER SET ascii", "");
         }
 
         PluginUtils.debug("Attempting to create necessary tables.");
@@ -505,7 +551,8 @@ public class ParkourDatabase {
 
         while (rs.next()) {
             TimeEntry time = new TimeEntry(
-                    rs.getString("player"),
+                    rs.getString("playerId"),
+                    rs.getString("playerName"),
                     rs.getLong("time"),
                     rs.getInt("deaths"));
             times.add(time);
@@ -533,13 +580,35 @@ public class ParkourDatabase {
      * @return matching {@link TimeEntry}
      */
     public TimeEntry getNthBestTime(String courseName, int position) {
+        List<TimeEntry> cachedResults = getCourseCache(courseName);
+        return position > cachedResults.size() ? null : cachedResults.get(position - 1);
+    }
+
+    /**
+     * Find the nth best time for the course.
+     * Uses cache to quickly find the result based on position in the list.
+     *
+     * @param courseName course
+     * @param results results
+     * @return matching {@link TimeEntry}
+     */
+    public List<TimeEntry> getTopBestTimes(String courseName, int results) {
+        List<TimeEntry> cachedResults = getCourseCache(courseName);
+        int maxResults = Math.min(results, cachedResults.size());
+        return cachedResults.subList(0, maxResults);
+    }
+
+    private List<TimeEntry> getCourseCache(String courseName) {
         if (!resultsCache.containsKey(courseName.toLowerCase())) {
             PluginUtils.debug("Populating times cache for " + courseName);
             resultsCache.put(courseName.toLowerCase(),
                     getTopCourseResults(courseName, parkour.getConfig().getLeaderboardMaxEntries()));
         }
 
-        List<TimeEntry> cachedResults = resultsCache.get(courseName.toLowerCase());
-        return position > cachedResults.size() ? null : cachedResults.get(position - 1);
+        return resultsCache.get(courseName.toLowerCase());
+    }
+
+    private String getPlayerId(OfflinePlayer player) {
+        return player.getUniqueId().toString().replace("-", "");
     }
 }

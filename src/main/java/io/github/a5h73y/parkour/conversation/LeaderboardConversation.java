@@ -95,15 +95,15 @@ public class LeaderboardConversation extends ParkourConversation {
             final Integer amount = (Integer) context.getSessionData("amount");
             final Player player = Bukkit.getPlayer((String) context.getSessionData("playerName"));
 
-            Bukkit.getScheduler().runTaskLaterAsynchronously(Parkour.getInstance(), () -> {
+            Bukkit.getScheduler().runTaskAsynchronously(Parkour.getInstance(), () -> {
                 if (leaderboardType.equals("personal")) {
-                    Utils.displayLeaderboard(player,
-                            Parkour.getInstance().getDatabase().getTopPlayerCourseResults(player.getName(), courseName, amount), courseName);
+                    Parkour.getInstance().getDatabase().displayTimeEntries(player, courseName,
+                            Parkour.getInstance().getDatabase().getTopPlayerCourseResults(player, courseName, amount));
                 } else if (leaderboardType.equals("global")) {
-                    Utils.displayLeaderboard(player,
-                            Parkour.getInstance().getDatabase().getTopCourseResults(courseName, amount), courseName);
+                    Parkour.getInstance().getDatabase().displayTimeEntries(player, courseName,
+                            Parkour.getInstance().getDatabase().getTopCourseResults(courseName, amount));
                 }
-            }, 3);
+            });
 
             return "";
         }

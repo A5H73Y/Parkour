@@ -29,57 +29,58 @@
                 <div id="contents-placeholder"></div>
 
                 <h2 id="designCourse">Design the course</h2>
-                <p class="no-margin">Firstly, design and build your course and decide where you want your checkpoints to be.</p>
-                <p class="italic">If it helps, we can place different blocks to mark where we want the checkpoints to be, we can remove these later.</p>
+                <p class="no-margin">Start by building your course and decide where you may want your checkpoints to be.</p>
+                <p class="font-italic">If it helps, we can place different blocks to mark where we want the checkpoints to be, we can remove these later.</p>
                 <img src="https://i.imgur.com/Ckjueri.jpg" alt="Design Course" class="img-thumbnail">
 
                 <h2 id="createCourse">Create the Course</h2>
-                <p class="no-margin">Decide where you want the course to start, stand in the position and face the direction you want the players to teleport to.</p>
-                <p class="italic">The position you are facing will be loaded when the players teleport to the course.</p>
+                <p>Decide where you want the course to start, stand in the position and face the direction you want the players to teleport to. When you are happy, enter the command <code>/pa create (course)</code>.</p>
                 <img src="https://i.imgur.com/OcbCbL8.jpg" alt="Create Course" class="img-thumbnail">
-                <p class="no-margin">When you are happy, enter <strong>/pa create (course)</strong>.</p>
-                <p class="italic">We will refer to our course as 'tutorial'. The course name is how we will refer to our course throughout the plugin, so remember it for now.</p>
-                <p>If everything was successful, the following message will appear.</p>
+                <p class="no-margin">This example has named the course "tutorial", the name you have chosen will be used to reference the course later on. If everything was successful, the following message will appear.</p>
+                <p class="font-italic">This will create a course entry in the database, allowing us to now track times against it.</p>
                 <img src="https://i.imgur.com/hA8HpnU.jpg" alt="Course Created" class="img-thumbnail"/>
-                <p class="italic">This will create a course entry in the database, allowing us to now track times against it.</p>
-                <p>You will notice that 'selected' is referred to often, this means that you are editing the course. This can be manually achieved by entering <strong>/pa select (course)</strong> this means you can execute commands without having to specify the course, for example the following <strong>/pa checkpoint</strong> command does not require you to specify a course.</p>
+                <p>The term 'selected' means that you are editing the course. This can be manually achieved by using the command <code>/pa select (course)</code>, you can now execute commands without having to specify the course, for example the following <code>/pa checkpoint</code> command does not require you to specify a course.</p>
 
                 <h2 id="createCheckpoints">Create Checkpoints</h2>
-                <p class="no-margin">We can now stand where we want our first checkpoint to be, stand in the position and face the direction you want the players to teleport to and enter <strong>/pa checkpoint</strong>.</p>
-                <p class="italic">This will place a pressure plate to activate the checkpoint.</p>
+                <p class="no-margin">To create a checkpoint stand where you want your first checkpoint to be, face the direction you want the players to teleport to and enter <code>/pa checkpoint</code>.</p>
+                <p class="font-italic">This will place a pressure plate to activate the checkpoint.</p>
                 <img src="https://i.imgur.com/IYgHBJs.jpg" alt="Checkpoint Created" class="img-thumbnail"/>
-                <p>There is no limit to how many checkpoints you can create, they are automatically generated when you enter <strong>/pa checkpoint</strong>. The checkpoint is generated for the course you have selected (editing). This is achieved when you create a course, or you can select it manually by typing <strong>/pa select (course)</strong>.</p>
-                <p>Now you've learnt how to create a single checkpoint, now repeat the command to create as many checkpoints as you want for the course!</p>
+                <p>There is no limit to how many checkpoints you can create, they are automatically generated every time you enter <code>/pa checkpoint</code>. The checkpoint is generated for the course you have selected (editing); To select a course use the command <code>/pa select (course)</code>.</p>
+                <p>Now you've learnt how to create a single checkpoint, repeat the command to create as many checkpoints as you want for the course!</p>
                 <img src="https://i.imgur.com/TXum8Wx.jpg" alt="Checkpoint 2 Created" class="img-thumbnail"/>
                 <img src="https://i.imgur.com/nlFsGsC.jpg" alt="Many Checkpoints Created" class="img-thumbnail"/>
-                <p>If you happen to make a mistake, or want to move a checkpoint, you can use the same command but with an optional number to overwrite that existing checkpoint. For example <strong>/pa checkpoint 2</strong> would overwrite the second checkpoint.</p>
+                <p>If you happen to make a mistake, or want to move a checkpoint, you can use the same command but with an optional number parameter to overwrite that existing checkpoint. For example <code>/pa checkpoint 2</code> would overwrite the second checkpoint.</p>
 
                 <h2 id="finishCourse">Finish the Course</h2>
-                <p class="no-margin">We need a "Finish Block" to allow the player to complete the course once they walk over it, because of the new ParkourKit system this can be different for each course. But for now we can set it to the default Finish Block, and you could change it later. Simply enter <strong>/pa kit</strong> to populate your inventory with each item of the default ParkourKit, then find the Material named "Finish Block", and simply place these materials where you want the finish area to be.</p>
-                <p class="italic">For more information on ParkourKits, <a href="page4.html">click here.</a></p>
-                <p>Once we're happy we've created all the checkpoints for the course, it's time to set the status of the course to "finished", so other players can join it. To mark the course as complete, enter <strong>/pa finish (course)</strong>.</p>
-                <p class="no-margin">By default, players can not join a course that has not been set to finished (so they don't join a half-finished course), this can be disabled by changing "OnJoin.EnforceFinished" to false in the config.yml.</p>
-                <p class="italic">You can enter <strong>/pa done</strong> to stop editing the course.</p>
-                <img src="https://i.imgur.com/kd1KkqU.jpg" alt="Course Finished" class="img-thumbnail"/>
-                <p>As simple as that! Now you've got a course setup, which can be joined by other players and track statistics and leaderboards. Try it yourself by joining it <strong>/pa join (course)</strong>.</p>
+                <p>For the player to be able to finish the course, we need use a "Finish Block" or a Finish Parkour Sign.</p>
+                <p class="no-margin">A "Finish Block" is part of a ParkourKit and will trigger the course being finished when walked upon. For now we can set it to the default Finish Block, you can change it later. Simply enter <code>/pa kit</code> to populate your inventory with each item of the default ParkourKit, then find the Material named "Finish Block", and simply place these materials where you want the finish area to be.</p>
+                <p class="font-italic">For more information on ParkourKits, <a href="page4.html">click here.</a></p>
+                <p>A Finish Parkour Sign can be placed at the end of the course, for more information <a href="part5.html#finishCourse">click here.</a></p>
+
+                <h2 id="readyStatus">Course Ready Status</h2>
+                <p>Once all the checkpoints are created for the course, it's time to set the status of the course to "ready", so other players can join it. To mark the course as ready, enter <code>/pa ready (course)</code>.</p>
+                <p class="no-margin">By default, players can not join a course that has not been set to ready (so they don't join a half-finished course), this can be disabled by changing "OnJoin.EnforceReady" to false in the config.yml.</p>
+                <p class="font-italic">You can enter <code>/pa done</code> to stop editing the course.</p>
+                <img src="https://i.imgur.com/kd1KkqU.jpg" alt="Course Ready" class="img-thumbnail"/>
+                <p>As simple as that! Now you've got a course setup, which can be joined by other players and track statistics and leaderboards. Try it yourself by joining it <code>/pa join (course)</code>.</p>
 
                 <h2 id="extraInformation">Extra Information</h2>
                 <h4>Test Mode</h4>
-                <p>You are able to simulate how each ParkourKit will behave by entering a simple command, just enable Test Mode with <strong>/pa test (Kit name)</strong>.</p>
-                <p class="no-margin">Please note that this doesn't do anything besides allow you to interact with the Kit and its corresponding actions. If you "die" while in Test Mode, it will take you back to the location you started Test Mode.</p>
-                <p class="italic">To disable Test Mode, reenter <strong>/pa test</strong>.</p>
+                <p>You are able to simulate how each ParkourKit will behave by entering a simple command, just enable Test Mode with <code>/pa test (kitName)</code>.</p>
+                <p class="no-margin">Please note that this doesn't do anything besides allow you to interact with the ParkourKit and its corresponding actions. If you "die" while in Test Mode, it will take you back to the location you initiated Test Mode.</p>
+                <p class="font-italic">To disable Test Mode, enter <code>/pa test</code> again.</p>
 
                 <h4>Overwriting the Creator of a course</h4>
-                <p class="no-margin">If you want to overwrite the creator of a course to a different player, you can enter <strong>/pa setcreator (course) (player)</strong> this will now allow the chosen player to have administration permissions for that course.</p>
-                <p class="italic">The creator of a course has exclusive permissions to be able to edit that course.</p>
+                <p class="no-margin">If you want to overwrite the creator of a course to a different player, you can enter <code>/pa setcreator (course) (player)</code> this will now allow the chosen player to have administration permissions for that course.</p>
+                <p class="font-italic">The creator of a course has exclusive permissions to be able to edit that course.</p>
 
                 <h4>Overwriting the Start of a course</h4>
-                <p class="no-margin">If you want to change the starting position of a course, you can enter <strong>/pa setstart</strong>.</p>
-                <p class="italic">Remember that you must have the course selected (editing), which can be achieved by entering <strong>/pa select (course)</strong>.</p>
+                <p class="no-margin">If you want to change the starting position of a course, you can enter <code>/pa setstart</code>.</p>
+                <p class="font-italic">Remember that you must have the course selected (editing), which can be achieved by entering <code>/pa select (course)</code>.</p>
 
                 <h4>Teleporting to a course</h4>
-                <p>If you want to teleport to the start of a course, you can enter <strong>/pa tp (course)</strong>. This will only teleport you, exactly as you are, without starting the course.</p>
-                <p>If you wish to teleport to a specific checkpoint in the course you can enter <strong>/pa tpc (course) (checkpoint)</strong>.</p>
+                <p>If you want to teleport to the start of a course, you can enter <code>/pa tp (course)</code>. This will only teleport you, exactly as you are, without starting the course.</p>
+                <p>If you wish to teleport to a specific checkpoint in the course you can enter <code>/pa tpc (course) (checkpoint)</code>.</p>
             </div>
         </div>
     </div>

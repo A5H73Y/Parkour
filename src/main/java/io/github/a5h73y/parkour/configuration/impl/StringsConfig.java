@@ -30,7 +30,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Parkour.Delete", "&b%VALUE% &fhas been deleted!");
 		this.addDefault("Parkour.DeleteCheckpoint", "Checkpoint &b%CHECKPOINT% &fwas deleted on &b%COURSE%");
 		this.addDefault("Parkour.Reset", "&b%VALUE% &fhas been reset!");
-		this.addDefault("Parkour.Finish", "&b%VALUE% &fhas been set to finished!");
+		this.addDefault("Parkour.Ready", "&b%VALUE% &fhas been set to ready to join!");
 		this.addDefault("Parkour.FinishBroadcast", "&3%PLAYER% &ffinished &b%COURSE% &fwith &b%DEATHS% &fdeaths, in &b%TIME%&f!");
 		this.addDefault("Parkour.FinishCourse1", "Finished &b%VALUE%&f!");
 		this.addDefault("Parkour.FinishCourse2", "In %TIME%, dying %DEATHS% times");
@@ -92,8 +92,8 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Error.WorldTeleport", "Teleporting to a different world has been cancelled");
 		this.addDefault("Error.Something", "Something went wrong: &4%VALUE%");
 		this.addDefault("Error.RequiredLvl", "You require level &b%VALUE% &fto join!");
-		this.addDefault("Error.Finished1", "This course is not ready for you to play yet!");
-		this.addDefault("Error.Finished2", "WARNING: This course is not finished yet.");
+		this.addDefault("Error.NotReady", "This course is not ready for you to play yet!");
+		this.addDefault("Error.NotReadyWarning", "This course is not ready yet.");
 		this.addDefault("Error.SignProtected", "This sign is protected!");
 		this.addDefault("Error.Syntax", "&cInvalid Syntax: &f/pa &8%COMMAND% &7%ARGUMENTS%");
 		this.addDefault("Error.UnknownSignCommand", "Unknown sign command!");

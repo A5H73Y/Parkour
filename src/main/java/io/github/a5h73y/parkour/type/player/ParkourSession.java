@@ -19,7 +19,8 @@ public class ParkourSession implements Serializable {
     private long timeStarted;
     private long timeFinished;
 
-    private final Course course;
+    private final String courseName;
+    private transient Course course;
     private Location freedomLocation;
 
     /**
@@ -36,6 +37,7 @@ public class ParkourSession implements Serializable {
     public ParkourSession(Course course) {
         this.timeStarted = System.currentTimeMillis();
         this.course = course;
+        this.courseName = course.getName();
     }
 
     public boolean hasAchievedAllCheckpoints() {
@@ -141,6 +143,14 @@ public class ParkourSession implements Serializable {
 
     public Course getCourse() {
         return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    public String getCourseName() {
+        return courseName;
     }
 
     public Location getFreedomLocation() {

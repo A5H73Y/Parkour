@@ -245,20 +245,20 @@ public class CourseInfo {
      * Returns whether the course is ready or not.
      *
      * @param courseName
-     * @return boolean
+     * @return ready status
      */
-    public static boolean getFinished(String courseName) {
-        return getCourseConfig().getBoolean(courseName.toLowerCase() + ".Finished");
+    public static boolean getReadyStatus(String courseName) {
+        return getCourseConfig().getBoolean(courseName.toLowerCase() + ".Ready");
     }
 
     /**
-     * Set the finish status of the course
+     * Set the ready status of the course
      *
      * @param courseName
-     * @param finished
+     * @param ready ready status
      */
-    public static void setFinished(String courseName, boolean finished) {
-        getCourseConfig().set(courseName.toLowerCase() + ".Finished", finished);
+    public static void setReadyStatus(String courseName, boolean ready) {
+        getCourseConfig().set(courseName.toLowerCase() + ".Ready", ready);
     }
 
     /**
@@ -362,7 +362,7 @@ public class CourseInfo {
      * @return
      */
     public static int getRewardLevel(String courseName) {
-        return getCourseConfig().getInt(courseName.toLowerCase() + ".Level");
+        return getCourseConfig().getInt(courseName.toLowerCase() + ".RewardLevel");
     }
 
     /**
@@ -372,7 +372,7 @@ public class CourseInfo {
      * @param level
      */
     public static void setRewardLevel(String courseName, int level) {
-        getCourseConfig().set(courseName.toLowerCase() + ".Level", level);
+        getCourseConfig().set(courseName.toLowerCase() + ".RewardLevel", level);
     }
 
     /**
@@ -382,7 +382,7 @@ public class CourseInfo {
      * @return
      */
     public static int getRewardLevelAdd(String courseName) {
-        return getCourseConfig().getInt(courseName.toLowerCase() + ".LevelAdd");
+        return getCourseConfig().getInt(courseName.toLowerCase() + ".RewardLevelAdd");
     }
 
     /**
@@ -392,7 +392,7 @@ public class CourseInfo {
      * @param amount
      */
     public static void setRewardLevelAdd(String courseName, String amount) {
-        getCourseConfig().set(courseName.toLowerCase() + ".LevelAdd", Integer.parseInt(amount));
+        getCourseConfig().set(courseName.toLowerCase() + ".RewardLevelAdd", Integer.parseInt(amount));
     }
 
     /**
@@ -535,14 +535,14 @@ public class CourseInfo {
         int maxDeaths = config.getInt(courseName + ".MaxDeaths");
         int maxTime = config.getInt(courseName + ".MaxTime");
         int minLevel = config.getInt(courseName + ".MinimumLevel");
-        int rewardLevel = config.getInt(courseName + ".Level");
-        int rewardLevelAdd = config.getInt(courseName + ".LevelAdd");
+        int rewardLevel = config.getInt(courseName + ".RewardLevel");
+        int rewardLevelAdd = config.getInt(courseName + ".RewardLevelAdd");
         int parkoins = config.getInt(courseName + ".Parkoins");
 
         String linkedLobby = config.getString(courseName + ".LinkedLobby");
         String linkedCourse = config.getString(courseName + ".LinkedCourse");
         String creator = config.getString(courseName + ".Creator");
-        boolean finished = config.getBoolean(courseName + ".Finished");
+        boolean ready = config.getBoolean(courseName + ".Ready");
         String parkourKit = config.getString(courseName + ".ParkourKit");
         String mode = config.getString(courseName + ".Mode");
 
@@ -553,7 +553,7 @@ public class CourseInfo {
         player.sendMessage("Completed: " + aqua + completed + " times (" + completePercent + "%)");
         player.sendMessage("Checkpoints: " + aqua + getCheckpointAmount(courseName));
         player.sendMessage("Creator: " + aqua + creator);
-        player.sendMessage("Finished: " + aqua + finished);
+        player.sendMessage("Ready: " + aqua + ready);
 
         if (minLevel > 0) {
             player.sendMessage("Level Required: " + aqua + minLevel);

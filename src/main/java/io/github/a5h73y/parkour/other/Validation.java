@@ -145,15 +145,15 @@ public class Validation {
             return false;
         }
 
-        /* Course isn't finished */
-        if (!CourseInfo.getFinished(course.getName())) {
-            if (Parkour.getDefaultConfig().getBoolean("OnJoin.EnforceFinished")) {
-                if (!PermissionUtils.hasPermissionOrCourseOwnership(player, Permission.ADMIN_FINISH_BYPASS, course.getName())) {
-                    TranslationUtils.sendTranslation("Error.Finished1", player);
+        /* Course isn't ready */
+        if (!CourseInfo.getReadyStatus(course.getName())) {
+            if (Parkour.getDefaultConfig().getBoolean("OnJoin.EnforceReady")) {
+                if (!PermissionUtils.hasPermissionOrCourseOwnership(player, Permission.ADMIN_READY_BYPASS, course.getName())) {
+                    TranslationUtils.sendTranslation("Error.NotReady", player);
                     return false;
                 }
             } else {
-                TranslationUtils.sendTranslation("Error.Finished2", player);
+                TranslationUtils.sendTranslation("Error.NotReadyWarning", player);
             }
         }
 
@@ -164,7 +164,7 @@ public class Validation {
 
         /* Check if the player is allowed to leave the course for another */
         if (Parkour.getDefaultConfig().getBoolean("OnCourse.PreventJoiningDifferentCourse")
-                && Parkour.getInstance().getPlayerManager().isPlaying(player.getName())) {
+                && Parkour.getInstance().getPlayerManager().isPlaying(player)) {
             TranslationUtils.sendTranslation("Error.JoiningAnotherCourse", player);
             return false;
         }
@@ -201,10 +201,10 @@ public class Validation {
             }
         }
 
-        /* Course isn't finished */
-        if (!CourseInfo.getFinished(courseName)
-                && Parkour.getDefaultConfig().getBoolean("OnJoin.EnforceFinished")
-                && !PermissionUtils.hasPermissionOrCourseOwnership(player, Permission.ADMIN_FINISH_BYPASS, courseName)) {
+        /* Course isn't ready */
+        if (!CourseInfo.getReadyStatus(courseName)
+                && Parkour.getDefaultConfig().getBoolean("OnJoin.EnforceReady")
+                && !PermissionUtils.hasPermissionOrCourseOwnership(player, Permission.ADMIN_READY_BYPASS, courseName)) {
             return false;
         }
 
@@ -226,36 +226,33 @@ public class Validation {
      */
     public static boolean challengePlayer(String[] args, Player player) {
         String courseName = args[1].toLowerCase();
-        String targetPlayerName = args[2];
+        Player targetPlayer = Bukkit.getPlayer(args[2]);
 
+        if (targetPlayer == null) {
+            player.sendMessage(Parkour.getPrefix() + "This player is not online!");
+            return false;
+        }
         if (!Parkour.getInstance().getCourseManager().courseExists(courseName)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
             return false;
         }
-        if (Bukkit.getPlayer(targetPlayerName) == null) {
-            player.sendMessage(Parkour.getPrefix() + "This player is not online!");
-            return false;
-        }
-        if (Parkour.getInstance().getPlayerManager().isPlaying(player.getName())) {
+        if (Parkour.getInstance().getPlayerManager().isPlaying(player)) {
             player.sendMessage(Parkour.getPrefix() + "You are already on a course!");
             return false;
         }
-        if (Parkour.getInstance().getPlayerManager().isPlaying(targetPlayerName)) {
+        if (Parkour.getInstance().getPlayerManager().isPlaying(targetPlayer)) {
             player.sendMessage(Parkour.getPrefix() + "This player is already on a course!");
             return false;
         }
-        if (player.getName().equalsIgnoreCase(targetPlayerName)) {
+        if (player.getName().equalsIgnoreCase(targetPlayer.getName())) {
             player.sendMessage(Parkour.getPrefix() + "You can't challenge yourself!");
             return false;
         }
-
-        Player target = Bukkit.getPlayer(targetPlayerName);
-
         if (!courseJoiningNoMessages(player, courseName)) {
             player.sendMessage(Parkour.getPrefix() + "You are not able to join this course!");
             return false;
         }
-        if (!courseJoiningNoMessages(target, courseName)) {
+        if (!courseJoiningNoMessages(targetPlayer, courseName)) {
             player.sendMessage(Parkour.getPrefix() + "They are not able to join this course!");
             return false;
         }
@@ -274,7 +271,7 @@ public class Validation {
                 player.sendMessage(Parkour.getPrefix() + "You do not have enough funds for this wager.");
                 return false;
 
-            } else if (!economyApi.hasAmount(target, Double.parseDouble(wagerAmount))) {
+            } else if (!economyApi.hasAmount(targetPlayer, Double.parseDouble(wagerAmount))) {
                 player.sendMessage(Parkour.getPrefix() + "They do not have enough funds for this wager.");
                 return false;
             }
@@ -317,7 +314,7 @@ public class Validation {
             return false;
         }
 
-        int level = Parkour.getDefaultConfig().getInt("Lobby." + lobby + ".Level");
+        int level = Parkour.getDefaultConfig().getInt("Lobby." + lobby + ".RequiredLevel");
 
         if (level > 0 && !PermissionUtils.hasPermission(player, Permission.ADMIN_LEVEL_BYPASS, false)) {
             if (PlayerInfo.getParkourLevel(player) < level) {

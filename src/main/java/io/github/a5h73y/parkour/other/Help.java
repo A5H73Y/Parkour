@@ -33,7 +33,7 @@ public final class Help {
 
         } else if (command.equals("create")) {
             displayHelpMessage(sender, "Create a Course", "/pa create (courseName)", "/pa create tutorial",
-                    " Creating a new Parkour course only takes 1 command, all the setup is automatic. Remember that your location and the direction you're facing is saved and then loaded once the course is joined. By default, the course will be 'unfinished' until set otherwise using '/pa ready'.");
+                    " Creating a new Parkour course only takes 1 command, all the setup is automatic. Remember that your location and the direction you're facing is saved and then loaded once the course is joined. By default, the course will not be ready until set otherwise using '/pa ready'.");
 
         } else if (command.equals("leave")) {
             displayHelpMessage(sender, "Leave a Course", "/pa leave", null,
@@ -80,8 +80,8 @@ public final class Help {
                     " Many of the commands don't require a course argument as they will use the course you are editing to make things a bit easier. For example '/pa checkpoint' will use the course you are currently editing. If you want to find out which course you are currently editing use '/pa select'. When you create a course, it will automatically select it for editing.");
 
         } else if (command.equals("done")) {
-            displayHelpMessage(sender, "Finish editing a course", "/pa done", null,
-                    " Finish editing the course you have selected.");
+            displayHelpMessage(sender, "Stop editing a course", "/pa done", null,
+                    " Stop editing the course you have selected.");
 
         } else if (command.equals("setstart")) {
             displayHelpMessage(sender, "Set start of a course", "/pa setstart", null,
@@ -99,9 +99,9 @@ public final class Help {
             displayHelpMessage(sender, "Set a Parkour lobby", "/pa setlobby [name] [levelRequired]", "/pa setlobby city 10",
                     " Create a lobby where you are stood, specifying its name and a level requirement to join. You are able to link courses to lobbies after completion.");
 
-        } else if (command.equals("finish")) {
-            displayHelpMessage(sender, "Set Course finish status", "/pa finish [course]", "/pa finish example",
-                    " When you first create a course, it will not be joinable until it has been set to finished by its creator (configurable). The command will toggle the finish status, so you mark it as finished or unfinished. If you don't provide a course parameter, your selected course will be used.");
+        } else if (command.equals("ready")) {
+            displayHelpMessage(sender, "Set Course ready status", "/pa ready [course]", "/pa ready example",
+                    " When you first create a course, it will not be joinable until it has been marked as ready by its creator (configurable). The command will toggle the ready status, so you mark it as ready or not. If you don't provide a course parameter, your selected course will be used.");
 
         } else if (command.equals("prize")) {
             displayHelpMessage(sender, "Configure course prize", "/pa prize (course)", "/pa prize tutorial",
@@ -377,7 +377,7 @@ public final class Help {
         displayCommandUsage(player, "setautostart", "(course)", "Create auto start for course");
         displayCommandUsage(player, "setcreator", "(course) (player)", "Set creator of course");
         displayCommandUsage(player, "setlobby", "[name] [level]", "Create / overwrite Parkour lobby");
-        displayCommandUsage(player, "finish", "[course]", "Toggle the finish status of the chosen course");
+        displayCommandUsage(player, "ready", "[course]", "Toggle the ready status of the chosen course");
         displayCommandUsage(player, "prize", "(course)", "Configure course prize");
         displayCommandUsage(player, "test", null, "Toggle Parkour test mode");
         displayCommandUsage(player, "leaderboard", "[course] [amount] [type]", "Show leaderboards");
@@ -443,7 +443,7 @@ public final class Help {
         player.sendMessage(ChatColor.DARK_AQUA + "[pa]");
         displaySignCommandUsage(player, "Join", "(j)", "Join sign for a Parkour course");
         displaySignCommandUsage(player, "Checkpoint", "(c)", "Checkpoint for course");
-        displaySignCommandUsage(player, "Finish", "(f)", "Optional finish sign for a Parkour course");
+        displaySignCommandUsage(player, "Finish", "(f)", "Finish sign for a Parkour course");
         displaySignCommandUsage(player, "Lobby", "(l)", "Teleport to Parkour lobby");
         displaySignCommandUsage(player, "Leave", "(le)", "Leave the current course");
         displaySignCommandUsage(player, "Effect", "(e)", "Apply a Parkour effect");

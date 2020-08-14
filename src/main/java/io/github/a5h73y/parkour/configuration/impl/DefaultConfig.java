@@ -27,7 +27,7 @@ public class DefaultConfig extends ParkourConfiguration {
 
 		this.addDefault("OnJoin.AllowViaCommand", true);
 		this.addDefault("OnJoin.EnforceWorld", false);
-		this.addDefault("OnJoin.EnforceFinished", true);
+		this.addDefault("OnJoin.EnforceReady", true);
 		this.addDefault("OnJoin.FillHealth", true);
 		this.addDefault("OnJoin.Item.LastCheckpoint.Material", "ARROW");
 		this.addDefault("OnJoin.Item.LastCheckpoint.Slot", 0);
