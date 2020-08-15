@@ -57,7 +57,7 @@ public class ChatListener extends AbstractPluginReceiver implements Listener {
 
         Player player = event.getPlayer();
 
-        if (isParkourCommand && parkour.getQuestionManager().hasPlayerBeenAskedQuestion(player.getName())) {
+        if (isParkourCommand && parkour.getQuestionManager().hasPlayerBeenAskedQuestion(player)) {
             String[] args = event.getMessage().split(" ");
             if (args.length <= 1) {
                 player.sendMessage(Parkour.getPrefix() + "Invalid answer.");

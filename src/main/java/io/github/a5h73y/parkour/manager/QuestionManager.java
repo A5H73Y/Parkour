@@ -1,14 +1,13 @@
 package io.github.a5h73y.parkour.manager;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.enums.QuestionType;
-import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -21,10 +20,10 @@ import org.bukkit.entity.Player;
  */
 public class QuestionManager {
 
-    private final Map<String, Question> questionMap = new HashMap<>();
+    private final Map<Player, Question> questionMap = new WeakHashMap<>();
 
-    public boolean hasPlayerBeenAskedQuestion(String playerName) {
-        return questionMap.containsKey(playerName);
+    public boolean hasPlayerBeenAskedQuestion(Player player) {
+        return questionMap.containsKey(player);
     }
 
     public void askResetPlayerQuestion(Player player, String targetName) {
@@ -95,13 +94,13 @@ public class QuestionManager {
 
     public void answerQuestion(Player player, String argument) {
         if (argument.equalsIgnoreCase("yes")) {
-            Question question = questionMap.get(player.getName());
+            Question question = questionMap.get(player);
             question.confirm(player, question.getType(), question.getArgument());
-            questionMap.remove(player.getName());
+            removeQuestion(player);
 
         } else if (argument.equalsIgnoreCase("no")) {
             player.sendMessage(Parkour.getPrefix() + "Question cancelled!");
-            questionMap.remove(player.getName());
+            removeQuestion(player);
 
         } else {
             player.sendMessage(Parkour.getPrefix() + ChatColor.RED + "Invalid question answer.");
@@ -109,9 +108,13 @@ public class QuestionManager {
         }
     }
 
+    public void removeQuestion(Player player) {
+        questionMap.remove(player);
+    }
+
     private void askQuestion(Player player, String argument, QuestionType type) {
         player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
-        questionMap.put(player.getName(), new Question(type, argument));
+        questionMap.put(player, new Question(type, argument));
     }
 
     private static class Question {

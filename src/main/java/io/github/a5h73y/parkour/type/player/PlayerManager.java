@@ -52,8 +52,6 @@ import org.bukkit.util.Vector;
 
 public class PlayerManager extends AbstractPluginReceiver {
 
-	private final String PLAYING_BIN_PATH = parkour.getDataFolder() + File.separator + "playing.bin";
-
 	private final Map<Player, ParkourSession> parkourPlayers = new WeakHashMap<>();
 	private final Map<Player, Long> playerDelay = new HashMap<>();
 	private final List<Player> quietPlayers = new ArrayList<>();
@@ -108,6 +106,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 */
 	public void teardownParkourPlayer(Player player) {
 		parkour.getChallengeManager().terminateChallenge(player);
+		parkour.getQuestionManager().removeQuestion(player);
 		storeParkourSession(player);
 		quietPlayers.remove(player);
 		hiddenPlayers.remove(player);

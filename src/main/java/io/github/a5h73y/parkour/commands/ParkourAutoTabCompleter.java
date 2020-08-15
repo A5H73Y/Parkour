@@ -1,18 +1,15 @@
 package io.github.a5h73y.parkour.commands;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.enums.Permission;
-import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.other.Validation;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
+import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -23,24 +20,33 @@ import org.bukkit.entity.Player;
  */
 public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements TabCompleter {
 
-    private static final Set<String> BASIC_CMDS = new HashSet<>(
-            Arrays.asList("create", "challenge", "leaderboard", "kit", "listkit", "tp", "tpc"));
+    private static final List<String> NO_PERMISSION_COMMANDS = Arrays.asList(
+            "join", "info", "course", "lobby", "perms", "quiet", "list", "help", "material", "about", "contact", "cmds");
 
-    private static final Set<String> ADMIN_CMDS = new HashSet<>(
-            Arrays.asList("setstart", "setlobby", "economy", "createkit", "editkit", "validatekit", "recreate",
-                    "sql", "settings", "reload", "rewardrank", "whitelist", "setlevel", "setrank",
-                    "test", "reset", "delete", "checkpoint", "link"));
+    private static final List<String> ADMIN_ONLY_COMMANDS = Arrays.asList(
+            "setlobby", "setcreator", "setautostart", "setminlevel", "setmaxdeath", "setmaxtime", "setjoinitem",
+            "rewardonce", "rewardlevel", "rewardleveladd", "rewardrank", "rewarddelay", "rewardparkoins", "reset",
+            "economy", "setmode", "createkit", "editkit", "validatekit", "recreate", "whitelist", "setlevel", "setrank",
+            "settings", "reload");
 
-    private static final Set<String> ADMIN_COURSE_CMDS = new HashSet<>(
-            Arrays.asList("setcreator", "prize", "setmode", "setjoinitem", "setminlevel",
-                    "setmaxdeath", "setmaxtime", "rewardonce", "rewardlevel", "rewardleveladd", "rewardparkoins",
-                    "rewarddelay", "edit", "linkkit", "setautostart", "ready"));
+    private static final List<String> ADMIN_COURSE_COMMANDS = Arrays.asList(
+            "checkpoint", "ready", "setstart", "select", "done", "link", "linkkit");
 
-    private static final Set<String> RESET_ARGS = new HashSet<>(
-            Arrays.asList("course", "leaderboard", "prize"));
+    private static final List<String> ON_COURSE_COMMAND_LIST = Arrays.asList(
+            "back", "leave");
 
-    private static final Set<String> DELETE_ARGS = new HashSet<>(
-            Arrays.asList("autostart", "checkpoint", "course"));
+    private static final List<String> QUESTION_ANSWER_COMMANDS = Arrays.asList(
+            "yes", "no");
+
+    private static final List<String> RESET_ARGS = Arrays.asList(
+            "course", "player", "leaderboard", "prize");
+
+    private static final List<String> DELETE_ARGS = Arrays.asList(
+            "autostart", "checkpoint", "course", "lobby", "kit");
+
+    private static final List<String> LIST_ARGS = Arrays.asList(
+            "courses", "players", "ranks", "lobbies");
+
 
     public ParkourAutoTabCompleter(Parkour parkour) {
         super(parkour);
@@ -56,185 +62,133 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             return null;
         }
 
-        Set<String> list = new HashSet<>();
-        Set<String> auto = new HashSet<>();
-        Set<String> courseCmds = getCourseCmds(sender);
+        final Player player = (Player) sender;
+        List<String> allowedCommands = new ArrayList<>();
+        List<String> filteredCommands = new ArrayList<>();
 
         if (args.length == 1) {
-            list.add("help");
-            list.add("info");
-            list.add("contact");
-            list.add("about");
-            list.add("version");
-            list.add("material");
-            list.add("quiet");
-            list.add("list");
-            list.add("lobby");
-            list.add("perms");
-            list.add("leave");
-            list.add("done");
-            list.add("tutorial");
-            list.add("request");
-            list.add("accept");
-            list.add("bug");
-            list.add("cmds");
-
-            if (PermissionUtils.hasPermission(sender, Permission.BASIC_ALL, false)) {
-                list.addAll(BASIC_CMDS);
-
-            } else {
-                if (sender.hasPermission("Parkour.Basic.Create")) {
-                    list.add("create");
-                }
-                if (sender.hasPermission("Parkour.Basic.Kit")) {
-                    list.add("kit");
-                    list.add("listkit");
-                }
-                if (sender.hasPermission("Parkour.Basic.Challenge")) {
-                    list.add("challenge");
-                }
-                if (sender.hasPermission("Parkour.Basic.TPC")) {
-                    list.add("tpc");
-                }
-                if (sender.hasPermission("Parkour.Basic.TP")) {
-                    list.add("tp");
-                }
-                if (sender.hasPermission("Parkour.Basic.Leaderboard")) {
-                    list.add("leaderboard");
-                }
-            }
-
-            if (PermissionUtils.hasPermission(sender, Permission.ADMIN_ALL, false)) {
-                list.addAll(ADMIN_CMDS);
-
-            } else {
-                if (sender.hasPermission("Parkour.Admin.Testmode")) {
-                    list.add("test");
-                }
-                if (sender.hasPermission("Parkour.Admin.Reset")) {
-                    list.add("reset");
-                }
-                if (sender.hasPermission("Parkour.Admin.Delete")) {
-                    list.add("delete");
-                }
-                if (sender.hasPermission("Parkour.Admin.Course") || isSelectedCourseOwner(sender)) {
-                    list.add("checkpoint");
-                    list.add("link");
-                }
-            }
-
-            list.addAll(courseCmds);
+            allowedCommands = populateMainCommands(player);
 
         } else if (args.length == 2) {
-            if (courseCmds.contains(args[0])) {
-                list.addAll(CourseInfo.getAllCourses());
+            allowedCommands = populateChildCommands(args[0].toLowerCase());
+        }
+        //TODO look into args.length == 3 things
 
-            } else if (args[0].equalsIgnoreCase("list")) {
-                list.add("courses");
-                list.add("players");
-                list.add("ranks");
-                list.add("lobbies");
-
-            } else if (args[0].equalsIgnoreCase("delete")) {
-                list.add("autostart");
-                list.add("course");
-                list.add("checkpoint");
-                list.add("lobby");
-                list.add("kit");
-
-            } else if (args[0].equalsIgnoreCase("kit") || args[0].equalsIgnoreCase("listkit") || args[0].equalsIgnoreCase("validatekit")) {
-                list.addAll(ParkourKitInfo.getParkourKitNames());
-
-            } else if (args[0].equalsIgnoreCase("reset")) {
-                list.add("course");
-                list.add("player");
-                list.add("leaderboard");
-                list.add("prize");
-
-            } else if (args[0].equalsIgnoreCase("economy")) {
-                list.add("setprize");
-                list.add("info");
-                list.add("recreate");
-                list.add("setfee");
-            }
-        } else if (args.length == 3) {
-            if (args[0].equalsIgnoreCase("reset") && RESET_ARGS.contains(args[1])) {
-                list.addAll(CourseInfo.getAllCourses());
-
-            } else if (args[0].equalsIgnoreCase("delete") && DELETE_ARGS.contains(args[1])) {
-                list.addAll(CourseInfo.getAllCourses());
-
-            } else if ((args[0].equalsIgnoreCase("delete") && args[1].equalsIgnoreCase("kit")) || args[0].equalsIgnoreCase("linkkit")) {
-                list.addAll(ParkourKitInfo.getParkourKitNames());
-
-            } else if (args[0].equalsIgnoreCase("economy") && (args[1].equalsIgnoreCase("setprize") || args[1].equalsIgnoreCase("setfee"))) {
-                list.addAll(CourseInfo.getAllCourses());
+        for (String allowedCommand : allowedCommands) {
+            if (allowedCommand.startsWith(args[args.length - 1])) {
+                filteredCommands.add(allowedCommand);
             }
         }
 
-        for (String s : list) {
-            if (s.startsWith(args[args.length - 1])) {
-                auto.add(s);
-            }
-        }
-
-        return auto.isEmpty() ? new ArrayList<>(list) : new ArrayList<>(auto);
+        return filteredCommands.isEmpty() ? allowedCommands : filteredCommands;
     }
 
-    private Set<String> getCourseCmds(CommandSender sender) {
-        Set<String> cmds = new HashSet<>();
-
-        cmds.add("join");
-        cmds.add("joinall");
-        cmds.add("stats");
-        cmds.add("course");
-        cmds.add("select"); // so course owner can select own course
-
-        if (PermissionUtils.hasPermission(sender, Permission.BASIC_ALL, false)) {
-            cmds.add("challenge");
-            cmds.add("tp");
-            cmds.add("tpc");
-            cmds.add("leaderboard");
-
-        } else {
-            if (sender.hasPermission("Parkour.Basic.Challenge")) {
-                cmds.add("challenge");
-            }
-            if (sender.hasPermission("Parkour.Basic.TP")) {
-                cmds.add("tp");
-            }
-            if (sender.hasPermission("Parkour.Basic.TPC")) {
-                cmds.add("tpc");
-            }
-            if (sender.hasPermission("Parkour.Basic.Leaderboard")) {
-                cmds.add("leaderboard");
-            }
+    private List<String> populateMainCommands(Player player) {
+        // if they have an outstanding question, make those the only options
+        if (parkour.getQuestionManager().hasPlayerBeenAskedQuestion(player)) {
+            return QUESTION_ANSWER_COMMANDS;
         }
 
-        if (PermissionUtils.hasPermission(sender, Permission.ADMIN_ALL, false)) {
-            cmds.addAll(ADMIN_COURSE_CMDS);
+        List<String> allowedCommands = new ArrayList<>(NO_PERMISSION_COMMANDS);
 
-        } else {
-            if (sender.hasPermission("Parkour.Admin.Course") || isSelectedCourseOwner(sender)) {
-                cmds.add("edit");
-                cmds.add("linkkit");
-                cmds.add("setautostart");
-                cmds.add("ready");
-            }
-            if (sender.hasPermission("Parkour.Admin.Prize")) {
-                cmds.add("prize");
-            }
+        if (parkour.getPlayerManager().isPlaying(player)) {
+            allowedCommands.addAll(ON_COURSE_COMMAND_LIST);
+        }
+        // the player has an outstanding challenge request
+        if (parkour.getChallengeManager().isPlayerInChallenge(player.getName())) {
+            allowedCommands.add("accept");
+            allowedCommands.add("decline");
         }
 
-        return cmds;
+        // basic commands
+        if (PermissionUtils.hasPermission(player, Permission.BASIC_JOINALL, false)) {
+            allowedCommands.add("joinall");
+        }
+        if (PermissionUtils.hasPermission(player, Permission.BASIC_CREATE, false)) {
+            allowedCommands.add("create");
+        }
+        if (PermissionUtils.hasPermission(player, Permission.BASIC_KIT, false)) {
+            allowedCommands.add("kit");
+            allowedCommands.add("listkit");
+        }
+        if (PermissionUtils.hasPermission(player, Permission.BASIC_CHALLENGE, false)) {
+            allowedCommands.add("challenge");
+        }
+        if (PermissionUtils.hasPermission(player, Permission.BASIC_TELEPORT, false)) {
+            allowedCommands.add("tp");
+        }
+        if (PermissionUtils.hasPermission(player, Permission.BASIC_TELEPORT_CHECKPOINT, false)) {
+            allowedCommands.add("tpc");
+        }
+        if (PermissionUtils.hasPermission(player, Permission.BASIC_LEADERBOARD, false)) {
+            allowedCommands.add("leaderboard");
+        }
+
+        // admin commands
+        if (PermissionUtils.hasPermission(player, Permission.ADMIN_PRIZE, false)) {
+            allowedCommands.add("prize");
+        }
+        if (PermissionUtils.hasPermission(player, Permission.ADMIN_DELETE, false)) {
+            allowedCommands.add("delete");
+        }
+        if (PermissionUtils.hasPermission(player, Permission.ADMIN_TESTMODE, false)) {
+            allowedCommands.add("test");
+        }
+        // they've selected a known course, or they have admin course permission
+        if (PlayerInfo.hasSelectedValidCourse(player)
+                || PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE, false)) {
+            allowedCommands.addAll(ADMIN_COURSE_COMMANDS);
+        }
+        if (PermissionUtils.hasPermission(player, Permission.ADMIN_ALL, false)) {
+            allowedCommands.addAll(ADMIN_ONLY_COMMANDS);
+        }
+
+        return allowedCommands;
     }
 
-    private boolean isSelectedCourseOwner(CommandSender sender) {
-        Player player = (Player) sender;
-        String courseName = PlayerInfo.getSelectedCourse(player);
-        if (!Validation.isStringValid(courseName)) {
-            return false;
+    private List<String> populateChildCommands(String command) {
+        List<String> allowedCommands = new ArrayList<>();
+
+        switch (command) {
+            case "reset":
+                allowedCommands = RESET_ARGS;
+                break;
+            case "delete":
+                allowedCommands = DELETE_ARGS;
+                break;
+            case "list":
+                allowedCommands = LIST_ARGS;
+                break;
+            case "join":
+            case "course":
+            case "ready":
+            case "setautostart":
+            case "prize":
+            case "select":
+            case "tp":
+            case "tpc":
+            case "setminlevel":
+            case "setmaxdeath":
+            case "setmaxtime":
+            case "setjoinitem":
+            case "rewardonce":
+            case "rewardlevel":
+            case "rewardleveladd":
+            case "rewarddelay":
+            case "rewardparkoins":
+            case "setmode":
+            case "leaderboard":
+                allowedCommands = CourseInfo.getAllCourses();
+                break;
+            case "kit":
+            case "listkit":
+            case "validatekit":
+                allowedCommands = new ArrayList<>(ParkourKitInfo.getParkourKitNames());
+                break;
+            default:
+                break;
         }
-        return player.getName().equals(CourseInfo.getCreator(courseName));
+
+        return allowedCommands;
     }
 }

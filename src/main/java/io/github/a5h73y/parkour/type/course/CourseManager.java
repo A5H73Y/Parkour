@@ -315,7 +315,9 @@ public class CourseManager extends AbstractPluginReceiver {
 
         } else {
             Set<String> levels = section.getKeys(false);
-            List<Integer> orderedLevels = levels.stream().mapToInt(Integer::parseInt).sorted().boxed().collect(Collectors.toList());
+            List<Integer> orderedLevels = levels.stream()
+                    .mapToInt(Integer::parseInt).sorted().boxed()
+                    .collect(Collectors.toList());
 
             for (Integer level : orderedLevels) {
                 String rank = playerConfig.getString("ServerInfo.Levels." + level + ".Rank");
@@ -354,12 +356,12 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param player
      */
     public void deselectCourse(Player player) {
-        if (PlayerInfo.hasSelected(player)) {
-            PlayerInfo.setDelected(player);
+        if (PlayerInfo.hasSelectedValidCourse(player)) {
+            PlayerInfo.resetSelected(player);
             player.sendMessage(Parkour.getPrefix() + "Finished editing.");
 
         } else {
-            TranslationUtils.sendTranslation("Error.Selected", false);
+            TranslationUtils.sendTranslation("Error.Selected", player);
         }
     }
 
@@ -714,7 +716,7 @@ public class CourseManager extends AbstractPluginReceiver {
         } else {
             TranslationUtils.sendValueTranslation("Parkour.Ready", courseName, player);
             PluginUtils.logToFile(courseName + " was set to ready by " + player.getName());
-            PlayerInfo.setDelected(player);
+            PlayerInfo.resetSelected(player);
         }
     }
 

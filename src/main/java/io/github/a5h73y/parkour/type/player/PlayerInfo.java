@@ -4,13 +4,11 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.event.PlayerParkourLevelEvent;
-import io.github.a5h73y.parkour.other.Validation;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -55,7 +53,7 @@ public class PlayerInfo {
      *
      * @param player
      */
-    public static void setDelected(OfflinePlayer player) {
+    public static void resetSelected(OfflinePlayer player) {
         getPlayersConfig().set(player.getUniqueId() + ".Selected", null);
     }
 
@@ -65,14 +63,9 @@ public class PlayerInfo {
      * @param player
      * @return boolean
      */
-    public static boolean hasSelected(Player player) {
+    public static boolean hasSelectedValidCourse(Player player) {
         String selected = getSelectedCourse(player);
-        if (!Validation.isStringValid(selected)) {
-            TranslationUtils.sendTranslation("Error.Selected", player);
-            player.sendMessage(ChatColor.GRAY + "Usage: " + ChatColor.WHITE + "/pa select " + ChatColor.AQUA + "(course)");
-            return false;
-        }
-        return true;
+        return Parkour.getInstance().getCourseManager().courseExists(selected);
     }
 
     /**
@@ -329,5 +322,9 @@ public class PlayerInfo {
 
     public static void setQuietMode(Player player, boolean inQuietMode) {
         getPlayersConfig().set(player.getUniqueId() + ".QuietMode", inQuietMode);
+    }
+
+    public static boolean isQuietMode(Player player) {
+        return getPlayersConfig().getBoolean(player.getUniqueId() + ".QuietMode");
     }
 }

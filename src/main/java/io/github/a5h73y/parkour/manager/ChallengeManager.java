@@ -206,6 +206,23 @@ public class ChallengeManager extends AbstractPluginReceiver {
         };
     }
 
+    public void declineChallenge(Player receivingPlayer) {
+        Challenge challenge = getChallengeForPlayer(receivingPlayer.getName());
+
+        if (challenge == null) {
+            receivingPlayer.sendMessage(Parkour.getPrefix() + "You have not been challenged!");
+            return;
+        }
+
+        final Player senderPlayer = Bukkit.getPlayer(challenge.getSenderPlayer());
+
+        if (senderPlayer != null) {
+            senderPlayer.sendMessage(Parkour.getPrefix() + "Your challenge request has been declined.");
+        }
+
+        challenges.remove(challenge);
+    }
+
     /**
      * The Challenge Model.
      * Contains the initial sender and receiver, and the course requested.

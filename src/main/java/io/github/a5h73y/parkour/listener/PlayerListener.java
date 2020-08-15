@@ -3,6 +3,7 @@ package io.github.a5h73y.parkour.listener;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
+import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Damageable;
@@ -133,6 +134,10 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         }
 
         parkour.getPlayerManager().loadParkourSession(event.getPlayer());
+
+        if (PlayerInfo.isQuietMode(event.getPlayer())) {
+            parkour.getPlayerManager().enableQuietMode(event.getPlayer());
+        }
 
         if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
             return;

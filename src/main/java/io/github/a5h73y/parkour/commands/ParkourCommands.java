@@ -132,7 +132,8 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "checkpoint":
-                if (!PlayerInfo.hasSelected(player)) {
+                if (!PlayerInfo.hasSelectedValidCourse(player)) {
+                    TranslationUtils.sendTranslation("Error.Selected", player);
                     return false;
 
                 } else if (!PermissionUtils.hasPermissionOrCourseOwnership(
@@ -144,11 +145,17 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "ready":
+                if (!PlayerInfo.hasSelectedValidCourse(player)
+                        && !PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
+                    return false;
+                }
+
                 parkour.getCourseManager().setCourseReadyStatus(args, player);
                 break;
 
             case "setstart":
-                if (!PlayerInfo.hasSelected(player)) {
+                if (!PlayerInfo.hasSelectedValidCourse(player)) {
+                    TranslationUtils.sendTranslation("Error.Selected", player);
                     return false;
 
                 } else if (!PermissionUtils.hasPermissionOrCourseOwnership(
@@ -248,9 +255,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
             case "link":
                 if (!ValidationUtils.validateArgs(player, args, 3, 4)) {
-                    return false;
-
-                } else if (!PlayerInfo.hasSelected(player)) {
                     return false;
 
                 } else if (!PermissionUtils.hasPermissionOrCourseOwnership(
@@ -387,6 +391,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "test":
+            case "testmode":
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_TESTMODE)) {
                     return false;
                 }
@@ -394,8 +399,8 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getPlayerManager().toggleTestMode(args, player);
                 break;
 
-            case "economy":
             case "econ":
+            case "economy":
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
                     return false;
 
@@ -407,6 +412,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "setmode":
+            case "setparkourmode":
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
                     return false;
 
@@ -417,8 +423,8 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getCourseManager().setCourseMode(args, player);
                 break;
 
-            case "createparkourkit":
             case "createkit":
+            case "createparkourkit":
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
                     return false;
                 }
@@ -426,8 +432,8 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 new CreateParkourKitConversation(player).begin();
                 break;
 
-            case "editparkourkit":
             case "editkit":
+            case "editparkourkit":
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
                     return false;
                 }
@@ -577,6 +583,10 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
             case "accept":
                 parkour.getChallengeManager().acceptChallenge(player);
+                break;
+
+            case "decline":
+                parkour.getChallengeManager().declineChallenge(player);
                 break;
 
             case "yes":
