@@ -350,7 +350,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getCourseManager().setRewardParkourRank(args, player);
+                parkour.getPlayerManager().setRewardParkourRank(args, player);
                 break;
 
             case "rewarddelay":

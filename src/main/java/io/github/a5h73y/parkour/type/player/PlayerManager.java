@@ -35,7 +35,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.WeakHashMap;
+import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
@@ -43,6 +46,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -54,6 +58,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 	private final Map<Player, ParkourSession> parkourPlayers = new WeakHashMap<>();
 	private final Map<Player, Long> playerDelay = new HashMap<>();
+	private final Map<Integer, String> parkourRanks = new TreeMap<>();
+
 	private final List<Player> quietPlayers = new ArrayList<>();
 	private final List<Player> hiddenPlayers = new ArrayList<>();
 
@@ -62,6 +68,49 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 	public PlayerManager(final Parkour parkour) {
 		super(parkour);
+		populateParkourRanks();
+	}
+
+	/**
+	 * Find the unlocked ParkourRank for new ParkourLevel.
+	 * The highest Rank available should be found first, gradually decreasing until a match.
+	 *
+	 * @param player target player
+	 * @param rewardLevel rewarded ParkourLevel
+	 * @return unlocked ParkourRank
+	 */
+	public String getUnlockedParkourRank(Player player, int rewardLevel) {
+		int currentLevel = PlayerInfo.getParkourLevel(player);
+		String result = null;
+
+		while (currentLevel < rewardLevel) {
+			if (parkourRanks.containsKey(rewardLevel)) {
+				result = parkourRanks.get(rewardLevel);
+				break;
+			}
+			rewardLevel--;
+		}
+		return result;
+	}
+
+	private void populateParkourRanks() {
+		parkourRanks.clear();
+		ParkourConfiguration playerConfig = Parkour.getConfig(ConfigType.PLAYERS);
+		ConfigurationSection section = playerConfig.getConfigurationSection("ServerInfo.Levels");
+
+		if (section != null) {
+			Set<String> levels = section.getKeys(false);
+			List<Integer> orderedLevels = levels.stream()
+					.mapToInt(Integer::parseInt).sorted().boxed()
+					.collect(Collectors.toList());
+
+			for (Integer level : orderedLevels) {
+				String rank = playerConfig.getString("ServerInfo.Levels." + level + ".Rank");
+				if (rank != null) {
+					parkourRanks.put(level, StringUtils.colour(rank));
+				}
+			}
+		}
 	}
 
 	/**
@@ -451,6 +500,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 				courseName, player, session.getTimeFinished(), session.getDeaths(), recordTime);
 
 		PlayerInfo.setCompletedCourseInfo(player, courseName);
+		PlayerInfo.persistChanges();
 
 		forceVisible(player);
 		parkour.getScoreboardManager().removeScoreboard(player);
@@ -542,39 +592,37 @@ public class PlayerManager extends AbstractPluginReceiver {
 			player.giveExp(xp);
 		}
 
-		// Level player
+		// TODO - move to a different method - Level player
+		int currentLevel = PlayerInfo.getParkourLevel(player);
+		int newParkourLevel = currentLevel;
+
+		// set parkour level
 		int rewardLevel = CourseInfo.getRewardLevel(courseName);
-		if (rewardLevel > 0) {
-			int current = PlayerInfo.getParkourLevel(player);
+		if (rewardLevel > 0 && currentLevel < rewardLevel) {
+			newParkourLevel = rewardLevel;
+		}
 
-			if (current < rewardLevel) {
-				PlayerInfo.setParkourLevel(player, rewardLevel);
-				if (parkour.getConfig().getBoolean("Other.Display.LevelReward")) {
-					player.sendMessage(TranslationUtils.getTranslation("Parkour.RewardLevel")
-							.replace("%LEVEL%", String.valueOf(rewardLevel))
-							.replace("%COURSE%", courseName));
-				}
+		// increase parkour level
+		int rewardAddLevel = CourseInfo.getRewardLevelAdd(courseName);
+		if (rewardAddLevel > 0) {
+			newParkourLevel = currentLevel + rewardAddLevel;
+		}
+
+		// if their parkour level has increased
+		if (newParkourLevel > currentLevel) {
+			// update parkour rank
+			String rewardRank = getUnlockedParkourRank(player, newParkourLevel);
+			if (rewardRank != null) {
+				PlayerInfo.setRank(player, rewardRank);
+				TranslationUtils.sendValueTranslation("Parkour.RewardRank", rewardRank, player);
 			}
-		}
-		// Level increment
-		int addLevel = CourseInfo.getRewardLevelAdd(courseName);
-		if (addLevel > 0) {
-			int newLevel = PlayerInfo.getParkourLevel(player) + addLevel;
 
-			PlayerInfo.setParkourLevel(player, newLevel);
-			player.sendMessage(TranslationUtils.getTranslation("Parkour.RewardLevel")
-					.replace("%LEVEL%", String.valueOf(newLevel))
-					.replace("%COURSE%", courseName));
-		}
-
-		// check if there is a rank upgrade
-		// todo update - this should be based on their new level, and not the course level
-		int newLevel = PlayerInfo.getParkourLevel(player);
-
-		String rewardRank = PlayerInfo.getRewardRank(newLevel);
-		if (rewardRank != null) {
-			PlayerInfo.setRank(player, rewardRank);
-			TranslationUtils.sendValueTranslation("Parkour.RewardRank", StringUtils.colour(rewardRank), player);
+			PlayerInfo.setParkourLevel(player, newParkourLevel);
+			if (parkour.getConfig().getBoolean("Other.Display.LevelReward")) {
+				player.sendMessage(TranslationUtils.getTranslation("Parkour.RewardLevel")
+						.replace("%LEVEL%", String.valueOf(rewardLevel))
+						.replace("%COURSE%", courseName));
+			}
 		}
 
 		// Execute the command
@@ -594,6 +642,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		parkour.getEconomyApi().giveEconomyPrize(player, courseName);
 		player.updateInventory();
+		PlayerInfo.persistChanges();
 	}
 
 	/**
@@ -979,6 +1028,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		int total = parkoins + PlayerInfo.getParkoins(player);
 		PlayerInfo.setParkoins(player, total);
+		PlayerInfo.persistChanges();
 		player.sendMessage(TranslationUtils.getTranslation("Parkour.RewardParkoins")
 				.replace("%AMOUNT%", String.valueOf(parkoins))
 				.replace("%TOTAL%", String.valueOf(total)));
@@ -999,6 +1049,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		current = (current < parkoins) ? 0 : (current - parkoins);
 
 		PlayerInfo.setParkoins(player, current);
+		PlayerInfo.persistChanges();
 		player.sendMessage(Parkour.getPrefix() + parkoins + " Parkoins deducted! New total: " + ChatColor.AQUA + current);
 	}
 
@@ -1171,6 +1222,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		int newLevel = Integer.parseInt(args[2]);
 		PlayerInfo.setParkourLevel(target, newLevel);
+		PlayerInfo.persistChanges();
 
 		sender.sendMessage(Parkour.getPrefix() + target.getName() + "'s Level was set to " + newLevel);
 	}
@@ -1184,6 +1236,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		PlayerInfo.setRank(target, args[2]);
+		PlayerInfo.persistChanges();
 		sender.sendMessage(Parkour.getPrefix() + target.getName() + "'s Rank was set to " + args[2]);
 	}
 
@@ -1434,5 +1487,39 @@ public class PlayerManager extends AbstractPluginReceiver {
 			return true;
 		}
 		return false;
+	}
+
+	public void displayParkourRanks(CommandSender sender) {
+		TranslationUtils.sendHeading("Parkour Ranks", sender);
+		parkourRanks.forEach((parkourLevel, parkourRank) ->
+				sender.sendMessage(TranslationUtils.getTranslation("Parkour.RankInfo", false)
+						.replace("%LEVEL%", parkourLevel.toString())
+						.replace("%RANK%", parkourRank)));
+	}
+
+	/**
+	 * Set the ParkourRank reward.
+	 * Not to be confused with rewardLevel or rewardPrize, this associates a
+	 * Parkour level with a message prefix. A rank is just a visual prefix. E.g.
+	 * Level 10: Pro, Level 99: God
+	 *
+	 * @param args
+	 * @param sender
+	 */
+	public void setRewardParkourRank(String[] args, CommandSender sender) {
+		if (!Validation.isPositiveInteger(args[1])) {
+			sender.sendMessage(Parkour.getPrefix() + "ParkourLevel needs to be numeric.");
+			return;
+		}
+
+		if (!Validation.isStringValid(args[2])) {
+			sender.sendMessage(Parkour.getPrefix() + "ParkourRank is not valid.");
+			return;
+		}
+
+		PlayerInfo.setRewardRank(Integer.parseInt(args[1]), args[2]);
+		PlayerInfo.persistChanges();
+		populateParkourRanks();
+		sender.sendMessage(Parkour.getPrefix() + "ParkourRank for ParkourLevel " + args[1] + " was set to " + StringUtils.colour(args[2]));
 	}
 }

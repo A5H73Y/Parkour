@@ -170,6 +170,7 @@
 							<include>pro.husk:*</include>
 							<include>com.zaxxer:*</include>
 							<include>org.slf4j:*</include>
+							<include>de.themoep:inventorygui:*</include>
 						</includes>
 					</artifactSet>
 					<filters>

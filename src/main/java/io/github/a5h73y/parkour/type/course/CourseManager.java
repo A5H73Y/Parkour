@@ -182,6 +182,7 @@ public class CourseManager extends AbstractPluginReceiver {
         courseConfig.save();
 
         PlayerInfo.setSelectedCourse(player, courseName);
+        PlayerInfo.persistChanges();
 
         TranslationUtils.sendValueTranslation("Parkour.Created", courseName, player);
         parkour.getDatabase().insertCourse(courseName);
@@ -236,7 +237,7 @@ public class CourseManager extends AbstractPluginReceiver {
             if (!PermissionUtils.hasPermission(sender, Permission.ADMIN_ALL)) {
                 return;
             }
-            displayRanks(sender);
+            parkour.getPlayerManager().displayParkourRanks(sender);
 
         } else if (args[1].equalsIgnoreCase("lobbies")) {
             if (!PermissionUtils.hasPermission(sender, Permission.ADMIN_ALL)) {
@@ -304,32 +305,6 @@ public class CourseManager extends AbstractPluginReceiver {
         sender.sendMessage("== " + page + " / " + ((courseList.size() + results - 1) / results) + " ==");
     }
 
-    //TODO move me
-    private void displayRanks(CommandSender sender) {
-        TranslationUtils.sendHeading("Parkour Ranks", sender);
-        ParkourConfiguration playerConfig = Parkour.getConfig(ConfigType.PLAYERS);
-        ConfigurationSection section = playerConfig.getConfigurationSection("ServerInfo.Levels");
-
-        if (section == null) {
-            sender.sendMessage(Parkour.getPrefix() + "No Ranks set.");
-
-        } else {
-            Set<String> levels = section.getKeys(false);
-            List<Integer> orderedLevels = levels.stream()
-                    .mapToInt(Integer::parseInt).sorted().boxed()
-                    .collect(Collectors.toList());
-
-            for (Integer level : orderedLevels) {
-                String rank = playerConfig.getString("ServerInfo.Levels." + level + ".Rank");
-                if (rank != null) {
-                    sender.sendMessage(TranslationUtils.getTranslation("Parkour.RankInfo", false)
-                            .replace("%LEVEL%", level.toString())
-                            .replace("%RANK%", StringUtils.colour(rank)));
-                }
-            }
-        }
-    }
-
     /**
      * Start editing a course.
      * Used for functions that do not require a course parameter, such as "/pa checkpoint".
@@ -348,6 +323,7 @@ public class CourseManager extends AbstractPluginReceiver {
         int pointcount = CourseInfo.getCheckpointAmount(courseName);
         player.sendMessage(Parkour.getPrefix() + "Checkpoints: " + ChatColor.AQUA + pointcount);
         PlayerInfo.setSelectedCourse(player, courseName);
+        PlayerInfo.persistChanges();
     }
 
     /**
@@ -617,30 +593,6 @@ public class CourseManager extends AbstractPluginReceiver {
         boolean isEnabled = !CourseInfo.getRewardOnce(args[1]);
         CourseInfo.setRewardOnce(args[1], isEnabled);
         sender.sendMessage(Parkour.getPrefix() + args[1] + "'s reward one time was set to " + ChatColor.AQUA + isEnabled);
-    }
-
-    /**
-     * Set the Course's ParkourRank reward.
-     * Not to be confused with rewardLevel or rewardPrize, this associates a
-     * Parkour level with a message prefix. A rank is just a visual prefix. E.g.
-     * Level 10: Pro, Level 99: God
-     *
-     * @param args
-     * @param sender
-     */
-    public void setRewardParkourRank(String[] args, CommandSender sender) {
-        if (!Validation.isPositiveInteger(args[1])) {
-            sender.sendMessage(Parkour.getPrefix() + "ParkourLevel needs to be numeric.");
-            return;
-        }
-
-        if (!Validation.isStringValid(args[2])) {
-            sender.sendMessage(Parkour.getPrefix() + "ParkourRank is not valid.");
-            return;
-        }
-
-        PlayerInfo.setRewardRank(Integer.parseInt(args[1]), args[2]);
-        sender.sendMessage(Parkour.getPrefix() + "ParkourRank for ParkourLevel " + args[1] + " was set to " + StringUtils.colour(args[2]));
     }
 
     /**

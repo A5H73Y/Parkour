@@ -144,7 +144,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                parkour.getCourseManager().setRewardParkourRank(args, sender);
+                parkour.getPlayerManager().setRewardParkourRank(args, sender);
                 break;
 
             case "rewardparkoins":
