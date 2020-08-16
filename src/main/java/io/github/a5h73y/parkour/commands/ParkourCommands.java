@@ -77,6 +77,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
             case "back":
             case "die":
+            case "respawn":
                 parkour.getPlayerManager().playerDie(player);
                 break;
 
@@ -93,6 +94,10 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
             case "leave":
                 parkour.getPlayerManager().leaveCourse(player);
+                break;
+
+            case "restart":
+                parkour.getPlayerManager().restartCourse(player);
                 break;
 
             case "info":

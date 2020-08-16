@@ -271,18 +271,20 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * Will remove the player from the players, which will also dispose of their course session.
 	 *
 	 * @param player target player
-	 * @param teleport teleport the player away
+	 * @param silent silently leave the course
 	 */
-	public void leaveCourse(Player player, boolean teleport) {
+	public void leaveCourse(Player player, boolean silent) {
 		if (!isPlaying(player)) {
 			TranslationUtils.sendTranslation("Error.NotOnAnyCourse", player);
 			return;
 		}
 
 		ParkourSession session = getParkourSession(player);
-		parkour.getBountifulApi().sendSubTitle(player,
-				TranslationUtils.getValueTranslation("Parkour.Leave", session.getCourse().getName(), false),
-				parkour.getConfig().getBoolean("DisplayTitle.Leave"));
+		if (!silent) {
+			parkour.getBountifulApi().sendSubTitle(player,
+					TranslationUtils.getValueTranslation("Parkour.Leave", session.getCourse().getName(), false),
+					parkour.getConfig().getBoolean("DisplayTitle.Leave"));
+		}
 
 		teardownParkourMode(player);
 		removePlayer(player);
@@ -296,7 +298,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			player.setLevel(0);
 		}
 
-		if (teleport) {
+		if (!silent) {
 			parkour.getLobbyManager().teleportToLeaveDestination(player, session);
 		}
 
@@ -317,7 +319,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param player target player
 	 */
 	public void leaveCourse(Player player) {
-		leaveCourse(player, true);
+		leaveCourse(player, false);
 	}
 
 	/**
@@ -519,23 +521,10 @@ public class PlayerManager extends AbstractPluginReceiver {
 			return;
 		}
 
-
-		// TODO leave the course and rejoin it.
-
-		ParkourSession session = getParkourSession(player);
-		session.restartSession();
-
-		if (parkour.getConfig().isFirstCheckAsStart()) {
-			session.increaseCheckpoint();
-		}
-
-		if (parkour.getScoreboardManager().isEnabled()) {
-			parkour.getScoreboardManager().updateScoreboardDeaths(player, String.valueOf(session.getDeaths()));
-			parkour.getScoreboardManager().updateScoreboardCheckpoints(player, session.getCurrentCheckpoint() + " / " + session.getCourse().getNumberOfCheckpoints());
-		}
-
+		Course course = getParkourSession(player).getCourse();
 		TranslationUtils.sendTranslation("Parkour.Restarting", player);
-		player.teleport(session.getCheckpoint().getLocation());
+		leaveCourse(player, true);
+		joinCourse(player, course);
 	}
 
 	/**

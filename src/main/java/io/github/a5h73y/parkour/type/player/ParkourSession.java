@@ -191,10 +191,4 @@ public class ParkourSession implements Serializable {
     public String displayTime() {
         return DateTimeUtils.displayCurrentTime(getCurrentTime());
     }
-
-    public void restartSession() {
-        currentCheckpoint = 0;
-        deaths = 0;
-        resetTimeStarted();
-    }
 }

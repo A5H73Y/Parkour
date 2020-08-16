@@ -182,7 +182,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
 
         if (event.getFrom().getWorld() != event.getTo().getWorld()) {
             if (parkour.getConfig().isCourseEnforceWorldLeaveCourse()) {
-                parkour.getPlayerManager().leaveCourse(event.getPlayer(), false);
+                parkour.getPlayerManager().leaveCourse(event.getPlayer(), true);
 
             } else {
                 event.setCancelled(true);
