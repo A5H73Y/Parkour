@@ -393,7 +393,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			parkour.getScoreboardManager().updateScoreboardDeaths(player, String.valueOf(session.getDeaths()));
 		}
 
-		if (session.getParkourMode() == ParkourMode.FREEDOM
+		if ((session.getParkourMode() == ParkourMode.FREEDOM || session.getParkourMode() == ParkourMode.FREE_CHECKPOINT)
 				&& session.getFreedomLocation() != null) {
 			player.teleport(session.getFreedomLocation());
 		} else {

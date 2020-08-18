@@ -22,7 +22,8 @@ public class ParkourModeConversation extends ParkourConversation {
     private class ChooseParkourMode extends FixedSetPrompt {
 
         ChooseParkourMode() {
-            super("freedom", "darkness", "drunk", "speedy", "moon", "dropper", "rockets", "none");
+//            super(ParkourMode.values().);
+            super("speedy", "freedom", "dropper", "rockets", "norun", "free_checkpoint", "potion_effect", "none");
         }
 
         @Override

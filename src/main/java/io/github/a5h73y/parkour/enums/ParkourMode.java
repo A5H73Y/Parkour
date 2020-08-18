@@ -7,6 +7,7 @@ public enum ParkourMode {
     DROPPER,
     ROCKETS,
     NORUN, // cancel run toggle event
+    FREE_CHECKPOINT,
     POTION_EFFECT
         // has PotionEffectType (BLINDNESS)
         // has duration (10000)

@@ -138,14 +138,18 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         }
 
         ParkourSession session = parkour.getPlayerManager().getParkourSession(event.getPlayer());
-        Course course = session.getCourse();
+
+        if (session.getParkourMode() == ParkourMode.FREE_CHECKPOINT) {
+            session.setFreedomLocation(event.getPlayer().getLocation());
+            TranslationUtils.sendTranslation("Event.FreeCheckpoints", event.getPlayer());
+            return;
+        }
 
         if (session.hasAchievedAllCheckpoints()) {
             return;
         }
 
         Checkpoint checkpoint = session.getCheckpoint();
-
         Location below = event.getClickedBlock().getRelative(BlockFace.DOWN).getLocation();
 
         if (checkpoint.getNextCheckpointX() == below.getBlockX()

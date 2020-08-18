@@ -3,11 +3,11 @@ package io.github.a5h73y.parkour.commands;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.conversation.CreateParkourKitConversation;
 import io.github.a5h73y.parkour.conversation.EditParkourKitConversation;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.enums.GuiMenu;
 import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Help;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
@@ -213,7 +213,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                Utils.deleteCommand(args, player);
+                PluginUtils.deleteCommand(args, player);
                 break;
 
             case "select":
@@ -392,7 +392,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                Utils.resetCommand(args, player);
+                PluginUtils.resetCommand(args, player);
                 break;
 
             case "test":

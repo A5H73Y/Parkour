@@ -73,6 +73,7 @@ public class StringsConfig extends ParkourConfiguration {
 
 		this.addDefault("Event.Join", "This server uses &bParkour &3%VALUE%");
 		this.addDefault("Event.Checkpoint", "Checkpoint set to &b%CURRENT% &8/ &7%TOTAL%");
+		this.addDefault("Event.FreeCheckpoints", "Checkpoint set");
 		this.addDefault("Event.AllCheckpoints", "All checkpoints achieved!");
 		this.addDefault("Event.HideAll1", "All players have magically reappeared!");
 		this.addDefault("Event.HideAll2", "All players have magically disappeared!");

@@ -6,6 +6,7 @@ import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.plugin.EconomyApi;
 import io.github.a5h73y.parkour.type.course.Course;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
+import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
@@ -370,6 +371,11 @@ public class Validation {
      * @return
      */
     public static boolean deleteCourse(String courseName, Player player) {
+        if (!Parkour.getInstance().getCourseManager().courseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
+            return false;
+        }
+
         courseName = courseName.toLowerCase();
         List<String> dependentCourses = new ArrayList<>();
 
@@ -392,18 +398,23 @@ public class Validation {
     /**
      * Validate a lobby before deleting it
      *
-     * @param courseName
+     * @param lobbyName
      * @param player
      * @return
      */
-    public static boolean deleteLobby(String courseName, Player player) {
-        courseName = courseName.toLowerCase();
+    public static boolean deleteLobby(String lobbyName, Player player) {
+        if (!Parkour.getDefaultConfig().contains("Lobby." + lobbyName.toLowerCase() + ".World")) {
+            player.sendMessage(Parkour.getPrefix() + "This lobby does not exist!");
+            return false;
+        }
+
+        lobbyName = lobbyName.toLowerCase();
         List<String> dependentCourses = new ArrayList<>();
 
         for (String course : CourseInfo.getAllCourses()) {
-            String linkedCourse = CourseInfo.getLinkedLobby(courseName);
+            String linkedCourse = CourseInfo.getLinkedLobby(lobbyName);
 
-            if (courseName.equals(linkedCourse)) {
+            if (lobbyName.equals(linkedCourse)) {
                 dependentCourses.add(course);
             }
         }
@@ -424,6 +435,11 @@ public class Validation {
      * @return
      */
     public static boolean deleteParkourKit(String parkourKit, Player player) {
+        if (!ParkourKitInfo.doesParkourKitExist(parkourKit)) {
+            player.sendMessage(Parkour.getPrefix() + "This ParkourKit does not exist!");
+            return false;
+        }
+
         parkourKit = parkourKit.toLowerCase();
         List<String> dependentCourses = new ArrayList<>();
 
@@ -452,8 +468,13 @@ public class Validation {
      * @return
      */
     public static boolean deleteAutoStart(String courseName, String coordinates, Player player) {
+        if (Parkour.getInstance().getCourseManager().getAutoStartCourse(player.getLocation()) == null) {
+            player.sendMessage(Parkour.getPrefix() + "There is no autostart at this location");
+            return false;
+        }
+
         courseName = courseName.toLowerCase();
-        if (!Parkour.getConfig(ConfigType.COURSES).getString("CourseInfo.AutoStart." + coordinates).equalsIgnoreCase(courseName)) {
+        if (!Parkour.getConfig(ConfigType.COURSES).getString("CourseInfo.AutoStart." + coordinates).equals(courseName)) {
             player.sendMessage(Parkour.getPrefix() + "This autostart can not be deleted as it is not linked to course: " + courseName);
             return false;
         }
@@ -461,4 +482,18 @@ public class Validation {
         return true;
     }
 
+    public static boolean deleteCheckpoint(String courseName, Player player) {
+        if (!Parkour.getInstance().getCourseManager().courseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
+            return false;
+        }
+
+        int checkpoints = CourseInfo.getCheckpointAmount(courseName);
+        // if it has no checkpoints
+        if (checkpoints <= 0) {
+            player.sendMessage(Parkour.getPrefix() + courseName + " has no checkpoints!");
+            return false;
+        }
+        return true;
+    }
 }
