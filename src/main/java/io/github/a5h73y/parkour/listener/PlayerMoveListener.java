@@ -71,9 +71,9 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
         }
 
         if (parkour.getConfig().isAttemptLessChecks()) {
-            if (event.getTo().getBlockX() == event.getFrom().getBlockX() &&
-                    event.getTo().getBlockY() == event.getFrom().getBlockY() &&
-                    event.getTo().getBlockZ() == event.getFrom().getBlockZ()) {
+            if (event.getTo().getBlockX() == event.getFrom().getBlockX()
+                    && event.getTo().getBlockY() == event.getFrom().getBlockY()
+                    && event.getTo().getBlockZ() == event.getFrom().getBlockZ()) {
                 return;
             }
         }

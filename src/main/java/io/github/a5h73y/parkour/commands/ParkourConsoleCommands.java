@@ -5,6 +5,7 @@ import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Backup;
 import io.github.a5h73y.parkour.other.Help;
 import io.github.a5h73y.parkour.utility.PluginUtils;
+import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -12,53 +13,34 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * Console related Parkour commands handling.
+ */
 public class ParkourConsoleCommands extends AbstractPluginReceiver implements CommandExecutor {
 
     public ParkourConsoleCommands(final Parkour parkour) {
         super(parkour);
     }
 
-    private static void displayCommands() {
-        PluginUtils.log("pac reload");
-        PluginUtils.log("pac recreate");
-        PluginUtils.log("pac setminlevel (course) (level)");
-        PluginUtils.log("pac setmaxdeath (course) (deaths)");
-        PluginUtils.log("pac setmaxtime (course) (seconds)");
-        PluginUtils.log("pac setjoinitem (course) (item) (amount)");
-        PluginUtils.log("pac rewardonce (course)");
-        PluginUtils.log("pac rewardlevel (course) (level)");
-        PluginUtils.log("pac rewardrank (level) (rank)");
-        PluginUtils.log("pac rewardparkoins (course) (amount)");
-        PluginUtils.log("pac setlevel (player) (level)");
-        PluginUtils.log("pac setrank (player) (rank)");
-        PluginUtils.log("pac list (courses / players)");
-        PluginUtils.log("pac listkit [kit]");
-        PluginUtils.log("pac settings");
-        PluginUtils.log("pac help (command)");
-        PluginUtils.log("pac backup : Create a backup zip of the Parkour config folder");
-    }
-
     @Override
-    public boolean onCommand(final CommandSender sender, final Command command,
-                             final String label, final String[] args) {
-        if (!command.getName().equalsIgnoreCase("paconsole")) {
-            return false;
-        }
-
-        if (!(sender instanceof ConsoleCommandSender)) {
+    public boolean onCommand(@NotNull CommandSender sender,
+                             @NotNull Command command,
+                             @NotNull String label,
+                             @NotNull String[] args) {
+        if (sender instanceof Player || !(sender instanceof ConsoleCommandSender)) {
+            sender.sendMessage(Parkour.getPrefix() + "Use '/parkour' for player commands.");
             return false;
         }
 
         if (args.length == 0) {
-            sender.sendMessage("v" + parkour.getDescription().getVersion() + " installed. Plugin created by A5H73Y & steve4744.");
-            sender.sendMessage("Enter 'pac cmds' to display all console commands.");
+            sender.sendMessage(Parkour.getPrefix() + "proudly created by A5H73Y & steve4744.");
+            TranslationUtils.sendTranslation("Parkour.ConsoleCommands", sender);
             return true;
         }
 
-        String firstArg = args[0].toLowerCase();
-
-        switch (firstArg) {
+        switch (args[0].toLowerCase()) {
             case "reload":
                 parkour.getConfigManager().reloadConfigs();
                 sender.sendMessage("Config reloaded!");
@@ -200,5 +182,25 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 break;
         }
         return true;
+    }
+
+    private static void displayCommands() {
+        PluginUtils.log("pac reload");
+        PluginUtils.log("pac recreate");
+        PluginUtils.log("pac setminlevel (course) (level)");
+        PluginUtils.log("pac setmaxdeath (course) (deaths)");
+        PluginUtils.log("pac setmaxtime (course) (seconds)");
+        PluginUtils.log("pac setjoinitem (course) (item) (amount)");
+        PluginUtils.log("pac rewardonce (course)");
+        PluginUtils.log("pac rewardlevel (course) (level)");
+        PluginUtils.log("pac rewardrank (level) (rank)");
+        PluginUtils.log("pac rewardparkoins (course) (amount)");
+        PluginUtils.log("pac setlevel (player) (level)");
+        PluginUtils.log("pac setrank (player) (rank)");
+        PluginUtils.log("pac list (courses / players)");
+        PluginUtils.log("pac listkit [kit]");
+        PluginUtils.log("pac settings");
+        PluginUtils.log("pac help (command)");
+        PluginUtils.log("pac backup : Create a backup zip of the Parkour config folder");
     }
 }

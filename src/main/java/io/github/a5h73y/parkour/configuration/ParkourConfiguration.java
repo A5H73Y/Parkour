@@ -6,6 +6,9 @@ import java.io.IOException;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+/**
+ * Base Parkour configuration file.
+ */
 public abstract class ParkourConfiguration extends YamlConfiguration {
 
 	protected File file;
@@ -20,7 +23,7 @@ public abstract class ParkourConfiguration extends YamlConfiguration {
 	/**
 	 * Initialise the configuration file.
 	 */
-	protected abstract void initializeConfig() throws IOException;
+	protected abstract void initializeConfig();
 
 	/**
 	 * Setup the file.
@@ -28,17 +31,17 @@ public abstract class ParkourConfiguration extends YamlConfiguration {
 	void setupFile(File dataFolder) {
 		file = new File(dataFolder, getFileName());
 		createIfNotExists();
+		// load it if it already exists
 		reload();
-
-		try {
-			initializeConfig();
-			save();
-		} catch (IOException e) {
-			PluginUtils.log("Failed to load " + getFileName(), 2);
-			e.printStackTrace();
-		}
+		// default any missing values
+		initializeConfig();
+		// persist any changes
+		save();
 	}
 
+	/**
+	 * Persist any changes to the file.
+	 */
 	public void save() {
 		try {
 			this.save(file);
@@ -48,6 +51,9 @@ public abstract class ParkourConfiguration extends YamlConfiguration {
 		}
 	}
 
+	/**
+	 * Reload the configuration file.
+	 */
 	protected void reload() {
 		try {
 			this.load(file);
@@ -57,6 +63,9 @@ public abstract class ParkourConfiguration extends YamlConfiguration {
 		}
 	}
 
+	/**
+	 * Create the physical file if it doesn't exist.
+	 */
 	private void createIfNotExists() {
 		if (file.exists()) {
 			return;

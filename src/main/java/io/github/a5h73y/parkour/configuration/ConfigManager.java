@@ -12,12 +12,22 @@ import io.github.a5h73y.parkour.enums.ConfigType;
 import java.io.File;
 import java.util.EnumMap;
 
+/**
+ * Parkour Configuration Manager.
+ * Manages and stores references to each of the available Config files.
+ */
 public class ConfigManager {
 
 	private final File dataFolder;
 
 	private final EnumMap<ConfigType, ParkourConfiguration> parkourConfigs = new EnumMap<>(ConfigType.class);
 
+	/**
+	 * Initialise the Config Manager.
+	 * Will invoke setup for each available config type.
+	 *
+	 * @param dataFolder where to store the configs
+	 */
 	public ConfigManager(File dataFolder) {
 		this.dataFolder = dataFolder;
 		createParkourFolder();

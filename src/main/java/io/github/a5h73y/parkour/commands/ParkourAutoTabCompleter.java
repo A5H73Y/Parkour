@@ -14,6 +14,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Tab auto-completion for Parkour commands.
@@ -32,21 +33,20 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
     private static final List<String> ADMIN_COURSE_COMMANDS = Arrays.asList(
             "checkpoint", "ready", "setstart", "select", "done", "link", "linkkit");
 
-    private static final List<String> ON_COURSE_COMMAND_LIST = Arrays.asList(
+    private static final List<String> ON_COURSE_COMMANDS = Arrays.asList(
             "back", "leave");
 
     private static final List<String> QUESTION_ANSWER_COMMANDS = Arrays.asList(
             "yes", "no");
 
-    private static final List<String> RESET_ARGS = Arrays.asList(
+    private static final List<String> RESET_COMMANDS = Arrays.asList(
             "course", "player", "leaderboard", "prize");
 
-    private static final List<String> DELETE_ARGS = Arrays.asList(
+    private static final List<String> DELETE_COMMANDS = Arrays.asList(
             "autostart", "checkpoint", "course", "lobby", "kit");
 
-    private static final List<String> LIST_ARGS = Arrays.asList(
+    private static final List<String> LIST_COMMANDS = Arrays.asList(
             "courses", "players", "ranks", "lobbies");
-
 
     public ParkourAutoTabCompleter(Parkour parkour) {
         super(parkour);
@@ -57,7 +57,10 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
      * {@inheritDoc}
      */
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender,
+                                      @NotNull Command cmd,
+                                      @NotNull String alias,
+                                      @NotNull String[] args) {
         if (!(sender instanceof Player)) {
             return null;
         }
@@ -92,7 +95,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
         List<String> allowedCommands = new ArrayList<>(NO_PERMISSION_COMMANDS);
 
         if (parkour.getPlayerManager().isPlaying(player)) {
-            allowedCommands.addAll(ON_COURSE_COMMAND_LIST);
+            allowedCommands.addAll(ON_COURSE_COMMANDS);
         }
         // the player has an outstanding challenge request
         if (parkour.getChallengeManager().isPlayerInChallenge(player.getName())) {
@@ -151,13 +154,13 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
 
         switch (command) {
             case "reset":
-                allowedCommands = RESET_ARGS;
+                allowedCommands = RESET_COMMANDS;
                 break;
             case "delete":
-                allowedCommands = DELETE_ARGS;
+                allowedCommands = DELETE_COMMANDS;
                 break;
             case "list":
-                allowedCommands = LIST_ARGS;
+                allowedCommands = LIST_COMMANDS;
                 break;
             case "join":
             case "course":

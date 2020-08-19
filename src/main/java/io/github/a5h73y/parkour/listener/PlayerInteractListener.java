@@ -123,13 +123,13 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
 
     @EventHandler
     public void onCheckpointEvent(PlayerInteractEvent event) {
-        if (event.getAction() != Action.PHYSICAL ||
-                !parkour.getPlayerManager().isPlaying(event.getPlayer())) {
+        if (event.getAction() != Action.PHYSICAL
+                || !parkour.getPlayerManager().isPlaying(event.getPlayer())) {
             return;
         }
 
-        if (event.getClickedBlock().getType() !=
-                XMaterial.fromString(parkour.getConfig().getCheckpointMaterial()).parseMaterial()) {
+        if (event.getClickedBlock().getType()
+                != XMaterial.fromString(parkour.getConfig().getCheckpointMaterial()).parseMaterial()) {
             return;
         }
 

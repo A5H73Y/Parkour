@@ -4,7 +4,6 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.bukkit.ChatColor;
@@ -299,7 +298,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		return MaterialUtils.lookupMaterial(this.getString("AutoStart.Material"));
 	}
 
-	public Material getGUIMaterial() {
+	public Material getGuiMaterial() {
 		Material guiMaterial = MaterialUtils.lookupMaterial(this.getString("ParkourGUI.Material"));
 		return guiMaterial == null ? Material.BOOK : guiMaterial;
 	}

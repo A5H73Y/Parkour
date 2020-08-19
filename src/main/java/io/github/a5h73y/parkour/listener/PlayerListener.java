@@ -71,8 +71,8 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         }
 
         if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-            if (parkour.getConfig().getBoolean("OnCourse.DisableFallDamage") ||
-                    (parkour.getPlayerManager().getParkourSession(player).getParkourMode() == ParkourMode.DROPPER
+            if (parkour.getConfig().getBoolean("OnCourse.DisableFallDamage")
+                    || (parkour.getPlayerManager().getParkourSession(player).getParkourMode() == ParkourMode.DROPPER
                             && !parkour.getConfig().getBoolean("ParkourModes.Dropper.FallDamage"))) {
                 event.setDamage(0);
                 event.setCancelled(true);

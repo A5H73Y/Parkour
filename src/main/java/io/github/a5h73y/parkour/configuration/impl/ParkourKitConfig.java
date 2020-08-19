@@ -1,7 +1,5 @@
 package io.github.a5h73y.parkour.configuration.impl;
 
-import java.io.IOException;
-
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
@@ -16,11 +14,10 @@ public class ParkourKitConfig extends ParkourConfiguration {
 	}
 
 	@Override
-	protected void initializeConfig() throws IOException {
+	protected void initializeConfig() {
 		if (!this.contains("ParkourKit.default")) {
 			createStandardKit(Constants.DEFAULT);
 		}
-		this.save(file);
 	}
 
 	/**

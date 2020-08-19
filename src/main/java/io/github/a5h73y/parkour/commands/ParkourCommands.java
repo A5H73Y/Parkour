@@ -20,7 +20,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * Player related Parkour commands handling.
+ */
 public class ParkourCommands extends AbstractPluginReceiver implements CommandExecutor {
 
     public ParkourCommands(final Parkour parkour) {
@@ -28,14 +32,13 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
     }
 
     @Override
-    public boolean onCommand(final CommandSender sender, final Command command,
-                             final String label, final String[] args) {
-        if (!command.getName().equalsIgnoreCase("parkour")) {
-            return false;
-        }
-
+    public boolean onCommand(@NotNull CommandSender sender,
+                             @NotNull Command command,
+                             @NotNull String label,
+                             @NotNull String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("For console commands, please use: paconsole (command)");
+            sender.sendMessage(Parkour.getPrefix() + "'/pa' is only available in game.");
+            sender.sendMessage(Parkour.getPrefix() + "Use '/pac' for console commands.");
             return false;
         }
 
@@ -48,13 +51,11 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
         if (args.length == 0) {
             player.sendMessage(Parkour.getPrefix() + "Plugin proudly created by " + ChatColor.AQUA + "A5H73Y & steve4744");
-            TranslationUtils.sendTranslation("Help.Commands", false, player);
+            TranslationUtils.sendTranslation("Help.Commands", player);
             return true;
         }
 
-        String firstArg = args[0].toLowerCase();
-
-        switch (firstArg) {
+        switch (args[0].toLowerCase()) {
             case "join":
                 if (!ValidationUtils.validateArgs(player, args, 2)) {
                     return false;
@@ -552,7 +553,8 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
             case "about":
             case "ver":
             case "version":
-                player.sendMessage(Parkour.getPrefix() + "Server is running Parkour " + ChatColor.GRAY + parkour.getDescription().getVersion());
+                player.sendMessage(Parkour.getPrefix() + "Server is running Parkour " + ChatColor.GRAY
+                        + parkour.getDescription().getVersion());
                 player.sendMessage("This plugin was developed by " + ChatColor.GOLD + "A5H73Y & steve4744");
                 break;
 
@@ -611,7 +613,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
             default:
                 TranslationUtils.sendTranslation("Error.UnknownCommand", player);
-                TranslationUtils.sendTranslation("Help.Commands", false, player);
+                TranslationUtils.sendTranslation("Help.Commands", player);
                 break;
         }
         return true;

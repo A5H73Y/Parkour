@@ -501,7 +501,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 		parkour.getDatabase().insertOrUpdateTime(
 				courseName, player, session.getTimeFinished(), session.getDeaths(), recordTime);
 
-		PlayerInfo.setCompletedCourseInfo(player, courseName);
+		PlayerInfo.setLastCompletedCourse(player, courseName);
+		PlayerInfo.addCompletedCourse(player, courseName);
 		PlayerInfo.persistChanges();
 
 		forceVisible(player);
@@ -1469,7 +1470,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			return true;
 		}
 
-		if (parkour.getDatabase().isBestPlayerTime(player, session.getCourse().getName(), session.getTimeFinished())) {
+		if (parkour.getDatabase().isBestCourseTime(player, session.getCourse().getName(), session.getTimeFinished())) {
 			parkour.getBountifulApi().sendFullTitle(player,
 					TranslationUtils.getTranslation("Parkour.BestTime", false),
 					DateTimeUtils.displayCurrentTime(session.getTimeFinished()), true);

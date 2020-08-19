@@ -1,7 +1,5 @@
 package io.github.a5h73y.parkour.configuration.impl;
 
-import java.io.IOException;
-
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 
 public class PlayersConfig extends ParkourConfiguration {
@@ -12,7 +10,7 @@ public class PlayersConfig extends ParkourConfiguration {
 	}
 
 	@Override
-	protected void initializeConfig() throws IOException {
+	protected void initializeConfig() {
 
 	}
 }

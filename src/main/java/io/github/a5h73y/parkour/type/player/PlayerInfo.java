@@ -4,10 +4,12 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.event.PlayerParkourLevelEvent;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -101,6 +103,17 @@ public class PlayerInfo {
     }
 
     /**
+     * Set the last completed course for the player.
+     * Update the completed list of courses for the player.
+     *
+     * @param player
+     * @param courseName
+     */
+    public static void setLastCompletedCourse(OfflinePlayer player, String courseName) {
+        getPlayersConfig().set(player.getUniqueId() + ".LastCompleted", courseName.toLowerCase());
+    }
+
+    /**
      * Return the name of the course the player last attempted.
      *
      * @param player
@@ -132,17 +145,29 @@ public class PlayerInfo {
     }
 
     /**
-     * Set the last completed course for the player.
-     * Update the completed list of courses for the player.
+     * Return the number of Parkour courses completed for player.
      *
      * @param player
-     * @param courseName
+     * @return results
      */
-    public static void setCompletedCourseInfo(OfflinePlayer player, String courseName) {
-        getPlayersConfig().set(player.getUniqueId() + ".LastCompleted", courseName.toLowerCase());
+    public static int getNumberOfCoursesCompleted(OfflinePlayer player) {
+        return getCompletedCourses(player).size();
+    }
 
+    public static List<String> getCompletedCourses(OfflinePlayer player) {
+        return getPlayersConfig().getStringList(player.getUniqueId() + ".Completed");
+    }
+
+    public static List<String> getUncompletedCourses(OfflinePlayer player) {
+        List<String> completedCourses = getCompletedCourses(player);
+        return CourseInfo.getAllCourses().stream()
+                .filter(s -> !completedCourses.contains(s))
+                .collect(Collectors.toList());
+    }
+
+    public static void addCompletedCourse(OfflinePlayer player, String courseName) {
         if (Parkour.getDefaultConfig().getBoolean("OnFinish.SaveUserCompletedCourses")) {
-            List<String> completedCourses = getPlayersConfig().getStringList(player.getUniqueId() + ".Completed");
+            List<String> completedCourses = getCompletedCourses(player);
 
             if (!completedCourses.contains(courseName)) {
                 completedCourses.add(courseName);
@@ -226,17 +251,6 @@ public class PlayerInfo {
     public static void resetPlayer(OfflinePlayer player) {
         getPlayersConfig().set(player.getUniqueId().toString(), null);
         Parkour.getInstance().getDatabase().deletePlayerTimes(player);
-    }
-
-    /**
-     * Return the number of Parkour courses completed for player.
-     *
-     * @param player
-     * @return results
-     */
-    public static String getNumberOfCoursesCompleted(OfflinePlayer player) {
-        List<String> completedCourse = getPlayersConfig().getStringList(player.getUniqueId() + ".Completed");
-        return String.valueOf(completedCourse.size());
     }
 
     /**

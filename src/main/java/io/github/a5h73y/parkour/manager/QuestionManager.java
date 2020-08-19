@@ -2,6 +2,7 @@ package io.github.a5h73y.parkour.manager;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.QuestionType;
+import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PluginUtils;
@@ -18,9 +19,13 @@ import org.bukkit.entity.Player;
  * Manage the questions that require confirmation from the player
  * Usually caused by actions that could change the outcome of the plugin / course
  */
-public class QuestionManager {
+public class QuestionManager extends AbstractPluginReceiver {
 
     private final Map<Player, Question> questionMap = new WeakHashMap<>();
+
+    public QuestionManager(Parkour parkour) {
+        super(parkour);
+    }
 
     public boolean hasPlayerBeenAskedQuestion(Player player) {
         return questionMap.containsKey(player);
@@ -117,7 +122,7 @@ public class QuestionManager {
         questionMap.put(player, new Question(type, argument));
     }
 
-    private static class Question {
+    private class Question {
 
         private final QuestionType type;
         private final String argument;
@@ -138,34 +143,34 @@ public class QuestionManager {
         private void confirm(Player player, QuestionType type, String argument) {
             switch (type) {
                 case DELETE_COURSE:
-                    Parkour.getInstance().getCourseManager().deleteCourse(argument, player);
+                    parkour.getCourseManager().deleteCourse(argument, player);
                     PluginUtils.logToFile(argument + " was deleted by " + player.getName());
                     return;
 
                 case DELETE_CHECKPOINT:
-                    Parkour.getInstance().getCheckpointManager().deleteCheckpoint(argument, player);
+                    parkour.getCheckpointManager().deleteCheckpoint(argument, player);
                     PluginUtils.logToFile(argument + "'s checkpoint " + CourseInfo.getCheckpointAmount(argument) + " was deleted by " + player.getName());
                     return;
 
                 case DELETE_LOBBY:
-                    Parkour.getInstance().getLobbyManager().deleteLobby(argument, player);
+                    parkour.getLobbyManager().deleteLobby(argument, player);
                     PluginUtils.logToFile("lobby " + argument + " was deleted by " + player.getName());
                     return;
 
                 case DELETE_KIT:
-                    Parkour.getInstance().getParkourKitManager().deleteKit(argument);
+                    parkour.getParkourKitManager().deleteKit(argument);
                     player.sendMessage(Parkour.getPrefix() + "ParkoutKit " + ChatColor.AQUA + argument + ChatColor.WHITE + " deleted...");
                     PluginUtils.logToFile("ParkourKit " + argument + " was deleted by " + player.getName());
                     return;
 
                 case DELETE_AUTOSTART:
-                    Parkour.getInstance().getCourseManager().deleteAutoStart(argument, player);
+                    parkour.getCourseManager().deleteAutoStart(argument, player);
                     player.sendMessage(Parkour.getPrefix() + "AutoStart deleted...");
                     PluginUtils.logToFile("AutoStart at " + argument + " was deleted by " + player.getName());
                     return;
 
                 case RESET_COURSE:
-                    Parkour.getInstance().getCourseManager().resetCourse(argument);
+                    parkour.getCourseManager().resetCourse(argument);
                     TranslationUtils.sendValueTranslation("Parkour.Reset", argument, player);
                     PluginUtils.logToFile(argument + " was reset by " + player.getName());
                     return;
@@ -182,7 +187,7 @@ public class QuestionManager {
                     return;
 
                 case RESET_LEADERBOARD:
-                    Parkour.getInstance().getDatabase().deleteCourseTimes(argument);
+                    parkour.getDatabase().deleteCourseTimes(argument);
                     player.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + argument + ChatColor.WHITE + " leaderboards have been reset.");
                     PluginUtils.logToFile(argument + " leaderboards were reset by " + player.getName());
                     return;
@@ -191,7 +196,7 @@ public class QuestionManager {
                     String[] arguments = argument.split(";");
                     target = Bukkit.getOfflinePlayer(arguments[0]);
                     if (target != null) {
-                        Parkour.getInstance().getDatabase().deletePlayerCourseTimes(target, arguments[1]);
+                        parkour.getDatabase().deletePlayerCourseTimes(target, arguments[1]);
                         PluginUtils.logToFile(arguments[0] + " leaderboards were reset on course + " + arguments[1] + " by " + player.getName());
                     } else {
                         player.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + arguments[1] + ChatColor.WHITE + " does not exist.");

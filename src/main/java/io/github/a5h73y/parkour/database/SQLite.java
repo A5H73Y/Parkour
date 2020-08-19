@@ -1,13 +1,11 @@
 package io.github.a5h73y.parkour.database;
 
+import io.github.a5h73y.parkour.utility.PluginUtils;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
-import io.github.a5h73y.parkour.utility.PluginUtils;
-import io.github.a5h73y.parkour.utility.Utils;
 import pro.husk.Database;
 
 /**

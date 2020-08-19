@@ -25,13 +25,13 @@ public class ScoreboardManager extends AbstractPluginReceiver {
 
     // For some reason the Scoreboard API is so stupid you have to use a blank string to identify the objective.
     // So each objective has a unique ChatColor for identifying it, which will be overwritten anyway
-    private final String COURSE_NAME = ChatColor.AQUA.toString();
-    private final String BEST_TIME_EVER = ChatColor.BLACK.toString();
-    private final String BEST_TIME_EVER_NAME = ChatColor.BLUE.toString();
-    private final String BEST_TIME_EVER_ME = ChatColor.DARK_AQUA.toString();
-    private final String CURRENT_TIME = ChatColor.DARK_BLUE.toString();
-    private final String CURRENT_DEATHS = ChatColor.DARK_GREEN.toString();
-    private final String CHECKPOINTS = ChatColor.DARK_RED.toString();
+    private static final String COURSE_NAME = ChatColor.AQUA.toString();
+    private static final String BEST_TIME_EVER = ChatColor.BLACK.toString();
+    private static final String BEST_TIME_EVER_NAME = ChatColor.BLUE.toString();
+    private static final String BEST_TIME_EVER_ME = ChatColor.DARK_AQUA.toString();
+    private static final String CURRENT_TIME = ChatColor.DARK_BLUE.toString();
+    private static final String CURRENT_DEATHS = ChatColor.DARK_GREEN.toString();
+    private static final String CHECKPOINTS = ChatColor.DARK_RED.toString();
 
     private final String titleFormat;
     private final String textFormat;

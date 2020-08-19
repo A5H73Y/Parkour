@@ -6,10 +6,6 @@ import io.github.a5h73y.parkour.commands.ParkourConsoleCommands;
 import io.github.a5h73y.parkour.configuration.ConfigManager;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
-import io.github.a5h73y.parkour.type.checkpoint.CheckpointManager;
-import io.github.a5h73y.parkour.type.course.CourseManager;
-import io.github.a5h73y.parkour.type.kit.ParkourKitManager;
-import io.github.a5h73y.parkour.type.lobby.LobbyManager;
 import io.github.a5h73y.parkour.database.ParkourDatabase;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.gui.ParkourGuiManager;
@@ -24,10 +20,14 @@ import io.github.a5h73y.parkour.manager.QuestionManager;
 import io.github.a5h73y.parkour.manager.ScoreboardManager;
 import io.github.a5h73y.parkour.other.Backup;
 import io.github.a5h73y.parkour.other.ParkourUpdater;
-import io.github.a5h73y.parkour.type.player.PlayerManager;
 import io.github.a5h73y.parkour.plugin.BountifulApi;
 import io.github.a5h73y.parkour.plugin.EconomyApi;
 import io.github.a5h73y.parkour.plugin.PlaceholderApi;
+import io.github.a5h73y.parkour.type.checkpoint.CheckpointManager;
+import io.github.a5h73y.parkour.type.course.CourseManager;
+import io.github.a5h73y.parkour.type.kit.ParkourKitManager;
+import io.github.a5h73y.parkour.type.lobby.LobbyManager;
+import io.github.a5h73y.parkour.type.player.PlayerManager;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bstats.bukkit.Metrics;
@@ -82,7 +82,8 @@ public class Parkour extends JavaPlugin {
         new Metrics(this, BUKKIT_PLUGIN_ID);
         checkForUpdates();
 
-        PluginUtils.log("v6.0 is currently a very unstable build, expect problems to occur and please raise them in the Discord server.", 2);
+        PluginUtils.log("v6.0 is currently a very unstable build, "
+                + "expect problems to occur and please raise them in the Discord server.", 2);
     }
 
     /**
@@ -90,7 +91,6 @@ public class Parkour extends JavaPlugin {
      */
     @Override
     public void onDisable() {
-//        PluginUtils.saveAllPlaying(playerManager.getPlaying(), Static.PLAYING_BIN_PATH);
         if (getConfig().getBoolean("Other.OnServerShutdown.BackupFiles")) {
             Backup.backupNow();
         }
@@ -109,11 +109,6 @@ public class Parkour extends JavaPlugin {
         return (DefaultConfig) this.configManager.get(ConfigType.DEFAULT);
     }
 
-    @Override
-    public void saveConfig() {
-        this.configManager.get(ConfigType.DEFAULT).save();
-    }
-
     /**
      * Get the matching {@link ParkourConfiguration} for the given {@link ConfigType}.
      *
@@ -122,6 +117,15 @@ public class Parkour extends JavaPlugin {
      */
     public static ParkourConfiguration getConfig(ConfigType type) {
         return instance.configManager.get(type);
+    }
+
+    /**
+     * Save the Default config.
+     * Overrides the default saveConfig() method.
+     */
+    @Override
+    public void saveConfig() {
+        this.configManager.get(ConfigType.DEFAULT).save();
     }
 
     /**
@@ -209,7 +213,7 @@ public class Parkour extends JavaPlugin {
         database = new ParkourDatabase(this);
         scoreboardManager = new ScoreboardManager(this);
         challengeManager = new ChallengeManager(this);
-        questionManager = new QuestionManager();
+        questionManager = new QuestionManager(this);
         playerManager = new PlayerManager(this);
         courseManager = new CourseManager(this);
         checkpointManager = new CheckpointManager(this);

@@ -96,7 +96,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             return PlayerInfo.getLastCompletedCourse(offlinePlayer);
 
         } else if (command.equals("courses_completed")) {
-            return PlayerInfo.getNumberOfCoursesCompleted(offlinePlayer);
+            return String.valueOf(PlayerInfo.getNumberOfCoursesCompleted(offlinePlayer));
 
         } else if (command.equals("last_played")) {
             return PlayerInfo.getLastPlayedCourse(offlinePlayer);

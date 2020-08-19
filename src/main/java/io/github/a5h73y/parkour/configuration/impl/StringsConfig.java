@@ -1,7 +1,6 @@
 package io.github.a5h73y.parkour.configuration.impl;
 
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
-import java.io.IOException;
 
 public class StringsConfig extends ParkourConfiguration {
 
@@ -11,7 +10,7 @@ public class StringsConfig extends ParkourConfiguration {
 	}
 
 	@Override
-	protected void initializeConfig() throws IOException {
+	protected void initializeConfig() {
 		this.addDefault("Parkour.Prefix", "&0[&bParkour&0] &f");
 		this.addDefault("Parkour.SignHeading", "&0[&bParkour&0]");
 		this.addDefault("Parkour.Commands", "To display all commands enter &f/pa cmds");
@@ -113,8 +112,8 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Error.NoPermission", "You do not have Permission: &b%VALUE%");
 
 		this.addDefault("Help.Command", "&7/pa help &9%VALUE% &0: &7To learn more about this command.");
-		this.addDefault("Help.Commands", "&3/pa &bcmds &8: &fTo display the Parkour commands menu.");
-		this.addDefault("Help.SignCommands", "&3/pa &bcmds signs &8: &fTo display the Parkour sign commands menu.");
+		this.addDefault("Help.Commands", "To display the commands menu, enter &b/pa cmds");
+		this.addDefault("Help.SignCommands", "To display the sign commands menu, enter &b/pa cmds signs");
 
 		this.addDefault("Other.Item.LastCheckpoint", "&7SHIFT + &6Right click to go back to last checkpoint");
 		this.addDefault("Other.Item.HideAll", "&7SHIFT + &6Right click to toggle visibility");

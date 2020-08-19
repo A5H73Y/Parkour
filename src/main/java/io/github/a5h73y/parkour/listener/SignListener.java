@@ -91,8 +91,8 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        if (event.getClickedBlock() == null ||
-                !(event.getClickedBlock().getState() instanceof Sign)) {
+        if (event.getClickedBlock() == null
+                || !(event.getClickedBlock().getState() instanceof Sign)) {
             return;
         }
 
