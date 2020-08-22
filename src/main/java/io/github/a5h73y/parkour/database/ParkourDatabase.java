@@ -194,7 +194,7 @@ public class ParkourDatabase extends AbstractPluginReceiver {
                 + " WHERE courseId=" + courseId + " AND time < " + time;
 
         if (player != null) {
-            leaderboardPositionQuery += "AND playerId='" + getPlayerId(player) + "';";
+            leaderboardPositionQuery += " AND playerId='" + getPlayerId(player) + "';";
         }
 
         PluginUtils.debug("Checking leaderboard position for: " + leaderboardPositionQuery);

@@ -12,7 +12,7 @@ public class StringsConfig extends ParkourConfiguration {
 	@Override
 	protected void initializeConfig() {
 		this.addDefault("Parkour.Prefix", "&0[&bParkour&0] &f");
-		this.addDefault("Parkour.SignHeading", "&0[&bParkour&0]");
+		this.addDefault("Parkour.SignHeader", "&0[&bParkour&0]");
 		this.addDefault("Parkour.Commands", "To display all commands enter &f/pa cmds");
 		this.addDefault("Parkour.ConsoleCommands", "To display all commands enter &f/pac cmds");
 		this.addDefault("Parkour.ConfigReloaded", "The config has been reloaded.");
