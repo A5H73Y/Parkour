@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
@@ -59,7 +61,7 @@ public class UpgradeParkour extends AbstractPluginReceiver {
 
 			if (!new CourseInfoUpgradeTask().start()) return;
 
-			if (!convertStrings()) return;
+			if (!new StringsUpgradeTask().start()) return;
 
 			if (!convertDatabase()) return;
 
@@ -69,13 +71,6 @@ public class UpgradeParkour extends AbstractPluginReceiver {
 			parkour.getLogger().info("Enabling Parkour...");
 //			parkour.onEnable();
 		});
-	}
-
-
-	private boolean convertStrings() {
-		// go through each string, if there are two instances of "%", then replace the contents with "VALUE".
-		// change gamemode numbers to words
-		return true;
 	}
 
 	private boolean convertDatabase() {
@@ -243,6 +238,50 @@ public class UpgradeParkour extends AbstractPluginReceiver {
 		@Override
 		String getTitle() {
 			return "CourseInfo";
+		}
+	}
+
+	private class StringsUpgradeTask extends AbstractUpgradeTask {
+
+		@Override
+		boolean doWork() {
+			boolean success = true;
+			Set<String> strings = stringsConfig.getConfigurationSection("").getKeys(true);
+			Pattern pattern = Pattern.compile("%.*?%", Pattern.DOTALL);
+
+			for (String string : strings) {
+				String value = stringsConfig.getString(string);
+
+				if (value != null && !value.isEmpty() && !value.startsWith("MemorySection")) {
+					Matcher matcher = pattern.matcher(value);
+					int results = countMatches(matcher);
+
+					// we only want to replace the entries with a single value placeholder
+					if (results == 1) {
+						stringsConfig.set(string, matcher.replaceAll("%VALUE%"));
+					}
+				}
+			}
+			try {
+				stringsConfig.save(stringsFile);
+			} catch (IOException e) {
+				parkour.getLogger().severe("An error occurred during upgrade: " + e.getMessage());
+				e.printStackTrace();
+				success = false;
+			}
+			return success;
+		}
+
+		@Override
+		String getTitle() {
+			return "Strings";
+		}
+
+		int countMatches(Matcher matcher) {
+			int counter = 0;
+			while (matcher.find())
+				counter++;
+			return counter;
 		}
 	}
 
