@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 public class DefaultConfig extends ParkourConfiguration {
 
@@ -159,6 +160,26 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("Lobby.EnforceWorld", false);
 
 		this.options().copyDefaults(true);
+	}
+
+	/**
+	 * Add a command to the whitelist.
+	 *
+	 * @param player requesting player
+	 * @param command command to whitelist
+	 */
+	public void addWhitelistedCommand(Player player, String command) {
+		List<String> whitelistedCommands = getWhitelistedCommands();
+		if (whitelistedCommands.contains(command.toLowerCase())) {
+	        player.sendMessage(Parkour.getPrefix() + "This command is already whitelisted!");
+	        return;
+        }
+
+		whitelistedCommands.add(command.toLowerCase());
+		set("OnCourse.EnforceParkourCommands.Whitelist", whitelistedCommands);
+		save();
+
+        player.sendMessage(Parkour.getPrefix() + "Command " + ChatColor.AQUA + command + ChatColor.WHITE + " added to the whitelisted commands!");
 	}
 
 	public String getSignHeader() {

@@ -13,7 +13,6 @@ import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
-import io.github.a5h73y.parkour.utility.Utils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -150,6 +149,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getCheckpointManager().createCheckpoint(args, player);
                 break;
 
+            case "finish":
             case "ready":
                 if (!PlayerInfo.hasSelectedValidCourse(player)
                         && !PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
@@ -520,7 +520,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                Utils.addWhitelistedCommand(args, player);
+                parkour.getConfig().addWhitelistedCommand(player, args[1]);
                 break;
 
             case "setlevel":

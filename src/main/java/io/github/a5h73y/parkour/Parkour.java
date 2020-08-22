@@ -20,6 +20,7 @@ import io.github.a5h73y.parkour.manager.QuestionManager;
 import io.github.a5h73y.parkour.manager.ScoreboardManager;
 import io.github.a5h73y.parkour.other.Backup;
 import io.github.a5h73y.parkour.other.ParkourUpdater;
+import io.github.a5h73y.parkour.other.UpgradeParkour;
 import io.github.a5h73y.parkour.plugin.BountifulApi;
 import io.github.a5h73y.parkour.plugin.EconomyApi;
 import io.github.a5h73y.parkour.plugin.PlaceholderApi;
@@ -71,6 +72,11 @@ public class Parkour extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+
+        if (upgradingParkour()) {
+            new UpgradeParkour(this).begin();
+            return;
+        }
 
         registerManagers();
         registerCommands();
@@ -244,5 +250,14 @@ public class Parkour extends JavaPlugin {
         if (getConfig().getBoolean("Other.CheckForUpdates")) {
             new ParkourUpdater(this, SPIGOT_PLUGIN_ID).checkForUpdateAsync();
         }
+    }
+
+    private boolean upgradingParkour() {
+        if (super.getConfig().contains("Version")) {
+            double existingVersion = super.getConfig().getDouble("Version");
+            double currentVersion = Double.parseDouble(this.getDescription().getVersion());
+            return existingVersion < currentVersion;
+        }
+        return false;
     }
 }

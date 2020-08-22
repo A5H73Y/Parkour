@@ -88,8 +88,8 @@ public class CheckpointManager extends AbstractPluginReceiver {
      * Create and save the checkpoint data.
      * The location for the player to teleport to and the location for the pressure plate will be created.
      *
-     * @param courseName   player's selected course
-     * @param location   checkpoint location
+     * @param courseName player's selected course
+     * @param location checkpoint location
      * @param checkpoint checkpoint being saved
      */
     public void createCheckpointData(String courseName, Location location, int checkpoint) {
