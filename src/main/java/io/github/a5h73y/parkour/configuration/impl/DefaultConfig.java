@@ -33,7 +33,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("OnJoin.Item.HideAll.Material", "BONE");
 		this.addDefault("OnJoin.Item.HideAll.Slot", 1);
 		this.addDefault("OnJoin.Item.HideAll.Global", true);
-		this.addDefault("OnJoin.Item.Leave.Material", "SAPLING");
+		this.addDefault("OnJoin.Item.Leave.Material", "OAK_SAPLING");
 		this.addDefault("OnJoin.Item.Leave.Slot", 2);
 		this.addDefault("OnJoin.Item.Restart.Material", "STICK");
 		this.addDefault("OnJoin.Item.Restart.Slot", 3);
