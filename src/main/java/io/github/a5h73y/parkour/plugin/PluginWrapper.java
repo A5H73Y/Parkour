@@ -33,7 +33,7 @@ public abstract class PluginWrapper {
 	 */
 	protected void initialise() {
 		// if the config prevents integration, don't begin setup.
-		if (!Parkour.getDefaultConfig().getBoolean(getPluginName() + ".Enabled")) {
+		if (!Parkour.getDefaultConfig().getBoolean("Other." + getPluginName() + ".Enabled")) {
 			return;
 		}
 
