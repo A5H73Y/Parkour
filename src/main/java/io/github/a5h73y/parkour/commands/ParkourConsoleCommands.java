@@ -29,7 +29,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                              @NotNull Command command,
                              @NotNull String label,
                              @NotNull String[] args) {
-        if (sender instanceof Player || !(sender instanceof ConsoleCommandSender)) {
+        if (sender instanceof Player) {
             sender.sendMessage(Parkour.getPrefix() + "Use '/parkour' for player commands.");
             return false;
         }
