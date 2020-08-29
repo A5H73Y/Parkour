@@ -222,12 +222,12 @@ public class ScoreboardManager extends AbstractPluginReceiver {
     }
 
     private String convertTitle(String title) {
-        title = titleFormat.replace("%TITLE%", title);
+        title = titleFormat.replace("%VALUE%", title);
         return cropAndColour(title);
     }
 
     private String convertText(String value) {
-        value = textFormat.replace("%TEXT%", value);
+        value = textFormat.replace("%VALUE%", value);
         return cropAndColour(value);
     }
 
