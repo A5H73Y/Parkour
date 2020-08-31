@@ -308,7 +308,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		forceVisible(player);
 		parkour.getScoreboardManager().removeScoreboard(player);
-		removeParkourSession(player);
+		deleteParkourSession(player);
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerLeaveCourseEvent(player, session.getCourse().getName()));
 	}
 
@@ -508,7 +508,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		forceVisible(player);
 		parkour.getScoreboardManager().removeScoreboard(player);
-		removeParkourSession(player);
+		deleteParkourSession(player);
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerFinishCourseEvent(player, courseName));
 	}
 
@@ -1292,7 +1292,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		return session;
 	}
 
-	private void removeParkourSession(Player player) {
+	private void deleteParkourSession(Player player) {
 		File sessionFile = new File(getSessionsPath(), player.getUniqueId().toString());
 
 		if (sessionFile.exists()) {
