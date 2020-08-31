@@ -308,6 +308,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		forceVisible(player);
 		parkour.getScoreboardManager().removeScoreboard(player);
+		deleteParkourSession(player);
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerLeaveCourseEvent(player, session.getCourse().getName()));
 	}
 
@@ -507,6 +508,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		forceVisible(player);
 		parkour.getScoreboardManager().removeScoreboard(player);
+		deleteParkourSession(player);
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerFinishCourseEvent(player, courseName));
 	}
 
@@ -1288,6 +1290,19 @@ public class PlayerManager extends AbstractPluginReceiver {
 			}
 		}
 		return session;
+	}
+
+	private void deleteParkourSession(Player player) {
+		File sessionFile = new File(getSessionsPath(), player.getUniqueId().toString());
+
+		if (sessionFile.exists()) {
+			try {
+				sessionFile.delete();
+			} catch (SecurityException e) {
+				PluginUtils.log("Player's session couldn't be deleted: " + e.getMessage(), 2);
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
