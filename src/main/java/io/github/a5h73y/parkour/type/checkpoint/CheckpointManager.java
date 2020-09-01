@@ -172,7 +172,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
             return;
         }
 
-        ParkourConfiguration checkpointsConfig = Parkour.getConfig(ConfigType.COURSES);
+        ParkourConfiguration checkpointsConfig = Parkour.getConfig(ConfigType.CHECKPOINTS);
 
         checkpointsConfig.set(courseName + "." + point, null);
         checkpointsConfig.set(courseName + ".Checkpoints", point - 1);
