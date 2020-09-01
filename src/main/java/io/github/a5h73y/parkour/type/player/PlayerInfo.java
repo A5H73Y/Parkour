@@ -306,7 +306,7 @@ public class PlayerInfo {
                 String completedPath = uuid + ".Completed";
                 List<String> completedCourses = getPlayersConfig().getStringList(completedPath);
 
-                if (completedCourses.contains(completedPath)) {
+                if (completedCourses.contains(courseName)) {
                     completedCourses.remove(courseName);
                     getPlayersConfig().set(completedPath, completedCourses);
                 }

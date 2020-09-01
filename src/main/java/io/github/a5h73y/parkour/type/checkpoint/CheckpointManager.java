@@ -114,6 +114,18 @@ public class CheckpointManager extends AbstractPluginReceiver {
     }
 
     /**
+     * Delete the course checkpoint data.
+     * When the course is deleted, delete the checkpoint data for the course.
+     *
+     * @param courseName
+     */
+    public void deleteCheckpointData(String courseName) {
+        ParkourConfiguration checkpointConfig = Parkour.getConfig(ConfigType.CHECKPOINTS);
+        checkpointConfig.set(courseName, null);
+        checkpointConfig.save();
+    }
+
+    /**
      * Teleport player to a checkpoint.
      * If the checkpoint flag is false, it will teleport the player to the start.
      * Otherwise the player will teleport to the chosen checkpoint.
@@ -172,7 +184,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
             return;
         }
 
-        ParkourConfiguration checkpointsConfig = Parkour.getConfig(ConfigType.COURSES);
+        ParkourConfiguration checkpointsConfig = Parkour.getConfig(ConfigType.CHECKPOINTS);
 
         checkpointsConfig.set(courseName + "." + point, null);
         checkpointsConfig.set(courseName + ".Checkpoints", point - 1);
