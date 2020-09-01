@@ -58,7 +58,7 @@ public class ParkourDatabase extends AbstractPluginReceiver {
      */
     public int getCourseId(String courseName, boolean printError) {
         if (courseIdCache.containsKey(courseName.toLowerCase())) {
-            PluginUtils.debug("Cached value found for " + courseName);
+            PluginUtils.debug("Cached value found for " + courseName + ": " + courseIdCache.get(courseName.toLowerCase()));
             return courseIdCache.get(courseName.toLowerCase());
         }
 
@@ -71,7 +71,9 @@ public class ParkourDatabase extends AbstractPluginReceiver {
                 courseId = rs.getInt("courseId");
             }
             rs.getStatement().close();
-            courseIdCache.put(courseName.toLowerCase(), courseId);
+            if (courseId != -1) {
+                courseIdCache.put(courseName.toLowerCase(), courseId);
+            }
         } catch (SQLException e) {
             logSqlException(e);
         }
