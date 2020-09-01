@@ -504,6 +504,8 @@ public class CourseInfo {
         getCourseConfig().set("Courses", courseList);
         persistChanges();
 
+        Parkour.getInstance().getCheckpointManager().deleteCheckpointData(courseName);
+
         Parkour.getInstance().getDatabase().deleteCourseAndReferences(courseName);
 
         PlayerInfo.removeCompletedCourse(courseName);
