@@ -502,6 +502,7 @@ public class CourseInfo {
         courseList.remove(courseName);
         getCourseConfig().set(courseName, null);
         getCourseConfig().set("Courses", courseList);
+        persistChanges();
 
         Parkour.getInstance().getDatabase().deleteCourseAndReferences(courseName);
 
