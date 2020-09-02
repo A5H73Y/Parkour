@@ -49,7 +49,7 @@ public abstract class PluginWrapper {
 
 		} else {
 			PluginUtils.log("[" + getPluginName() + "] Plugin is missing, disabling config option.", 1);
-			Parkour.getDefaultConfig().set(getPluginName() + ".Enabled", false);
+			Parkour.getDefaultConfig().set("Other." + getPluginName() + ".Enabled", false);
 			Parkour.getDefaultConfig().save();
 		}
 	}
