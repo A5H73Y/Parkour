@@ -475,6 +475,24 @@ public class ParkourDatabase extends AbstractPluginReceiver {
     }
 
     /**
+     * Find the nth best time for the course.
+     * Uses cache to quickly find the result based on position in the list.
+     *
+     * @param courseName course
+     * @param results results
+     * @return matching {@link TimeEntry}
+     */
+    public List<TimeEntry> getTopBestTimes(String courseName, int results) {
+        List<TimeEntry> cachedResults = getCourseCache(courseName);
+        int maxResults = Math.min(results, cachedResults.size());
+        return cachedResults.subList(0, maxResults);
+    }
+
+    public Database getDatabase() {
+        return database;
+    }
+
+    /**
      * Initialise connection to the configured Database source.
      * SQLite will be the default (and fallback) unless MySQL is correctly configured.
      */
@@ -583,34 +601,20 @@ public class ParkourDatabase extends AbstractPluginReceiver {
      * @return amount of results
      */
     private int calculateResultsLimit(int limit) {
-        return Math.max(1, Math.min(limit, parkour.getConfig().getLeaderboardMaxEntries()));
-    }
-
-    /**
-     * Find the nth best time for the course.
-     * Uses cache to quickly find the result based on position in the list.
-     *
-     * @param courseName course
-     * @param results results
-     * @return matching {@link TimeEntry}
-     */
-    public List<TimeEntry> getTopBestTimes(String courseName, int results) {
-        List<TimeEntry> cachedResults = getCourseCache(courseName);
-        int maxResults = Math.min(results, cachedResults.size());
-        return cachedResults.subList(0, maxResults);
+        return Math.max(1, Math.min(limit, parkour.getConfig().getMaximumCoursesCached()));
     }
 
     private List<TimeEntry> getCourseCache(String courseName) {
         if (!resultsCache.containsKey(courseName.toLowerCase())) {
             PluginUtils.debug("Populating times cache for " + courseName);
             resultsCache.put(courseName.toLowerCase(),
-                    getTopCourseResults(courseName, parkour.getConfig().getLeaderboardMaxEntries()));
+                    getTopCourseResults(courseName, parkour.getConfig().getMaximumCoursesCached()));
         }
 
         return resultsCache.get(courseName.toLowerCase());
     }
 
-    private String getPlayerId(OfflinePlayer player) {
+    public static String getPlayerId(OfflinePlayer player) {
         return player.getUniqueId().toString().replace("-", "");
     }
 }

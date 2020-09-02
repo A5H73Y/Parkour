@@ -241,6 +241,11 @@ public class PlayerManager extends AbstractPluginReceiver {
 			parkour.getBountifulApi().sendFullTitle(player,
 					TranslationUtils.getValueTranslation("Parkour.Join", course.getName(), false),
 					subTitle,  displayTitle);
+
+			if (parkour.getConfig().isCompletedCoursesEnabled()
+					&& PlayerInfo.getCompletedCourses(player).contains(course.getName())) {
+				TranslationUtils.sendValueTranslation("Parkour.AlreadyCompleted", course.getName(), player);
+			}
 		} else {
 			removePlayer(player);
 			if (!isInQuietMode(player)) {
@@ -824,9 +829,9 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		for (Player players : playerScope) {
 			if (enabled) {
-				player.showPlayer(parkour, players);
+				player.showPlayer(players);
 			} else {
-				player.hidePlayer(parkour, players);
+				player.hidePlayer(players);
 			}
 		}
 		if (enabled) {
@@ -841,7 +846,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 	public void forceVisible(Player player) {
 		for (Player players : Bukkit.getOnlinePlayers()) {
-			players.showPlayer(parkour, player);
+			players.showPlayer(player);
 		}
 	}
 
@@ -1193,7 +1198,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 				player.sendMessage("Parkoins: " + ChatColor.AQUA + PlayerInfo.getParkoins(target));
 			}
 
-			if (parkour.getConfig().getBoolean("OnFinish.SaveUserCompletedCourses")) {
+			if (parkour.getConfig().isCompletedCoursesEnabled()) {
 				player.sendMessage("Courses Completed: " + ChatColor.AQUA + PlayerInfo.getNumberOfCoursesCompleted(target) + " / " + CourseInfo.getAllCourses().size());
 			}
 		}
@@ -1359,25 +1364,26 @@ public class PlayerManager extends AbstractPluginReceiver {
 				.replace("%DEATHS%", String.valueOf(session.getDeaths()))
 				.replace("%TIME%", session.displayTime());
 
-		switch (parkour.getConfig().getString("OnFinish.BroadcastLevel", "world").toUpperCase()) {
-			case "world":
-				for (Player players : player.getWorld().getPlayers()) {
-					players.sendMessage(finishBroadcast);
-				}
-				return;
-			case "global":
+		switch (parkour.getConfig().getString("OnFinish.BroadcastLevel", "WORLD").toUpperCase()) {
+			case "GLOBAL":
 				for (Player players : Bukkit.getServer().getOnlinePlayers()) {
 					players.sendMessage(finishBroadcast);
 				}
 				return;
-//			case "parkour":
-//				for (Player players : Utils.getOnlineParkourPlayers()) {
-//					players.sendMessage(finishBroadcast);
-//				}
-//				return;
-			case "player":
-			default:
+			case "WORLD":
+				for (Player players : player.getWorld().getPlayers()) {
+					players.sendMessage(finishBroadcast);
+				}
+				return;
+			case "PARKOUR":
+				for (Player players : getOnlineParkourPlayers()) {
+					players.sendMessage(finishBroadcast);
+				}
+				return;
+			case "PLAYER":
 				player.sendMessage(finishBroadcast);
+				return;
+			default:
 		}
 	}
 

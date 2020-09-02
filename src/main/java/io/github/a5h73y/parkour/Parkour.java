@@ -20,7 +20,7 @@ import io.github.a5h73y.parkour.manager.QuestionManager;
 import io.github.a5h73y.parkour.manager.ScoreboardManager;
 import io.github.a5h73y.parkour.other.Backup;
 import io.github.a5h73y.parkour.other.ParkourUpdater;
-import io.github.a5h73y.parkour.other.UpgradeParkour;
+import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
 import io.github.a5h73y.parkour.plugin.BountifulApi;
 import io.github.a5h73y.parkour.plugin.EconomyApi;
 import io.github.a5h73y.parkour.plugin.PlaceholderApi;
@@ -73,8 +73,8 @@ public class Parkour extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        if (upgradingParkour()) {
-            new UpgradeParkour(this).begin();
+        if (parkourNeedsUpgrading()) {
+            new ParkourUpgrader(this).begin();
             return;
         }
 
@@ -215,8 +215,7 @@ public class Parkour extends JavaPlugin {
     }
 
     private void registerManagers() {
-        configManager = new ConfigManager(this.getDataFolder());
-        database = new ParkourDatabase(this);
+        registerEssentialManagers();
         scoreboardManager = new ScoreboardManager(this);
         challengeManager = new ChallengeManager(this);
         questionManager = new QuestionManager(this);
@@ -226,6 +225,11 @@ public class Parkour extends JavaPlugin {
         lobbyManager = new LobbyManager(this);
         parkourKitManager = new ParkourKitManager(this);
         guiManager = new ParkourGuiManager(this);
+    }
+
+    public void registerEssentialManagers() {
+        configManager = new ConfigManager(this.getDataFolder());
+        database = new ParkourDatabase(this);
     }
 
     private void registerCommands() {
@@ -252,7 +256,7 @@ public class Parkour extends JavaPlugin {
         }
     }
 
-    private boolean upgradingParkour() {
+    private boolean parkourNeedsUpgrading() {
         if (super.getConfig().contains("Version")) {
             double existingVersion = super.getConfig().getDouble("Version");
             double currentVersion = Double.parseDouble(this.getDescription().getVersion());

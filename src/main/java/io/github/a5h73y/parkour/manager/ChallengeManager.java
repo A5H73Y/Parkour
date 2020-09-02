@@ -167,8 +167,8 @@ public class ChallengeManager extends AbstractPluginReceiver {
         final Player senderPlayer = Bukkit.getPlayer(challenge.getSenderPlayer());
 
         if (parkour.getConfig().getBoolean("ParkourModes.Challenge.hidePlayers")) {
-            senderPlayer.hidePlayer(parkour, receivingPlayer);
-            receivingPlayer.hidePlayer(parkour, senderPlayer);
+            senderPlayer.hidePlayer(receivingPlayer);
+            receivingPlayer.hidePlayer(senderPlayer);
         }
 
         parkour.getPlayerManager().joinCourse(senderPlayer, challenge.getCourseName());

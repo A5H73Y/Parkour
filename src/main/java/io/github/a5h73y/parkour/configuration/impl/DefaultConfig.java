@@ -34,6 +34,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("OnJoin.Item.HideAll.Material", "BONE");
 		this.addDefault("OnJoin.Item.HideAll.Slot", 1);
 		this.addDefault("OnJoin.Item.HideAll.Global", true);
+		this.addDefault("OnJoin.Item.HideAllEnabled.Material", "BONE");
 		this.addDefault("OnJoin.Item.Leave.Material", "OAK_SAPLING");
 		this.addDefault("OnJoin.Item.Leave.Slot", 2);
 		this.addDefault("OnJoin.Item.Restart.Material", "STICK");
@@ -42,6 +43,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("OnJoin.TreatFirstCheckpointAsStart", false);
 		this.addDefault("OnJoin.PerCoursePermission", false);
 
+		this.addDefault("OnCourse.AnybodyPlaceBreakBlocks", false);
 		this.addDefault("OnCourse.AdminPlaceBreakBlocks", true);
 		this.addDefault("OnCourse.AttemptLessChecks", false);
 		this.addDefault("OnCourse.CheckpointMaterial", "STONE_PLATE");
@@ -67,7 +69,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("OnCourse.EnforceParkourCommands.Enabled", true);
 		this.addDefault("OnCourse.EnforceParkourCommands.Whitelist", Collections.singletonList("login"));
 
-		this.addDefault("OnFinish.BroadcastLevel", 3);
+		this.addDefault("OnFinish.BroadcastLevel", "GLOBAL");
 		this.addDefault("OnFinish.DefaultPrize.Material", "DIAMOND");
 		this.addDefault("OnFinish.DefaultPrize.Amount", 1);
 		this.addDefault("OnFinish.DefaultPrize.XP", 0);
@@ -75,7 +77,8 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("OnFinish.DisplayStats", true);
 		this.addDefault("OnFinish.EnablePrizes", true);
 		this.addDefault("OnFinish.EnforceCompletion", true);
-		this.addDefault("OnFinish.SaveUserCompletedCourses", false);
+		this.addDefault("OnFinish.CompletedCourses.Enabled", false);
+		this.addDefault("OnFinish.CompletedCourses.JoinMessage", true);
 		this.addDefault("OnFinish.SetGameMode", "SURVIVAL");
 		this.addDefault("OnFinish.TeleportAway", true);
 		this.addDefault("OnFinish.TeleportDelay", 0);
@@ -126,7 +129,7 @@ public class DefaultConfig extends ParkourConfiguration {
 
 		this.addDefault("Other.CheckForUpdates", true);
 		this.addDefault("Other.BountifulAPI.Enabled", true);
-		this.addDefault("Other.Economy.Enabled", true);
+		this.addDefault("Other.Vault.Enabled", true);
 		this.addDefault("Other.PlaceholderAPI.Enabled", true);
 		this.addDefault("Other.LogToFile", true);
 		this.addDefault("Other.UseSounds", true);
@@ -138,15 +141,15 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("Other.Parkour.ChatRankPrefix.OverrideChat", true);
 		this.addDefault("Other.Parkour.SignProtection", true);
 		this.addDefault("Other.Parkour.InventoryManagement", true);
-		this.addDefault("Other.Parkour.SignPermissions", false);
-		this.addDefault("Other.Parkour.CommandPermissions", false);
+		this.addDefault("Other.Parkour.SignUsePermissions", false);
+		this.addDefault("Other.Parkour.CommandUsePermissions", false);
 		this.addDefault("Other.Display.JoinWelcomeMessage", true);
 		this.addDefault("Other.Display.LevelReward", true);
 		this.addDefault("Other.Display.ShowMilliseconds", false);
 		this.addDefault("Other.Display.PrizeCooldown", true);
 		this.addDefault("Other.OnServerShutdown.BackupFiles", false);
-		this.addDefault("Other.Leaderboard.MaxEntries", 10);
 
+		this.addDefault("Database.MaximumCoursesCached", 10);
 		this.addDefault("SQLite.PathOverride", "");
 		this.addDefault("MySQL.Use", false);
 		this.addDefault("MySQL.URL", "jdbc:mysql://(HOST):(PORT)/(DATABASE)?useSSL=false");
@@ -191,11 +194,11 @@ public class DefaultConfig extends ParkourConfiguration {
 	}
 
 	public boolean isPermissionsForCommands() {
-		return this.getBoolean("Other.Parkour.CommandPermissions");
+		return this.getBoolean("Other.Parkour.CommandUsePermissions");
 	}
 
 	public boolean isPermissionForSignInteraction() {
-		return this.getBoolean("Other.Parkour.SignPermissions");
+		return this.getBoolean("Other.Parkour.SignUsePermissions");
 	}
 
 	public boolean isUseParkourKit() {
@@ -278,41 +281,29 @@ public class DefaultConfig extends ParkourConfiguration {
 		return this.getBoolean("Other.UseSounds");
 	}
 
+	public boolean isCompletedCoursesEnabled() {
+		return this.getBoolean("OnFinish.CompletedCourses.Enabled");
+	}
+
 	/* Materials */
 	public Material getLastCheckpointTool() {
-		Material lastCheckpointTool = MaterialUtils.lookupMaterial(this.getString("OnJoin.Item.LastCheckpoint.Material"));
-		return lastCheckpointTool == Material.AIR ? null : lastCheckpointTool;
+		return getMaterialOrDefault("OnJoin.Item.LastCheckpoint.Material", Material.AIR);
 	}
 
-	public int getLastCheckPointToolSlot() {
-		return this.getInt("OnJoin.Item.LastCheckpoint.Slot", 0);
+	public Material getHideAllDisabledTool() {
+		return getMaterialOrDefault("OnJoin.Item.HideAll.Material", Material.AIR);
 	}
 
-	public Material getHideallTool() {
-		Material hideallTool = MaterialUtils.lookupMaterial(this.getString("OnJoin.Item.HideAll.Material"));
-		return hideallTool == Material.AIR ? null : hideallTool;
-	}
-
-	public int getHideallToolSlot() {
-		return this.getInt("OnJoin.Item.HideAll.Slot", 1);
+	public Material getHideAllEnabledTool() {
+		return getMaterialOrDefault("OnJoin.Item.HideAllEnabled.Material", Material.AIR);
 	}
 
 	public Material getLeaveTool() {
-		Material leaveTool = MaterialUtils.lookupMaterial(this.getString("OnJoin.Item.Leave.Material"));
-		return leaveTool == Material.AIR ? null : leaveTool;
-	}
-
-	public int getLeaveToolSlot() {
-		return this.getInt("OnJoin.Item.Leave.Slot", 2);
+		return getMaterialOrDefault("OnJoin.Item.Leave.Material", Material.AIR);
 	}
 
 	public Material getRestartTool() {
-		Material restartTool = MaterialUtils.lookupMaterial(this.getString("OnJoin.Item.Restart.Material"));
-		return restartTool == Material.AIR ? null : restartTool;
-	}
-
-	public int getRestartToolSlot() {
-		return this.getInt("OnJoin.Item.Restart.Slot", 3);
+		return getMaterialOrDefault("OnJoin.Item.Restart.Material", Material.AIR);
 	}
 
 	public Material getAutoStartMaterial() {
@@ -320,8 +311,12 @@ public class DefaultConfig extends ParkourConfiguration {
 	}
 
 	public Material getGuiMaterial() {
-		Material guiMaterial = MaterialUtils.lookupMaterial(this.getString("ParkourGUI.Material"));
-		return guiMaterial == null ? Material.BOOK : guiMaterial;
+		return getMaterialOrDefault("ParkourGUI.Material", Material.BOOK);
+	}
+
+	private Material getMaterialOrDefault(String configPath, Material defaultMaterial) {
+		Material matchingMaterial = MaterialUtils.lookupMaterial(this.getString(configPath));
+		return matchingMaterial != null ? matchingMaterial : defaultMaterial;
 	}
 
 	/* Strings */
@@ -358,7 +353,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		return this.getInt("AutoStart.TickDelay");
 	}
 
-	public int getLeaderboardMaxEntries() {
-		return this.getInt("Other.Leaderboard.MaxEntries");
+	public int getMaximumCoursesCached() {
+		return this.getInt("Database.MaximumCoursesCached");
 	}
 }

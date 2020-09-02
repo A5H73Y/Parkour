@@ -217,6 +217,10 @@ public class CheckpointManager extends AbstractPluginReceiver {
         int points = checkpointsConfig.getInt(courseName + ".Checkpoints") + 1;
         World world = Bukkit.getWorld(courseConfig.getString(courseName + "." + "World"));
 
+        if (world == null) {
+            return checkpoints;
+        }
+
         for (int i = 0; i < points; i++) {
             String checkpointPath = courseName + "." + i + ".";
 

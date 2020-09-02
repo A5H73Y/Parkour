@@ -166,7 +166,7 @@ public class PlayerInfo {
     }
 
     public static void addCompletedCourse(OfflinePlayer player, String courseName) {
-        if (Parkour.getDefaultConfig().getBoolean("OnFinish.SaveUserCompletedCourses")) {
+        if (Parkour.getDefaultConfig().isCompletedCoursesEnabled()) {
             List<String> completedCourses = getCompletedCourses(player);
 
             if (!completedCourses.contains(courseName)) {
@@ -299,7 +299,7 @@ public class PlayerInfo {
     }
 
     public static void removeCompletedCourse(String courseName) {
-        if (Parkour.getDefaultConfig().getBoolean("OnFinish.SaveUserCompletedCourses")) {
+        if (Parkour.getDefaultConfig().isCompletedCoursesEnabled()) {
             Set<String> playersUUIDs = getPlayersConfig().getConfigurationSection("").getKeys(false);
 
             for (String uuid : playersUUIDs) {

@@ -119,6 +119,11 @@ public class Validation {
      * @return
      */
     public static boolean courseJoining(Player player, Course course) {
+        /* World doesn't exist */
+        if (course.getCheckpoints().isEmpty() ) {
+            player.sendMessage("Woah, this world doesn't exist..."); //TODO translate
+            return false;
+        }
 
         /* Player in wrong world */
         if (Parkour.getDefaultConfig().isJoinEnforceWorld()

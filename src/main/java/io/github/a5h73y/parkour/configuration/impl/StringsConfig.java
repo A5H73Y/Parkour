@@ -69,6 +69,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Parkour.Challenge.Quit", "You have forfeited the challenge. &b%VALUE% &fmust complete the course to win!");
 		this.addDefault("Parkour.Challenge.Winner", "Congratulations! You beat &b%PLAYER% &fat &b%COURSE%!");
 		this.addDefault("Parkour.Challenge.Loser", "&b%PLAYER% &fhas completed &b%COURSE% &fbefore you!");
+		this.addDefault("Parkour.AlreadyCompleted", "You have already completed this course.");
 
 		this.addDefault("Event.Join", "This server uses &bParkour &3%VALUE%");
 		this.addDefault("Event.Checkpoint", "Checkpoint set to &b%CURRENT% &8/ &7%TOTAL%");
@@ -103,7 +104,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Error.Cheating1", "Please do not cheat.");
 		this.addDefault("Error.Cheating2", "&lYou must achieve all &4%VALUE% &f&lcheckpoints!");
 		this.addDefault("Error.Cooldown", "Slow down! Please wait &b%VALUE% &fmore seconds.");
-		this.addDefault("Error.NotCompleted", "You have not yet completed &b%VALUE%&f!");
+		this.addDefault("Error.NotCompleted", "You have not yet completed &b%VALUE%&f!"); //TODO why isn't this used?
 		this.addDefault("Error.PrizeCooldown", "You have to wait &b%VALUE% &fbefore you can receive this prize again!");
 		this.addDefault("Error.NoQuestion", "You have not been asked a question!");
 		this.addDefault("Error.JoiningAnotherCourse", "You can not join another course while on a course.");

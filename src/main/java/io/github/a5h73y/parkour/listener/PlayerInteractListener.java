@@ -1,15 +1,15 @@
 package io.github.a5h73y.parkour.listener;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
-import io.github.a5h73y.parkour.type.course.Course;
 import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
+import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.support.XMaterial;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -18,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 public class PlayerInteractListener extends AbstractPluginReceiver implements Listener {
 
@@ -37,6 +38,10 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             return;
         }
 
+        if (event.getHand() != EquipmentSlot.HAND) { //TODO is SneakToInteractItems is false, this acts super weird.
+            return;
+        }
+
         if (!player.isSneaking() && parkour.getConfig().getBoolean("OnCourse.SneakToInteractItems")) {
             return;
         }
@@ -50,25 +55,28 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             return;
         }
 
-        if (MaterialUtils.getMaterialInPlayersHand(player) == parkour.getConfig().getLastCheckpointTool()) {
+        Material materialInHand = MaterialUtils.getMaterialInPlayersHand(player);
+
+        if (materialInHand == parkour.getConfig().getLastCheckpointTool()) {
             if (parkour.getPlayerManager().delayPlayer(player, 1, false)) {
                 event.setCancelled(true);
                 parkour.getPlayerManager().playerDie(player);
             }
 
-        } else if (MaterialUtils.getMaterialInPlayersHand(player) == parkour.getConfig().getHideallTool()) {
+        } else if (materialInHand == parkour.getConfig().getHideAllDisabledTool()
+                || materialInHand == parkour.getConfig().getHideAllEnabledTool()) {
             if (parkour.getPlayerManager().delayPlayer(player, 1, false)) {
                 event.setCancelled(true);
                 parkour.getPlayerManager().toggleVisibility(player);
             }
 
-        } else if (MaterialUtils.getMaterialInPlayersHand(player) == parkour.getConfig().getLeaveTool()) {
+        } else if (materialInHand == parkour.getConfig().getLeaveTool()) {
             if (parkour.getPlayerManager().delayPlayer(player, 1, false)) {
                 event.setCancelled(true);
                 parkour.getPlayerManager().leaveCourse(player);
             }
 
-        } else if (MaterialUtils.getMaterialInPlayersHand(player) == parkour.getConfig().getRestartTool()) {
+        } else if (materialInHand == parkour.getConfig().getRestartTool()) {
             if (parkour.getPlayerManager().delayPlayer(player, 1, false)) {
                 event.setCancelled(true);
                 parkour.getPlayerManager().restartCourse(player);
@@ -140,6 +148,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         ParkourSession session = parkour.getPlayerManager().getParkourSession(event.getPlayer());
 
         if (session.getParkourMode() == ParkourMode.FREE_CHECKPOINT) {
+            // TODO check the location isn't the same block
             session.setFreedomLocation(event.getPlayer().getLocation());
             TranslationUtils.sendTranslation("Event.FreeCheckpoints", event.getPlayer());
             return;
