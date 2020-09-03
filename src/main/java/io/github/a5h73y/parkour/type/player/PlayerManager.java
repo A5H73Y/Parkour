@@ -68,6 +68,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 	public PlayerManager(final Parkour parkour) {
 		super(parkour);
+		populateParkourPlayers();
 		populateParkourRanks();
 	}
 
@@ -91,6 +92,28 @@ public class PlayerManager extends AbstractPluginReceiver {
 			rewardLevel--;
 		}
 		return result;
+	}
+
+	/**
+	 * Populate Parkour Players.
+	 * As part of a server reload, there would be online players who need their Parkour session restored.
+	 */
+	private void populateParkourPlayers() {
+		for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+			loadParkourSession(onlinePlayer);
+
+			if (PlayerInfo.isQuietMode(onlinePlayer)) {
+				enableQuietMode(onlinePlayer);
+			}
+
+			if (!isPlaying(onlinePlayer)) {
+				return;
+			}
+
+			String currentCourse = getParkourSession(onlinePlayer).getCourse().getName();
+			TranslationUtils.sendValueTranslation("Parkour.Continue", currentCourse, onlinePlayer);
+			parkour.getScoreboardManager().addScoreboard(onlinePlayer);
+		}
 	}
 
 	private void populateParkourRanks() {
@@ -162,7 +185,12 @@ public class PlayerManager extends AbstractPluginReceiver {
 		playerDelay.remove(player);
 		PlayerInfo.setQuietMode(player, isInQuietMode(player));
 		PlayerInfo.persistChanges();
-		quietPlayers.remove(player);
+	}
+
+	public void teardownParkourPlayers() {
+		for (Player player : parkourPlayers.keySet()) {
+			createParkourSessionFile(player);
+		}
 	}
 
 	/**
@@ -1243,6 +1271,12 @@ public class PlayerManager extends AbstractPluginReceiver {
 	}
 
 	public void saveParkourSession(Player player) {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () -> {
+			createParkourSessionFile(player);
+		});
+	}
+
+	private void createParkourSessionFile(Player player) {
 		if (!getSessionsPath().exists()) {
 			getSessionsPath().mkdirs();
 		}
@@ -1250,28 +1284,26 @@ public class PlayerManager extends AbstractPluginReceiver {
 		ParkourSession session = getParkourSession(player);
 
 		if (session != null) {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () -> {
-				File sessionFile = new File(getSessionsPath(), player.getUniqueId().toString());
+			File sessionFile = new File(getSessionsPath(), player.getUniqueId().toString());
 
-				if (!sessionFile.exists()) {
-					try {
-						sessionFile.createNewFile();
-					} catch (IOException e) {
-						PluginUtils.log("Player's session couldn't be created: " + e.getMessage(), 2);
-						e.printStackTrace();
-					}
-				}
-
-				try (
-						FileOutputStream fout = new FileOutputStream(sessionFile);
-						ObjectOutputStream oos = new ObjectOutputStream(fout)
-				) {
-					oos.writeObject(session);
+			if (!sessionFile.exists()) {
+				try {
+					sessionFile.createNewFile();
 				} catch (IOException e) {
-					PluginUtils.log("Player's session couldn't be saved: " + e.getMessage(), 2);
+					PluginUtils.log("Player's session couldn't be created: " + e.getMessage(), 2);
 					e.printStackTrace();
 				}
-			});
+			}
+
+			try (
+					FileOutputStream fout = new FileOutputStream(sessionFile);
+					ObjectOutputStream oos = new ObjectOutputStream(fout)
+			) {
+				oos.writeObject(session);
+			} catch (IOException e) {
+				PluginUtils.log("Player's session couldn't be saved: " + e.getMessage(), 2);
+				e.printStackTrace();
+			}
 		}
 	}
 

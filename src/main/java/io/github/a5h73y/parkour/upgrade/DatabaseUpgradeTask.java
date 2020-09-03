@@ -58,18 +58,18 @@ public class DatabaseUpgradeTask extends TimedUpgradeTask {
 
 				getParkourUpgrader().getLogger().info("Found " + courseIdToName.size() + " courses...");
 
-				ResultSet playerNames = database.query("SELECT * FROM time ORDER BY player");
-				while (playerNames.next()) {
-					String playerName = playerNames.getString("player");
+				ResultSet playerTimes = database.query("SELECT * FROM time ORDER BY player");
+				while (playerTimes.next()) {
+					String playerName = playerTimes.getString("player");
 					List<TimeEntry> results = playerNameToTimes.getOrDefault(
-							playerNames.getString("player"), new ArrayList<>());
+							playerTimes.getString("player"), new ArrayList<>());
 
 					results.add(new TimeEntry(
-							playerNames.getString("courseId"),
+							playerTimes.getString("courseId"),
 							null,
-							playerNames.getString("player"),
-							playerNames.getLong("time"),
-							playerNames.getInt("deaths")));
+							playerTimes.getString("player"),
+							playerTimes.getLong("time"),
+							playerTimes.getInt("deaths")));
 					playerNameToTimes.put(playerName, results);
 				}
 

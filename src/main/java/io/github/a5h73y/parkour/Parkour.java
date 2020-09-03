@@ -100,6 +100,7 @@ public class Parkour extends JavaPlugin {
         if (getConfig().getBoolean("Other.OnServerShutdown.BackupFiles")) {
             Backup.backupNow();
         }
+        getPlayerManager().teardownParkourPlayers();
         PluginUtils.log("Disabled Parkour v" + getDescription().getVersion());
         instance = null;
     }
@@ -219,11 +220,11 @@ public class Parkour extends JavaPlugin {
         scoreboardManager = new ScoreboardManager(this);
         challengeManager = new ChallengeManager(this);
         questionManager = new QuestionManager(this);
-        playerManager = new PlayerManager(this);
         courseManager = new CourseManager(this);
         checkpointManager = new CheckpointManager(this);
-        lobbyManager = new LobbyManager(this);
         parkourKitManager = new ParkourKitManager(this);
+        playerManager = new PlayerManager(this);
+        lobbyManager = new LobbyManager(this);
         guiManager = new ParkourGuiManager(this);
     }
 

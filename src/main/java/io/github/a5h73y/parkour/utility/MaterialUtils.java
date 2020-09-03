@@ -7,13 +7,13 @@ import java.util.Collections;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.MaterialData;
 import org.bukkit.material.Stairs;
 
 public class MaterialUtils {
@@ -178,5 +178,11 @@ public class MaterialUtils {
 			}
 		}
 		return true;
+	}
+
+	public static boolean sameBlockLocations(Location location1, Location location2) {
+		return location1.getBlockX() == location2.getBlockX()
+				&& location1.getBlockY() == location2.getBlockY()
+				&& location1.getBlockZ() == location2.getBlockZ();
 	}
 }
