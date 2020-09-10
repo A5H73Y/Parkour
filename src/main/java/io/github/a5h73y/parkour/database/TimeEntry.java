@@ -58,4 +58,17 @@ public class TimeEntry {
     public int getDeaths() {
         return deaths;
     }
+
+    /**
+     * The player's full UUID including hyphens.
+     * @return player UUID including hyphens
+     */
+    public String getPlayerUUID() {
+        StringBuilder uuid = new StringBuilder(playerId);
+        uuid.insert(20, "-");
+        uuid.insert(16, "-");
+        uuid.insert(12, "-");
+        uuid.insert(8, "-");
+        return uuid.toString();
+    }
 }
