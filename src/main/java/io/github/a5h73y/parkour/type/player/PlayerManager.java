@@ -266,6 +266,11 @@ public class PlayerManager extends AbstractPluginReceiver {
 						"Parkour.JoinLives", String.valueOf(course.getMaxDeaths()), false);
 			}
 
+			if (course.hasMaxTime()) {
+				subTitle = TranslationUtils.getValueTranslation(
+						"Parkour.JoinTime", DateTimeUtils.convertSecondsToTime(course.getMaxTime()), false);
+			}
+
 			parkour.getBountifulApi().sendFullTitle(player,
 					TranslationUtils.getValueTranslation("Parkour.Join", course.getName(), false),
 					subTitle,  displayTitle);
