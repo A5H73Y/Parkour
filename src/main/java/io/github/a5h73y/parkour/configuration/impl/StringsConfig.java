@@ -23,6 +23,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Parkour.Join", "Joined &b%VALUE%");
 		this.addDefault("Parkour.JoinLives", "&7You have &3%VALUE% &7lives on this course!");
 		this.addDefault("Parkour.JoinTime", "&7You have &3%VALUE% &7to finish this course!");
+		this.addDefault("Parkour.JoinLivesAndTime", "&7You have &3%MAXTIME% &7and &3%LIVES% &7lives to finish this course!");
 		this.addDefault("Parkour.TimerStarted", "Timer started!");
 		this.addDefault("Parkour.Restarting", "Restarting course");
 		this.addDefault("Parkour.Leave", "You left &b%VALUE%");
