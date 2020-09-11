@@ -134,6 +134,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Scoreboard.CurrentTimeTitle", "Current Time:");
 		this.addDefault("Scoreboard.CurrentDeathsTitle", "Current Deaths:");
 		this.addDefault("Scoreboard.CheckpointsTitle", "Checkpoints:");
+		this.addDefault("Scoreboard.MaxTimeTitle", "Time Remaining:");
 
 		this.addDefault("ParkourGUI.NextPage", "&bNext page &f>");
 		this.addDefault("ParkourGUI.PreviousPage", "< &bPrevious page");

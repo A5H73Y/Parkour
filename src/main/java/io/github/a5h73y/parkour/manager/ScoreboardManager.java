@@ -32,6 +32,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
     private static final String CURRENT_TIME = ChatColor.DARK_BLUE.toString();
     private static final String CURRENT_DEATHS = ChatColor.DARK_GREEN.toString();
     private static final String CHECKPOINTS = ChatColor.DARK_RED.toString();
+	private static final String MAX_TIME = ChatColor.DARK_PURPLE.toString();
 
     private final String titleFormat;
     private final String textFormat;
@@ -68,6 +69,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
         translationKey.put(CURRENT_TIME, stringsConfig.getString("Scoreboard.CurrentTimeTitle"));
         translationKey.put(CURRENT_DEATHS, stringsConfig.getString("Scoreboard.CurrentDeathsTitle"));
         translationKey.put(CHECKPOINTS, stringsConfig.getString("Scoreboard.CheckpointsTitle"));
+		translationKey.put(MAX_TIME, stringsConfig.getString("Scoreboard.MaxTimeTitle"));
 
         this.numberOfRowsNeeded = calculateNumberOfRowsNeeded();
     }
@@ -190,8 +192,10 @@ public class ScoreboardManager extends AbstractPluginReceiver {
         if (Parkour.getConfig(ConfigType.COURSES).contains(playerBoard.getCourseName() + ".MaxTime")) {
             start = DateTimeUtils.convertSecondsToTime(
                     Parkour.getConfig(ConfigType.COURSES).getInt(playerBoard.getCourseName() + ".MaxTime", 0));
-        }
-        print(playerBoard, start, CURRENT_TIME);
+			print(playerBoard, start, MAX_TIME);
+        } else {
+			print(playerBoard, start, CURRENT_TIME);
+		}
     }
 
     private void addCurrentDeaths(PlayerScoreboard playerBoard) {
