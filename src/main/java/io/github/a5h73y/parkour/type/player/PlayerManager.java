@@ -177,9 +177,9 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param player parkour player
 	 */
 	public void teardownParkourPlayer(Player player) {
+		stashParkourSession(player);
 		parkour.getChallengeManager().terminateChallenge(player);
 		parkour.getQuestionManager().removeQuestion(player);
-		storeParkourSession(player);
 		quietPlayers.remove(player);
 		hiddenPlayers.remove(player);
 		playerDelay.remove(player);
@@ -1265,14 +1265,13 @@ public class PlayerManager extends AbstractPluginReceiver {
 		sender.sendMessage(Parkour.getPrefix() + target.getName() + "'s Rank was set to " + args[2]);
 	}
 
-	public void storeParkourSession(Player player) {
-		saveParkourSession(player);
-		parkourPlayers.remove(player);
-	}
-
-	public void saveParkourSession(Player player) {
+	public void stashParkourSession(Player player) {
+		if (isPlaying(player)) {
+			getParkourSession(player).setTimeAccumulated();
+		}
 		Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () -> {
 			createParkourSessionFile(player);
+			parkourPlayers.remove(player);
 		});
 	}
 
@@ -1319,6 +1318,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 				session = (ParkourSession) oos.readObject();
 				if (session != null) {
 					session.setCourse(parkour.getCourseManager().getCourse(session.getCourseName()));
+					session.recalculateTime();
 					parkourPlayers.put(player, session);
 				}
 			} catch (IOException | ClassNotFoundException e) {

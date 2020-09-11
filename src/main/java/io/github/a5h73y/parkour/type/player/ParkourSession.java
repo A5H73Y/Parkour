@@ -1,8 +1,8 @@
 package io.github.a5h73y.parkour.type.player;
 
+import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.course.Course;
-import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import java.io.Serializable;
 import org.bukkit.Location;
@@ -17,6 +17,7 @@ public class ParkourSession implements Serializable {
     private int currentCheckpoint;
 
     private long timeStarted;
+    private long timeAccumulated;
     private long timeFinished;
 
     private final String courseName;
@@ -163,6 +164,7 @@ public class ParkourSession implements Serializable {
 
     public void resetTimeStarted() {
         this.timeStarted = System.currentTimeMillis();
+        this.timeAccumulated = 0;
 //        if (course.hasMaxTime()) { //TODO
 //            seconds = course.getMaxTime();
 //        }
@@ -176,12 +178,16 @@ public class ParkourSession implements Serializable {
         deaths++;
     }
 
+    public long getTimeFinished() {
+        return timeFinished;
+    }
+
     public void setTimeFinished() {
         timeFinished = getCurrentTime();
     }
 
-    public long getTimeFinished() {
-        return timeFinished;
+    public void setTimeAccumulated() {
+        timeAccumulated = getCurrentTime();
     }
 
     public long getCurrentTime() {
@@ -190,5 +196,10 @@ public class ParkourSession implements Serializable {
 
     public String displayTime() {
         return DateTimeUtils.displayCurrentTime(getCurrentTime());
+    }
+
+    public void recalculateTime() {
+        timeStarted = System.currentTimeMillis() - timeAccumulated;
+        timeAccumulated = 0;
     }
 }
