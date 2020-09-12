@@ -89,8 +89,8 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 parkour.getCourseManager().setMaxTime(args, sender);
                 break;
 
-            case "setjoinitem":
-                if (!ValidationUtils.validateArgs(sender, args, 4)) {
+            case "addjoinitem":
+                if (!ValidationUtils.validateArgs(sender, args, 4, 6)) {
                     return false;
                 }
 
@@ -190,7 +190,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
         PluginUtils.log("pac setminlevel (course) (level)");
         PluginUtils.log("pac setmaxdeath (course) (deaths)");
         PluginUtils.log("pac setmaxtime (course) (seconds)");
-        PluginUtils.log("pac setjoinitem (course) (item) (amount)");
+        PluginUtils.log("pac addjoinitem (course) (item) (amount) [label] [unbreakable]");
         PluginUtils.log("pac rewardonce (course)");
         PluginUtils.log("pac rewardlevel (course) (level)");
         PluginUtils.log("pac rewardrank (level) (rank)");

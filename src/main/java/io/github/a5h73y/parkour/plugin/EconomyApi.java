@@ -153,7 +153,7 @@ public class EconomyApi extends PluginWrapper {
 				return;
 			}
 			if (!Validation.isPositiveInteger(args[3])) {
-				sender.sendMessage(Parkour.getPrefix() + "Amount needs to be numeric.");
+				TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
 				return;
 			}
 
@@ -171,7 +171,7 @@ public class EconomyApi extends PluginWrapper {
 				return;
 			}
 			if (!Validation.isPositiveInteger(args[3])) {
-				sender.sendMessage(Parkour.getPrefix() + "Amount needs to be numeric.");
+				TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
 				return;
 			}
 

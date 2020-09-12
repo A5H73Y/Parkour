@@ -113,6 +113,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Error.AllowViaCommand", "Joining a course via the command has been disabled.");
 		this.addDefault("Error.PluginNotLinked", "%VALUE% has not been linked.");
 		this.addDefault("Error.NoPermission", "You do not have Permission: &b%VALUE%");
+		this.addDefault("Error.InvalidAmount", "Amount needs to be numeric.");
 
 		this.addDefault("Help.Command", "&7/pa help &9%VALUE% &0: &7To learn more about this command.");
 		this.addDefault("Help.Commands", "To display the commands menu, enter &b/pa cmds");
@@ -177,6 +178,9 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("GUI.JoinCourses.Setup.Line1", "         ");
 		this.addDefault("GUI.JoinCourses.Setup.Line2", " ggggggg ");
 		this.addDefault("GUI.JoinCourses.Setup.Line3", "  fp nl  ");
+
+		this.addDefault("Display.TimeFormat", "HH:mm:ss:MMM");
+		this.addDefault("Display.DateFormat", "dd/MM/yyyy");
 
 		this.options().copyDefaults(true);
 	}

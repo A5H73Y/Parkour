@@ -18,6 +18,7 @@ import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
+import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.support.XMaterial;
 import java.util.Collections;
@@ -27,6 +28,7 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
@@ -261,7 +263,7 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         if (page <= 0) {
-            sender.sendMessage(Parkour.getPrefix() + "Please enter a valid page number.");
+            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
@@ -472,7 +474,7 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         if (!Validation.isPositiveInteger(args[2])) {
-            sender.sendMessage(Parkour.getPrefix() + "Amount of deaths is not valid.");
+            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
@@ -499,7 +501,7 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         if (!Validation.isPositiveInteger(args[2])) {
-            sender.sendMessage(Parkour.getPrefix() + "Amount of seconds is not valid.");
+            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
@@ -520,8 +522,9 @@ public class CourseManager extends AbstractPluginReceiver {
             TranslationUtils.sendValueTranslation("Error.NoExist", args[1], sender);
             return;
         }
+
         if (!Validation.isPositiveInteger(args[2])) {
-            sender.sendMessage(Parkour.getPrefix() + "Minimum level is not valid.");
+            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
@@ -543,7 +546,7 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         if (!Validation.isPositiveInteger(args[2])) {
-            sender.sendMessage(Parkour.getPrefix() + "Reward level needs to be numeric.");
+            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
@@ -565,7 +568,7 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         if (!Validation.isPositiveInteger(args[2])) {
-            sender.sendMessage(Parkour.getPrefix() + "Reward level addition needs to be numeric.");
+            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
@@ -604,8 +607,9 @@ public class CourseManager extends AbstractPluginReceiver {
             TranslationUtils.sendValueTranslation("Error.NoExist", args[1], sender);
             return;
         }
+
         if (!Validation.isPositiveInteger(args[2])) {
-            sender.sendMessage(Parkour.getPrefix() + "Reward delay needs to be numeric.");
+            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
@@ -627,7 +631,7 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         if (!Validation.isPositiveInteger(args[2])) {
-            sender.sendMessage(Parkour.getPrefix() + "Parkoins reward needs to be numeric.");
+            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
@@ -825,24 +829,23 @@ public class CourseManager extends AbstractPluginReceiver {
             return;
         }
 
-        if (MaterialUtils.lookupMaterial(args[2].toUpperCase()) == null) {
-            sender.sendMessage(Parkour.getPrefix() + "Invalid material: " + args[2].toUpperCase());
+        Material material = MaterialUtils.lookupMaterial(args[2].toUpperCase());
+        if (material == null) {
             TranslationUtils.sendValueTranslation("Error.UnknownMaterial", args[2].toUpperCase(), sender);
             return;
         }
 
         if (!Validation.isPositiveInteger(args[3])) {
-            sender.sendMessage(Parkour.getPrefix() + "Amount needs to be numeric.");
+            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
-        if (args.length == 5 && !Validation.isPositiveInteger(args[4])) {
-            sender.sendMessage(Parkour.getPrefix() + "Invalid Material Data");
-        }
-
         int amount = MaterialUtils.parseItemStackAmount(args[3]);
-        CourseInfo.addJoinItem(args[1], args[2], amount, args[4], false); //TODO unbreakable
-        sender.sendMessage(Parkour.getPrefix() + "Join item for " + args[1] + " set to " + args[2] + " (" + amount + ")");
+        String label = args.length >= 5 ? args[4] : StringUtils.standardizeText(material.name());
+        boolean unbreakable = args.length == 6 && Boolean.parseBoolean(args[5]);
+
+        CourseInfo.addJoinItem(args[1], material, amount, label, unbreakable);
+        sender.sendMessage(Parkour.getPrefix() + "Join item " + material.name() + " (" + amount + ") was added to " + args[1]);
     }
 
     /**
@@ -881,7 +884,7 @@ public class CourseManager extends AbstractPluginReceiver {
 
         if (args.length >= 3) {
             if (!Validation.isPositiveInteger(args[2])) {
-                player.sendMessage(Parkour.getPrefix() + "Amount of results needs to be numeric.");
+                TranslationUtils.sendTranslation("Error.InvalidAmount", player);
                 return;
             }
             limit = Integer.parseInt(args[2]);

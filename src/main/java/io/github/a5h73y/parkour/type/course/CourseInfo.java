@@ -466,12 +466,12 @@ public class CourseInfo {
         return joinItems;
     }
 
-    public static void addJoinItem(String courseName, String material, int amount, String label, boolean unbreakable) {
+    public static void addJoinItem(String courseName, Material material, int amount, String label, boolean unbreakable) {
         courseName = courseName.toLowerCase();
 
-        getCourseConfig().set(courseName + ".JoinItems." + material + ".Amount", amount);
-        getCourseConfig().set(courseName + ".JoinItems." + material + ".Label", label);
-        getCourseConfig().set(courseName + ".JoinItems." + material + ".Unbreakable", unbreakable);
+        getCourseConfig().set(courseName + ".JoinItems." + material.name() + ".Amount", amount);
+        getCourseConfig().set(courseName + ".JoinItems." + material.name() + ".Label", label);
+        getCourseConfig().set(courseName + ".JoinItems." + material.name() + ".Unbreakable", unbreakable);
     }
 
     public static String getWorld(String courseName) {

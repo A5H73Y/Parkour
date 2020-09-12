@@ -143,8 +143,8 @@ public final class Help {
             displayHelpMessage(sender, "Set Mode for course", "/pa setmode (course)", "/pa setmode tutorial",
                     " By default, a course does not have a Parkour Mode attached. Each mode can affect the interaction with the course, an example being the 'Freedom' mode allows you to create and load your own checkpoints.");
 
-        } else if (command.equals("setjoinitem")) {
-            displayHelpMessage(sender, "Set Join Item for course", "/pa setjoinitem (course) (material) (amount)", "/pa setjoinitem tutorial elytra 1",
+        } else if (command.equals("addjoinitem")) {
+            displayHelpMessage(sender, "Add Join Item to a course", "/pa addjoinitem (course) (material) (amount) [label] [unbreakable]", "/pa addjoinitem tutorial elytra 1",
                     " By default, a course will give you the default join items (configurable). You can provide the player with an additional specified item when they join a course, such as Elytra or Ender pearls for a certain types of courses etc.");
 
         } else if (command.equals("setminlevel")) {
@@ -397,7 +397,7 @@ public final class Help {
         displayCommandUsage(player, "linkKit", "(course) (kit)", "Link ParkourKit");
         displayCommandUsage(player, "listKit", "[kit]", "Display ParkourKit info");
         displayCommandUsage(player, "setmode", "(course)", "Set Parkour Mode");
-        displayCommandUsage(player, "setjoinitem", "(course) (material) (amount)", "Join item");
+        displayCommandUsage(player, "addjoinitem", "(course) (material) (amount) [label] [unbreakable]", "Add Join item");
         displayCommandUsage(player, "setminlevel", "(course) (level)", "Set course minimum level");
         displayCommandUsage(player, "setmaxdeath", "(course) (deaths)", "Set course max deaths");
         displayCommandUsage(player, "setmaxtime", "(course) (seconds)", "Set course time limit");

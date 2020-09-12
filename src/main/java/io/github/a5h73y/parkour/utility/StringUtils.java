@@ -25,8 +25,9 @@ public class StringUtils {
 	 * @return standardized input
 	 */
 	public static String standardizeText(String text) {
-		return ValidationUtils.isStringValid(text)
-				? text.substring(0, 1).toUpperCase().concat(text.substring(1).toLowerCase())
-				: text;
+		return !ValidationUtils.isStringValid(text) ? text
+				: text.substring(0, 1).toUpperCase()
+				.concat(text.substring(1).toLowerCase())
+				.replace("_", " ");
 	}
 }

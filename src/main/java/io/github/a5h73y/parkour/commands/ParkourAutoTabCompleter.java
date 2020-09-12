@@ -25,7 +25,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             "join", "info", "course", "lobby", "perms", "quiet", "list", "help", "material", "about", "contact", "cmds");
 
     private static final List<String> ADMIN_ONLY_COMMANDS = Arrays.asList(
-            "setlobby", "setcreator", "setautostart", "setminlevel", "setmaxdeath", "setmaxtime", "setjoinitem",
+            "setlobby", "setcreator", "setautostart", "setminlevel", "setmaxdeath", "setmaxtime", "addjoinitem",
             "rewardonce", "rewardlevel", "rewardleveladd", "rewardrank", "rewarddelay", "rewardparkoins", "reset",
             "economy", "setmode", "createkit", "editkit", "validatekit", "recreate", "whitelist", "setlevel", "setrank",
             "settings", "reload");
@@ -173,7 +173,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             case "setminlevel":
             case "setmaxdeath":
             case "setmaxtime":
-            case "setjoinitem":
+            case "addjoinitem":
             case "rewardonce":
             case "rewardlevel":
             case "rewardleveladd":

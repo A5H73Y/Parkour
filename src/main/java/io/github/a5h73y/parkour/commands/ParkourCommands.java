@@ -304,11 +304,11 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getCourseManager().setMaxTime(args, player);
                 break;
 
-            case "setjoinitem":
+            case "addjoinitem":
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
                     return false;
 
-                } else if (!ValidationUtils.validateArgs(player, args, 4)) {
+                } else if (!ValidationUtils.validateArgs(player, args, 4, 6)) {
                     return false;
                 }
 

@@ -1241,7 +1241,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 	public void setParkourLevel(String[] args, CommandSender sender) {
 		if (!Validation.isPositiveInteger(args[2])) {
-			sender.sendMessage(Parkour.getPrefix() + "Minimum level is not valid.");
+			TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
 			return;
 		}
 
@@ -1558,7 +1558,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 */
 	public void setRewardParkourRank(String[] args, CommandSender sender) {
 		if (!Validation.isPositiveInteger(args[1])) {
-			sender.sendMessage(Parkour.getPrefix() + "ParkourLevel needs to be numeric.");
+			TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
 			return;
 		}
 
