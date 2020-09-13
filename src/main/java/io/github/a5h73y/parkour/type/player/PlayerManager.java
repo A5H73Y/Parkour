@@ -1432,10 +1432,10 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param player
 	 */
 	private void saveHealth(Player player) {
-		ParkourConfiguration config = Parkour.getConfig(ConfigType.INVENTORY);
-		config.set(player.getName() + ".Health", player.getHealth());
-		config.set(player.getName() + ".Hunger", player.getFoodLevel());
-		config.save();
+		ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
+		inventoryConfig.set(player.getName() + ".Health", player.getHealth());
+		inventoryConfig.set(player.getName() + ".Hunger", player.getFoodLevel());
+		inventoryConfig.save();
 	}
 
 	/**
@@ -1446,14 +1446,14 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param player
 	 */
 	private void restoreHealth(Player player) {
-		ParkourConfiguration invConfig = Parkour.getConfig(ConfigType.INVENTORY);
+		ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
 
-		double health = Math.min(player.getMaxHealth(), invConfig.getDouble(player.getName() + ".Health"));
+		double health = Math.min(player.getMaxHealth(), inventoryConfig.getDouble(player.getName() + ".Health"));
 		player.setHealth(health);
-		player.setFoodLevel(invConfig.getInt(player.getName() + ".Hunger"));
-		invConfig.set(player.getName() + ".Health", null);
-		invConfig.set(player.getName() + ".Hunger", null);
-		invConfig.save();
+		player.setFoodLevel(inventoryConfig.getInt(player.getName() + ".Hunger"));
+		inventoryConfig.set(player.getName() + ".Health", null);
+		inventoryConfig.set(player.getName() + ".Hunger", null);
+		inventoryConfig.save();
 	}
 
 	/**
@@ -1463,9 +1463,9 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param player
 	 */
 	private void saveXPLevel(Player player) {
-		ParkourConfiguration config = Parkour.getConfig(ConfigType.INVENTORY);
-		config.set(player.getName() + ".XPLevel", player.getLevel());
-		config.save();
+		ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
+		inventoryConfig.set(player.getName() + ".XPLevel", player.getLevel());
+		inventoryConfig.save();
 	}
 
 	/**
@@ -1476,10 +1476,10 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param player
 	 */
 	private void restoreXPLevel(Player player) {
-		ParkourConfiguration invConfig = Parkour.getConfig(ConfigType.INVENTORY);
-		player.setLevel(invConfig.getInt(player.getName() + ".XPLevel"));
-		invConfig.set(player.getName() + ".XPLevel", null);
-		invConfig.save();
+		ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
+		player.setLevel(inventoryConfig.getInt(player.getName() + ".XPLevel"));
+		inventoryConfig.set(player.getName() + ".XPLevel", null);
+		inventoryConfig.save();
 	}
 
 	private boolean hasDisplayPermission(Player player, Permission permission) {
