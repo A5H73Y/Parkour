@@ -330,13 +330,12 @@ public class PlayerManager extends AbstractPluginReceiver {
 		removePlayer(player);
 		preparePlayer(player, parkour.getConfig().getString("OnFinish.SetGameMode"));
 		restoreHealth(player);
+		if (parkour.getConfig().getBoolean("OnDie.SetXPBarToDeathCount")) {
+			restoreXPLevel(player);
+		}
 		loadInventory(player);
 
 		parkour.getChallengeManager().terminateChallenge(player);
-
-		if (parkour.getConfig().getBoolean("OnDie.SetXPBarToDeathCount")) {
-			player.setLevel(0);
-		}
 
 		if (!silent) {
 			parkour.getLobbyManager().teleportToLeaveDestination(player, session);
@@ -514,7 +513,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		parkour.getChallengeManager().completeChallenge(player);
 
 		if (parkour.getConfig().getBoolean("OnDie.SetXPBarToDeathCount")) {
-			player.setLevel(0);
+			restoreXPLevel(player);
 		}
 
 		final long delay = parkour.getConfig().getLong("OnFinish.TeleportDelay");
@@ -1457,6 +1456,32 @@ public class PlayerManager extends AbstractPluginReceiver {
 		invConfig.save();
 	}
 
+	/**
+	 * Prepare the player for Parkour.
+	 * Store the player's XP level.
+	 *
+	 * @param player
+	 */
+	private void saveXPLevel(Player player) {
+		ParkourConfiguration config = Parkour.getConfig(ConfigType.INVENTORY);
+		config.set(player.getName() + ".XPLevel", player.getLevel());
+		config.save();
+	}
+
+	/**
+	 * Load the players original XP level.
+	 * When they leave or finish a course, their XP level will be restored to them.
+	 * Will delete the XP level from the config once loaded.
+	 *
+	 * @param player
+	 */
+	private void restoreXPLevel(Player player) {
+		ParkourConfiguration invConfig = Parkour.getConfig(ConfigType.INVENTORY);
+		player.setLevel(invConfig.getInt(player.getName() + ".XPLevel"));
+		invConfig.set(player.getName() + ".XPLevel", null);
+		invConfig.save();
+	}
+
 	private boolean hasDisplayPermission(Player player, Permission permission) {
 		if (player.hasPermission(permission.getPermission())) {
 			player.sendMessage("* " + permission.getPermission());
@@ -1481,6 +1506,11 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		if (parkour.getConfig().getBoolean("OnJoin.FillHealth")) {
 			player.setFoodLevel(20);
+		}
+
+		if (parkour.getConfig().getBoolean("OnDie.SetXPBarToDeathCount")) {
+			saveXPLevel(player);
+			player.setLevel(0);
 		}
 
 		if (parkour.getConfig().getBoolean("OnCourse.DisableFly")) {
