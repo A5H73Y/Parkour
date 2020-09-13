@@ -1106,7 +1106,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			}
 
 			boolean anyPerms = hasDisplayPermission(player, Permission.BASIC_ALL)
-					|| hasDisplayPermission(player, Permission.SIGN_ALL)
+					|| hasDisplayPermission(player, Permission.CREATE_SIGN_ALL)
 					|| hasDisplayPermission(player, Permission.ADMIN_ALL);
 
 			if (!anyPerms) {

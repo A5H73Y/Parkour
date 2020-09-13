@@ -126,7 +126,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "setcreator":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
                     return false;
 
                 } else if (!ValidationUtils.validateArgs(player, args, 3)) {
@@ -272,7 +272,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "setminlevel":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
                     return false;
 
                 } else if (!ValidationUtils.validateArgs(player, args, 3)) {
@@ -283,7 +283,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "setmaxdeath":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
                     return false;
 
                 } else if (!ValidationUtils.validateArgs(player, args, 3)) {
@@ -294,7 +294,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "setmaxtime":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
                     return false;
 
                 } else if (!ValidationUtils.validateArgs(player, args, 3)) {
@@ -305,7 +305,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "addjoinitem":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
                     return false;
 
                 } else if (!ValidationUtils.validateArgs(player, args, 4, 6)) {
@@ -316,7 +316,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "rewardonce":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
                     return false;
 
                 } else if (!ValidationUtils.validateArgs(player, args, 2)) {
@@ -327,7 +327,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "rewardlevel":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
                     return false;
 
                 } else if (!ValidationUtils.validateArgs(player, args, 3)) {
@@ -338,7 +338,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "rewardleveladd":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
                     return false;
 
                 } else if (!ValidationUtils.validateArgs(player, args, 3)) {
@@ -349,7 +349,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "rewardrank":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
                     return false;
 
                 } else if (!ValidationUtils.validateArgs(player, args, 3)) {
@@ -360,7 +360,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "rewarddelay":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
                     return false;
 
                 } else if (!ValidationUtils.validateArgs(player, args, 3)) {
@@ -371,7 +371,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "rewardparkoins":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
                     return false;
 
                 } else if (!ValidationUtils.validateArgs(player, args, 3)) {
@@ -419,7 +419,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
             case "setmode":
             case "setparkourmode":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
                     return false;
 
                 } else if (!ValidationUtils.validateArgs(player, args, 2)) {
@@ -431,7 +431,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
             case "createkit":
             case "createparkourkit":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
                     return false;
                 }
 
@@ -440,7 +440,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
             case "editkit":
             case "editparkourkit":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
                     return false;
                 }
 
@@ -468,7 +468,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "validatekit":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
                     return false;
                 }
 
@@ -547,6 +547,10 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
             case "material":
                 MaterialUtils.lookupMaterialInformation(args, player);
+                break;
+
+            case "sql":
+                player.sendMessage("TODO"); //TODO show connection successful, number of rows in each table etc.
                 break;
 
             //Other commands//

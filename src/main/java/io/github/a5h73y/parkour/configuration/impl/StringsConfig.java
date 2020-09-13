@@ -118,6 +118,8 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Help.Command", "&7/pa help &9%VALUE% &0: &7To learn more about this command.");
 		this.addDefault("Help.Commands", "To display the commands menu, enter &b/pa cmds");
 		this.addDefault("Help.SignCommands", "To display the sign commands menu, enter &b/pa cmds signs");
+		this.addDefault("Help.CommandSyntax", "&7Syntax: &f/pa %VALUE%");
+		this.addDefault("Help.CommandExample", "&7Example: &f%VALUE%");
 
 		this.addDefault("Other.Item.LastCheckpoint", "&7SHIFT + &6Right click to go back to last checkpoint");
 		this.addDefault("Other.Item.HideAll", "&7SHIFT + &6Right click to toggle visibility");

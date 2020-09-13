@@ -99,9 +99,9 @@ public class PermissionUtils {
 	 * @return player has permission
 	 */
 	public static boolean hasSignPermission(Player player, String permissionNode, SignChangeEvent sign) {
-		Permission matchingPermission = Permission.valueOf("SIGN_" + permissionNode.toUpperCase());
+		Permission matchingPermission = Permission.valueOf("CREATE_SIGN_" + permissionNode.toUpperCase());
 
-		if (!hasPermission(player, Permission.SIGN_ALL, false) && !hasPermission(player, matchingPermission, false)) {
+		if (!hasPermission(player, Permission.CREATE_SIGN_ALL, false) && !hasPermission(player, matchingPermission, false)) {
 			sign.setCancelled(true);
 			sign.getBlock().breakNaturally();
 			return false;

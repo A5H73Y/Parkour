@@ -137,6 +137,14 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 parkour.getCourseManager().setRewardParkoins(args, sender);
                 break;
 
+            case "rewarddelay":
+                if (!ValidationUtils.validateArgs(sender, args, 3)) {
+                    return false;
+                }
+
+                parkour.getCourseManager().setRewardDelay(args, sender);
+                break;
+
             case "setlevel":
                 if (!ValidationUtils.validateArgs(sender, args, 3)) {
                     return false;
@@ -193,8 +201,10 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
         PluginUtils.log("pac addjoinitem (course) (item) (amount) [label] [unbreakable]");
         PluginUtils.log("pac rewardonce (course)");
         PluginUtils.log("pac rewardlevel (course) (level)");
+        PluginUtils.log("pac rewardleveladd (course) (level)");
         PluginUtils.log("pac rewardrank (level) (rank)");
         PluginUtils.log("pac rewardparkoins (course) (amount)");
+        PluginUtils.log("pac rewarddelay (course) (delay)");
         PluginUtils.log("pac setlevel (player) (level)");
         PluginUtils.log("pac setrank (player) (rank)");
         PluginUtils.log("pac list (courses / players)");

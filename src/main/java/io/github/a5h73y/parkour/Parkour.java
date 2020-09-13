@@ -1,5 +1,6 @@
 package io.github.a5h73y.parkour;
 
+import com.google.gson.GsonBuilder;
 import io.github.a5h73y.parkour.commands.ParkourAutoTabCompleter;
 import io.github.a5h73y.parkour.commands.ParkourCommands;
 import io.github.a5h73y.parkour.commands.ParkourConsoleCommands;
@@ -19,8 +20,8 @@ import io.github.a5h73y.parkour.manager.ChallengeManager;
 import io.github.a5h73y.parkour.manager.QuestionManager;
 import io.github.a5h73y.parkour.manager.ScoreboardManager;
 import io.github.a5h73y.parkour.other.Backup;
+import io.github.a5h73y.parkour.other.CommandUsage;
 import io.github.a5h73y.parkour.other.ParkourUpdater;
-import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
 import io.github.a5h73y.parkour.plugin.BountifulApi;
 import io.github.a5h73y.parkour.plugin.EconomyApi;
 import io.github.a5h73y.parkour.plugin.PlaceholderApi;
@@ -29,8 +30,15 @@ import io.github.a5h73y.parkour.type.course.CourseManager;
 import io.github.a5h73y.parkour.type.kit.ParkourKitManager;
 import io.github.a5h73y.parkour.type.lobby.LobbyManager;
 import io.github.a5h73y.parkour.type.player.PlayerManager;
+import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -44,9 +52,10 @@ public class Parkour extends JavaPlugin {
     private EconomyApi economyApi;
     private PlaceholderApi placeholderApi;
 
-    private ConfigManager configManager;
     private ParkourDatabase database;
+    private List<CommandUsage> commandUsages;
 
+    private ConfigManager configManager;
     private ScoreboardManager scoreboardManager;
     private ChallengeManager challengeManager;
     private QuestionManager questionManager;
@@ -209,6 +218,15 @@ public class Parkour extends JavaPlugin {
         return placeholderApi;
     }
 
+    public List<CommandUsage> getCommandUsages() {
+        return commandUsages;
+    }
+
+    public void registerEssentialManagers() {
+        configManager = new ConfigManager(this.getDataFolder());
+        database = new ParkourDatabase(this);
+    }
+
     private void setupPlugins() {
         bountifulApi = new BountifulApi();
         economyApi = new EconomyApi();
@@ -228,11 +246,6 @@ public class Parkour extends JavaPlugin {
         guiManager = new ParkourGuiManager(this);
     }
 
-    public void registerEssentialManagers() {
-        configManager = new ConfigManager(this.getDataFolder());
-        database = new ParkourDatabase(this);
-    }
-
     private void registerCommands() {
         getCommand("parkour").setExecutor(new ParkourCommands(this));
         getCommand("paconsole").setExecutor(new ParkourConsoleCommands(this));
@@ -240,6 +253,11 @@ public class Parkour extends JavaPlugin {
         if (this.getConfig().getBoolean("Other.UseAutoTabCompletion")) {
             getCommand("parkour").setTabCompleter(new ParkourAutoTabCompleter(this));
         }
+
+        String json = new BufferedReader(new InputStreamReader(getResource("parkourCommands.json"), StandardCharsets.UTF_8))
+                .lines().collect(Collectors.joining("\n"));
+
+        commandUsages = Arrays.asList(new GsonBuilder().create().fromJson(json, CommandUsage[].class));
     }
 
     private void registerEvents() {

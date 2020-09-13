@@ -31,14 +31,14 @@ public enum Permission {
 	ADMIN_TESTMODE("Parkour.Admin", "Testmode"),
 
 	// Create Parkour Signs
-	SIGN_ALL("Parkour.CreateSign", "*"),
-	SIGN_JOIN("Parkour.CreateSign", "Join"),
-	SIGN_FINISH("Parkour.CreateSign", "Finish"),
-	SIGN_LEAVE("Parkour.CreateSign", "Leave"),
-	SIGN_EFFECT("Parkour.CreateSign", "Effect"),
-	SIGN_STATS("Parkour.CreateSign", "Stats"),
-	SIGN_LEADERBOARDS("Parkour.CreateSign", "Leaderboards"),
-	SIGN_LOBBY("Parkour.CreateSign", "Lobby"),
+	CREATE_SIGN_ALL("Parkour.CreateSign", "*"),
+	CREATE_SIGN_JOIN("Parkour.CreateSign", "Join"),
+	CREATE_SIGN_FINISH("Parkour.CreateSign", "Finish"),
+	CREATE_SIGN_LEAVE("Parkour.CreateSign", "Leave"),
+	CREATE_SIGN_EFFECT("Parkour.CreateSign", "Effect"),
+	CREATE_SIGN_STATS("Parkour.CreateSign", "Stats"),
+	CREATE_SIGN_LEADERBOARDS("Parkour.CreateSign", "Leaderboards"),
+	CREATE_SIGN_LOBBY("Parkour.CreateSign", "Lobby"),
 
 	PARKOUR_LEVEL("Parkour.Level", "99999"),
 	PARKOUR_COURSE("Course", "*");
