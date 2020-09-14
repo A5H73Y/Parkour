@@ -1042,7 +1042,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		player.updateInventory();
 
-		Parkour.getConfig(ConfigType.INVENTORY).set(player.getName(), null);
+		Parkour.getConfig(ConfigType.INVENTORY).set(player.getUniqueId().toString(), null);
 		Parkour.getConfig(ConfigType.INVENTORY).save();
 	}
 
@@ -1433,8 +1433,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 */
 	private void saveHealth(Player player) {
 		ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
-		inventoryConfig.set(player.getName() + ".Health", player.getHealth());
-		inventoryConfig.set(player.getName() + ".Hunger", player.getFoodLevel());
+		inventoryConfig.set(player.getUniqueId() + ".Health", player.getHealth());
+		inventoryConfig.set(player.getUniqueId() + ".Hunger", player.getFoodLevel());
 		inventoryConfig.save();
 	}
 
@@ -1448,11 +1448,11 @@ public class PlayerManager extends AbstractPluginReceiver {
 	private void restoreHealth(Player player) {
 		ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
 
-		double health = Math.min(player.getMaxHealth(), inventoryConfig.getDouble(player.getName() + ".Health"));
+		double health = Math.min(player.getMaxHealth(), inventoryConfig.getDouble(player.getUniqueId() + ".Health"));
 		player.setHealth(health);
-		player.setFoodLevel(inventoryConfig.getInt(player.getName() + ".Hunger"));
-		inventoryConfig.set(player.getName() + ".Health", null);
-		inventoryConfig.set(player.getName() + ".Hunger", null);
+		player.setFoodLevel(inventoryConfig.getInt(player.getUniqueId() + ".Hunger"));
+		inventoryConfig.set(player.getUniqueId() + ".Health", null);
+		inventoryConfig.set(player.getUniqueId() + ".Hunger", null);
 		inventoryConfig.save();
 	}
 
@@ -1464,7 +1464,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 */
 	private void saveXPLevel(Player player) {
 		ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
-		inventoryConfig.set(player.getName() + ".XPLevel", player.getLevel());
+		inventoryConfig.set(player.getUniqueId() + ".XPLevel", player.getLevel());
 		inventoryConfig.save();
 	}
 
@@ -1477,8 +1477,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 */
 	private void restoreXPLevel(Player player) {
 		ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
-		player.setLevel(inventoryConfig.getInt(player.getName() + ".XPLevel"));
-		inventoryConfig.set(player.getName() + ".XPLevel", null);
+		player.setLevel(inventoryConfig.getInt(player.getUniqueId() + ".XPLevel"));
+		inventoryConfig.set(player.getUniqueId() + ".XPLevel", null);
 		inventoryConfig.save();
 	}
 
