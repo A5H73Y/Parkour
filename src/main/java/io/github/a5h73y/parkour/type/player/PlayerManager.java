@@ -1396,6 +1396,11 @@ public class PlayerManager extends AbstractPluginReceiver {
 					parkour.getConfig().getBoolean("DisplayTitle.Finish"));
 		}
 
+		// don't announce the time if the course isn't ready
+		if (!CourseInfo.getReadyStatus(session.getCourseName())) {
+			return;
+		}
+
 		String finishBroadcast = TranslationUtils.getTranslation("Parkour.FinishBroadcast")
 				.replace("%PLAYER%", player.getName())
 				.replace("%COURSE%", session.getCourse().getName())
