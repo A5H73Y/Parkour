@@ -330,13 +330,12 @@ public class PlayerManager extends AbstractPluginReceiver {
 		removePlayer(player);
 		preparePlayer(player, parkour.getConfig().getString("OnFinish.SetGameMode"));
 		restoreHealth(player);
+		if (parkour.getConfig().getBoolean("OnDie.SetXPBarToDeathCount")) {
+			restoreXPLevel(player);
+		}
 		loadInventory(player);
 
 		parkour.getChallengeManager().terminateChallenge(player);
-
-		if (parkour.getConfig().getBoolean("OnDie.SetXPBarToDeathCount")) {
-			player.setLevel(0);
-		}
 
 		if (!silent) {
 			parkour.getLobbyManager().teleportToLeaveDestination(player, session);
@@ -514,7 +513,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		parkour.getChallengeManager().completeChallenge(player);
 
 		if (parkour.getConfig().getBoolean("OnDie.SetXPBarToDeathCount")) {
-			player.setLevel(0);
+			restoreXPLevel(player);
 		}
 
 		final long delay = parkour.getConfig().getLong("OnFinish.TeleportDelay");
@@ -1043,7 +1042,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		player.updateInventory();
 
-		Parkour.getConfig(ConfigType.INVENTORY).set(player.getName(), null);
+		Parkour.getConfig(ConfigType.INVENTORY).set(player.getUniqueId().toString(), null);
 		Parkour.getConfig(ConfigType.INVENTORY).save();
 	}
 
@@ -1433,10 +1432,10 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param player
 	 */
 	private void saveHealth(Player player) {
-		ParkourConfiguration config = Parkour.getConfig(ConfigType.INVENTORY);
-		config.set(player.getName() + ".Health", player.getHealth());
-		config.set(player.getName() + ".Hunger", player.getFoodLevel());
-		config.save();
+		ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
+		inventoryConfig.set(player.getUniqueId() + ".Health", player.getHealth());
+		inventoryConfig.set(player.getUniqueId() + ".Hunger", player.getFoodLevel());
+		inventoryConfig.save();
 	}
 
 	/**
@@ -1447,14 +1446,40 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param player
 	 */
 	private void restoreHealth(Player player) {
-		ParkourConfiguration invConfig = Parkour.getConfig(ConfigType.INVENTORY);
+		ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
 
-		double health = Math.min(player.getMaxHealth(), invConfig.getDouble(player.getName() + ".Health"));
+		double health = Math.min(player.getMaxHealth(), inventoryConfig.getDouble(player.getUniqueId() + ".Health"));
 		player.setHealth(health);
-		player.setFoodLevel(invConfig.getInt(player.getName() + ".Hunger"));
-		invConfig.set(player.getName() + ".Health", null);
-		invConfig.set(player.getName() + ".Hunger", null);
-		invConfig.save();
+		player.setFoodLevel(inventoryConfig.getInt(player.getUniqueId() + ".Hunger"));
+		inventoryConfig.set(player.getUniqueId() + ".Health", null);
+		inventoryConfig.set(player.getUniqueId() + ".Hunger", null);
+		inventoryConfig.save();
+	}
+
+	/**
+	 * Prepare the player for Parkour.
+	 * Store the player's XP level.
+	 *
+	 * @param player
+	 */
+	private void saveXPLevel(Player player) {
+		ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
+		inventoryConfig.set(player.getUniqueId() + ".XPLevel", player.getLevel());
+		inventoryConfig.save();
+	}
+
+	/**
+	 * Load the players original XP level.
+	 * When they leave or finish a course, their XP level will be restored to them.
+	 * Will delete the XP level from the config once loaded.
+	 *
+	 * @param player
+	 */
+	private void restoreXPLevel(Player player) {
+		ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
+		player.setLevel(inventoryConfig.getInt(player.getUniqueId() + ".XPLevel"));
+		inventoryConfig.set(player.getUniqueId() + ".XPLevel", null);
+		inventoryConfig.save();
 	}
 
 	private boolean hasDisplayPermission(Player player, Permission permission) {
@@ -1481,6 +1506,11 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		if (parkour.getConfig().getBoolean("OnJoin.FillHealth")) {
 			player.setFoodLevel(20);
+		}
+
+		if (parkour.getConfig().getBoolean("OnDie.SetXPBarToDeathCount")) {
+			saveXPLevel(player);
+			player.setLevel(0);
 		}
 
 		if (parkour.getConfig().getBoolean("OnCourse.DisableFly")) {
