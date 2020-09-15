@@ -6,6 +6,7 @@ import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
 import org.bukkit.OfflinePlayer;
 
 /**
@@ -76,9 +77,9 @@ public class DateTimeUtils {
 		MillisecondConverter time = new MillisecondConverter(millis);
 		StringBuilder totalTime = new StringBuilder();
 
-		if (time.getDays() > 2) {
+		if (time.getDays() > 1) {
 			totalTime.append(time.getDays());
-			totalTime.append(" days"); //todo translate
+			totalTime.append(" days"); //TODO translate
 			return totalTime.toString();
 		}
 
@@ -96,7 +97,7 @@ public class DateTimeUtils {
 	}
 
 	public static long convertDaysToMilliseconds(int days) {
-		return days * 86400000; //(24*60*60*1000)
+		return days * 86400000L; //(24*60*60*1000)
 	}
 
 }
