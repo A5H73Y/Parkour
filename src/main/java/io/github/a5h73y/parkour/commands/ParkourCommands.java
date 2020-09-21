@@ -550,7 +550,22 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "sql":
-                player.sendMessage("TODO"); //TODO show connection successful, number of rows in each table etc.
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                    return false;
+                }
+
+                player.sendMessage("TODO");
+                //TODO show connection successful, number of rows in each table etc.
+                break;
+
+            case "cache":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                    return false;
+                }
+
+                player.sendMessage("TODO");
+                // TODO no args = show number of courses cached, number of database times cached
+                // TODO [clear] = empty the cache
                 break;
 
             //Other commands//

@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 
 public final class Help {
 
-    // Check that every single command is in the json
     // Check that console commands match syntax
     // Update group number based on help command
     // Check that the formatting is consistent (ends with a period, 'Course')

@@ -33,6 +33,16 @@
                 <p>When you want to teleport to the Parkour lobby, enter <code>/pa lobby</code>. By default, this is where players are teleported to when they complete or leave a course. We can create many lobbies which have different locations and requirements, which will be covered later in the tutorials.</p>
                 <p>You should now have the latest version of Parkour installed, and have a Parkour lobby created.</p>
 
+                <h2 id="faq">Frequently Asked Questions</h2>
+                <h5>Parkour Welcome Message</h5>
+                <p>To disable the Parkour Join message, in the <code>config.yml</code> find <code>Other.Display.JoinWelcomeMessage</code> and set it to false.</p>
+
+                <h5>Update Player Database Time</h5>
+                <p>To keep a single database row per player per course, in the <code>config.yml</code> find <code>OnFinish.UpdatePlayerDatabaseTime</code> and set it to true.</p>
+
+                <h5>Stuck Pressure Plates</h5>
+                <p>To allow for multiple players to stand on a pressure plate at once, in the <code>config.yml</code> find <code>OnCourse.PreventPlateStick</code> and set it to true.</p>
+
                 <h2 id="permissions">Permissions</h2>
 
                 <dl class="row">

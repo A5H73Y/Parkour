@@ -25,13 +25,13 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             "join", "info", "course", "lobby", "perms", "quiet", "list", "help", "material", "about", "contact", "cmds");
 
     private static final List<String> ADMIN_ONLY_COMMANDS = Arrays.asList(
-            "setlobby", "setcreator", "setautostart", "setminlevel", "setmaxdeath", "setmaxtime", "addjoinitem",
-            "rewardonce", "rewardlevel", "rewardleveladd", "rewardrank", "rewarddelay", "rewardparkoins", "reset",
-            "economy", "setmode", "createkit", "editkit", "validatekit", "recreate", "whitelist", "setlevel", "setrank",
-            "settings", "reload");
+            "setlobby", "reset", "economy", "recreate", "whitelist", "setlevel", "setrank", "settings",
+            "sql", "cache", "reload");
 
     private static final List<String> ADMIN_COURSE_COMMANDS = Arrays.asList(
-            "checkpoint", "ready", "setstart", "select", "done", "link", "linkkit");
+            "checkpoint", "ready", "setstart", "setcreator", "setautostart", "select", "done", "link", "linkkit",
+            "setminlevel", "setmaxdeath", "setmaxtime", "addjoinitem", "rewardonce", "rewardlevel", "rewardleveladd",
+            "rewardrank", "rewarddelay", "rewardparkoins", "setmode", "createkit", "editkit", "validatekit");
 
     private static final List<String> ON_COURSE_COMMANDS = Arrays.asList(
             "back", "leave");

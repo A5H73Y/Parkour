@@ -69,12 +69,12 @@ public class ValidationUtils {
 	public static boolean validateArgs(CommandSender sender, String[] args, int minimum, int maximum) {
 		if (args.length > maximum) {
 			TranslationUtils.sendValueTranslation("Error.TooMany", String.valueOf(maximum), sender);
-			TranslationUtils.sendValueTranslation("Help.Command", StringUtils.standardizeText(args[0]), sender);
+			TranslationUtils.sendValueTranslation("Help.Command", args[0].toLowerCase(), sender);
 			return false;
 
 		} else if (args.length < minimum) {
 			TranslationUtils.sendValueTranslation("Error.TooLittle", String.valueOf(minimum), sender);
-			TranslationUtils.sendValueTranslation("Help.Command", StringUtils.standardizeText(args[0]), sender);
+			TranslationUtils.sendValueTranslation("Help.Command", args[0].toLowerCase(), sender);
 			return false;
 		}
 		return true;
