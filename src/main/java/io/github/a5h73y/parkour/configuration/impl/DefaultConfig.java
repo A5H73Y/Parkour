@@ -135,7 +135,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("Other.UseSounds", true);
 		this.addDefault("Other.EnforceSafeCheckpoints", true);
 		this.addDefault("Other.UseAutoTabCompletion", true);
-		this.addDefault("Other.ShowUnfinishedCoursesToGuests", true);
+		this.addDefault("Other.Display.OnlyReadyCourses", false);
 		this.addDefault("Other.ParkourKit.ReplaceInventory", true);
 		this.addDefault("Other.ParkourKit.GiveSign", true);
 		this.addDefault("Other.Parkour.ChatRankPrefix.Enabled", false);
