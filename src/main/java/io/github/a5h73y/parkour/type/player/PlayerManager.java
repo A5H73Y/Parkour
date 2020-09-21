@@ -384,16 +384,20 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		boolean showTitle = parkour.getConfig().getBoolean("DisplayTitle.Checkpoint");
-		if (session.hasAchievedAllCheckpoints()) {
-			parkour.getBountifulApi().sendSubTitle(player, TranslationUtils.getTranslation("Event.AllCheckpoints", false), showTitle);
+		String checkpointMessage = "";
 
-		} else {
-			String checkpointMessage = TranslationUtils.getTranslation("Event.Checkpoint", false)
+		if (session.hasAchievedAllCheckpoints()) {
+			checkpointMessage = TranslationUtils.getTranslation("Event.AllCheckpoints", false)
 					.replace("%CURRENT%", String.valueOf(session.getCurrentCheckpoint()))
 					.replace("%TOTAL%", String.valueOf(session.getCourse().getNumberOfCheckpoints()));
 
-			parkour.getBountifulApi().sendSubTitle(player, checkpointMessage, showTitle);
+		} else {
+			checkpointMessage = TranslationUtils.getTranslation("Event.Checkpoint", false)
+					.replace("%CURRENT%", String.valueOf(session.getCurrentCheckpoint()))
+					.replace("%TOTAL%", String.valueOf(session.getCourse().getNumberOfCheckpoints()));
 		}
+		parkour.getBountifulApi().sendSubTitle(player, checkpointMessage, showTitle);
+
 		Bukkit.getServer().getPluginManager().callEvent(
 				new PlayerAchieveCheckpointEvent(player, session.getCourse().getName(), session.getCheckpoint()));
 	}
