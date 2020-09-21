@@ -25,6 +25,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -269,7 +271,13 @@ public class CourseManager extends AbstractPluginReceiver {
 
         int results = 8;
         int fromIndex = (page - 1) * results;
+
         List<String> courseList = CourseInfo.getAllCourses();
+        if(parkour.getConfig().getBoolean("Other.Display.OnlyReadyCourses") && !PermissionUtils.hasPermission(sender, Permission.ADMIN_READY_BYPASS, false)) {
+            courseList = courseList.stream()
+                    .filter(CourseInfo::getReadyStatus)
+                    .collect(Collectors.toList());
+        }
 
         if (courseList.size() <= fromIndex) {
             sender.sendMessage(Parkour.getPrefix() + "This page doesn't exist.");
