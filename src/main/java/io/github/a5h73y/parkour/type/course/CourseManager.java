@@ -273,7 +273,7 @@ public class CourseManager extends AbstractPluginReceiver {
         int fromIndex = (page - 1) * results;
 
         List<String> courseList = CourseInfo.getAllCourses();
-        if(!parkour.getConfig().getBoolean("Other.ShowUnfinishedCoursesToGuests") && !PermissionUtils.hasPermission(sender, Permission.ADMIN_READY_BYPASS, false)) {
+        if(parkour.getConfig().getBoolean("Other.Display.OnlyReadyCourses") && !PermissionUtils.hasPermission(sender, Permission.ADMIN_READY_BYPASS, false)) {
             courseList = courseList.stream()
                     .filter(CourseInfo::getReadyStatus)
                     .collect(Collectors.toList());
