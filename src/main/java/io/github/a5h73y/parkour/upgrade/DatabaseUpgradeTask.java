@@ -74,22 +74,19 @@ public class DatabaseUpgradeTask extends TimedUpgradeTask {
 				}
 
 				getParkourUpgrader().getLogger().info("Found " + playerNameToTimes.size() + " player times...");
+
 				// create an exact copy, in case something goes bang
-				if (database instanceof MySQL) {
-					database.update("SELECT * INTO course_backup FROM course;");
-					database.update("SELECT * INTO time_backup FROM time;");
-				} else {
-					database.update("CREATE TABLE course_backup AS SELECT * FROM course;");
-					database.update("CREATE TABLE time_backup AS SELECT * FROM time;");
-				}
+				database.update("CREATE TABLE course_backup AS SELECT * FROM course;");
+				database.update("CREATE TABLE time_backup AS SELECT * FROM time;");
+
 				getParkourUpgrader().getLogger().info("Created backup tables...");
 				database.closeConnection();
 
 				database = openExistingConnection();
 				// drop the original tables
 				database.update("DROP TABLE time;");
+				database.update("DROP TABLE vote;");
 				database.update("DROP TABLE course;");
-				database.update("DROP TABLE vote;"); // TODO if exists
 				getParkourUpgrader().getLogger().info("Dropped old tables...");
 
 				// close this temporary connection
@@ -150,8 +147,7 @@ public class DatabaseUpgradeTask extends TimedUpgradeTask {
 		FileConfiguration defaultConfig = getParkourUpgrader().getDefaultConfig();
 
 		if (defaultConfig.getBoolean("MySQL.Use")) {
-			String connectionURL = "jdbc:mysql://" + defaultConfig.getString("MySQL.Host") + ":" + defaultConfig.getString("MySQL.Port") + "/" + defaultConfig.getString("MySQL.Database");
-			database = new MySQL(connectionURL, defaultConfig.getString("MySQL.User"), defaultConfig.getString("MySQL.Password"));
+			database = new MySQL(defaultConfig.getString("MySQL.URL"), defaultConfig.getString("MySQL.Username"), defaultConfig.getString("MySQL.Password"));
 
 		} else {
 			String pathOverride = defaultConfig.getString("SQLite.PathOverride", "");

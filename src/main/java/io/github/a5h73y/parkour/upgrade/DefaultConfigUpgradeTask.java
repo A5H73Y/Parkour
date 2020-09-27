@@ -30,6 +30,7 @@ public class DefaultConfigUpgradeTask extends TimedUpgradeTask {
 			transferAndDelete("Other.Economy.Enabled", "Other.Vault.Enabled");
 			transferAndDelete("Other.Parkour.SignPermissions", "Other.Parkour.SignUsePermissions");
 			transferAndDelete("Other.Parkour.CommandPermissions", "Other.Parkour.CommandUsePermissions");
+			transferAndDelete("MySQL.User", "MySQL.Username");
 
 			// update int to actual value
 			defaultConfig.set("OnJoin.SetGameMode", getMatchingGameMode(defaultConfig.getInt("OnJoin.SetGamemode")));
@@ -47,9 +48,11 @@ public class DefaultConfigUpgradeTask extends TimedUpgradeTask {
 			defaultConfig.set("OnCourse.Trails", null);
 			defaultConfig.set("OnJoin.SetGamemode", null);
 			defaultConfig.set("OnFinish.SetGamemode", null);
+			defaultConfig.set("MySQL.User", null);
 			defaultConfig.set("MySQL.Host", null);
 			defaultConfig.set("MySQL.Port", null);
 			defaultConfig.set("MySQL.Database", null);
+			defaultConfig.set("MySQL.Table", null);
 			defaultConfig.set("Other.Economy", null);
 			getParkourUpgrader().saveDefaultConfig();
 		} catch (IOException e) {

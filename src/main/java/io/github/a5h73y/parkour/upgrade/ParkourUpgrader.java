@@ -85,6 +85,7 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 			}
 
 			parkour.getLogger().info("Parkour successfully upgraded to " + parkour.getDescription().getVersion());
+			parkour.getLogger().info("Please restart the server to start the plugin.");
 		});
 	}
 
