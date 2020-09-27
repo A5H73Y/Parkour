@@ -999,7 +999,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
-		if (inventoryConfig.contains(player.getName() + ".Inventory")) {
+		if (inventoryConfig.contains(player.getUniqueId() + ".Inventory")) {
 			return;
 		}
 

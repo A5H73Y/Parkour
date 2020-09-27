@@ -168,11 +168,17 @@ public class Validation {
             return false;
         }
 
-        /* Check if the player is allowed to leave the course for another */
-        if (Parkour.getDefaultConfig().getBoolean("OnCourse.PreventJoiningDifferentCourse")
-                && Parkour.getInstance().getPlayerManager().isPlaying(player)) {
-            TranslationUtils.sendTranslation("Error.JoiningAnotherCourse", player);
-            return false;
+        /* Check if the player can leave the course for another */
+        if (Parkour.getInstance().getPlayerManager().isPlaying(player)) {
+            if (Parkour.getDefaultConfig().getBoolean("OnCourse.PreventJoiningDifferentCourse")) {
+                TranslationUtils.sendTranslation("Error.JoiningAnotherCourse", player);
+                return false;
+            }
+            if (Parkour.getDefaultConfig().isCourseEnforceWorld()
+                    && !player.getLocation().getWorld().getName().equals(course.getCheckpoints().get(0).getWorld())) {
+                TranslationUtils.sendTranslation("Error.WrongWorld", player);
+                return false;
+            }
         }
 
         return true;
