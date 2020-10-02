@@ -488,6 +488,7 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         CourseInfo.setMaximumDeaths(args[1], Integer.parseInt(args[2]));
+        clearCache(args[1]);
         sender.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + args[1] + ChatColor.WHITE + " maximum deaths was set to " + ChatColor.AQUA + args[2]);
     }
 
@@ -516,6 +517,7 @@ public class CourseManager extends AbstractPluginReceiver {
 
         int seconds = Integer.parseInt(args[2]);
         CourseInfo.setMaximumTime(args[1], seconds);
+        clearCache(args[1]);
         sender.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + args[1] + ChatColor.WHITE + " maximum time limit was set to "
                 + ChatColor.AQUA + DateTimeUtils.convertSecondsToTime(seconds));
     }
@@ -783,6 +785,7 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         CourseInfo.setParkourKit(args[1], args[2]);
+        clearCache(args[1]);
         player.sendMessage(Parkour.getPrefix() + args[1] + " is now linked to ParkourKit " + args[2]);
     }
 

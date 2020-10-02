@@ -1,5 +1,6 @@
 package io.github.a5h73y.parkour.conversation;
 
+import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.ChatColor;
@@ -37,6 +38,7 @@ public class ParkourModeConversation extends ParkourConversation {
             String courseName = (String) context.getSessionData("courseName");
 
             CourseInfo.setMode(courseName, choice);
+            Parkour.getInstance().getCourseManager().clearCache(courseName);
 
             context.getForWhom().sendRawMessage(TranslationUtils.getTranslation("Parkour.SetMode")
                     .replace("%COURSE%", courseName)

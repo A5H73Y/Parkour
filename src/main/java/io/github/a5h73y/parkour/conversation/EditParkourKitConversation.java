@@ -3,6 +3,7 @@ package io.github.a5h73y.parkour.conversation;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.conversation.other.AddKitItemConversation;
 import io.github.a5h73y.parkour.enums.ConfigType;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
@@ -86,6 +87,9 @@ public class EditParkourKitConversation extends ParkourConversation {
             Parkour.getConfig(ConfigType.PARKOURKIT).set("ParkourKit." + kitName + "." + material, null);
             Parkour.getConfig(ConfigType.PARKOURKIT).save();
             Parkour.getInstance().getParkourKitManager().clearMemory(kitName);
+            for (String courseName : CourseInfo.getDependentCourses(kitName)) {
+                Parkour.getInstance().getCourseManager().clearCache(courseName);
+            }
             context.getForWhom().sendRawMessage(Parkour.getPrefix() + material + " removed from " + kitName);
             return new ChooseOption(true);
         }

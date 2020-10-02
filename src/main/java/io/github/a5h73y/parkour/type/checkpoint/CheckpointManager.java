@@ -189,6 +189,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
         checkpointsConfig.set(courseName + "." + point, null);
         checkpointsConfig.set(courseName + ".Checkpoints", point - 1);
         checkpointsConfig.save();
+        parkour.getCourseManager().clearCache(courseName);
 
         player.sendMessage(TranslationUtils.getTranslation("Parkour.DeleteCheckpoint")
                 .replace("%CHECKPOINT%", String.valueOf(point))

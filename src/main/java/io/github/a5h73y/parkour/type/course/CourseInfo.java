@@ -51,6 +51,22 @@ public class CourseInfo {
     }
 
     /**
+     * Get list of Parkour courses linked to a Parkour kit.
+     * @param parkourKit
+     * @return List Parkour course names
+     */
+    public static List<String> getDependentCourses(String parkourKit) {
+        List<String> dependentCourses = new ArrayList<>();
+        for (String course : getAllCourses()) {
+            String linkedKit = CourseInfo.getParkourKit(course);
+            if (parkourKit.equals(linkedKit)) {
+                dependentCourses.add(course);
+            }
+        }
+        return dependentCourses;
+    }
+
+    /**
      * Check if Course is linked to another Course.
      *
      * @param courseName

@@ -4,6 +4,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.conversation.ParkourConversation;
 import io.github.a5h73y.parkour.enums.ConfigType;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import java.util.HashMap;
 import java.util.Map;
@@ -187,6 +188,9 @@ public class AddKitItemConversation {
 
             context.getForWhom().sendRawMessage(Parkour.getPrefix() + kitName + " ParkourKit has been successfully saved.");
             Parkour.getInstance().getParkourKitManager().clearMemory(kitName);
+            for (String courseName : CourseInfo.getDependentCourses(kitName)) {
+                Parkour.getInstance().getCourseManager().clearCache(courseName);
+            }
             return endingConversation;
         }
     }
