@@ -187,6 +187,7 @@ public class AddKitItemConversation {
 
             context.getForWhom().sendRawMessage(Parkour.getPrefix() + kitName + " ParkourKit has been successfully saved.");
             Parkour.getInstance().getParkourKitManager().clearMemory(kitName);
+            Parkour.getInstance().getCourseManager().clearCache();
             return endingConversation;
         }
     }

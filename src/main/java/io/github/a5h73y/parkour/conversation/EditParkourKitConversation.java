@@ -86,6 +86,7 @@ public class EditParkourKitConversation extends ParkourConversation {
             Parkour.getConfig(ConfigType.PARKOURKIT).set("ParkourKit." + kitName + "." + material, null);
             Parkour.getConfig(ConfigType.PARKOURKIT).save();
             Parkour.getInstance().getParkourKitManager().clearMemory(kitName);
+            Parkour.getInstance().getCourseManager().clearCache();
             context.getForWhom().sendRawMessage(Parkour.getPrefix() + material + " removed from " + kitName);
             return new ChooseOption(true);
         }
