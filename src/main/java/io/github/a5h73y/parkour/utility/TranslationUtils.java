@@ -3,6 +3,7 @@ package io.github.a5h73y.parkour.utility;
 import static io.github.a5h73y.parkour.utility.StringUtils.colour;
 
 import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import java.util.regex.Pattern;
 import org.bukkit.command.CommandSender;
@@ -72,6 +73,13 @@ public class TranslationUtils {
 		return getValueTranslation(translationKey, value, true);
 	}
 
+	public static String getCourseMessage(String courseName, String key, String fallback) {
+		ParkourConfiguration courseConfig = Parkour.getConfig(ConfigType.COURSES);
+		String courseMessage = StringUtils.colour(courseConfig.getString(courseName + "." + key,
+				getTranslation(fallback, false)));
+		return valuePlaceholder.matcher(courseMessage).replaceAll(courseName == null ? "" : courseName);
+	}
+
 	/**
 	 * Send the translated message to the player(s).
 	 *
@@ -134,5 +142,16 @@ public class TranslationUtils {
 		sender.sendMessage(getTranslation("Error.Syntax")
 				.replace("%COMMAND%", command)
 				.replace("%ARGUMENTS%", arguments));
+	}
+
+	public static void sendPropertySet(CommandSender sender, String property, String courseName, String value) {
+		sender.sendMessage(getPropertySet(property, courseName, value));
+	}
+
+	public static String getPropertySet(String property, String courseName, String value) {
+		return getTranslation("Other.PropertySet")
+				.replace("%PROPERTY%", property)
+				.replace("%COURSE%", courseName)
+				.replace("%VALUE%", value);
 	}
 }

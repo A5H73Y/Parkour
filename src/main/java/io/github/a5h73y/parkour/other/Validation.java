@@ -452,7 +452,7 @@ public class Validation {
         }
 
         parkourKit = parkourKit.toLowerCase();
-        List<String> dependentCourses = CourseInfo.getDependentCourses(parkourKit);
+        List<String> dependentCourses = ParkourKitInfo.getDependentCourses(parkourKit);
 
         if (dependentCourses.size() > 0) {
             player.sendMessage(Parkour.getPrefix() + "This ParkourKit can not be deleted as there are dependent courses: " + dependentCourses);

@@ -43,16 +43,16 @@ public class PlayerInfoUpgradeTask extends TimedUpgradeTask {
 				getParkourUpgrader().getLogger().info(percent + "% complete...");
 			}
 
-			OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerName);
+			OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(playerName);
 			Set<String> settings = getParkourUpgrader().getPlayerConfig().getConfigurationSection("PlayerInfo." + playerName).getKeys(false);
 
 			for (String setting : settings) {
-				getParkourUpgrader().getPlayerConfig().set(offlinePlayer.getUniqueId() + "." + setting,
+				getParkourUpgrader().getPlayerConfig().set(targetPlayer.getUniqueId() + "." + setting,
 						getParkourUpgrader().getPlayerConfig().get("PlayerInfo." + playerName + "." + setting));
 			}
 
 			if (getParkourUpgrader().getInventoryConfig().contains(playerName)) {
-				convertPlayerInventory(playerName, offlinePlayer);
+				convertPlayerInventory(playerName, targetPlayer);
 			}
 
 			count++;

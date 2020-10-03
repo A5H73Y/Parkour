@@ -159,7 +159,7 @@ public class EconomyApi extends PluginWrapper {
 
 			econConfig.set("Price." + args[2].toLowerCase() + ".Finish", Integer.parseInt(args[3]));
 			econConfig.save();
-			sender.sendMessage(Parkour.getPrefix() + "Prize for " + args[2] + " set to " + args[3]);
+			TranslationUtils.sendPropertySet(sender, "Economy Prize", args[2], args[3]);
 
 		} else if (args[1].equalsIgnoreCase("setfee")) {
 			if (args.length != 4) {
@@ -177,7 +177,7 @@ public class EconomyApi extends PluginWrapper {
 
 			econConfig.set("Price." + args[2].toLowerCase() + ".JoinFee", Integer.parseInt(args[3]));
 			econConfig.save();
-			sender.sendMessage(Parkour.getPrefix() + "Fee for " + args[2] + " set to " + args[3]);
+			TranslationUtils.sendPropertySet(sender, "Join Fee", args[2], args[3]);
 
 		} else if (args[1].equalsIgnoreCase("recreate")) {
 			sender.sendMessage(Parkour.getPrefix() + "Starting Recreation...");

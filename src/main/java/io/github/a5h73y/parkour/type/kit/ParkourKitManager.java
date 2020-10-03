@@ -92,14 +92,14 @@ public class ParkourKitManager extends AbstractPluginReceiver {
 	 *
 	 * @param kitName
 	 */
-	public void clearMemory(String kitName) {
+	public void clearCache(String kitName) {
 		loaded.remove(kitName);
 	}
 
 	public void deleteKit(String argument) {
 		Parkour.getConfig(ConfigType.PARKOURKIT).set("ParkourKit." + argument, null);
 		Parkour.getConfig(ConfigType.PARKOURKIT).save();
-		clearMemory(argument);
+		clearCache(argument);
 	}
 
 	/**

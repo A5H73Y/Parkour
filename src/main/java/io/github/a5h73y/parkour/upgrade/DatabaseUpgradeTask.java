@@ -120,8 +120,8 @@ public class DatabaseUpgradeTask extends TimedUpgradeTask {
 			getParkourUpgrader().getLogger().info("Re-inserting time data, this might take a while...");
 
 			for (Map.Entry<String, List<TimeEntry>> playerEntry : playerNameToTimes.entrySet()) {
-				OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerEntry.getKey());
-				String playerId = ParkourDatabase.getPlayerId(offlinePlayer);
+				OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(playerEntry.getKey());
+				String playerId = ParkourDatabase.getPlayerId(targetPlayer);
 
 				for (TimeEntry timeEntry : playerEntry.getValue()) {
 					pDatabase.update("INSERT INTO time (courseId, playerId, playerName, time, deaths) VALUES "

@@ -125,17 +125,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getLobbyManager().createLobby(args, player);
                 break;
 
-            case "setcreator":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
-                    return false;
-                }
-
-                parkour.getCourseManager().setCreator(args, player);
-                break;
-
             case "checkpoint":
                 if (!PlayerInfo.hasSelectedValidCourse(player)) {
                     TranslationUtils.sendTranslation("Error.Selected", player);
@@ -271,39 +260,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getCourseManager().linkCourse(args, player);
                 break;
 
-            case "setminlevel":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
-                    return false;
-                }
-
-                parkour.getCourseManager().setMinLevel(args, player);
-                break;
-
-            case "setmaxdeath":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
-                    return false;
-                }
-
-                parkour.getCourseManager().setMaxDeaths(args, player);
-                break;
-
-            case "setmaxtime":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
-                    return false;
-                }
-
-                parkour.getCourseManager().setMaxTime(args, player);
-                break;
-
             case "addjoinitem":
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
                     return false;
@@ -426,7 +382,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getCourseManager().setCourseMode(args, player);
+                parkour.getCourseManager().setCourseParkourMode(args, player);
                 break;
 
             case "createkit":
@@ -523,26 +479,26 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getConfig().addWhitelistedCommand(player, args[1]);
                 break;
 
-            case "setlevel":
+            case "setcourse":
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
                     return false;
 
-                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
+                } else if (!ValidationUtils.validateArgs(player, args, 2, 100)) {
                     return false;
                 }
 
-                parkour.getPlayerManager().setParkourLevel(args, player);
+                parkour.getCourseManager().processSetCommand(args, player);
                 break;
 
-            case "setrank":
+            case "setplayer":
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
                     return false;
 
-                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
+                } else if (!ValidationUtils.validateArgs(player, args, 2, 100)) {
                     return false;
                 }
 
-                parkour.getPlayerManager().setParkourRank(args, player);
+                parkour.getPlayerManager().processSetCommand(args, player);
                 break;
 
             case "material":
@@ -628,6 +584,26 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getConfigManager().reloadConfigs();
                 TranslationUtils.sendTranslation("Other.Reload", player);
                 PluginUtils.logToFile(player.getName() + " reloaded the Parkour config");
+                break;
+
+            case "setminlevel":
+            case "setmaxtime":
+            case "setmaxdeath":
+            case "setcreator":
+                if (!ValidationUtils.validateArgs(player, args, 1, 3)) {
+                    return false;
+                }
+
+                player.performCommand("parkour setcourse " + args[1] + " " + args[0].replace("set", "") + " " + args[2]);
+                break;
+
+            case "setrank":
+            case "setlevel":
+                if (!ValidationUtils.validateArgs(player, args, 1, 3)) {
+                    return false;
+                }
+
+                player.performCommand("parkour setplayer " + args[1] + " " + args[0].replace("set", "") + " " + args[2]);
                 break;
 
             default:

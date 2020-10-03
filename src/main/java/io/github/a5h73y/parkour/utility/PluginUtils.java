@@ -284,8 +284,9 @@ public class PluginUtils {
                 break;
 
             case "player":
-                OfflinePlayer target = Bukkit.getOfflinePlayer(args[2]);
-                if (target == null || !PlayerInfo.hasPlayerInfo(target)) {
+                OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(args[2]);
+
+                if (!PlayerInfo.hasPlayerInfo(targetPlayer) || !targetPlayer.hasPlayedBefore()) {
                     TranslationUtils.sendTranslation("Error.UnknownPlayer", player);
                     return;
                 }

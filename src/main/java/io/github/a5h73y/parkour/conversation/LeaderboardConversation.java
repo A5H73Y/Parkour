@@ -90,9 +90,9 @@ public class LeaderboardConversation extends ParkourConversation {
     private class DisplayLeaderboards extends MessagePrompt {
         public String getPromptText(ConversationContext context) {
             final String leaderboardType = (String) context.getSessionData("type");
-            final String courseName = (String) context.getSessionData("course");
+            final String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);
             final Integer amount = (Integer) context.getSessionData("amount");
-            final Player player = Bukkit.getPlayer((String) context.getSessionData("playerName"));
+            final Player player = Bukkit.getPlayer((String) context.getSessionData(SESSION_PLAYER_NAME));
 
             Bukkit.getScheduler().runTaskAsynchronously(Parkour.getInstance(), () -> {
                 if (leaderboardType.equals("personal")) {

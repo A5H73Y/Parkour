@@ -5,6 +5,7 @@ import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.conversation.CoursePrizeConversation;
 import io.github.a5h73y.parkour.conversation.LeaderboardConversation;
 import io.github.a5h73y.parkour.conversation.ParkourModeConversation;
+import io.github.a5h73y.parkour.conversation.SetCourseConversation;
 import io.github.a5h73y.parkour.database.TimeEntry;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.enums.ParkourMode;
@@ -26,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -381,7 +381,7 @@ public class CourseManager extends AbstractPluginReceiver {
 
         parkour.getCheckpointManager().createCheckpointData(selectedCourse, player.getLocation(), 0);
         PluginUtils.logToFile(selectedCourse + " spawn was reset by " + player.getName());
-        player.sendMessage(Parkour.getPrefix() + "Spawn for " + ChatColor.AQUA + selectedCourse + ChatColor.WHITE + " has been set to your position");
+        TranslationUtils.sendPropertySet(player, "Spawn", selectedCourse, "your position");
     }
 
     /**
@@ -408,11 +408,12 @@ public class CourseManager extends AbstractPluginReceiver {
 
         courseConfig.set("CourseInfo.AutoStart." + coordinates, args[1].toLowerCase());
         courseConfig.save();
-        player.sendMessage(Parkour.getPrefix() + "AutoStart for " + args[1] + " created!");
 
         block.setType(XMaterial.STONE_PRESSURE_PLATE.parseMaterial());
         Block blockUnder = block.getRelative(BlockFace.DOWN);
         blockUnder.setType(Parkour.getDefaultConfig().getAutoStartMaterial());
+
+        TranslationUtils.sendPropertySet(player, "AutoStart", args[1], "your position");
     }
 
     /**
@@ -456,91 +457,95 @@ public class CourseManager extends AbstractPluginReceiver {
     /**
      * Overwrite the creator of the course.
      *
-     * @param args
-     * @param player
+     * @param sender requesting player
+     * @param courseName course name
+     * @param value new creator name
      */
-    public void setCreator(String[] args, Player player) {
-        if (!courseExists(args[1])) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", args[1], player);
+    public void setCreator(CommandSender sender, String courseName, String value) {
+        if (!courseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
         }
 
-        CourseInfo.setCreator(args[1], args[2]);
-        player.sendMessage(Parkour.getPrefix() + "Creator of " + ChatColor.DARK_AQUA + args[1] + ChatColor.WHITE + " was set to " + ChatColor.AQUA + args[2]);
+        CourseInfo.setCreator(courseName, value);
+        TranslationUtils.sendPropertySet(sender, "Creator", courseName, value);
     }
 
     /**
      * Set MaxDeaths for Course.
      * Set the maximum amount of deaths a player can accumulate before failing the course.
      *
-     * @param args
-     * @param sender
+     * @param sender requesting player
+     * @param courseName course name
+     * @param value new maximum deaths
      */
-    public void setMaxDeaths(String[] args, CommandSender sender) {
-        if (!courseExists(args[1])) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", args[1], sender);
+    public void setMaxDeaths(CommandSender sender, String courseName, String value) {
+        if (!courseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
         }
 
-        if (!Validation.isPositiveInteger(args[2])) {
+        if (!Validation.isPositiveInteger(value)) {
             TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
-        CourseInfo.setMaximumDeaths(args[1], Integer.parseInt(args[2]));
-        clearCache(args[1]);
-        sender.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + args[1] + ChatColor.WHITE + " maximum deaths was set to " + ChatColor.AQUA + args[2]);
+
+        CourseInfo.setMaximumDeaths(courseName, Integer.parseInt(value));
+        clearCache(courseName);
+        TranslationUtils.sendPropertySet(sender, "Maximum Deaths", courseName, value);
     }
 
     /**
-     * Set MaxTime for Course.
+     * Set Maximum Time for Course in seconds.
      * Set the maximum amount of deaths a player can accumulate before failing the course.
      *
-     * @param args
-     * @param sender
+     * @param sender requesting player
+     * @param courseName course name
+     * @param secondsValue new maximum seconds
      */
-    public void setMaxTime(String[] args, CommandSender sender) {
+    public void setMaxTime(CommandSender sender, String courseName, String secondsValue) {
         if (!Parkour.getDefaultConfig().getBoolean("OnCourse.DisplayLiveTime")) {
             sender.sendMessage(Parkour.getPrefix() + "Live Time is disabled!");
             return;
         }
 
-        if (!courseExists(args[1])) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", args[1], sender);
+        if (!courseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
         }
 
-        if (!Validation.isPositiveInteger(args[2])) {
+        if (!Validation.isPositiveInteger(secondsValue)) {
             TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
-        int seconds = Integer.parseInt(args[2]);
-        CourseInfo.setMaximumTime(args[1], seconds);
-        clearCache(args[1]);
-        sender.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + args[1] + ChatColor.WHITE + " maximum time limit was set to "
-                + ChatColor.AQUA + DateTimeUtils.convertSecondsToTime(seconds));
+        int seconds = Integer.parseInt(secondsValue);
+        CourseInfo.setMaximumTime(courseName, seconds);
+        clearCache(courseName);
+        TranslationUtils.sendPropertySet(sender, "Maximum Time Limit", courseName, DateTimeUtils.convertSecondsToTime(seconds));
     }
 
     /**
      * Set the mimimum Parkour level required to join the course.
      *
-     * @param args
-     * @param sender
+     * @param sender requesting player
+     * @param courseName course name
+     * @param value new minimum ParkourLevel
      */
-    public void setMinLevel(String[] args, CommandSender sender) {
-        if (!courseExists(args[1])) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", args[1], sender);
+    public void setMinLevel(CommandSender sender, String courseName, String value) {
+        if (!courseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
         }
 
-        if (!Validation.isPositiveInteger(args[2])) {
+        if (!Validation.isPositiveInteger(value)) {
             TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
-        CourseInfo.setMinimumLevel(args[1], Integer.parseInt(args[2]));
-        sender.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + args[1] + ChatColor.WHITE + " minimum level requirement was set to " + ChatColor.AQUA + args[2]);
+        CourseInfo.setMinimumLevel(courseName, Integer.parseInt(value));
+        TranslationUtils.sendPropertySet(sender, "Minimum ParkourLevel", courseName, value);
     }
 
     /**
@@ -562,7 +567,7 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         CourseInfo.setRewardLevel(args[1], Integer.parseInt(args[2]));
-        sender.sendMessage(Parkour.getPrefix() + args[1] + "'s reward level was set to " + ChatColor.AQUA + args[2]);
+        TranslationUtils.sendPropertySet(sender, "ParkourLevel reward", args[1], args[2]);
     }
 
     /**
@@ -584,7 +589,7 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         CourseInfo.setRewardLevelAdd(args[1], args[2]);
-        sender.sendMessage(Parkour.getPrefix() + args[1] + "'s reward level addition was set to " + ChatColor.AQUA + args[2]);
+        TranslationUtils.sendPropertySet(sender, "ParkourLevel addition reward", args[1], args[2]);
     }
 
     /**
@@ -603,7 +608,7 @@ public class CourseManager extends AbstractPluginReceiver {
         // invert the existing value
         boolean isEnabled = !CourseInfo.getRewardOnce(args[1]);
         CourseInfo.setRewardOnce(args[1], isEnabled);
-        sender.sendMessage(Parkour.getPrefix() + args[1] + "'s reward one time was set to " + ChatColor.AQUA + isEnabled);
+        TranslationUtils.sendPropertySet(sender, "reward once status", args[1], String.valueOf(isEnabled));
     }
 
     /**
@@ -625,7 +630,7 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         CourseInfo.setRewardDelay(args[1], Integer.parseInt(args[2]));
-        sender.sendMessage(Parkour.getPrefix() + args[1] + "'s reward delay was set to " + args[2] + " day(s).");
+        TranslationUtils.sendPropertySet(sender, "Reward Delay", args[1], args[2] + " days(s)");
     }
 
     /**
@@ -647,7 +652,7 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         CourseInfo.setRewardParkoins(args[1], Integer.parseInt(args[2]));
-        sender.sendMessage(Parkour.getPrefix() + args[1] + "'s Parkoins reward was set to " + ChatColor.AQUA + args[2]);
+        TranslationUtils.sendPropertySet(sender, "Parkoins reward", args[1], args[2]);
     }
 
     /**
@@ -670,18 +675,15 @@ public class CourseManager extends AbstractPluginReceiver {
             return;
         }
 
-        boolean ready = CourseInfo.getReadyStatus(courseName);
-        CourseInfo.setReadyStatus(courseName, !ready);
+        boolean ready = !CourseInfo.getReadyStatus(courseName);
+        CourseInfo.setReadyStatus(courseName, ready);
 
         if (ready) {
-            player.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + courseName + ChatColor.WHITE + " has been set to not ready!");
-            PluginUtils.logToFile(courseName + " was set to not ready by " + player.getName());
-
-        } else {
-            TranslationUtils.sendValueTranslation("Parkour.Ready", courseName, player);
-            PluginUtils.logToFile(courseName + " was set to ready by " + player.getName());
             PlayerInfo.resetSelected(player);
         }
+
+        TranslationUtils.sendPropertySet(player, "Ready Status", courseName, String.valueOf(ready));
+        PluginUtils.logToFile(courseName + " ready status was set to " + ready + " by " + player.getName());
     }
 
     /**
@@ -705,7 +707,7 @@ public class CourseManager extends AbstractPluginReceiver {
             }
 
             CourseInfo.setLinkedCourse(selected, args[2]);
-            player.sendMessage(Parkour.getPrefix() + ChatColor.DARK_AQUA + selected + ChatColor.WHITE + " is now linked to " + ChatColor.AQUA + args[2]);
+            TranslationUtils.sendPropertySet(player, "Linked Course", selected, args[2]);
 
         } else if (args.length >= 3 && args[1].equalsIgnoreCase("lobby")) {
             if (!Parkour.getDefaultConfig().contains("Lobby." + args[2] + ".World")) { // TODO
@@ -719,11 +721,11 @@ public class CourseManager extends AbstractPluginReceiver {
             }
 
             CourseInfo.setLinkedLobby(selected, args[2]);
-            player.sendMessage(Parkour.getPrefix() + ChatColor.DARK_AQUA + selected + ChatColor.WHITE + " is now linked to " + ChatColor.AQUA + args[2]);
+            TranslationUtils.sendPropertySet(player, "Linked Lobby", selected, args[2]);
 
         } else if (args[1].equalsIgnoreCase("reset")) {
             CourseInfo.resetLinks(selected);
-            player.sendMessage(Parkour.getPrefix() + ChatColor.DARK_AQUA + selected + ChatColor.WHITE + " is no longer linked.");
+            TranslationUtils.sendPropertySet(player, "Linked Status", selected, "none");
 
         } else {
             TranslationUtils.sendInvalidSyntax(player, "Link", "(course / lobby / reset) (courseName / lobbyName)");
@@ -786,7 +788,7 @@ public class CourseManager extends AbstractPluginReceiver {
 
         CourseInfo.setParkourKit(args[1], args[2]);
         clearCache(args[1]);
-        player.sendMessage(Parkour.getPrefix() + args[1] + " is now linked to ParkourKit " + args[2]);
+        TranslationUtils.sendPropertySet(player, "ParkourKit", args[1], args[2]);
     }
 
     /**
@@ -857,7 +859,7 @@ public class CourseManager extends AbstractPluginReceiver {
         boolean unbreakable = args.length == 6 && Boolean.parseBoolean(args[5]);
 
         CourseInfo.addJoinItem(args[1], material, amount, label, unbreakable);
-        sender.sendMessage(Parkour.getPrefix() + "Join item " + material.name() + " (" + amount + ") was added to " + args[1]);
+        TranslationUtils.sendPropertySet(sender, "Add Join Item", args[1], material.name() + " x" + amount);
     }
 
     /**
@@ -918,7 +920,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param args
      * @param player
      */
-    public void setCourseMode(String[] args, Player player) {
+    public void setCourseParkourMode(String[] args, Player player) {
         if (!courseExists(args[1])) {
             TranslationUtils.sendValueTranslation("Error.NoExist", args[1], player);
             return;
@@ -936,5 +938,22 @@ public class CourseManager extends AbstractPluginReceiver {
     public ParkourMode getCourseMode(String courseName) {
         String mode = CourseInfo.getMode(courseName).toUpperCase();
         return ParkourMode.valueOf(mode);
+    }
+
+    public void processSetCommand(String[] args, CommandSender sender) {
+        if (!courseExists(args[1])) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", args[1], sender);
+            return;
+        }
+
+        if (args.length == 2 && sender instanceof Player) {
+            new SetCourseConversation((Player) sender).withCourseName(args[1].toLowerCase()).begin();
+
+        } else if (args.length >= 4) {
+            SetCourseConversation.performAction(sender, args[1], args[2], args[3]);
+
+        } else {
+            TranslationUtils.sendInvalidSyntax(sender, "setcourse", "(courseName) [creator, minlevel, maxdeath, maxtime] [value]");
+        }
     }
 }

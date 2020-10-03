@@ -2,6 +2,7 @@ package io.github.a5h73y.parkour.type.player;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
+import io.github.a5h73y.parkour.conversation.SetPlayerConversation;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.enums.Permission;
@@ -274,11 +275,12 @@ public class PlayerManager extends AbstractPluginReceiver {
 			}
 
 			parkour.getBountifulApi().sendFullTitle(player,
-					TranslationUtils.getValueTranslation("Parkour.Join", course.getName(), false),
+					TranslationUtils.getCourseMessage(course.getName(), "JoinMessage", "Parkour.Join"),
 					subTitle,  displayTitle);
 
 			if (parkour.getConfig().isCompletedCoursesEnabled()
-					&& PlayerInfo.getCompletedCourses(player).contains(course.getName())) {
+					&& PlayerInfo.getCompletedCourses(player).contains(course.getName())
+					&& parkour.getConfig().getBoolean("Other.Display.CourseCompleted")) {
 				TranslationUtils.sendValueTranslation("Parkour.AlreadyCompleted", course.getName(), player);
 			}
 		} else {
@@ -322,7 +324,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		ParkourSession session = getParkourSession(player);
 		if (!silent) {
 			parkour.getBountifulApi().sendSubTitle(player,
-					TranslationUtils.getValueTranslation("Parkour.Leave", session.getCourse().getName(), false),
+					TranslationUtils.getCourseMessage(session.getCourse().getName(), "LeaveMessage", "Parkour.Leave"),
 					parkour.getConfig().getBoolean("DisplayTitle.Leave"));
 		}
 
@@ -384,9 +386,16 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		boolean showTitle = parkour.getConfig().getBoolean("DisplayTitle.Checkpoint");
-		String checkpointMessageKey  = session.hasAchievedAllCheckpoints() ?  "Event.AllCheckpoints" :"Event.Checkpoint";
 
-		String checkpointMessage = TranslationUtils.getTranslation(checkpointMessageKey, false)
+		String checkpointCourseTranslation = "CheckpointMessage";
+		String checkpointTranslation = "Event.Checkpoint";
+
+		if (session.hasAchievedAllCheckpoints()) {
+			checkpointCourseTranslation  = "CheckpointallMessage";
+			checkpointTranslation = "Event.AllCheckpoints";
+		}
+
+		String checkpointMessage = TranslationUtils.getCourseMessage(session.getCourse().getName(), checkpointCourseTranslation , checkpointTranslation)
 				.replace("%CURRENT%", String.valueOf(session.getCurrentCheckpoint()))
 				.replace("%TOTAL%", String.valueOf(session.getCourse().getNumberOfCheckpoints()));
 
@@ -1197,15 +1206,15 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param player
 	 */
 	public void displayParkourInfo(String[] args, Player player) {
-		OfflinePlayer target = args.length <= 1 ? player : Bukkit.getOfflinePlayer(args[1]);
-		ParkourSession session = getParkourSession(target.getPlayer());
+		OfflinePlayer targetPlayer = args.length <= 1 ? player : Bukkit.getOfflinePlayer(args[1]);
 
-		if (session == null && !PlayerInfo.hasPlayerInfo(target)) {
-			player.sendMessage(Parkour.getPrefix() + "Player has never played Parkour. What is wrong with them?!");
+		if (!PlayerInfo.hasPlayerInfo(targetPlayer) || !targetPlayer.hasPlayedBefore()) {
+			TranslationUtils.sendTranslation("Error.UnknownPlayer", player);
 			return;
 		}
 
-		TranslationUtils.sendHeading(target.getName() + "'s information", player);
+		ParkourSession session = getParkourSession(targetPlayer.getPlayer());
+		TranslationUtils.sendHeading(targetPlayer.getName() + "'s information", player);
 
 		if (session != null) {
 			player.sendMessage("Course: " + ChatColor.AQUA + session.getCourse().getName());
@@ -1214,59 +1223,54 @@ public class PlayerManager extends AbstractPluginReceiver {
 			player.sendMessage("Checkpoint: " + ChatColor.AQUA + session.getCurrentCheckpoint());
 		}
 
-		if (PlayerInfo.hasPlayerInfo(target)) {
-			int level = PlayerInfo.getParkourLevel(target);
-			String selected = PlayerInfo.getSelectedCourse(target);
+		int level = PlayerInfo.getParkourLevel(targetPlayer);
+		String selected = PlayerInfo.getSelectedCourse(targetPlayer);
 
-			if (level > 0) {
-				player.sendMessage("Level: " + ChatColor.AQUA + level);
-			}
+		if (level > 0) {
+			player.sendMessage("Level: " + ChatColor.AQUA + level);
+		}
 
-			if (selected != null && selected.length() > 0) {
-				player.sendMessage("Editing: " + ChatColor.AQUA + selected);
-			}
+		if (selected != null && selected.length() > 0) {
+			player.sendMessage("Editing: " + ChatColor.AQUA + selected);
+		}
 
-			if (PlayerInfo.getParkoins(target) > 0) {
-				player.sendMessage("Parkoins: " + ChatColor.AQUA + PlayerInfo.getParkoins(target));
-			}
+		if (PlayerInfo.getParkoins(targetPlayer) > 0) {
+			player.sendMessage("Parkoins: " + ChatColor.AQUA + PlayerInfo.getParkoins(targetPlayer));
+		}
 
-			if (parkour.getConfig().isCompletedCoursesEnabled()) {
-				player.sendMessage("Courses Completed: " + ChatColor.AQUA + PlayerInfo.getNumberOfCoursesCompleted(target) + " / " + CourseInfo.getAllCourses().size());
-			}
+		if (parkour.getConfig().isCompletedCoursesEnabled()) {
+			player.sendMessage("Courses Completed: " + ChatColor.AQUA + PlayerInfo.getNumberOfCoursesCompleted(targetPlayer)
+					+ " / " + CourseInfo.getAllCourses().size());
 		}
 	}
 
-	public void setParkourLevel(String[] args, CommandSender sender) {
-		if (!Validation.isPositiveInteger(args[2])) {
+	public void setParkourLevel(CommandSender sender, OfflinePlayer targetPlayer, String value) {
+		if (!Validation.isPositiveInteger(value)) {
 			TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
 			return;
 		}
 
-		Player target = Bukkit.getPlayer(args[1]);
-
-		if (target == null) {
-			sender.sendMessage(Parkour.getPrefix() + "That player is not online.");
+		if (!PlayerInfo.hasPlayerInfo(targetPlayer) || !targetPlayer.hasPlayedBefore()) {
+			TranslationUtils.sendTranslation("Error.UnknownPlayer", sender);
 			return;
 		}
 
-		int newLevel = Integer.parseInt(args[2]);
-		PlayerInfo.setParkourLevel(target, newLevel);
+		int newLevel = Integer.parseInt(value);
+		PlayerInfo.setParkourLevel(targetPlayer, newLevel);
 		PlayerInfo.persistChanges();
 
-		sender.sendMessage(Parkour.getPrefix() + target.getName() + "'s Level was set to " + newLevel);
+		sender.sendMessage(Parkour.getPrefix() + targetPlayer.getName() + "'s Level was set to " + newLevel);
 	}
 
-	public void setParkourRank(String[] args, CommandSender sender) {
-		Player target = Bukkit.getPlayer(args[1]);
-
-		if (target == null) {
-			sender.sendMessage(Parkour.getPrefix() + "That player is not online.");
+	public void setParkourRank(CommandSender sender, OfflinePlayer targetPlayer, String value) {
+		if (!PlayerInfo.hasPlayerInfo(targetPlayer) || !targetPlayer.hasPlayedBefore()) {
+			TranslationUtils.sendTranslation("Error.UnknownPlayer", sender);
 			return;
 		}
 
-		PlayerInfo.setRank(target, args[2]);
+		PlayerInfo.setRank(targetPlayer, value);
 		PlayerInfo.persistChanges();
-		sender.sendMessage(Parkour.getPrefix() + target.getName() + "'s Rank was set to " + args[2]);
+		sender.sendMessage(Parkour.getPrefix() + targetPlayer.getName() + "'s Rank was set to " + value);
 	}
 
 	public void stashParkourSession(Player player) {
@@ -1387,7 +1391,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	private void displayFinishMessage(Player player, ParkourSession session) {
 		if (parkour.getConfig().getBoolean("OnFinish.DisplayStats")) {
 			parkour.getBountifulApi().sendFullTitle(player,
-					TranslationUtils.getValueTranslation("Parkour.FinishCourse1", session.getCourse().getName(), false),
+					TranslationUtils.getCourseMessage(session.getCourse().getName(), "FinishMessage", "Parkour.FinishCourse1"),
 					TranslationUtils.getTranslation("Parkour.FinishCourse2", false)
 							.replace("%DEATHS%", String.valueOf(session.getDeaths()))
 							.replace("%TIME%", session.displayTime()),
@@ -1603,6 +1607,25 @@ public class PlayerManager extends AbstractPluginReceiver {
 		PlayerInfo.setRewardRank(Integer.parseInt(args[1]), args[2]);
 		PlayerInfo.persistChanges();
 		populateParkourRanks();
-		sender.sendMessage(Parkour.getPrefix() + "ParkourRank for ParkourLevel " + args[1] + " was set to " + StringUtils.colour(args[2]));
+		TranslationUtils.sendPropertySet(sender, "ParkourRank", "ParkourLevel " + args[1], StringUtils.colour(args[2]));
+	}
+
+	public void processSetCommand(String[] args, CommandSender sender) {
+		OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(args[1]);
+
+		if (!PlayerInfo.hasPlayerInfo(targetPlayer) || !targetPlayer.hasPlayedBefore()) {
+			TranslationUtils.sendTranslation("Error.UnknownPlayer", sender);
+			return;
+		}
+
+		if (args.length == 2 && sender instanceof Player) {
+			new SetPlayerConversation((Player) sender).withTargetPlayerName(args[1].toLowerCase()).begin();
+
+		} else if (args.length >= 4) {
+			SetPlayerConversation.performAction(sender, targetPlayer, args[2], args[3]);
+
+		} else {
+			TranslationUtils.sendInvalidSyntax(sender, "setplayer", "(player) [level / rank] [value]");
+		}
 	}
 }

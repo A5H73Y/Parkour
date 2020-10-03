@@ -1,6 +1,8 @@
 package io.github.a5h73y.parkour.commands;
 
 import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.conversation.SetCourseConversation;
+import io.github.a5h73y.parkour.conversation.SetPlayerConversation;
 import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
@@ -29,9 +31,9 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             "sql", "cache", "reload");
 
     private static final List<String> ADMIN_COURSE_COMMANDS = Arrays.asList(
-            "checkpoint", "ready", "setstart", "setcreator", "setautostart", "select", "done", "link", "linkkit",
-            "setminlevel", "setmaxdeath", "setmaxtime", "addjoinitem", "rewardonce", "rewardlevel", "rewardleveladd",
-            "rewardrank", "rewarddelay", "rewardparkoins", "setmode", "createkit", "editkit", "validatekit");
+            "checkpoint", "ready", "setstart", "setcourse", "setautostart", "select", "done", "link", "linkkit",
+            "addjoinitem", "rewardonce", "rewardlevel", "rewardleveladd", "rewardrank", "rewarddelay", "rewardparkoins",
+            "setmode", "createkit", "editkit", "validatekit");
 
     private static final List<String> ON_COURSE_COMMANDS = Arrays.asList(
             "back", "leave");
@@ -73,9 +75,11 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             allowedCommands = populateMainCommands(player);
 
         } else if (args.length == 2) {
-            allowedCommands = populateChildCommands(args[0].toLowerCase());
+            allowedCommands = populateFirstChildCommands(args[0]);
+
+        } else if (args.length == 3) {
+            allowedCommands = populateSecondChildCommands(args[0], args[1]);
         }
-        //TODO look into args.length == 3 things
 
         for (String allowedCommand : allowedCommands) {
             if (allowedCommand.startsWith(args[args.length - 1])) {
@@ -149,10 +153,10 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
         return allowedCommands;
     }
 
-    private List<String> populateChildCommands(String command) {
+    private List<String> populateFirstChildCommands(String command) {
         List<String> allowedCommands = new ArrayList<>();
 
-        switch (command) {
+        switch (command.toLowerCase()) {
             case "reset":
                 allowedCommands = RESET_COMMANDS;
                 break;
@@ -170,9 +174,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             case "select":
             case "tp":
             case "tpc":
-            case "setminlevel":
-            case "setmaxdeath":
-            case "setmaxtime":
+            case "setcourse":
             case "addjoinitem":
             case "rewardonce":
             case "rewardlevel":
@@ -192,6 +194,22 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
                 break;
         }
 
+        return allowedCommands;
+    }
+
+    private List<String> populateSecondChildCommands(String command, String firstArg) {
+        List<String> allowedCommands = new ArrayList<>();
+
+        switch (command.toLowerCase()) {
+            case "setcourse":
+                allowedCommands = SetCourseConversation.SET_COURSE_OPTIONS;
+                break;
+            case "setplayer":
+                allowedCommands = SetPlayerConversation.SET_PLAYER_OPTIONS;
+                break;
+            case "TODO": //TODO more things here
+                break;
+        }
         return allowedCommands;
     }
 }

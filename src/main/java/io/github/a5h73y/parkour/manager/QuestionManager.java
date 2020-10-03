@@ -176,14 +176,16 @@ public class QuestionManager extends AbstractPluginReceiver {
                     return;
 
                 case RESET_PLAYER:
-                    OfflinePlayer target = Bukkit.getOfflinePlayer(argument);
-                    if (target != null) {
-                        PlayerInfo.resetPlayer(target);
-                        player.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + argument + ChatColor.WHITE + " has been reset.");
-                        PluginUtils.logToFile("player " + argument + " was reset by " + player.getName());
-                    } else {
-                        player.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + argument + ChatColor.WHITE + " does not exist.");
+                    OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(argument);
+
+                    if (!PlayerInfo.hasPlayerInfo(targetPlayer) || !targetPlayer.hasPlayedBefore()) {
+                        TranslationUtils.sendTranslation("Error.UnknownPlayer", player);
+                        return;
                     }
+
+                    PlayerInfo.resetPlayer(targetPlayer);
+                    player.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + argument + ChatColor.WHITE + " has been reset.");
+                    PluginUtils.logToFile("player " + argument + " was reset by " + player.getName());
                     return;
 
                 case RESET_LEADERBOARD:
@@ -194,13 +196,15 @@ public class QuestionManager extends AbstractPluginReceiver {
 
                 case RESET_PLAYER_LEADERBOARD:
                     String[] arguments = argument.split(";");
-                    target = Bukkit.getOfflinePlayer(arguments[0]);
-                    if (target != null) {
-                        parkour.getDatabase().deletePlayerCourseTimes(target, arguments[1]);
-                        PluginUtils.logToFile(arguments[0] + " leaderboards were reset on course + " + arguments[1] + " by " + player.getName());
-                    } else {
-                        player.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + arguments[1] + ChatColor.WHITE + " does not exist.");
+                    targetPlayer = Bukkit.getOfflinePlayer(arguments[0]);
+
+                    if (!PlayerInfo.hasPlayerInfo(targetPlayer) || !targetPlayer.hasPlayedBefore()) {
+                        TranslationUtils.sendTranslation("Error.UnknownPlayer", player);
+                        return;
                     }
+
+                    parkour.getDatabase().deletePlayerCourseTimes(targetPlayer, arguments[1]);
+                    PluginUtils.logToFile(arguments[0] + " leaderboards were reset on course + " + arguments[1] + " by " + player.getName());
                     return;
 
                 case RESET_PRIZES:

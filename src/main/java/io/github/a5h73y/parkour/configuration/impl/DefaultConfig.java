@@ -148,6 +148,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("Other.Display.ShowMilliseconds", false);
 		this.addDefault("Other.Display.PrizeCooldown", true);
 		this.addDefault("Other.Display.OnlyReadyCourses", false);
+		this.addDefault("Other.Display.CourseCompleted", false);
 		this.addDefault("Other.OnServerShutdown.BackupFiles", false);
 
 		this.addDefault("Database.MaximumCoursesCached", 10);

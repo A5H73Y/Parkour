@@ -35,7 +35,7 @@ public class ParkourModeConversation extends ParkourConversation {
 
         @Override
         protected Prompt acceptValidatedInput(ConversationContext context, String choice) {
-            String courseName = (String) context.getSessionData("courseName");
+            String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);
 
             CourseInfo.setMode(courseName, choice);
             Parkour.getInstance().getCourseManager().clearCache(courseName);

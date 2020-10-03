@@ -12,9 +12,13 @@ import org.bukkit.entity.Player;
 
 public abstract class ParkourConversation implements ConversationAbandonedListener {
 
+    public static final String SESSION_PLAYER_NAME = "playerName";
+    public static final String SESSION_TARGET_PLAYER_NAME = "targetPlayerName";
+    public static final String SESSION_COURSE_NAME = "courseName";
     private final ConversationFactory conversationFactory;
     private final Player player;
     private String courseName;
+    private String targetPlayerName;
 
     public abstract Prompt getEntryPrompt();
 
@@ -47,12 +51,20 @@ public abstract class ParkourConversation implements ConversationAbandonedListen
         return this;
     }
 
+    public ParkourConversation withTargetPlayerName(String targetPlayerName) {
+        this.targetPlayerName = targetPlayerName;
+        return this;
+    }
+
     public void begin() {
-        Conversation convo = conversationFactory.buildConversation(player);
-        convo.getContext().setSessionData("playerName", player.getName());
+        Conversation conversation = conversationFactory.buildConversation(player);
+        conversation.getContext().setSessionData(SESSION_PLAYER_NAME, player.getName());
         if (courseName != null) {
-            convo.getContext().setSessionData("courseName", courseName);
+            conversation.getContext().setSessionData(SESSION_COURSE_NAME, courseName);
         }
-        convo.begin();
+        if (targetPlayerName != null) {
+            conversation.getContext().setSessionData(SESSION_TARGET_PLAYER_NAME, targetPlayerName);
+        }
+        conversation.begin();
     }
 }

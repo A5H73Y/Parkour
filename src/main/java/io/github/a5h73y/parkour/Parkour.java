@@ -110,6 +110,7 @@ public class Parkour extends JavaPlugin {
             Backup.backupNow();
         }
         getPlayerManager().teardownParkourPlayers();
+        getDatabase().closeConnection();
         PluginUtils.log("Disabled Parkour v" + getDescription().getVersion());
         instance = null;
     }

@@ -51,22 +51,6 @@ public class CourseInfo {
     }
 
     /**
-     * Get list of Parkour courses linked to a Parkour kit.
-     * @param parkourKit
-     * @return List Parkour course names
-     */
-    public static List<String> getDependentCourses(String parkourKit) {
-        List<String> dependentCourses = new ArrayList<>();
-        for (String course : getAllCourses()) {
-            String linkedKit = CourseInfo.getParkourKit(course);
-            if (parkourKit.equals(linkedKit)) {
-                dependentCourses.add(course);
-            }
-        }
-        return dependentCourses;
-    }
-
-    /**
      * Check if Course is linked to another Course.
      *
      * @param courseName
@@ -84,6 +68,7 @@ public class CourseInfo {
      */
     public static void setLinkedCourse(String courseName, String linkedCourse) {
         getCourseConfig().set(courseName.toLowerCase() + ".LinkedCourse", linkedCourse.toLowerCase());
+        persistChanges();
     }
 
     /**
@@ -115,6 +100,7 @@ public class CourseInfo {
      */
     public static void setLinkedLobby(String courseName, String lobbyName) {
         getCourseConfig().set(courseName.toLowerCase() + ".LinkedLobby", lobbyName);
+        persistChanges();
     }
 
     /**
@@ -135,6 +121,7 @@ public class CourseInfo {
      */
     public static void setMode(String courseName, String mode) {
         getCourseConfig().set(courseName.toLowerCase() + ".Mode", mode);
+        persistChanges();
     }
 
     /**
@@ -165,6 +152,7 @@ public class CourseInfo {
      */
     public static void setCreator(String courseName, String playerName) {
         getCourseConfig().set(courseName.toLowerCase() + ".Creator", playerName);
+        persistChanges();
     }
 
     /**
@@ -185,6 +173,7 @@ public class CourseInfo {
      */
     public static void setMinimumLevel(String courseName, int level) {
         getCourseConfig().set(courseName.toLowerCase() + ".MinimumLevel", level);
+        persistChanges();
     }
 
     /**
@@ -215,6 +204,7 @@ public class CourseInfo {
      */
     public static void setParkourKit(String courseName, String parkourKitName) {
         getCourseConfig().set(courseName.toLowerCase() + ".ParkourKit", parkourKitName.toLowerCase());
+        persistChanges();
     }
 
     /**
@@ -245,6 +235,7 @@ public class CourseInfo {
      */
     public static void setMaximumDeaths(String courseName, int amount) {
         getCourseConfig().set(courseName.toLowerCase() + ".MaxDeaths", amount);
+        persistChanges();
     }
 
     /**
@@ -255,6 +246,7 @@ public class CourseInfo {
      */
     public static void setMaximumTime(String courseName, int seconds) {
         getCourseConfig().set(courseName.toLowerCase() + ".MaxTime", seconds);
+        persistChanges();
     }
 
     /**
@@ -275,6 +267,7 @@ public class CourseInfo {
      */
     public static void setReadyStatus(String courseName, boolean ready) {
         getCourseConfig().set(courseName.toLowerCase() + ".Ready", ready);
+        persistChanges();
     }
 
     /**
@@ -308,6 +301,7 @@ public class CourseInfo {
         commands.add(command);
 
         getCourseConfig().set(courseName.toLowerCase() + ".Prize.CMD", commands);
+        persistChanges();
     }
 
     /**
@@ -320,6 +314,7 @@ public class CourseInfo {
     public static void setMaterialPrize(String courseName, String material, int amount) {
         getCourseConfig().set(courseName.toLowerCase() + ".Prize.Material", material);
         getCourseConfig().set(courseName.toLowerCase() + ".Prize.Amount", amount);
+        persistChanges();
     }
 
     /**
@@ -340,6 +335,7 @@ public class CourseInfo {
      */
     public static void setXPPrize(String courseName, int amount) {
         getCourseConfig().set(courseName.toLowerCase() + ".Prize.XP", amount);
+        persistChanges();
     }
 
     /**
@@ -389,6 +385,7 @@ public class CourseInfo {
      */
     public static void setRewardLevel(String courseName, int level) {
         getCourseConfig().set(courseName.toLowerCase() + ".RewardLevel", level);
+        persistChanges();
     }
 
     /**
@@ -409,6 +406,7 @@ public class CourseInfo {
      */
     public static void setRewardLevelAdd(String courseName, String amount) {
         getCourseConfig().set(courseName.toLowerCase() + ".RewardLevelAdd", Integer.parseInt(amount));
+        persistChanges();
     }
 
     /**
@@ -429,6 +427,7 @@ public class CourseInfo {
      */
     public static void setRewardOnce(String courseName, boolean enabled) {
         getCourseConfig().set(courseName.toLowerCase() + ".RewardOnce", enabled);
+        persistChanges();
     }
 
     public static boolean hasRewardDelay(String courseName) {
@@ -441,6 +440,7 @@ public class CourseInfo {
 
     public static void setRewardDelay(String courseName, int rewardDelay) {
         getCourseConfig().set(courseName.toLowerCase() + ".RewardDelay", rewardDelay);
+        persistChanges();
     }
 
     public static int getRewardParkoins(String courseName) {
@@ -449,6 +449,7 @@ public class CourseInfo {
 
     public static void setRewardParkoins(String courseName, int parkoins) {
         getCourseConfig().set(courseName.toLowerCase() + ".Parkoins", parkoins);
+        persistChanges();
     }
 
     public static List<ItemStack> getJoinItems(String courseName) {
@@ -488,6 +489,7 @@ public class CourseInfo {
         getCourseConfig().set(courseName + ".JoinItems." + material.name() + ".Amount", amount);
         getCourseConfig().set(courseName + ".JoinItems." + material.name() + ".Label", label);
         getCourseConfig().set(courseName + ".JoinItems." + material.name() + ".Unbreakable", unbreakable);
+        persistChanges();
     }
 
     public static String getWorld(String courseName) {
@@ -509,6 +511,7 @@ public class CourseInfo {
     public static void resetLinks(String courseName) {
         getCourseConfig().set(courseName.toLowerCase() + ".LinkedLobby", null);
         getCourseConfig().set(courseName.toLowerCase() + ".LinkedCourse", null);
+        persistChanges();
     }
 
     public static void deleteCourse(String courseName) {
@@ -521,7 +524,6 @@ public class CourseInfo {
         persistChanges();
 
         Parkour.getInstance().getCheckpointManager().deleteCheckpointData(courseName);
-
         Parkour.getInstance().getDatabase().deleteCourseAndReferences(courseName);
 
         PlayerInfo.removeCompletedCourse(courseName);
@@ -529,6 +531,7 @@ public class CourseInfo {
 
     public static void resetPrizes(String courseName) {
         getCourseConfig().set(courseName.toLowerCase() + ".Prize", null);
+        persistChanges();
     }
 
     /**

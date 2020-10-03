@@ -11,7 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -65,28 +64,20 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 parkour.getDatabase().recreateAllCourses();
                 break;
 
-            case "setminlevel":
-                if (!ValidationUtils.validateArgs(sender, args, 3)) {
+            case "setcourse":
+                if (!ValidationUtils.validateArgs(sender, args, 2, 100)) {
                     return false;
                 }
 
-                parkour.getCourseManager().setMinLevel(args, sender);
+                parkour.getCourseManager().processSetCommand(args, sender);
                 break;
 
-            case "setmaxdeath":
-                if (!ValidationUtils.validateArgs(sender, args, 3)) {
+            case "setplayer":
+                if (!ValidationUtils.validateArgs(sender, args, 2, 100)) {
                     return false;
                 }
 
-                parkour.getCourseManager().setMaxDeaths(args, sender);
-                break;
-
-            case "setmaxtime":
-                if (!ValidationUtils.validateArgs(sender, args, 3)) {
-                    return false;
-                }
-
-                parkour.getCourseManager().setMaxTime(args, sender);
+                parkour.getPlayerManager().processSetCommand(args, sender);
                 break;
 
             case "addjoinitem":
@@ -145,22 +136,6 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 parkour.getCourseManager().setRewardDelay(args, sender);
                 break;
 
-            case "setlevel":
-                if (!ValidationUtils.validateArgs(sender, args, 3)) {
-                    return false;
-                }
-
-                parkour.getPlayerManager().setParkourLevel(args, sender);
-                break;
-
-            case "setrank":
-                if (!ValidationUtils.validateArgs(sender, args, 3)) {
-                    return false;
-                }
-
-                parkour.getPlayerManager().setParkourRank(args, sender);
-                break;
-
             case "list":
                 parkour.getCourseManager().displayList(args, sender);
                 break;
@@ -195,9 +170,8 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
     private static void displayCommands() {
         PluginUtils.log("pac reload");
         PluginUtils.log("pac recreate");
-        PluginUtils.log("pac setminlevel (course) (level)");
-        PluginUtils.log("pac setmaxdeath (course) (deaths)");
-        PluginUtils.log("pac setmaxtime (course) (seconds)");
+        PluginUtils.log("pac setcourse (course) (command) (value)");
+        PluginUtils.log("pac setplayer (player) (command) (value)");
         PluginUtils.log("pac addjoinitem (course) (item) (amount) [label] [unbreakable]");
         PluginUtils.log("pac rewardonce (course)");
         PluginUtils.log("pac rewardlevel (course) (level)");
@@ -205,8 +179,6 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
         PluginUtils.log("pac rewardrank (level) (rank)");
         PluginUtils.log("pac rewardparkoins (course) (amount)");
         PluginUtils.log("pac rewarddelay (course) (delay)");
-        PluginUtils.log("pac setlevel (player) (level)");
-        PluginUtils.log("pac setrank (player) (rank)");
         PluginUtils.log("pac list (courses / players)");
         PluginUtils.log("pac listkit [kit]");
         PluginUtils.log("pac settings");

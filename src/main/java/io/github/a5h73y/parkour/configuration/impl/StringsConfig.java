@@ -31,7 +31,6 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Parkour.Delete", "&b%VALUE% &fhas been deleted!");
 		this.addDefault("Parkour.DeleteCheckpoint", "Checkpoint &b%CHECKPOINT% &fwas deleted on &b%COURSE%");
 		this.addDefault("Parkour.Reset", "&b%VALUE% &fhas been reset!");
-		this.addDefault("Parkour.Ready", "&b%VALUE% &fhas been set to ready to join!");
 		this.addDefault("Parkour.FinishBroadcast", "&3%PLAYER% &ffinished &b%COURSE% &fwith &b%DEATHS% &fdeaths, in &b%TIME%&f!");
 		this.addDefault("Parkour.FinishCourse1", "Finished &b%VALUE%&f!");
 		this.addDefault("Parkour.FinishCourse2", "In %TIME%, dying %DEATHS% times");
@@ -101,7 +100,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Error.Syntax", "&cInvalid Syntax: &f/pa &8%COMMAND% &7%ARGUMENTS%");
 		this.addDefault("Error.UnknownSignCommand", "Unknown sign command!");
 		this.addDefault("Error.UnknownCommand", "Unknown command!");
-		this.addDefault("Error.UnknownPlayer", "This player does not exist!");
+		this.addDefault("Error.UnknownPlayer", "Unknown Parkour player!");
 		this.addDefault("Error.UnknownMaterial", "Unknown Material: &4%VALUE%");
 		this.addDefault("Error.Cheating1", "Please do not cheat.");
 		this.addDefault("Error.Cheating2", "&lYou must achieve all &4%VALUE% &f&lcheckpoints!");
@@ -127,6 +126,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Other.Item.Restart", "&7SHIFT + &6Right click to restart course");
 		this.addDefault("Other.Reload", "Config Reloaded!");
 		this.addDefault("Other.Kit", "ParkourKit Given!");
+		this.addDefault("Other.PropertySet", "The &3%PROPERTY% &ffor &3%COURSE% &fwas set to &b%VALUE%&f!");
 
 		this.addDefault("Scoreboard.MainHeading", "&b&l== Parkour ==");
 		this.addDefault("Scoreboard.TitleFormat", "&b%VALUE%");
