@@ -27,6 +27,10 @@ public class CoursePrizeConversation extends ParkourConversation {
         return new PrizeType();
     }
 
+    MessagePrompt getCommandProcessCompletePrompt() {
+        return new CommandProcessComplete();
+    }
+
     private class PrizeType extends FixedSetPrompt {
 
         public PrizeType() {
@@ -59,6 +63,7 @@ public class CoursePrizeConversation extends ParkourConversation {
 
     /* BEGIN MATERIAL PRIZE */
     private class ChooseBlock extends StringPrompt {
+
         @Override
         public String getPromptText(ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " What Material do you want to reward the player with?";
@@ -101,10 +106,10 @@ public class CoursePrizeConversation extends ParkourConversation {
 
             return new MaterialProcessComplete();
         }
-
     }
 
     private class MaterialProcessComplete extends MessagePrompt {
+
         public String getPromptText(ConversationContext context) {
             String courseName = context.getSessionData(SESSION_COURSE_NAME).toString();
             CourseInfo.setMaterialPrize(courseName,
@@ -122,7 +127,7 @@ public class CoursePrizeConversation extends ParkourConversation {
     }
 
     /* BEGIN COMMAND PRIZE */
-    private class ChooseCommand extends StringPrompt {
+    class ChooseCommand extends StringPrompt {
 
         @Override
         public String getPromptText(ConversationContext context) {
@@ -155,12 +160,12 @@ public class CoursePrizeConversation extends ParkourConversation {
                         context.getSessionData("command").toString()
                                 .replace("%PLAYER%", context.getSessionData(SESSION_PLAYER_NAME).toString()));
             }
-            return new CommandProcessComplete();
+            return getCommandProcessCompletePrompt();
         }
-
     }
 
     private class CommandProcessComplete extends MessagePrompt {
+
         public String getPromptText(ConversationContext context) {
             String courseName = context.getSessionData(SESSION_COURSE_NAME).toString();
             CourseInfo.addCommandPrize(courseName, context.getSessionData("command").toString());
@@ -202,6 +207,7 @@ public class CoursePrizeConversation extends ParkourConversation {
     }
 
     private class XPProcessComplete extends MessagePrompt {
+
         public String getPromptText(ConversationContext context) {
             String courseName = context.getSessionData(SESSION_COURSE_NAME).toString();
             String amount = context.getSessionData("amount").toString();
@@ -215,5 +221,4 @@ public class CoursePrizeConversation extends ParkourConversation {
             return Prompt.END_OF_CONVERSATION;
         }
     }
-
 }

@@ -257,36 +257,43 @@ public class PlayerManager extends AbstractPluginReceiver {
 		PlayerInfo.setLastPlayedCourse(player, course.getName());
 		PlayerInfo.persistChanges();
 
-		// they are aren't on a course
-		if (!isPlaying(player) && !isInQuietMode(player)) {
-			boolean displayTitle = parkour.getConfig().getBoolean("DisplayTitle.JoinCourse");
-
-			String subTitle = "";
-			if (course.hasMaxDeaths() && course.hasMaxTime()){
-				subTitle = TranslationUtils.getTranslation("Parkour.JoinLivesAndTime", false)
-						.replace("%LIVES%", String.valueOf(course.getMaxDeaths()))
-						.replace("%MAXTIME%", DateTimeUtils.convertSecondsToTime(course.getMaxTime()));
-			} else if (course.hasMaxDeaths()) {
-				subTitle = TranslationUtils.getValueTranslation(
-						"Parkour.JoinLives", String.valueOf(course.getMaxDeaths()), false);
-			} else if (course.hasMaxTime()) {
-				subTitle = TranslationUtils.getValueTranslation(
-						"Parkour.JoinTime", DateTimeUtils.convertSecondsToTime(course.getMaxTime()), false);
-			}
-
-			parkour.getBountifulApi().sendFullTitle(player,
-					TranslationUtils.getCourseMessage(course.getName(), "JoinMessage", "Parkour.Join"),
-					subTitle,  displayTitle);
-
-			if (parkour.getConfig().isCompletedCoursesEnabled()
-					&& PlayerInfo.getCompletedCourses(player).contains(course.getName())
-					&& parkour.getConfig().getBoolean("Other.Display.CourseCompleted")) {
-				TranslationUtils.sendValueTranslation("Parkour.AlreadyCompleted", course.getName(), player);
-			}
-		} else {
+		// already on a different course
+		if (isPlaying(player) && !getParkourSession(player).getCourseName().equals(course.getName())) {
 			removePlayer(player);
-			if (!isInQuietMode(player)) {
+		}
+
+		// join message
+		if (!isInQuietMode(player)) {
+			if (isPlaying(player)) {
 				TranslationUtils.sendTranslation("Parkour.TimeReset", player);
+
+			} else {
+				boolean displayTitle = parkour.getConfig().getBoolean("DisplayTitle.JoinCourse");
+
+				String subTitle = "";
+				if (course.hasMaxDeaths() && course.hasMaxTime()) {
+					subTitle = TranslationUtils.getTranslation("Parkour.JoinLivesAndTime", false)
+							.replace("%LIVES%", String.valueOf(course.getMaxDeaths()))
+							.replace("%MAXTIME%", DateTimeUtils.convertSecondsToTime(course.getMaxTime()));
+
+				} else if (course.hasMaxDeaths()) {
+					subTitle = TranslationUtils.getValueTranslation(
+							"Parkour.JoinLives", String.valueOf(course.getMaxDeaths()), false);
+
+				} else if (course.hasMaxTime()) {
+					subTitle = TranslationUtils.getValueTranslation(
+							"Parkour.JoinTime", DateTimeUtils.convertSecondsToTime(course.getMaxTime()), false);
+				}
+
+				parkour.getBountifulApi().sendFullTitle(player,
+						TranslationUtils.getCourseMessage(course.getName(), "JoinMessage", "Parkour.Join"),
+						subTitle, displayTitle);
+
+				if (parkour.getConfig().isCompletedCoursesEnabled()
+						&& PlayerInfo.getCompletedCourses(player).contains(course.getName())
+						&& parkour.getConfig().getBoolean("Other.Display.CourseCompleted")) {
+					TranslationUtils.sendValueTranslation("Parkour.AlreadyCompleted", course.getName(), player);
+				}
 			}
 		}
 
@@ -379,10 +386,20 @@ public class PlayerManager extends AbstractPluginReceiver {
 			return;
 		}
 
+		String courseName = session.getCourseName();
 		session.increaseCheckpoint();
 
 		if (parkour.getScoreboardManager().isEnabled()) {
 			parkour.getScoreboardManager().updateScoreboardCheckpoints(player, session.getCurrentCheckpoint() + " / " + session.getCourse().getNumberOfCheckpoints());
+		}
+
+		// execute command per checkpoint
+		if (CourseInfo.hasCheckpointCommandPrize(courseName)) {
+			for (String command : CourseInfo.getCheckpointCommandsPrize(courseName)) {
+				parkour.getServer().dispatchCommand(
+						parkour.getServer().getConsoleSender(),
+						command.replace("%PLAYER%", player.getName()));
+			}
 		}
 
 		boolean showTitle = parkour.getConfig().getBoolean("DisplayTitle.Checkpoint");

@@ -183,6 +183,17 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getCourseManager().setPrize(args[1], player);
                 break;
 
+            case "checkpointprize":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_PRIZE)) {
+                    return false;
+
+                } else if (!ValidationUtils.validateArgs(player, args, 2)) {
+                    return false;
+                }
+
+                parkour.getCourseManager().setCheckpointPrize(args[1], player);
+                break;
+
             case "perms":
                 parkour.getPlayerManager().displayPermissions(player, args.length > 2);
                 break;

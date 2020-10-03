@@ -2,6 +2,7 @@ package io.github.a5h73y.parkour.type.course;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
+import io.github.a5h73y.parkour.conversation.CheckpointPrizeConversation;
 import io.github.a5h73y.parkour.conversation.CoursePrizeConversation;
 import io.github.a5h73y.parkour.conversation.LeaderboardConversation;
 import io.github.a5h73y.parkour.conversation.ParkourModeConversation;
@@ -364,6 +365,22 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         new CoursePrizeConversation(player).withCourseName(courseName.toLowerCase()).begin();
+    }
+
+    /**
+     * Set the checkpoint course prize.
+     * TODO
+     *
+     * @param courseName
+     * @param player
+     */
+    public void setCheckpointPrize(String courseName, Player player) {
+        if (!courseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
+            return;
+        }
+
+        new CheckpointPrizeConversation(player).withCourseName(courseName.toLowerCase()).begin();
     }
 
     /**

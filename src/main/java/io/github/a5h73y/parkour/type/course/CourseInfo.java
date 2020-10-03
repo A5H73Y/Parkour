@@ -281,6 +281,16 @@ public class CourseInfo {
     }
 
     /**
+     * Get the prize commands for the checkpoint.
+     *
+     * @param courseName
+     * @return
+     */
+    public static List<String> getCheckpointCommandsPrize(String courseName) {
+        return getCourseConfig().getStringList(courseName.toLowerCase() + ".Prize.CheckpointCMD");
+    }
+
+    /**
      * Does this course have prize commands
      *
      * @param courseName
@@ -288,6 +298,16 @@ public class CourseInfo {
      */
     public static boolean hasCommandPrize(String courseName) {
         return getCourseConfig().contains(courseName.toLowerCase() + ".Prize.CMD");
+    }
+
+    /**
+     * Does this course have prize commands
+     *
+     * @param courseName
+     * @return
+     */
+    public static boolean hasCheckpointCommandPrize(String courseName) {
+        return getCourseConfig().contains(courseName.toLowerCase() + ".Prize.CheckpointCMD");
     }
 
     /**
@@ -301,6 +321,20 @@ public class CourseInfo {
         commands.add(command);
 
         getCourseConfig().set(courseName.toLowerCase() + ".Prize.CMD", commands);
+        persistChanges();
+    }
+
+    /**
+     * Add a command to the list of checkpoint prize commands.
+     *
+     * @param courseName
+     * @param command
+     */
+    public static void addCheckpointCommandPrize(String courseName, String command) {
+        List<String> commands = getCheckpointCommandsPrize(courseName);
+        commands.add(command);
+
+        getCourseConfig().set(courseName.toLowerCase() + ".Prize.CheckpointCMD", commands);
         persistChanges();
     }
 
