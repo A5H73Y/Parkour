@@ -40,15 +40,11 @@ import org.bukkit.entity.Player;
 
 public class CourseManager extends AbstractPluginReceiver {
 
-    // TODO have configuration useCourseCache
-    // If you have a crazy amount of courses / checkpoints, caching might be a bad idea
-
     private final Map<String, Course> courseCache = new HashMap<>();
 
     public CourseManager(final Parkour parkour) {
         super(parkour);
     }
-
 
     /**
      * Does course exist.
@@ -63,14 +59,7 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         courseName = courseName.trim().toLowerCase();
-
-        for (String course : CourseInfo.getAllCourses()) {
-            if (courseName.equals(course)) {
-                return true;
-            }
-        }
-
-        return false;
+        return CourseInfo.getAllCourses().contains(courseName);
     }
 
     public Course getCourse(String argument) {

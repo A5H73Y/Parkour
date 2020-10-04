@@ -217,7 +217,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 String tCol = "&f";
                 //check if colour codes specified
                 if (arguments[0].length() == 9 && arguments[0].substring(7).matches("[0-9a-f]+")) {
-                    nCol = "&" + arguments[0].substring(7, 8);
+                    nCol = "&" + arguments[0].charAt(7);
                     tCol = "&" + arguments[0].substring(8);
                 }
                 return nCol + result.getPlayerName() + "&7 - " + tCol + DateTimeUtils.displayCurrentTime(result.getTime());

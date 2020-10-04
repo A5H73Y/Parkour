@@ -33,7 +33,7 @@ public abstract class PluginWrapper {
 	 */
 	protected void initialise() {
 		// if the config prevents integration, don't begin setup.
-		if (!Parkour.getDefaultConfig().getBoolean("Other." + getPluginName() + ".Enabled")) {
+		if (!Parkour.getDefaultConfig().getBoolean("Plugin." + getPluginName() + ".Enabled")) {
 			return;
 		}
 
@@ -49,7 +49,7 @@ public abstract class PluginWrapper {
 
 		} else {
 			PluginUtils.log("[" + getPluginName() + "] Plugin is missing, disabling config option.", 1);
-			Parkour.getDefaultConfig().set("Other." + getPluginName() + ".Enabled", false);
+			Parkour.getDefaultConfig().set("Plugin." + getPluginName() + ".Enabled", false);
 			Parkour.getDefaultConfig().save();
 		}
 	}

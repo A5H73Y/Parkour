@@ -50,7 +50,7 @@ public class CreateParkourKitConversation extends ParkourConversation {
         }
     }
 
-    private class UseStandardKit extends BooleanPrompt {
+    private static class UseStandardKit extends BooleanPrompt {
 
         @Override
         public String getPromptText(ConversationContext context) {

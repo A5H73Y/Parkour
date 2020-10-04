@@ -87,7 +87,7 @@ public class LeaderboardConversation extends ParkourConversation {
         }
     }
 
-    private class DisplayLeaderboards extends MessagePrompt {
+    private static class DisplayLeaderboards extends MessagePrompt {
         public String getPromptText(ConversationContext context) {
             final String leaderboardType = (String) context.getSessionData("type");
             final String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);

@@ -22,6 +22,7 @@ import io.github.a5h73y.parkour.manager.ScoreboardManager;
 import io.github.a5h73y.parkour.other.Backup;
 import io.github.a5h73y.parkour.other.CommandUsage;
 import io.github.a5h73y.parkour.other.ParkourUpdater;
+import io.github.a5h73y.parkour.plugin.AACApi;
 import io.github.a5h73y.parkour.plugin.BountifulApi;
 import io.github.a5h73y.parkour.plugin.EconomyApi;
 import io.github.a5h73y.parkour.plugin.PlaceholderApi;
@@ -232,6 +233,7 @@ public class Parkour extends JavaPlugin {
         bountifulApi = new BountifulApi();
         economyApi = new EconomyApi();
         placeholderApi = new PlaceholderApi();
+        new AACApi();
     }
 
     private void registerManagers() {

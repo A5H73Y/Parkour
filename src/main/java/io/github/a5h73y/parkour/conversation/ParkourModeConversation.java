@@ -20,7 +20,7 @@ public class ParkourModeConversation extends ParkourConversation {
         return new ChooseParkourMode();
     }
 
-    private class ChooseParkourMode extends FixedSetPrompt {
+    private static class ChooseParkourMode extends FixedSetPrompt {
 
         ChooseParkourMode() {
 //            super(ParkourMode.values().);

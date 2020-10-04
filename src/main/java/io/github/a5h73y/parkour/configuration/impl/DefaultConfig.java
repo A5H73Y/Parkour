@@ -128,9 +128,6 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("ParkourGUI.Material", "BOOK");
 
 		this.addDefault("Other.CheckForUpdates", true);
-		this.addDefault("Other.BountifulAPI.Enabled", true);
-		this.addDefault("Other.Vault.Enabled", true);
-		this.addDefault("Other.PlaceholderAPI.Enabled", true);
 		this.addDefault("Other.LogToFile", true);
 		this.addDefault("Other.UseSounds", true);
 		this.addDefault("Other.EnforceSafeCheckpoints", true);
@@ -150,6 +147,11 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("Other.Display.OnlyReadyCourses", false);
 		this.addDefault("Other.Display.CourseCompleted", false);
 		this.addDefault("Other.OnServerShutdown.BackupFiles", false);
+
+		this.addDefault("Plugin.BountifulAPI.Enabled", true);
+		this.addDefault("Plugin.Vault.Enabled", true);
+		this.addDefault("Plugin.PlaceholderAPI.Enabled", true);
+		this.addDefault("Plugin.AAC.Enabled", true);
 
 		this.addDefault("Database.MaximumCoursesCached", 10);
 		this.addDefault("SQLite.PathOverride", "");

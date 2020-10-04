@@ -108,7 +108,7 @@ public class CoursePrizeConversation extends ParkourConversation {
         }
     }
 
-    private class MaterialProcessComplete extends MessagePrompt {
+    private static class MaterialProcessComplete extends MessagePrompt {
 
         public String getPromptText(ConversationContext context) {
             String courseName = context.getSessionData(SESSION_COURSE_NAME).toString();
@@ -164,7 +164,7 @@ public class CoursePrizeConversation extends ParkourConversation {
         }
     }
 
-    private class CommandProcessComplete extends MessagePrompt {
+    private static class CommandProcessComplete extends MessagePrompt {
 
         public String getPromptText(ConversationContext context) {
             String courseName = context.getSessionData(SESSION_COURSE_NAME).toString();
@@ -206,7 +206,7 @@ public class CoursePrizeConversation extends ParkourConversation {
         }
     }
 
-    private class XPProcessComplete extends MessagePrompt {
+    private static class XPProcessComplete extends MessagePrompt {
 
         public String getPromptText(ConversationContext context) {
             String courseName = context.getSessionData(SESSION_COURSE_NAME).toString();

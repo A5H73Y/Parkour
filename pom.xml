@@ -65,6 +65,11 @@
 			<id>minebench-repo</id>
 			<url>https://repo.minebench.de/</url>
 		</repository>
+		<!-- AAC API -->
+		<repository>
+			<id>janmm14-public</id>
+			<url>https://repo.janmm14.de/repository/public/</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -122,6 +127,12 @@
 			<artifactId>inventorygui</artifactId>
 			<version>1.4.2-SNAPSHOT</version>
 			<scope>compile</scope>
+		</dependency>
+		<!-- AAC API -->
+		<dependency>
+			<groupId>de.janmm14</groupId>
+			<artifactId>aac-api</artifactId>
+			<version>4.2.0</version>
 		</dependency>
 	</dependencies>
 
