@@ -601,7 +601,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
             case "setmaxtime":
             case "setmaxdeath":
             case "setcreator":
-                if (!ValidationUtils.validateArgs(player, args, 1, 3)) {
+                if (!ValidationUtils.validateArgs(player, args, 3)) {
                     return false;
                 }
 
@@ -610,7 +610,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
             case "setrank":
             case "setlevel":
-                if (!ValidationUtils.validateArgs(player, args, 1, 3)) {
+                if (!ValidationUtils.validateArgs(player, args, 3)) {
                     return false;
                 }
 
