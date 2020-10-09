@@ -11,10 +11,9 @@ public class ParkourSession implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-//    private String liveTime; //TODO what do?
-
     private int deaths;
     private int currentCheckpoint;
+    private int secondsAccumulated;
 
     private long timeStarted;
     private long timeAccumulated;
@@ -39,6 +38,7 @@ public class ParkourSession implements Serializable {
         this.timeStarted = System.currentTimeMillis();
         this.course = course;
         this.courseName = course.getName();
+        this.secondsAccumulated = course.hasMaxTime() ? course.getMaxTime() : 0;
     }
 
     public boolean hasAchievedAllCheckpoints() {
@@ -52,83 +52,6 @@ public class ParkourSession implements Serializable {
     public Checkpoint getCheckpoint() {
         return course.getCheckpoints().get(currentCheckpoint);
     }
-
-//    /**
-//     * Start the visual timer either on the ActionBar if DisplayLiveTime is true, or in the scoreboard
-//     * if the scoreboard is enabled and the display current time option is true.
-//     */
-//    public void startVisualTimer(final Player player) {
-//        if (Parkour.getInstance().getPlayerManager().isInQuietMode(player.getName()) ) {
-//            return;
-//        }
-//        if (!Parkour.getDefaultConfig().getBoolean("OnCourse.DisplayLiveTime")
-//                && (!Parkour.getInstance().getScoreboardManager().isEnabled()
-//                || !Parkour.getDefaultConfig().getBoolean("Scoreboard.Display.CurrentTime"))) {
-//            return;
-//        }
-//
-//        if (course.hasMaxTime()) {
-//            seconds = course.getMaxTime();
-//        }
-//        final String soundName = SoundUtils.getTimerSound();
-//        BukkitTask task = new BukkitRunnable() {
-//            @Override
-//            public void run() {
-//                if (course.hasMaxTime()) {
-//                    liveTime = DateTimeUtils.convertSecondsToTime(--seconds);
-//                } else {
-//                    liveTime = DateTimeUtils.convertSecondsToTime(++seconds);
-//                }
-//
-//                if (!player.isOnline()) {
-//                    cancelVisualTimer();
-//                    return;
-//                }
-//                if (course.hasMaxTime() && (seconds <= 5 || seconds == 10)) {
-//                    liveTime = ChatColor.RED + liveTime;
-//
-//                    if (Parkour.getDefaultConfig().isSoundEnabled()) {
-//                        player.playSound(player.getLocation(), Sound.valueOf(soundName), 2.0f, 1.75f);
-//                    }
-//                }
-//
-//                if (Parkour.getInstance().getScoreboardManager().isEnabled()) {
-//                    Parkour.getInstance().getScoreboardManager().updateScoreboardTimer(player, liveTime);
-//                }
-//
-//                // TODO check config flag,
-//                // if it's true, check server version, if unsupported action bar message, check for BountifulAPI
-//                if (PluginUtils.getMinorServerVersion() > 13
-//                        && Parkour.getDefaultConfig().getBoolean("OnCourse.DisplayLiveTime")) {
-//                    Parkour.getInstance().getBountifulApi().sendActionBar(player, liveTime, true);
-//                }
-//
-//                if (course.hasMaxTime() && seconds == 0) {
-//                    String maxTime = DateTimeUtils.convertSecondsToTime(course.getMaxTime());
-//                    TranslationUtils.sendValueTranslation("Parkour.MaxTime", maxTime, player);
-//                    Parkour.getInstance().getPlayerManager().leaveCourse(player);
-//                }
-//            }
-//        }.runTaskTimer(Parkour.getInstance(), 20, 20);
-//
-//        taskId = task.getTaskId();
-//    }
-//
-//    public void cancelVisualTimer() {
-//        if (taskId > 0) {
-//            Bukkit.getScheduler().cancelTask(taskId);
-//            taskId = 0;
-//        }
-//    }
-
-    /**
-     * Get the current time of the ParkourSession
-     *
-     * @return String in %02d:%02d:%02d format
-//     */
-//    public String getLiveTime() {
-//        return liveTime;
-//    }
 
     public int getDeaths() {
         return deaths;
@@ -165,9 +88,7 @@ public class ParkourSession implements Serializable {
     public void resetTimeStarted() {
         this.timeStarted = System.currentTimeMillis();
         this.timeAccumulated = 0;
-//        if (course.hasMaxTime()) { //TODO
-//            seconds = course.getMaxTime();
-//        }
+        this.secondsAccumulated = course.hasMaxTime() ? course.getMaxTime() : 0;
     }
 
     public void increaseCheckpoint() {
@@ -178,16 +99,16 @@ public class ParkourSession implements Serializable {
         deaths++;
     }
 
-    public long getTimeFinished() {
-        return timeFinished;
+    public void markTimeAccumulated() {
+        timeAccumulated = getCurrentTime();
     }
 
-    public void setTimeFinished() {
+    public void markTimeFinished() {
         timeFinished = getCurrentTime();
     }
 
-    public void setTimeAccumulated() {
-        timeAccumulated = getCurrentTime();
+    public long getTimeFinished() {
+        return timeFinished;
     }
 
     public long getCurrentTime() {
@@ -201,5 +122,9 @@ public class ParkourSession implements Serializable {
     public void recalculateTime() {
         timeStarted = System.currentTimeMillis() - timeAccumulated;
         timeAccumulated = 0;
+    }
+
+    public int calculateSeconds() {
+        return course.hasMaxTime() ? secondsAccumulated-- : secondsAccumulated++;
     }
 }

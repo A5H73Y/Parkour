@@ -41,6 +41,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Parkour extends JavaPlugin {
@@ -112,6 +113,7 @@ public class Parkour extends JavaPlugin {
         }
         getPlayerManager().teardownParkourPlayers();
         getDatabase().closeConnection();
+        Bukkit.getScheduler().cancelTasks(this);
         PluginUtils.log("Disabled Parkour v" + getDescription().getVersion());
         instance = null;
     }

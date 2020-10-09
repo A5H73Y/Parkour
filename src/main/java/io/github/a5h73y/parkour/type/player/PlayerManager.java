@@ -22,6 +22,7 @@ import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
+import io.github.a5h73y.parkour.utility.SoundUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.support.XMaterial;
@@ -53,11 +54,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 public class PlayerManager extends AbstractPluginReceiver {
 
 	private final Map<Player, ParkourSession> parkourPlayers = new WeakHashMap<>();
+
 	private final Map<Player, Long> playerDelay = new HashMap<>();
 	private final Map<Integer, String> parkourRanks = new TreeMap<>();
 
@@ -71,6 +74,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		super(parkour);
 		populateParkourPlayers();
 		populateParkourRanks();
+		startLiveTimerRunnable();
 	}
 
 	/**
@@ -166,9 +170,48 @@ public class PlayerManager extends AbstractPluginReceiver {
 	private void removePlayer(Player player) {
 		ParkourSession session = parkourPlayers.get(player);
 		if (session != null) {
-//			session.cancelVisualTimer();
 			parkourPlayers.remove(player);
 		}
+	}
+
+	/**
+	 * Start the visual timer either on the ActionBar if DisplayLiveTime is true, or in the scoreboard
+	 * if the scoreboard is enabled and the display current time option is true.
+	 */
+	public void startLiveTimerRunnable() {
+		if (!parkour.getConfig().getBoolean("OnCourse.DisplayLiveTime")) {
+			return;
+		}
+
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				for (Map.Entry<Player, ParkourSession> parkourSession : parkourPlayers.entrySet()) {
+					Player player = parkourSession.getKey();
+					Course course = parkourSession.getValue().getCourse();
+
+					int seconds = parkourSession.getValue().calculateSeconds();
+					String liveTimer = DateTimeUtils.convertSecondsToTime(seconds);
+
+					if (course.hasMaxTime() && (seconds <= 5 || seconds == 10)) {
+						liveTimer = ChatColor.RED + liveTimer;
+					}
+
+					if (!isInQuietMode(player)) {
+						SoundUtils.playTimerSound(player);
+						parkour.getBountifulApi().sendActionBar(player, liveTimer, true);
+					}
+
+					parkour.getScoreboardManager().updateScoreboardTimer(player, liveTimer);
+
+					if (course.hasMaxTime() && seconds == 0) {
+						String maxTime = DateTimeUtils.convertSecondsToTime(course.getMaxTime());
+						TranslationUtils.sendValueTranslation("Parkour.MaxTime", maxTime, player);
+						leaveCourse(player);
+					}
+				}
+			}
+		}.runTaskTimer(parkour, 0, 20);
 	}
 
 	/**
@@ -312,7 +355,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param courseName
 	 */
 	public void joinCourseButDelayed(Player player, String courseName, int delay) {
-		Bukkit.getScheduler().scheduleSyncDelayedTask(Parkour.getInstance(), () -> joinCourse(player, courseName), delay);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () -> joinCourse(player, courseName), delay);
 	}
 
 	/**
@@ -522,7 +565,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			return;
 		}
 
-		session.setTimeFinished();
+		session.markTimeFinished();
 		preparePlayer(player, parkour.getConfig().getString("OnFinish.SetGameMode"));
 
 		if (hasHiddenPlayers(player)) {
@@ -1292,7 +1335,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 	public void stashParkourSession(Player player) {
 		if (isPlaying(player)) {
-			getParkourSession(player).setTimeAccumulated();
+			getParkourSession(player).markTimeAccumulated();
 		}
 		Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () -> {
 			createParkourSessionFile(player);

@@ -217,14 +217,8 @@ public class CourseInfo {
         return getCourseConfig().getInt(courseName.toLowerCase() + ".MaxDeaths", -1);
     }
 
-    /**
-     * Get the maximum time limit for course
-     *
-     * @param courseName
-     * @return seconds
-     */
-    public static int getMaximumTime(String courseName) {
-        return getCourseConfig().getInt(courseName.toLowerCase() + ".MaxTime", -1);
+    public static boolean hasMaximumDeaths(String courseName) {
+        return getMaximumDeaths(courseName) > 0;
     }
 
     /**
@@ -236,6 +230,20 @@ public class CourseInfo {
     public static void setMaximumDeaths(String courseName, int amount) {
         getCourseConfig().set(courseName.toLowerCase() + ".MaxDeaths", amount);
         persistChanges();
+    }
+
+    /**
+     * Get the maximum time limit for course
+     *
+     * @param courseName
+     * @return seconds
+     */
+    public static int getMaximumTime(String courseName) {
+        return getCourseConfig().getInt(courseName.toLowerCase() + ".MaxTime", -1);
+    }
+
+    public static boolean hasMaximumTime(String courseName) {
+        return getMaximumTime(courseName) > 0;
     }
 
     /**

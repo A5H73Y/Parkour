@@ -417,7 +417,7 @@ public class CourseManager extends AbstractPluginReceiver {
 
         block.setType(XMaterial.STONE_PRESSURE_PLATE.parseMaterial());
         Block blockUnder = block.getRelative(BlockFace.DOWN);
-        blockUnder.setType(Parkour.getDefaultConfig().getAutoStartMaterial());
+        blockUnder.setType(parkour.getConfig().getAutoStartMaterial());
 
         TranslationUtils.sendPropertySet(player, "AutoStart", args[1], "your position");
     }
@@ -511,7 +511,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param secondsValue new maximum seconds
      */
     public void setMaxTime(CommandSender sender, String courseName, String secondsValue) {
-        if (!Parkour.getDefaultConfig().getBoolean("OnCourse.DisplayLiveTime")) {
+        if (!parkour.getConfig().getBoolean("OnCourse.DisplayLiveTime")) {
             sender.sendMessage(Parkour.getPrefix() + "Live Time is disabled!");
             return;
         }
@@ -716,7 +716,7 @@ public class CourseManager extends AbstractPluginReceiver {
             TranslationUtils.sendPropertySet(player, "Linked Course", selected, args[2]);
 
         } else if (args.length >= 3 && args[1].equalsIgnoreCase("lobby")) {
-            if (!Parkour.getDefaultConfig().contains("Lobby." + args[2] + ".World")) { // TODO
+            if (!parkour.getConfig().contains("Lobby." + args[2] + ".World")) { // TODO
                 player.sendMessage(Parkour.getPrefix() + "Lobby " + args[2] + " does not exist.");
                 return;
             }

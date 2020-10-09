@@ -6,6 +6,7 @@ import io.github.a5h73y.parkour.database.TimeEntry;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.course.Course;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
@@ -45,7 +46,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
 
     public ScoreboardManager(Parkour parkour) {
         super(parkour);
-        ParkourConfiguration defaultConfig = Parkour.getConfig(ConfigType.DEFAULT);
+        ParkourConfiguration defaultConfig = parkour.getConfig();
         ParkourConfiguration stringsConfig = Parkour.getConfig(ConfigType.STRINGS);
 
         this.enabled = defaultConfig.getBoolean("Scoreboard.Enabled");
@@ -85,7 +86,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
 
         Scoreboard board = setupScoreboard(player);
 
-        if (Parkour.getDefaultConfig().isPreventPlayerCollisions() && PluginUtils.getMinorServerVersion() > 8) {
+        if (parkour.getConfig().isPreventPlayerCollisions() && PluginUtils.getMinorServerVersion() > 8) {
             Team team = board.registerNewTeam("parkour");
             team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
             team.addEntry(player.getName());
@@ -97,7 +98,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
     public void updateScoreboardTimer(Player player, String liveTime) {
         Scoreboard board = player.getScoreboard();
 
-        if (board == null || !configKey.get(CURRENT_TIME)) {
+        if (!enabled || board == null || !configKey.get(CURRENT_TIME)) {
             return;
         }
 
@@ -107,7 +108,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
     public void updateScoreboardDeaths(Player player, String deaths) {
         Scoreboard board = player.getScoreboard();
 
-        if (board == null || !configKey.get(CURRENT_DEATHS)) {
+        if (!enabled || board == null || !configKey.get(CURRENT_DEATHS)) {
             return;
         }
 
@@ -117,7 +118,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
     public void updateScoreboardCheckpoints(Player player, String checkpoints) {
         Scoreboard board = player.getScoreboard();
 
-        if (board == null || !configKey.get(CHECKPOINTS)) {
+        if (!enabled || board == null || !configKey.get(CHECKPOINTS)) {
             return;
         }
 
@@ -158,7 +159,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
             return;
         }
 
-        TimeEntry result = Parkour.getInstance().getDatabase().getNthBestTime(playerBoard.getCourseName(), 1);
+        TimeEntry result = parkour.getDatabase().getNthBestTime(playerBoard.getCourseName(), 1);
 
         if (configKey.get(BEST_TIME_EVER)) {
             String bestTimeEver = result != null ? DateTimeUtils.displayCurrentTime(result.getTime())
@@ -177,7 +178,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
             return;
         }
 
-        List<TimeEntry> result = Parkour.getInstance().getDatabase()
+        List<TimeEntry> result = parkour.getDatabase()
                 .getTopPlayerCourseResults(playerBoard.getPlayer(), playerBoard.getCourseName(), 1);
         String bestTime = result.size() > 0 ? DateTimeUtils.displayCurrentTime(result.get(0).getTime()) : translationKey.get("notCompleted");
         print(playerBoard, bestTime, BEST_TIME_EVER_ME);
@@ -189,9 +190,8 @@ public class ScoreboardManager extends AbstractPluginReceiver {
         }
 
         String start = "00:00:00";
-        if (Parkour.getConfig(ConfigType.COURSES).contains(playerBoard.getCourseName() + ".MaxTime")) {
-            start = DateTimeUtils.convertSecondsToTime(
-                    Parkour.getConfig(ConfigType.COURSES).getInt(playerBoard.getCourseName() + ".MaxTime", 0));
+        if (CourseInfo.hasMaximumTime(playerBoard.getCourseName())) {
+            start = DateTimeUtils.convertSecondsToTime(CourseInfo.getMaximumTime(playerBoard.getCourseName()));
 			print(playerBoard, start, MAX_TIME);
         } else {
 			print(playerBoard, start, CURRENT_TIME);
