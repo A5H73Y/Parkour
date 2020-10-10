@@ -102,6 +102,11 @@ public class ScoreboardManager extends AbstractPluginReceiver {
             return;
         }
 
+        if (board.getTeam(MAX_TIME) != null) {
+            board.getTeam(MAX_TIME).setPrefix(convertText(liveTime));
+            return;
+        }
+
         board.getTeam(CURRENT_TIME).setPrefix(convertText(liveTime));
     }
 
