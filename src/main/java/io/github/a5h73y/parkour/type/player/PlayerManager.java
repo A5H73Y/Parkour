@@ -1621,16 +1621,20 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		if (parkour.getDatabase().isBestCourseTime(session.getCourse().getName(), session.getTimeFinished())) {
-			parkour.getBountifulApi().sendFullTitle(player,
-					TranslationUtils.getTranslation("Parkour.CourseRecord", false),
-					DateTimeUtils.displayCurrentTime(session.getTimeFinished()), true);
+			if (parkour.getConfig().getBoolean("OnFinish.DisplayNewRecords")) {
+				parkour.getBountifulApi().sendFullTitle(player,
+						TranslationUtils.getTranslation("Parkour.CourseRecord", false),
+						DateTimeUtils.displayCurrentTime(session.getTimeFinished()), true);
+			}
 			return true;
 		}
 
 		if (parkour.getDatabase().isBestCourseTime(player, session.getCourse().getName(), session.getTimeFinished())) {
-			parkour.getBountifulApi().sendFullTitle(player,
-					TranslationUtils.getTranslation("Parkour.BestTime", false),
-					DateTimeUtils.displayCurrentTime(session.getTimeFinished()), true);
+			if (parkour.getConfig().getBoolean("OnFinish.DisplayNewRecords")) {
+				parkour.getBountifulApi().sendFullTitle(player,
+						TranslationUtils.getTranslation("Parkour.BestTime", false),
+						DateTimeUtils.displayCurrentTime(session.getTimeFinished()), true);
+			}
 			return true;
 		}
 		return false;
