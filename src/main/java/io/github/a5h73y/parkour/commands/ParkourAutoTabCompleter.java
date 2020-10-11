@@ -50,6 +50,9 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
     private static final List<String> LIST_COMMANDS = Arrays.asList(
             "courses", "players", "ranks", "lobbies");
 
+    private static final List<String> ECONOMY_COMMANDS = Arrays.asList(
+            "info", "recreate", "setprize", "setfee");
+
     public ParkourAutoTabCompleter(Parkour parkour) {
         super(parkour);
     }
@@ -165,6 +168,9 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
                 break;
             case "list":
                 allowedCommands = LIST_COMMANDS;
+                break;
+            case "economy":
+                allowedCommands = ECONOMY_COMMANDS;
                 break;
             case "join":
             case "course":
