@@ -65,11 +65,11 @@ public class BountifulApi extends PluginWrapper {
 		}
 
 		if (attemptTitle) {
-			if (isEnabled()) {
-				BountifulAPI.sendTitle(player, inDuration, stayDuration, outDuration, title, subTitle);
-
-			} else if (useSpigotMethods) {
+			if (useSpigotMethods) {
 				player.sendTitle(title, subTitle, inDuration, stayDuration, outDuration);
+
+			} else if (isEnabled()) {
+				BountifulAPI.sendTitle(player, inDuration, stayDuration, outDuration, title, subTitle);
 			}
 		} else {
 			player.sendMessage(Parkour.getPrefix() + title);
@@ -82,11 +82,11 @@ public class BountifulApi extends PluginWrapper {
 		}
 
 		if (attemptTitle) {
-			if (isEnabled()) {
-				BountifulAPI.sendActionBar(player, title);
-
-			} else if (useSpigotMethods) {
+			if (useSpigotMethods) {
 				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(title));
+
+			} else if (isEnabled()) {
+				BountifulAPI.sendActionBar(player, title);
 			}
 		} else {
 			player.sendMessage(Parkour.getPrefix() + title);
