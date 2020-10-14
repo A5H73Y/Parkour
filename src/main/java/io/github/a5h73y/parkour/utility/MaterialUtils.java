@@ -1,10 +1,11 @@
 package io.github.a5h73y.parkour.utility;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.utility.support.XMaterial;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -102,10 +103,10 @@ public class MaterialUtils {
 		Material material = Material.getMaterial(materialName);
 
 		if (material == null) {
-			XMaterial matching = XMaterial.fromString(materialName);
+			Optional<XMaterial> matching = XMaterial.matchXMaterial(materialName);
 
-			if (matching != null) {
-				material = matching.parseMaterial();
+			if (matching.isPresent()) {
+				material = matching.get().parseMaterial();
 			}
 		}
 

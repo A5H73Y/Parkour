@@ -5,15 +5,15 @@ import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Validation;
-import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
+import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
-import io.github.a5h73y.parkour.utility.support.XMaterial;
 import java.util.ArrayList;
 import java.util.List;
+import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -76,7 +76,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
             blockUnder.setType(Material.STONE);
         }
 
-        Material pressurePlate = XMaterial.fromString(parkour.getConfig().getCheckpointMaterial()).parseMaterial();
+        Material pressurePlate = MaterialUtils.lookupMaterial(parkour.getConfig().getCheckpointMaterial());
         block.setType(pressurePlate);
 
         createCheckpointData(selectedCourse, location, checkpoint);

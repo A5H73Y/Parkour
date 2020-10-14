@@ -25,7 +25,6 @@ import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.SoundUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
-import io.github.a5h73y.parkour.utility.support.XMaterial;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -41,6 +40,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.WeakHashMap;
 import java.util.stream.Collectors;
+import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
@@ -1465,6 +1465,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		String finishBroadcast = TranslationUtils.getTranslation("Parkour.FinishBroadcast")
 				.replace("%PLAYER%", player.getName())
+				.replace("%PLAYER_DISPLAY%", player.getDisplayName())
 				.replace("%COURSE%", session.getCourse().getName())
 				.replace("%DEATHS%", String.valueOf(session.getDeaths()))
 				.replace("%TIME%", session.displayTime());

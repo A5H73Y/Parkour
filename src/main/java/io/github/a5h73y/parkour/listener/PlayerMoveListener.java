@@ -6,9 +6,9 @@ import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.kit.ParkourKit;
 import io.github.a5h73y.parkour.type.kit.ParkourKitAction;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
-import io.github.a5h73y.parkour.utility.support.XMaterial;
 import java.util.Arrays;
 import java.util.List;
+import com.cryptomorin.xseries.XBlock;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -81,9 +81,8 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
         Material belowMaterial = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
 
         // if player is on half-block or jumping, get actual location.
-        if ((player.getLocation().getBlock().getType() != Material.AIR
-                && player.getLocation().getBlock().getType() != XMaterial.CAVE_AIR.parseMaterial())
-                || !player.isOnGround()) {
+        if (!parkour.getConfig().isLegacyGroundDetection()
+                && (!XBlock.isAir(player.getLocation().getBlock().getType()) || !player.isOnGround())) {
             belowMaterial = player.getLocation().getBlock().getType();
         }
 

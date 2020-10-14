@@ -7,7 +7,7 @@ import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
-import io.github.a5h73y.parkour.utility.support.XMaterial;
+import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -137,7 +137,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         }
 
         if (event.getClickedBlock().getType()
-                != XMaterial.fromString(parkour.getConfig().getCheckpointMaterial()).parseMaterial()) {
+                != MaterialUtils.lookupMaterial(parkour.getConfig().getCheckpointMaterial())) {
             return;
         }
 

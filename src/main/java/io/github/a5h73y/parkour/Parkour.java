@@ -46,7 +46,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Parkour extends JavaPlugin {
 
-    private static final int BUKKIT_PLUGIN_ID = 42615;
+    private static final int BSTATS_ID = 1181;
     private static final int SPIGOT_PLUGIN_ID = 23685;
     private static Parkour instance;
 
@@ -96,7 +96,7 @@ public class Parkour extends JavaPlugin {
         setupPlugins();
 
         getLogger().info("Enabled Parkour v" + getDescription().getVersion());
-        new Metrics(this, BUKKIT_PLUGIN_ID);
+        new Metrics(this, BSTATS_ID);
         checkForUpdates();
 
         PluginUtils.log("v6.0 is currently a very unstable build, "

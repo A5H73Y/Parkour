@@ -134,6 +134,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("Other.UseAutoTabCompletion", true);
 		this.addDefault("Other.ParkourKit.ReplaceInventory", true);
 		this.addDefault("Other.ParkourKit.GiveSign", true);
+		this.addDefault("Other.ParkourKit.LegacyGroundDetection", false);
 		this.addDefault("Other.Parkour.ChatRankPrefix.Enabled", false);
 		this.addDefault("Other.Parkour.ChatRankPrefix.OverrideChat", true);
 		this.addDefault("Other.Parkour.SignProtection", true);
@@ -287,6 +288,10 @@ public class DefaultConfig extends ParkourConfiguration {
 
 	public boolean isCompletedCoursesEnabled() {
 		return this.getBoolean("OnFinish.CompletedCourses.Enabled");
+	}
+
+	public boolean isLegacyGroundDetection() {
+		return this.getBoolean("Other.ParkourKit.LegacyGroundDetection");
 	}
 
 	/* Materials */

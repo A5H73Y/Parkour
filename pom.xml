@@ -134,6 +134,13 @@
 			<artifactId>aac-api</artifactId>
 			<version>4.2.0</version>
 		</dependency>
+		<!-- XSeries -->
+		<dependency>
+			<groupId>com.github.cryptomorin</groupId>
+			<artifactId>XSeries</artifactId>
+			<version>7.5.3</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -177,6 +184,7 @@
 					<createDependencyReducedPom>false</createDependencyReducedPom>
 					<artifactSet>
 						<includes>
+							<include>com.github.cryptomorin:*</include>
 							<include>org.bstats:*</include>
 							<include>pro.husk:*</include>
 							<include>com.zaxxer:*</include>
@@ -195,7 +203,11 @@
 					<relocations>
 						<relocation>
 							<pattern>org.bstats</pattern>
-							<shadedPattern>io.github.a5h73y.parkour</shadedPattern>
+							<shadedPattern>io.github.a5h73y.parkour.bstats</shadedPattern>
+						</relocation>
+						<relocation>
+							<pattern>com.cryptomorin.xseries</pattern>
+							<shadedPattern>io.github.a5h73y.parkour.support</shadedPattern>
 						</relocation>
 					</relocations>
 				</configuration>
