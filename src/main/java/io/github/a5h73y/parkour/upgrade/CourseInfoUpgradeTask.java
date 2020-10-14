@@ -32,7 +32,7 @@ public class CourseInfoUpgradeTask extends TimedUpgradeTask {
 			}
 
 			int checkpoints = getParkourUpgrader().getCoursesConfig().getInt(courseName + ".Points");
-			getParkourUpgrader().getCoursesConfig().set(courseName + ".Checkpoints", checkpoints);
+			getParkourUpgrader().getCheckpointsConfig().set(courseName + ".Checkpoints", checkpoints);
 			getParkourUpgrader().getCoursesConfig().set(courseName + ".Points", null);
 
 			for (int i = 0; i < checkpoints + 1; i++) {
