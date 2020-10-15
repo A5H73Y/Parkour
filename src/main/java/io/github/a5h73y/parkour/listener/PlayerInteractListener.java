@@ -166,7 +166,8 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
                 && checkpoint.getNextCheckpointZ() == below.getBlockZ()) {
             if (parkour.getConfig().isFirstCheckAsStart() && session.getCurrentCheckpoint() == 0) {
                 session.resetTimeStarted();
-                parkour.getBountifulApi().sendActionBar(event.getPlayer(), TranslationUtils.getTranslation("Parkour.TimerStarted", false), true);
+                parkour.getBountifulApi().sendActionBar(event.getPlayer(),
+                        TranslationUtils.getTranslation("Parkour.TimerStarted", false), true);
             }
             parkour.getPlayerManager().increaseCheckpoint(event.getPlayer());
         }

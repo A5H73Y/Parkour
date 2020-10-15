@@ -13,8 +13,6 @@ public class StringsConfig extends ParkourConfiguration {
 	protected void initializeConfig() {
 		this.addDefault("Parkour.Prefix", "&0[&bParkour&0] &f");
 		this.addDefault("Parkour.SignHeader", "&0[&bParkour&0]");
-		this.addDefault("Parkour.Commands", "To display all commands enter &f/pa cmds");
-		this.addDefault("Parkour.ConsoleCommands", "To display all commands enter &f/pac cmds");
 		this.addDefault("Parkour.ConfigReloaded", "The config has been reloaded.");
 		this.addDefault("Parkour.SignRemoved", "Parkour sign removed!");
 		this.addDefault("Parkour.SignCreated", "&b%VALUE% &fsign created.");
@@ -28,6 +26,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Parkour.Restarting", "Restarting course");
 		this.addDefault("Parkour.Leave", "You left &b%VALUE%");
 		this.addDefault("Parkour.Created", "&b%VALUE% &fhas been created and selected!");
+		this.addDefault("Parkour.WhenReady", "When you have finished creating &b%VALUE%&f, enter &b/pa ready");
 		this.addDefault("Parkour.Delete", "&b%VALUE% &fhas been deleted!");
 		this.addDefault("Parkour.DeleteCheckpoint", "Checkpoint &b%CHECKPOINT% &fwas deleted on &b%COURSE%");
 		this.addDefault("Parkour.Reset", "&b%VALUE% &fhas been reset!");
@@ -91,8 +90,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Error.Sign", "Non-Parkour signs have been disabled!");
 		this.addDefault("Error.Selected", "You have not selected a course!");
 		this.addDefault("Error.WrongWorld", "You are in the wrong world!");
-		this.addDefault("Error.WorldTeleport", "Teleporting to a different world has been cancelled");
-		this.addDefault("Error.Something", "Something went wrong: &4%VALUE%");
+		this.addDefault("Error.WorldTeleport", "Teleporting to a different world has been prevented!");
 		this.addDefault("Error.RequiredLvl", "You require level &b%VALUE% &fto join!");
 		this.addDefault("Error.NotReady", "This course is not ready for you to play yet!");
 		this.addDefault("Error.NotReadyWarning", "This course is not ready yet.");
@@ -105,7 +103,6 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Error.Cheating1", "Please do not cheat.");
 		this.addDefault("Error.Cheating2", "&lYou must achieve all &4%VALUE% &f&lcheckpoints!");
 		this.addDefault("Error.Cooldown", "Slow down! Please wait &b%VALUE% &fmore seconds.");
-		this.addDefault("Error.NotCompleted", "You have not yet completed &b%VALUE%&f!"); //TODO why isn't this used?
 		this.addDefault("Error.PrizeCooldown", "You have to wait &b%VALUE% &fbefore you can receive this prize again!");
 		this.addDefault("Error.NoQuestion", "You have not been asked a question!");
 		this.addDefault("Error.JoiningAnotherCourse", "You can not join another course while on a course.");
@@ -116,6 +113,7 @@ public class StringsConfig extends ParkourConfiguration {
 
 		this.addDefault("Help.Command", "&7/pa help &9%VALUE% &0: &7To learn more about this command.");
 		this.addDefault("Help.Commands", "To display the commands menu, enter &b/pa cmds");
+		this.addDefault("Help.ConsoleCommands", "To display all commands, enter &f/pac cmds");
 		this.addDefault("Help.SignCommands", "To display the sign commands menu, enter &b/pa cmds signs");
 		this.addDefault("Help.CommandSyntax", "&7Syntax: &f/pa %VALUE%");
 		this.addDefault("Help.CommandExample", "&7Example: &f%VALUE%");
@@ -124,8 +122,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Other.Item.HideAll", "&7SHIFT + &6Right click to toggle visibility");
 		this.addDefault("Other.Item.Leave", "&7SHIFT + &6Right click to leave course");
 		this.addDefault("Other.Item.Restart", "&7SHIFT + &6Right click to restart course");
-		this.addDefault("Other.Reload", "Config Reloaded!");
-		this.addDefault("Other.Kit", "ParkourKit Given!");
+		this.addDefault("Other.Kit", "&b%VALUE% &fParkourKit received!");
 		this.addDefault("Other.PropertySet", "The &3%PROPERTY% &ffor &3%COURSE% &fwas set to &b%VALUE%&f!");
 
 		this.addDefault("Scoreboard.MainHeading", "&b&l== Parkour ==");
@@ -140,12 +137,6 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Scoreboard.CurrentDeathsTitle", "Current Deaths:");
 		this.addDefault("Scoreboard.CheckpointsTitle", "Checkpoints:");
 		this.addDefault("Scoreboard.MaxTimeTitle", "Time Remaining:");
-
-		this.addDefault("ParkourGUI.NextPage", "&bNext page &f>");
-		this.addDefault("ParkourGUI.PreviousPage", "< &bPrevious page");
-		this.addDefault("ParkourGUI.AllCourses.Title", "Courses - Page %VALUE%");
-		this.addDefault("ParkourGUI.AllCourses.Description", "&fJoin &b%VALUE%");
-		this.addDefault("ParkourGUI.AllCourses.Command", "pa join %VALUE%");
 
 		this.addDefault("Economy.Insufficient", "You require at least &b%AMOUNT% &fbefore joining &b%COURSE%");
 		this.addDefault("Economy.Fee", "&b%AMOUNT% &fhas been deducted from your balance for joining &b%COURSE%");
@@ -168,8 +159,6 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Mode.Freedom.Save", "Position saved");
 		this.addDefault("Mode.Freedom.Load", "Position loaded");
 
-		this.addDefault("Mode.Drunk.JoinText", "You feel strange...");
-		this.addDefault("Mode.Darkness.JoinText", "It suddenly becomes dark...");
 		this.addDefault("Mode.Rockets.JoinText", "Use the Rocket Launcher to launch yourself");
 		this.addDefault("Mode.Rockets.ItemName", "Rocket Launcher");
 
@@ -180,6 +169,8 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("GUI.JoinCourses.Setup.Line1", "         ");
 		this.addDefault("GUI.JoinCourses.Setup.Line2", " ggggggg ");
 		this.addDefault("GUI.JoinCourses.Setup.Line3", "  fp nl  ");
+		this.addDefault("GUI.JoinCourses.Description", "&fJoin &b%VALUE%");
+
 
 		this.addDefault("Display.TimeFormat", "HH:mm:ss:MMM");
 		this.addDefault("Display.DateFormat", "dd/MM/yyyy");

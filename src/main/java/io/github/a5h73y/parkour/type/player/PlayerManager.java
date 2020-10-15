@@ -340,10 +340,9 @@ public class PlayerManager extends AbstractPluginReceiver {
 			}
 		}
 
-		ParkourSession session = addPlayer(player, new ParkourSession(course));
+		addPlayer(player, new ParkourSession(course));
 		setupParkourMode(player);
 		parkour.getScoreboardManager().addScoreboard(player);
-//		session.startVisualTimer(player);
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerJoinCourseEvent(player, course.getName()));
 	}
 
@@ -509,15 +508,15 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		// if it's the first checkpoint
 		if (session.getCurrentCheckpoint() == 0) {
+			String message = TranslationUtils.getTranslation("Parkour.Die1");
+
 			if (parkour.getConfig().getBoolean("OnDie.ResetTimeWithNoCheckpoint")) {
 				session.resetTimeStarted();
-				if (!isInQuietMode(player)) {
-					player.sendMessage(TranslationUtils.getTranslation("Parkour.Die1") + TranslationUtils.getTranslation("Parkour.TimeReset", false));
-				}
-			} else {
-				if (!isInQuietMode(player)) {
-					TranslationUtils.sendTranslation("Parkour.Die1", player);
-				}
+				message += TranslationUtils.getTranslation("Parkour.TimeReset", false);
+			}
+
+			if (!isInQuietMode(player)) {
+				player.sendMessage(message);
 			}
 		} else {
 			if (!isInQuietMode(player)) {
@@ -560,7 +559,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 				&& !session.hasAchievedAllCheckpoints()) {
 
 			TranslationUtils.sendTranslation("Error.Cheating1", player);
-			TranslationUtils.sendValueTranslation("Error.Cheating2", String.valueOf(session.getCourse().getNumberOfCheckpoints()), player);
+			TranslationUtils.sendValueTranslation("Error.Cheating2",
+					String.valueOf(session.getCourse().getNumberOfCheckpoints()), player);
 			playerDie(player);
 			return;
 		}
@@ -832,8 +832,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		if (courseMode == ParkourMode.FREEDOM) {
 			TranslationUtils.sendTranslation("Mode.Freedom.JoinText", player);
-			player.getInventory().addItem(MaterialUtils.createItemStack(
-					XMaterial.REDSTONE_TORCH.parseMaterial(), TranslationUtils.getTranslation("Mode.Freedom.ItemName", false)));
+			player.getInventory().addItem(MaterialUtils.createItemStack(XMaterial.REDSTONE_TORCH.parseMaterial(),
+					TranslationUtils.getTranslation("Mode.Freedom.ItemName", false)));
 
 		} else if (courseMode == ParkourMode.SPEEDY) {
 			float speed = Float.parseFloat(parkour.getConfig().getString("ParkourModes.Speedy.SetSpeed"));
@@ -1221,7 +1221,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		player.updateInventory();
-		player.sendMessage(TranslationUtils.getTranslation("Other.Kit"));
+		TranslationUtils.sendValueTranslation("Other.Kit", kitName, player);
 		PluginUtils.logToFile(player.getName() + " received the kit");
 	}
 

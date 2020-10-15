@@ -221,7 +221,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                     TranslationUtils.sendValueTranslation("Error.NoExist", lines[2], player);
 
                 } else if (!parkour.getPlayerManager().isPlaying(player)) {
-                    TranslationUtils.sendTranslation("Error.NotOnCourse", player);
+                    TranslationUtils.sendTranslation("Error.NotOnAnyCourse", player);
 
                 } else if (!parkour.getPlayerManager().getParkourSession(player).getCourse().getName().equals(lines[2].toLowerCase())) {
                     TranslationUtils.sendTranslation("Error.NotOnCourse", player);

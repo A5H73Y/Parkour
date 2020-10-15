@@ -161,8 +161,7 @@ public class LobbyManager extends AbstractPluginReceiver {
 
         parkour.getConfig().set("Lobby." + lobby, null);
         parkour.saveConfig();
-
-        player.sendMessage(Parkour.getPrefix() + "Lobby " + lobby + " was deleted successfully.");
+        TranslationUtils.sendValueTranslation("Parkour.Delete", lobby + " Lobby", player);
     }
 
     /**

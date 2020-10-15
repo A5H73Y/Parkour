@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.bukkit.configuration.file.FileConfiguration;
 
 public class StringsConfigUpgradeTask extends TimedUpgradeTask {
 
@@ -21,6 +22,7 @@ public class StringsConfigUpgradeTask extends TimedUpgradeTask {
 		boolean success = true;
 		Set<String> strings = getParkourUpgrader().getStringsConfig().getConfigurationSection("").getKeys(true);
 		Pattern pattern = Pattern.compile("%.*?%", Pattern.DOTALL);
+		FileConfiguration config = getParkourUpgrader().getStringsConfig();
 
 		for (String string : strings) {
 			String value = getParkourUpgrader().getStringsConfig().getString(string);
@@ -31,10 +33,13 @@ public class StringsConfigUpgradeTask extends TimedUpgradeTask {
 
 				// we only want to replace the entries with a single value placeholder
 				if (results == 1) {
-					getParkourUpgrader().getStringsConfig().set(string, matcher.replaceAll("%VALUE%"));
+					config.set(string, matcher.replaceAll("%VALUE%"));
 				}
 			}
 		}
+
+		config.set("Event.Checkpoint", "Checkpoint set to &b%CURRENT% &8/ &7%TOTAL%");
+
 		try {
 			getParkourUpgrader().saveStringsConfig();
 		} catch (IOException e) {

@@ -200,16 +200,12 @@ public class EconomyApi extends PluginWrapper {
 
 		int updated = 0;
 		for (String course : CourseInfo.getAllCourses()) {
-			try {
-				if (!config.contains(course + ".JoinFee")) {
-					updated++;
-					config.set(course + ".JoinFee", 0);
-				}
-				if (!config.contains(course + ".FinishReward")) {
-					config.set(course + ".FinishReward", 0);
-				}
-			} catch (Exception ex) {
-				PluginUtils.log(TranslationUtils.getValueTranslation("Error.Something", ex.getMessage(), false));
+			if (!config.contains(course + ".JoinFee")) {
+				updated++;
+				config.set(course + ".JoinFee", 0);
+			}
+			if (!config.contains(course + ".FinishReward")) {
+				config.set(course + ".FinishReward", 0);
 			}
 		}
 

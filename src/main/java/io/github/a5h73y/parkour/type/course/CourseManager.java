@@ -176,6 +176,7 @@ public class CourseManager extends AbstractPluginReceiver {
         PlayerInfo.persistChanges();
 
         TranslationUtils.sendValueTranslation("Parkour.Created", courseName, player);
+        TranslationUtils.sendValueTranslation("Parkour.WhenReady", courseName, player);
         parkour.getDatabase().insertCourse(courseName);
     }
 

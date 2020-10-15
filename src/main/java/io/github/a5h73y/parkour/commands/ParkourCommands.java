@@ -593,7 +593,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 }
 
                 parkour.getConfigManager().reloadConfigs();
-                TranslationUtils.sendTranslation("Other.Reload", player);
+                TranslationUtils.sendTranslation("Parkour.ConfigReloaded", player);
                 PluginUtils.logToFile(player.getName() + " reloaded the Parkour config");
                 break;
 

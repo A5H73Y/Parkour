@@ -35,14 +35,14 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
 
         if (args.length == 0) {
             sender.sendMessage(Parkour.getPrefix() + "proudly created by A5H73Y & steve4744.");
-            TranslationUtils.sendTranslation("Parkour.ConsoleCommands", sender);
+            TranslationUtils.sendTranslation("Help.ConsoleCommands", sender);
             return true;
         }
 
         switch (args[0].toLowerCase()) {
             case "reload":
                 parkour.getConfigManager().reloadConfigs();
-                sender.sendMessage("Config reloaded!");
+                TranslationUtils.sendTranslation("Parkour.ConfigReloaded", sender);
                 break;
 
             case "join":

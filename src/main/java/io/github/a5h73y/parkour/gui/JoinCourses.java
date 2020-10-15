@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Car Store Gui.
+ * Join Parkour Courses GUI.
  */
 public class JoinCourses extends AbstractMenu {
 
@@ -44,24 +44,12 @@ public class JoinCourses extends AbstractMenu {
 								return true;
 							},
 
-							// the car type heading
-							StringUtils.standardizeText(course)
+							// the item heading
+							StringUtils.standardizeText(course),
 
-							// maximum speed
-//							TranslationUtils.getValueTranslation("CarDetails.MaxSpeed",
-//									String.valueOf(details.getStartMaxSpeed()), false),
-//
-//							// acceleration
-//							TranslationUtils.getValueTranslation("CarDetails.Acceleration",
-//									String.valueOf(details.getAcceleration()), false),
-//
-//							// fuel usage
-//							TranslationUtils.getValueTranslation("CarDetails.FuelUsage",
-//									String.valueOf(details.getAcceleration()), false),
-//
-//							// economy cost
-//							TranslationUtils.getValueTranslation("CarDetails.Cost",
-//									displayCost, false)
+							// the item description
+							TranslationUtils.getValueTranslation("GUI.JoinCourses.Description",
+									course, false)
 					));
 		}
 		return group;

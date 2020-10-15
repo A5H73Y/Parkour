@@ -74,7 +74,8 @@ public class CoursePrizeConversation extends ParkourConversation {
             Material material = MaterialUtils.lookupMaterial(message.toUpperCase());
 
             if (material == null) {
-                sendErrorMessage(context, "This is not a valid material");
+                sendErrorMessage(context, TranslationUtils.getValueTranslation("Error.UnknownMaterial",
+                        message.toUpperCase(), false));
                 return this;
             }
 

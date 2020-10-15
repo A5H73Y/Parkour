@@ -1,11 +1,13 @@
 package io.github.a5h73y.parkour.conversation.other;
 
+import static io.github.a5h73y.parkour.conversation.ParkourConversation.sendErrorMessage;
+
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
-import io.github.a5h73y.parkour.conversation.ParkourConversation;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
+import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.ChatColor;
@@ -56,12 +58,13 @@ public class AddKitItemConversation {
             Material material = MaterialUtils.lookupMaterial(message.toUpperCase());
 
             if (material == null) {
-                ParkourConversation.sendErrorMessage(context, message.toUpperCase() + " is not a valid Material");
+                sendErrorMessage(context, TranslationUtils.getValueTranslation("Error.UnknownMaterial",
+                        message.toUpperCase(), false));
                 return this;
             }
 
             if (Parkour.getDefaultConfig().contains("ParkourKit." + kitName + "." + material.name())) {
-                ParkourConversation.sendErrorMessage(context, "You've already used this Material");
+                sendErrorMessage(context, material.name() + " already exists in this ParkourKit!");
                 return this;
             }
 

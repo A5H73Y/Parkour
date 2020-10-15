@@ -87,7 +87,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
 
                 TranslationUtils.sendValueTranslation("Parkour.Challenge.Forfeited",
                         opponent.getName(), player);
-                TranslationUtils.sendValueTranslation("Parkour.Challenge.Forfeited",
+                TranslationUtils.sendValueTranslation("Parkour.Challenge.Quit",
                         player.getName(), opponent);
 
             } else {

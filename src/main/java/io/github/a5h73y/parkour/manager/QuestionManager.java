@@ -159,13 +159,13 @@ public class QuestionManager extends AbstractPluginReceiver {
 
                 case DELETE_KIT:
                     parkour.getParkourKitManager().deleteKit(argument);
-                    player.sendMessage(Parkour.getPrefix() + "ParkoutKit " + ChatColor.AQUA + argument + ChatColor.WHITE + " deleted...");
+                    TranslationUtils.sendValueTranslation("Parkour.Delete", argument + " ParkourKit", player);
                     PluginUtils.logToFile("ParkourKit " + argument + " was deleted by " + player.getName());
                     return;
 
                 case DELETE_AUTOSTART:
                     parkour.getCourseManager().deleteAutoStart(argument, player);
-                    player.sendMessage(Parkour.getPrefix() + "AutoStart deleted...");
+                    TranslationUtils.sendValueTranslation("Parkour.Delete", "AutoStart", player);
                     PluginUtils.logToFile("AutoStart at " + argument + " was deleted by " + player.getName());
                     return;
 
@@ -184,13 +184,13 @@ public class QuestionManager extends AbstractPluginReceiver {
                     }
 
                     PlayerInfo.resetPlayer(targetPlayer);
-                    player.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + argument + ChatColor.WHITE + " has been reset.");
+                    TranslationUtils.sendValueTranslation("Parkour.Reset", argument, player);
                     PluginUtils.logToFile("player " + argument + " was reset by " + player.getName());
                     return;
 
                 case RESET_LEADERBOARD:
                     parkour.getDatabase().deleteCourseTimes(argument);
-                    player.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + argument + ChatColor.WHITE + " leaderboards have been reset.");
+                    TranslationUtils.sendValueTranslation("Parkour.Reset", argument + " Leaderboards", player);
                     PluginUtils.logToFile(argument + " leaderboards were reset by " + player.getName());
                     return;
 
@@ -204,12 +204,13 @@ public class QuestionManager extends AbstractPluginReceiver {
                     }
 
                     parkour.getDatabase().deletePlayerCourseTimes(targetPlayer, arguments[1]);
+                    TranslationUtils.sendValueTranslation("Parkour.Reset", arguments[0] + " leaderboards for " + arguments[2], player);
                     PluginUtils.logToFile(arguments[0] + " leaderboards were reset on course + " + arguments[1] + " by " + player.getName());
                     return;
 
                 case RESET_PRIZES:
                     CourseInfo.resetPrizes(argument);
-                    player.sendMessage(Parkour.getPrefix() + ChatColor.AQUA + argument + ChatColor.WHITE + " prizes have been reset.");
+                    TranslationUtils.sendValueTranslation("Parkour.Reset", argument + " Prizes", player);
                     PluginUtils.logToFile(argument + " prizes were reset by " + player.getName());
                     return;
             }
