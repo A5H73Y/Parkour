@@ -2,6 +2,8 @@ package io.github.a5h73y.parkour.upgrade;
 
 import io.github.a5h73y.parkour.Parkour;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import org.bukkit.GameMode;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -24,6 +26,8 @@ public class DefaultConfigUpgradeTask extends TimedUpgradeTask {
 		boolean success = true;
 
 		try {
+			upgradeDefaultLobby();
+
 			// straight up replacements (renames etc.)
 			transferAndDelete("OnJoin.EnforceFinished", "OnJoin.EnforceReady");
 			transferAndDelete("OnFinish.SaveUserCompletedCourses", "OnFinish.CompletedCourses.Enabled");
@@ -31,6 +35,7 @@ public class DefaultConfigUpgradeTask extends TimedUpgradeTask {
 			transferAndDelete("Other.Parkour.SignPermissions", "Other.Parkour.SignUsePermissions");
 			transferAndDelete("Other.Parkour.CommandPermissions", "Other.Parkour.CommandUsePermissions");
 			transferAndDelete("MySQL.User", "MySQL.Username");
+			transferAndDelete("Lobby.EnforceWorld", "LobbySettings.EnforceWorld");
 
 			// update int to actual value
 			defaultConfig.set("OnJoin.SetGameMode", getMatchingGameMode(defaultConfig.getInt("OnJoin.SetGamemode")));
@@ -54,6 +59,8 @@ public class DefaultConfigUpgradeTask extends TimedUpgradeTask {
 			defaultConfig.set("MySQL.Database", null);
 			defaultConfig.set("MySQL.Table", null);
 			defaultConfig.set("Other.Economy", null);
+			defaultConfig.set("Lobby.Set", null);
+			defaultConfig.set("Lobby.EnforceWorld", null);
 			getParkourUpgrader().saveDefaultConfig();
 		} catch (IOException e) {
 			getParkourUpgrader().getLogger().severe("An error occurred during upgrade: " + e.getMessage());
@@ -83,5 +90,14 @@ public class DefaultConfigUpgradeTask extends TimedUpgradeTask {
 			return "GLOBAL";
 		}
 		return "NOBODY";
+	}
+
+	private void upgradeDefaultLobby() {
+		List<String> details = Arrays.asList("World", "X", "Y", "Z", "Pitch", "Yaw");
+
+		for (String detail : details) {
+			defaultConfig.set("Lobby.default." + detail, defaultConfig.get("Lobby." + detail));
+			defaultConfig.set("Lobby." + detail, null);
+		}
 	}
 }

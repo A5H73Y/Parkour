@@ -7,6 +7,7 @@ import io.github.a5h73y.parkour.plugin.EconomyApi;
 import io.github.a5h73y.parkour.type.course.Course;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
+import io.github.a5h73y.parkour.type.lobby.LobbyInfo;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
@@ -298,42 +299,49 @@ public class Validation {
      * @param player
      * @return boolean
      */
-    public static boolean lobbyJoiningSet(Player player) {
-        if (Parkour.getDefaultConfig().getBoolean("Lobby.Set")) {
-            return true;
-        }
+    public static boolean isDefaultLobbySet(Player player) {
+        boolean lobbySet = true;
+        if (!LobbyInfo.doesLobbyExist()) {
+            if (PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                player.sendMessage(Parkour.getPrefix() + ChatColor.RED + "Default Lobby has not been set!");
+                player.sendMessage(StringUtils.colour("Type &b'/pa setlobby'&f where you want the lobby to be set."));
 
-        if (PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
-            player.sendMessage(Parkour.getPrefix() + ChatColor.RED + "Lobby has not been set!");
-            player.sendMessage(StringUtils.colour("Type &b'/pa setlobby'&f where you want the lobby to be set."));
-
-        } else {
-            player.sendMessage(Parkour.getPrefix() + ChatColor.RED + "Lobby has not been set! Please tell the Owner!");
+            } else {
+                player.sendMessage(Parkour.getPrefix() + ChatColor.RED + "Default Lobby has not been set! Please tell the Owner!");
+            }
+            lobbySet = false;
         }
-        return false;
+        return lobbySet;
     }
 
     /**
      * Validate joining a custom lobby
      *
      * @param player
-     * @param lobby
+     * @param lobbyName
      * @return
      */
-    public static boolean lobbyJoiningCustom(Player player, String lobby) {
-        if (!Parkour.getDefaultConfig().contains("Lobby." + lobby + ".World")) {
+    public static boolean canJoinLobby(Player player, String lobbyName) {
+        if (!LobbyInfo.doesLobbyExist(lobbyName)) {
             player.sendMessage(Parkour.getPrefix() + "Lobby does not exist!");
             return false;
         }
 
-        int level = Parkour.getDefaultConfig().getInt("Lobby." + lobby + ".RequiredLevel");
-
-        if (level > 0 && !PermissionUtils.hasPermission(player, Permission.ADMIN_LEVEL_BYPASS, false)) {
-            if (PlayerInfo.getParkourLevel(player) < level) {
-                TranslationUtils.sendValueTranslation("Error.RequiredLvl", String.valueOf(level), player);
-                return false;
-            }
+        if (Parkour.getDefaultConfig().getBoolean("LobbySettings.EnforceWorld")
+                && !player.getWorld().getName().equals(LobbyInfo.getLobbyLocation(lobbyName).getWorld().getName())) {
+            TranslationUtils.sendTranslation("Error.WrongWorld", player);
+            return false;
         }
+
+        int level = LobbyInfo.getRequiredLevel(lobbyName);
+
+        if (level > 0
+                && !PermissionUtils.hasPermission(player, Permission.ADMIN_LEVEL_BYPASS, false)
+                && PlayerInfo.getParkourLevel(player) < level) {
+            TranslationUtils.sendValueTranslation("Error.RequiredLvl", String.valueOf(level), player);
+            return false;
+        }
+
         return true;
     }
 
@@ -414,8 +422,8 @@ public class Validation {
      * @return
      */
     public static boolean deleteLobby(String lobbyName, Player player) {
-        if (!Parkour.getDefaultConfig().contains("Lobby." + lobbyName.toLowerCase() + ".World")) {
-            player.sendMessage(Parkour.getPrefix() + "This lobby does not exist!");
+        if (!LobbyInfo.doesLobbyExist(lobbyName)) {
+            TranslationUtils.sendValueTranslation("Error.UnknownLobby", lobbyName, player);
             return false;
         }
 
@@ -431,7 +439,8 @@ public class Validation {
         }
 
         if (dependentCourses.size() > 0) {
-            player.sendMessage(Parkour.getPrefix() + "This lobby can not be deleted as there are dependent courses: " + dependentCourses);
+            player.sendMessage(Parkour.getPrefix() + "This lobby can not be deleted as there are dependent courses: "
+                    + dependentCourses);
             return false;
         }
 

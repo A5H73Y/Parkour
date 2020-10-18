@@ -22,7 +22,7 @@ import org.bukkit.entity.Player;
 
 public class ParkourKitManager extends AbstractPluginReceiver {
 
-	private final Map<String, ParkourKit> loaded = new HashMap<>();
+	private final Map<String, ParkourKit> parkourKitCache = new HashMap<>();
 
 	public ParkourKitManager(final Parkour parkour) {
 		super(parkour);
@@ -39,8 +39,8 @@ public class ParkourKitManager extends AbstractPluginReceiver {
 	public ParkourKit getParkourKit(String name) {
 		name = name.toLowerCase();
 
-		if (loaded.containsKey(name)) {
-			return loaded.get(name);
+		if (parkourKitCache.containsKey(name)) {
+			return parkourKitCache.get(name);
 		}
 
 		if (!ParkourKitInfo.doesParkourKitExist(name)) {
@@ -48,7 +48,7 @@ public class ParkourKitManager extends AbstractPluginReceiver {
 		}
 
 		ParkourKit kit = populateParkourKit(name);
-		loaded.put(name, kit);
+		parkourKitCache.put(name, kit);
 		return kit;
 	}
 
@@ -93,7 +93,7 @@ public class ParkourKitManager extends AbstractPluginReceiver {
 	 * @param kitName
 	 */
 	public void clearCache(String kitName) {
-		loaded.remove(kitName);
+		parkourKitCache.remove(kitName);
 	}
 
 	public void deleteKit(String argument) {

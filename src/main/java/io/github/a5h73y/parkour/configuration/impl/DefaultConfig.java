@@ -164,8 +164,7 @@ public class DefaultConfig extends ParkourConfiguration {
 
 		this.addDefault("Version", Double.parseDouble(Parkour.getInstance().getDescription().getVersion()));
 
-		this.addDefault("Lobby.Set", false);
-		this.addDefault("Lobby.EnforceWorld", false);
+		this.addDefault("LobbySettings.EnforceWorld", false);
 
 		this.options().copyDefaults(true);
 	}

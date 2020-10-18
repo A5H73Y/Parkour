@@ -1,8 +1,9 @@
 package io.github.a5h73y.parkour.utility;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.other.Validation;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
+import io.github.a5h73y.parkour.type.lobby.LobbyInfo;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
@@ -114,18 +115,19 @@ public class SignUtils {
             TranslationUtils.sendValueTranslation("Parkour.SignCreated", "Lobby");
 
         } else {
-            // TODO maybe some lowercase?
-            if (Parkour.getDefaultConfig().contains("Lobby." + signEvent.getLine(2))) {
-                if (Parkour.getDefaultConfig().contains("Lobby." + signEvent.getLine(2) + ".RequiredLevel")) {
-                    signEvent.setLine(3, ChatColor.RED + Parkour.getDefaultConfig().getString("Lobby." + signEvent.getLine(2) + ".RequiredLevel"));
-                }
-                TranslationUtils.sendValueTranslation("Parkour.SignCreated", "Lobby");
+            String lobbyName = signEvent.getLine(2);
 
-            } else {
-                player.sendMessage(Parkour.getPrefix() + "That custom lobby does not exist!");
+            if (!LobbyInfo.doesLobbyExist(lobbyName)) {
+                TranslationUtils.sendValueTranslation("Error.UnknownLobby", signEvent.getLine(2), player);
                 signEvent.setLine(2, "");
                 signEvent.setLine(3, "-----");
+                return;
             }
+
+            if (LobbyInfo.hasRequiredLevel(lobbyName)) {
+                signEvent.setLine(3, ChatColor.RED + LobbyInfo.getRequiredLevel(lobbyName).toString());
+            }
+            TranslationUtils.sendValueTranslation("Parkour.SignCreated", "Lobby");
         }
     }
 

@@ -234,7 +234,7 @@ public class ParkourDatabase extends AbstractPluginReceiver {
      * @return is best course time
      */
     public boolean isBestCourseTime(String courseName, long time) {
-        return getPositionOnLeaderboard(courseName, time) == 1; //TODO test
+        return getPositionOnLeaderboard(courseName, time) == 1;
     }
 
     /**
@@ -245,7 +245,7 @@ public class ParkourDatabase extends AbstractPluginReceiver {
      * @return is best course time
      */
     public boolean isBestCourseTime(OfflinePlayer player, String courseName, long time) {
-        return getPositionOnLeaderboard(player, courseName, time) == 1; //TODO test
+        return getPositionOnLeaderboard(player, courseName, time) == 1;
     }
 
     /**

@@ -32,7 +32,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Parkour.Reset", "&b%VALUE% &fhas been reset!");
 		this.addDefault("Parkour.FinishBroadcast", "&3%PLAYER% &ffinished &b%COURSE% &fwith &b%DEATHS% &fdeaths, in &b%TIME%&f!");
 		this.addDefault("Parkour.FinishCourse1", "Finished &b%VALUE%&f!");
-		this.addDefault("Parkour.FinishCourse2", "In %TIME%, dying %DEATHS% times");
+		this.addDefault("Parkour.FinishCourse2", "In &b%TIME%&f, dying &b%DEATHS% &ftimes");
 		this.addDefault("Parkour.Lobby", "You have joined the lobby");
 		this.addDefault("Parkour.LobbyOther", "You have joined the &b%VALUE% &flobby");
 		this.addDefault("Parkour.JoinLocation", "You have returned to your original location");
@@ -100,6 +100,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Error.UnknownCommand", "Unknown command!");
 		this.addDefault("Error.UnknownPlayer", "Unknown Parkour player!");
 		this.addDefault("Error.UnknownMaterial", "Unknown Material: &4%VALUE%");
+		this.addDefault("Error.UnknownLobby", "%VALUE% lobby does not exist!");
 		this.addDefault("Error.Cheating1", "Please do not cheat.");
 		this.addDefault("Error.Cheating2", "&lYou must achieve all &4%VALUE% &f&lcheckpoints!");
 		this.addDefault("Error.Cooldown", "Slow down! Please wait &b%VALUE% &fmore seconds.");
@@ -124,6 +125,9 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Other.Item.Restart", "&7SHIFT + &6Right click to restart course");
 		this.addDefault("Other.Kit", "&b%VALUE% &fParkourKit received!");
 		this.addDefault("Other.PropertySet", "The &3%PROPERTY% &ffor &3%COURSE% &fwas set to &b%VALUE%&f!");
+
+		this.addDefault("Lobby.Created", "&b%VALUE% &flobby created.");
+		this.addDefault("Lobby.RequiredLevelSet", "The required ParkourLevel to join is &b%VALUE%");
 
 		this.addDefault("Scoreboard.MainHeading", "&b&l== Parkour ==");
 		this.addDefault("Scoreboard.TitleFormat", "&b%VALUE%");

@@ -1,5 +1,7 @@
 package io.github.a5h73y.parkour.commands;
 
+import static io.github.a5h73y.parkour.other.Constants.DEFAULT;
+
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.conversation.CreateParkourKitConversation;
 import io.github.a5h73y.parkour.conversation.EditParkourKitConversation;
@@ -114,7 +116,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "lobby":
-                parkour.getLobbyManager().joinLobby(args, player);
+                parkour.getLobbyManager().joinLobby(player, args.length > 1 ? args[1] : DEFAULT);
                 break;
 
             case "setlobby":
@@ -122,7 +124,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getLobbyManager().createLobby(args, player);
+                parkour.getLobbyManager().createLobby(player, args);
                 break;
 
             case "checkpoint":

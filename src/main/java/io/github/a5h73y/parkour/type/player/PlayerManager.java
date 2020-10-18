@@ -19,6 +19,7 @@ import io.github.a5h73y.parkour.type.course.Course;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.kit.ParkourKit;
 import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
+import io.github.a5h73y.parkour.type.lobby.LobbyInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
@@ -389,7 +390,11 @@ public class PlayerManager extends AbstractPluginReceiver {
 		parkour.getChallengeManager().terminateChallenge(player);
 
 		if (!silent) {
-			parkour.getLobbyManager().teleportToLeaveDestination(player, session);
+			if (parkour.getConfig().isTeleportToJoinLocation()) {
+				player.teleport(PlayerInfo.getJoinLocation(player));
+			} else {
+				parkour.getLobbyManager().teleportToLeaveDestination(player, session);
+			}
 		}
 
 		if (hasHiddenPlayers(player)) {
@@ -754,18 +759,23 @@ public class PlayerManager extends AbstractPluginReceiver {
 		if (CourseInfo.hasLinkedCourse(courseName)) {
 			String linkedCourseName = CourseInfo.getLinkedCourse(courseName);
 			joinCourse(player, linkedCourseName);
+			return;
 
 		} else if (CourseInfo.hasLinkedLobby(courseName)) {
 			String lobbyName = CourseInfo.getLinkedLobby(courseName);
 
-			if (parkour.getConfig().contains("Lobby." + lobbyName + ".World")) {
-				String[] args = {null, lobbyName};
-				parkour.getLobbyManager().joinLobby(args, player);
+			if (LobbyInfo.doesLobbyExist(lobbyName)) {
+				parkour.getLobbyManager().joinLobby(player, lobbyName);
 				return;
 			}
+
+		} else if (parkour.getConfig().isTeleportToJoinLocation()) {
+			player.teleport(PlayerInfo.getJoinLocation(player));
+			TranslationUtils.sendTranslation("Parkour.JoinLocation", player);
+			return;
 		}
 
-		parkour.getLobbyManager().joinLobby(null, player);
+		parkour.getLobbyManager().joinLobby(player, Constants.DEFAULT);
 	}
 
 	public void rocketLaunchPlayer(Player player) {

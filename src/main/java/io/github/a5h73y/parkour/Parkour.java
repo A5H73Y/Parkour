@@ -101,6 +101,7 @@ public class Parkour extends JavaPlugin {
 
         PluginUtils.log("v6.0 is currently a very unstable build, "
                 + "expect problems to occur and please raise them in the Discord server.", 2);
+        deleteMe();
     }
 
     /**
@@ -116,6 +117,24 @@ public class Parkour extends JavaPlugin {
         Bukkit.getScheduler().cancelTasks(this);
         PluginUtils.log("Disabled Parkour v" + getDescription().getVersion());
         instance = null;
+    }
+
+    // TODO delete me before release - old 6.0 -> new 6.0 workaround
+    private void deleteMe() {
+        if (getConfig().contains("Lobby.Set")) {
+            List<String> details = Arrays.asList("World", "X", "Y", "Z", "Pitch", "Yaw");
+
+            for (String detail : details) {
+                getConfig().set("Lobby.default." + detail, getConfig().get("Lobby." + detail));
+                getConfig().set("Lobby." + detail, null);
+            }
+
+            getConfig().set("LobbySettings.EnforceWorld", getConfig().getString("Lobby.EnforceWorld"));
+            getConfig().set("Lobby.Set", null);
+            getConfig().set("Lobby.EnforceWorld", null);
+            saveConfig();
+            PluginUtils.log("Your lobbies have been upgraded.");
+        }
     }
 
     /**
@@ -145,7 +164,7 @@ public class Parkour extends JavaPlugin {
      */
     @Override
     public void saveConfig() {
-        this.configManager.get(ConfigType.DEFAULT).save();
+        getConfig().save();
     }
 
     /**

@@ -341,4 +341,10 @@ public class PlayerInfo {
     public static boolean isQuietMode(Player player) {
         return getPlayersConfig().getBoolean(player.getUniqueId() + ".QuietMode");
     }
+
+// difficult to decide if this is needed, if you join a linked course you'd want it to keep the original join location
+// maybe it never needs to be reset and just overwritten?
+    public static void resetJoinLocation(Player player) {
+        getPlayersConfig().set(player.getUniqueId() + ".JoinLocation", null);
+    }
 }

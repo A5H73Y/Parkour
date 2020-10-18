@@ -15,6 +15,7 @@ import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Validation;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.kit.ParkourKit;
+import io.github.a5h73y.parkour.type.lobby.LobbyInfo;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
@@ -717,8 +718,8 @@ public class CourseManager extends AbstractPluginReceiver {
             TranslationUtils.sendPropertySet(player, "Linked Course", selected, args[2]);
 
         } else if (args.length >= 3 && args[1].equalsIgnoreCase("lobby")) {
-            if (!parkour.getConfig().contains("Lobby." + args[2] + ".World")) { // TODO
-                player.sendMessage(Parkour.getPrefix() + "Lobby " + args[2] + " does not exist.");
+            if (!LobbyInfo.doesLobbyExist(args[2])) {
+                TranslationUtils.sendValueTranslation("Error.UnknownLobby", args[2], player);
                 return;
             }
 

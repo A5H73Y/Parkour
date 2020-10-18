@@ -194,13 +194,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 break;
 
             case "lobby":
-                if (lines[2].isEmpty()) {
-                    parkour.getLobbyManager().joinLobby(new String[0], player);
-
-                } else {
-                    String[] args = {"", lines[2]};
-                    parkour.getLobbyManager().joinLobby(args, player);
-                }
+                parkour.getLobbyManager().joinLobby(player, lines[2].isEmpty() ? null : lines[2]);
                 break;
 
             case "stats":
