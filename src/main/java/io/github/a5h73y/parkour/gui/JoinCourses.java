@@ -53,7 +53,7 @@ public class JoinCourses extends AbstractMenu {
 							TranslationUtils.getValueTranslation("GUI.JoinCourses.Players",
 									String.valueOf(Parkour.getInstance().getPlayerManager().getNumberOfPlayersOnCourse(course)), false),
 							TranslationUtils.getValueTranslation("GUI.JoinCourses.Checkpoints",
-									String.valueOf(Parkour.getInstance().getCourseManager().getCourse(course).getNumberOfCheckpoints()), false)
+									String.valueOf(CourseInfo.getCheckpointAmount(course)), false)
 					));
 		}
 		return group;
