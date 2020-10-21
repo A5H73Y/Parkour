@@ -7,7 +7,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
-import org.bukkit.Material;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -37,7 +37,7 @@ public class JoinCourses extends AbstractMenu {
 		for (String course : CourseInfo.getAllCourses()) {
 			group.addElement(
 					new StaticGuiElement('e',
-							new ItemStack(Material.MINECART),
+							new ItemStack(Parkour.getDefaultConfig().getGuiMaterial()),
 							click -> {
 								Parkour.getInstance().getPlayerManager().joinCourse(player, course);
 								parent.close();
@@ -49,7 +49,11 @@ public class JoinCourses extends AbstractMenu {
 
 							// the item description
 							TranslationUtils.getValueTranslation("GUI.JoinCourses.Description",
-									course, false)
+									course, false),
+							TranslationUtils.getValueTranslation("GUI.JoinCourses.Players",
+									String.valueOf(Parkour.getInstance().getPlayerManager().getNumberOfPlayersOnCourse(course)), false),
+							TranslationUtils.getValueTranslation("GUI.JoinCourses.Checkpoints",
+									String.valueOf(CourseInfo.getCheckpointAmount(course)), false)
 					));
 		}
 		return group;

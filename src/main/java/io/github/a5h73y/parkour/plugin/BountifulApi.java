@@ -27,7 +27,7 @@ public class BountifulApi extends PluginWrapper {
 	protected void initialise() {
 		super.initialise();
 
-		useSpigotMethods = PluginUtils.getMinorServerVersion() > 9;
+		useSpigotMethods = PluginUtils.getMinorServerVersion() > 10;
 		inDuration = Parkour.getDefaultConfig().getTitleIn();
 		stayDuration = Parkour.getDefaultConfig().getTitleStay();
 		outDuration = Parkour.getDefaultConfig().getTitleOut();
