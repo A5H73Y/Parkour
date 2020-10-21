@@ -944,7 +944,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @return ParkourMode
      */
     public ParkourMode getCourseMode(String courseName) {
-        String mode = CourseInfo.getMode(courseName).toUpperCase();
+        String mode = CourseInfo.getParkourMode(courseName).toUpperCase();
         return ParkourMode.valueOf(mode);
     }
 

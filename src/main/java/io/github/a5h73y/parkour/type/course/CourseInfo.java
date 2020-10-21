@@ -109,7 +109,7 @@ public class CourseInfo {
      * @param courseName
      * @return mode
      */
-    public static String getMode(String courseName) {
+    public static String getParkourMode(String courseName) {
         return getCourseConfig().getString(courseName.toLowerCase() + ".Mode", "NONE");
     }
 
@@ -119,7 +119,7 @@ public class CourseInfo {
      * @param courseName
      * @param mode
      */
-    public static void setMode(String courseName, String mode) {
+    public static void setParkourMode(String courseName, String mode) {
         getCourseConfig().set(courseName.toLowerCase() + ".Mode", mode);
         persistChanges();
     }
@@ -686,6 +686,35 @@ public class CourseInfo {
                 player.sendMessage("Cooldown Remaining: " + aqua + DateTimeUtils.getTimeRemaining(player, courseName));
             }
         }
+    }
+
+    public static List<String> getParkourModePotionEffects(String courseName) {
+        return getCourseConfig().getStringList(courseName.toLowerCase() + ".PotionParkourMode.Effects");
+    }
+
+    public static void addParkourModePotionEffect(String courseName, String potionEffectType, String durationAmplifier) {
+        List<String> potionEffects = getParkourModePotionEffects(courseName);
+        String potionEffect = potionEffectType;
+
+        if (durationAmplifier != null) {
+            potionEffect += "," + durationAmplifier;
+        }
+
+        potionEffects.add(potionEffect);
+        getCourseConfig().set(courseName.toLowerCase() + ".PotionParkourMode.Effects", potionEffects);
+        persistChanges();
+    }
+
+    public static boolean hasParkourModeJoinMessage(String courseName) {
+        return getCourseConfig().contains(courseName.toLowerCase() + ".PotionParkourMode.JoinMessage");
+    }
+
+    public static String getParkourModeJoinMessage(String courseName) {
+        return getCourseConfig().getString(courseName.toLowerCase() + ".PotionParkourMode.JoinMessage");
+    }
+
+    public static void setParkourModePotionEffectJoinMessage(String courseName, String joinMessage) {
+        getCourseConfig().set(courseName.toLowerCase() + ".PotionParkourMode.JoinMessage", joinMessage);
     }
 
     public static int getEconomyFinishReward(String courseName) {

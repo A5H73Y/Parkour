@@ -50,7 +50,6 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Parkour.RewardRank", "Your rank has been set to %VALUE%");
 		this.addDefault("Parkour.RankInfo", "* For level &b%LEVEL% &fyou earn: %RANK%");
 		this.addDefault("Parkour.RewardParkoins", "&b%AMOUNT% &fParkoins rewarded! New total: &7%TOTAL%");
-		this.addDefault("Parkour.SetMode", "Mode for &b%COURSE% &fset to &b%MODE%");
 		this.addDefault("Parkour.Countdown", "Starting in &b%VALUE% &fseconds...");
 		this.addDefault("Parkour.Go", "Go!");
 		this.addDefault("Parkour.BestTime", "Your new best time!");

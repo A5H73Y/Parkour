@@ -42,6 +42,7 @@ import java.util.TreeMap;
 import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.XPotion;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
@@ -834,7 +835,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param player
 	 */
 	private void setupParkourMode(Player player) {
-		ParkourMode courseMode = getParkourSession(player).getParkourMode();
+		ParkourSession session = getParkourSession(player);
+		ParkourMode courseMode = session.getParkourMode();
 
 		if (courseMode == ParkourMode.NONE) {
 			return;
@@ -853,6 +855,12 @@ public class PlayerManager extends AbstractPluginReceiver {
 			TranslationUtils.sendTranslation("Mode.Rockets.JoinText", player);
 			player.getInventory().addItem(MaterialUtils.createItemStack(
 					XMaterial.FIREWORK_ROCKET.parseMaterial(), TranslationUtils.getTranslation("Mode.Rockets.ItemName", false)));
+
+		} else if (courseMode == ParkourMode.POTION_EFFECT) {
+			XPotion.addPotionEffectsFromString(player, CourseInfo.getParkourModePotionEffects(session.getCourseName()));
+			if (CourseInfo.hasParkourModeJoinMessage(session.getCourseName())) {
+				player.sendMessage(StringUtils.colour(CourseInfo.getParkourModeJoinMessage(session.getCourseName())));
+			}
 		}
 	}
 
