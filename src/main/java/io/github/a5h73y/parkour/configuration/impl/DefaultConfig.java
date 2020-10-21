@@ -126,6 +126,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("ParkourGUI.Enabled", false);
 		this.addDefault("ParkourGUI.Rows", 2);
 		this.addDefault("ParkourGUI.Material", "BOOK");
+		this.addDefault("ParkourGUI.FillerMaterial", "CYAN_STAINED_GLASS_PANE");
 
 		this.addDefault("Other.CheckForUpdates", true);
 		this.addDefault("Other.LogToFile", true);
@@ -320,6 +321,10 @@ public class DefaultConfig extends ParkourConfiguration {
 
 	public Material getGuiMaterial() {
 		return getMaterialOrDefault("ParkourGUI.Material", Material.BOOK);
+	}
+
+	public Material getGuiFillerMaterial() {
+		return getMaterialOrDefault("ParkourGUI.FillerMaterial", Material.AIR);
 	}
 
 	private Material getMaterialOrDefault(String configPath, Material defaultMaterial) {

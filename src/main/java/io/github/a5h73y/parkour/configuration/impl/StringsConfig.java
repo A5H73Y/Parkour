@@ -174,6 +174,8 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("GUI.JoinCourses.Setup.Line2", " ggggggg ");
 		this.addDefault("GUI.JoinCourses.Setup.Line3", "  fp nl  ");
 		this.addDefault("GUI.JoinCourses.Description", "&fJoin &b%VALUE%");
+		this.addDefault("GUI.JoinCourses.Players", "Players: &b%VALUE%");
+		this.addDefault("GUI.JoinCourses.Checkpoints", "Checkpoints: &b%VALUE%");
 
 
 		this.addDefault("Display.TimeFormat", "HH:mm:ss:MMM");

@@ -1447,6 +1447,19 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 	}
 
+	public int getNumberOfPlayersOnCourse(String course) {
+		if (getNumberOfParkourPlayer() == 0) {
+			return 0;
+		}
+		int count = 0;
+		for (Map.Entry<Player, ParkourSession> entry : parkourPlayers.entrySet()) {
+			if (entry.getValue().getCourse().getName().equalsIgnoreCase(course)) {
+				count++;
+			}
+		}
+		return count;
+	}
+
 	private File getSessionsPath() {
 		return new File(parkour.getDataFolder() + File.separator + "sessions" + File.separator);
 	}
