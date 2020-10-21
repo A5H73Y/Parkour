@@ -95,7 +95,6 @@ public class DefaultConfig extends ParkourConfiguration {
 
 		this.addDefault("ParkourModes.Challenge.HidePlayers", true);
 		this.addDefault("ParkourModes.Challenge.CountdownFrom", 5);
-		this.addDefault("ParkourModes.Moon.Strength", 5);
 		this.addDefault("ParkourModes.Speedy.SetSpeed", 0.8);
 		this.addDefault("ParkourModes.Speedy.ResetSpeed", 0.2);
 		this.addDefault("ParkourModes.Dropper.FallDamage", false);
