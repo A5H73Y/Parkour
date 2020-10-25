@@ -518,7 +518,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 			if (parkour.getConfig().getBoolean("OnDie.ResetTimeWithNoCheckpoint")) {
 				session.resetTimeStarted();
-				message += TranslationUtils.getTranslation("Parkour.TimeReset", false);
+				message += " " + TranslationUtils.getTranslation("Parkour.TimeReset", false);
 			}
 
 			if (!isInQuietMode(player)) {
@@ -1402,10 +1402,13 @@ public class PlayerManager extends AbstractPluginReceiver {
 					ObjectInputStream oos = new ObjectInputStream(fout)
 			) {
 				session = (ParkourSession) oos.readObject();
-				if (session != null) {
+				if (session != null && parkour.getCourseManager().courseExists(session.getCourseName())) {
 					session.setCourse(parkour.getCourseManager().getCourse(session.getCourseName()));
 					session.recalculateTime();
 					parkourPlayers.put(player, session);
+				} else {
+					player.sendMessage("Your ParkourSession is invalid."); //TODO translate
+					deleteParkourSession(player);
 				}
 			} catch (IOException | ClassNotFoundException e) {
 				PluginUtils.log("Player's session couldn't be loaded: " + e.getMessage(), 2);
@@ -1415,7 +1418,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		return session;
 	}
 
-	private void deleteParkourSession(Player player) {
+	public void deleteParkourSession(OfflinePlayer player) {
 		File sessionFile = new File(getSessionsPath(), player.getUniqueId().toString());
 
 		if (sessionFile.exists()) {

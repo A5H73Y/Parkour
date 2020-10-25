@@ -184,6 +184,7 @@ public class QuestionManager extends AbstractPluginReceiver {
                     }
 
                     PlayerInfo.resetPlayer(targetPlayer);
+                    parkour.getPlayerManager().deleteParkourSession(targetPlayer);
                     TranslationUtils.sendValueTranslation("Parkour.Reset", argument, player);
                     PluginUtils.logToFile("player " + argument + " was reset by " + player.getName());
                     return;
