@@ -6,8 +6,11 @@ import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
+import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import com.cryptomorin.xseries.XMaterial;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -38,7 +41,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             return;
         }
 
-        if (event.getHand() != EquipmentSlot.HAND) { //TODO is SneakToInteractItems is false, this acts super weird.
+        if (PluginUtils.getMinorServerVersion() > 8 && !event.getHand().equals(EquipmentSlot.HAND)) {
             return;
         }
 
@@ -60,7 +63,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         if (materialInHand == parkour.getConfig().getLastCheckpointTool()) {
             if (parkour.getPlayerManager().delayPlayer(player, 1, false)) {
                 event.setCancelled(true);
-                parkour.getPlayerManager().playerDie(player);
+                Bukkit.getScheduler().runTask(parkour, () -> parkour.getPlayerManager().playerDie(player));
             }
 
         } else if (materialInHand == parkour.getConfig().getHideAllDisabledTool()

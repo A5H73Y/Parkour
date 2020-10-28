@@ -292,9 +292,22 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param course target course
 	 */
 	public void joinCourse(Player player, Course course) {
-		if (parkour.getConfig().isTeleportToJoinLocation()) {
+		joinCourse(player, course, false);
+	}
+
+	/**
+	 * Join the Player to a Course.
+	 * Prepare the player for a Parkour course.
+	 *
+	 * @param player target player
+	 * @param course target course
+	 * @param silent silently join the course
+	 */
+	public void joinCourse(Player player, Course course, boolean silent) {
+		if (!silent && parkour.getConfig().isTeleportToJoinLocation()) {
 			PlayerInfo.setJoinLocation(player);
 		}
+
 		player.teleport(course.getCheckpoints().get(0).getLocation());
 		preparePlayerForCourse(player, course.getName());
 		CourseInfo.increaseView(course.getName());
@@ -309,7 +322,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		// join message
 		if (!isInQuietMode(player)) {
-			if (isPlaying(player)) {
+			if (silent) {
 				TranslationUtils.sendTranslation("Parkour.TimeReset", player);
 
 			} else {
@@ -639,7 +652,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		Course course = getParkourSession(player).getCourse();
 		TranslationUtils.sendTranslation("Parkour.Restarting", player);
 		leaveCourse(player, true);
-		joinCourse(player, course);
+		Bukkit.getScheduler().runTask(parkour, () -> joinCourse(player, course, true));
 	}
 
 	/**
