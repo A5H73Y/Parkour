@@ -183,8 +183,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
 
         } else if (command.equals("current_course_timer")) {
             ParkourSession session = parkour.getPlayerManager().getParkourSession(player);
-//            return session == null ? "" : session.getLiveTime(); TODO
-            return "";
+            return session == null ? "" : session.getDisplayTime();
 
         } else if (command.equals("current_course_deaths")) {
             ParkourSession session = parkour.getPlayerManager().getParkourSession(player);

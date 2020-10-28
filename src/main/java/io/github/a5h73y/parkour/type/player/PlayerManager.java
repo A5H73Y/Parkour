@@ -292,9 +292,22 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param course target course
 	 */
 	public void joinCourse(Player player, Course course) {
-		if (parkour.getConfig().isTeleportToJoinLocation()) {
+		joinCourse(player, course, false);
+	}
+
+	/**
+	 * Join the Player to a Course.
+	 * Prepare the player for a Parkour course.
+	 *
+	 * @param player target player
+	 * @param course target course
+	 * @param silent silently join the course
+	 */
+	public void joinCourse(Player player, Course course, boolean silent) {
+		if (!silent && parkour.getConfig().isTeleportToJoinLocation()) {
 			PlayerInfo.setJoinLocation(player);
 		}
+
 		player.teleport(course.getCheckpoints().get(0).getLocation());
 		preparePlayerForCourse(player, course.getName());
 		CourseInfo.increaseView(course.getName());
@@ -308,37 +321,32 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		// join message
-		if (!isInQuietMode(player)) {
-			if (isPlaying(player)) {
-				TranslationUtils.sendTranslation("Parkour.TimeReset", player);
+		if (!isInQuietMode(player) && !silent) {
+			boolean displayTitle = parkour.getConfig().getBoolean("DisplayTitle.JoinCourse");
 
-			} else {
-				boolean displayTitle = parkour.getConfig().getBoolean("DisplayTitle.JoinCourse");
+			String subTitle = "";
+			if (course.hasMaxDeaths() && course.hasMaxTime()) {
+				subTitle = TranslationUtils.getTranslation("Parkour.JoinLivesAndTime", false)
+						.replace("%LIVES%", String.valueOf(course.getMaxDeaths()))
+						.replace("%MAXTIME%", DateTimeUtils.convertSecondsToTime(course.getMaxTime()));
 
-				String subTitle = "";
-				if (course.hasMaxDeaths() && course.hasMaxTime()) {
-					subTitle = TranslationUtils.getTranslation("Parkour.JoinLivesAndTime", false)
-							.replace("%LIVES%", String.valueOf(course.getMaxDeaths()))
-							.replace("%MAXTIME%", DateTimeUtils.convertSecondsToTime(course.getMaxTime()));
+			} else if (course.hasMaxDeaths()) {
+				subTitle = TranslationUtils.getValueTranslation(
+						"Parkour.JoinLives", String.valueOf(course.getMaxDeaths()), false);
 
-				} else if (course.hasMaxDeaths()) {
-					subTitle = TranslationUtils.getValueTranslation(
-							"Parkour.JoinLives", String.valueOf(course.getMaxDeaths()), false);
+			} else if (course.hasMaxTime()) {
+				subTitle = TranslationUtils.getValueTranslation(
+						"Parkour.JoinTime", DateTimeUtils.convertSecondsToTime(course.getMaxTime()), false);
+			}
 
-				} else if (course.hasMaxTime()) {
-					subTitle = TranslationUtils.getValueTranslation(
-							"Parkour.JoinTime", DateTimeUtils.convertSecondsToTime(course.getMaxTime()), false);
-				}
+			parkour.getBountifulApi().sendFullTitle(player,
+					TranslationUtils.getCourseMessage(course.getName(), "JoinMessage", "Parkour.Join"),
+					subTitle, displayTitle);
 
-				parkour.getBountifulApi().sendFullTitle(player,
-						TranslationUtils.getCourseMessage(course.getName(), "JoinMessage", "Parkour.Join"),
-						subTitle, displayTitle);
-
-				if (parkour.getConfig().isCompletedCoursesEnabled()
-						&& PlayerInfo.getCompletedCourses(player).contains(course.getName())
-						&& parkour.getConfig().getBoolean("Other.Display.CourseCompleted")) {
-					TranslationUtils.sendValueTranslation("Parkour.AlreadyCompleted", course.getName(), player);
-				}
+			if (parkour.getConfig().isCompletedCoursesEnabled()
+					&& PlayerInfo.getCompletedCourses(player).contains(course.getName())
+					&& parkour.getConfig().getBoolean("Other.Display.CourseCompleted")) {
+				TranslationUtils.sendValueTranslation("Parkour.AlreadyCompleted", course.getName(), player);
 			}
 		}
 
@@ -347,7 +355,6 @@ public class PlayerManager extends AbstractPluginReceiver {
 		parkour.getScoreboardManager().addScoreboard(player);
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerJoinCourseEvent(player, course.getName()));
 	}
-
 
 	/**
 	 * Execute the joinCourse after a delay.
@@ -639,7 +646,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		Course course = getParkourSession(player).getCourse();
 		TranslationUtils.sendTranslation("Parkour.Restarting", player);
 		leaveCourse(player, true);
-		joinCourse(player, course);
+		Bukkit.getScheduler().runTask(parkour, () -> joinCourse(player, course, true));
 	}
 
 	/**
@@ -955,11 +962,11 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 		if (enabled) {
 			removeHidden(player);
-			TranslationUtils.sendTranslation("Event.HideAll1");
+			TranslationUtils.sendTranslation("Event.HideAll1", player);
 
 		} else {
 			addHidden(player);
-			TranslationUtils.sendTranslation("Event.HideAll2");
+			TranslationUtils.sendTranslation("Event.HideAll2", player);
 		}
 	}
 
@@ -1297,7 +1304,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		if (session != null) {
 			player.sendMessage("Course: " + ChatColor.AQUA + session.getCourse().getName());
 			player.sendMessage("Deaths: " + ChatColor.AQUA + session.getDeaths());
-			player.sendMessage("Time: " + ChatColor.AQUA + session.displayTime());
+			player.sendMessage("Time: " + ChatColor.AQUA + session.getDisplayTime());
 			player.sendMessage("Checkpoint: " + ChatColor.AQUA + session.getCurrentCheckpoint());
 		}
 
@@ -1454,7 +1461,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 					.replace("%PLAYER%", entry.getKey().getName())
 					.replace("%COURSE%", entry.getValue().getCourse().getName())
 					.replace("%DEATHS%", String.valueOf(entry.getValue().getDeaths()))
-					.replace("%TIME%", entry.getValue().displayTime()));
+					.replace("%TIME%", entry.getValue().getDisplayTime()));
 		}
 	}
 
@@ -1481,7 +1488,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 					TranslationUtils.getCourseMessage(session.getCourse().getName(), "FinishMessage", "Parkour.FinishCourse1"),
 					TranslationUtils.getTranslation("Parkour.FinishCourse2", false)
 							.replace("%DEATHS%", String.valueOf(session.getDeaths()))
-							.replace("%TIME%", session.displayTime()),
+							.replace("%TIME%", session.getDisplayTime()),
 					parkour.getConfig().getBoolean("DisplayTitle.Finish"));
 		}
 
@@ -1495,7 +1502,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 				.replace("%PLAYER_DISPLAY%", player.getDisplayName())
 				.replace("%COURSE%", session.getCourse().getName())
 				.replace("%DEATHS%", String.valueOf(session.getDeaths()))
-				.replace("%TIME%", session.displayTime());
+				.replace("%TIME%", session.getDisplayTime());
 
 		switch (parkour.getConfig().getString("OnFinish.BroadcastLevel", "WORLD").toUpperCase()) {
 			case "GLOBAL":

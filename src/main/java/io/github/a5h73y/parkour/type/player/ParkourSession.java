@@ -115,7 +115,7 @@ public class ParkourSession implements Serializable {
         return System.currentTimeMillis() - timeStarted;
     }
 
-    public String displayTime() {
+    public String getDisplayTime() {
         return DateTimeUtils.displayCurrentTime(getCurrentTime());
     }
 
