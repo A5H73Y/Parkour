@@ -34,7 +34,7 @@ public class JoinCourses extends AbstractMenu {
 	public GuiElementGroup getGroupContent(InventoryGui parent, Player player) {
 		GuiElementGroup group = new GuiElementGroup('g');
 
-		for (String course : CourseInfo.getAllCourses()) {
+		for (String course : CourseInfo.getAllCourseNames()) {
 			group.addElement(
 					new StaticGuiElement('e',
 							new ItemStack(Parkour.getDefaultConfig().getGuiMaterial()),

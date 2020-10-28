@@ -17,13 +17,13 @@ public class ParkourKitInfo {
      *
      * @return Set<String> of ParkourKit names
      */
-    public static Set<String> getParkourKitNames() {
+    public static Set<String> getAllParkourKitNames() {
         ConfigurationSection section = Parkour.getConfig(PARKOURKIT).getConfigurationSection("ParkourKit");
         return section != null ? section.getKeys(false) : new HashSet<>();
     }
 
     public static boolean doesParkourKitExist(String kitName) {
-        return getParkourKitNames().contains(kitName.toLowerCase());
+        return getAllParkourKitNames().contains(kitName.toLowerCase());
     }
 
     public static Set<String> getParkourKitContents(String kitName) {
@@ -43,7 +43,7 @@ public class ParkourKitInfo {
      */
     public static List<String> getDependentCourses(String parkourKitName) {
         List<String> dependentCourses = new ArrayList<>();
-        for (String courseName : CourseInfo.getAllCourses()) {
+        for (String courseName : CourseInfo.getAllCourseNames()) {
             String linkedKitName = CourseInfo.getParkourKit(courseName);
             if (parkourKitName.equals(linkedKitName)) {
                 dependentCourses.add(courseName);

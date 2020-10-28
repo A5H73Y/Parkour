@@ -160,7 +160,7 @@ public class PlayerInfo {
 
     public static List<String> getUncompletedCourses(OfflinePlayer player) {
         List<String> completedCourses = getCompletedCourses(player);
-        return CourseInfo.getAllCourses().stream()
+        return CourseInfo.getAllCourseNames().stream()
                 .filter(s -> !completedCourses.contains(s))
                 .collect(Collectors.toList());
     }
@@ -195,8 +195,8 @@ public class PlayerInfo {
      * @return
      */
     public static String getRank(OfflinePlayer player) {
-        String rank = getPlayersConfig().getString(player.getUniqueId() + ".Rank");
-        return rank == null ? TranslationUtils.getTranslation("Event.DefaultRank", false) : rank;
+        return getPlayersConfig().getString(player.getUniqueId() + ".Rank",
+                TranslationUtils.getTranslation("Event.DefaultRank", false));
     }
 
     /**

@@ -122,7 +122,7 @@ public class Validation {
     public static boolean courseJoining(Player player, Course course) {
         /* World doesn't exist */
         if (course.getCheckpoints().isEmpty() ) {
-            player.sendMessage("Woah, this world doesn't exist..."); //TODO translate
+            TranslationUtils.sendTranslation("Error.UnknownWorld", player);
             return false;
         }
 
@@ -398,7 +398,7 @@ public class Validation {
         courseName = courseName.toLowerCase();
         List<String> dependentCourses = new ArrayList<>();
 
-        for (String course : CourseInfo.getAllCourses()) {
+        for (String course : CourseInfo.getAllCourseNames()) {
             String linkedCourse = CourseInfo.getLinkedCourse(courseName);
 
             if (courseName.equals(linkedCourse)) {
@@ -430,7 +430,7 @@ public class Validation {
         lobbyName = lobbyName.toLowerCase();
         List<String> dependentCourses = new ArrayList<>();
 
-        for (String course : CourseInfo.getAllCourses()) {
+        for (String course : CourseInfo.getAllCourseNames()) {
             String linkedCourse = CourseInfo.getLinkedLobby(lobbyName);
 
             if (lobbyName.equals(linkedCourse)) {

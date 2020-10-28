@@ -24,7 +24,7 @@ public class EditParkourKitConversation extends ParkourConversation {
     private class ChooseParkourKit extends FixedSetPrompt {
 
         ChooseParkourKit() {
-            super(ParkourKitInfo.getParkourKitNames().toArray(new String[0]));
+            super(ParkourKitInfo.getAllParkourKitNames().toArray(new String[0]));
         }
 
         @Override

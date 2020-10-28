@@ -7,11 +7,14 @@ import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
+import io.github.a5h73y.parkour.type.lobby.LobbyInfo;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -194,12 +197,12 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             case "rewardparkoins":
             case "setmode":
             case "leaderboard":
-                allowedCommands = CourseInfo.getAllCourses();
+                allowedCommands = CourseInfo.getAllCourseNames();
                 break;
             case "kit":
             case "listkit":
             case "validatekit":
-                allowedCommands = new ArrayList<>(ParkourKitInfo.getParkourKitNames());
+                allowedCommands = new ArrayList<>(ParkourKitInfo.getAllParkourKitNames());
                 break;
             default:
                 break;
@@ -218,9 +221,30 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             case "setplayer":
                 allowedCommands = SetPlayerConversation.SET_PLAYER_OPTIONS;
                 break;
-            case "TODO": //TODO more things here
+            case "delete":
+            case "reset":
+                switch (firstArg) {
+                    case "course":
+                    case "leaderboard":
+                    case "prize":
+                        allowedCommands = CourseInfo.getAllCourseNames();
+                        break;
+                    case "kit":
+                        allowedCommands = new ArrayList<>(ParkourKitInfo.getAllParkourKitNames());
+                        break;
+                    case "lobby":
+                        allowedCommands = new ArrayList<>(LobbyInfo.getAllLobbyNames());
+                        break;
+                    case "player":
+                        allowedCommands = getAllOnlinePlayerNames();
+                        break;
+                }
                 break;
         }
         return allowedCommands;
+    }
+
+    private List<String> getAllOnlinePlayerNames() {
+        return Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
     }
 }

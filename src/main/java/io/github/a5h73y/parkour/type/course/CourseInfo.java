@@ -35,7 +35,7 @@ public class CourseInfo {
      *
      * @return List Parkour course names
      */
-    public static List<String> getAllCourses() {
+    public static List<String> getAllCourseNames() {
         return getCourseConfig().getStringList("Courses");
     }
 
@@ -559,7 +559,7 @@ public class CourseInfo {
     public static void deleteCourse(String courseName) {
         courseName = courseName.toLowerCase();
 
-        List<String> courseList = getAllCourses();
+        List<String> courseList = getAllCourseNames();
         courseList.remove(courseName);
         getCourseConfig().set(courseName, null);
         getCourseConfig().set("Courses", courseList);
@@ -688,12 +688,12 @@ public class CourseInfo {
         }
     }
 
-    public static List<String> getParkourModePotionEffects(String courseName) {
+    public static List<String> getPotionParkourModeEffects(String courseName) {
         return getCourseConfig().getStringList(courseName.toLowerCase() + ".PotionParkourMode.Effects");
     }
 
-    public static void addParkourModePotionEffect(String courseName, String potionEffectType, String durationAmplifier) {
-        List<String> potionEffects = getParkourModePotionEffects(courseName);
+    public static void addPotionParkourModeEffect(String courseName, String potionEffectType, String durationAmplifier) {
+        List<String> potionEffects = getPotionParkourModeEffects(courseName);
         String potionEffect = potionEffectType;
 
         if (durationAmplifier != null) {
@@ -705,15 +705,15 @@ public class CourseInfo {
         persistChanges();
     }
 
-    public static boolean hasParkourModeJoinMessage(String courseName) {
+    public static boolean hasPotionJoinMessage(String courseName) {
         return getCourseConfig().contains(courseName.toLowerCase() + ".PotionParkourMode.JoinMessage");
     }
 
-    public static String getParkourModeJoinMessage(String courseName) {
+    public static String getPotionJoinMessage(String courseName) {
         return getCourseConfig().getString(courseName.toLowerCase() + ".PotionParkourMode.JoinMessage");
     }
 
-    public static void setParkourModePotionEffectJoinMessage(String courseName, String joinMessage) {
+    public static void setPotionJoinMessage(String courseName, String joinMessage) {
         getCourseConfig().set(courseName.toLowerCase() + ".PotionParkourMode.JoinMessage", joinMessage);
     }
 

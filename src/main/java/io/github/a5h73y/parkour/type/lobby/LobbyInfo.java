@@ -10,7 +10,7 @@ import org.bukkit.World;
 
 public class LobbyInfo {
 
-	public static Set<String> getLobbies() {
+	public static Set<String> getAllLobbyNames() {
 		return Parkour.getDefaultConfig().getConfigurationSection("Lobby").getKeys(false);
 	}
 

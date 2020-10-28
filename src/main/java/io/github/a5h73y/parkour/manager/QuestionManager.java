@@ -118,7 +118,7 @@ public class QuestionManager extends AbstractPluginReceiver {
     }
 
     private void askQuestion(Player player, String argument, QuestionType type) {
-        player.sendMessage("Please enter " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " to confirm!");
+        TranslationUtils.sendTranslation("Parkour.Question", false, player);
         questionMap.put(player, new Question(type, argument));
     }
 

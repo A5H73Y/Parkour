@@ -46,7 +46,7 @@ public class ParkourModeConversation extends ParkourConversation {
         protected Prompt acceptValidatedInput(@NotNull ConversationContext context,
                                               @NotNull String choice) {
 
-            if (choice.equals(ParkourMode.POTION_EFFECT.name().toLowerCase())) {
+            if (choice.equals(ParkourMode.POTION.name().toLowerCase())) {
                 return new ChoosePotionEffect();
             }
 
@@ -106,7 +106,7 @@ public class ParkourModeConversation extends ParkourConversation {
 
     private static class SpecifyDurationAmplifier extends ValidatingPrompt {
 
-        private static final String NUMBER_REGEX = "\\d*,\\d*";
+        private static final String NUMBER_REGEX = "^\\d*,\\d+\\.?\\d*$";
 
         @Override
         protected boolean isInputValid(@NotNull ConversationContext context, @NotNull String input) {
@@ -171,16 +171,16 @@ public class ParkourModeConversation extends ParkourConversation {
             String potionEffect = (String) context.getSessionData("potion");
             String durationAmplifier = (String) context.getSessionData("durationAmplifier");
             String joinMessage = (String) context.getSessionData("joinMessage");
-            String potionEffectParkourMode = ParkourMode.POTION_EFFECT.name().toLowerCase();
+            String potionParkourMode = ParkourMode.POTION.name().toLowerCase();
 
-            CourseInfo.setParkourMode(courseName, potionEffectParkourMode);
-            CourseInfo.addParkourModePotionEffect(courseName, potionEffect, durationAmplifier);
-            CourseInfo.setParkourModePotionEffectJoinMessage(courseName, joinMessage);
+            CourseInfo.setParkourMode(courseName, potionParkourMode);
+            CourseInfo.addPotionParkourModeEffect(courseName, potionEffect, durationAmplifier);
+            CourseInfo.setPotionJoinMessage(courseName, joinMessage);
 
             Parkour.getInstance().getCourseManager().clearCache(courseName);
 
             return TranslationUtils.getPropertySet("ParkourMode", courseName,
-                    potionEffectParkourMode + " (" + potionEffect + ")");
+                    potionParkourMode + " (" + potionEffect + ")");
         }
     }
 }

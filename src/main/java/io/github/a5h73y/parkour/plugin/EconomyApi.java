@@ -199,7 +199,7 @@ public class EconomyApi extends PluginWrapper {
 		EconomyConfig config = (EconomyConfig) Parkour.getConfig(ConfigType.ECONOMY);
 
 		int updated = 0;
-		for (String course : CourseInfo.getAllCourses()) {
+		for (String course : CourseInfo.getAllCourseNames()) {
 			if (!config.contains(course + ".JoinFee")) {
 				updated++;
 				config.set(course + ".JoinFee", 0);

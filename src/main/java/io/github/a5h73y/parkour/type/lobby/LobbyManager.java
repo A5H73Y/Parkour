@@ -133,6 +133,6 @@ public class LobbyManager extends AbstractPluginReceiver {
      */
     public void displayLobbies(CommandSender sender) {
         TranslationUtils.sendHeading("Available Lobbies", sender);
-        LobbyInfo.getLobbies().forEach(s -> sender.sendMessage("* " + s));
+        LobbyInfo.getAllLobbyNames().forEach(s -> sender.sendMessage("* " + s));
     }
 }

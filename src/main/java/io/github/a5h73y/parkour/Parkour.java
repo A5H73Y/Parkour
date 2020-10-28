@@ -19,6 +19,7 @@ import io.github.a5h73y.parkour.listener.SignListener;
 import io.github.a5h73y.parkour.manager.ChallengeManager;
 import io.github.a5h73y.parkour.manager.QuestionManager;
 import io.github.a5h73y.parkour.manager.ScoreboardManager;
+import io.github.a5h73y.parkour.manager.SoundsManager;
 import io.github.a5h73y.parkour.other.Backup;
 import io.github.a5h73y.parkour.other.CommandUsage;
 import io.github.a5h73y.parkour.other.ParkourUpdater;
@@ -67,6 +68,7 @@ public class Parkour extends JavaPlugin {
     private LobbyManager lobbyManager;
     private ParkourKitManager parkourKitManager;
     private ParkourGuiManager guiManager;
+    private SoundsManager soundsManager;
 
     /**
      * Get the plugin's instance.
@@ -229,6 +231,10 @@ public class Parkour extends JavaPlugin {
         return guiManager;
     }
 
+    public SoundsManager getSoundsManager() {
+        return soundsManager;
+    }
+
     public BountifulApi getBountifulApi() {
         return bountifulApi;
     }
@@ -268,6 +274,7 @@ public class Parkour extends JavaPlugin {
         playerManager = new PlayerManager(this);
         lobbyManager = new LobbyManager(this);
         guiManager = new ParkourGuiManager(this);
+        soundsManager = new SoundsManager(this);
     }
 
     private void registerCommands() {

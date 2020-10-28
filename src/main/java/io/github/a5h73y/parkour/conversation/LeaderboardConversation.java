@@ -32,7 +32,7 @@ public class LeaderboardConversation extends ParkourConversation {
 
         @Override
         public Prompt acceptInput(ConversationContext context, String message) {
-            if (!CourseInfo.getAllCourses().contains(message.toLowerCase())) {
+            if (!CourseInfo.getAllCourseNames().contains(message.toLowerCase())) {
                 ParkourConversation.sendErrorMessage(context, "This course does not exist");
                 return this;
             }

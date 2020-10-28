@@ -1,0 +1,20 @@
+package io.github.a5h73y.parkour.enums;
+
+public enum SoundType {
+
+	SECOND_INCREMENT("SecondIncrement"),
+	SECOND_DECREMENT("SecondDecrement"),
+	PLAYER_DEATH("PlayerDeath"),
+	CHECKPOINT_ACHIEVED("CheckpointAchieved"),
+	COURSE_FINISHED("CourseFinished");
+
+	private final String configEntry;
+
+	SoundType(String configEntry) {
+		this.configEntry = configEntry;
+	}
+
+	public String getConfigEntry() {
+		return this.configEntry;
+	}
+}

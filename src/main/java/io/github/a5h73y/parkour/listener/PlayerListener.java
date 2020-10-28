@@ -159,11 +159,15 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
 
     @EventHandler
     public void onPlayerDisconnect(PlayerQuitEvent event) {
-        if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
-            return;
+        if (parkour.getPlayerManager().isPlaying(event.getPlayer())) {
+            parkour.getPlayerManager().teardownParkourPlayer(event.getPlayer());
         }
 
-        parkour.getPlayerManager().teardownParkourPlayer(event.getPlayer());
+        if (event.getPlayer().isBanned()
+                && parkour.getConfig().getBoolean("Other.OnPlayerBan.ResetParkourInfo")) {
+            PlayerInfo.resetPlayer(event.getPlayer());
+            parkour.getPlayerManager().deleteParkourSession(event.getPlayer());
+        }
     }
 
     @EventHandler

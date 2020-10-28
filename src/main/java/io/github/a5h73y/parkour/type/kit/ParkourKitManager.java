@@ -188,7 +188,7 @@ public class ParkourKitManager extends AbstractPluginReceiver {
 	 * @param sender
 	 */
 	public void listParkourKit(String[] args, CommandSender sender) {
-		Set<String> parkourKit = ParkourKitInfo.getParkourKitNames();
+		Set<String> parkourKit = ParkourKitInfo.getAllParkourKitNames();
 
 		// specifying a kit
 		if (args.length == 2) {

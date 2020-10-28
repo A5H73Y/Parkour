@@ -405,7 +405,7 @@ public class ParkourDatabase extends AbstractPluginReceiver {
         Bukkit.getScheduler().runTaskAsynchronously(parkour, () -> {
             PluginUtils.log("Starting recreation of courses process...");
             int changes = 0;
-            for (String courseName : CourseInfo.getAllCourses()) {
+            for (String courseName : CourseInfo.getAllCourseNames()) {
                 if (getCourseId(courseName, false) == -1) {
                     insertCourse(courseName);
                     changes++;

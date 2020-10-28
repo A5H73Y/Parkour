@@ -40,7 +40,7 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
             return;
         }
 
-        if (courseMode == ParkourMode.POTION_EFFECT) {
+        if (courseMode == ParkourMode.POTION) {
             // check they still have the potion effect, if not reapply it
         }
     }

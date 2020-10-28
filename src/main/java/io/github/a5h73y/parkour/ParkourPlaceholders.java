@@ -12,6 +12,7 @@ import java.util.List;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Parkour's implementation of {@link PlaceholderExpansion}.
@@ -49,7 +50,8 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     }
 
     @Override
-    public String onRequest(OfflinePlayer offlinePlayer, String command) {
+    public String onRequest(OfflinePlayer offlinePlayer,
+                            @NotNull String command) {
         command = command.toLowerCase();
         String[] arguments = command.split("_");
 
@@ -57,7 +59,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             return getVersion();
 
         } else if (command.equals("course_count")) {
-            return String.valueOf(CourseInfo.getAllCourses().size());
+            return String.valueOf(CourseInfo.getAllCourseNames().size());
 
         } else if (command.equals("player_count")) {
             return String.valueOf(parkour.getPlayerManager().getNumberOfParkourPlayer());

@@ -60,7 +60,7 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         courseName = courseName.trim().toLowerCase();
-        return CourseInfo.getAllCourses().contains(courseName);
+        return CourseInfo.getAllCourseNames().contains(courseName);
     }
 
     public Course getCourse(String argument) {
@@ -119,11 +119,11 @@ public class CourseManager extends AbstractPluginReceiver {
      * @return Course
      */
     public Course findByNumber(int courseNumber) {
-        if (courseNumber <= 0 || courseNumber > CourseInfo.getAllCourses().size()) {
+        if (courseNumber <= 0 || courseNumber > CourseInfo.getAllCourseNames().size()) {
             return null;
         }
 
-        String courseName = CourseInfo.getAllCourses().get(courseNumber - 1);
+        String courseName = CourseInfo.getAllCourseNames().get(courseNumber - 1);
         return findByName(courseName);
     }
 
@@ -167,7 +167,7 @@ public class CourseManager extends AbstractPluginReceiver {
 
         parkour.getCheckpointManager().createCheckpointData(courseName, player.getLocation(), 0);
 
-        List<String> courseList = CourseInfo.getAllCourses();
+        List<String> courseList = CourseInfo.getAllCourseNames();
         courseList.add(courseName);
         Collections.sort(courseList);
         courseConfig.set("Courses", courseList);
@@ -251,7 +251,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param page
      */
     private void displayCourses(CommandSender sender, int page) {
-        if (CourseInfo.getAllCourses().size() == 0) {
+        if (CourseInfo.getAllCourseNames().size() == 0) {
             sender.sendMessage(Parkour.getPrefix() + "There are no Parkour courses!");
             return;
         }
@@ -264,7 +264,7 @@ public class CourseManager extends AbstractPluginReceiver {
         int results = 8;
         int fromIndex = (page - 1) * results;
 
-        List<String> courseList = CourseInfo.getAllCourses();
+        List<String> courseList = CourseInfo.getAllCourseNames();
         if (parkour.getConfig().getBoolean("Other.Display.OnlyReadyCourses")
                 && !PermissionUtils.hasPermission(sender, Permission.ADMIN_READY_BYPASS, false)) {
             courseList = courseList.stream()

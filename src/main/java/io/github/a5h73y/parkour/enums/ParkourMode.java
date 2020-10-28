@@ -8,9 +8,5 @@ public enum ParkourMode {
     ROCKETS,
     NORUN, // cancel run toggle event
     FREE_CHECKPOINT,
-    POTION_EFFECT
-        // has PotionEffectType (BLINDNESS)
-        // has duration (10000)
-        // has strength (1)
-        // has optional join text (i.e. "It suddenly becomes dark...")
+    POTION
 }

@@ -2,6 +2,7 @@ package io.github.a5h73y.parkour.configuration.impl;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
+import io.github.a5h73y.parkour.enums.SoundType;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.Collections;
@@ -122,6 +123,29 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("Scoreboard.Display.CurrentDeaths", true);
 		this.addDefault("Scoreboard.Display.Checkpoints", true);
 
+		this.addDefault("Sounds.Enabled", true);
+		this.addDefault("Sounds.SecondIncrement.Enabled", true);
+		this.addDefault("Sounds.SecondIncrement.Sound", "BLOCK_NOTE_BLOCK_PLING");
+		this.addDefault("Sounds.SecondIncrement.Volume", 0.1f);
+		this.addDefault("Sounds.SecondIncrement.Pitch", 1.75f);
+
+		this.addDefault("Sounds.SecondDecrement.Enabled", true); //TODO test out sounds for each
+		this.addDefault("Sounds.SecondDecrement.Sound", "BLOCK_NOTE_BLOCK_PLING");
+		this.addDefault("Sounds.SecondDecrement.Volume", 0.1f);
+		this.addDefault("Sounds.SecondDecrement.Pitch", 1.75f);
+		this.addDefault("Sounds.PlayerDeath.Enabled", true);
+		this.addDefault("Sounds.PlayerDeath.Sound", "BLOCK_NOTE_BLOCK_PLING");
+		this.addDefault("Sounds.PlayerDeath.Volume", 0.1f);
+		this.addDefault("Sounds.PlayerDeath.Pitch", 1.75f);
+		this.addDefault("Sounds.CheckpointAchieved.Enabled", true);
+		this.addDefault("Sounds.CheckpointAchieved.Sound", "BLOCK_NOTE_BLOCK_PLING");
+		this.addDefault("Sounds.CheckpointAchieved.Volume", 0.1f);
+		this.addDefault("Sounds.CheckpointAchieved.Pitch", 1.75f);
+		this.addDefault("Sounds.CourseFinished.Enabled", true);
+		this.addDefault("Sounds.CourseFinished.Sound", "BLOCK_NOTE_BLOCK_PLING");
+		this.addDefault("Sounds.CourseFinished.Volume", 0.1f);
+		this.addDefault("Sounds.CourseFinished.Pitch", 1.75f);
+
 		this.addDefault("ParkourGUI.Enabled", false);
 		this.addDefault("ParkourGUI.Rows", 2);
 		this.addDefault("ParkourGUI.Material", "BOOK");
@@ -129,7 +153,6 @@ public class DefaultConfig extends ParkourConfiguration {
 
 		this.addDefault("Other.CheckForUpdates", true);
 		this.addDefault("Other.LogToFile", true);
-		this.addDefault("Other.UseSounds", true);
 		this.addDefault("Other.EnforceSafeCheckpoints", true);
 		this.addDefault("Other.UseAutoTabCompletion", true);
 		this.addDefault("Other.ParkourKit.ReplaceInventory", true);
@@ -148,6 +171,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("Other.Display.OnlyReadyCourses", false);
 		this.addDefault("Other.Display.CourseCompleted", false);
 		this.addDefault("Other.OnServerShutdown.BackupFiles", false);
+		this.addDefault("Other.OnPlayerBan.ResetParkourInfo", false);
 
 		this.addDefault("Plugin.BountifulAPI.Enabled", true);
 		this.addDefault("Plugin.Vault.Enabled", true);
@@ -282,7 +306,11 @@ public class DefaultConfig extends ParkourConfiguration {
 	}
 
 	public boolean isSoundEnabled() {
-		return this.getBoolean("Other.UseSounds");
+		return this.getBoolean("Sounds.Enabled");
+	}
+
+	public boolean isSoundEnabled(SoundType soundType) {
+		return this.getBoolean("Sounds." + soundType.getConfigEntry() + ".Enabled");
 	}
 
 	public boolean isCompletedCoursesEnabled() {

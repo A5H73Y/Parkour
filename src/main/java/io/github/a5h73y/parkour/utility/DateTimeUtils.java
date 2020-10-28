@@ -20,6 +20,9 @@ public class DateTimeUtils {
 	public static final String HH_MM_SS = "%02d:%02d:%02d";
 	public static final String HH_MM_SS_MS = "%02d:%02d:%02d.%03d";
 
+	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
+			TranslationUtils.getTranslation("", false));
+
 	/**
 	 * Display current date.
 	 *
@@ -100,4 +103,11 @@ public class DateTimeUtils {
 		return days * 86400000L; //(24*60*60*1000)
 	}
 
+//	public void tesT() {
+//		LocalDateTime localDateTime = LocalDate.now().format(DateTimeFormatter.ofPattern(""));
+//		SimpleDateFormat formatter= new SimpleDateFormat("HH:mm:ss.SSS");
+//		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+//// Pass date object
+//		String formatted = formatter.format(date );
+//	}
 }

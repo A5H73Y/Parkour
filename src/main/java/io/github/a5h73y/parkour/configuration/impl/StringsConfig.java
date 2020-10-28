@@ -69,6 +69,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Parkour.Challenge.Winner", "Congratulations! You beat &b%PLAYER% &fat &b%COURSE%!");
 		this.addDefault("Parkour.Challenge.Loser", "&b%PLAYER% &fhas completed &b%COURSE% &fbefore you!");
 		this.addDefault("Parkour.AlreadyCompleted", "You have already completed this course.");
+		this.addDefault("Parkour.Question", "Please enter &a/pa yes &fto confirm, or &c/pa no &fto cancel.");
 
 		this.addDefault("Event.Join", "This server uses &bParkour &3%VALUE%");
 		this.addDefault("Event.Checkpoint", "Checkpoint set to &b%CURRENT% &8/ &7%TOTAL%");
@@ -100,6 +101,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Error.UnknownPlayer", "Unknown Parkour player!");
 		this.addDefault("Error.UnknownMaterial", "Unknown Material: &4%VALUE%");
 		this.addDefault("Error.UnknownLobby", "%VALUE% lobby does not exist!");
+		this.addDefault("Error.UnknownWorld", "The requested world doesn't exist.");
 		this.addDefault("Error.Cheating1", "Please do not cheat.");
 		this.addDefault("Error.Cheating2", "&lYou must achieve all &4%VALUE% &f&lcheckpoints!");
 		this.addDefault("Error.Cooldown", "Slow down! Please wait &b%VALUE% &fmore seconds.");

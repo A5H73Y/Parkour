@@ -1,11 +1,14 @@
 package io.github.a5h73y.parkour.type.player;
 
+import static io.github.a5h73y.parkour.other.Constants.DEFAULT;
+
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.conversation.SetPlayerConversation;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.enums.Permission;
+import io.github.a5h73y.parkour.enums.SoundType;
 import io.github.a5h73y.parkour.event.PlayerAchieveCheckpointEvent;
 import io.github.a5h73y.parkour.event.PlayerDeathEvent;
 import io.github.a5h73y.parkour.event.PlayerFinishCourseEvent;
@@ -23,7 +26,6 @@ import io.github.a5h73y.parkour.type.lobby.LobbyInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
-import io.github.a5h73y.parkour.utility.SoundUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.io.File;
@@ -114,12 +116,11 @@ public class PlayerManager extends AbstractPluginReceiver {
 			}
 
 			if (!isPlaying(onlinePlayer)) {
-				return;
+				continue;
 			}
 
 			String currentCourse = getParkourSession(onlinePlayer).getCourse().getName();
 			TranslationUtils.sendValueTranslation("Parkour.Continue", currentCourse, onlinePlayer);
-			parkour.getScoreboardManager().addScoreboard(onlinePlayer);
 		}
 	}
 
@@ -181,7 +182,9 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * if the scoreboard is enabled and the display current time option is true.
 	 */
 	public void startLiveTimerRunnable() {
-		if (!parkour.getConfig().getBoolean("OnCourse.DisplayLiveTime")) {
+		if (!parkour.getConfig().getBoolean("OnCourse.DisplayLiveTime")
+				&& !(parkour.getConfig().getBoolean("Scoreboard.Enabled")
+				&& parkour.getConfig().getBoolean("Scoreboard.Display.CurrentTime"))) {
 			return;
 		}
 
@@ -200,7 +203,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 					}
 
 					if (!isInQuietMode(player)) {
-						SoundUtils.playTimerSound(player);
+						parkour.getSoundsManager().playSound(player, SoundType.SECOND_INCREMENT);
 						parkour.getBountifulApi().sendActionBar(player, liveTimer, true);
 					}
 
@@ -783,7 +786,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			return;
 		}
 
-		parkour.getLobbyManager().joinLobby(player, Constants.DEFAULT);
+		parkour.getLobbyManager().joinLobby(player, DEFAULT);
 	}
 
 	public void rocketLaunchPlayer(Player player) {
@@ -863,10 +866,10 @@ public class PlayerManager extends AbstractPluginReceiver {
 			player.getInventory().addItem(MaterialUtils.createItemStack(
 					XMaterial.FIREWORK_ROCKET.parseMaterial(), TranslationUtils.getTranslation("Mode.Rockets.ItemName", false)));
 
-		} else if (courseMode == ParkourMode.POTION_EFFECT) {
-			XPotion.addPotionEffectsFromString(player, CourseInfo.getParkourModePotionEffects(session.getCourseName()));
-			if (CourseInfo.hasParkourModeJoinMessage(session.getCourseName())) {
-				player.sendMessage(StringUtils.colour(CourseInfo.getParkourModeJoinMessage(session.getCourseName())));
+		} else if (courseMode == ParkourMode.POTION) {
+			XPotion.addPotionEffectsFromString(player, CourseInfo.getPotionParkourModeEffects(session.getCourseName()));
+			if (CourseInfo.hasPotionJoinMessage(session.getCourseName())) {
+				player.sendMessage(StringUtils.colour(CourseInfo.getPotionJoinMessage(session.getCourseName())));
 			}
 		}
 	}
@@ -1217,7 +1220,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			player.getInventory().clear();
 		}
 
-		String kitName = args != null && args.length == 2 ? args[1] : Constants.DEFAULT;
+		String kitName = args != null && args.length == 2 ? args[1] : DEFAULT;
 		ParkourKit kit = parkour.getParkourKitManager().getParkourKit(kitName);
 
 		if (kit == null) {
@@ -1267,7 +1270,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 				player.sendMessage(Parkour.getPrefix() + "You are not in Test Mode.");
 			}
 		} else {
-			String kitName = args.length == 2 ? args[1].toLowerCase() : Constants.DEFAULT;
+			String kitName = args.length == 2 ? args[1].toLowerCase() : DEFAULT;
 			ParkourKit kit = parkour.getParkourKitManager().getParkourKit(kitName);
 
 			if (kit == null) {
@@ -1325,7 +1328,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		if (parkour.getConfig().isCompletedCoursesEnabled()) {
 			player.sendMessage("Courses Completed: " + ChatColor.AQUA + PlayerInfo.getNumberOfCoursesCompleted(targetPlayer)
-					+ " / " + CourseInfo.getAllCourses().size());
+					+ " / " + CourseInfo.getAllCourseNames().size());
 		}
 	}
 
@@ -1416,6 +1419,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 				} else {
 					player.sendMessage("Your ParkourSession is invalid."); //TODO translate
 					deleteParkourSession(player);
+					parkour.getLobbyManager().joinLobby(player, DEFAULT);
 				}
 			} catch (IOException | ClassNotFoundException e) {
 				PluginUtils.log("Player's session couldn't be loaded: " + e.getMessage(), 2);
