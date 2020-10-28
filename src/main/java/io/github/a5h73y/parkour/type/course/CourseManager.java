@@ -513,7 +513,9 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param secondsValue new maximum seconds
      */
     public void setMaxTime(CommandSender sender, String courseName, String secondsValue) {
-        if (!parkour.getConfig().getBoolean("OnCourse.DisplayLiveTime")) {
+        if (!parkour.getConfig().getBoolean("OnCourse.DisplayLiveTime")
+                && !(parkour.getConfig().getBoolean("Scoreboard.Enabled")
+                && parkour.getConfig().getBoolean("Scoreboard.Display.CurrentTime"))) {
             sender.sendMessage(Parkour.getPrefix() + "Live Time is disabled!");
             return;
         }

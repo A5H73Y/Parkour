@@ -198,12 +198,16 @@ public class PlayerManager extends AbstractPluginReceiver {
 					int seconds = parkourSession.getValue().calculateSeconds();
 					String liveTimer = DateTimeUtils.convertSecondsToTime(seconds);
 
-					if (course.hasMaxTime() && (seconds <= 5 || seconds == 10)) {
-						liveTimer = ChatColor.RED + liveTimer;
+					if (course.hasMaxTime()) {
+						parkour.getSoundsManager().playSound(player, SoundType.SECOND_DECREMENT);
+						if (seconds <= 5 || seconds == 10) {
+							liveTimer = ChatColor.RED + liveTimer;
+						}
+					} else {
+						parkour.getSoundsManager().playSound(player, SoundType.SECOND_INCREMENT);
 					}
 
 					if (!isInQuietMode(player)) {
-						parkour.getSoundsManager().playSound(player, SoundType.SECOND_INCREMENT);
 						parkour.getBountifulApi().sendActionBar(player, liveTimer, true);
 					}
 
@@ -384,6 +388,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		ParkourSession session = getParkourSession(player);
 		if (!silent) {
+			parkour.getSoundsManager().playSound(player, SoundType.COURSE_FAILED);
 			parkour.getBountifulApi().sendSubTitle(player,
 					TranslationUtils.getCourseMessage(session.getCourse().getName(), "LeaveMessage", "Parkour.Leave"),
 					parkour.getConfig().getBoolean("DisplayTitle.Leave"));
@@ -446,6 +451,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		String courseName = session.getCourseName();
 		session.increaseCheckpoint();
+		parkour.getSoundsManager().playSound(player, SoundType.CHECKPOINT_ACHIEVED);
 
 		if (parkour.getScoreboardManager().isEnabled()) {
 			parkour.getScoreboardManager().updateScoreboardCheckpoints(player, session.getCurrentCheckpoint() + " / " + session.getCourse().getNumberOfCheckpoints());
@@ -494,6 +500,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		ParkourSession session = getParkourSession(player);
+		parkour.getSoundsManager().playSound(player, SoundType.PLAYER_DEATH);
 		session.increaseDeath();
 
 		if (session.getCourse().hasMaxDeaths()) {
@@ -582,6 +589,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		session.markTimeFinished();
+		parkour.getSoundsManager().playSound(player, SoundType.COURSE_FINISHED);
 		preparePlayer(player, parkour.getConfig().getString("OnFinish.SetGameMode"));
 
 		if (hasHiddenPlayers(player)) {

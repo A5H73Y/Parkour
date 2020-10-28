@@ -6,7 +6,8 @@ public enum SoundType {
 	SECOND_DECREMENT("SecondDecrement"),
 	PLAYER_DEATH("PlayerDeath"),
 	CHECKPOINT_ACHIEVED("CheckpointAchieved"),
-	COURSE_FINISHED("CourseFinished");
+	COURSE_FINISHED("CourseFinished"),
+	COURSE_FAILED("CourseFailed");
 
 	private final String configEntry;
 

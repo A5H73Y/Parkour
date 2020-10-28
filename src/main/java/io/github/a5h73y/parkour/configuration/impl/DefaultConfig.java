@@ -126,25 +126,28 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("Sounds.Enabled", true);
 		this.addDefault("Sounds.SecondIncrement.Enabled", true);
 		this.addDefault("Sounds.SecondIncrement.Sound", "BLOCK_NOTE_BLOCK_PLING");
-		this.addDefault("Sounds.SecondIncrement.Volume", 0.1f);
+		this.addDefault("Sounds.SecondIncrement.Volume", 0.05f);
 		this.addDefault("Sounds.SecondIncrement.Pitch", 1.75f);
-
-		this.addDefault("Sounds.SecondDecrement.Enabled", true); //TODO test out sounds for each
+		this.addDefault("Sounds.SecondDecrement.Enabled", true);
 		this.addDefault("Sounds.SecondDecrement.Sound", "BLOCK_NOTE_BLOCK_PLING");
-		this.addDefault("Sounds.SecondDecrement.Volume", 0.1f);
-		this.addDefault("Sounds.SecondDecrement.Pitch", 1.75f);
+		this.addDefault("Sounds.SecondDecrement.Volume", 0.05f);
+		this.addDefault("Sounds.SecondDecrement.Pitch", 4f);
 		this.addDefault("Sounds.PlayerDeath.Enabled", true);
-		this.addDefault("Sounds.PlayerDeath.Sound", "BLOCK_NOTE_BLOCK_PLING");
+		this.addDefault("Sounds.PlayerDeath.Sound", "ENTITY_PLAYER_DEATH");
 		this.addDefault("Sounds.PlayerDeath.Volume", 0.1f);
 		this.addDefault("Sounds.PlayerDeath.Pitch", 1.75f);
 		this.addDefault("Sounds.CheckpointAchieved.Enabled", true);
-		this.addDefault("Sounds.CheckpointAchieved.Sound", "BLOCK_NOTE_BLOCK_PLING");
+		this.addDefault("Sounds.CheckpointAchieved.Sound", "BLOCK_NOTE_BLOCK_CHIME");
 		this.addDefault("Sounds.CheckpointAchieved.Volume", 0.1f);
 		this.addDefault("Sounds.CheckpointAchieved.Pitch", 1.75f);
 		this.addDefault("Sounds.CourseFinished.Enabled", true);
-		this.addDefault("Sounds.CourseFinished.Sound", "BLOCK_NOTE_BLOCK_PLING");
+		this.addDefault("Sounds.CourseFinished.Sound", "BLOCK_CONDUIT_ACTIVATE");
 		this.addDefault("Sounds.CourseFinished.Volume", 0.1f);
 		this.addDefault("Sounds.CourseFinished.Pitch", 1.75f);
+		this.addDefault("Sounds.CourseFailed.Enabled", true);
+		this.addDefault("Sounds.CourseFailed.Sound", "BLOCK_CONDUIT_DEACTIVATE");
+		this.addDefault("Sounds.CourseFailed.Volume", 0.1f);
+		this.addDefault("Sounds.CourseFailed.Pitch", 1.75f);
 
 		this.addDefault("ParkourGUI.Enabled", false);
 		this.addDefault("ParkourGUI.Rows", 2);
