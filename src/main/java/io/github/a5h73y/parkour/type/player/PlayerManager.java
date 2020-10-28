@@ -1310,7 +1310,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		if (session != null) {
 			player.sendMessage("Course: " + ChatColor.AQUA + session.getCourse().getName());
 			player.sendMessage("Deaths: " + ChatColor.AQUA + session.getDeaths());
-			player.sendMessage("Time: " + ChatColor.AQUA + session.displayTime());
+			player.sendMessage("Time: " + ChatColor.AQUA + session.getDisplayTime());
 			player.sendMessage("Checkpoint: " + ChatColor.AQUA + session.getCurrentCheckpoint());
 		}
 
@@ -1464,7 +1464,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 					.replace("%PLAYER%", entry.getKey().getName())
 					.replace("%COURSE%", entry.getValue().getCourse().getName())
 					.replace("%DEATHS%", String.valueOf(entry.getValue().getDeaths()))
-					.replace("%TIME%", entry.getValue().displayTime()));
+					.replace("%TIME%", entry.getValue().getDisplayTime()));
 		}
 	}
 
@@ -1491,7 +1491,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 					TranslationUtils.getCourseMessage(session.getCourse().getName(), "FinishMessage", "Parkour.FinishCourse1"),
 					TranslationUtils.getTranslation("Parkour.FinishCourse2", false)
 							.replace("%DEATHS%", String.valueOf(session.getDeaths()))
-							.replace("%TIME%", session.displayTime()),
+							.replace("%TIME%", session.getDisplayTime()),
 					parkour.getConfig().getBoolean("DisplayTitle.Finish"));
 		}
 
@@ -1505,7 +1505,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 				.replace("%PLAYER_DISPLAY%", player.getDisplayName())
 				.replace("%COURSE%", session.getCourse().getName())
 				.replace("%DEATHS%", String.valueOf(session.getDeaths()))
-				.replace("%TIME%", session.displayTime());
+				.replace("%TIME%", session.getDisplayTime());
 
 		switch (parkour.getConfig().getString("OnFinish.BroadcastLevel", "WORLD").toUpperCase()) {
 			case "GLOBAL":
