@@ -964,11 +964,11 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 		if (enabled) {
 			removeHidden(player);
-			TranslationUtils.sendTranslation("Event.HideAll1");
+			TranslationUtils.sendTranslation("Event.HideAll1", player);
 
 		} else {
 			addHidden(player);
-			TranslationUtils.sendTranslation("Event.HideAll2");
+			TranslationUtils.sendTranslation("Event.HideAll2", player);
 		}
 	}
 
