@@ -350,13 +350,11 @@ public class PlayerManager extends AbstractPluginReceiver {
 			}
 		}
 
-
 		addPlayer(player, new ParkourSession(course));
 		setupParkourMode(player);
 		parkour.getScoreboardManager().addScoreboard(player);
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerJoinCourseEvent(player, course.getName()));
 	}
-
 
 	/**
 	 * Execute the joinCourse after a delay.
