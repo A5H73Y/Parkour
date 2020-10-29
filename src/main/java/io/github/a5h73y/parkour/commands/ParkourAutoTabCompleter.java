@@ -27,16 +27,16 @@ import org.jetbrains.annotations.NotNull;
 public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements TabCompleter {
 
     private static final List<String> NO_PERMISSION_COMMANDS = Arrays.asList(
-            "join", "info", "course", "lobby", "perms", "quiet", "list", "help", "material", "about", "contact", "cmds");
+            "join", "info", "course", "lobby", "perms", "quiet", "list", "help", "material", "about", "contact", "cmds", "version");
 
     private static final List<String> ADMIN_ONLY_COMMANDS = Arrays.asList(
-            "setlobby", "reset", "economy", "recreate", "whitelist", "setlevel", "setrank", "settings",
+            "setlobby", "reset", "economy", "recreate", "whitelist", "setlevel", "setplayer", "setrank", "settings",
             "sql", "cache", "reload");
 
     private static final List<String> ADMIN_COURSE_COMMANDS = Arrays.asList(
             "checkpoint", "ready", "setstart", "setcourse", "setautostart", "select", "done", "link", "linkkit",
             "addjoinitem", "rewardonce", "rewardlevel", "rewardleveladd", "rewardrank", "rewarddelay", "rewardparkoins",
-            "setmode", "createkit", "editkit", "validatekit");
+            "setmode", "createkit", "editkit", "validatekit", "checkpointprize");
 
     private static final List<String> ON_COURSE_COMMANDS = Arrays.asList(
             "back", "leave");
@@ -195,8 +195,10 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             case "rewardleveladd":
             case "rewarddelay":
             case "rewardparkoins":
+            case "checkpointprize":
             case "setmode":
             case "leaderboard":
+            case "linkkit":
                 allowedCommands = CourseInfo.getAllCourseNames();
                 break;
             case "kit":
@@ -220,6 +222,17 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
                 break;
             case "setplayer":
                 allowedCommands = SetPlayerConversation.SET_PLAYER_OPTIONS;
+                break;
+            case "economy":
+                switch (firstArg) {
+                    case "setfee":
+                    case "setprize":
+                        allowedCommands = CourseInfo.getAllCourseNames();
+                        break;
+                }
+                break;
+            case "linkkit":
+                allowedCommands = new ArrayList<>(ParkourKitInfo.getAllParkourKitNames());
                 break;
             case "delete":
             case "reset":
