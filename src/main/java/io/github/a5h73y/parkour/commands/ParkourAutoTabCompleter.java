@@ -34,7 +34,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             "sql", "cache", "reload");
 
     private static final List<String> ADMIN_COURSE_COMMANDS = Arrays.asList(
-            "checkpoint", "ready", "setstart", "setcourse", "setautostart", "select", "done", "link", "linkkit",
+            "checkpoint", "ready", "setstart", "setcourse", "setautostart", "select", "deselect", "done", "link", "linkkit",
             "addjoinitem", "rewardonce", "rewardlevel", "rewardleveladd", "rewardrank", "rewarddelay", "rewardparkoins",
             "setmode", "createkit", "editkit", "validatekit", "checkpointprize");
 
@@ -56,7 +56,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
     private static final List<String> ECONOMY_COMMANDS = Arrays.asList(
             "info", "recreate", "setprize", "setfee");
 
-    private static final List<String> LINK_COMMANDS = Arrays.asList("course", "lobby");
+    private static final List<String> LINK_COMMANDS = Arrays.asList("course", "lobby", "reset");
 
     public ParkourAutoTabCompleter(Parkour parkour) {
         super(parkour);
