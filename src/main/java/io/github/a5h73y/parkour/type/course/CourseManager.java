@@ -334,6 +334,7 @@ public class CourseManager extends AbstractPluginReceiver {
     public void deselectCourse(Player player) {
         if (PlayerInfo.hasSelectedValidCourse(player)) {
             PlayerInfo.resetSelected(player);
+            PlayerInfo.persistChanges();
             player.sendMessage(Parkour.getPrefix() + "Finished editing.");
 
         } else {
@@ -690,6 +691,7 @@ public class CourseManager extends AbstractPluginReceiver {
 
         if (ready) {
             PlayerInfo.resetSelected(player);
+            PlayerInfo.persistChanges();
         }
 
         TranslationUtils.sendPropertySet(player, "Ready Status", courseName, String.valueOf(ready));
