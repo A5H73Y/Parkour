@@ -57,6 +57,7 @@ public class PlayerInfo {
      */
     public static void resetSelected(OfflinePlayer player) {
         getPlayersConfig().set(player.getUniqueId() + ".Selected", null);
+        persistChanges();
     }
 
     /**
