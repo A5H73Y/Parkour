@@ -406,7 +406,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 		parkour.getChallengeManager().terminateChallenge(player);
 
 		if (!silent) {
-			if (parkour.getConfig().isTeleportToJoinLocation()) {
+			if (parkour.getConfig().isTeleportToJoinLocation()
+					&& PlayerInfo.hasJoinLocation(player)) {
 				player.teleport(PlayerInfo.getJoinLocation(player));
 			} else {
 				parkour.getLobbyManager().teleportToLeaveDestination(player, session);

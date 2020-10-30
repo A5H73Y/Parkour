@@ -315,14 +315,6 @@ public class PlayerInfo {
         }
     }
 
-    /** Set the location from which the player has joined a course.
-     *
-     * @param player
-     */
-    public static void setJoinLocation(Player player) {
-        getPlayersConfig().set(player.getUniqueId() + ".JoinLocation", player.getLocation());
-    }
-
     /**
      * Get the location from which the player joined the course.
      * This is used to return the player to their original location on course completion.
@@ -334,6 +326,18 @@ public class PlayerInfo {
         return (Location) getPlayersConfig().get(player.getUniqueId() + ".JoinLocation");
     }
 
+    public static boolean hasJoinLocation(Player player) {
+        return getPlayersConfig().contains(player.getUniqueId() + ".JoinLocation");
+    }
+
+    /** Set the location from which the player has joined a course.
+     *
+     * @param player
+     */
+    public static void setJoinLocation(Player player) {
+        getPlayersConfig().set(player.getUniqueId() + ".JoinLocation", player.getLocation());
+    }
+
     public static void setQuietMode(Player player, boolean inQuietMode) {
         getPlayersConfig().set(player.getUniqueId() + ".QuietMode", inQuietMode);
     }
@@ -342,8 +346,6 @@ public class PlayerInfo {
         return getPlayersConfig().getBoolean(player.getUniqueId() + ".QuietMode");
     }
 
-// difficult to decide if this is needed, if you join a linked course you'd want it to keep the original join location
-// maybe it never needs to be reset and just overwritten?
     public static void resetJoinLocation(Player player) {
         getPlayersConfig().set(player.getUniqueId() + ".JoinLocation", null);
     }
