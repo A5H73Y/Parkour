@@ -1,5 +1,6 @@
 package io.github.a5h73y.parkour;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.github.a5h73y.parkour.commands.ParkourAutoTabCompleter;
 import io.github.a5h73y.parkour.commands.ParkourCommands;
@@ -39,6 +40,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.bstats.bukkit.Metrics;
@@ -289,6 +291,13 @@ public class Parkour extends JavaPlugin {
                 .lines().collect(Collectors.joining("\n"));
 
         commandUsages = Arrays.asList(new GsonBuilder().create().fromJson(json, CommandUsage[].class));
+
+//        TODO - Run before release, orders json
+//        commandUsages = commandUsages.stream().sorted(Comparator.comparing(CommandUsage::getCommandGroup)
+//                        .thenComparing(CommandUsage::getCommand))
+//                        .collect(Collectors.toList());
+//        commandUsages.forEach(commandUsage -> System.out.println(commandUsage.getCommandGroup() + commandUsage.getCommand()));
+//        System.out.println(new Gson().toJson(commandUsages));
     }
 
     private void registerEvents() {
