@@ -615,6 +615,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			restoreHealth(player);
 			loadInventory(player);
 			rewardPrize(player, courseName);
+			parkour.getScoreboardManager().removeScoreboard(player);
 			if (teleportAway) {
 				teleportCourseCompletion(player, courseName);
 			}
@@ -623,6 +624,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 				restoreHealth(player);
 				loadInventory(player);
 				rewardPrize(player, courseName);
+				parkour.getScoreboardManager().removeScoreboard(player);
 				if (teleportAway) {
 					teleportCourseCompletion(player, courseName);
 				}
@@ -638,7 +640,6 @@ public class PlayerManager extends AbstractPluginReceiver {
 		PlayerInfo.persistChanges();
 
 		forceVisible(player);
-		parkour.getScoreboardManager().removeScoreboard(player);
 		deleteParkourSession(player);
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerFinishCourseEvent(player, courseName));
 	}
