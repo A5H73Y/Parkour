@@ -144,6 +144,10 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 parkour.getParkourKitManager().listParkourKit(sender, args);
                 break;
 
+            case "setplayerlimit":
+                parkour.getCourseManager().setPlayerLimit(sender, args[1], args[2]);
+                break;
+
             case "settings":
                 Help.displaySettings(sender);
                 break;

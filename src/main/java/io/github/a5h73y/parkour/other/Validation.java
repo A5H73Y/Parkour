@@ -182,6 +182,14 @@ public class Validation {
             }
         }
 
+        /* Check if player limit exceeded */
+        if (CourseInfo.hasPlayerLimit(course.getName())) {
+            if (Parkour.getInstance().getPlayerManager().getNumberOfPlayersOnCourse(course.getName()) >= CourseInfo.getPlayerLimit(course.getName())) {
+                TranslationUtils.sendTranslation("Error.LimitExceeded", player);
+                return false;
+            }
+        }
+
         return true;
     }
 

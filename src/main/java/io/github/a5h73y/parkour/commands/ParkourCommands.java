@@ -541,6 +541,17 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getPlayerManager().toggleTestMode(player, args.length == 2 ? args[1].toLowerCase() : DEFAULT);
                 break;
 
+            case "setplayerlimit":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                    return false;
+
+                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
+                    return false;
+                }
+
+                parkour.getCourseManager().setPlayerLimit(player, args[1], args[2]);
+                break;
+            
             case "tp":
             case "teleport":
                 if (!PermissionUtils.hasPermission(player, Permission.BASIC_TELEPORT)) {
