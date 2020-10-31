@@ -725,8 +725,21 @@ public class CourseInfo {
         return Parkour.getConfig(ConfigType.ECONOMY).getInt("Price." + courseName.toLowerCase() + ".JoinFee");
     }
 
-	public static void setJoinMessage(String courseName, String type, String value) {
+    public static void setJoinMessage(String courseName, String type, String value) {
         getCourseConfig().set(courseName + "." + StringUtils.standardizeText(type) + "Message", value);
         persistChanges();
-	}
+    }
+
+    public static boolean hasPlayerLimit(String courseName) {
+        return getCourseConfig().getInt(courseName.toLowerCase() + ".PlayerLimit") > 0;
+    }
+
+    public static int getPlayerLimit(String courseName) {
+        return getCourseConfig().getInt(courseName.toLowerCase() + ".PlayerLimit");
+    }
+
+    public static void setPlayerLimit(String courseName, int limit) {
+        getCourseConfig().set(courseName.toLowerCase() + ".PlayerLimit", limit);
+        persistChanges();
+    }
 }

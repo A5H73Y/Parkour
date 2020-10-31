@@ -488,6 +488,17 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getConfig().addWhitelistedCommand(player, args[1]);
                 break;
 
+            case "setplayerlimit":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                    return false;
+
+                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
+                    return false;
+                }
+
+                parkour.getCourseManager().setPlayerLimit(player, args[1], args[2]);
+                break;
+
             case "setcourse":
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
                     return false;

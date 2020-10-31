@@ -9,6 +9,7 @@ import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
 import io.github.a5h73y.parkour.type.lobby.LobbyInfo;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
+import io.github.a5h73y.parkour.type.player.PlayerManager;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -178,6 +179,14 @@ public class Validation {
             if (Parkour.getDefaultConfig().isCourseEnforceWorld()
                     && !player.getLocation().getWorld().getName().equals(course.getCheckpoints().get(0).getWorld())) {
                 TranslationUtils.sendTranslation("Error.WrongWorld", player);
+                return false;
+            }
+        }
+
+        /* Check if player limit exceeded */
+        if (CourseInfo.hasPlayerLimit(course.getName())) {
+            if (Parkour.getInstance().getPlayerManager().getNumberOfPlayersOnCourse(course.getName()) >= CourseInfo.getPlayerLimit(course.getName())) {
+                TranslationUtils.sendTranslation("Error.LimitExceeded", player);
                 return false;
             }
         }

@@ -116,6 +116,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Error.PluginNotLinked", "%VALUE% has not been linked.");
 		this.addDefault("Error.NoPermission", "You do not have Permission: &b%VALUE%");
 		this.addDefault("Error.InvalidAmount", "Amount needs to be numeric.");
+		this.addDefault("Error.LimitExceeded", "The player limit for the course has been reached.");
 
 		this.addDefault("Help.Command", "&7/pa help &9%VALUE% &0: &7To learn more about this command.");
 		this.addDefault("Help.Commands", "To display the commands menu, enter &b/pa cmds");

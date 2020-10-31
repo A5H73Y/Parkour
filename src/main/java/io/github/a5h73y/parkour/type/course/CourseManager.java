@@ -971,4 +971,27 @@ public class CourseManager extends AbstractPluginReceiver {
             TranslationUtils.sendInvalidSyntax(sender, "setcourse", "(courseName) [creator, minlevel, maxdeath, maxtime, message] [value]");
         }
     }
+
+    /**
+     * Set player limit  for course.
+     * Set a limit on the number of players that can play the course concurrently.
+     *
+     * @param sender
+     * @param course name
+     * @param limit
+     */
+    public void setPlayerLimit(CommandSender sender, String courseName, String limit) {
+        if (!courseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            return;
+        }
+
+        if (!Validation.isPositiveInteger(limit)) {
+            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+            return;
+        }
+
+        CourseInfo.setPlayerLimit(courseName, Integer.parseInt(limit));
+        TranslationUtils.sendPropertySet(sender, "Player Limit", courseName, String.valueOf(limit));
+    }
 }
