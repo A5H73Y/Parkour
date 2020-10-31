@@ -138,16 +138,14 @@ public class ParkourKitManager extends AbstractPluginReceiver {
 	 * @param args
 	 * @param player
 	 */
-	public void validateParkourKit(String[] args, Player player) {
-		String kitName = (args.length == 2 ? args[1].toLowerCase() : Constants.DEFAULT);
-
+	public void validateParkourKit(Player player, String kitName) {
 		if (!ParkourKitInfo.doesParkourKitExist(kitName)) {
-			player.sendMessage(Parkour.getPrefix() + kitName + " ParkourKit does not exist!");
+			TranslationUtils.sendTranslation("Error.UnknownParkourKit", player);
 			return;
 		}
 
 		List<String> invalidTypes = new ArrayList<>();
-		String path = "ParkourKit." + kitName;
+		String path = "ParkourKit." + kitName.toLowerCase();
 
 		Set<String> materialList = ParkourKitInfo.getParkourKitContents(kitName);
 
@@ -187,7 +185,7 @@ public class ParkourKitManager extends AbstractPluginReceiver {
 	 * @param args
 	 * @param sender
 	 */
-	public void listParkourKit(String[] args, CommandSender sender) {
+	public void listParkourKit(CommandSender sender, String[] args) {
 		Set<String> parkourKit = ParkourKitInfo.getAllParkourKitNames();
 
 		// specifying a kit

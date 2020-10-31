@@ -87,6 +87,9 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
 
         } else if (args.length == 3) {
             allowedCommands = populateSecondChildCommands(args[0], args[1]);
+
+        } else if (args.length == 4) {
+            allowedCommands = populateThirdChildCommands(args[0], args[1], args[2]);
         }
 
         for (String allowedCommand : allowedCommands) {
@@ -213,10 +216,10 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
         return allowedCommands;
     }
 
-    private List<String> populateSecondChildCommands(String command, String firstArg) {
+    private List<String> populateSecondChildCommands(String arg0, String arg1) {
         List<String> allowedCommands = new ArrayList<>();
 
-        switch (command.toLowerCase()) {
+        switch (arg0.toLowerCase()) {
             case "setcourse":
                 allowedCommands = SetCourseConversation.SET_COURSE_OPTIONS;
                 break;
@@ -224,7 +227,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
                 allowedCommands = SetPlayerConversation.SET_PLAYER_OPTIONS;
                 break;
             case "economy":
-                switch (firstArg) {
+                switch (arg1) {
                     case "setfee":
                     case "setprize":
                         allowedCommands = CourseInfo.getAllCourseNames();
@@ -236,7 +239,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
                 break;
             case "delete":
             case "reset":
-                switch (firstArg) {
+                switch (arg1) {
                     case "course":
                     case "leaderboard":
                     case "prize":
@@ -254,6 +257,22 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
                 }
                 break;
         }
+        return allowedCommands;
+    }
+
+    private List<String> populateThirdChildCommands(String arg0, String arg1, String arg2) {
+        List<String> allowedCommands = new ArrayList<>();
+
+        switch (arg0.toLowerCase()) {
+            case "setcourse":
+                switch (arg2.toLowerCase()) {
+                    case "message":
+                        allowedCommands = SetCourseConversation.MESSAGE_OPTIONS;
+                        break;
+                }
+                break;
+        }
+
         return allowedCommands;
     }
 

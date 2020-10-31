@@ -53,7 +53,7 @@ public class QuestionManager extends AbstractPluginReceiver {
 
     public void askResetPlayerLeaderboardQuestion(Player player, String courseName, String targetPlayerName) {
         courseName = courseName.toLowerCase();
-        player.sendMessage(Parkour.getPrefix() + "You are about to reset " + ChatColor.AQUA + targetPlayerName + ChatColor.WHITE + " leaderboards on course " + ChatColor.AQUA + "...");
+        player.sendMessage(Parkour.getPrefix() + "You are about to reset " + ChatColor.AQUA + targetPlayerName + ChatColor.WHITE + " leaderboards on course " + ChatColor.AQUA + courseName + "...");
         player.sendMessage(ChatColor.GRAY + "Resetting the player's leaderboards will remove all times they have from the database for this course. This will NOT affect the player or course in any other way.");
         askQuestion(player, targetPlayerName+ ";" + courseName, QuestionType.RESET_PLAYER_LEADERBOARD);
     }
@@ -143,17 +143,17 @@ public class QuestionManager extends AbstractPluginReceiver {
         private void confirm(Player player, QuestionType type, String argument) {
             switch (type) {
                 case DELETE_COURSE:
-                    parkour.getCourseManager().deleteCourse(argument, player);
+                    parkour.getCourseManager().deleteCourse(player, argument);
                     PluginUtils.logToFile(argument + " was deleted by " + player.getName());
                     return;
 
                 case DELETE_CHECKPOINT:
-                    parkour.getCheckpointManager().deleteCheckpoint(argument, player);
+                    parkour.getCheckpointManager().deleteCheckpoint(player, argument);
                     PluginUtils.logToFile(argument + "'s checkpoint " + CourseInfo.getCheckpointAmount(argument) + " was deleted by " + player.getName());
                     return;
 
                 case DELETE_LOBBY:
-                    parkour.getLobbyManager().deleteLobby(argument, player);
+                    parkour.getLobbyManager().deleteLobby(player, argument);
                     PluginUtils.logToFile("lobby " + argument + " was deleted by " + player.getName());
                     return;
 
@@ -164,7 +164,7 @@ public class QuestionManager extends AbstractPluginReceiver {
                     return;
 
                 case DELETE_AUTOSTART:
-                    parkour.getCourseManager().deleteAutoStart(argument, player);
+                    parkour.getCourseManager().deleteAutoStart(player, argument);
                     TranslationUtils.sendValueTranslation("Parkour.Delete", "AutoStart", player);
                     PluginUtils.logToFile("AutoStart at " + argument + " was deleted by " + player.getName());
                     return;
@@ -205,7 +205,7 @@ public class QuestionManager extends AbstractPluginReceiver {
                     }
 
                     parkour.getDatabase().deletePlayerCourseTimes(targetPlayer, arguments[1]);
-                    TranslationUtils.sendValueTranslation("Parkour.Reset", arguments[0] + " leaderboards for " + arguments[2], player);
+                    TranslationUtils.sendValueTranslation("Parkour.Reset", arguments[0] + " leaderboards for " + arguments[1], player);
                     PluginUtils.logToFile(arguments[0] + " leaderboards were reset on course + " + arguments[1] + " by " + player.getName());
                     return;
 

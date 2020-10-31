@@ -237,7 +237,7 @@ public class Validation {
      * @param player
      * @return
      */
-    public static boolean challengePlayer(String[] args, Player player) {
+    public static boolean challengePlayer(Player player, String[] args) {
         String courseName = args[1].toLowerCase();
         Player targetPlayer = Bukkit.getPlayer(args[2]);
 
@@ -323,7 +323,7 @@ public class Validation {
      */
     public static boolean canJoinLobby(Player player, String lobbyName) {
         if (!LobbyInfo.doesLobbyExist(lobbyName)) {
-            player.sendMessage(Parkour.getPrefix() + "Lobby does not exist!");
+            TranslationUtils.sendValueTranslation("Error.UnknownLobby", lobbyName, player);
             return false;
         }
 
@@ -352,7 +352,7 @@ public class Validation {
      * @param player
      * @return
      */
-    public static boolean createCheckpoint(String[] args, Player player) {
+    public static boolean createCheckpoint(Player player, String[] args) {
         String selected = PlayerInfo.getSelectedCourse(player).toLowerCase();
 
         if (!Parkour.getInstance().getCourseManager().courseExists(selected)) {
@@ -456,7 +456,7 @@ public class Validation {
      */
     public static boolean deleteParkourKit(String parkourKit, Player player) {
         if (!ParkourKitInfo.doesParkourKitExist(parkourKit)) {
-            player.sendMessage(Parkour.getPrefix() + "This ParkourKit does not exist!");
+            TranslationUtils.sendTranslation("Error.UnknownParkourKit", player);
             return false;
         }
 

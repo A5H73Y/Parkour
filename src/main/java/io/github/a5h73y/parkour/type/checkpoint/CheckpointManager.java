@@ -22,6 +22,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 public class CheckpointManager extends AbstractPluginReceiver {
 
@@ -39,8 +40,8 @@ public class CheckpointManager extends AbstractPluginReceiver {
      * @param args
      * @param player
      */
-    public void createCheckpoint(String[] args, Player player) {
-        if (!Validation.createCheckpoint(args, player)) {
+    public void createCheckpoint(Player player, String[] args) {
+        if (!Validation.createCheckpoint(player, args)) {
             return;
         }
 
@@ -134,18 +135,18 @@ public class CheckpointManager extends AbstractPluginReceiver {
      * @param player
      * @param toCheckpoint
      */
-    public void teleportCheckpoint(String[] args, Player player, boolean toCheckpoint) {
-        if (!parkour.getCourseManager().courseExists(args[1])) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", args[1], player);
+    public void teleportCheckpoint(Player player, String courseName, @Nullable String checkpoint) {
+        if (!parkour.getCourseManager().courseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
             return;
         }
 
         ParkourConfiguration checkpointsConfig = Parkour.getConfig(ConfigType.CHECKPOINTS);
         ParkourConfiguration courseConfig = Parkour.getConfig(ConfigType.COURSES);
 
-        String courseName = args[1].toLowerCase();
+        courseName = courseName.toLowerCase();
         // if a checkpoint is specified, or default to 0 (start)
-        String path = toCheckpoint ? courseName + "." + args[2] : courseName + ".0";
+        String path = checkpoint == null ? courseName + ".0" : courseName + "." + checkpoint;
 
         World world = Bukkit.getWorld(courseConfig.getString(courseName + "." + "World"));
         double x = checkpointsConfig.getDouble(path + ".X");
@@ -155,13 +156,13 @@ public class CheckpointManager extends AbstractPluginReceiver {
         float pitch = checkpointsConfig.getInt(path + ".Pitch");
 
         if (x == 0 && y == 0 && z == 0) {
-            player.sendMessage(Parkour.getPrefix() + ChatColor.RED + "ERROR: " + ChatColor.WHITE + "This checkpoint is invalid or doesn't exist!");
+            TranslationUtils.sendTranslation("Error.UnknownCheckpoint", player);
             return;
         }
 
         player.teleport(new Location(world, x, y, z, yaw, pitch));
-        String message = TranslationUtils.getValueTranslation("Parkour.Teleport", args[1]);
-        player.sendMessage(toCheckpoint ? message + StringUtils.colour(" &f(&3" + args[2] + "&f)") : message);
+        String message = TranslationUtils.getValueTranslation("Parkour.Teleport", courseName);
+        player.sendMessage(checkpoint != null ? message + StringUtils.colour(" &f(&3" + checkpoint + "&f)") : message);
     }
 
     /**
@@ -171,7 +172,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
      * @param courseName
      * @param player
      */
-    public void deleteCheckpoint(String courseName, Player player) {
+    public void deleteCheckpoint(Player player, String courseName) {
         if (!parkour.getCourseManager().courseExists(courseName)) {
             return;
         }

@@ -3,6 +3,7 @@ package io.github.a5h73y.parkour.utility;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.enums.Permission;
+import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
@@ -81,7 +82,12 @@ public class PermissionUtils {
 	 * @return player has permission or ownership
 	 */
 	public static boolean hasPermissionOrCourseOwnership(Player player, Permission permission, String courseName) {
-		if (!(Parkour.getInstance().getCourseManager().courseExists(courseName))) {
+		if (!PlayerInfo.hasSelectedValidCourse(player) && courseName == null) {
+			TranslationUtils.sendTranslation("Error.Selected", player);
+			return false;
+		}
+
+		if (!Parkour.getInstance().getCourseManager().courseExists(courseName)) {
 			TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
 			return false;
 		}

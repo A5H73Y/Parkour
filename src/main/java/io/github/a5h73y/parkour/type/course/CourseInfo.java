@@ -724,4 +724,9 @@ public class CourseInfo {
     public static int getEconomyJoiningFee(String courseName) {
         return Parkour.getConfig(ConfigType.ECONOMY).getInt("Price." + courseName.toLowerCase() + ".JoinFee");
     }
+
+	public static void setJoinMessage(String courseName, String type, String value) {
+        getCourseConfig().set(courseName + "." + StringUtils.standardizeText(type) + "Message", value);
+        persistChanges();
+	}
 }

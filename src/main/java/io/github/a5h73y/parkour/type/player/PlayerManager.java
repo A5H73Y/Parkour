@@ -812,7 +812,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param lines
 	 * @param player
 	 */
-	public void applyEffect(String[] lines, Player player) {
+	public void applyEffect(Player player, String[] lines) {
 		if (lines[2].equalsIgnoreCase("heal")) {
 			Damageable playerDamage = player;
 			playerDamage.setHealth(playerDamage.getMaxHealth());
@@ -1224,12 +1224,11 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 *
 	 * @param player
 	 */
-	public void giveParkourKit(String[] args, Player player) {
+	public void giveParkourKit(Player player, String kitName) {
 		if (parkour.getConfig().getBoolean("Other.ParkourKit.ReplaceInventory")) {
 			player.getInventory().clear();
 		}
 
-		String kitName = args != null && args.length == 2 ? args[1] : DEFAULT;
 		ParkourKit kit = parkour.getParkourKitManager().getParkourKit(kitName);
 
 		if (kit == null) {
@@ -1269,7 +1268,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 *
 	 * @param player
 	 */
-	public void toggleTestMode(String[] args, Player player) {
+	public void toggleTestMode(Player player, String kitName) {
 		if (isPlaying(player)) {
 			if (isPlayerInTestMode(player)) {
 				removePlayer(player);
@@ -1279,7 +1278,6 @@ public class PlayerManager extends AbstractPluginReceiver {
 				player.sendMessage(Parkour.getPrefix() + "You are not in Test Mode.");
 			}
 		} else {
-			String kitName = args.length == 2 ? args[1].toLowerCase() : DEFAULT;
 			ParkourKit kit = parkour.getParkourKitManager().getParkourKit(kitName);
 
 			if (kit == null) {
@@ -1302,7 +1300,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param args
 	 * @param player
 	 */
-	public void displayParkourInfo(String[] args, Player player) {
+	public void displayParkourInfo(Player player, String[] args) {
 		OfflinePlayer targetPlayer = args.length <= 1 ? player : Bukkit.getOfflinePlayer(args[1]);
 
 		if (!PlayerInfo.hasPlayerInfo(targetPlayer) || !targetPlayer.hasPlayedBefore()) {
@@ -1705,24 +1703,25 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param args
 	 * @param sender
 	 */
-	public void setRewardParkourRank(String[] args, CommandSender sender) {
-		if (!Validation.isPositiveInteger(args[1])) {
+	public void setRewardParkourRank(CommandSender sender, String parkourLevel, String parkourRank) {
+		if (!Validation.isPositiveInteger(parkourLevel)) {
 			TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
 			return;
 		}
 
-		if (!Validation.isStringValid(args[2])) {
+		if (!Validation.isStringValid(parkourRank)) {
 			sender.sendMessage(Parkour.getPrefix() + "ParkourRank is not valid.");
 			return;
 		}
 
-		PlayerInfo.setRewardRank(Integer.parseInt(args[1]), args[2]);
+		PlayerInfo.setRewardRank(Integer.parseInt(parkourLevel), parkourRank);
 		PlayerInfo.persistChanges();
 		populateParkourRanks();
-		TranslationUtils.sendPropertySet(sender, "ParkourRank", "ParkourLevel " + args[1], StringUtils.colour(args[2]));
+		TranslationUtils.sendPropertySet(sender, "ParkourRank", "ParkourLevel " + parkourLevel,
+				StringUtils.colour(parkourRank));
 	}
 
-	public void processSetCommand(String[] args, CommandSender sender) {
+	public void processSetCommand(CommandSender sender, String[] args) {
 		OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(args[1]);
 
 		if (!PlayerInfo.hasPlayerInfo(targetPlayer) || !targetPlayer.hasPlayedBefore()) {

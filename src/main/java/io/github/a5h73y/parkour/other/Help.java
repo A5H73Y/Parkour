@@ -22,7 +22,7 @@ public final class Help {
      * @param args
      * @param sender
      */
-    public static void lookupCommandHelp(String[] args, CommandSender sender) {
+    public static void lookupCommandHelp(CommandSender sender, String[] args) {
         if (args.length == 1) {
             sender.sendMessage(Parkour.getPrefix() + "Find helpful information about any Parkour command:");
             sender.sendMessage("             /pa help " + ChatColor.AQUA + "(command)");
@@ -63,7 +63,7 @@ public final class Help {
      * @param args
      * @param player
      */
-    public static void processCommandsInput(String[] args, Player player) {
+    public static void processCommandsInput(Player player, String[] args) {
         if (args.length == 1) {
             displayCommandsIndex(player);
             return;

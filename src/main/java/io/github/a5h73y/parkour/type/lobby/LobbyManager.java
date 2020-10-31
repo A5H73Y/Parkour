@@ -102,7 +102,7 @@ public class LobbyManager extends AbstractPluginReceiver {
      * @param lobbyName
      * @param player
      */
-    public void deleteLobby(String lobbyName, Player player) {
+    public void deleteLobby(Player player, String lobbyName) {
         if (!LobbyInfo.doesLobbyExist(lobbyName)) {
             TranslationUtils.sendValueTranslation("Error.UnknownLobby", lobbyName, player);
             return;

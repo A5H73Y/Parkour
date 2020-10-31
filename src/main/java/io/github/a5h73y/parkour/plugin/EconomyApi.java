@@ -132,7 +132,7 @@ public class EconomyApi extends PluginWrapper {
 	 * @param args
 	 * @param sender
 	 */
-	public void processEconomyCommand(String[] args, CommandSender sender) {
+	public void processEconomyCommand(CommandSender sender, String[] args) {
 		if (!isEnabled()) {
 			TranslationUtils.sendValueTranslation("Error.PluginNotLinked", getPluginName(), sender);
 			return;

@@ -69,7 +69,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                parkour.getCourseManager().processSetCommand(args, sender);
+                parkour.getCourseManager().processSetCommand(sender, args);
                 break;
 
             case "setplayer":
@@ -77,7 +77,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                parkour.getPlayerManager().processSetCommand(args, sender);
+                parkour.getPlayerManager().processSetCommand(sender, args);
                 break;
 
             case "addjoinitem":
@@ -85,7 +85,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                parkour.getCourseManager().addJoinItem(args, sender);
+                parkour.getCourseManager().addJoinItem(sender, args);
                 break;
 
             case "rewardonce":
@@ -93,7 +93,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                parkour.getCourseManager().setRewardOnce(args, sender);
+                parkour.getCourseManager().setRewardOnce(sender, args[1]);
                 break;
 
             case "rewardlevel":
@@ -101,7 +101,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                parkour.getCourseManager().setRewardParkourLevel(args, sender);
+                parkour.getCourseManager().setRewardParkourLevel(sender, args[1], args[2]);
                 break;
 
             case "rewardleveladd":
@@ -109,7 +109,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                parkour.getCourseManager().setRewardParkourLevelAddition(args, sender);
+                parkour.getCourseManager().setRewardParkourLevelAddition(sender, args[1], args[2]);
                 break;
 
             case "rewardrank":
@@ -117,7 +117,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                parkour.getPlayerManager().setRewardParkourRank(args, sender);
+                parkour.getPlayerManager().setRewardParkourRank(sender, args[1], args[2]);
                 break;
 
             case "rewardparkoins":
@@ -125,7 +125,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                parkour.getCourseManager().setRewardParkoins(args, sender);
+                parkour.getCourseManager().setRewardParkoins(sender, args[1], args[2]);
                 break;
 
             case "rewarddelay":
@@ -133,15 +133,15 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                parkour.getCourseManager().setRewardDelay(args, sender);
+                parkour.getCourseManager().setRewardDelay(sender, args[1], args[2]);
                 break;
 
             case "list":
-                parkour.getCourseManager().displayList(args, sender);
+                parkour.getCourseManager().displayList(sender, args);
                 break;
 
             case "listkit":
-                parkour.getParkourKitManager().listParkourKit(args, sender);
+                parkour.getParkourKitManager().listParkourKit(sender, args);
                 break;
 
             case "settings":
@@ -149,7 +149,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 break;
 
             case "help":
-                Help.lookupCommandHelp(args, sender);
+                Help.lookupCommandHelp(sender, args);
                 break;
 
             case "cmds":

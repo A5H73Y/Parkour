@@ -1,8 +1,7 @@
 package io.github.a5h73y.parkour.conversation;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.enums.ConfigType;
-import io.github.a5h73y.parkour.utility.StringUtils;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +20,9 @@ public class SetCourseConversation extends ParkourConversation {
 
     public static final List<String> SET_COURSE_OPTIONS =
             Arrays.asList("creator", "minlevel", "maxdeath", "maxtime", "message");
+
+    public static final List<String> MESSAGE_OPTIONS =
+            Arrays.asList("join", "leave", "finish", "checkpoint", "checkpointall");
 
     public SetCourseConversation(Player player) {
         super(player);
@@ -88,7 +90,7 @@ public class SetCourseConversation extends ParkourConversation {
     private static class ChooseCourseMessageOption extends FixedSetPrompt {
 
         ChooseCourseMessageOption() {
-            super("join", "leave", "finish", "checkpoint", "checkpointall");
+            super(MESSAGE_OPTIONS.toArray(new String[0]));
         }
 
         @Override
@@ -120,12 +122,7 @@ public class SetCourseConversation extends ParkourConversation {
 
             String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);
             String messageValue = (String) context.getSessionData("setMessageOption");
-            Parkour parkour = Parkour.getInstance();
-
-            parkour.getConfigManager().get(ConfigType.COURSES).set(courseName + "."
-                    + StringUtils.standardizeText(messageValue) + "Message", input);
-            parkour.getConfigManager().get(ConfigType.COURSES).save();
-
+            CourseInfo.setJoinMessage(courseName, messageValue, input);
             return Prompt.END_OF_CONVERSATION;
         }
     }

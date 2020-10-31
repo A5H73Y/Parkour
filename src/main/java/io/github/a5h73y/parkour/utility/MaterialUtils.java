@@ -122,7 +122,7 @@ public class MaterialUtils {
 	 * @param args
 	 * @param player
 	 */
-	public static void lookupMaterialInformation(String[] args, Player player) {
+	public static void lookupMaterialInformation(Player player, String[] args) {
 		Material material;
 		ItemStack data = null;
 

@@ -226,7 +226,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 break;
 
             case "effect":
-                parkour.getPlayerManager().applyEffect(lines, player);
+                parkour.getPlayerManager().applyEffect(player, lines);
                 break;
 
             case "leaderboards":

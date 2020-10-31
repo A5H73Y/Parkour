@@ -26,7 +26,9 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Parkour.Restarting", "Restarting course");
 		this.addDefault("Parkour.Leave", "You left &b%VALUE%");
 		this.addDefault("Parkour.Created", "&b%VALUE% &fhas been created and selected!");
-		this.addDefault("Parkour.WhenReady", "When you have finished creating &b%VALUE%&f, enter &b/pa ready");
+		this.addDefault("Parkour.Selected", "Now editing &b%VALUE%");
+		this.addDefault("Parkour.Deselected", "Finish editing.");
+		this.addDefault("Parkour.WhenReady", "&7When you have finished creating &b%VALUE%&7, enter &b/pa ready");
 		this.addDefault("Parkour.Delete", "&b%VALUE% &fhas been deleted!");
 		this.addDefault("Parkour.DeleteCheckpoint", "Checkpoint &b%CHECKPOINT% &fwas deleted on &b%COURSE%");
 		this.addDefault("Parkour.Reset", "&b%VALUE% &fhas been reset!");
@@ -102,6 +104,8 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Error.UnknownMaterial", "Unknown Material: &4%VALUE%");
 		this.addDefault("Error.UnknownLobby", "%VALUE% lobby does not exist!");
 		this.addDefault("Error.UnknownWorld", "The requested world doesn't exist.");
+		this.addDefault("Error.UnknownParkourKit", "Unknown ParkourKit.");
+		this.addDefault("Error.UnknownCheckpoint", "Unknown or invalid Checkpoint.");
 		this.addDefault("Error.Cheating1", "Please do not cheat.");
 		this.addDefault("Error.Cheating2", "&lYou must achieve all &4%VALUE% &f&lcheckpoints!");
 		this.addDefault("Error.Cooldown", "Slow down! Please wait &b%VALUE% &fmore seconds.");

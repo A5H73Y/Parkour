@@ -15,6 +15,7 @@ import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Validation;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.kit.ParkourKit;
+import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
 import io.github.a5h73y.parkour.type.lobby.LobbyInfo;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
@@ -151,7 +152,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param courseName
      * @param player
      */
-    public void createCourse(String courseName, Player player) {
+    public void createCourse(Player player, String courseName) {
         if (!Validation.courseCreation(courseName, player)) {
             return;
         }
@@ -177,7 +178,7 @@ public class CourseManager extends AbstractPluginReceiver {
         PlayerInfo.persistChanges();
 
         TranslationUtils.sendValueTranslation("Parkour.Created", courseName, player);
-        TranslationUtils.sendValueTranslation("Parkour.WhenReady", courseName, player);
+        player.sendMessage(TranslationUtils.getValueTranslation("Parkour.WhenReady", courseName, false));
         parkour.getDatabase().insertCourse(courseName);
     }
 
@@ -188,7 +189,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param courseName
      * @param player
      */
-    public void deleteCourse(String courseName, Player player) {
+    public void deleteCourse(Player player, String courseName) {
         if (!courseExists(courseName)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
             return;
@@ -213,7 +214,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param args
      * @param sender
      */
-    public void displayList(String[] args, CommandSender sender) {
+    public void displayList(CommandSender sender, String[] args) {
         if (args.length < 2) {
             TranslationUtils.sendInvalidSyntax(sender, "list", "(players / courses / ranks / lobbies)");
             return;
@@ -309,19 +310,15 @@ public class CourseManager extends AbstractPluginReceiver {
      * Start editing a course.
      * Used for functions that do not require a course parameter, such as "/pa checkpoint".
      *
-     * @param args
      * @param player
      */
-    public void selectCourse(String[] args, Player player) {
-        if (!courseExists(args[1])) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", args[1], player);
+    public void selectCourse(Player player, String courseName) {
+        if (!courseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
             return;
         }
 
-        String courseName = args[1].trim().toLowerCase();
-        player.sendMessage(Parkour.getPrefix() + "Now Editing: " + ChatColor.AQUA + args[1]);
-        int pointcount = CourseInfo.getCheckpointAmount(courseName);
-        player.sendMessage(Parkour.getPrefix() + "Checkpoints: " + ChatColor.AQUA + pointcount);
+        TranslationUtils.sendValueTranslation("Parkour.Selected", courseName, player);
         PlayerInfo.setSelectedCourse(player, courseName);
         PlayerInfo.persistChanges();
     }
@@ -334,7 +331,7 @@ public class CourseManager extends AbstractPluginReceiver {
     public void deselectCourse(Player player) {
         if (PlayerInfo.hasSelectedValidCourse(player)) {
             PlayerInfo.resetSelected(player);
-            player.sendMessage(Parkour.getPrefix() + "Finished editing.");
+            TranslationUtils.sendTranslation("Parkour.Deselected", player);
 
         } else {
             TranslationUtils.sendTranslation("Error.Selected", player);
@@ -349,7 +346,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param courseName
      * @param player
      */
-    public void setPrize(String courseName, Player player) {
+    public void setPrize(Player player, String courseName) {
         if (!courseExists(courseName)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
             return;
@@ -365,7 +362,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param courseName
      * @param player
      */
-    public void setCheckpointPrize(String courseName, Player player) {
+    public void setCheckpointPrize(Player player, String courseName) {
         if (!courseExists(courseName)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
             return;
@@ -378,18 +375,17 @@ public class CourseManager extends AbstractPluginReceiver {
      * Overwrite the start location of the course.
      *
      * @param player
+     * @param courseName
      */
-    public void setStart(Player player) {
-        String selectedCourse = PlayerInfo.getSelectedCourse(player);
-
-        if (!courseExists(selectedCourse)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", selectedCourse, player);
+    public void setStart(Player player, String courseName) {
+        if (!courseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
             return;
         }
 
-        parkour.getCheckpointManager().createCheckpointData(selectedCourse, player.getLocation(), 0);
-        PluginUtils.logToFile(selectedCourse + " spawn was reset by " + player.getName());
-        TranslationUtils.sendPropertySet(player, "Spawn", selectedCourse, "your position");
+        parkour.getCheckpointManager().createCheckpointData(courseName, player.getLocation(), 0);
+        PluginUtils.logToFile(courseName + " start location was reset by " + player.getName());
+        TranslationUtils.sendPropertySet(player, "Start Location", courseName, "your position");
     }
 
     /**
@@ -399,9 +395,9 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param args
      * @param player
      */
-    public void setAutoStart(String[] args, Player player) {
-        if (!courseExists(args[1])) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", args[1], player);
+    public void setAutoStart(Player player, String courseName) {
+        if (!courseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
             return;
         }
 
@@ -414,14 +410,14 @@ public class CourseManager extends AbstractPluginReceiver {
             return;
         }
 
-        courseConfig.set("CourseInfo.AutoStart." + coordinates, args[1].toLowerCase());
+        courseConfig.set("CourseInfo.AutoStart." + coordinates, courseName.toLowerCase());
         courseConfig.save();
 
         block.setType(XMaterial.STONE_PRESSURE_PLATE.parseMaterial());
         Block blockUnder = block.getRelative(BlockFace.DOWN);
         blockUnder.setType(parkour.getConfig().getAutoStartMaterial());
 
-        TranslationUtils.sendPropertySet(player, "AutoStart", args[1], "your position");
+        TranslationUtils.sendPropertySet(player, "AutoStart", courseName, "your position");
     }
 
     /**
@@ -456,7 +452,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param coordinates
      * @param player
      */
-    public void deleteAutoStart(String coordinates, Player player) {
+    public void deleteAutoStart(Player player, String coordinates) {
         ParkourConfiguration courseConfig = Parkour.getConfig(ConfigType.COURSES);
         courseConfig.set("CourseInfo.AutoStart." + coordinates, null);
         courseConfig.save();
@@ -562,22 +558,21 @@ public class CourseManager extends AbstractPluginReceiver {
      * Set Course's ParkourLevel reward.
      * Reward the player with the Parkour level on course completion.
      *
-     * @param args
      * @param sender
      */
-    public void setRewardParkourLevel(String[] args, CommandSender sender) {
-        if (!courseExists(args[1])) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", args[1], sender);
+    public void setRewardParkourLevel(CommandSender sender, String courseName, String parkourLevel) {
+        if (!courseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
         }
 
-        if (!Validation.isPositiveInteger(args[2])) {
+        if (!Validation.isPositiveInteger(parkourLevel)) {
             TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
-        CourseInfo.setRewardLevel(args[1], Integer.parseInt(args[2]));
-        TranslationUtils.sendPropertySet(sender, "ParkourLevel reward", args[1], args[2]);
+        CourseInfo.setRewardLevel(courseName, Integer.parseInt(parkourLevel));
+        TranslationUtils.sendPropertySet(sender, "ParkourLevel reward", courseName, parkourLevel);
     }
 
     /**
@@ -587,38 +582,37 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param args
      * @param sender
      */
-    public void setRewardParkourLevelAddition(String[] args, CommandSender sender) {
-        if (!courseExists(args[1])) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", args[1], sender);
+    public void setRewardParkourLevelAddition(CommandSender sender, String courseName, String parkourLevelAdd) {
+        if (!courseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
         }
 
-        if (!Validation.isPositiveInteger(args[2])) {
+        if (!Validation.isPositiveInteger(parkourLevelAdd)) {
             TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
-        CourseInfo.setRewardLevelAdd(args[1], args[2]);
-        TranslationUtils.sendPropertySet(sender, "ParkourLevel addition reward", args[1], args[2]);
+        CourseInfo.setRewardLevelAdd(courseName, parkourLevelAdd);
+        TranslationUtils.sendPropertySet(sender, "ParkourLevel addition reward", courseName, parkourLevelAdd);
     }
 
     /**
      * Set RewardOnce status of Course.
      * Set whether the player only gets the prize for the first time they complete the course.
      *
-     * @param args
      * @param sender
      */
-    public void setRewardOnce(String[] args, CommandSender sender) {
-        if (!courseExists(args[1])) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", args[1], sender);
+    public void setRewardOnce(CommandSender sender, String courseName) {
+        if (!courseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
         }
 
         // invert the existing value
-        boolean isEnabled = !CourseInfo.getRewardOnce(args[1]);
-        CourseInfo.setRewardOnce(args[1], isEnabled);
-        TranslationUtils.sendPropertySet(sender, "reward once status", args[1], String.valueOf(isEnabled));
+        boolean isEnabled = !CourseInfo.getRewardOnce(courseName);
+        CourseInfo.setRewardOnce(courseName, isEnabled);
+        TranslationUtils.sendPropertySet(sender, "reward once status", courseName, String.valueOf(isEnabled));
     }
 
     /**
@@ -628,19 +622,19 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param args
      * @param sender
      */
-    public void setRewardDelay(String[] args, CommandSender sender) {
-        if (!courseExists(args[1])) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", args[1], sender);
+    public void setRewardDelay(CommandSender sender, String courseName, String delay) {
+        if (!courseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
         }
 
-        if (!Validation.isPositiveInteger(args[2])) {
+        if (!Validation.isPositiveInteger(delay)) {
             TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
-        CourseInfo.setRewardDelay(args[1], Integer.parseInt(args[2]));
-        TranslationUtils.sendPropertySet(sender, "Reward Delay", args[1], args[2] + " days(s)");
+        CourseInfo.setRewardDelay(courseName, Integer.parseInt(delay));
+        TranslationUtils.sendPropertySet(sender, "Reward Delay", courseName, delay + " days(s)");
     }
 
     /**
@@ -650,19 +644,19 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param args
      * @param sender
      */
-    public void setRewardParkoins(String[] args, CommandSender sender) {
-        if (!courseExists(args[1])) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", args[1], sender);
+    public void setRewardParkoins(CommandSender sender, String courseName, String reward) {
+        if (!courseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
         }
 
-        if (!Validation.isPositiveInteger(args[2])) {
+        if (!Validation.isPositiveInteger(reward)) {
             TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
-        CourseInfo.setRewardParkoins(args[1], Integer.parseInt(args[2]));
-        TranslationUtils.sendPropertySet(sender, "Parkoins reward", args[1], args[2]);
+        CourseInfo.setRewardParkoins(courseName, Integer.parseInt(reward));
+        TranslationUtils.sendPropertySet(sender, "Parkoins reward", courseName, reward);
     }
 
     /**
@@ -673,8 +667,8 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param args
      * @param player
      */
-    public void setCourseReadyStatus(String[] args, Player player) {
-        String courseName = args.length > 1 ? args[1].toLowerCase() : PlayerInfo.getSelectedCourse(player);
+    public void setCourseReadyStatus(Player player, String courseName) {
+        courseName = courseName == null ? PlayerInfo.getSelectedCourse(player) : courseName;
 
         if (!Validation.isStringValid(courseName)) {
             player.sendMessage(Parkour.getPrefix() + "Please select a course, or provide a course argument");
@@ -702,7 +696,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param args
      * @param player
      */
-    public void linkCourse(String[] args, Player player) {
+    public void linkCourse(Player player, String[] args) {
         String selected = PlayerInfo.getSelectedCourse(player);
 
         if (args.length >= 3 && args[1].equalsIgnoreCase("course")) {
@@ -783,22 +777,22 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param args
      * @param player
      */
-    public void linkParkourKit(String[] args, Player player) {
-        if (!courseExists(args[1])) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", args[1], player);
+    public void linkParkourKit(Player player, String courseName, String kitName) {
+        if (!courseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
             return;
         }
-        if (!Parkour.getConfig(ConfigType.PARKOURKIT).contains("ParkourKit." + args[2].toLowerCase())) {
-            player.sendMessage(Parkour.getPrefix() + "ParkourKit doesn't exist!");
+        if (!ParkourKitInfo.doesParkourKitExist(kitName)) {
+            TranslationUtils.sendTranslation("Error.UnknownParkourKit", player);
             return;
         }
-        if (CourseInfo.hasParkourKit(args[1])) {
+        if (CourseInfo.hasParkourKit(courseName)) {
             player.sendMessage(Parkour.getPrefix() + "This course is already linked to a ParkourKit, continuing anyway...");
         }
 
-        CourseInfo.setParkourKit(args[1], args[2]);
-        clearCache(args[1]);
-        TranslationUtils.sendPropertySet(player, "ParkourKit", args[1], args[2]);
+        CourseInfo.setParkourKit(courseName, kitName);
+        clearCache(courseName);
+        TranslationUtils.sendPropertySet(player, "ParkourKit", courseName, kitName);
     }
 
     /**
@@ -808,8 +802,8 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param args
      * @param player
      */
-    public void challengePlayer(String[] args, Player player) {
-        if (!Validation.challengePlayer(args, player)) {
+    public void challengePlayer(Player player, String[] args) {
+        if (!Validation.challengePlayer(player, args)) {
             return;
         }
 
@@ -847,7 +841,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param args
      * @param sender
      */
-    public void addJoinItem(String[] args, CommandSender sender) {
+    public void addJoinItem(CommandSender sender, String[] args) {
         if (!courseExists(args[1])) {
             TranslationUtils.sendValueTranslation("Error.NoExist", args[1], sender);
             return;
@@ -880,7 +874,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param args
      * @param player
      */
-    public void getLeaderboards(String[] args, Player player) {
+    public void getLeaderboards(Player player, String[] args) {
         if (!parkour.getPlayerManager().delayPlayer(player, 3, true)) {
             return;
         }
@@ -930,12 +924,12 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param args
      * @param player
      */
-    public void setCourseParkourMode(String[] args, Player player) {
-        if (!courseExists(args[1])) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", args[1], player);
+    public void setCourseParkourMode(Player player, String courseName) {
+        if (!courseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
             return;
         }
-        new ParkourModeConversation(player).withCourseName(args[1].toLowerCase()).begin();
+        new ParkourModeConversation(player).withCourseName(courseName.toLowerCase()).begin();
     }
 
     /**
@@ -950,7 +944,7 @@ public class CourseManager extends AbstractPluginReceiver {
         return ParkourMode.valueOf(mode);
     }
 
-    public void processSetCommand(String[] args, CommandSender sender) {
+    public void processSetCommand(CommandSender sender, String[] args) {
         if (!courseExists(args[1])) {
             TranslationUtils.sendValueTranslation("Error.NoExist", args[1], sender);
             return;
@@ -959,11 +953,22 @@ public class CourseManager extends AbstractPluginReceiver {
         if (args.length == 2 && sender instanceof Player) {
             new SetCourseConversation((Player) sender).withCourseName(args[1].toLowerCase()).begin();
 
-        } else if (args.length >= 4) {
+        } else if (args.length == 4) {
             SetCourseConversation.performAction(sender, args[1], args[2], args[3]);
 
+        } else if (args.length >= 5 && args[2].equalsIgnoreCase("message")) {
+            if (SetCourseConversation.MESSAGE_OPTIONS.contains(args[3].toLowerCase())) {
+                String message = StringUtils.extractMessageFromArgs(args, 4);
+
+                CourseInfo.setJoinMessage(args[1], args[3], message);
+                TranslationUtils.sendPropertySet(sender, StringUtils.standardizeText(args[3]) + " Message", args[1],
+                        StringUtils.colour(message));
+
+            } else {
+                TranslationUtils.sendInvalidSyntax(sender, "setcourse", "(courseName) message [join, leave, finish, checkpoint, checkpointall] [value]");
+            }
         } else {
-            TranslationUtils.sendInvalidSyntax(sender, "setcourse", "(courseName) [creator, minlevel, maxdeath, maxtime] [value]");
+            TranslationUtils.sendInvalidSyntax(sender, "setcourse", "(courseName) [creator, minlevel, maxdeath, maxtime, message] [value]");
         }
     }
 }

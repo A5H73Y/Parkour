@@ -23,6 +23,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Parkour Plugin related utility methods.
@@ -207,48 +208,47 @@ public class PluginUtils {
      * @param args
      * @param player
      */
-    public static void deleteCommand(String[] args, Player player) {
-        String command = args[1].toLowerCase();
+    public static void deleteCommand(Player player, String command, String argument) {
         Parkour parkour = Parkour.getInstance();
 
-        switch (command) {
+        switch (command.toLowerCase()) {
             case "course":
-                if (!Validation.deleteCourse(args[2], player)) {
+                if (!Validation.deleteCourse(argument, player)) {
                     return;
                 }
 
-                parkour.getQuestionManager().askDeleteCourseQuestion(player, args[2]);
+                parkour.getQuestionManager().askDeleteCourseQuestion(player, argument);
                 break;
 
             case "checkpoint":
-                if (!Validation.deleteCheckpoint(args[2], player)) {
+                if (!Validation.deleteCheckpoint(argument, player)) {
                     return;
                 }
 
-                int checkpoints = CourseInfo.getCheckpointAmount(args[2]);
-                parkour.getQuestionManager().askDeleteCheckpointQuestion(player, args[2], checkpoints);
+                int checkpoints = CourseInfo.getCheckpointAmount(argument);
+                parkour.getQuestionManager().askDeleteCheckpointQuestion(player, argument, checkpoints);
                 break;
 
             case "lobby":
-                if (!Validation.deleteLobby(args[2], player)) {
+                if (!Validation.deleteLobby(argument, player)) {
                     return;
                 }
 
-                parkour.getQuestionManager().askDeleteLobbyQuestion(player, args[2]);
+                parkour.getQuestionManager().askDeleteLobbyQuestion(player, argument);
                 break;
 
             case "kit":
-                if (!Validation.deleteParkourKit(args[2], player)) {
+                if (!Validation.deleteParkourKit(argument, player)) {
                     return;
                 }
 
-                parkour.getQuestionManager().askDeleteKitQuestion(player, args[2]);
+                parkour.getQuestionManager().askDeleteKitQuestion(player, argument);
                 break;
 
             case "autostart":
                 Location location = player.getLocation();
                 String coordinates = location.getBlockX() + "-" + location.getBlockY() + "-" + location.getBlockZ();
-                if (!Validation.deleteAutoStart(args[2], coordinates, player)) {
+                if (!Validation.deleteAutoStart(argument, coordinates, player)) {
                     return;
                 }
 
@@ -269,51 +269,50 @@ public class PluginUtils {
      * @param args
      * @param player
      */
-    public static void resetCommand(String[] args, Player player) {
-        String command = args[1].toLowerCase();
+    public static void resetCommand(Player player, String command, String argument, @Nullable String extraArgument) {
         Parkour parkour = Parkour.getInstance();
 
-        switch (command) {
+        switch (command.toLowerCase()) {
             case "course":
-                if (!parkour.getCourseManager().courseExists(args[2])) {
-                    TranslationUtils.sendValueTranslation("Error.NoExist", args[2], player);
+                if (!parkour.getCourseManager().courseExists(argument)) {
+                    TranslationUtils.sendValueTranslation("Error.NoExist", argument, player);
                     return;
                 }
 
-                parkour.getQuestionManager().askResetCourseQuestion(player, args[2]);
+                parkour.getQuestionManager().askResetCourseQuestion(player, argument);
                 break;
 
             case "player":
-                OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(args[2]);
+                OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(argument);
 
                 if (!PlayerInfo.hasPlayerInfo(targetPlayer) || !targetPlayer.hasPlayedBefore()) {
                     TranslationUtils.sendTranslation("Error.UnknownPlayer", player);
                     return;
                 }
 
-                parkour.getQuestionManager().askResetPlayerQuestion(player, args[2]);
+                parkour.getQuestionManager().askResetPlayerQuestion(player, argument);
                 break;
 
             case "leaderboard":
-                if (!parkour.getCourseManager().courseExists(args[2])) {
-                    TranslationUtils.sendValueTranslation("Error.NoExist", args[2], player);
+                if (!parkour.getCourseManager().courseExists(argument)) {
+                    TranslationUtils.sendValueTranslation("Error.NoExist", argument, player);
                     return;
                 }
 
-                if (args.length > 3) {
-                    parkour.getQuestionManager().askResetPlayerLeaderboardQuestion(player, args[2], args[3]);
+                if (extraArgument != null) {
+                    parkour.getQuestionManager().askResetPlayerLeaderboardQuestion(player, argument, extraArgument);
                 } else {
-                    parkour.getQuestionManager().askResetLeaderboardQuestion(player, args[2]);
+                    parkour.getQuestionManager().askResetLeaderboardQuestion(player, argument);
                 }
                 break;
 
             case "prize":
-                if (!parkour.getCourseManager().courseExists(args[2])) {
-                    TranslationUtils.sendValueTranslation("Error.NoExist", args[2], player);
+                if (!parkour.getCourseManager().courseExists(argument)) {
+                    TranslationUtils.sendValueTranslation("Error.NoExist", argument, player);
                     return;
                 }
 
-                parkour.getQuestionManager().askResetPrizeQuestion(player, args[2]);
+                parkour.getQuestionManager().askResetPrizeQuestion(player, argument);
                 break;
 
             default:
