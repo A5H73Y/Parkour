@@ -4,6 +4,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.other.Validation;
+import io.github.a5h73y.parkour.type.Cacheable;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
@@ -14,7 +15,7 @@ import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class LobbyManager extends AbstractPluginReceiver {
+public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lobby> {
 
     private final Map<String, Lobby> lobbyCache = new HashMap<>();
 
@@ -137,5 +138,15 @@ public class LobbyManager extends AbstractPluginReceiver {
     public void displayLobbies(CommandSender sender) {
         TranslationUtils.sendHeading("Available Lobbies", sender);
         LobbyInfo.getAllLobbyNames().forEach(s -> sender.sendMessage("* " + s));
+    }
+
+    @Override
+    public int getCacheSize() {
+        return lobbyCache.size();
+    }
+
+    @Override
+    public void clearCache() {
+        lobbyCache.clear();
     }
 }

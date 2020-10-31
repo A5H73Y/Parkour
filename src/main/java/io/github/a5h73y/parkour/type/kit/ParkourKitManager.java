@@ -5,8 +5,8 @@ import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.ActionType;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.other.Validation;
+import io.github.a5h73y.parkour.type.Cacheable;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -20,7 +20,7 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class ParkourKitManager extends AbstractPluginReceiver {
+public class ParkourKitManager extends AbstractPluginReceiver implements Cacheable<ParkourKit> {
 
 	private final Map<String, ParkourKit> parkourKitCache = new HashMap<>();
 
@@ -85,15 +85,6 @@ public class ParkourKitManager extends AbstractPluginReceiver {
 		}
 
 		return new ParkourKit(kitName, actionTypes);
-	}
-
-	/**
-	 * Clear the ParkourKit cache
-	 *
-	 * @param kitName
-	 */
-	public void clearCache(String kitName) {
-		parkourKitCache.remove(kitName);
 	}
 
 	public void deleteKit(String argument) {
@@ -244,5 +235,24 @@ public class ParkourKitManager extends AbstractPluginReceiver {
 			PluginUtils.log("Unknown ParkourKit Action Type: " + actionTypeName, 2);
 		}
 		return actionType;
+	}
+
+	@Override
+	public int getCacheSize() {
+		return parkourKitCache.size();
+	}
+
+	@Override
+	public void clearCache() {
+		parkourKitCache.clear();
+	}
+
+	/**
+	 * Clear the ParkourKit cache
+	 *
+	 * @param kitName
+	 */
+	public void clearCache(String kitName) {
+		parkourKitCache.remove(kitName);
 	}
 }

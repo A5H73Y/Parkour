@@ -160,6 +160,10 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 ParkourConsoleCommands.displayCommands();
                 break;
 
+            case "cache":
+                PluginUtils.cacheCommand(sender, args.length == 2 ? args[1] : null);
+                break;
+
             case "backup":
                 Backup.backupNow(true);
                 break;

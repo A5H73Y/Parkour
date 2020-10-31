@@ -2,6 +2,7 @@ package io.github.a5h73y.parkour.database;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
+import io.github.a5h73y.parkour.type.Cacheable;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
@@ -26,7 +27,7 @@ import pro.husk.mysql.MySQL;
  * Database Utility methods and the database implementation instance are managed here.
  * Caching is used on course-specific related information.
  */
-public class ParkourDatabase extends AbstractPluginReceiver {
+public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable<List<TimeEntry>> {
 
     private Database database;
 
@@ -617,5 +618,15 @@ public class ParkourDatabase extends AbstractPluginReceiver {
 
     public static String getPlayerId(OfflinePlayer player) {
         return player.getUniqueId().toString().replace("-", "");
+    }
+
+    @Override
+    public int getCacheSize() {
+        return resultsCache.size();
+    }
+
+    @Override
+    public void clearCache() {
+        resultsCache.clear();
     }
 }

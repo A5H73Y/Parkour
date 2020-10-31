@@ -26,6 +26,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class CheckpointManager extends AbstractPluginReceiver {
 
+    // no need for cache as they are per course (which are cached)
+
     public CheckpointManager(final Parkour parkour) {
         super(parkour);
     }

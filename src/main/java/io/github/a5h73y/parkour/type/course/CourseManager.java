@@ -13,6 +13,7 @@ import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Validation;
+import io.github.a5h73y.parkour.type.Cacheable;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.kit.ParkourKit;
 import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
@@ -40,7 +41,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-public class CourseManager extends AbstractPluginReceiver {
+public class CourseManager extends AbstractPluginReceiver implements Cacheable<Course> {
 
     private final Map<String, Course> courseCache = new HashMap<>();
 
@@ -199,12 +200,18 @@ public class CourseManager extends AbstractPluginReceiver {
         TranslationUtils.sendValueTranslation("Parkour.Delete", courseName, player);
     }
 
-    public void clearCache(String courseName) {
-        courseCache.remove(courseName.toLowerCase());
+    @Override
+    public int getCacheSize() {
+        return courseCache.size();
     }
 
+    @Override
     public void clearCache() {
         courseCache.clear();
+    }
+
+    public void clearCache(String courseName) {
+        courseCache.remove(courseName.toLowerCase());
     }
 
     /**
@@ -977,7 +984,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * Set a limit on the number of players that can play the course concurrently.
      *
      * @param sender
-     * @param course name
+     * @param courseName
      * @param limit
      */
     public void setPlayerLimit(CommandSender sender, String courseName, String limit) {
@@ -992,6 +999,6 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         CourseInfo.setPlayerLimit(courseName, Integer.parseInt(limit));
-        TranslationUtils.sendPropertySet(sender, "Player Limit", courseName, String.valueOf(limit));
+        TranslationUtils.sendPropertySet(sender, "Player Limit", courseName, limit);
     }
 }

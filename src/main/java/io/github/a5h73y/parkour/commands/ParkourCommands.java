@@ -73,9 +73,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                player.sendMessage("TODO");
-                // TODO no args = show number of courses cached, number of database times cached
-                // TODO [clear] = empty the cache
+                PluginUtils.cacheCommand(player, args.length == 2 ? args[1] : null);
                 break;
 
             case "challenge":

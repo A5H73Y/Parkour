@@ -22,6 +22,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -318,6 +319,40 @@ public class PluginUtils {
             default:
                 TranslationUtils.sendInvalidSyntax(player, "reset", "(course / player / leaderboard / prize) (argument)");
                 break;
+        }
+    }
+
+    public static void cacheCommand(CommandSender player, @Nullable String argument) {
+        Parkour parkour = Parkour.getInstance();
+        if (argument != null) {
+            switch (argument.toLowerCase()) {
+                case "course":
+                case "courses":
+                    parkour.getCourseManager().clearCache();
+                    break;
+                case "database":
+                    parkour.getDatabase().clearCache();
+                    break;
+                case "lobby":
+                case "lobbies":
+                    parkour.getLobbyManager().clearCache();
+                    break;
+                case "parkourkit":
+                case "parkourkits":
+                    parkour.getParkourKitManager().clearCache();
+                    break;
+                default:
+                    TranslationUtils.sendInvalidSyntax(player, "cache", "[course / database / lobby / parkourkit]");
+                    return;
+            }
+            TranslationUtils.sendPropertySet(player, "Cache", StringUtils.standardizeText(argument), "empty");
+
+        } else {
+            TranslationUtils.sendHeading("Parkour Cache", player);
+            player.sendMessage("Courses Cached: " + parkour.getCourseManager().getCacheSize());
+            player.sendMessage("Database Cached: " + parkour.getDatabase().getCacheSize());
+            player.sendMessage("Lobbies Cached: " + parkour.getLobbyManager().getCacheSize());
+            player.sendMessage("ParkourKits Cached: " + parkour.getParkourKitManager().getCacheSize());
         }
     }
 }
