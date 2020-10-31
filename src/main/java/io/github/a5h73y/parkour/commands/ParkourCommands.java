@@ -57,6 +57,132 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
         }
 
         switch (args[0].toLowerCase()) {
+            case "addjoinitem":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
+                    return false;
+
+                } else if (!ValidationUtils.validateArgs(player, args, 4, 6)) {
+                    return false;
+                }
+
+                parkour.getCourseManager().addJoinItem(player, args);
+                break;
+
+            case "cache":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                    return false;
+                }
+
+                player.sendMessage("TODO");
+                // TODO no args = show number of courses cached, number of database times cached
+                // TODO [clear] = empty the cache
+                break;
+
+            case "challenge":
+                if (!PermissionUtils.hasPermission(player, Permission.BASIC_CHALLENGE)) {
+                    return false;
+
+                } else if (!ValidationUtils.validateArgs(player, args, 3, 4)) {
+                    return false;
+                }
+
+                parkour.getCourseManager().challengePlayer(player, args);
+                break;
+
+            case "checkpoint":
+                if (!PlayerInfo.hasSelectedValidCourse(player)) {
+                    TranslationUtils.sendTranslation("Error.Selected", player);
+                    return false;
+
+                } else if (!PermissionUtils.hasPermissionOrCourseOwnership(
+                        player, Permission.ADMIN_COURSE, PlayerInfo.getSelectedCourse(player))) {
+                    return false;
+                }
+
+                parkour.getCheckpointManager().createCheckpoint(player, args);
+                break;
+
+            case "checkpointprize":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_PRIZE)) {
+                    return false;
+
+                } else if (!ValidationUtils.validateArgs(player, args, 2)) {
+                    return false;
+                }
+
+                parkour.getCourseManager().setCheckpointPrize(player, args[1]);
+                break;
+
+            case "cmds":
+                Help.processCommandsInput(player, args);
+                break;
+
+            case "create":
+                if (!PermissionUtils.hasPermission(player, Permission.BASIC_CREATE)) {
+                    return false;
+
+                } else if (!ValidationUtils.validateArgs(player, args, 2)) {
+                    return false;
+                }
+
+                parkour.getCourseManager().createCourse(player, args[1]);
+                break;
+
+            case "createkit":
+            case "createparkourkit":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
+                    return false;
+                }
+
+                new CreateParkourKitConversation(player).begin();
+                break;
+
+            case "delete":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_DELETE)) {
+                    return false;
+
+                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
+                    return false;
+                }
+
+                PluginUtils.deleteCommand(player, args[1], args[2]);
+                break;
+
+            case "done":
+            case "deselect":
+            case "stopselect":
+                parkour.getCourseManager().deselectCourse(player);
+                break;
+
+            case "econ":
+            case "economy":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                    return false;
+
+                } else if (!ValidationUtils.validateArgs(player, args, 2, 4)) {
+                    return false;
+                }
+
+                parkour.getEconomyApi().processEconomyCommand(player, args);
+                break;
+
+            case "editkit":
+            case "editparkourkit":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
+                    return false;
+                }
+
+                new EditParkourKitConversation(player).begin();
+                break;
+
+            case "help":
+                Help.lookupCommandHelp(player, args);
+                break;
+
+            case "info":
+                parkour.getPlayerManager().displayParkourInfo(player, args);
+                break;
+
             case "join":
                 if (!ValidationUtils.validateArgs(player, args, 2)) {
                     return false;
@@ -77,123 +203,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getGuiManager().showMenu(player, GuiMenu.JOIN_COURSES);
                 break;
 
-            case "back":
-            case "die":
-            case "respawn":
-                parkour.getPlayerManager().playerDie(player);
-                break;
-
-            case "create":
-                if (!PermissionUtils.hasPermission(player, Permission.BASIC_CREATE)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 2)) {
-                    return false;
-                }
-
-                parkour.getCourseManager().createCourse(player, args[1]);
-                break;
-
-            case "leave":
-                parkour.getPlayerManager().leaveCourse(player);
-                break;
-
-            case "restart":
-                parkour.getPlayerManager().restartCourse(player);
-                break;
-
-            case "info":
-                parkour.getPlayerManager().displayParkourInfo(player, args);
-                break;
-
-            case "stats":
-            case "course":
-                if (!ValidationUtils.validateArgs(player, args, 2)) {
-                    return false;
-                }
-
-                CourseInfo.displayCourseInfo(args[1], player);
-                break;
-
-            case "lobby":
-                parkour.getLobbyManager().joinLobby(player, args.length > 1 ? args[1] : DEFAULT);
-                break;
-
-            case "setlobby":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
-                    return false;
-                }
-
-                parkour.getLobbyManager().createLobby(player, args);
-                break;
-
-            case "checkpoint":
-                if (!PlayerInfo.hasSelectedValidCourse(player)) {
-                    TranslationUtils.sendTranslation("Error.Selected", player);
-                    return false;
-
-                } else if (!PermissionUtils.hasPermissionOrCourseOwnership(
-                        player, Permission.ADMIN_COURSE, PlayerInfo.getSelectedCourse(player))) {
-                    return false;
-                }
-
-                parkour.getCheckpointManager().createCheckpoint(player, args);
-                break;
-
-            case "finish":
-            case "ready":
-                if (!PermissionUtils.hasPermissionOrCourseOwnership(player,
-                        Permission.ADMIN_COURSE, getChosenCourseName(player, args, 1))) {
-                    return false;
-                }
-
-                parkour.getCourseManager().setCourseReadyStatus(player, getChosenCourseName(player, args, 1));
-                break;
-
-            case "setstart":
-                if (!PermissionUtils.hasPermissionOrCourseOwnership(player,
-                        Permission.ADMIN_COURSE, getChosenCourseName(player, args, 1))) {
-                    return false;
-                }
-
-                parkour.getCourseManager().setStart(player, getChosenCourseName(player, args, 1));
-                break;
-
-            case "setautostart":
-                if (!PermissionUtils.hasPermissionOrCourseOwnership(player,
-                        Permission.ADMIN_COURSE, getChosenCourseName(player, args, 1))) {
-                    return false;
-                }
-
-                parkour.getCourseManager().setAutoStart(player, getChosenCourseName(player, args, 1));
-                break;
-
-            case "prize":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_PRIZE)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 2)) {
-                    return false;
-                }
-
-                parkour.getCourseManager().setPrize(player, args[1]);
-                break;
-
-            case "checkpointprize":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_PRIZE)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 2)) {
-                    return false;
-                }
-
-                parkour.getCourseManager().setCheckpointPrize(player, args[1]);
-                break;
-
-            case "perms":
-                parkour.getPlayerManager().displayPermissions(player, args.length > 2);
-                break;
-
             case "kit":
                 if (!PermissionUtils.hasPermission(player, Permission.BASIC_KIT)) {
                     return false;
@@ -202,57 +211,17 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getPlayerManager().giveParkourKit(player, args.length == 2 ? args[1] : DEFAULT);
                 break;
 
-            case "delete":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_DELETE)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
+            case "leaderboard":
+            case "leaderboards":
+                if (!PermissionUtils.hasPermission(player, Permission.BASIC_LEADERBOARD)) {
                     return false;
                 }
 
-                PluginUtils.deleteCommand(player, args[1], args[2]);
+                parkour.getCourseManager().getLeaderboards(player, args);
                 break;
 
-            case "select":
-            case "edit":
-                if (!ValidationUtils.validateArgs(player, args, 2)) {
-                    return false;
-
-                } else if (!PermissionUtils.hasPermissionOrCourseOwnership(
-                        player, Permission.ADMIN_COURSE, args[1])) {
-                    return false;
-                }
-
-                parkour.getCourseManager().selectCourse(player, args[1]);
-                break;
-
-            case "done":
-            case "deselect":
-            case "stopselect":
-                parkour.getCourseManager().deselectCourse(player);
-                break;
-
-            case "tp":
-            case "teleport":
-                if (!PermissionUtils.hasPermission(player, Permission.BASIC_TELEPORT)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 2)) {
-                    return false;
-                }
-
-                parkour.getCheckpointManager().teleportCheckpoint(player, args[1], null);
-                break;
-
-            case "tpc":
-                if (!PermissionUtils.hasPermission(player, Permission.BASIC_TELEPORT_CHECKPOINT)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
-                    return false;
-                }
-
-                parkour.getCheckpointManager().teleportCheckpoint(player, args[1], args[2]);
+            case "leave":
+                parkour.getPlayerManager().leaveCourse(player);
                 break;
 
             case "link":
@@ -271,24 +240,123 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getCourseManager().linkCourse(player, args);
                 break;
 
-            case "addjoinitem":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
+            case "linkkit":
+                if (!ValidationUtils.validateArgs(player, args, 3)) {
                     return false;
 
-                } else if (!ValidationUtils.validateArgs(player, args, 4, 6)) {
+                } else if (!PermissionUtils.hasPermissionOrCourseOwnership(
+                        player, Permission.ADMIN_COURSE, args[1])) {
                     return false;
                 }
 
-                parkour.getCourseManager().addJoinItem(player, args);
+                parkour.getCourseManager().linkParkourKit(player, args[1], args[2]);
                 break;
 
-            case "rewardonce":
+            case "list":
+                parkour.getCourseManager().displayList(player, args);
+                break;
+
+            case "listkit":
+                if (!PermissionUtils.hasPermission(player, Permission.BASIC_KIT)) {
+                    return false;
+                }
+
+                parkour.getParkourKitManager().listParkourKit(player, args);
+                break;
+
+            case "lobby":
+                parkour.getLobbyManager().joinLobby(player, args.length > 1 ? args[1] : DEFAULT);
+                break;
+
+            case "material":
+                MaterialUtils.lookupMaterialInformation(player, args);
+                break;
+
+            case "perms":
+            case "permissions":
+                parkour.getPlayerManager().displayPermissions(player, args.length > 2);
+                break;
+
+            case "prize":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_PRIZE)) {
+                    return false;
+
+                } else if (!ValidationUtils.validateArgs(player, args, 2)) {
+                    return false;
+                }
+
+                parkour.getCourseManager().setPrize(player, args[1]);
+                break;
+
+            case "quiet":
+                parkour.getPlayerManager().toggleQuietMode(player);
+                break;
+
+            case "ready":
+            case "finish":
                 if (!PermissionUtils.hasPermissionOrCourseOwnership(player,
                         Permission.ADMIN_COURSE, getChosenCourseName(player, args, 1))) {
                     return false;
                 }
 
-                parkour.getCourseManager().setRewardOnce(player, getChosenCourseName(player, args, 1));
+                parkour.getCourseManager().setCourseReadyStatus(player, getChosenCourseName(player, args, 1));
+                break;
+
+            case "recreate":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                    return false;
+                }
+
+                player.sendMessage(Parkour.getPrefix() + "Recreating courses...");
+                parkour.getDatabase().recreateAllCourses();
+                break;
+
+            case "reload":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                    return false;
+                }
+
+                parkour.getConfigManager().reloadConfigs();
+                TranslationUtils.sendTranslation("Parkour.ConfigReloaded", player);
+                PluginUtils.logToFile(player.getName() + " reloaded the Parkour config");
+                break;
+
+            case "request":
+            case "bug":
+                player.sendMessage(Parkour.getPrefix() + "To Request a feature or to Report a bug...");
+                player.sendMessage("Click here: " + ChatColor.DARK_AQUA + "https://github.com/A5H73Y/Parkour/issues");
+                break;
+
+            case "reset":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_RESET)) {
+                    return false;
+
+                } else if (!ValidationUtils.validateArgs(player, args, 3, 4)) {
+                    return false;
+                }
+
+                PluginUtils.resetCommand(player, args[1], args[2], args.length == 4 ? args[3] : null);
+                break;
+
+            case "respawn":
+            case "back":
+            case "die":
+                parkour.getPlayerManager().playerDie(player);
+                break;
+
+            case "restart":
+                parkour.getPlayerManager().restartCourse(player);
+                break;
+
+            case "rewarddelay":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
+                    return false;
+
+                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
+                    return false;
+                }
+
+                parkour.getCourseManager().setRewardDelay(player, args[1], args[2]);
                 break;
 
             case "rewardlevel":
@@ -313,26 +381,13 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getCourseManager().setRewardParkourLevelAddition(player, args[1], args[2]);
                 break;
 
-            case "rewardrank":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
+            case "rewardonce":
+                if (!PermissionUtils.hasPermissionOrCourseOwnership(player,
+                        Permission.ADMIN_COURSE, getChosenCourseName(player, args, 1))) {
                     return false;
                 }
 
-                parkour.getPlayerManager().setRewardParkourRank(player, args[1], args[2]);
-                break;
-
-            case "rewarddelay":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
-                    return false;
-                }
-
-                parkour.getCourseManager().setRewardDelay(player, args[1], args[2]);
+                parkour.getCourseManager().setRewardOnce(player, getChosenCourseName(player, args, 1));
                 break;
 
             case "rewardparkoins":
@@ -346,40 +401,77 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getCourseManager().setRewardParkoins(player, args[1], args[2]);
                 break;
 
-            case "quiet":
-                parkour.getPlayerManager().toggleQuietMode(player);
-                break;
-
-            case "reset":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_RESET)) {
+            case "rewardrank":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
                     return false;
 
-                } else if (!ValidationUtils.validateArgs(player, args, 3, 4)) {
+                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
                     return false;
                 }
 
-                PluginUtils.resetCommand(player, args[1], args[2], args.length == 4 ? args[3] : null);
+                parkour.getPlayerManager().setRewardParkourRank(player, args[1], args[2]);
                 break;
 
-            case "test":
-            case "testmode":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_TESTMODE)) {
+            case "select":
+            case "edit":
+                if (!ValidationUtils.validateArgs(player, args, 2)) {
+                    return false;
+
+                } else if (!PermissionUtils.hasPermissionOrCourseOwnership(
+                        player, Permission.ADMIN_COURSE, args[1])) {
                     return false;
                 }
 
-                parkour.getPlayerManager().toggleTestMode(player, args.length == 2 ? args[1].toLowerCase() : DEFAULT);
+                parkour.getCourseManager().selectCourse(player, args[1]);
                 break;
 
-            case "econ":
-            case "economy":
+            case "setautostart":
+                if (!PermissionUtils.hasPermissionOrCourseOwnership(player,
+                        Permission.ADMIN_COURSE, getChosenCourseName(player, args, 1))) {
+                    return false;
+                }
+
+                parkour.getCourseManager().setAutoStart(player, getChosenCourseName(player, args, 1));
+                break;
+
+            case "setcourse":
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
                     return false;
 
-                } else if (!ValidationUtils.validateArgs(player, args, 2, 4)) {
+                } else if (!ValidationUtils.validateArgs(player, args, 2, 100)) {
                     return false;
                 }
 
-                parkour.getEconomyApi().processEconomyCommand(player, args);
+                parkour.getCourseManager().processSetCommand(player, args);
+                break;
+
+
+            case "setcreator":
+            case "setmaxdeath":
+            case "setmaxtime":
+            case "setminlevel":
+                if (!ValidationUtils.validateArgs(player, args, 3)) {
+                    return false;
+                }
+
+                player.performCommand("parkour setcourse " + args[1] + " " + args[0].replace("set", "") + " " + args[2]);
+                break;
+
+            case "setlevel":
+            case "setrank":
+                if (!ValidationUtils.validateArgs(player, args, 3)) {
+                    return false;
+                }
+
+                player.performCommand("parkour setplayer " + args[1] + " " + args[0].replace("set", "") + " " + args[2]);
+                break;
+
+            case "setlobby":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                    return false;
+                }
+
+                parkour.getLobbyManager().createLobby(player, args);
                 break;
 
             case "setmode":
@@ -394,42 +486,98 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getCourseManager().setCourseParkourMode(player, args[1]);
                 break;
 
-            case "createkit":
-            case "createparkourkit":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
+            case "setplayer":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                    return false;
+
+                } else if (!ValidationUtils.validateArgs(player, args, 2, 100)) {
                     return false;
                 }
 
-                new CreateParkourKitConversation(player).begin();
+                parkour.getPlayerManager().processSetCommand(player, args);
                 break;
 
-            case "editkit":
-            case "editparkourkit":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
+            case "setstart":
+                if (!PermissionUtils.hasPermissionOrCourseOwnership(player,
+                        Permission.ADMIN_COURSE, getChosenCourseName(player, args, 1))) {
                     return false;
                 }
 
-                new EditParkourKitConversation(player).begin();
+                parkour.getCourseManager().setStart(player, getChosenCourseName(player, args, 1));
                 break;
 
-            case "linkkit":
-                if (!ValidationUtils.validateArgs(player, args, 3)) {
-                    return false;
-
-                } else if (!PermissionUtils.hasPermissionOrCourseOwnership(
-                        player, Permission.ADMIN_COURSE, args[1])) {
+            case "settings":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
                     return false;
                 }
 
-                parkour.getCourseManager().linkParkourKit(player, args[1], args[2]);
+                Help.displaySettings(player);
                 break;
 
-            case "listkit":
-                if (!PermissionUtils.hasPermission(player, Permission.BASIC_KIT)) {
+            case "sql":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
                     return false;
                 }
 
-                parkour.getParkourKitManager().listParkourKit(player, args);
+                player.sendMessage("TODO");
+                //TODO show connection successful, number of rows in each table etc.
+                break;
+
+            case "stats":
+            case "course":
+                if (!ValidationUtils.validateArgs(player, args, 2)) {
+                    return false;
+                }
+
+                CourseInfo.displayCourseInfo(args[1], player);
+                break;
+
+            case "test":
+            case "testmode":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_TESTMODE)) {
+                    return false;
+                }
+
+                parkour.getPlayerManager().toggleTestMode(player, args.length == 2 ? args[1].toLowerCase() : DEFAULT);
+                break;
+
+            case "setplayerlimit":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                    return false;
+
+                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
+                    return false;
+                }
+
+                parkour.getCourseManager().setPlayerLimit(player, args[1], args[2]);
+                break;
+            
+            case "tp":
+            case "teleport":
+                if (!PermissionUtils.hasPermission(player, Permission.BASIC_TELEPORT)) {
+                    return false;
+
+                } else if (!ValidationUtils.validateArgs(player, args, 2)) {
+                    return false;
+                }
+
+                parkour.getCheckpointManager().teleportCheckpoint(player, args[1], null);
+                break;
+
+            case "tpc":
+                if (!PermissionUtils.hasPermission(player, Permission.BASIC_TELEPORT_CHECKPOINT)) {
+                    return false;
+
+                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
+                    return false;
+                }
+
+                parkour.getCheckpointManager().teleportCheckpoint(player, args[1], args[2]);
+                break;
+
+            case "tutorial":
+                player.sendMessage(Parkour.getPrefix() + "To follow the official Parkour tutorials...");
+                player.sendMessage("Click here: " + ChatColor.DARK_AQUA + "https://a5h73y.github.io/Parkour/");
                 break;
 
             case "validatekit":
@@ -438,43 +586,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 }
 
                 parkour.getParkourKitManager().validateParkourKit(player, args.length == 2 ? args[1] : DEFAULT);
-                break;
-
-            case "challenge":
-                if (!PermissionUtils.hasPermission(player, Permission.BASIC_CHALLENGE)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 3, 4)) {
-                    return false;
-                }
-
-                parkour.getCourseManager().challengePlayer(player, args);
-                break;
-
-            case "list":
-                parkour.getCourseManager().displayList(player, args);
-                break;
-
-            case "help":
-                Help.lookupCommandHelp(player, args);
-                break;
-
-            case "leaderboard":
-            case "leaderboards":
-                if (!PermissionUtils.hasPermission(player, Permission.BASIC_LEADERBOARD)) {
-                    return false;
-                }
-
-                parkour.getCourseManager().getLeaderboards(player, args);
-                break;
-
-            case "recreate":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
-                    return false;
-                }
-
-                player.sendMessage(Parkour.getPrefix() + "Recreating courses...");
-                parkour.getDatabase().recreateAllCourses();
                 break;
 
             case "whitelist":
@@ -488,62 +599,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getConfig().addWhitelistedCommand(player, args[1]);
                 break;
 
-            case "setplayerlimit":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
-                    return false;
-                }
-
-                parkour.getCourseManager().setPlayerLimit(player, args[1], args[2]);
-                break;
-
-            case "setcourse":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 2, 100)) {
-                    return false;
-                }
-
-                parkour.getCourseManager().processSetCommand(player, args);
-                break;
-
-            case "setplayer":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 2, 100)) {
-                    return false;
-                }
-
-                parkour.getPlayerManager().processSetCommand(player, args);
-                break;
-
-            case "material":
-                MaterialUtils.lookupMaterialInformation(player, args);
-                break;
-
-            case "sql":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
-                    return false;
-                }
-
-                player.sendMessage("TODO");
-                //TODO show connection successful, number of rows in each table etc.
-                break;
-
-            case "cache":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
-                    return false;
-                }
-
-                player.sendMessage("TODO");
-                // TODO no args = show number of courses cached, number of database times cached
-                // TODO [clear] = empty the cache
-                break;
-
             //Other commands//
             case "about":
             case "ver":
@@ -551,36 +606,8 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 player.sendMessage(Parkour.getPrefix() + "Server is running Parkour " + ChatColor.GRAY
                         + parkour.getDescription().getVersion());
                 player.sendMessage("This plugin was developed by " + ChatColor.GOLD + "A5H73Y & steve4744");
-                break;
-
-            case "contact":
-                player.sendMessage(Parkour.getPrefix() + "For information or help please contact me:");
-                player.sendMessage("Spigot: " + ChatColor.AQUA + "A5H73Y");
                 player.sendMessage("Project Page: " + ChatColor.AQUA + "https://www.spigotmc.org/resources/parkour.23685/");
                 player.sendMessage("Discord Server: " + ChatColor.AQUA + "https://discord.gg/Gc8RGYr");
-                break;
-
-            case "request":
-            case "bug":
-                player.sendMessage(Parkour.getPrefix() + "To Request a feature or to Report a bug...");
-                player.sendMessage("Click here: " + ChatColor.DARK_AQUA + "https://github.com/A5H73Y/Parkour/issues");
-                break;
-
-            case "tutorial":
-                player.sendMessage(Parkour.getPrefix() + "To follow the official Parkour tutorials...");
-                player.sendMessage("Click here: " + ChatColor.DARK_AQUA + "https://a5h73y.github.io/Parkour/");
-                break;
-
-            case "settings":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
-                    return false;
-                }
-
-                Help.displaySettings(player);
-                break;
-
-            case "cmds":
-                Help.processCommandsInput(player, args);
                 break;
 
             case "accept":
@@ -594,36 +621,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
             case "yes":
             case "no":
                 TranslationUtils.sendTranslation("Error.NoQuestion", player);
-                break;
-
-            case "reload":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
-                    return false;
-                }
-
-                parkour.getConfigManager().reloadConfigs();
-                TranslationUtils.sendTranslation("Parkour.ConfigReloaded", player);
-                PluginUtils.logToFile(player.getName() + " reloaded the Parkour config");
-                break;
-
-            case "setminlevel":
-            case "setmaxtime":
-            case "setmaxdeath":
-            case "setcreator":
-                if (!ValidationUtils.validateArgs(player, args, 3)) {
-                    return false;
-                }
-
-                player.performCommand("parkour setcourse " + args[1] + " " + args[0].replace("set", "") + " " + args[2]);
-                break;
-
-            case "setrank":
-            case "setlevel":
-                if (!ValidationUtils.validateArgs(player, args, 3)) {
-                    return false;
-                }
-
-                player.performCommand("parkour setplayer " + args[1] + " " + args[0].replace("set", "") + " " + args[2]);
                 break;
 
             default:
