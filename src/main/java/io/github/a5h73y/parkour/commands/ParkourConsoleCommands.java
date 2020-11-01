@@ -164,6 +164,10 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 PluginUtils.cacheCommand(sender, args.length == 2 ? args[1] : null);
                 break;
 
+            case "sql":
+                parkour.getDatabase().displayInformation(sender);
+                break;
+
             case "backup":
                 Backup.backupNow(true);
                 break;

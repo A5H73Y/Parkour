@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import pro.husk.Database;
@@ -628,5 +629,19 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
     @Override
     public void clearCache() {
         resultsCache.clear();
+    }
+
+    public void displayInformation(CommandSender sender) {
+        try {
+            TranslationUtils.sendHeading("Parkour Database", sender);
+            String type = database instanceof MySQL ? "MySQL" : "SQLite";
+            sender.sendMessage("Database Type: " + type);
+            ResultSet count = database.query("SELECT COUNT(*) FROM course;");
+            sender.sendMessage("Courses: " + count.getInt(1));
+            count = database.query("SELECT COUNT(*) FROM time;");
+            sender.sendMessage("Times: " + count.getInt(1));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }

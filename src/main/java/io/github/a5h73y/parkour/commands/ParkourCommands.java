@@ -517,8 +517,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                player.sendMessage("TODO");
-                //TODO show connection successful, number of rows in each table etc.
+                parkour.getDatabase().displayInformation(player);
                 break;
 
             case "stats":
