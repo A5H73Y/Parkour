@@ -41,7 +41,7 @@ public enum Permission {
 	CREATE_SIGN_LOBBY("Parkour.CreateSign", "Lobby"),
 
 	PARKOUR_LEVEL("Parkour.Level", "99999"),
-	PARKOUR_COURSE("Course", "*");
+	PARKOUR_COURSE("Parkour.Course", "*");
 
 	private final String permissionNode;
 	private final String permissionRoot;

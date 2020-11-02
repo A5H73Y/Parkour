@@ -3,8 +3,11 @@ package io.github.a5h73y.parkour.commands;
 import static io.github.a5h73y.parkour.other.Constants.DEFAULT;
 
 import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.conversation.CheckpointPrizeConversation;
+import io.github.a5h73y.parkour.conversation.CoursePrizeConversation;
 import io.github.a5h73y.parkour.conversation.CreateParkourKitConversation;
 import io.github.a5h73y.parkour.conversation.EditParkourKitConversation;
+import io.github.a5h73y.parkour.conversation.ParkourModeConversation;
 import io.github.a5h73y.parkour.enums.GuiMenu;
 import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
@@ -108,7 +111,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getCourseManager().setCheckpointPrize(player, args[1]);
+                new CheckpointPrizeConversation(player).withCourseName(args[1]).begin();
                 break;
 
             case "cmds":
@@ -283,7 +286,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getCourseManager().setPrize(player, args[1]);
+                new CoursePrizeConversation(player).withCourseName(args[1]).begin();
                 break;
 
             case "quiet":
@@ -315,6 +318,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 }
 
                 parkour.getConfigManager().reloadConfigs();
+                PluginUtils.clearAllCache();
                 TranslationUtils.sendTranslation("Parkour.ConfigReloaded", player);
                 PluginUtils.logToFile(player.getName() + " reloaded the Parkour config");
                 break;
@@ -443,7 +447,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getCourseManager().processSetCommand(player, args);
                 break;
 
-
             case "setcreator":
             case "setmaxdeath":
             case "setmaxtime":
@@ -481,7 +484,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getCourseManager().setCourseParkourMode(player, args[1]);
+                new ParkourModeConversation(player).withCourseName(args[1]).begin();
                 break;
 
             case "setplayer":
@@ -493,6 +496,17 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 }
 
                 parkour.getPlayerManager().processSetCommand(player, args);
+                break;
+
+            case "setplayerlimit":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                    return false;
+
+                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
+                    return false;
+                }
+
+                parkour.getCourseManager().setPlayerLimit(player, args[1], args[2]);
                 break;
 
             case "setstart":
@@ -526,7 +540,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                CourseInfo.displayCourseInfo(args[1], player);
+                CourseInfo.displayCourseInfo(player, args[1]);
                 break;
 
             case "test":
@@ -538,17 +552,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getPlayerManager().toggleTestMode(player, args.length == 2 ? args[1].toLowerCase() : DEFAULT);
                 break;
 
-            case "setplayerlimit":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
-                    return false;
-                }
-
-                parkour.getCourseManager().setPlayerLimit(player, args[1], args[2]);
-                break;
-            
             case "tp":
             case "teleport":
                 if (!PermissionUtils.hasPermission(player, Permission.BASIC_TELEPORT)) {
@@ -630,7 +633,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
     /**
      * Get the Player's chosen course.
-     * If the have provided a course parameter, use that.
+     * If they have provided a course parameter, use that.
      * Otherwise fallback to the player's selected course.
      *
      * @param player requesting player

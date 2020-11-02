@@ -7,19 +7,19 @@ import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.conversations.BooleanPrompt;
+import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.FixedSetPrompt;
 import org.bukkit.conversations.MessagePrompt;
 import org.bukkit.conversations.NumericPrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class CoursePrizeConversation extends ParkourConversation {
 
-    public CoursePrizeConversation(Player player) {
-        super(player);
+    public CoursePrizeConversation(Conversable conversable) {
+        super(conversable);
     }
 
     @Override

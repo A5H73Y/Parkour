@@ -127,11 +127,11 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 	 * Used for identifying what the problem with the ParkourKit is.
 	 *
 	 * @param args
-	 * @param player
+	 * @param sender
 	 */
-	public void validateParkourKit(Player player, String kitName) {
+	public void validateParkourKit(CommandSender sender, String kitName) {
 		if (!ParkourKitInfo.doesParkourKitExist(kitName)) {
-			TranslationUtils.sendTranslation("Error.UnknownParkourKit", player);
+			TranslationUtils.sendTranslation("Error.UnknownParkourKit", sender);
 			return;
 		}
 
@@ -160,10 +160,10 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 			}
 		}
 
-		player.sendMessage(Parkour.getPrefix() + invalidTypes.size() + " problems with " + ChatColor.AQUA + kitName + ChatColor.WHITE + " found.");
+		sender.sendMessage(Parkour.getPrefix() + invalidTypes.size() + " problems with " + ChatColor.AQUA + kitName + ChatColor.WHITE + " found.");
 		if (invalidTypes.size() > 0) {
 			for (String type : invalidTypes) {
-				player.sendMessage(ChatColor.RED + type);
+				sender.sendMessage(ChatColor.RED + type);
 			}
 		}
 	}

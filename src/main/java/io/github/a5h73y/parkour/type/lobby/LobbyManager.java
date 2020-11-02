@@ -101,16 +101,16 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
      * Delete a Parkour lobby.
      *
      * @param lobbyName
-     * @param player
+     * @param sender
      */
-    public void deleteLobby(Player player, String lobbyName) {
+    public void deleteLobby(CommandSender sender, String lobbyName) {
         if (!LobbyInfo.doesLobbyExist(lobbyName)) {
-            TranslationUtils.sendValueTranslation("Error.UnknownLobby", lobbyName, player);
+            TranslationUtils.sendValueTranslation("Error.UnknownLobby", lobbyName, sender);
             return;
         }
 
         LobbyInfo.deleteLobby(lobbyName);
-        TranslationUtils.sendValueTranslation("Parkour.Delete", lobbyName + " Lobby", player);
+        TranslationUtils.sendValueTranslation("Parkour.Delete", lobbyName + " Lobby", sender);
     }
 
     /**

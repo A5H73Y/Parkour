@@ -2,10 +2,7 @@ package io.github.a5h73y.parkour.type.course;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
-import io.github.a5h73y.parkour.conversation.CheckpointPrizeConversation;
-import io.github.a5h73y.parkour.conversation.CoursePrizeConversation;
 import io.github.a5h73y.parkour.conversation.LeaderboardConversation;
-import io.github.a5h73y.parkour.conversation.ParkourModeConversation;
 import io.github.a5h73y.parkour.conversation.SetCourseConversation;
 import io.github.a5h73y.parkour.database.TimeEntry;
 import io.github.a5h73y.parkour.enums.ConfigType;
@@ -188,16 +185,16 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      * Remove all information stored on the server about the course, including all references from the database.
      *
      * @param courseName
-     * @param player
+     * @param sender
      */
-    public void deleteCourse(Player player, String courseName) {
+    public void deleteCourse(CommandSender sender, String courseName) {
         if (!courseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
         }
 
         CourseInfo.deleteCourse(courseName);
-        TranslationUtils.sendValueTranslation("Parkour.Delete", courseName, player);
+        TranslationUtils.sendValueTranslation("Parkour.Delete", courseName, sender);
     }
 
     @Override
@@ -346,39 +343,6 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     }
 
     /**
-     * Set the course prize.
-     * Starts a Prize conversation that allows you to configure what the player gets awarded with when the complete the course.
-     * A course could have every type of Prize if configured so.
-     *
-     * @param courseName
-     * @param player
-     */
-    public void setPrize(Player player, String courseName) {
-        if (!courseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
-            return;
-        }
-
-        new CoursePrizeConversation(player).withCourseName(courseName.toLowerCase()).begin();
-    }
-
-    /**
-     * Set the checkpoint course prize.
-     * TODO
-     *
-     * @param courseName
-     * @param player
-     */
-    public void setCheckpointPrize(Player player, String courseName) {
-        if (!courseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
-            return;
-        }
-
-        new CheckpointPrizeConversation(player).withCourseName(courseName.toLowerCase()).begin();
-    }
-
-    /**
      * Overwrite the start location of the course.
      *
      * @param player
@@ -459,7 +423,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      * @param coordinates
      * @param player
      */
-    public void deleteAutoStart(Player player, String coordinates) {
+    public void deleteAutoStart(String coordinates) {
         ParkourConfiguration courseConfig = Parkour.getConfig(ConfigType.COURSES);
         courseConfig.set("CourseInfo.AutoStart." + coordinates, null);
         courseConfig.save();
@@ -782,24 +746,24 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      * The name of the ParkourKit must be specified, then will be applied when a player joins the course.
      *
      * @param args
-     * @param player
+     * @param sender
      */
-    public void linkParkourKit(Player player, String courseName, String kitName) {
+    public void linkParkourKit(CommandSender sender, String courseName, String kitName) {
         if (!courseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
         }
         if (!ParkourKitInfo.doesParkourKitExist(kitName)) {
-            TranslationUtils.sendTranslation("Error.UnknownParkourKit", player);
+            TranslationUtils.sendTranslation("Error.UnknownParkourKit", sender);
             return;
         }
         if (CourseInfo.hasParkourKit(courseName)) {
-            player.sendMessage(Parkour.getPrefix() + "This course is already linked to a ParkourKit, continuing anyway...");
+            sender.sendMessage(Parkour.getPrefix() + "This course is already linked to a ParkourKit, continuing anyway...");
         }
 
         CourseInfo.setParkourKit(courseName, kitName);
         clearCache(courseName);
-        TranslationUtils.sendPropertySet(player, "ParkourKit", courseName, kitName);
+        TranslationUtils.sendPropertySet(sender, "ParkourKit", courseName, kitName);
     }
 
     /**
@@ -925,21 +889,6 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     }
 
     /**
-     * Set the ParkourMode of a course
-     * Starts a Conversation to set the mode of the course.
-     *
-     * @param args
-     * @param player
-     */
-    public void setCourseParkourMode(Player player, String courseName) {
-        if (!courseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
-            return;
-        }
-        new ParkourModeConversation(player).withCourseName(courseName.toLowerCase()).begin();
-    }
-
-    /**
      * Retrieves the ParkourMode of a course
      * Will default to NONE if a mode hasn't been specified.
      *
@@ -958,7 +907,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         }
 
         if (args.length == 2 && sender instanceof Player) {
-            new SetCourseConversation((Player) sender).withCourseName(args[1].toLowerCase()).begin();
+            new SetCourseConversation((Player) sender).withCourseName(args[1]).begin();
 
         } else if (args.length == 4) {
             SetCourseConversation.performAction(sender, args[1], args[2], args[3]);

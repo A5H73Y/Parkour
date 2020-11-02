@@ -3,6 +3,7 @@ package io.github.a5h73y.parkour.manager;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.SoundType;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
+import io.github.a5h73y.parkour.type.Cacheable;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import java.util.EnumMap;
 import java.util.Optional;
@@ -10,13 +11,25 @@ import com.cryptomorin.xseries.XSound;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-public class SoundsManager extends AbstractPluginReceiver {
+public class SoundsManager extends AbstractPluginReceiver implements Cacheable<SoundsManager.SoundDetails> {
 
 	private final EnumMap<SoundType, SoundDetails> soundTypes = new EnumMap<>(SoundType.class);
 
 	public SoundsManager(Parkour parkour) {
 		super(parkour);
+		populateCache();
+	}
 
+	public void playSound(Player player, SoundType soundType) {
+		if (!parkour.getPlayerManager().isInQuietMode(player)) {
+			SoundDetails details = soundTypes.get(soundType);
+			if (details != null) {
+				player.playSound(player.getLocation(), details.getSound(), details.getVolume(), details.getPitch());
+			}
+		}
+	}
+
+	private void populateCache() {
 		if (parkour.getConfig().isSoundEnabled()) {
 			for (SoundType soundType : SoundType.values()) {
 				if (parkour.getConfig().isSoundEnabled(soundType)) {
@@ -36,16 +49,18 @@ public class SoundsManager extends AbstractPluginReceiver {
 		}
 	}
 
-	public void playSound(Player player, SoundType soundType) {
-		if (!parkour.getPlayerManager().isInQuietMode(player)) {
-			SoundDetails details = soundTypes.get(soundType);
-			if (details != null) {
-				player.playSound(player.getLocation(), details.getSound(), details.getVolume(), details.getPitch());
-			}
-		}
+	@Override
+	public int getCacheSize() {
+		return soundTypes.size();
 	}
 
-	private static class SoundDetails {
+	@Override
+	public void clearCache() {
+		soundTypes.clear();
+		populateCache();
+	}
+
+	protected static class SoundDetails {
 
 		private final Sound sound;
 		private final float volume;

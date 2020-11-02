@@ -203,7 +203,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                     return;
                 }
 
-                CourseInfo.displayCourseInfo(lines[2], player);
+                CourseInfo.displayCourseInfo(player, lines[2]);
                 break;
 
             case "leave":

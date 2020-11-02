@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Validation {
@@ -394,12 +395,12 @@ public class Validation {
      * Validate a course before deleting it
      *
      * @param courseName
-     * @param player
+     * @param sender
      * @return
      */
-    public static boolean deleteCourse(String courseName, Player player) {
+    public static boolean deleteCourse(String courseName, CommandSender sender) {
         if (!Parkour.getInstance().getCourseManager().courseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return false;
         }
 
@@ -415,7 +416,7 @@ public class Validation {
         }
 
         if (dependentCourses.size() > 0) {
-            player.sendMessage(Parkour.getPrefix() + "This course can not be deleted as there are dependent courses: " + dependentCourses);
+            sender.sendMessage(Parkour.getPrefix() + "This course can not be deleted as there are dependent courses: " + dependentCourses);
             return false;
         }
 
@@ -429,9 +430,9 @@ public class Validation {
      * @param player
      * @return
      */
-    public static boolean deleteLobby(String lobbyName, Player player) {
+    public static boolean deleteLobby(CommandSender sender, String lobbyName) {
         if (!LobbyInfo.doesLobbyExist(lobbyName)) {
-            TranslationUtils.sendValueTranslation("Error.UnknownLobby", lobbyName, player);
+            TranslationUtils.sendValueTranslation("Error.UnknownLobby", lobbyName, sender);
             return false;
         }
 
@@ -447,7 +448,7 @@ public class Validation {
         }
 
         if (dependentCourses.size() > 0) {
-            player.sendMessage(Parkour.getPrefix() + "This lobby can not be deleted as there are dependent courses: "
+            sender.sendMessage(Parkour.getPrefix() + "This lobby can not be deleted as there are dependent courses: "
                     + dependentCourses);
             return false;
         }
@@ -459,12 +460,12 @@ public class Validation {
      * Validate a kit before deleting it
      *
      * @param parkourKit
-     * @param player
+     * @param sender
      * @return
      */
-    public static boolean deleteParkourKit(String parkourKit, Player player) {
+    public static boolean deleteParkourKit(CommandSender sender, String parkourKit) {
         if (!ParkourKitInfo.doesParkourKitExist(parkourKit)) {
-            TranslationUtils.sendTranslation("Error.UnknownParkourKit", player);
+            TranslationUtils.sendTranslation("Error.UnknownParkourKit", sender);
             return false;
         }
 
@@ -472,7 +473,7 @@ public class Validation {
         List<String> dependentCourses = ParkourKitInfo.getDependentCourses(parkourKit);
 
         if (dependentCourses.size() > 0) {
-            player.sendMessage(Parkour.getPrefix() + "This ParkourKit can not be deleted as there are dependent courses: " + dependentCourses);
+            sender.sendMessage(Parkour.getPrefix() + "This ParkourKit can not be deleted as there are dependent courses: " + dependentCourses);
             return false;
         }
 
@@ -487,7 +488,7 @@ public class Validation {
      * @param player
      * @return
      */
-    public static boolean deleteAutoStart(String courseName, String coordinates, Player player) {
+    public static boolean deleteAutoStart(Player player, String courseName, String coordinates) {
         if (Parkour.getInstance().getCourseManager().getAutoStartCourse(player.getLocation()) == null) {
             player.sendMessage(Parkour.getPrefix() + "There is no autostart at this location");
             return false;
@@ -502,16 +503,16 @@ public class Validation {
         return true;
     }
 
-    public static boolean deleteCheckpoint(String courseName, Player player) {
+    public static boolean deleteCheckpoint(CommandSender sender, String courseName) {
         if (!Parkour.getInstance().getCourseManager().courseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return false;
         }
 
         int checkpoints = CourseInfo.getCheckpointAmount(courseName);
         // if it has no checkpoints
         if (checkpoints <= 0) {
-            player.sendMessage(Parkour.getPrefix() + courseName + " has no checkpoints!");
+            sender.sendMessage(Parkour.getPrefix() + courseName + " has no checkpoints!");
             return false;
         }
         return true;

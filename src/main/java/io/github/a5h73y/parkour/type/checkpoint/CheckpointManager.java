@@ -21,6 +21,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -172,9 +173,9 @@ public class CheckpointManager extends AbstractPluginReceiver {
      * This will only delete the last checkpoint, decreasing the amount of checkpoints.
      *
      * @param courseName
-     * @param player
+     * @param sender
      */
-    public void deleteCheckpoint(Player player, String courseName) {
+    public void deleteCheckpoint(CommandSender sender, String courseName) {
         if (!parkour.getCourseManager().courseExists(courseName)) {
             return;
         }
@@ -183,7 +184,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
         int point = CourseInfo.getCheckpointAmount(courseName);
 
         if (point <= 0) {
-            player.sendMessage(Parkour.getPrefix() + courseName + " has no checkpoints!");
+            sender.sendMessage(Parkour.getPrefix() + courseName + " has no checkpoints!");
             return;
         }
 
@@ -194,11 +195,11 @@ public class CheckpointManager extends AbstractPluginReceiver {
         checkpointsConfig.save();
         parkour.getCourseManager().clearCache(courseName);
 
-        player.sendMessage(TranslationUtils.getTranslation("Parkour.DeleteCheckpoint")
+        sender.sendMessage(TranslationUtils.getTranslation("Parkour.DeleteCheckpoint")
                 .replace("%CHECKPOINT%", String.valueOf(point))
                 .replace("%COURSE%", courseName));
 
-        PluginUtils.logToFile("Checkpoint " + point + " was deleted on " + courseName + " by " + player.getName());
+        PluginUtils.logToFile("Checkpoint " + point + " was deleted on " + courseName + " by " + sender.getName());
     }
 
     /**

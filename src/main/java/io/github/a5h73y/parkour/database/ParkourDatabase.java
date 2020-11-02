@@ -449,13 +449,13 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
     /**
      * Display Leaderboards Entries to player.
      *
-     * @param player target player
+     * @param sender target player
      * @param courseName name of the course
      * @param times {@link TimeEntry} results
      */
-    public void displayTimeEntries(Player player, String courseName, List<TimeEntry> times) {
+    public void displayTimeEntries(CommandSender sender, String courseName, List<TimeEntry> times) {
         if (times.isEmpty()) {
-            player.sendMessage(Parkour.getPrefix() + "No results were found!");
+            sender.sendMessage(Parkour.getPrefix() + "No results were found!");
             return;
         }
 
@@ -463,7 +463,7 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
                 .replace("%COURSE%", courseName)
                 .replace("%AMOUNT%", String.valueOf(times.size()));
 
-        TranslationUtils.sendHeading(heading, player);
+        TranslationUtils.sendHeading(heading, sender);
 
         for (int i = 0; i < times.size(); i++) {
             TimeEntry entry = times.get(i);
@@ -473,7 +473,7 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
                     .replace("%TIME%", DateTimeUtils.displayCurrentTime(entry.getTime()))
                     .replace("%DEATHS%", String.valueOf(entry.getDeaths()));
 
-            player.sendMessage(translation);
+            sender.sendMessage(translation);
         }
     }
 

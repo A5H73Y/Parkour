@@ -207,7 +207,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 						parkour.getSoundsManager().playSound(player, SoundType.SECOND_INCREMENT);
 					}
 
-					if (!isInQuietMode(player)) {
+					if (!isInQuietMode(player) && parkour.getConfig().getBoolean("OnCourse.DisplayLiveTime")) {
 						parkour.getBountifulApi().sendActionBar(player, liveTimer, true);
 					}
 
@@ -1299,43 +1299,43 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * Will display their stored statistics as well as their current information if they're on a course.
 	 *
 	 * @param args
-	 * @param player
+	 * @param sender
 	 */
-	public void displayParkourInfo(Player player, String[] args) {
-		OfflinePlayer targetPlayer = args.length <= 1 ? player : Bukkit.getOfflinePlayer(args[1]);
+	public void displayParkourInfo(CommandSender sender, String[] args) {
+		OfflinePlayer targetPlayer = args.length <= 1 ? (OfflinePlayer) sender : Bukkit.getOfflinePlayer(args[1]);
 
 		if (!PlayerInfo.hasPlayerInfo(targetPlayer) || !targetPlayer.hasPlayedBefore()) {
-			TranslationUtils.sendTranslation("Error.UnknownPlayer", player);
+			TranslationUtils.sendTranslation("Error.UnknownPlayer", sender);
 			return;
 		}
 
 		ParkourSession session = getParkourSession(targetPlayer.getPlayer());
-		TranslationUtils.sendHeading(targetPlayer.getName() + "'s information", player);
+		TranslationUtils.sendHeading(targetPlayer.getName() + "'s information", sender);
 
 		if (session != null) {
-			player.sendMessage("Course: " + ChatColor.AQUA + session.getCourse().getName());
-			player.sendMessage("Deaths: " + ChatColor.AQUA + session.getDeaths());
-			player.sendMessage("Time: " + ChatColor.AQUA + session.getDisplayTime());
-			player.sendMessage("Checkpoint: " + ChatColor.AQUA + session.getCurrentCheckpoint());
+			sender.sendMessage("Course: " + ChatColor.AQUA + session.getCourse().getName());
+			sender.sendMessage("Deaths: " + ChatColor.AQUA + session.getDeaths());
+			sender.sendMessage("Time: " + ChatColor.AQUA + session.getDisplayTime());
+			sender.sendMessage("Checkpoint: " + ChatColor.AQUA + session.getCurrentCheckpoint());
 		}
 
 		int level = PlayerInfo.getParkourLevel(targetPlayer);
 		String selected = PlayerInfo.getSelectedCourse(targetPlayer);
 
 		if (level > 0) {
-			player.sendMessage("Level: " + ChatColor.AQUA + level);
+			sender.sendMessage("Level: " + ChatColor.AQUA + level);
 		}
 
 		if (selected != null && selected.length() > 0) {
-			player.sendMessage("Editing: " + ChatColor.AQUA + selected);
+			sender.sendMessage("Editing: " + ChatColor.AQUA + selected);
 		}
 
 		if (PlayerInfo.getParkoins(targetPlayer) > 0) {
-			player.sendMessage("Parkoins: " + ChatColor.AQUA + PlayerInfo.getParkoins(targetPlayer));
+			sender.sendMessage("Parkoins: " + ChatColor.AQUA + PlayerInfo.getParkoins(targetPlayer));
 		}
 
 		if (parkour.getConfig().isCompletedCoursesEnabled()) {
-			player.sendMessage("Courses Completed: " + ChatColor.AQUA + PlayerInfo.getNumberOfCoursesCompleted(targetPlayer)
+			sender.sendMessage("Courses Completed: " + ChatColor.AQUA + PlayerInfo.getNumberOfCoursesCompleted(targetPlayer)
 					+ " / " + CourseInfo.getAllCourseNames().size());
 		}
 	}
@@ -1701,7 +1701,6 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * Parkour level with a message prefix. A rank is just a visual prefix. E.g.
 	 * Level 10: Pro, Level 99: God
 	 *
-	 * @param args
 	 * @param sender
 	 */
 	public void setRewardParkourRank(CommandSender sender, String parkourLevel, String parkourRank) {

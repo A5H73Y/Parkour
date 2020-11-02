@@ -1,7 +1,9 @@
 package io.github.a5h73y.parkour.conversation;
 
 import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ConversationAbandonedListener;
@@ -9,6 +11,7 @@ import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class ParkourConversation implements ConversationAbandonedListener {
 
@@ -16,23 +19,22 @@ public abstract class ParkourConversation implements ConversationAbandonedListen
     public static final String SESSION_TARGET_PLAYER_NAME = "targetPlayerName";
     public static final String SESSION_COURSE_NAME = "courseName";
     private final ConversationFactory conversationFactory;
-    private final Player player;
+    private final Conversable conversable;
     private String courseName;
     private String targetPlayerName;
 
     public abstract Prompt getEntryPrompt();
 
-    public ParkourConversation(Player player) {
-        this.player = player;
+    public ParkourConversation(Conversable conversable) {
+        this.conversable = conversable;
 
         conversationFactory = new ConversationFactory(Parkour.getInstance())
                 .withEscapeSequence("cancel")
                 .withTimeout(30)
-                .thatExcludesNonPlayersWithMessage("This is only possible in game, sorry.")
                 .addConversationAbandonedListener(this)
                 .withFirstPrompt(getEntryPrompt());
 
-        player.sendMessage(ChatColor.GRAY + "Note: Enter 'cancel' to quit the conversation.");
+        conversable.sendRawMessage(ChatColor.GRAY + "Note: Enter 'cancel' to quit the conversation.");
     }
 
     public static void sendErrorMessage(ConversationContext context, String message) {
@@ -46,8 +48,8 @@ public abstract class ParkourConversation implements ConversationAbandonedListen
         }
     }
 
-    public ParkourConversation withCourseName(String courseName) {
-        this.courseName = courseName;
+    public ParkourConversation withCourseName(@NotNull String courseName) {
+        this.courseName = courseName.toLowerCase();
         return this;
     }
 
@@ -57,8 +59,14 @@ public abstract class ParkourConversation implements ConversationAbandonedListen
     }
 
     public void begin() {
-        Conversation conversation = conversationFactory.buildConversation(player);
-        conversation.getContext().setSessionData(SESSION_PLAYER_NAME, player.getName());
+        if (courseName != null && !Parkour.getInstance().getCourseManager().courseExists(courseName)) {
+            conversable.sendRawMessage(TranslationUtils.getValueTranslation("Error.NoExist", courseName));
+            return;
+        }
+
+        Conversation conversation = conversationFactory.buildConversation(conversable);
+        String conversableName = conversable instanceof Player ? ((Player) conversable).getName() : "Console";
+        conversation.getContext().setSessionData(SESSION_PLAYER_NAME, conversableName);
         if (courseName != null) {
             conversation.getContext().setSessionData(SESSION_COURSE_NAME, courseName);
         }

@@ -4,6 +4,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.FixedSetPrompt;
 import org.bukkit.conversations.MessagePrompt;
@@ -14,8 +15,8 @@ import org.bukkit.entity.Player;
 
 public class LeaderboardConversation extends ParkourConversation {
 
-    public LeaderboardConversation(Player player) {
-        super(player);
+    public LeaderboardConversation(Conversable conversable) {
+        super(conversable);
     }
 
     @Override

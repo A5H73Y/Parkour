@@ -8,20 +8,20 @@ import java.util.stream.Stream;
 import com.cryptomorin.xseries.XPotion;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.BooleanPrompt;
+import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.FixedSetPrompt;
 import org.bukkit.conversations.MessagePrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.bukkit.conversations.ValidatingPrompt;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ParkourModeConversation extends ParkourConversation {
 
-    public ParkourModeConversation(Player player) {
-        super(player);
+    public ParkourModeConversation(Conversable conversable) {
+        super(conversable);
     }
 
     @Override

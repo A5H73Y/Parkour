@@ -2,16 +2,16 @@ package io.github.a5h73y.parkour.conversation;
 
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.MessagePrompt;
 import org.bukkit.conversations.Prompt;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class CheckpointPrizeConversation extends CoursePrizeConversation {
 
-    public CheckpointPrizeConversation(Player player) {
-        super(player);
+    public CheckpointPrizeConversation(Conversable conversable) {
+        super(conversable);
     }
 
     @Override

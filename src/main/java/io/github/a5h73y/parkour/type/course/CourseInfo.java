@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -582,11 +583,11 @@ public class CourseInfo {
      * Yeah, it's super ugly.
      *
      * @param courseName
-     * @param player
+     * @param sender
      */
-    public static void displayCourseInfo(String courseName, Player player) {
+    public static void displayCourseInfo(CommandSender sender, String courseName) {
         if (!Parkour.getInstance().getCourseManager().courseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
         }
 
@@ -611,79 +612,80 @@ public class CourseInfo {
         String mode = config.getString(courseName + ".Mode");
 
         double completePercent = Math.round((completed * 1.0 / views) * 100);
-        TranslationUtils.sendHeading(StringUtils.standardizeText(courseName) + " statistics", player);
+        TranslationUtils.sendHeading(StringUtils.standardizeText(courseName) + " statistics", sender);
 
-        player.sendMessage("Views: " + aqua + views);
-        player.sendMessage("Completed: " + aqua + completed + " times (" + completePercent + "%)");
-        player.sendMessage("Checkpoints: " + aqua + getCheckpointAmount(courseName));
-        player.sendMessage("Creator: " + aqua + creator);
-        player.sendMessage("Ready: " + aqua + ready);
+        sender.sendMessage("Views: " + aqua + views);
+        sender.sendMessage("Completed: " + aqua + completed + " times (" + completePercent + "%)");
+        sender.sendMessage("Checkpoints: " + aqua + getCheckpointAmount(courseName));
+        sender.sendMessage("Creator: " + aqua + creator);
+        sender.sendMessage("Ready: " + aqua + ready);
 
         if (minLevel > 0) {
-            player.sendMessage("Level Required: " + aqua + minLevel);
+            sender.sendMessage("Level Required: " + aqua + minLevel);
         }
 
         if (rewardLevel > 0) {
-            player.sendMessage("Level Reward: " + aqua + rewardLevel);
+            sender.sendMessage("Level Reward: " + aqua + rewardLevel);
         }
 
         if (rewardLevelAdd > 0) {
-            player.sendMessage("Level Reward Addon: " + aqua + rewardLevelAdd);
+            sender.sendMessage("Level Reward Addon: " + aqua + rewardLevelAdd);
         }
 
         if (linkedLobby != null && linkedLobby.length() > 0) {
-            player.sendMessage("Linked Lobby: " + aqua + linkedLobby);
+            sender.sendMessage("Linked Lobby: " + aqua + linkedLobby);
         }
 
         if (linkedCourse != null && linkedCourse.length() > 0) {
-            player.sendMessage("Linked Course: " + aqua + linkedCourse);
+            sender.sendMessage("Linked Course: " + aqua + linkedCourse);
         }
 
         if (parkoins > 0) {
-            player.sendMessage("Parkoins Reward: " + aqua + parkoins);
+            sender.sendMessage("Parkoins Reward: " + aqua + parkoins);
         }
 
         if (parkourKit != null && parkourKit.length() > 0) {
-            player.sendMessage("ParkourKit: " + aqua + parkourKit);
+            sender.sendMessage("ParkourKit: " + aqua + parkourKit);
         }
 
         if (mode != null && !"none".equalsIgnoreCase(mode)) {
-            player.sendMessage("ParkourMode: " + aqua + mode);
+            sender.sendMessage("ParkourMode: " + aqua + mode);
         }
 
         if (maxDeaths > 0) {
-            player.sendMessage("Max Deaths: " + aqua + maxDeaths);
+            sender.sendMessage("Max Deaths: " + aqua + maxDeaths);
         }
 
         if (maxTime > 0) {
-            player.sendMessage("Time Limit: " + aqua + DateTimeUtils.convertSecondsToTime(maxTime));
+            sender.sendMessage("Time Limit: " + aqua + DateTimeUtils.convertSecondsToTime(maxTime));
         }
 
         if (Parkour.getInstance().getEconomyApi().isEnabled()) {
             int joinFee = getEconomyJoiningFee(courseName);
             int finishReward = getEconomyFinishReward(courseName);
             if (joinFee > 0) {
-                player.sendMessage("Join Fee: " + aqua + joinFee);
+                sender.sendMessage("Join Fee: " + aqua + joinFee);
             }
             if (finishReward > 0) {
-                player.sendMessage("Economy Reward: " + aqua + finishReward);
+                sender.sendMessage("Economy Reward: " + aqua + finishReward);
             }
         }
 
         if (hasMaterialPrize(courseName) && getMaterialPrizeAmount(courseName) > 0) {
-            player.sendMessage("Material Prize: " + aqua + getMaterialPrize(courseName) + " x " + getMaterialPrizeAmount(courseName));
+            sender.sendMessage("Material Prize: " + aqua + getMaterialPrize(courseName) + " x " + getMaterialPrizeAmount(courseName));
         }
         if (hasCommandPrize(courseName)) {
-            player.sendMessage("Command Prize: " + aqua + getCommandsPrize(courseName));
+            sender.sendMessage("Command Prize: " + aqua + getCommandsPrize(courseName));
         }
         if (getXPPrize(courseName) > 0) {
-            player.sendMessage("XP Prize: " + aqua + getXPPrize(courseName));
+            sender.sendMessage("XP Prize: " + aqua + getXPPrize(courseName));
         }
 
         if (hasRewardDelay(courseName) && Parkour.getDefaultConfig().isDisplayPrizeCooldown()) {
-            player.sendMessage("Reward Cooldown (days): " + aqua + getRewardDelay(courseName));
-            if (!Parkour.getInstance().getPlayerManager().hasPrizeCooldownDurationPassed(player, courseName, false)) {
-                player.sendMessage("Cooldown Remaining: " + aqua + DateTimeUtils.getTimeRemaining(player, courseName));
+            sender.sendMessage("Reward Cooldown (days): " + aqua + getRewardDelay(courseName));
+
+            if (sender instanceof Player && !Parkour.getInstance().getPlayerManager().hasPrizeCooldownDurationPassed((Player) sender, courseName, false)) {
+                sender.sendMessage("Cooldown Remaining: " + aqua + DateTimeUtils.getTimeRemaining((Player) sender, courseName));
             }
         }
     }

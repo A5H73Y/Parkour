@@ -6,15 +6,15 @@ import io.github.a5h73y.parkour.conversation.other.AddKitItemConversation;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.BooleanPrompt;
+import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
-import org.bukkit.entity.Player;
 
 public class CreateParkourKitConversation extends ParkourConversation {
 
-    public CreateParkourKitConversation(Player player) {
-        super(player);
+    public CreateParkourKitConversation(Conversable conversable) {
+        super(conversable);
     }
 
     @Override
