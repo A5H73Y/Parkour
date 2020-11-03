@@ -360,7 +360,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		addPlayer(player, new ParkourSession(course));
 		setupParkourMode(player);
 		parkour.getScoreboardManager().addScoreboard(player);
-		Bukkit.getServer().getPluginManager().callEvent(new PlayerJoinCourseEvent(player, course.getName()));
+		Bukkit.getServer().getPluginManager().callEvent(new PlayerJoinCourseEvent(player, course.getName(), silent));
 	}
 
 	/**
@@ -421,7 +421,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		forceVisible(player);
 		parkour.getScoreboardManager().removeScoreboard(player);
 		deleteParkourSession(player);
-		Bukkit.getServer().getPluginManager().callEvent(new PlayerLeaveCourseEvent(player, session.getCourse().getName()));
+		Bukkit.getServer().getPluginManager().callEvent(new PlayerLeaveCourseEvent(player, session.getCourse().getName(), silent));
 	}
 
 	/**
