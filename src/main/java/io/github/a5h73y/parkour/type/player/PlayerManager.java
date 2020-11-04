@@ -659,7 +659,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		Course course = getParkourSession(player).getCourse();
 		TranslationUtils.sendTranslation("Parkour.Restarting", player);
 		leaveCourse(player, true);
-		Bukkit.getScheduler().runTask(parkour, () -> joinCourse(player, course, true));
+		joinCourse(player, course, true);
 	}
 
 	/**
