@@ -1,6 +1,7 @@
 package io.github.a5h73y.parkour.conversation;
 
 import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.enums.ParkourEventType;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -169,7 +170,7 @@ public class CoursePrizeConversation extends ParkourConversation {
 
         public String getPromptText(ConversationContext context) {
             String courseName = context.getSessionData(SESSION_COURSE_NAME).toString();
-            CourseInfo.addCommandPrize(courseName, context.getSessionData("command").toString());
+            CourseInfo.addEventCommand(courseName, ParkourEventType.PRIZE, context.getSessionData("command").toString());
 
             return TranslationUtils.getPropertySet("Command Prize", courseName,
                     "/" + context.getSessionData("command"));

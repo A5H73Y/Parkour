@@ -37,6 +37,9 @@ public class DefaultConfigUpgradeTask extends TimedUpgradeTask {
 			transferAndDelete("MySQL.User", "MySQL.Username");
 			transferAndDelete("Lobby.EnforceWorld", "LobbySettings.EnforceWorld");
 
+			transferAndDelete("Scoreboard.Display.CurrentTime", "Scoreboard.LiveTimer.Enabled");
+			// TODO more scoreboard
+
 			// update int to actual value
 			defaultConfig.set("OnJoin.SetGameMode", getMatchingGameMode(defaultConfig.getInt("OnJoin.SetGamemode")));
 			defaultConfig.set("OnFinish.BroadcastLevel", getBroadcastLevel(defaultConfig.getInt("OnFinish.BroadcastLevel")));

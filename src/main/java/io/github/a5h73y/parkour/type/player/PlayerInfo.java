@@ -26,7 +26,7 @@ public class PlayerInfo {
         return Parkour.getConfig(ConfigType.PLAYERS);
     }
 
-    public static void persistChanges() {
+    private static void persistChanges() {
         getPlayersConfig().save();
     }
 
@@ -48,6 +48,7 @@ public class PlayerInfo {
      */
     public static void setSelectedCourse(OfflinePlayer player, String courseName) {
         getPlayersConfig().set(player.getUniqueId() + ".Selected", courseName.toLowerCase());
+        persistChanges();
     }
 
     /**
@@ -91,6 +92,7 @@ public class PlayerInfo {
      */
     public static void setParkoins(OfflinePlayer player, int amount) {
         getPlayersConfig().set(player.getUniqueId() + ".Parkoins", amount);
+        persistChanges();
     }
 
     /**
@@ -112,6 +114,7 @@ public class PlayerInfo {
      */
     public static void setLastCompletedCourse(OfflinePlayer player, String courseName) {
         getPlayersConfig().set(player.getUniqueId() + ".LastCompleted", courseName.toLowerCase());
+        persistChanges();
     }
 
     /**
@@ -142,6 +145,7 @@ public class PlayerInfo {
      */
     public static void setParkourLevel(OfflinePlayer player, int level) {
         getPlayersConfig().set(player.getUniqueId() + ".ParkourLevel", level);
+        persistChanges();
         Bukkit.getServer().getPluginManager().callEvent(new PlayerParkourLevelEvent((Player) player, null, level));
     }
 
@@ -167,13 +171,16 @@ public class PlayerInfo {
     }
 
     public static void addCompletedCourse(OfflinePlayer player, String courseName) {
-        if (Parkour.getDefaultConfig().isCompletedCoursesEnabled()) {
-            List<String> completedCourses = getCompletedCourses(player);
+        if (!Parkour.getDefaultConfig().isCompletedCoursesEnabled()) {
+            return;
+        }
 
-            if (!completedCourses.contains(courseName)) {
-                completedCourses.add(courseName);
-                getPlayersConfig().set(player.getUniqueId() + ".Completed", completedCourses);
-            }
+        List<String> completedCourses = getCompletedCourses(player);
+
+        if (!completedCourses.contains(courseName)) {
+            completedCourses.add(courseName);
+            getPlayersConfig().set(player.getUniqueId() + ".Completed", completedCourses);
+            persistChanges();
         }
     }
 
@@ -185,6 +192,7 @@ public class PlayerInfo {
      */
     public static void setLastPlayedCourse(OfflinePlayer player, String courseName) {
         getPlayersConfig().set(player.getUniqueId() + ".LastPlayed", courseName.toLowerCase());
+        persistChanges();
     }
 
     /**
@@ -208,6 +216,7 @@ public class PlayerInfo {
      */
     public static void setRank(OfflinePlayer player, String rank) {
         getPlayersConfig().set(player.getUniqueId() + ".Rank", rank);
+        persistChanges();
     }
 
     /**
@@ -230,6 +239,7 @@ public class PlayerInfo {
      */
     public static void setLastRewardedTime(OfflinePlayer player, String courseName, long rewardTime) {
         getPlayersConfig().set(player.getUniqueId() + ".LastRewarded." + courseName.toLowerCase(), rewardTime);
+        persistChanges();
     }
 
     /**
@@ -251,6 +261,7 @@ public class PlayerInfo {
      */
     public static void resetPlayer(OfflinePlayer player) {
         getPlayersConfig().set(player.getUniqueId().toString(), null);
+        persistChanges();
         Parkour.getInstance().getDatabase().deletePlayerTimes(player);
     }
 
@@ -261,7 +272,6 @@ public class PlayerInfo {
      * @return
      */
     public static String getRewardRank(int parkourLevel) {
-        //TODO
         return getPlayersConfig().getString("ServerInfo.Levels." + parkourLevel + ".Rank");
     }
 
@@ -272,8 +282,8 @@ public class PlayerInfo {
      * @param rank
      */
     public static void setRewardRank(int parkourLevel, String rank) {
-        //TODO
         getPlayersConfig().set("ServerInfo.Levels." + parkourLevel + ".Rank", rank);
+        persistChanges();
     }
 
     /**
@@ -300,20 +310,22 @@ public class PlayerInfo {
     }
 
     public static void removeCompletedCourse(String courseName) {
-        if (Parkour.getDefaultConfig().isCompletedCoursesEnabled()) {
-            Set<String> playersUUIDs = getPlayersConfig().getConfigurationSection("").getKeys(false);
+        if (!Parkour.getDefaultConfig().isCompletedCoursesEnabled()) {
+            return;
 
-            for (String uuid : playersUUIDs) {
-                String completedPath = uuid + ".Completed";
-                List<String> completedCourses = getPlayersConfig().getStringList(completedPath);
-
-                if (completedCourses.contains(courseName)) {
-                    completedCourses.remove(courseName);
-                    getPlayersConfig().set(completedPath, completedCourses);
-                }
-            }
-            getPlayersConfig().save();
         }
+        Set<String> playersUUIDs = getPlayersConfig().getConfigurationSection("").getKeys(false);
+
+        for (String uuid : playersUUIDs) {
+            String completedPath = uuid + ".Completed";
+            List<String> completedCourses = getPlayersConfig().getStringList(completedPath);
+
+            if (completedCourses.contains(courseName)) {
+                completedCourses.remove(courseName);
+                getPlayersConfig().set(completedPath, completedCourses);
+            }
+        }
+        persistChanges();
     }
 
     /**
@@ -337,10 +349,12 @@ public class PlayerInfo {
      */
     public static void setJoinLocation(Player player) {
         getPlayersConfig().set(player.getUniqueId() + ".JoinLocation", player.getLocation());
+        persistChanges();
     }
 
     public static void setQuietMode(Player player, boolean inQuietMode) {
         getPlayersConfig().set(player.getUniqueId() + ".QuietMode", inQuietMode);
+        persistChanges();
     }
 
     public static boolean isQuietMode(Player player) {
@@ -349,5 +363,6 @@ public class PlayerInfo {
 
     public static void resetJoinLocation(Player player) {
         getPlayersConfig().set(player.getUniqueId() + ".JoinLocation", null);
+        persistChanges();
     }
 }

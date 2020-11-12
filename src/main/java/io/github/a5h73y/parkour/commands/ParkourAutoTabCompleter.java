@@ -36,7 +36,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
     private static final List<String> ADMIN_COURSE_COMMANDS = Arrays.asList(
             "checkpoint", "ready", "setstart", "setcourse", "setautostart", "select", "deselect", "done", "link", "linkkit",
             "addjoinitem", "rewardonce", "rewardlevel", "rewardleveladd", "rewardrank", "rewarddelay", "rewardparkoins",
-            "setmode", "createkit", "editkit", "validatekit", "checkpointprize", "setplayerlimit");
+            "setmode", "createkit", "editkit", "validatekit", "setplayerlimit");
 
     private static final List<String> ON_COURSE_COMMANDS = Arrays.asList(
             "back", "leave");
@@ -58,7 +58,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
 
     private static final List<String> LINK_COMMANDS = Arrays.asList("course", "lobby", "reset");
 
-    private static final List<String> CACHE_COMMANDS = Arrays.asList("course", "lobby", "database", "parkourkit");
+    private static final List<String> CACHE_COMMANDS = Arrays.asList("course", "lobby", "database", "parkourkit", "sound");
 
     public ParkourAutoTabCompleter(Parkour parkour) {
         super(parkour);
@@ -203,7 +203,6 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             case "rewardleveladd":
             case "rewarddelay":
             case "rewardparkoins":
-            case "checkpointprize":
             case "setmode":
             case "leaderboard":
             case "linkkit":
@@ -274,6 +273,9 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
                 switch (arg2.toLowerCase()) {
                     case "message":
                         allowedCommands = SetCourseConversation.MESSAGE_OPTIONS;
+                        break;
+                    case "command":
+                        allowedCommands = SetCourseConversation.COMMAND_OPTIONS;
                         break;
                 }
                 break;

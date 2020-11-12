@@ -38,7 +38,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Parkour.Lobby", "You have joined the lobby");
 		this.addDefault("Parkour.LobbyOther", "You have joined the &b%VALUE% &flobby");
 		this.addDefault("Parkour.JoinLocation", "You have returned to your original location");
-		this.addDefault("Parkour.Continue", "Continuing Parkour on &b%VALUE%");
+		this.addDefault("Parkour.Continue", "Continuing progress on &b%VALUE%");
 		this.addDefault("Parkour.TimeReset", "Your time has been restarted!");
 		this.addDefault("Parkour.Teleport", "You have teleported to &b%VALUE%");
 		this.addDefault("Parkour.MaxDeaths", "Sorry, you reached the maximum amount of deaths: &b%VALUE%");
@@ -107,13 +107,13 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Error.UnknownParkourKit", "Unknown ParkourKit.");
 		this.addDefault("Error.UnknownCheckpoint", "Unknown or invalid Checkpoint.");
 		this.addDefault("Error.Cheating1", "Please do not cheat.");
-		this.addDefault("Error.Cheating2", "&lYou must achieve all &4%VALUE% &f&lcheckpoints!");
+		this.addDefault("Error.Cheating2", "&lYou must achieve all &4&l%VALUE% &f&lcheckpoints!");
 		this.addDefault("Error.Cooldown", "Slow down! Please wait &b%VALUE% &fmore seconds.");
 		this.addDefault("Error.PrizeCooldown", "You have to wait &b%VALUE% &fbefore you can receive this prize again!");
 		this.addDefault("Error.NoQuestion", "You have not been asked a question!");
 		this.addDefault("Error.JoiningAnotherCourse", "You can not join another course while on a course.");
 		this.addDefault("Error.AllowViaCommand", "Joining a course via the command has been disabled.");
-		this.addDefault("Error.PluginNotLinked", "%VALUE% has not been linked.");
+		this.addDefault("Error.PluginNotLinked", "&b%VALUE% &fhas not been linked.");
 		this.addDefault("Error.NoPermission", "You do not have Permission: &b%VALUE%");
 		this.addDefault("Error.InvalidAmount", "Amount needs to be numeric.");
 		this.addDefault("Error.LimitExceeded", "The player limit for the course has been reached.");
@@ -139,14 +139,15 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Scoreboard.TitleFormat", "&b%VALUE%");
 		this.addDefault("Scoreboard.TextFormat", "&f%VALUE%");
 		this.addDefault("Scoreboard.NotCompleted", "Not Completed");
-		this.addDefault("Scoreboard.CourseTitle", "Course:");
-		this.addDefault("Scoreboard.BestTimeTitle", "Best Time:");
-		this.addDefault("Scoreboard.BestTimeNameTitle", "Best Player:");
+
+		this.addDefault("Scoreboard.CourseNameTitle", "Course:");
+		this.addDefault("Scoreboard.BestTimeEverTitle", "Best Time:");
+		this.addDefault("Scoreboard.BestTimeEverNameTitle", "Best Player:");
 		this.addDefault("Scoreboard.MyBestTimeTitle", "My Best Time:");
-		this.addDefault("Scoreboard.CurrentTimeTitle", "Current Time:");
 		this.addDefault("Scoreboard.CurrentDeathsTitle", "Current Deaths:");
 		this.addDefault("Scoreboard.CheckpointsTitle", "Checkpoints:");
-		this.addDefault("Scoreboard.MaxTimeTitle", "Time Remaining:");
+		this.addDefault("Scoreboard.LiveTimerTitle", "Current Time:");
+		this.addDefault("Scoreboard.TimeRemainingTitle", "Time Remaining:");
 
 		this.addDefault("Economy.Insufficient", "You require at least &b%AMOUNT% &fbefore joining &b%COURSE%");
 		this.addDefault("Economy.Fee", "&b%AMOUNT% &fhas been deducted from your balance for joining &b%COURSE%");

@@ -49,7 +49,7 @@ public class ChatListener extends AbstractPluginReceiver implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
-        List<String> aliases = parkour.getCommand("parkour").getAliases();
+        List<String> aliases = parkour.getCommand(Parkour.PARKOUR).getAliases();
 
         // if the command is "parkour" or an alias.
         boolean isParkourCommand = event.getMessage().startsWith("/parkour")

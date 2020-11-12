@@ -20,8 +20,10 @@ public class ParkourSession implements Serializable {
     private long timeFinished;
 
     private final String courseName;
-    private transient Course course;
     private Location freedomLocation;
+
+    private transient Course course;
+    private transient boolean markedForDeletion;
 
     /**
      * This is the ParkourSession object.
@@ -126,5 +128,13 @@ public class ParkourSession implements Serializable {
 
     public int calculateSeconds() {
         return course.hasMaxTime() ? secondsAccumulated-- : secondsAccumulated++;
+    }
+
+    public boolean isMarkedForDeletion() {
+        return markedForDeletion;
+    }
+
+    public void setMarkedForDeletion(boolean markedForDeletion) {
+        this.markedForDeletion = markedForDeletion;
     }
 }

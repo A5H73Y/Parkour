@@ -6,6 +6,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.conversation.SetPlayerConversation;
 import io.github.a5h73y.parkour.enums.ConfigType;
+import io.github.a5h73y.parkour.enums.ParkourEventType;
 import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.enums.SoundType;
@@ -49,6 +50,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -184,7 +186,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	public void startLiveTimerRunnable() {
 		if (!parkour.getConfig().getBoolean("OnCourse.DisplayLiveTime")
 				&& !(parkour.getConfig().getBoolean("Scoreboard.Enabled")
-				&& parkour.getConfig().getBoolean("Scoreboard.Display.CurrentTime"))) {
+				&& parkour.getConfig().getBoolean("Scoreboard.LiveTimer.Enabled"))) {
 			return;
 		}
 
@@ -211,9 +213,10 @@ public class PlayerManager extends AbstractPluginReceiver {
 						parkour.getBountifulApi().sendActionBar(player, liveTimer, true);
 					}
 
-					parkour.getScoreboardManager().updateScoreboardTimer(player, liveTimer);
+					parkour.getScoreboardManager().updateScoreboardTimer(player, course.hasMaxTime(), liveTimer);
 
-					if (course.hasMaxTime() && seconds == 0) {
+					if (course.hasMaxTime() && seconds <= 0) {
+						parkourSession.getValue().setMarkedForDeletion(true);
 						String maxTime = DateTimeUtils.convertSecondsToTime(course.getMaxTime());
 						TranslationUtils.sendValueTranslation("Parkour.MaxTime", maxTime, player);
 						leaveCourse(player);
@@ -230,14 +233,15 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param player parkour player
 	 */
 	public void teardownParkourPlayer(Player player) {
-		stashParkourSession(player);
 		parkour.getChallengeManager().terminateChallenge(player);
 		parkour.getQuestionManager().removeQuestion(player);
 		quietPlayers.remove(player);
 		hiddenPlayers.remove(player);
 		playerDelay.remove(player);
 		PlayerInfo.setQuietMode(player, isInQuietMode(player));
-		PlayerInfo.persistChanges();
+		Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () -> {
+			stashParkourSession(player);
+		});
 	}
 
 	public void teardownParkourPlayers() {
@@ -318,9 +322,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		player.teleport(course.getCheckpoints().get(0).getLocation());
 		preparePlayerForCourse(player, course.getName());
 		CourseInfo.increaseView(course.getName());
-		CourseInfo.persistChanges();
 		PlayerInfo.setLastPlayedCourse(player, course.getName());
-		PlayerInfo.persistChanges();
 
 		// already on a different course
 		if (isPlaying(player) && !getParkourSession(player).getCourseName().equals(course.getName())) {
@@ -357,9 +359,18 @@ public class PlayerManager extends AbstractPluginReceiver {
 			}
 		}
 
-		addPlayer(player, new ParkourSession(course));
+		if (canLoadParkourSession(player, course)) {
+			ParkourSession session = loadParkourSession(player);
+			player.teleport(determineDestination(session));
+			TranslationUtils.sendValueTranslation("Parkour.Continue", session.getCourseName(), player);
+		} else {
+			addPlayer(player, new ParkourSession(course));
+		}
 		setupParkourMode(player);
 		parkour.getScoreboardManager().addScoreboard(player);
+		if (!silent) {
+			parkour.getCourseManager().runEventCommands(player, course.getName(), ParkourEventType.JOIN);
+		}
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerJoinCourseEvent(player, course.getName(), silent));
 	}
 
@@ -376,6 +387,17 @@ public class PlayerManager extends AbstractPluginReceiver {
 	/**
 	 * Leave the player from a course.
 	 * Will remove the player from the players, which will also dispose of their course session.
+	 * Teleports the player to their designated location.
+	 *
+	 * @param player target player
+	 */
+	public void leaveCourse(Player player) {
+		leaveCourse(player, false);
+	}
+
+	/**
+	 * Leave the player from a course.
+	 * Will remove the player from the players, which will also dispose of their course session.
 	 *
 	 * @param player target player
 	 * @param silent silently leave the course
@@ -387,52 +409,43 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		ParkourSession session = getParkourSession(player);
-		if (!silent) {
-			parkour.getSoundsManager().playSound(player, SoundType.COURSE_FAILED);
-			parkour.getBountifulApi().sendSubTitle(player,
-					TranslationUtils.getCourseMessage(session.getCourse().getName(), "LeaveMessage", "Parkour.Leave"),
-					parkour.getConfig().getBoolean("DisplayTitle.Leave"));
+		if (parkour.getConfig().getBoolean("OnLeave.DestroyCourseProgress")) {
+			session.setMarkedForDeletion(true);
 		}
 
 		teardownParkourMode(player);
-		removePlayer(player);
+		if (session.isMarkedForDeletion()) {
+			deleteParkourSession(player);
+			removePlayer(player);
+		} else {
+			stashParkourSession(player);
+		}
 		preparePlayer(player, parkour.getConfig().getString("OnFinish.SetGameMode"));
 		restoreHealth(player);
 		if (parkour.getConfig().getBoolean("OnDie.SetXPBarToDeathCount")) {
 			restoreXPLevel(player);
 		}
 		loadInventory(player);
-
 		parkour.getChallengeManager().terminateChallenge(player);
 
 		if (!silent) {
+			parkour.getSoundsManager().playSound(player, SoundType.COURSE_FAILED);
+			parkour.getBountifulApi().sendSubTitle(player,
+					TranslationUtils.getCourseMessage(session.getCourse().getName(), "LeaveMessage", "Parkour.Leave"),
+					parkour.getConfig().getBoolean("DisplayTitle.Leave"));
+
 			if (parkour.getConfig().isTeleportToJoinLocation()
 					&& PlayerInfo.hasJoinLocation(player)) {
 				player.teleport(PlayerInfo.getJoinLocation(player));
 			} else {
 				parkour.getLobbyManager().teleportToLeaveDestination(player, session);
 			}
-		}
-
-		if (hasHiddenPlayers(player)) {
-			toggleVisibility(player, true);
+			parkour.getCourseManager().runEventCommands(player, session.getCourseName(), ParkourEventType.LEAVE);
 		}
 
 		forceVisible(player);
 		parkour.getScoreboardManager().removeScoreboard(player);
-		deleteParkourSession(player);
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerLeaveCourseEvent(player, session.getCourse().getName(), silent));
-	}
-
-	/**
-	 * Leave the player from a course.
-	 * Will remove the player from the players, which will also dispose of their course session.
-	 * Teleports the player to their designated location.
-	 *
-	 * @param player target player
-	 */
-	public void leaveCourse(Player player) {
-		leaveCourse(player, false);
 	}
 
 	/**
@@ -453,19 +466,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 		String courseName = session.getCourseName();
 		session.increaseCheckpoint();
 		parkour.getSoundsManager().playSound(player, SoundType.CHECKPOINT_ACHIEVED);
-
-		if (parkour.getScoreboardManager().isEnabled()) {
-			parkour.getScoreboardManager().updateScoreboardCheckpoints(player, session.getCurrentCheckpoint() + " / " + session.getCourse().getNumberOfCheckpoints());
-		}
-
-		// execute command per checkpoint
-		if (CourseInfo.hasCheckpointCommandPrize(courseName)) {
-			for (String command : CourseInfo.getCheckpointCommandsPrize(courseName)) {
-				parkour.getServer().dispatchCommand(
-						parkour.getServer().getConsoleSender(),
-						command.replace("%PLAYER%", player.getName()));
-			}
-		}
+		parkour.getScoreboardManager().updateScoreboardCheckpoints(player, session);
+		parkour.getCourseManager().runEventCommands(player, courseName, ParkourEventType.CHECKPOINT);
 
 		boolean showTitle = parkour.getConfig().getBoolean("DisplayTitle.Checkpoint");
 
@@ -519,16 +521,10 @@ public class PlayerManager extends AbstractPluginReceiver {
 			}
 		}
 
-		if (parkour.getScoreboardManager().isEnabled()) {
-			parkour.getScoreboardManager().updateScoreboardDeaths(player, String.valueOf(session.getDeaths()));
-		}
+		parkour.getScoreboardManager().updateScoreboardDeaths(player, session.getDeaths());
+		parkour.getCourseManager().runEventCommands(player, session.getCourseName(), ParkourEventType.DEATH);
 
-		if ((session.getParkourMode() == ParkourMode.FREEDOM || session.getParkourMode() == ParkourMode.FREE_CHECKPOINT)
-				&& session.getFreedomLocation() != null) {
-			player.teleport(session.getFreedomLocation());
-		} else {
-			player.teleport(session.getCheckpoint().getLocation());
-		}
+		player.teleport(determineDestination(session));
 
 		// if it's the first checkpoint
 		if (session.getCurrentCheckpoint() == 0) {
@@ -552,10 +548,17 @@ public class PlayerManager extends AbstractPluginReceiver {
 			player.setLevel(session.getDeaths());
 		}
 
-		//TODO sounds
-
 		preparePlayer(player, parkour.getConfig().getString("OnJoin.SetGameMode"));
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerDeathEvent(player, session.getCourse().getName()));
+	}
+
+	private Location determineDestination(ParkourSession session) {
+		if ((session.getParkourMode() == ParkourMode.FREEDOM || session.getParkourMode() == ParkourMode.FREE_CHECKPOINT)
+				&& session.getFreedomLocation() != null) {
+			return session.getFreedomLocation();
+		} else {
+			return session.getCheckpoint().getLocation();
+		}
 	}
 
 	/**
@@ -637,7 +640,6 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		PlayerInfo.setLastCompletedCourse(player, courseName);
 		PlayerInfo.addCompletedCourse(player, courseName);
-		PlayerInfo.persistChanges();
 
 		forceVisible(player);
 		deleteParkourSession(player);
@@ -659,6 +661,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		Course course = getParkourSession(player).getCourse();
 		TranslationUtils.sendTranslation("Parkour.Restarting", player);
 		leaveCourse(player, true);
+		deleteParkourSession(player);
 		joinCourse(player, course, true);
 	}
 
@@ -675,6 +678,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		if (CourseInfo.getRewardOnce(courseName)
 				&& parkour.getDatabase().hasPlayerAchievedTime(player, courseName)) {
+			parkour.getCourseManager().runEventCommands(player, courseName, ParkourEventType.FINISH);
 			return;
 		}
 
@@ -749,24 +753,11 @@ public class PlayerManager extends AbstractPluginReceiver {
 			}
 		}
 
-		// Execute the command
-		if (CourseInfo.hasCommandPrize(courseName)) {
-			for (String command : CourseInfo.getCommandsPrize(courseName)) {
-				parkour.getServer().dispatchCommand(
-						parkour.getServer().getConsoleSender(),
-						command.replace("%PLAYER%", player.getName()));
-			}
-		}
-
-		// Give player Parkoins
-		int parkoins = CourseInfo.getRewardParkoins(courseName);
-		if (parkoins > 0) {
-			rewardParkoins(player, parkoins);
-		}
+		parkour.getCourseManager().runEventCommands(player, courseName, ParkourEventType.PRIZE);
+		rewardParkoins(player, CourseInfo.getRewardParkoins(courseName));
 
 		parkour.getEconomyApi().giveEconomyPrize(player, courseName);
 		player.updateInventory();
-		PlayerInfo.persistChanges();
 	}
 
 	/**
@@ -987,6 +978,9 @@ public class PlayerManager extends AbstractPluginReceiver {
 		for (Player players : Bukkit.getOnlinePlayers()) {
 			players.showPlayer(player);
 		}
+		if (hasHiddenPlayers(player)) {
+			toggleVisibility(player, true);
+		}
 	}
 
 	public boolean hasHiddenPlayers(Player player) {
@@ -1164,7 +1158,6 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		int total = parkoins + PlayerInfo.getParkoins(player);
 		PlayerInfo.setParkoins(player, total);
-		PlayerInfo.persistChanges();
 		player.sendMessage(TranslationUtils.getTranslation("Parkour.RewardParkoins")
 				.replace("%AMOUNT%", String.valueOf(parkoins))
 				.replace("%TOTAL%", String.valueOf(total)));
@@ -1185,7 +1178,6 @@ public class PlayerManager extends AbstractPluginReceiver {
 		current = (current < parkoins) ? 0 : (current - parkoins);
 
 		PlayerInfo.setParkoins(player, current);
-		PlayerInfo.persistChanges();
 		player.sendMessage(Parkour.getPrefix() + parkoins + " Parkoins deducted! New total: " + ChatColor.AQUA + current);
 	}
 
@@ -1353,7 +1345,6 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		int newLevel = Integer.parseInt(value);
 		PlayerInfo.setParkourLevel(targetPlayer, newLevel);
-		PlayerInfo.persistChanges();
 
 		sender.sendMessage(Parkour.getPrefix() + targetPlayer.getName() + "'s Level was set to " + newLevel);
 	}
@@ -1365,7 +1356,6 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		PlayerInfo.setRank(targetPlayer, value);
-		PlayerInfo.persistChanges();
 		sender.sendMessage(Parkour.getPrefix() + targetPlayer.getName() + "'s Rank was set to " + value);
 	}
 
@@ -1373,10 +1363,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 		if (isPlaying(player)) {
 			getParkourSession(player).markTimeAccumulated();
 		}
-		Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () -> {
-			createParkourSessionFile(player);
-			parkourPlayers.remove(player);
-		});
+		createParkourSessionFile(player);
+		parkourPlayers.remove(player);
 	}
 
 	private void createParkourSessionFile(Player player) {
@@ -1411,6 +1399,30 @@ public class PlayerManager extends AbstractPluginReceiver {
 	}
 
 	public ParkourSession loadParkourSession(Player player) {
+		ParkourSession session = readParkourSession(player);
+
+		if (session != null) {
+			if (parkour.getCourseManager().courseExists(session.getCourseName())) {
+				session.setCourse(parkour.getCourseManager().getCourse(session.getCourseName()));
+				session.recalculateTime();
+				parkourPlayers.put(player, session);
+
+			} else {
+				player.sendMessage("Your ParkourSession is invalid."); //TODO translate
+				deleteParkourSession(player);
+				parkour.getLobbyManager().joinLobby(player, DEFAULT);
+			}
+		}
+
+		return session;
+	}
+
+	private boolean canLoadParkourSession(Player player, Course course) {
+		ParkourSession session = readParkourSession(player);
+		return session != null && session.getCourseName().equals(course.getName());
+	}
+
+	public ParkourSession readParkourSession(Player player) {
 		ParkourSession session = null;
 		File sessionFile = new File(getSessionsPath(), player.getUniqueId().toString());
 
@@ -1420,15 +1432,6 @@ public class PlayerManager extends AbstractPluginReceiver {
 					ObjectInputStream oos = new ObjectInputStream(fout)
 			) {
 				session = (ParkourSession) oos.readObject();
-				if (session != null && parkour.getCourseManager().courseExists(session.getCourseName())) {
-					session.setCourse(parkour.getCourseManager().getCourse(session.getCourseName()));
-					session.recalculateTime();
-					parkourPlayers.put(player, session);
-				} else {
-					player.sendMessage("Your ParkourSession is invalid."); //TODO translate
-					deleteParkourSession(player);
-					parkour.getLobbyManager().joinLobby(player, DEFAULT);
-				}
 			} catch (IOException | ClassNotFoundException e) {
 				PluginUtils.log("Player's session couldn't be loaded: " + e.getMessage(), 2);
 				e.printStackTrace();
@@ -1715,7 +1718,6 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		PlayerInfo.setRewardRank(Integer.parseInt(parkourLevel), parkourRank);
-		PlayerInfo.persistChanges();
 		populateParkourRanks();
 		TranslationUtils.sendPropertySet(sender, "ParkourRank", "ParkourLevel " + parkourLevel,
 				StringUtils.colour(parkourRank));

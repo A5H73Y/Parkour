@@ -3,7 +3,6 @@ package io.github.a5h73y.parkour.commands;
 import static io.github.a5h73y.parkour.other.Constants.DEFAULT;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.conversation.CheckpointPrizeConversation;
 import io.github.a5h73y.parkour.conversation.CoursePrizeConversation;
 import io.github.a5h73y.parkour.conversation.CreateParkourKitConversation;
 import io.github.a5h73y.parkour.conversation.EditParkourKitConversation;
@@ -59,14 +58,6 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
 
             case "cache":
                 PluginUtils.cacheCommand(sender, args.length == 2 ? args[1] : null);
-                break;
-
-            case "checkpointprize":
-                if (!ValidationUtils.validateArgs(sender, args, 2)) {
-                    return false;
-                }
-
-                new CheckpointPrizeConversation((Conversable) sender).withCourseName(args[1]).begin();
                 break;
 
             case "cmds":

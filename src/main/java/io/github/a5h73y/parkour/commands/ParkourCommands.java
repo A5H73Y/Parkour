@@ -3,7 +3,6 @@ package io.github.a5h73y.parkour.commands;
 import static io.github.a5h73y.parkour.other.Constants.DEFAULT;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.conversation.CheckpointPrizeConversation;
 import io.github.a5h73y.parkour.conversation.CoursePrizeConversation;
 import io.github.a5h73y.parkour.conversation.CreateParkourKitConversation;
 import io.github.a5h73y.parkour.conversation.EditParkourKitConversation;
@@ -101,17 +100,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 }
 
                 parkour.getCheckpointManager().createCheckpoint(player, args);
-                break;
-
-            case "checkpointprize":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_PRIZE)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 2)) {
-                    return false;
-                }
-
-                new CheckpointPrizeConversation(player).withCourseName(args[1]).begin();
                 break;
 
             case "cmds":

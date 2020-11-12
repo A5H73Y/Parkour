@@ -87,6 +87,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("OnFinish.UpdatePlayerDatabaseTime", false);
 
 		this.addDefault("OnLeave.TeleportToLinkedLobby", false);
+		this.addDefault("OnLeave.DestroyCourseProgress", true);
 
 		this.addDefault("OnDie.ResetTimeWithNoCheckpoint", false);
 		this.addDefault("OnDie.SetXPBarToDeathCount", false);
@@ -115,13 +116,20 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("AutoStart.TickDelay", 0);
 
 		this.addDefault("Scoreboard.Enabled", false);
-		this.addDefault("Scoreboard.Display.CourseName", true);
-		this.addDefault("Scoreboard.Display.BestTimeEver", true);
-		this.addDefault("Scoreboard.Display.BestTimeEverName", true);
-		this.addDefault("Scoreboard.Display.BestTimeByMe", true);
-		this.addDefault("Scoreboard.Display.CurrentTime", true);
-		this.addDefault("Scoreboard.Display.CurrentDeaths", true);
-		this.addDefault("Scoreboard.Display.Checkpoints", true);
+		this.addDefault("Scoreboard.CourseName.Enabled", true);
+		this.addDefault("Scoreboard.CourseName.Sequence", 1);
+		this.addDefault("Scoreboard.BestTimeEver.Enabled", true);
+		this.addDefault("Scoreboard.BestTimeEver.Sequence", 2);
+		this.addDefault("Scoreboard.BestTimeEverName.Enabled", true);
+		this.addDefault("Scoreboard.BestTimeEverName.Sequence", 3);
+		this.addDefault("Scoreboard.MyBestTime.Enabled", true);
+		this.addDefault("Scoreboard.MyBestTime.Sequence", 4);
+		this.addDefault("Scoreboard.CurrentDeaths.Enabled", true);
+		this.addDefault("Scoreboard.CurrentDeaths.Sequence", 5);
+		this.addDefault("Scoreboard.Checkpoints.Enabled", true);
+		this.addDefault("Scoreboard.Checkpoints.Sequence", 6);
+		this.addDefault("Scoreboard.LiveTimer.Enabled", true);
+		this.addDefault("Scoreboard.LiveTimer.Sequence", 7);
 
 		this.addDefault("Sounds.Enabled", true);
 		this.addDefault("Sounds.SecondIncrement.Enabled", true);

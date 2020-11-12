@@ -130,7 +130,8 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         if (parkour.getConfig().isDisplayWelcomeMessage()) {
-            TranslationUtils.sendValueTranslation("Event.Join", parkour.getDescription().getVersion(), event.getPlayer());
+            TranslationUtils.sendValueTranslation("Event.Join",
+                    parkour.getDescription().getVersion(), event.getPlayer());
         }
 
         parkour.getPlayerManager().loadParkourSession(event.getPlayer());

@@ -1,15 +1,18 @@
 package io.github.a5h73y.parkour.manager;
 
+import static io.github.a5h73y.parkour.Parkour.PARKOUR;
+
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.database.TimeEntry;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.type.course.Course;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
+import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
+import io.github.a5h73y.parkour.utility.TranslationUtils;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,48 +32,34 @@ public class ScoreboardManager extends AbstractPluginReceiver {
     private static final String COURSE_NAME = ChatColor.AQUA.toString();
     private static final String BEST_TIME_EVER = ChatColor.BLACK.toString();
     private static final String BEST_TIME_EVER_NAME = ChatColor.BLUE.toString();
-    private static final String BEST_TIME_EVER_ME = ChatColor.DARK_AQUA.toString();
-    private static final String CURRENT_TIME = ChatColor.DARK_BLUE.toString();
+    private static final String MY_BEST_TIME_EVER = ChatColor.DARK_AQUA.toString();
     private static final String CURRENT_DEATHS = ChatColor.DARK_GREEN.toString();
     private static final String CHECKPOINTS = ChatColor.DARK_RED.toString();
-	private static final String MAX_TIME = ChatColor.DARK_PURPLE.toString();
+    private static final String LIVE_TIMER = ChatColor.DARK_BLUE.toString();
+    private static final String MAX_TIME = ChatColor.DARK_PURPLE.toString();
 
-    private final String titleFormat;
-    private final String textFormat;
+    // final translations
+    private final String titleFormat = TranslationUtils.getTranslation("Scoreboard.TitleFormat", false);
+    private final String textFormat = TranslationUtils.getTranslation("Scoreboard.TextFormat", false);
+    private final String mainHeading = TranslationUtils.getTranslation("Scoreboard.MainHeading", false);
+    private final String notCompleted = TranslationUtils.getTranslation("Scoreboard.NotCompleted", false);
+    private final String maxTime = TranslationUtils.getTranslation("Scoreboard.MaxTimeTitle", false);
 
     private final boolean enabled;
     private final int numberOfRowsNeeded;
-
-    private final Map<String, Boolean> configKey = new HashMap<>();
-    private final Map<String, String> translationKey = new HashMap<>();
+    private final Map<String, ScoreboardEntry> scoreboardDetails = new HashMap<>();
 
     public ScoreboardManager(Parkour parkour) {
         super(parkour);
-        ParkourConfiguration defaultConfig = parkour.getConfig();
-        ParkourConfiguration stringsConfig = Parkour.getConfig(ConfigType.STRINGS);
+        this.enabled = parkour.getConfig().getBoolean("Scoreboard.Enabled");
 
-        this.enabled = defaultConfig.getBoolean("Scoreboard.Enabled");
-        this.titleFormat = stringsConfig.getString("Scoreboard.TitleFormat");
-        this.textFormat = stringsConfig.getString("Scoreboard.TextFormat");
-
-        configKey.put(COURSE_NAME, defaultConfig.getBoolean("Scoreboard.Display.CourseName"));
-        configKey.put(BEST_TIME_EVER, defaultConfig.getBoolean("Scoreboard.Display.BestTimeEver"));
-        configKey.put(BEST_TIME_EVER_NAME, defaultConfig.getBoolean("Scoreboard.Display.BestTimeEverName"));
-        configKey.put(BEST_TIME_EVER_ME, defaultConfig.getBoolean("Scoreboard.Display.BestTimeByMe"));
-        configKey.put(CURRENT_TIME, defaultConfig.getBoolean("Scoreboard.Display.CurrentTime"));
-        configKey.put(CURRENT_DEATHS, defaultConfig.getBoolean("Scoreboard.Display.CurrentDeaths"));
-        configKey.put(CHECKPOINTS, defaultConfig.getBoolean("Scoreboard.Display.Checkpoints"));
-
-        translationKey.put("mainHeading", stringsConfig.getString("Scoreboard.MainHeading"));
-        translationKey.put("notCompleted", stringsConfig.getString("Scoreboard.NotCompleted"));
-        translationKey.put(COURSE_NAME, stringsConfig.getString("Scoreboard.CourseTitle"));
-        translationKey.put(BEST_TIME_EVER, stringsConfig.getString("Scoreboard.BestTimeTitle"));
-        translationKey.put(BEST_TIME_EVER_NAME, stringsConfig.getString("Scoreboard.BestTimeNameTitle"));
-        translationKey.put(BEST_TIME_EVER_ME, stringsConfig.getString("Scoreboard.MyBestTimeTitle"));
-        translationKey.put(CURRENT_TIME, stringsConfig.getString("Scoreboard.CurrentTimeTitle"));
-        translationKey.put(CURRENT_DEATHS, stringsConfig.getString("Scoreboard.CurrentDeathsTitle"));
-        translationKey.put(CHECKPOINTS, stringsConfig.getString("Scoreboard.CheckpointsTitle"));
-		translationKey.put(MAX_TIME, stringsConfig.getString("Scoreboard.MaxTimeTitle"));
+        scoreboardDetails.put(COURSE_NAME, generateScoreboard("CourseName"));
+        scoreboardDetails.put(BEST_TIME_EVER, generateScoreboard("BestTimeEver"));
+        scoreboardDetails.put(BEST_TIME_EVER_NAME, generateScoreboard("BestTimeEverName"));
+        scoreboardDetails.put(MY_BEST_TIME_EVER, generateScoreboard("MyBestTime"));
+        scoreboardDetails.put(CURRENT_DEATHS, generateScoreboard("CurrentDeaths"));
+        scoreboardDetails.put(CHECKPOINTS, generateScoreboard("Checkpoints"));
+        scoreboardDetails.put(LIVE_TIMER, generateScoreboard("LiveTimer"));
 
         this.numberOfRowsNeeded = calculateNumberOfRowsNeeded();
     }
@@ -86,148 +75,132 @@ public class ScoreboardManager extends AbstractPluginReceiver {
 
         Scoreboard board = setupScoreboard(player);
 
-        if (parkour.getConfig().isPreventPlayerCollisions() && PluginUtils.getMinorServerVersion() > 8) {
-            Team team = board.registerNewTeam("parkour");
+        if (parkour.getConfig().isPreventPlayerCollisions()
+                && PluginUtils.getMinorServerVersion() > 8) {
+            Team team = board.registerNewTeam(PARKOUR);
             team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
             team.addEntry(player.getName());
         }
-
-        player.setScoreboard(board);
     }
 
-    public void updateScoreboardTimer(Player player, String liveTime) {
+    public void updateScoreboardTimer(Player player, boolean hasMaxTime, String liveTime) {
         Scoreboard board = player.getScoreboard();
 
-        if (!enabled || board == null || !configKey.get(CURRENT_TIME)) {
+        if (!enabled || !scoreboardDetails.get(LIVE_TIMER).isEnabled()) {
             return;
         }
 
-        if (board.getTeam(MAX_TIME) != null) {
-            board.getTeam(MAX_TIME).setPrefix(convertText(liveTime));
-            return;
-        }
-
-        board.getTeam(CURRENT_TIME).setPrefix(convertText(liveTime));
+        board.getTeam(LIVE_TIMER).setPrefix(convertText(liveTime));
     }
 
-    public void updateScoreboardDeaths(Player player, String deaths) {
+    public void updateScoreboardDeaths(Player player, int deaths) {
         Scoreboard board = player.getScoreboard();
 
-        if (!enabled || board == null || !configKey.get(CURRENT_DEATHS)) {
+        if (!enabled || !scoreboardDetails.get(CURRENT_DEATHS).isEnabled()) {
             return;
         }
 
-        board.getTeam(CURRENT_DEATHS).setPrefix(convertText(deaths));
+        board.getTeam(CURRENT_DEATHS).setPrefix(convertText(String.valueOf(deaths)));
     }
 
-    public void updateScoreboardCheckpoints(Player player, String checkpoints) {
+    public void updateScoreboardCheckpoints(Player player, ParkourSession session) {
         Scoreboard board = player.getScoreboard();
 
-        if (!enabled || board == null || !configKey.get(CHECKPOINTS)) {
+        if (!enabled || !scoreboardDetails.get(CHECKPOINTS).isEnabled()) {
             return;
         }
 
-        board.getTeam(CHECKPOINTS).setPrefix(convertText(checkpoints));
+        board.getTeam(CHECKPOINTS).setPrefix(convertText(session.getCurrentCheckpoint()
+                + " / " + session.getCourse().getNumberOfCheckpoints()));
     }
 
     private Scoreboard setupScoreboard(Player player) {
-        String mainHeading = StringUtils.colour(translationKey.get("mainHeading"));
-
         // Set up the scoreboard itself
         Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
-        Objective objective = board.registerNewObjective(player.getName(), "Parkour");
+        Objective objective = board.registerNewObjective(player.getName(), PARKOUR);
         objective.setDisplayName(mainHeading);
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         PlayerScoreboard playerScoreboard = new PlayerScoreboard(player, board, objective);
+        registerAllEntries(playerScoreboard);
 
-        addCourseName(playerScoreboard);
-        addBestTimeEver(playerScoreboard);
-        addBestTimeEverMe(playerScoreboard);
-        addCurrentTime(playerScoreboard);
-        addCurrentDeaths(playerScoreboard);
-        addCheckpoints(playerScoreboard);
+        setCourseName(playerScoreboard);
+        setBestTimeEver(playerScoreboard);
+        setMyBestTimeEver(playerScoreboard);
+
+        player.setScoreboard(board);
+
+        updateScoreboardCheckpoints(player, playerScoreboard.getSession());
+        updateScoreboardDeaths(player, playerScoreboard.getSession().getDeaths());
+
+        if (CourseInfo.hasMaximumTime(playerScoreboard.getSession().getCourseName())) {
+            // how do I fix this
+            player.getScoreboard().getTeams().forEach(score -> player.sendMessage(score.getDisplayName() + " - " + score.getPrefix()));
+            playerScoreboard.scoreboard.getTeam(LIVE_TIMER).setDisplayName(maxTime);
+        }
 
         return board;
     }
 
-    private void addCourseName(PlayerScoreboard playerBoard) {
-        if (!configKey.get(COURSE_NAME)) {
+    private void registerAllEntries(PlayerScoreboard playerBoard) {
+        scoreboardDetails.entrySet().stream()
+                .filter(detail -> detail.getValue().isEnabled())
+                .sorted(Comparator.comparingInt(detail -> detail.getValue().getSequence()))
+                .forEach(detail -> registerTeam(playerBoard, detail.getKey(), detail.getValue()));
+    }
+
+    private ScoreboardEntry generateScoreboard(String keyName) {
+        ScoreboardEntry entry = new ScoreboardEntry();
+        entry.setEnabled(parkour.getConfig().getBoolean("Scoreboard." + keyName + ".Enabled"));
+        entry.setSequence(parkour.getConfig().getInt("Scoreboard." + keyName + ".Sequence"));
+        entry.setTranslation(Parkour.getConfig(ConfigType.STRINGS).getString("Scoreboard." + keyName + "Title"));
+        return entry;
+    }
+
+    private void setCourseName(PlayerScoreboard playerBoard) {
+        if (!scoreboardDetails.get(COURSE_NAME).isEnabled()) {
             return;
         }
 
-        print(playerBoard, playerBoard.getCourseName(), COURSE_NAME);
+        playerBoard.scoreboard.getTeam(COURSE_NAME).setPrefix(playerBoard.getSession().getCourseName());
     }
 
-    private void addBestTimeEver(PlayerScoreboard playerBoard) {
-        if (!configKey.get(BEST_TIME_EVER) && !configKey.get(BEST_TIME_EVER_NAME)) {
+    private void setBestTimeEver(PlayerScoreboard playerBoard) {
+        if (!scoreboardDetails.get(BEST_TIME_EVER).isEnabled()
+                && !scoreboardDetails.get(BEST_TIME_EVER_NAME).isEnabled()) {
             return;
         }
 
-        TimeEntry result = parkour.getDatabase().getNthBestTime(playerBoard.getCourseName(), 1);
+        TimeEntry result = parkour.getDatabase().getNthBestTime(playerBoard.getSession().getCourseName(), 1);
 
-        if (configKey.get(BEST_TIME_EVER)) {
-            String bestTimeEver = result != null ? DateTimeUtils.displayCurrentTime(result.getTime())
-                    : translationKey.get("notCompleted");
-            print(playerBoard, bestTimeEver, BEST_TIME_EVER);
+        if (scoreboardDetails.get(BEST_TIME_EVER).isEnabled()) {
+            String bestTimeEver = result != null ? DateTimeUtils.displayCurrentTime(result.getTime()) : notCompleted;
+            playerBoard.scoreboard.getTeam(BEST_TIME_EVER).setPrefix(bestTimeEver);
         }
-        if (configKey.get(BEST_TIME_EVER_NAME)) {
-            String bestTimeName = result != null ? result.getPlayerName() :
-                    translationKey.get("notCompleted");
-            print(playerBoard, bestTimeName, BEST_TIME_EVER_NAME);
+        if (scoreboardDetails.get(BEST_TIME_EVER_NAME).isEnabled()) {
+            String bestTimeName = result != null ? result.getPlayerName() : notCompleted;
+            playerBoard.scoreboard.getTeam(BEST_TIME_EVER_NAME).setPrefix(bestTimeName);
         }
     }
 
-    private void addBestTimeEverMe(PlayerScoreboard playerBoard) {
-        if (!configKey.get(BEST_TIME_EVER_ME)) {
+    private void setMyBestTimeEver(PlayerScoreboard playerBoard) {
+        if (!scoreboardDetails.get(MY_BEST_TIME_EVER).isEnabled()) {
             return;
         }
 
-        List<TimeEntry> result = parkour.getDatabase()
-                .getTopPlayerCourseResults(playerBoard.getPlayer(), playerBoard.getCourseName(), 1);
-        String bestTime = result.size() > 0 ? DateTimeUtils.displayCurrentTime(result.get(0).getTime()) : translationKey.get("notCompleted");
-        print(playerBoard, bestTime, BEST_TIME_EVER_ME);
+        List<TimeEntry> result = parkour.getDatabase().getTopPlayerCourseResults(
+                playerBoard.getPlayer(), playerBoard.getSession().getCourseName(), 1);
+        String bestTime = result.size() > 0 ? DateTimeUtils.displayCurrentTime(result.get(0).getTime()) : notCompleted;
+        playerBoard.scoreboard.getTeam(MY_BEST_TIME_EVER).setPrefix(bestTime);
     }
 
-    private void addCurrentTime(PlayerScoreboard playerBoard) {
-        if (!configKey.get(CURRENT_TIME)) {
-            return;
-        }
+    private void registerTeam(PlayerScoreboard playerBoard, String key, ScoreboardEntry scoreboardKey) {
+        Score titleText = playerBoard.objective.getScore(convertTitle(scoreboardKey.getTranslation()));
+        titleText.setScore(playerBoard.getDecreaseCount());
 
-        String start = "00:00:00";
-        if (CourseInfo.hasMaximumTime(playerBoard.getCourseName())) {
-            start = DateTimeUtils.convertSecondsToTime(CourseInfo.getMaximumTime(playerBoard.getCourseName()));
-			print(playerBoard, start, MAX_TIME);
-        } else {
-			print(playerBoard, start, CURRENT_TIME);
-		}
-    }
-
-    private void addCurrentDeaths(PlayerScoreboard playerBoard) {
-        if (!configKey.get(CURRENT_DEATHS)) {
-            return;
-        }
-
-        print(playerBoard, "0", CURRENT_DEATHS);
-    }
-
-    private void addCheckpoints(PlayerScoreboard playerBoard) {
-        if (!configKey.get(CHECKPOINTS)) {
-            return;
-        }
-
-        int checkpoints = playerBoard.getCourse().getNumberOfCheckpoints();
-        print(playerBoard, "0 / " + checkpoints, CHECKPOINTS);
-    }
-
-    private void print(PlayerScoreboard playerBoard, String result, String scoreboardKey) {
-        Score onlineName = playerBoard.objective.getScore(convertTitle(translationKey.get(scoreboardKey)));
-        onlineName.setScore(playerBoard.getDecreaseCount());
-
-        Team displayName = playerBoard.scoreboard.registerNewTeam(scoreboardKey);
-        displayName.addEntry(scoreboardKey);
-        displayName.setPrefix(convertText(result));
-        playerBoard.objective.getScore(scoreboardKey).setScore(playerBoard.getDecreaseCount());
+        Team valueText = playerBoard.scoreboard.registerNewTeam(key);
+        valueText.addEntry(key);
+        playerBoard.objective.getScore(key).setScore(playerBoard.getDecreaseCount());
     }
 
     private String convertTitle(String title) {
@@ -258,37 +231,13 @@ public class ScoreboardManager extends AbstractPluginReceiver {
      * Each row needs a heading and a text entry
      */
     private int calculateNumberOfRowsNeeded() {
-
-        // TODO for each key add 2
-        int rowsNeeded = 0;
-        if (configKey.get(COURSE_NAME)) {
-            rowsNeeded += 2;
-        }
-        if (configKey.get(BEST_TIME_EVER)) {
-            rowsNeeded += 2;
-        }
-        if (configKey.get(BEST_TIME_EVER_NAME)) {
-            rowsNeeded += 2;
-        }
-        if (configKey.get(BEST_TIME_EVER_ME)) {
-            rowsNeeded += 2;
-        }
-        if (configKey.get(CURRENT_TIME)) {
-            rowsNeeded += 2;
-        }
-        if (configKey.get(CURRENT_DEATHS)) {
-            rowsNeeded += 2;
-        }
-        if (configKey.get(CHECKPOINTS)) {
-            rowsNeeded += 2;
-        }
-        return rowsNeeded;
+        return (int) (scoreboardDetails.values().stream().filter(ScoreboardEntry::isEnabled).count() * 2);
     }
 
     private class PlayerScoreboard {
 
         private final Player player;
-        private final Course course;
+        private final ParkourSession session;
 
         private int scoreboardCount = numberOfRowsNeeded;
         private final Scoreboard scoreboard;
@@ -296,7 +245,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
 
         public PlayerScoreboard(Player player, Scoreboard scoreboard, Objective objective) {
             this.player = player;
-            this.course = parkour.getPlayerManager().getParkourSession(player).getCourse();
+            this.session = parkour.getPlayerManager().getParkourSession(player);
             this.scoreboard = scoreboard;
             this.objective = objective;
         }
@@ -309,12 +258,41 @@ public class ScoreboardManager extends AbstractPluginReceiver {
             return player;
         }
 
-        public Course getCourse() {
-            return course;
+        public ParkourSession getSession() {
+            return session;
+        }
+    }
+
+    private static class ScoreboardEntry {
+
+        private boolean enabled;
+
+        private int sequence;
+
+        private String translation;
+
+        public boolean isEnabled() {
+            return enabled;
         }
 
-        public String getCourseName() {
-            return course.getName();
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public int getSequence() {
+            return sequence;
+        }
+
+        public void setSequence(int sequence) {
+            this.sequence = sequence;
+        }
+
+        public String getTranslation() {
+            return translation;
+        }
+
+        public void setTranslation(String translation) {
+            this.translation = translation;
         }
     }
 }

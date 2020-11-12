@@ -77,7 +77,7 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.16.1-R0.1-SNAPSHOT</version>
+			<version>1.16.3-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- Vault API -->
@@ -107,6 +107,13 @@
 			<version>2.10.9</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- AAC API -->
+		<dependency>
+			<groupId>de.janmm14</groupId>
+			<artifactId>aac-api</artifactId>
+			<version>4.2.0</version>
+			<scope>provided</scope>
+		</dependency>
 		<!-- bStats -->
 		<dependency>
 			<groupId>org.bstats</groupId>
@@ -127,12 +134,6 @@
 			<artifactId>inventorygui</artifactId>
 			<version>1.4.2-SNAPSHOT</version>
 			<scope>compile</scope>
-		</dependency>
-		<!-- AAC API -->
-		<dependency>
-			<groupId>de.janmm14</groupId>
-			<artifactId>aac-api</artifactId>
-			<version>4.2.0</version>
 		</dependency>
 		<!-- XSeries -->
 		<dependency>

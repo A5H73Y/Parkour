@@ -6,6 +6,7 @@ import io.github.a5h73y.parkour.conversation.LeaderboardConversation;
 import io.github.a5h73y.parkour.conversation.SetCourseConversation;
 import io.github.a5h73y.parkour.database.TimeEntry;
 import io.github.a5h73y.parkour.enums.ConfigType;
+import io.github.a5h73y.parkour.enums.ParkourEventType;
 import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
@@ -173,7 +174,6 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         courseConfig.save();
 
         PlayerInfo.setSelectedCourse(player, courseName);
-        PlayerInfo.persistChanges();
 
         TranslationUtils.sendValueTranslation("Parkour.Created", courseName, player);
         player.sendMessage(TranslationUtils.getValueTranslation("Parkour.WhenReady", courseName, false));
@@ -324,7 +324,6 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
 
         TranslationUtils.sendValueTranslation("Parkour.Selected", courseName, player);
         PlayerInfo.setSelectedCourse(player, courseName);
-        PlayerInfo.persistChanges();
     }
 
     /**
@@ -482,7 +481,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     public void setMaxTime(CommandSender sender, String courseName, String secondsValue) {
         if (!parkour.getConfig().getBoolean("OnCourse.DisplayLiveTime")
                 && !(parkour.getConfig().getBoolean("Scoreboard.Enabled")
-                && parkour.getConfig().getBoolean("Scoreboard.Display.CurrentTime"))) {
+                && parkour.getConfig().getBoolean("Scoreboard.LiveTimer.Enabled"))) {
             sender.sendMessage(Parkour.getPrefix() + "Live Time is disabled!");
             return;
         }
@@ -912,16 +911,27 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         } else if (args.length == 4) {
             SetCourseConversation.performAction(sender, args[1], args[2], args[3]);
 
-        } else if (args.length >= 5 && args[2].equalsIgnoreCase("message")) {
-            if (SetCourseConversation.MESSAGE_OPTIONS.contains(args[3].toLowerCase())) {
-                String message = StringUtils.extractMessageFromArgs(args, 4);
+        } else if (args.length >= 5) {
+            if (args[2].equalsIgnoreCase("message")) {
+                if (SetCourseConversation.MESSAGE_OPTIONS.contains(args[3].toLowerCase())) {
+                    String message = StringUtils.extractMessageFromArgs(args, 4);
 
-                CourseInfo.setJoinMessage(args[1], args[3], message);
-                TranslationUtils.sendPropertySet(sender, StringUtils.standardizeText(args[3]) + " Message", args[1],
-                        StringUtils.colour(message));
+                    CourseInfo.setJoinMessage(args[1], args[3], message);
+                    TranslationUtils.sendPropertySet(sender, StringUtils.standardizeText(args[3]) + " Message", args[1],
+                            StringUtils.colour(message));
 
-            } else {
-                TranslationUtils.sendInvalidSyntax(sender, "setcourse", "(courseName) message [join, leave, finish, checkpoint, checkpointall] [value]");
+                } else {
+                    TranslationUtils.sendInvalidSyntax(sender, "setcourse", "(courseName) message [join, leave, finish, checkpoint, checkpointall] [value]");
+                }
+            } else if (args[2].equalsIgnoreCase("command")) {
+                if (SetCourseConversation.COMMAND_OPTIONS.contains(args[3].toLowerCase())) {
+                    String message = StringUtils.extractMessageFromArgs(args, 4);
+                    ParkourEventType type = ParkourEventType.valueOf(args[3].toUpperCase());
+                    CourseInfo.addEventCommand(args[1], type, message);
+                    TranslationUtils.sendPropertySet(sender, type.getConfigEntry() + " command", args[1], "/" + message);
+                } else {
+                    TranslationUtils.sendInvalidSyntax(sender, "setcourse", "(courseName) message [join, leave, finish, checkpoint, checkpointall] [value]");
+                }
             }
         } else {
             TranslationUtils.sendInvalidSyntax(sender, "setcourse", "(courseName) [creator, minlevel, maxdeath, maxtime, message] [value]");
@@ -949,5 +959,15 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
 
         CourseInfo.setPlayerLimit(courseName, Integer.parseInt(limit));
         TranslationUtils.sendPropertySet(sender, "Player Limit", courseName, limit);
+    }
+
+    public void runEventCommands(Player player, String courseName, ParkourEventType type) {
+        if (CourseInfo.hasEventCommands(courseName, type)) {
+            for (String command : CourseInfo.getEventCommands(courseName, type)) {
+                parkour.getServer().dispatchCommand(
+                        parkour.getServer().getConsoleSender(),
+                        command.replace("%PLAYER%", player.getName()));
+            }
+        }
     }
 }

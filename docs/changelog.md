@@ -18,7 +18,6 @@ This update is a rewrite of v5.3 with performance and usability being the forefr
 
 ## New Features
 - Option to store join location to lobby
-- `/pa checkpointprize (course)` for per-checkpoint commands.
 - `/pa setcourse` is now used for course options
 - `/pa setplayer` is now used for player options
 - New `Potion` ParkourMode for applying Potion Effects.

@@ -60,6 +60,10 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
 
         Material materialInHand = MaterialUtils.getMaterialInPlayersHand(player);
 
+        if (materialInHand.isAir()) {
+            return;
+        }
+
         if (materialInHand == parkour.getConfig().getLastCheckpointTool()) {
             if (parkour.getPlayerManager().delayPlayer(player, 1, false)) {
                 event.setCancelled(true);

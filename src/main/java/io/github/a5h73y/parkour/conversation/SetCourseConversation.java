@@ -1,10 +1,13 @@
 package io.github.a5h73y.parkour.conversation;
 
 import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.enums.ParkourEventType;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -19,7 +22,10 @@ import org.jetbrains.annotations.Nullable;
 public class SetCourseConversation extends ParkourConversation {
 
     public static final List<String> SET_COURSE_OPTIONS =
-            Arrays.asList("creator", "minlevel", "maxdeath", "maxtime", "message");
+            Arrays.asList("creator", "minlevel", "maxdeath", "maxtime", "command", "message");
+
+    public static final List<String> COMMAND_OPTIONS =
+            Stream.of(ParkourEventType.values()).map(type -> type.name().toLowerCase()).collect(Collectors.toList());
 
     public static final List<String> MESSAGE_OPTIONS =
             Arrays.asList("join", "leave", "finish", "checkpoint", "checkpointall");
@@ -53,6 +59,8 @@ public class SetCourseConversation extends ParkourConversation {
 
             if (choice.equals("message")) {
                 return new ChooseCourseMessageOption();
+            } else if (choice.equals("command")) {
+                return new ChooseCourseCommandOption();
             } else {
                 return new SetCourseOptionValue();
             }
@@ -83,6 +91,47 @@ public class SetCourseConversation extends ParkourConversation {
 
             performAction(player, courseName, setOption, input);
 
+            return Prompt.END_OF_CONVERSATION;
+        }
+    }
+
+    private static class ChooseCourseCommandOption extends FixedSetPrompt {
+
+        ChooseCourseCommandOption() {
+            super(COMMAND_OPTIONS.toArray(new String[0]));
+        }
+
+        @Override
+        @NotNull
+        public String getPromptText(@NotNull ConversationContext context) {
+            return ChatColor.LIGHT_PURPLE + " Which event would you like to add a command to?\n"
+                    + ChatColor.GREEN + formatFixedSet();
+        }
+
+        @Override
+        protected Prompt acceptValidatedInput(@NotNull ConversationContext context,
+                                              @NotNull String choice) {
+            context.setSessionData("setCommandOption", choice);
+            return new ChooseCourseCommandValue();
+        }
+    }
+
+    private static class ChooseCourseCommandValue extends StringPrompt {
+
+        @Override
+        @NotNull
+        public String getPromptText(@NotNull ConversationContext context) {
+            return ChatColor.LIGHT_PURPLE + " What command would you like to set?";
+        }
+
+        @Override
+        public Prompt acceptInput(@NotNull ConversationContext context,
+                                  @Nullable String input) {
+
+            String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);
+            ParkourEventType type = ParkourEventType.valueOf(context.getSessionData("setCommandOption").toString().toUpperCase());
+            CourseInfo.addEventCommand(courseName, type, input);
+            context.getForWhom().sendRawMessage(TranslationUtils.getPropertySet(type.getConfigEntry() + " command", courseName, "/" + input));
             return Prompt.END_OF_CONVERSATION;
         }
     }

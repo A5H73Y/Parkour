@@ -1,6 +1,5 @@
 package io.github.a5h73y.parkour;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.github.a5h73y.parkour.commands.ParkourAutoTabCompleter;
 import io.github.a5h73y.parkour.commands.ParkourCommands;
@@ -40,7 +39,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.bstats.bukkit.Metrics;
@@ -48,6 +46,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Parkour extends JavaPlugin {
+
+    public static final String PARKOUR = "parkour";
 
     private static final int BSTATS_ID = 1181;
     private static final int SPIGOT_PLUGIN_ID = 23685;
@@ -280,11 +280,11 @@ public class Parkour extends JavaPlugin {
     }
 
     private void registerCommands() {
-        getCommand("parkour").setExecutor(new ParkourCommands(this));
+        getCommand(PARKOUR).setExecutor(new ParkourCommands(this));
         getCommand("paconsole").setExecutor(new ParkourConsoleCommands(this));
 
         if (this.getConfig().getBoolean("Other.UseAutoTabCompletion")) {
-            getCommand("parkour").setTabCompleter(new ParkourAutoTabCompleter(this));
+            getCommand(PARKOUR).setTabCompleter(new ParkourAutoTabCompleter(this));
         }
 
         String json = new BufferedReader(new InputStreamReader(getResource("parkourCommands.json"), StandardCharsets.UTF_8))

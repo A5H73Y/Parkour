@@ -3,6 +3,7 @@ package io.github.a5h73y.parkour.type.course;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.ConfigType;
+import io.github.a5h73y.parkour.enums.ParkourEventType;
 import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
@@ -280,74 +281,6 @@ public class CourseInfo {
     }
 
     /**
-     * Get the prize commands for the course
-     *
-     * @param courseName
-     * @return
-     */
-    public static List<String> getCommandsPrize(String courseName) {
-        return getCourseConfig().getStringList(courseName.toLowerCase() + ".Prize.CMD");
-    }
-
-    /**
-     * Get the prize commands for the checkpoint.
-     *
-     * @param courseName
-     * @return
-     */
-    public static List<String> getCheckpointCommandsPrize(String courseName) {
-        return getCourseConfig().getStringList(courseName.toLowerCase() + ".Prize.CheckpointCMD");
-    }
-
-    /**
-     * Does this course have prize commands
-     *
-     * @param courseName
-     * @return
-     */
-    public static boolean hasCommandPrize(String courseName) {
-        return getCourseConfig().contains(courseName.toLowerCase() + ".Prize.CMD");
-    }
-
-    /**
-     * Does this course have prize commands
-     *
-     * @param courseName
-     * @return
-     */
-    public static boolean hasCheckpointCommandPrize(String courseName) {
-        return getCourseConfig().contains(courseName.toLowerCase() + ".Prize.CheckpointCMD");
-    }
-
-    /**
-     * Add a command to the list of prize commands for completing course
-     *
-     * @param courseName
-     * @param command
-     */
-    public static void addCommandPrize(String courseName, String command) {
-        List<String> commands = getCommandsPrize(courseName);
-        commands.add(command);
-
-        getCourseConfig().set(courseName.toLowerCase() + ".Prize.CMD", commands);
-        persistChanges();
-    }
-
-    /**
-     * Add a command to the list of checkpoint prize commands.
-     *
-     * @param courseName
-     * @param command
-     */
-    public static void addCheckpointCommandPrize(String courseName, String command) {
-        List<String> commands = getCheckpointCommandsPrize(courseName);
-        commands.add(command);
-
-        getCourseConfig().set(courseName.toLowerCase() + ".Prize.CheckpointCMD", commands);
-        persistChanges();
-    }
-
-    /**
      * Set the prize material and amount for completing course
      *
      * @param courseName
@@ -387,8 +320,8 @@ public class CourseInfo {
      * @param courseName
      */
     public static void increaseComplete(String courseName) {
-        int completed = getCourseConfig().getInt(courseName.toLowerCase() + ".Completed");
-        getCourseConfig().set(courseName.toLowerCase() + ".Completed", completed + 1);
+        getCourseConfig().set(courseName.toLowerCase() + ".Completed", getCompletions(courseName) + 1);
+        persistChanges();
     }
 
     /**
@@ -400,14 +333,17 @@ public class CourseInfo {
         return getCourseConfig().getInt(courseName + ".Completed", 0);
     }
 
+    public static int getViews(String courseName) {
+        return getCourseConfig().getInt(courseName + ".Views", 0);
+    }
+
     /**
      * Increase the amount of views of the course
      *
      * @param courseName
      */
     public static void increaseView(String courseName) {
-        int views = getCourseConfig().getInt(courseName.toLowerCase() + ".Views");
-        getCourseConfig().set(courseName.toLowerCase() + ".Views", views + 1);
+        getCourseConfig().set(courseName.toLowerCase() + ".Views", getViews(courseName) + 1);
     }
 
     /**
@@ -674,9 +610,6 @@ public class CourseInfo {
         if (hasMaterialPrize(courseName) && getMaterialPrizeAmount(courseName) > 0) {
             sender.sendMessage("Material Prize: " + aqua + getMaterialPrize(courseName) + " x " + getMaterialPrizeAmount(courseName));
         }
-        if (hasCommandPrize(courseName)) {
-            sender.sendMessage("Command Prize: " + aqua + getCommandsPrize(courseName));
-        }
         if (getXPPrize(courseName) > 0) {
             sender.sendMessage("XP Prize: " + aqua + getXPPrize(courseName));
         }
@@ -686,6 +619,12 @@ public class CourseInfo {
 
             if (sender instanceof Player && !Parkour.getInstance().getPlayerManager().hasPrizeCooldownDurationPassed((Player) sender, courseName, false)) {
                 sender.sendMessage("Cooldown Remaining: " + aqua + DateTimeUtils.getTimeRemaining((Player) sender, courseName));
+            }
+        }
+        for (ParkourEventType value : ParkourEventType.values()) {
+            if (hasEventCommands(courseName, value)) {
+                sender.sendMessage(value.getConfigEntry() + " Command");
+                getEventCommands(courseName, value).forEach(sender::sendMessage);
             }
         }
     }
@@ -717,6 +656,7 @@ public class CourseInfo {
 
     public static void setPotionJoinMessage(String courseName, String joinMessage) {
         getCourseConfig().set(courseName.toLowerCase() + ".PotionParkourMode.JoinMessage", joinMessage);
+        persistChanges();
     }
 
     public static int getEconomyFinishReward(String courseName) {
@@ -742,6 +682,22 @@ public class CourseInfo {
 
     public static void setPlayerLimit(String courseName, int limit) {
         getCourseConfig().set(courseName.toLowerCase() + ".PlayerLimit", limit);
+        persistChanges();
+    }
+
+    public static List<String> getEventCommands(String courseName, ParkourEventType eventType) {
+        return getCourseConfig().getStringList(courseName.toLowerCase() + "." + eventType.getConfigEntry() + "Command");
+    }
+
+    public static boolean hasEventCommands(String courseName, ParkourEventType eventType) {
+        return getCourseConfig().contains(courseName.toLowerCase() + "." + eventType.getConfigEntry() + "Command");
+    }
+
+    public static void addEventCommand(String courseName, ParkourEventType eventType, String value) {
+        List<String> commands = getEventCommands(courseName, eventType);
+        commands.add(value);
+
+        getCourseConfig().set(courseName.toLowerCase() + "." + eventType.getConfigEntry() + "Command", commands);
         persistChanges();
     }
 }

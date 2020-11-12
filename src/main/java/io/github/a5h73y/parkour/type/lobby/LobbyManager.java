@@ -60,7 +60,6 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
         // if they are on a course, force them to leave, which will ultimately run this method again.
         if (parkour.getPlayerManager().isPlaying(player)) {
             PlayerInfo.resetJoinLocation(player);
-            PlayerInfo.persistChanges();
             parkour.getPlayerManager().leaveCourse(player);
             return;
         }

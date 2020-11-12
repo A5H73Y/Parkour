@@ -38,16 +38,6 @@
     "commandGroup": "2"
   },
   {
-    "command": "checkpointprize",
-    "title": "Set a prize for each checkpoint",
-    "arguments": "(course)",
-    "example": "/pa checkpointprize tutorial",
-    "description": "Specify a command which be run every time a player achieves a checkpoint on a course. You are able to use %PLAYER% as a placeholder.",
-    "permission": "Parkour.Admin.Course",
-    "commandGroup": "2",
-    "consoleSyntax": "pac checkpointprize (course)"
-  },
-  {
     "command": "cmds",
     "title": "Display Parkour Commands",
     "arguments": "(menu)",
