@@ -121,7 +121,7 @@ public final class Help {
         player.sendMessage(" 4" + ChatColor.DARK_GRAY + " : " + ChatColor.GRAY + "Admin");
         player.sendMessage(" signs" + ChatColor.DARK_GRAY + " : " + ChatColor.GRAY + "Sign commands");
         player.sendMessage("");
-        player.sendMessage(ChatColor.DARK_GRAY + "Example: " + ChatColor.GRAY + "/pa cmds 1");
+        player.sendMessage(TranslationUtils.getValueTranslation("Help.CommandSyntax", "cmds 1", false));
         player.sendMessage(ChatColor.DARK_GRAY + "Remember: " + ChatColor.AQUA + "()" + ChatColor.GRAY + " means required, " + ChatColor.AQUA + "[]" + ChatColor.GRAY + " means optional.");
     }
 
