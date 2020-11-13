@@ -56,9 +56,14 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
     private static final List<String> ECONOMY_COMMANDS = Arrays.asList(
             "info", "recreate", "setprize", "setfee");
 
-    private static final List<String> LINK_COMMANDS = Arrays.asList("course", "lobby", "reset");
+    private static final List<String> LINK_COMMANDS = Arrays.asList(
+            "course", "lobby", "reset");
 
-    private static final List<String> CACHE_COMMANDS = Arrays.asList("course", "lobby", "database", "parkourkit", "sound");
+    private static final List<String> CACHE_COMMANDS = Arrays.asList(
+            "course", "lobby", "database", "parkourkit", "sound");
+
+    private static final List<String> COMMANDS_MENU = Arrays.asList(
+            "1", "2", "3", "4", "signs");
 
     public ParkourAutoTabCompleter(Parkour parkour) {
         super(parkour);
@@ -188,6 +193,12 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             case "cache":
                 allowedCommands = CACHE_COMMANDS;
                 break;
+            case "cmds":
+                allowedCommands = COMMANDS_MENU;
+                break;
+            case "lobby":
+                allowedCommands = new ArrayList<>(LobbyInfo.getAllLobbyNames());
+                break;
             case "join":
             case "course":
             case "ready":
@@ -207,8 +218,10 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             case "leaderboard":
             case "linkkit":
             case "setplayerlimit":
+            case "stats":
                 allowedCommands = CourseInfo.getAllCourseNames();
                 break;
+            case "test":
             case "kit":
             case "listkit":
             case "validatekit":

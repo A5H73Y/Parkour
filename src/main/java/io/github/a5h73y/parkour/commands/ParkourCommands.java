@@ -40,7 +40,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                              @NotNull String label,
                              @NotNull String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(Parkour.getPrefix() + "'/pa' is only available in game.");
+            sender.sendMessage(Parkour.getPrefix() + "'/parkour' is only available in game.");
             sender.sendMessage(Parkour.getPrefix() + "Use '/pac' for console commands.");
             return false;
         }

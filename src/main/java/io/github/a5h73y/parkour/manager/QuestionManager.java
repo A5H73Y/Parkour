@@ -108,8 +108,8 @@ public class QuestionManager extends AbstractPluginReceiver {
             removeQuestion(sender);
 
         } else {
-            sender.sendMessage(Parkour.getPrefix() + ChatColor.RED + "Invalid question answer.");
-            sender.sendMessage("Please use either " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " or " + ChatColor.AQUA + "/pa no");
+            TranslationUtils.sendTranslation("Error.InvalidQuestionAnswer", sender);
+            TranslationUtils.sendTranslation("Error.QuestionAnswerChoices", false, sender);
         }
     }
 

@@ -1,7 +1,6 @@
 package io.github.a5h73y.parkour.other;
 
 import io.github.a5h73y.parkour.utility.TranslationUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class CommandUsage {
@@ -32,9 +31,10 @@ public class CommandUsage {
 	}
 
 	public void displayCommandUsage(CommandSender sender) {
-		sender.sendMessage(ChatColor.DARK_AQUA + "/pa " + ChatColor.AQUA + command +
-				(arguments != null ? ChatColor.YELLOW + " " + arguments : "") +
-				ChatColor.BLACK + " : " + ChatColor.WHITE + title);
+		sender.sendMessage(TranslationUtils.getTranslation("Help.CommandUsage", false)
+				.replace("%COMMAND%", command)
+				.replace("%ARGUMENTS%", arguments != null ? " " + arguments : "")
+				.replace("%TITLE%", title));
 	}
 
 	public String getCommand() {

@@ -60,8 +60,8 @@ public class ChatListener extends AbstractPluginReceiver implements Listener {
         if (isParkourCommand && parkour.getQuestionManager().hasPlayerBeenAskedQuestion(player)) {
             String[] args = event.getMessage().split(" ");
             if (args.length <= 1) {
-                player.sendMessage(Parkour.getPrefix() + "Invalid answer.");
-                player.sendMessage("Please use either " + ChatColor.GREEN + "/pa yes" + ChatColor.WHITE + " or " + ChatColor.AQUA + "/pa no");
+                TranslationUtils.sendTranslation("Error.InvalidQuestionAnswer", player);
+                TranslationUtils.sendTranslation("Error.QuestionAnswerChoices", false, player);
             } else {
                 parkour.getQuestionManager().answerQuestion(player, args[1]);
             }

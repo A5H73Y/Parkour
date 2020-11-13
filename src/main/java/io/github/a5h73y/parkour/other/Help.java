@@ -9,11 +9,13 @@ import org.bukkit.entity.Player;
 
 public final class Help {
 
-    // Check that console commands match syntax
-    // Update group number based on help command
+    private static final String BASIC_COMMANDS = "1";
+    private static final String CREATE_COMMANDS = "2";
+    private static final String CONFIG_COMMANDS = "3";
+    private static final String ADMIN_COMMANDS = "4";
+
     // Check that the formatting is consistent (ends with a period, 'Course')
     // Check the actual descriptions, update to meet new updates / standards.
-    // Change console commands to pac
     // Add aliases?
 
     /**
@@ -24,8 +26,7 @@ public final class Help {
      */
     public static void lookupCommandHelp(CommandSender sender, String[] args) {
         if (args.length == 1) {
-            sender.sendMessage(Parkour.getPrefix() + "Find helpful information about any Parkour command:");
-            sender.sendMessage("             /pa help " + ChatColor.AQUA + "(command)");
+            TranslationUtils.sendValueTranslation("Help.Command", "(command)", sender);
             return;
         }
 
@@ -39,7 +40,8 @@ public final class Help {
             matching.get().displayHelpInformation(sender);
 
         } else {
-            sender.sendMessage(Parkour.getPrefix() + "Unrecognised command. Please find all available commands using '/pa cmds'");
+            sender.sendMessage(Parkour.getPrefix() + "Unrecognised Parkour command.");
+            TranslationUtils.sendTranslation("Help.Commands", sender);
         }
     }
 
@@ -47,12 +49,15 @@ public final class Help {
      * Display the sign command usage
      *
      * @param player
-     * @param title
+     * @param command
      * @param shortcut
      * @param description
      */
-    private static void displaySignCommandUsage(Player player, String title, String shortcut, String description) {
-        player.sendMessage(ChatColor.AQUA + title + ChatColor.YELLOW + " " + shortcut + ChatColor.BLACK + " : " + ChatColor.WHITE + description);
+    private static void displaySignCommandUsage(Player player, String command, String shortcut, String description) {
+        player.sendMessage(TranslationUtils.getTranslation("Help.SignUsage", false)
+                .replace("%COMMAND%", command)
+                .replace("%SHORTCUT%", shortcut)
+                .replace("%DESCRIPTION%", description));
     }
 
     /**
@@ -70,22 +75,22 @@ public final class Help {
         }
 
         switch (args[1].toLowerCase()) {
-            case "1":
+            case BASIC_COMMANDS:
             case "basic":
                 displayBasicCommands(player);
                 break;
 
-            case "2":
+            case CREATE_COMMANDS:
             case "create":
                 displayCreatingCommands(player);
                 break;
 
-            case "3":
+            case CONFIG_COMMANDS:
             case "configure":
                 displayConfigureCommands(player);
                 break;
 
-            case "4":
+            case ADMIN_COMMANDS:
             case "admin":
                 displayAdminCommands(player);
                 break;
@@ -127,7 +132,7 @@ public final class Help {
      */
     private static void displayBasicCommands(Player player) {
         TranslationUtils.sendHeading("Basic Commands", player);
-        displayCommands(player, "1");
+        displayCommands(player, BASIC_COMMANDS);
     }
 
     /**
@@ -137,7 +142,7 @@ public final class Help {
      */
     private static void displayCreatingCommands(Player player) {
         TranslationUtils.sendHeading("Create Commands", player);
-        displayCommands(player, "2");
+        displayCommands(player, CREATE_COMMANDS);
     }
 
     /**
@@ -147,7 +152,7 @@ public final class Help {
      */
     private static void displayConfigureCommands(Player player) {
         TranslationUtils.sendHeading("Configuration Commands", player);
-        displayCommands(player, "3");
+        displayCommands(player, CONFIG_COMMANDS);
     }
 
     /**
@@ -157,7 +162,7 @@ public final class Help {
      */
     private static void displayAdminCommands(Player player) {
         TranslationUtils.sendHeading("Admin Commands", player);
-        displayCommands(player, "4");
+        displayCommands(player, ADMIN_COMMANDS);
     }
 
     private static void displayCommands(Player player, String key) {

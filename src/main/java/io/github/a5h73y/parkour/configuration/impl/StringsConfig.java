@@ -116,14 +116,18 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Error.PluginNotLinked", "&b%VALUE% &fhas not been linked.");
 		this.addDefault("Error.NoPermission", "You do not have Permission: &b%VALUE%");
 		this.addDefault("Error.InvalidAmount", "Amount needs to be numeric.");
+		this.addDefault("Error.InvalidQuestionAnswer", "Invalid Question Answer.");
+		this.addDefault("Error.QuestionAnswerChoices", "Please use either &a/pa yes &for &c/pa no");
 		this.addDefault("Error.LimitExceeded", "The player limit for the course has been reached.");
 
-		this.addDefault("Help.Command", "&7/pa help &9%VALUE% &0: &7To learn more about this command.");
+		this.addDefault("Help.Command", "&7/pa help &9%VALUE% &0: &7To learn more about the command.");
 		this.addDefault("Help.Commands", "To display the commands menu, enter &b/pa cmds");
 		this.addDefault("Help.ConsoleCommands", "To display all commands, enter &f/pac cmds");
 		this.addDefault("Help.SignCommands", "To display the sign commands menu, enter &b/pa cmds signs");
 		this.addDefault("Help.CommandSyntax", "&7Syntax: &f/pa %VALUE%");
 		this.addDefault("Help.CommandExample", "&7Example: &f%VALUE%");
+		this.addDefault("Help.CommandUsage", "&3/pa &b%COMMAND%&e%ARGUMENTS% &0: &f%TITLE%");
+		this.addDefault("Help.SignUsage", "&b%COMMAND% &e%SHORTCUT% &0: &f%DESCRIPTION%");
 
 		this.addDefault("Other.Item.LastCheckpoint", "&7SHIFT + &6Right click to go back to last checkpoint");
 		this.addDefault("Other.Item.HideAll", "&7SHIFT + &6Right click to toggle visibility");
