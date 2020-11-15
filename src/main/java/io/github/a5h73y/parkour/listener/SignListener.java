@@ -9,6 +9,7 @@ import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
 import io.github.a5h73y.parkour.utility.SignUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.utility.ValidationUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -174,7 +175,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
 
                 ParkourSession session = parkour.getPlayerManager().getParkourSession(player);
 
-                if (lines[3].isEmpty() || !Validation.isPositiveInteger(lines[3])) {
+                if (lines[3].isEmpty() || !ValidationUtils.isPositiveInteger(lines[3])) {
                     return;
                 }
 

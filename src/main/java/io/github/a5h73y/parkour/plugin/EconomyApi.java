@@ -6,10 +6,12 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.configuration.impl.EconomyConfig;
 import io.github.a5h73y.parkour.enums.ConfigType;
+import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.other.Validation;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.utility.ValidationUtils;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -76,7 +78,7 @@ public class EconomyApi extends PluginWrapper {
 
 				player.sendMessage(TranslationUtils.getTranslation("Economy.Reward")
 						.replace("%AMOUNT%", reward + getCurrencyName())
-						.replace("%COURSE%", courseName));
+						.replace(Constants.COURSE_PLACEHOLDER, courseName));
 			}
 		}
 	}
@@ -107,14 +109,14 @@ public class EconomyApi extends PluginWrapper {
 				if (!hasAmount(player, joinFee)) {
 					player.sendMessage(TranslationUtils.getTranslation("Economy.Insufficient")
 							.replace("%AMOUNT%", joinFee + getCurrencyName())
-							.replace("%COURSE%", courseName));
+							.replace(Constants.COURSE_PLACEHOLDER, courseName));
 					allowed = false;
 
 				} else {
 					chargePlayer(player, joinFee);
 					player.sendMessage(TranslationUtils.getTranslation("Economy.Fee")
 							.replace("%AMOUNT%", joinFee + getCurrencyName())
-							.replace("%COURSE%", courseName));
+							.replace(Constants.COURSE_PLACEHOLDER, courseName));
 				}
 			}
 		}
@@ -152,7 +154,7 @@ public class EconomyApi extends PluginWrapper {
 				TranslationUtils.sendValueTranslation("Error.NoExist", args[2], sender);
 				return;
 			}
-			if (!Validation.isPositiveInteger(args[3])) {
+			if (!ValidationUtils.isPositiveInteger(args[3])) {
 				TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
 				return;
 			}
@@ -170,7 +172,7 @@ public class EconomyApi extends PluginWrapper {
 				TranslationUtils.sendValueTranslation("Error.NoExist", args[2], sender);
 				return;
 			}
-			if (!Validation.isPositiveInteger(args[3])) {
+			if (!ValidationUtils.isPositiveInteger(args[3])) {
 				TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
 				return;
 			}

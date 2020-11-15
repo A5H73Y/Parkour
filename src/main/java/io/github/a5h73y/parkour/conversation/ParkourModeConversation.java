@@ -50,8 +50,10 @@ public class ParkourModeConversation extends ParkourConversation {
                 return new ChoosePotionEffect();
             }
 
+            ParkourMode parkourMode = ParkourMode.valueOf(choice.toUpperCase());
+
             String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);
-            CourseInfo.setParkourMode(courseName, choice);
+            CourseInfo.setParkourMode(courseName, parkourMode);
             Parkour.getInstance().getCourseManager().clearCache(courseName);
 
             context.getForWhom().sendRawMessage(TranslationUtils.getPropertySet("ParkourMode", courseName, choice));
@@ -171,16 +173,15 @@ public class ParkourModeConversation extends ParkourConversation {
             String potionEffect = (String) context.getSessionData("potion");
             String durationAmplifier = (String) context.getSessionData("durationAmplifier");
             String joinMessage = (String) context.getSessionData("joinMessage");
-            String potionParkourMode = ParkourMode.POTION.name().toLowerCase();
 
-            CourseInfo.setParkourMode(courseName, potionParkourMode);
+            CourseInfo.setParkourMode(courseName, ParkourMode.POTION);
             CourseInfo.addPotionParkourModeEffect(courseName, potionEffect, durationAmplifier);
             CourseInfo.setPotionJoinMessage(courseName, joinMessage);
 
             Parkour.getInstance().getCourseManager().clearCache(courseName);
 
             return TranslationUtils.getPropertySet("ParkourMode", courseName,
-                    potionParkourMode + " (" + potionEffect + ")");
+                    ParkourMode.POTION.name().toLowerCase() + " (" + potionEffect + ")");
         }
     }
 }

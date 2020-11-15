@@ -29,6 +29,7 @@ import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -239,9 +240,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		hiddenPlayers.remove(player);
 		playerDelay.remove(player);
 		PlayerInfo.setQuietMode(player, isInQuietMode(player));
-		Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () -> {
-			stashParkourSession(player);
-		});
+		Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () -> stashParkourSession(player));
 	}
 
 	public void teardownParkourPlayers() {
@@ -321,7 +320,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		player.teleport(course.getCheckpoints().get(0).getLocation());
 		preparePlayerForCourse(player, course.getName());
-		CourseInfo.increaseView(course.getName());
+		CourseInfo.incrementViews(course.getName());
 		PlayerInfo.setLastPlayedCourse(player, course.getName());
 
 		// already on a different course
@@ -601,7 +600,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		displayFinishMessage(player, session);
-		CourseInfo.increaseComplete(courseName);
+		CourseInfo.incrementCompletions(courseName);
 		teardownParkourMode(player);
 		removePlayer(player);
 
@@ -725,13 +724,13 @@ public class PlayerManager extends AbstractPluginReceiver {
 		int newParkourLevel = currentLevel;
 
 		// set parkour level
-		int rewardLevel = CourseInfo.getRewardLevel(courseName);
+		int rewardLevel = CourseInfo.getRewardParkourLevel(courseName);
 		if (rewardLevel > 0 && currentLevel < rewardLevel) {
 			newParkourLevel = rewardLevel;
 		}
 
 		// increase parkour level
-		int rewardAddLevel = CourseInfo.getRewardLevelAdd(courseName);
+		int rewardAddLevel = CourseInfo.getRewardParkourLevelIncrease(courseName);
 		if (rewardAddLevel > 0) {
 			newParkourLevel = currentLevel + rewardAddLevel;
 		}
@@ -749,7 +748,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			if (parkour.getConfig().getBoolean("Other.Display.LevelReward")) {
 				player.sendMessage(TranslationUtils.getTranslation("Parkour.RewardLevel")
 						.replace("%LEVEL%", String.valueOf(rewardLevel))
-						.replace("%COURSE%", courseName));
+						.replace(Constants.COURSE_PLACEHOLDER, courseName));
 			}
 		}
 
@@ -1030,7 +1029,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	}
 
 	/**
-	 * Check to see if the minimum amount of time has passed (in days) to allow the plugin to provide the prize again
+	 * Check to see if the minimum amount of time has passed (in hours) to allow the plugin to provide the prize again
 	 *
 	 * @param player
 	 * @param courseName
@@ -1038,7 +1037,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @return boolean
 	 */
 	public boolean hasPrizeCooldownDurationPassed(Player player, String courseName, boolean displayMessage) {
-		int rewardDelay = CourseInfo.getRewardDelay(courseName);
+		double rewardDelay = CourseInfo.getRewardDelay(courseName);
 
 		if (rewardDelay <= 0) {
 			return true;
@@ -1051,15 +1050,15 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		long timeDifference = System.currentTimeMillis() - lastRewardTime;
-		long daysDelay = DateTimeUtils.convertDaysToMilliseconds(rewardDelay);
+		long hoursDelay = DateTimeUtils.convertHoursToMilliseconds(rewardDelay);
 
-		if (timeDifference > daysDelay) {
+		if (timeDifference > hoursDelay) {
 			return true;
 		}
 
 		if (parkour.getConfig().isDisplayPrizeCooldown() && displayMessage) {
 			TranslationUtils.sendValueTranslation("Error.PrizeCooldown",
-					DateTimeUtils.getTimeRemaining(player, courseName), player.getPlayer());
+					DateTimeUtils.getTimeRemaining(player, courseName), player);
 		}
 		return false;
 	}
@@ -1333,7 +1332,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	}
 
 	public void setParkourLevel(CommandSender sender, OfflinePlayer targetPlayer, String value) {
-		if (!Validation.isPositiveInteger(value)) {
+		if (!ValidationUtils.isPositiveInteger(value)) {
 			TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
 			return;
 		}
@@ -1473,8 +1472,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 		String playingTemplate = TranslationUtils.getTranslation("Parkour.Playing", false);
 		for (Map.Entry<Player, ParkourSession> entry : parkourPlayers.entrySet()) {
 			sender.sendMessage(playingTemplate
-					.replace("%PLAYER%", entry.getKey().getName())
-					.replace("%COURSE%", entry.getValue().getCourse().getName())
+					.replace(Constants.PLAYER_PLACEHOLDER, entry.getKey().getName())
+					.replace(Constants.COURSE_PLACEHOLDER, entry.getValue().getCourse().getName())
 					.replace("%DEATHS%", String.valueOf(entry.getValue().getDeaths()))
 					.replace("%TIME%", entry.getValue().getDisplayTime()));
 		}
@@ -1513,9 +1512,9 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		String finishBroadcast = TranslationUtils.getTranslation("Parkour.FinishBroadcast")
-				.replace("%PLAYER%", player.getName())
+				.replace(Constants.PLAYER_PLACEHOLDER, player.getName())
 				.replace("%PLAYER_DISPLAY%", player.getDisplayName())
-				.replace("%COURSE%", session.getCourse().getName())
+				.replace(Constants.COURSE_PLACEHOLDER, session.getCourse().getName())
 				.replace("%DEATHS%", String.valueOf(session.getDeaths()))
 				.replace("%TIME%", session.getDisplayTime());
 
@@ -1707,12 +1706,12 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param sender
 	 */
 	public void setRewardParkourRank(CommandSender sender, String parkourLevel, String parkourRank) {
-		if (!Validation.isPositiveInteger(parkourLevel)) {
+		if (!ValidationUtils.isPositiveInteger(parkourLevel)) {
 			TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
 			return;
 		}
 
-		if (!Validation.isStringValid(parkourRank)) {
+		if (!ValidationUtils.isStringValid(parkourRank)) {
 			sender.sendMessage(Parkour.getPrefix() + "ParkourRank is not valid.");
 			return;
 		}

@@ -180,7 +180,7 @@ public class SignUtils {
         }
 
         if (!signEvent.getLine(3).isEmpty()) {
-            if (!Validation.isPositiveInteger(signEvent.getLine(3))) {
+            if (!ValidationUtils.isPositiveInteger(signEvent.getLine(3))) {
                 signEvent.setLine(3, "");
             }
         }
@@ -193,7 +193,7 @@ public class SignUtils {
             return;
         }
 
-        if (signEvent.getLine(3).isEmpty() || !Validation.isPositiveInteger(signEvent.getLine(3))) {
+        if (signEvent.getLine(3).isEmpty() || !ValidationUtils.isPositiveInteger(signEvent.getLine(3))) {
             signEvent.getBlock().breakNaturally();
             player.sendMessage(Parkour.getPrefix() + "Please specify checkpoint on bottom line!");
             return;

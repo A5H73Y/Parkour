@@ -6,4 +6,8 @@ public class Constants {
 
     public static final String DEFAULT = "default";
 
+    public static final String COURSE_PLACEHOLDER = "%COURSE%";
+
+    public static final String PLAYER_PLACEHOLDER = "%PLAYER%";
+
 }

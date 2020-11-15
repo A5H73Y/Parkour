@@ -43,7 +43,7 @@ public class LeaderboardConversation extends ParkourConversation {
         }
     }
 
-    private class ChooseType extends FixedSetPrompt {
+    private static class ChooseType extends FixedSetPrompt {
 
         ChooseType() {
             super("personal", "global");
@@ -63,7 +63,7 @@ public class LeaderboardConversation extends ParkourConversation {
         }
     }
 
-    private class ChooseAmount extends NumericPrompt {
+    private static class ChooseAmount extends NumericPrompt {
 
         @Override
         public String getPromptText(ConversationContext context) {

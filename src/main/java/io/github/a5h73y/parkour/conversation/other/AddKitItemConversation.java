@@ -158,8 +158,8 @@ public class AddKitItemConversation {
     private class ProcessComplete extends BooleanPrompt {
 
         public String getPromptText(ConversationContext context) {
-            return ChatColor.LIGHT_PURPLE + " ParkourKit saved! Would you like to add another Material?\n" +
-                    ChatColor.GREEN + "[yes, no]";
+            return ChatColor.LIGHT_PURPLE + " ParkourKit saved! Would you like to add another Material?\n"
+                    + ChatColor.GREEN + "[yes, no]";
         }
 
         @Override

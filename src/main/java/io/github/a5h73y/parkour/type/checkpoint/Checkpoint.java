@@ -1,10 +1,14 @@
 package io.github.a5h73y.parkour.type.checkpoint;
 
 import java.io.Serializable;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
+/**
+ * A Course Checkpoint.
+ * Consists of fields that create a {@link Location} to teleport the player to.
+ * The {@code next} coordinates are used for detection of the next pressure plate.
+ */
 public class Checkpoint implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -21,9 +25,12 @@ public class Checkpoint implements Serializable {
     private final double nextCheckpointZ;
 
     /**
-     * The location is used for where the player is physically teleported.
-     * The nextCheckpoint coordinates are used for the detection of the next pressure plate.
-     * As locations are transient, we must reconstruct the Checkpoints after a reload.
+     * Construct a Checkpoint from a location and next checkpoint coordinates.
+     *
+     * @param location player's location.
+     * @param nextCheckpointX next checkpoint x coordinate.
+     * @param nextCheckpointY next checkpoint y coordinate.
+     * @param nextCheckpointZ next checkpoint z coordinate.
      */
     public Checkpoint(Location location, double nextCheckpointX, double nextCheckpointY, double nextCheckpointZ) {
         this.x = location.getX();
@@ -37,23 +44,43 @@ public class Checkpoint implements Serializable {
         this.nextCheckpointZ = nextCheckpointZ;
     }
 
+    /**
+     * Create a {@link Location} from Checkpoint coordinates.
+     * @return checkpoint location
+     */
+    public Location getLocation() {
+        return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
+    }
+
+    /**
+     * Get the World of the Checkpoint.
+     * @return checkpoint world
+     */
     public String getWorld() {
         return world;
     }
 
+    /**
+     * The next checkpoint's X location.
+     * @return next X location
+     */
     public double getNextCheckpointX() {
         return nextCheckpointX;
     }
 
+    /**
+     * The next checkpoint's Y location.
+     * @return next Y location
+     */
     public double getNextCheckpointY() {
         return nextCheckpointY;
     }
 
+    /**
+     * The next checkpoint's Z location.
+     * @return next Z location
+     */
     public double getNextCheckpointZ() {
         return nextCheckpointZ;
-    }
-
-    public Location getLocation() {
-        return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
     }
 }

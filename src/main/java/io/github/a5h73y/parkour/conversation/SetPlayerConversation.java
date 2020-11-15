@@ -3,6 +3,7 @@ package io.github.a5h73y.parkour.conversation;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,8 +19,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class SetPlayerConversation extends ParkourConversation {
 
-    public static final List<String> SET_PLAYER_OPTIONS =
-            Arrays.asList("level", "rank");
+    public static final List<String> SET_PLAYER_OPTIONS = Collections.unmodifiableList(
+            Arrays.asList("level", "rank"));
 
     public SetPlayerConversation(Player player) {
         super(player);

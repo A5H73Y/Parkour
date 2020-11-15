@@ -97,9 +97,13 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 } else if (!PermissionUtils.hasPermissionOrCourseOwnership(
                         player, Permission.ADMIN_COURSE, PlayerInfo.getSelectedCourse(player))) {
                     return false;
+
+                } else if (args.length == 2 && !ValidationUtils.isPositiveInteger(args[1])) {
+                    TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+                    return false;
                 }
 
-                parkour.getCheckpointManager().createCheckpoint(player, args);
+                parkour.getCheckpointManager().createCheckpoint(player, args.length == 2 ? Integer.parseInt(args[1]) : null);
                 break;
 
             case "cmds":
@@ -558,9 +562,13 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
                 } else if (!ValidationUtils.validateArgs(player, args, 3)) {
                     return false;
+
+                } else if (!ValidationUtils.isPositiveInteger(args[2])) {
+                    TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+                    return false;
                 }
 
-                parkour.getCheckpointManager().teleportCheckpoint(player, args[1], args[2]);
+                parkour.getCheckpointManager().teleportCheckpoint(player, args[1], Integer.parseInt(args[2]));
                 break;
 
             case "tutorial":

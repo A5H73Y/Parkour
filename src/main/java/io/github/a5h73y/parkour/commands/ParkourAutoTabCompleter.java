@@ -27,7 +27,8 @@ import org.jetbrains.annotations.NotNull;
 public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements TabCompleter {
 
     private static final List<String> NO_PERMISSION_COMMANDS = Arrays.asList(
-            "join", "info", "course", "lobby", "perms", "quiet", "list", "help", "material", "about", "contact", "cmds", "version");
+            "join", "info", "course", "lobby", "perms", "quiet", "list", "help", "material", "about",
+            "contact", "cmds", "version");
 
     private static final List<String> ADMIN_ONLY_COMMANDS = Arrays.asList(
             "setlobby", "reset", "economy", "recreate", "whitelist", "setlevel", "setplayer", "setrank", "settings",
@@ -70,7 +71,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
     }
 
     /**
-     * List of commands will be built based on the configuration and player permissions.
+     * List of tab-able commands will be built based on the configuration and player permissions.
      * {@inheritDoc}
      */
     @Override
@@ -108,6 +109,11 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
         return filteredCommands.isEmpty() ? allowedCommands : filteredCommands;
     }
 
+    /**
+     * Populate the main command options.
+     * @param player requesting player
+     * @return allowed commands
+     */
     private List<String> populateMainCommands(Player player) {
         // if they have an outstanding question, make those the only options
         if (parkour.getQuestionManager().hasPlayerBeenAskedQuestion(player)) {
@@ -159,6 +165,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
         if (PermissionUtils.hasPermission(player, Permission.ADMIN_TESTMODE, false)) {
             allowedCommands.add("test");
         }
+
         // they've selected a known course, or they have admin course permission
         if (PlayerInfo.hasSelectedValidCourse(player)
                 || PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE, false)) {
@@ -171,10 +178,15 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
         return allowedCommands;
     }
 
-    private List<String> populateFirstChildCommands(String command) {
+    /**
+     * Populate the first argument command options.
+     * @param mainCommand main command
+     * @return allowed commands
+     */
+    private List<String> populateFirstChildCommands(String mainCommand) {
         List<String> allowedCommands = new ArrayList<>();
 
-        switch (command.toLowerCase()) {
+        switch (mainCommand.toLowerCase()) {
             case "reset":
                 allowedCommands = RESET_COMMANDS;
                 break;
@@ -234,10 +246,16 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
         return allowedCommands;
     }
 
-    private List<String> populateSecondChildCommands(String arg0, String arg1) {
+    /**
+     * Populate the second argument command options.
+     * @param mainCommand main command
+     * @param arg1 first argument
+     * @return allowed commands
+     */
+    private List<String> populateSecondChildCommands(String mainCommand, String arg1) {
         List<String> allowedCommands = new ArrayList<>();
 
-        switch (arg0.toLowerCase()) {
+        switch (mainCommand.toLowerCase()) {
             case "setcourse":
                 allowedCommands = SetCourseConversation.SET_COURSE_OPTIONS;
                 break;
@@ -249,6 +267,8 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
                     case "setfee":
                     case "setprize":
                         allowedCommands = CourseInfo.getAllCourseNames();
+                        break;
+                    default:
                         break;
                 }
                 break;
@@ -272,16 +292,27 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
                     case "player":
                         allowedCommands = getAllOnlinePlayerNames();
                         break;
+                    default:
+                        break;
                 }
+                break;
+            default:
                 break;
         }
         return allowedCommands;
     }
 
-    private List<String> populateThirdChildCommands(String arg0, String arg1, String arg2) {
+    /**
+     * Populate the third argument command options.
+     * @param mainCommand main command
+     * @param arg1 first argument
+     * @param arg2 second argument
+     * @return allowed commands
+     */
+    private List<String> populateThirdChildCommands(String mainCommand, String arg1, String arg2) {
         List<String> allowedCommands = new ArrayList<>();
 
-        switch (arg0.toLowerCase()) {
+        switch (mainCommand.toLowerCase()) {
             case "setcourse":
                 switch (arg2.toLowerCase()) {
                     case "message":
@@ -290,13 +321,21 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
                     case "command":
                         allowedCommands = SetCourseConversation.COMMAND_OPTIONS;
                         break;
+                    default:
+                        break;
                 }
+                break;
+            default:
                 break;
         }
 
         return allowedCommands;
     }
 
+    /**
+     * Get all Online Player names.
+     * @return online player names
+     */
     private List<String> getAllOnlinePlayerNames() {
         return Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
     }

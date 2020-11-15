@@ -7,6 +7,7 @@ import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.Collections;
 import java.util.List;
+import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -36,7 +37,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("OnJoin.Item.HideAll.Slot", 1);
 		this.addDefault("OnJoin.Item.HideAll.Global", true);
 		this.addDefault("OnJoin.Item.HideAllEnabled.Material", "BONE");
-		this.addDefault("OnJoin.Item.Leave.Material", "OAK_SAPLING");
+		this.addDefault("OnJoin.Item.Leave.Material", XMaterial.OAK_SAPLING.parseMaterial().name());
 		this.addDefault("OnJoin.Item.Leave.Slot", 2);
 		this.addDefault("OnJoin.Item.Restart.Material", "STICK");
 		this.addDefault("OnJoin.Item.Restart.Slot", 3);
@@ -97,7 +98,7 @@ public class DefaultConfig extends ParkourConfiguration {
 
 		this.addDefault("ParkourModes.Challenge.HidePlayers", true);
 		this.addDefault("ParkourModes.Challenge.CountdownFrom", 5);
-		this.addDefault("ParkourModes.Speedy.SetSpeed", 0.8);
+		this.addDefault("ParkourModes.Speedy.SetSpeed", 0.7);
 		this.addDefault("ParkourModes.Speedy.ResetSpeed", 0.2);
 		this.addDefault("ParkourModes.Dropper.FallDamage", false);
 
@@ -213,15 +214,16 @@ public class DefaultConfig extends ParkourConfiguration {
 	public void addWhitelistedCommand(CommandSender sender, String command) {
 		List<String> whitelistedCommands = getWhitelistedCommands();
 		if (whitelistedCommands.contains(command.toLowerCase())) {
-	        sender.sendMessage(Parkour.getPrefix() + "This command is already whitelisted!");
-	        return;
-        }
+			sender.sendMessage(Parkour.getPrefix() + "This command is already whitelisted!");
+			return;
+		}
 
 		whitelistedCommands.add(command.toLowerCase());
 		set("OnCourse.EnforceParkourCommands.Whitelist", whitelistedCommands);
 		save();
 
-        sender.sendMessage(Parkour.getPrefix() + "Command " + ChatColor.AQUA + command + ChatColor.WHITE + " added to the whitelisted commands!");
+		sender.sendMessage(Parkour.getPrefix() + "Command " + ChatColor.AQUA + command
+				+ ChatColor.WHITE + " added to the whitelisted commands!");
 	}
 
 	public String getSignHeader() {
@@ -370,10 +372,8 @@ public class DefaultConfig extends ParkourConfiguration {
 		return matchingMaterial != null ? matchingMaterial : defaultMaterial;
 	}
 
-	/* Strings */
-
-	public String getCheckpointMaterial() {
-		return this.getString("OnCourse.CheckpointMaterial");
+	public Material getCheckpointMaterial() {
+		return MaterialUtils.lookupMaterial(this.getString("OnCourse.CheckpointMaterial"));
 	}
 
 	/* Lists */

@@ -2,6 +2,7 @@ package io.github.a5h73y.parkour.conversation;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.ParkourEventType;
+import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -63,7 +64,7 @@ public class CoursePrizeConversation extends ParkourConversation {
     }
 
     /* BEGIN MATERIAL PRIZE */
-    private class ChooseBlock extends StringPrompt {
+    private static class ChooseBlock extends StringPrompt {
 
         @Override
         public String getPromptText(ConversationContext context) {
@@ -85,7 +86,7 @@ public class CoursePrizeConversation extends ParkourConversation {
         }
     }
 
-    private class ChooseAmount extends NumericPrompt {
+    private static class ChooseAmount extends NumericPrompt {
 
         @Override
         public String getPromptText(ConversationContext context) {
@@ -160,7 +161,7 @@ public class CoursePrizeConversation extends ParkourConversation {
                 Parkour.getInstance().getServer().dispatchCommand(
                         Parkour.getInstance().getServer().getConsoleSender(),
                         context.getSessionData("command").toString()
-                                .replace("%PLAYER%", context.getSessionData(SESSION_PLAYER_NAME).toString()));
+                                .replace(Constants.PLAYER_PLACEHOLDER, context.getSessionData(SESSION_PLAYER_NAME).toString()));
             }
             return getCommandProcessCompletePrompt();
         }
@@ -183,7 +184,7 @@ public class CoursePrizeConversation extends ParkourConversation {
     }
 
     /* BEGIN XP PRIZE */
-    private class ChooseXP extends NumericPrompt {
+    private static class ChooseXP extends NumericPrompt {
 
         @Override
         public String getPromptText(ConversationContext context) {

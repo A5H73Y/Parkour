@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -51,7 +52,7 @@ public class ParkourUpdater {
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.addRequestProperty("User-Agent", USER_AGENT);
 
-			InputStreamReader reader = new InputStreamReader(connection.getInputStream());
+			InputStreamReader reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8);
 			JsonElement element = new JsonParser().parse(reader);
 
 			reader.close();

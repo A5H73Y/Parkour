@@ -102,7 +102,7 @@ public class MaterialUtils {
 	public static Material lookupMaterial(String materialName) {
 		Material material = Material.getMaterial(materialName);
 
-		if (material == null) {
+		if (material == null && ValidationUtils.isStringValid(materialName)) {
 			Optional<XMaterial> matching = XMaterial.matchXMaterial(materialName);
 
 			if (matching.isPresent()) {

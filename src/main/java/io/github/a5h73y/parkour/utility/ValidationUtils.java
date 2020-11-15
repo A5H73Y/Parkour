@@ -32,6 +32,17 @@ public class ValidationUtils {
 	}
 
 	/**
+	 * Validate if the argument is numeric
+	 * "1" = true, "Hi" = false, "-1" = false
+	 *
+	 * @param input
+	 * @return whether the input is numeric
+	 */
+	public static boolean isPositiveInteger(String input) {
+		return isInteger(input) && Integer.parseInt(input) >= 0;
+	}
+
+	/**
 	 * Validate if the input is a valid Double.
 	 *
 	 * @param input text
@@ -43,6 +54,17 @@ public class ValidationUtils {
 			return true;
 		} catch (Exception ignored) { }
 		return false;
+	}
+
+	/**
+	 * Validate if the argument is numeric
+	 * "1" = true, "Hi" = false, "-1" = false
+	 *
+	 * @param input
+	 * @return whether the input is numeric
+	 */
+	public static boolean isPositiveDouble(String input) {
+		return isDouble(input) && Double.parseDouble(input) >= 0;
 	}
 
 	/**

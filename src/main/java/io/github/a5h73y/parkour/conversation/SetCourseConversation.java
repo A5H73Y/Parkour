@@ -5,6 +5,7 @@ import io.github.a5h73y.parkour.enums.ParkourEventType;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,14 +22,14 @@ import org.jetbrains.annotations.Nullable;
 
 public class SetCourseConversation extends ParkourConversation {
 
-    public static final List<String> SET_COURSE_OPTIONS =
-            Arrays.asList("creator", "minlevel", "maxdeath", "maxtime", "command", "message");
+    public static final List<String> SET_COURSE_OPTIONS = Collections.unmodifiableList(
+            Arrays.asList("creator", "minlevel", "maxdeath", "maxtime", "command", "message"));
 
     public static final List<String> COMMAND_OPTIONS =
             Stream.of(ParkourEventType.values()).map(type -> type.name().toLowerCase()).collect(Collectors.toList());
 
-    public static final List<String> MESSAGE_OPTIONS =
-            Arrays.asList("join", "leave", "finish", "checkpoint", "checkpointall");
+    public static final List<String> MESSAGE_OPTIONS = Collections.unmodifiableList(
+            Arrays.asList("join", "leave", "finish", "checkpoint", "checkpointall")); //TODO update to use ParkourEventType
 
     public SetCourseConversation(Player player) {
         super(player);
@@ -171,7 +172,7 @@ public class SetCourseConversation extends ParkourConversation {
 
             String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);
             String messageValue = (String) context.getSessionData("setMessageOption");
-            CourseInfo.setJoinMessage(courseName, messageValue, input);
+            CourseInfo.setEventMessage(courseName, messageValue, input);
             return Prompt.END_OF_CONVERSATION;
         }
     }

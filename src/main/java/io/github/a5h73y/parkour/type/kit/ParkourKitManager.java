@@ -10,6 +10,7 @@ import io.github.a5h73y.parkour.type.Cacheable;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,6 @@ import java.util.Set;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class ParkourKitManager extends AbstractPluginReceiver implements Cacheable<ParkourKit> {
 
@@ -218,7 +218,7 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 			String matchingValue = parkourKitConfig.getString("ParkourKit." + kitName + "." + oldMaterial + "." + attribute);
 
 			parkourKitConfig.set("ParkourKit." + kitName + "." + newMaterial + "." + attribute,
-					Validation.isInteger(matchingValue) ? Integer.parseInt(matchingValue) : matchingValue);
+					ValidationUtils.isInteger(matchingValue) ? Integer.parseInt(matchingValue) : matchingValue);
 		}
 
 		// remove the old kit

@@ -8,8 +8,8 @@ import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import com.cryptomorin.xseries.XBlock;
 import com.cryptomorin.xseries.XMaterial;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -60,7 +60,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
 
         Material materialInHand = MaterialUtils.getMaterialInPlayersHand(player);
 
-        if (materialInHand.isAir()) {
+        if (XBlock.isAir(materialInHand)) {
             return;
         }
 
@@ -143,8 +143,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             return;
         }
 
-        if (event.getClickedBlock().getType()
-                != MaterialUtils.lookupMaterial(parkour.getConfig().getCheckpointMaterial())) {
+        if (event.getClickedBlock().getType() != parkour.getConfig().getCheckpointMaterial()) {
             return;
         }
 

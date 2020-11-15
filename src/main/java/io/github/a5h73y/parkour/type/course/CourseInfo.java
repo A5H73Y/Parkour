@@ -4,6 +4,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.enums.ParkourEventType;
+import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
@@ -17,24 +18,19 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.Nullable;
 
+/**
+ * Course Information Utility class.
+ * Convenience methods for accessing configuration files.
+ */
 public class CourseInfo {
 
-    public static ParkourConfiguration getCourseConfig() {
-        return Parkour.getConfig(ConfigType.COURSES);
-    }
-
-    public static void persistChanges() {
-        getCourseConfig().save();
-    }
-
     /**
-     * Get list of all Parkour course names.
-     *
+     * Get List of all Parkour course names.
      * @return List Parkour course names
      */
     public static List<String> getAllCourseNames() {
@@ -42,10 +38,9 @@ public class CourseInfo {
     }
 
     /**
-     * Return the linked Course of the specified course.
-     * Will validate it's a valid course before returning
-     *
-     * @param courseName
+     * Get the linked Course of the specified course.
+     * The result may still need to be verified as existing.
+     * @param courseName course name
      * @return linkedCourse
      */
     public static String getLinkedCourse(String courseName) {
@@ -54,8 +49,7 @@ public class CourseInfo {
 
     /**
      * Check if Course is linked to another Course.
-     *
-     * @param courseName
+     * @param courseName course name
      * @return if linked course is found
      */
     public static boolean hasLinkedCourse(String courseName) {
@@ -63,10 +57,9 @@ public class CourseInfo {
     }
 
     /**
-     * Set the Course to link to another Course.
-     *
-     * @param courseName
-     * @param linkedCourse
+     * Set the linked Course destination to a different Course.
+     * @param courseName course name
+     * @param linkedCourse linked course name
      */
     public static void setLinkedCourse(String courseName, String linkedCourse) {
         getCourseConfig().set(courseName.toLowerCase() + ".LinkedCourse", linkedCourse.toLowerCase());
@@ -74,20 +67,18 @@ public class CourseInfo {
     }
 
     /**
-     * Return the linked lobby of the Course.
-     * Will validate it's a valid lobby before returning
-     *
-     * @param courseName
-     * @return linkedLobby
+     * Find the linked Lobby of the Course.
+     * The result may still need to be verified as existing.
+     * @param courseName course name
+     * @return linked Lobby name
      */
     public static String getLinkedLobby(String courseName) {
         return getCourseConfig().getString(courseName.toLowerCase() + ".LinkedLobby");
     }
 
     /**
-     * Does this course have a linked lobby
-     *
-     * @param courseName
+     * Check if Course is linked to a Lobby.
+     * @param courseName course name
      * @return if linked lobby is found
      */
     public static boolean hasLinkedLobby(String courseName) {
@@ -95,10 +86,9 @@ public class CourseInfo {
     }
 
     /**
-     * Set the course to link to a lobby
-     *
-     * @param courseName
-     * @param lobbyName
+     * Set the linked Course destination to a Lobby.
+     * @param courseName course name
+     * @param lobbyName lobby name
      */
     public static void setLinkedLobby(String courseName, String lobbyName) {
         getCourseConfig().set(courseName.toLowerCase() + ".LinkedLobby", lobbyName);
@@ -106,51 +96,56 @@ public class CourseInfo {
     }
 
     /**
-     * Get the Mode for the course
-     *
-     * @param courseName
-     * @return mode
+     * Get the ParkourMode name for the Course.
+     * @param courseName course name
+     * @return the parkour mode set
      */
     public static String getParkourMode(String courseName) {
-        return getCourseConfig().getString(courseName.toLowerCase() + ".Mode", "NONE");
+        return getCourseConfig().getString(courseName.toLowerCase() + ".Mode", ParkourMode.NONE.name());
     }
 
     /**
-     * Set ParkourMode of a course
-     *
-     * @param courseName
-     * @param mode
+     * Check if the Course has a ParkourMode defined.
+     * None is not considered a ParkourMode.
+     * @param courseName courseName
+     * @return course has ParkourMode
      */
-    public static void setParkourMode(String courseName, String mode) {
-        getCourseConfig().set(courseName.toLowerCase() + ".Mode", mode);
+    public static boolean hasParkourMode(String courseName) {
+        return !ParkourMode.NONE.name().equals(getParkourMode(courseName));
+    }
+
+    /**
+     * Set the {@link ParkourMode} for the Course.
+     * @param courseName course name
+     * @param mode ParkourMode
+     */
+    public static void setParkourMode(String courseName, ParkourMode mode) {
+        getCourseConfig().set(courseName.toLowerCase() + ".Mode", mode.name());
         persistChanges();
     }
 
     /**
-     * Get amount of checkpoints on a course
-     *
-     * @param courseName
-     * @return
+     * Get the number of Checkpoints on a Course.
+     * @param courseName course name
+     * @return number of checkpoints
      */
     public static int getCheckpointAmount(String courseName) {
         return Parkour.getConfig(ConfigType.CHECKPOINTS).getInt(courseName.toLowerCase() + ".Checkpoints");
     }
 
     /**
-     * Get creator of course
-     *
-     * @param courseName
-     * @return
+     * Get the Creator's name of the Course.
+     * @param courseName course name
+     * @return creator's name
      */
     public static String getCreator(String courseName) {
         return getCourseConfig().getString(courseName.toLowerCase() + ".Creator");
     }
 
     /**
-     * Set creator of course
-     *
-     * @param courseName
-     * @param playerName
+     * Set the Creator's name of the Course.
+     * @param courseName course name
+     * @param playerName player's name
      */
     public static void setCreator(String courseName, String playerName) {
         getCourseConfig().set(courseName.toLowerCase() + ".Creator", playerName);
@@ -158,51 +153,55 @@ public class CourseInfo {
     }
 
     /**
-     * Get minimum level required to join course
-     *
-     * @param courseName
-     * @return
+     * Get the Minimum ParkourLevel of a Course.
+     * @param courseName course name
+     * @return minimum ParkourLevel to join Course
      */
     public static int getMinimumLevel(String courseName) {
         return getCourseConfig().getInt(courseName.toLowerCase() + ".MinimumLevel");
     }
 
     /**
-     * Set minimum level required to join course
-     *
-     * @param courseName
-     * @param level
+     * Check if the Course has a Minimum ParkourLevel.
+     * @param courseName course name
+     * @return course has minimum ParkourLevel
      */
-    public static void setMinimumLevel(String courseName, int level) {
-        getCourseConfig().set(courseName.toLowerCase() + ".MinimumLevel", level);
+    public static boolean hasMinimumLevel(String courseName) {
+        return getMinimumLevel(courseName) > 0;
+    }
+
+    /**
+     * Set the Minimum ParkourLevel for a Course.
+     * @param courseName course name
+     * @param parkourLevel minimum parkour level
+     */
+    public static void setMinimumLevel(String courseName, int parkourLevel) {
+        getCourseConfig().set(courseName.toLowerCase() + ".MinimumLevel", parkourLevel);
         persistChanges();
     }
 
     /**
-     * Get ParkourKit set for the course
-     *
-     * @param courseName
-     * @return
+     * Get ParkourKit name for the Course.
+     * @param courseName course name
+     * @return ParkourKit name.
      */
     public static String getParkourKit(String courseName) {
         return getCourseConfig().getString(courseName.toLowerCase() + ".ParkourKit", Constants.DEFAULT);
     }
 
     /**
-     * Does this course have a ParkourKit set
-     *
-     * @param courseName
-     * @return
+     * Check if the Course has a ParkourKit set.
+     * @param courseName course name
+     * @return course has ParkourKit
      */
     public static boolean hasParkourKit(String courseName) {
         return getCourseConfig().contains(courseName.toLowerCase() + ".ParkourKit");
     }
 
     /**
-     * Set ParkourKit for this course
-     *
-     * @param courseName
-     * @param parkourKitName
+     * Set the ParkourKit name for the Course.
+     * @param courseName course name
+     * @param parkourKitName parkour kit name
      */
     public static void setParkourKit(String courseName, String parkourKitName) {
         getCourseConfig().set(courseName.toLowerCase() + ".ParkourKit", parkourKitName.toLowerCase());
@@ -210,24 +209,28 @@ public class CourseInfo {
     }
 
     /**
-     * Get the maximum deaths for course
-     *
-     * @param courseName
-     * @return death count
+     * Get the Maximum number of Deaths for a Course.
+     * Maximum number of deaths a player can accumulate before a loss.
+     * @param courseName course name
+     * @return maximum deaths
      */
     public static int getMaximumDeaths(String courseName) {
         return getCourseConfig().getInt(courseName.toLowerCase() + ".MaxDeaths", -1);
     }
 
+    /**
+     * Check if the Course has a Maximum number of Deaths set.
+     * @param courseName course name
+     * @return course has maximum deaths set
+     */
     public static boolean hasMaximumDeaths(String courseName) {
         return getMaximumDeaths(courseName) > 0;
     }
 
     /**
-     * Set the maximum deaths for course
-     *
-     * @param courseName
-     * @param amount
+     * Set the Maximum number of Deaths for Course.
+     * @param courseName course name
+     * @param amount amount of deaths
      */
     public static void setMaximumDeaths(String courseName, int amount) {
         getCourseConfig().set(courseName.toLowerCase() + ".MaxDeaths", amount);
@@ -235,24 +238,28 @@ public class CourseInfo {
     }
 
     /**
-     * Get the maximum time limit for course
-     *
-     * @param courseName
-     * @return seconds
+     * Get the Maximum Time for Course.
+     * Maximum number of seconds a player can accumulate before a loss.
+     * @param courseName course name
+     * @return maximum time in seconds
      */
     public static int getMaximumTime(String courseName) {
         return getCourseConfig().getInt(courseName.toLowerCase() + ".MaxTime", -1);
     }
 
+    /**
+     * Check if the Course has a Maximum Time set.
+     * @param courseName course name
+     * @return course has Maximum Time
+     */
     public static boolean hasMaximumTime(String courseName) {
         return getMaximumTime(courseName) > 0;
     }
 
     /**
-     * Set the maximum time limit for course
-     *
-     * @param courseName
-     * @param seconds
+     * Set the Maximum Time for the Course.
+     * @param courseName course name
+     * @param seconds number of seconds
      */
     public static void setMaximumTime(String courseName, int seconds) {
         getCourseConfig().set(courseName.toLowerCase() + ".MaxTime", seconds);
@@ -260,19 +267,17 @@ public class CourseInfo {
     }
 
     /**
-     * Returns whether the course is ready or not.
-     *
-     * @param courseName
-     * @return ready status
+     * Get Course Ready Status.
+     * @param courseName course name
+     * @return course ready status
      */
     public static boolean getReadyStatus(String courseName) {
         return getCourseConfig().getBoolean(courseName.toLowerCase() + ".Ready");
     }
 
     /**
-     * Set the ready status of the course
-     *
-     * @param courseName
+     * Set the Course Ready status.
+     * @param courseName course name
      * @param ready ready status
      */
     public static void setReadyStatus(String courseName, boolean ready) {
@@ -281,11 +286,38 @@ public class CourseInfo {
     }
 
     /**
-     * Set the prize material and amount for completing course
-     *
-     * @param courseName
-     * @param material
-     * @param amount
+     * Get Material Prize for Course.
+     * @param courseName course name
+     * @return material of reward
+     */
+    public static Material getMaterialPrize(String courseName) {
+        return MaterialUtils.lookupMaterial(getCourseConfig().getString(courseName.toLowerCase() + ".Prize.Material"));
+    }
+
+    /**
+     * Get amount of Material prize for Course.
+     * @param courseName course name
+     * @return amount of material prize
+     */
+    public static int getMaterialPrizeAmount(String courseName) {
+        return getCourseConfig().getInt(courseName.toLowerCase() + ".Prize.Amount", 0);
+    }
+
+    /**
+     * Check if Course has a Material Prize.
+     * @param courseName course name
+     * @return course has Material prize
+     */
+    public static boolean hasMaterialPrize(String courseName) {
+        return getCourseConfig().contains(courseName.toLowerCase() + ".Prize.Material");
+    }
+
+    /**
+     * Set the Material Prize for the Course.
+     * The Material and Amount to be rewarded for finishing the Course.
+     * @param courseName course name
+     * @param material prize material
+     * @param amount prize amount
      */
     public static void setMaterialPrize(String courseName, String material, int amount) {
         getCourseConfig().set(courseName.toLowerCase() + ".Prize.Material", material);
@@ -294,20 +326,18 @@ public class CourseInfo {
     }
 
     /**
-     * Get the amount of XP for course
-     *
-     * @param courseName
-     * @return
+     * Get the amount of XP prize for the Course.
+     * @param courseName course name
+     * @return XP prize
      */
     public static int getXPPrize(String courseName) {
         return getCourseConfig().getInt(courseName.toLowerCase() + ".Prize.XP");
     }
 
     /**
-     * Set the amount of XP for completing course
-     *
-     * @param courseName
-     * @param amount
+     * Set the amount of XP to reward for completing the Course.
+     * @param courseName course name
+     * @param amount xp amount
      */
     public static void setXPPrize(String courseName, int amount) {
         getCourseConfig().set(courseName.toLowerCase() + ".Prize.XP", amount);
@@ -315,122 +345,179 @@ public class CourseInfo {
     }
 
     /**
-     * Increase the Complete count of the course
-     *
-     * @param courseName
-     */
-    public static void increaseComplete(String courseName) {
-        getCourseConfig().set(courseName.toLowerCase() + ".Completed", getCompletions(courseName) + 1);
-        persistChanges();
-    }
-
-    /**
-     * Get the number of times the course has been completed
-     * @param courseName
-     * @return amount
+     * Get the number of times the Course has been Completed.
+     * @param courseName course name
+     * @return number of completions
      */
     public static int getCompletions(String courseName) {
         return getCourseConfig().getInt(courseName + ".Completed", 0);
     }
 
+    /**
+     * Get the percentage of Views to Completions for Course.
+     * @param courseName course
+     * @return percentage of completions
+     */
+    public static double getCompletionPercent(String courseName) {
+        return Math.round((getCompletions(courseName) * 1.0 / getViews(courseName)) * 100);
+    }
+
+    /**
+     * Increment the number of Completions for the Course.
+     * @param courseName course name
+     */
+    public static void incrementCompletions(String courseName) {
+        getCourseConfig().set(courseName.toLowerCase() + ".Completed", getCompletions(courseName) + 1);
+        persistChanges();
+    }
+
+    /**
+     * Get the number of a views a Course has had.
+     * @param courseName course name
+     * @return number of views
+     */
     public static int getViews(String courseName) {
         return getCourseConfig().getInt(courseName + ".Views", 0);
     }
 
     /**
-     * Increase the amount of views of the course
-     *
-     * @param courseName
+     * Increment the number of Views for the Course.
+     * @param courseName course name
      */
-    public static void increaseView(String courseName) {
+    public static void incrementViews(String courseName) {
         getCourseConfig().set(courseName.toLowerCase() + ".Views", getViews(courseName) + 1);
     }
 
     /**
-     * Get the reward level for course
-     *
-     * @param courseName
-     * @return
+     * Get the ParkourLevel reward for completing Course.
+     * @param courseName course name
+     * @return ParkourLevel reward
      */
-    public static int getRewardLevel(String courseName) {
+    public static int getRewardParkourLevel(String courseName) {
         return getCourseConfig().getInt(courseName.toLowerCase() + ".RewardLevel");
     }
 
     /**
-     * Set the reward level for course
-     *
-     * @param courseName
-     * @param level
+     * Has a ParkourLevel reward for completing Course.
+     * @param courseName course name
+     * @return has ParkourLevel reward
      */
-    public static void setRewardLevel(String courseName, int level) {
+    public static boolean hasRewardParkourLevel(String courseName) {
+        return getRewardParkourLevel(courseName) > 0;
+    }
+
+    /**
+     * Set the ParkourLevel reward for completing Course.
+     * @param courseName course name
+     * @param level ParkourLevel reward
+     */
+    public static void setRewardParkourLevel(String courseName, int level) {
         getCourseConfig().set(courseName.toLowerCase() + ".RewardLevel", level);
         persistChanges();
     }
 
     /**
-     * Get the reward level increase for course
-     *
-     * @param courseName
-     * @return
+     * Get the ParkourLevel increase reward for completing Course.
+     * This is the number added to their current ParkourLevel.
+     * @param courseName course name
+     * @return ParkourLevel increase reward
      */
-    public static int getRewardLevelAdd(String courseName) {
+    public static int getRewardParkourLevelIncrease(String courseName) {
         return getCourseConfig().getInt(courseName.toLowerCase() + ".RewardLevelAdd");
     }
 
     /**
-     * Set the reward level increase for course
-     *
-     * @param courseName
-     * @param amount
+     * Has a ParkourLevel increase reward for completing Course.
+     * @param courseName course name
+     * @return has ParkourLevel increase reward
      */
-    public static void setRewardLevelAdd(String courseName, String amount) {
+    public static boolean hasRewardParkourLevelIncrease(String courseName) {
+        return getRewardParkourLevelIncrease(courseName) > 0;
+    }
+
+    /**
+     * Set the ParkourLevel increase reward for completing Course.
+     * @param courseName course name
+     * @param amount ParkourLevel increase reward
+     */
+    public static void setRewardParkourLevelIncrease(String courseName, String amount) {
         getCourseConfig().set(courseName.toLowerCase() + ".RewardLevelAdd", Integer.parseInt(amount));
         persistChanges();
     }
 
     /**
-     * Get the reward once status for course
-     *
-     * @param courseName
-     * @return
+     * Get the Reward Once status of the Course.
+     * @param courseName course name
+     * @return reward once status
      */
     public static boolean getRewardOnce(String courseName) {
         return getCourseConfig().getBoolean(courseName.toLowerCase() + ".RewardOnce");
     }
 
     /**
-     * Set the reward once status for course
-     *
-     * @param courseName
-     * @param enabled
+     * Set the Reward Once status for the Course.
+     * @param courseName course name
+     * @param enabled reward once enabled
      */
     public static void setRewardOnce(String courseName, boolean enabled) {
         getCourseConfig().set(courseName.toLowerCase() + ".RewardOnce", enabled);
         persistChanges();
     }
 
+    /**
+     * Get Reward Delay in Hours for the Course.
+     * @param courseName course name
+     * @return number of hours delay for Course
+     */
+    public static double getRewardDelay(String courseName) {
+        return getCourseConfig().getDouble(courseName.toLowerCase() + ".RewardDelay", 0);
+    }
+
+    /**
+     * Check if the Course has a Reward Delay set.
+     * @param courseName course name
+     * @return course has reward delay
+     */
     public static boolean hasRewardDelay(String courseName) {
         return getRewardDelay(courseName) > 0;
     }
 
-    public static int getRewardDelay(String courseName) {
-        return getCourseConfig().getInt(courseName.toLowerCase() + ".RewardDelay", 0);
-    }
-
-    public static void setRewardDelay(String courseName, int rewardDelay) {
+    /**
+     * Set the Reward Delay for the Course.
+     * @param courseName course name
+     * @param rewardDelay number of days delay //TODO hours
+     */
+    public static void setRewardDelay(String courseName, double rewardDelay) {
         getCourseConfig().set(courseName.toLowerCase() + ".RewardDelay", rewardDelay);
         persistChanges();
     }
 
+    /**
+     * Get number of Parkoins awarded for completing the Course.
+     * @param courseName course name
+     * @return Parkoins to reward
+     */
     public static int getRewardParkoins(String courseName) {
         return getCourseConfig().getInt(courseName.toLowerCase() + ".Parkoins");
     }
 
+    /**
+     * Set number of Parkoins awarded for completing the Course.
+     * @param courseName course name
+     * @param parkoins Parkoins to reward
+     */
     public static void setRewardParkoins(String courseName, int parkoins) {
         getCourseConfig().set(courseName.toLowerCase() + ".Parkoins", parkoins);
         persistChanges();
     }
 
+    /**
+     * Get Join Items for Course.
+     * Each Join item has customisable and optional settings.
+     * Build the list of each Material in an ItemStack based on options.
+     * @param courseName course name
+     * @return populated Join Items
+     */
     public static List<ItemStack> getJoinItems(String courseName) {
         List<ItemStack> joinItems = new ArrayList<>();
         ConfigurationSection joinItemStack = getCourseConfig().getConfigurationSection(courseName.toLowerCase() + ".JoinItems");
@@ -462,6 +549,14 @@ public class CourseInfo {
         return joinItems;
     }
 
+    /**
+     * Add a Join Item to the Course.
+     * @param courseName course name
+     * @param material material to add
+     * @param amount amount of material
+     * @param label item label
+     * @param unbreakable unbreakable flag
+     */
     public static void addJoinItem(String courseName, Material material, int amount, String label, boolean unbreakable) {
         courseName = courseName.toLowerCase();
 
@@ -471,28 +566,19 @@ public class CourseInfo {
         persistChanges();
     }
 
+    /**
+     * Get the World the Course is in.
+     * @param courseName course name
+     * @return world name
+     */
     public static String getWorld(String courseName) {
         return getCourseConfig().getString(courseName.toLowerCase() + ".World");
     }
 
-    public static Material getMaterialPrize(String courseName) {
-        return MaterialUtils.lookupMaterial(getCourseConfig().getString(courseName.toLowerCase() + ".Prize.Material"));
-    }
-
-    public static int getMaterialPrizeAmount(String courseName) {
-        return getCourseConfig().getInt(courseName.toLowerCase() + ".Prize.Amount", 0);
-    }
-
-    public static boolean hasMaterialPrize(String courseName) {
-        return getCourseConfig().contains(courseName.toLowerCase() + ".Prize.Material");
-    }
-
-    public static void resetLinks(String courseName) {
-        getCourseConfig().set(courseName.toLowerCase() + ".LinkedLobby", null);
-        getCourseConfig().set(courseName.toLowerCase() + ".LinkedCourse", null);
-        persistChanges();
-    }
-
+    /**
+     * Delete the Course and all associated data.
+     * @param courseName course name
+     */
     public static void deleteCourse(String courseName) {
         courseName = courseName.toLowerCase();
 
@@ -508,18 +594,31 @@ public class CourseInfo {
         PlayerInfo.removeCompletedCourse(courseName);
     }
 
+    /**
+     * Reset Prizes for Course completion.
+     * @param courseName course name
+     */
     public static void resetPrizes(String courseName) {
         getCourseConfig().set(courseName.toLowerCase() + ".Prize", null);
         persistChanges();
     }
 
     /**
-     * Displays all the information stored about a course.
-     * Accessed via "/pa stats (course)", will only display applicable information.
-     * Yeah, it's super ugly.
-     *
-     * @param courseName
-     * @param sender
+     * Reset the Links of the Course.
+     * Removes any linked Lobby or Course.
+     * @param courseName course name
+     */
+    public static void resetLinks(String courseName) {
+        getCourseConfig().set(courseName.toLowerCase() + ".LinkedLobby", null);
+        getCourseConfig().set(courseName.toLowerCase() + ".LinkedCourse", null);
+        persistChanges();
+    }
+
+    /**
+     * Displays all information stored about Course.
+     * Dynamically displays data based on what has been set.
+     * @param sender requesting player
+     * @param courseName course name
      */
     public static void displayCourseInfo(CommandSender sender, String courseName) {
         if (!Parkour.getInstance().getCourseManager().courseExists(courseName)) {
@@ -527,113 +626,72 @@ public class CourseInfo {
             return;
         }
 
-        courseName = courseName.toLowerCase();
-        FileConfiguration config = getCourseConfig();
-        ChatColor aqua = ChatColor.AQUA;
-
-        int views = config.getInt(courseName + ".Views");
-        int completed = config.getInt(courseName + ".Completed");
-        int maxDeaths = config.getInt(courseName + ".MaxDeaths");
-        int maxTime = config.getInt(courseName + ".MaxTime");
-        int minLevel = config.getInt(courseName + ".MinimumLevel");
-        int rewardLevel = config.getInt(courseName + ".RewardLevel");
-        int rewardLevelAdd = config.getInt(courseName + ".RewardLevelAdd");
-        int parkoins = config.getInt(courseName + ".Parkoins");
-
-        String linkedLobby = config.getString(courseName + ".LinkedLobby");
-        String linkedCourse = config.getString(courseName + ".LinkedCourse");
-        String creator = config.getString(courseName + ".Creator");
-        boolean ready = config.getBoolean(courseName + ".Ready");
-        String parkourKit = config.getString(courseName + ".ParkourKit");
-        String mode = config.getString(courseName + ".Mode");
-
-        double completePercent = Math.round((completed * 1.0 / views) * 100);
         TranslationUtils.sendHeading(StringUtils.standardizeText(courseName) + " statistics", sender);
 
-        sender.sendMessage("Views: " + aqua + views);
-        sender.sendMessage("Completed: " + aqua + completed + " times (" + completePercent + "%)");
-        sender.sendMessage("Checkpoints: " + aqua + getCheckpointAmount(courseName));
-        sender.sendMessage("Creator: " + aqua + creator);
-        sender.sendMessage("Ready: " + aqua + ready);
+        sendValue(sender, "Views", getViews(courseName));
+        sendValue(sender, "Completions", getCompletions(courseName)
+                + " (" + getCompletionPercent(courseName) + "%)");
+        sendValue(sender, "Checkpoints", getCheckpointAmount(courseName));
+        sendValue(sender, "Creator", getCreator(courseName));
+        sendValue(sender, "Ready Status", String.valueOf(getReadyStatus(courseName)));
 
-        if (minLevel > 0) {
-            sender.sendMessage("Level Required: " + aqua + minLevel);
-        }
+        sendConditionalValue(sender, "Minimum ParkourLevel", getMinimumLevel(courseName));
+        sendConditionalValue(sender, "ParkourLevel Reward", getRewardParkourLevel(courseName));
+        sendConditionalValue(sender, "ParkourLevel Reward Increase", getRewardParkourLevelIncrease(courseName));
+        sendConditionalValue(sender, "Parkoins Reward", getRewardParkoins(courseName));
+        sendConditionalValue(sender, "Max Deaths", getMaximumDeaths(courseName));
+        sendConditionalValue(sender, "Max Time", hasMaximumTime(courseName),
+                DateTimeUtils.convertSecondsToTime(getMaximumTime(courseName)));
 
-        if (rewardLevel > 0) {
-            sender.sendMessage("Level Reward: " + aqua + rewardLevel);
-        }
+        sendConditionalValue(sender, "Linked Course", hasLinkedCourse(courseName), getLinkedCourse(courseName));
+        sendConditionalValue(sender, "Linked Lobby", hasLinkedLobby(courseName), getLinkedLobby(courseName));
+        sendConditionalValue(sender, "ParkourKit", hasParkourKit(courseName), getLinkedLobby(courseName));
+        sendConditionalValue(sender, "ParkourMode", hasParkourMode(courseName), getParkourMode(courseName));
 
-        if (rewardLevelAdd > 0) {
-            sender.sendMessage("Level Reward Addon: " + aqua + rewardLevelAdd);
-        }
-
-        if (linkedLobby != null && linkedLobby.length() > 0) {
-            sender.sendMessage("Linked Lobby: " + aqua + linkedLobby);
-        }
-
-        if (linkedCourse != null && linkedCourse.length() > 0) {
-            sender.sendMessage("Linked Course: " + aqua + linkedCourse);
-        }
-
-        if (parkoins > 0) {
-            sender.sendMessage("Parkoins Reward: " + aqua + parkoins);
-        }
-
-        if (parkourKit != null && parkourKit.length() > 0) {
-            sender.sendMessage("ParkourKit: " + aqua + parkourKit);
-        }
-
-        if (mode != null && !"none".equalsIgnoreCase(mode)) {
-            sender.sendMessage("ParkourMode: " + aqua + mode);
-        }
-
-        if (maxDeaths > 0) {
-            sender.sendMessage("Max Deaths: " + aqua + maxDeaths);
-        }
-
-        if (maxTime > 0) {
-            sender.sendMessage("Time Limit: " + aqua + DateTimeUtils.convertSecondsToTime(maxTime));
-        }
+        sendConditionalValue(sender, "Material Prize",
+                hasMaterialPrize(courseName) && getMaterialPrizeAmount(courseName) > 0,
+                getMaterialPrize(courseName) + " x " + getMaterialPrizeAmount(courseName));
+        sendConditionalValue(sender, "XP Prize", getXPPrize(courseName));
 
         if (Parkour.getInstance().getEconomyApi().isEnabled()) {
-            int joinFee = getEconomyJoiningFee(courseName);
-            int finishReward = getEconomyFinishReward(courseName);
-            if (joinFee > 0) {
-                sender.sendMessage("Join Fee: " + aqua + joinFee);
-            }
-            if (finishReward > 0) {
-                sender.sendMessage("Economy Reward: " + aqua + finishReward);
-            }
-        }
-
-        if (hasMaterialPrize(courseName) && getMaterialPrizeAmount(courseName) > 0) {
-            sender.sendMessage("Material Prize: " + aqua + getMaterialPrize(courseName) + " x " + getMaterialPrizeAmount(courseName));
-        }
-        if (getXPPrize(courseName) > 0) {
-            sender.sendMessage("XP Prize: " + aqua + getXPPrize(courseName));
+            sendConditionalValue(sender, "Join Fee", getEconomyJoiningFee(courseName));
+            sendConditionalValue(sender, "Economy Reward", getEconomyFinishReward(courseName));
         }
 
         if (hasRewardDelay(courseName) && Parkour.getDefaultConfig().isDisplayPrizeCooldown()) {
-            sender.sendMessage("Reward Cooldown (days): " + aqua + getRewardDelay(courseName));
+            sendValue(sender, "Reward Cooldown", DateTimeUtils.displayTimeRemaining(
+                    DateTimeUtils.convertHoursToMilliseconds(getRewardDelay(courseName))));
 
-            if (sender instanceof Player && !Parkour.getInstance().getPlayerManager().hasPrizeCooldownDurationPassed((Player) sender, courseName, false)) {
-                sender.sendMessage("Cooldown Remaining: " + aqua + DateTimeUtils.getTimeRemaining((Player) sender, courseName));
+            if (sender instanceof Player && !Parkour.getInstance().getPlayerManager().hasPrizeCooldownDurationPassed(
+                    (Player) sender, courseName, false)) {
+                sendValue(sender, "Cool down Remaining", DateTimeUtils.getTimeRemaining((Player) sender, courseName));
             }
         }
         for (ParkourEventType value : ParkourEventType.values()) {
             if (hasEventCommands(courseName, value)) {
-                TranslationUtils.sendHeading(value.getConfigEntry() + " Commands", sender);
+                sender.sendMessage(ChatColor.AQUA + value.getConfigEntry() + " Commands");
                 getEventCommands(courseName, value).forEach(sender::sendMessage);
             }
         }
     }
 
+    /**
+     * Get Potion ParkourMode Effects for Course.
+     * The effects are stored in a "EFFECT,DURATION,AMPLIFIER" format to be used by XPotion library.
+     * @param courseName course name
+     * @return list of potion effects
+     */
     public static List<String> getPotionParkourModeEffects(String courseName) {
         return getCourseConfig().getStringList(courseName.toLowerCase() + ".PotionParkourMode.Effects");
     }
 
-    public static void addPotionParkourModeEffect(String courseName, String potionEffectType, String durationAmplifier) {
+    /**
+     * Add a Potion ParkourMode Effect to the Course.
+     * @param courseName course name
+     * @param potionEffectType potion effect type name
+     * @param durationAmplifier duration and amplifier provided
+     */
+    public static void addPotionParkourModeEffect(String courseName, String potionEffectType, @Nullable String durationAmplifier) {
         List<String> potionEffects = getPotionParkourModeEffects(courseName);
         String potionEffect = potionEffectType;
 
@@ -646,58 +704,159 @@ public class CourseInfo {
         persistChanges();
     }
 
-    public static boolean hasPotionJoinMessage(String courseName) {
-        return getCourseConfig().contains(courseName.toLowerCase() + ".PotionParkourMode.JoinMessage");
-    }
-
+    /**
+     * Get Potion ParkourMode join message.
+     * @param courseName course name
+     * @return join message
+     */
     public static String getPotionJoinMessage(String courseName) {
         return getCourseConfig().getString(courseName.toLowerCase() + ".PotionParkourMode.JoinMessage");
     }
 
+    /**
+     * Check if the Course has a Potion join message.
+     * @param courseName course name
+     * @return course has potion join message
+     */
+    public static boolean hasPotionJoinMessage(String courseName) {
+        return getCourseConfig().contains(courseName.toLowerCase() + ".PotionParkourMode.JoinMessage");
+    }
+
+    /**
+     * Set Potion ParkourMode join message.
+     * @param courseName course name
+     * @param joinMessage join message
+     */
     public static void setPotionJoinMessage(String courseName, String joinMessage) {
         getCourseConfig().set(courseName.toLowerCase() + ".PotionParkourMode.JoinMessage", joinMessage);
         persistChanges();
     }
 
+    /**
+     * Get Economic Reward for finishing Course.
+     * @param courseName course name
+     * @return finish reward
+     */
     public static int getEconomyFinishReward(String courseName) {
         return Parkour.getConfig(ConfigType.ECONOMY).getInt("Price." + courseName.toLowerCase() + ".Finish");
     }
 
+    /**
+     * Get Economic Fee for joining Course.
+     * @param courseName course name
+     * @return joining fee
+     */
     public static int getEconomyJoiningFee(String courseName) {
         return Parkour.getConfig(ConfigType.ECONOMY).getInt("Price." + courseName.toLowerCase() + ".JoinFee");
     }
 
-    public static void setJoinMessage(String courseName, String type, String value) {
+    /**
+     * Set Event Message for Course.
+     * Possible events found within {@link ParkourEventType}.
+     * @param courseName course name
+     * @param type event type name
+     * @param value message value
+     */
+    public static void setEventMessage(String courseName, String type, String value) {
         getCourseConfig().set(courseName + "." + StringUtils.standardizeText(type) + "Message", value);
         persistChanges();
     }
 
-    public static boolean hasPlayerLimit(String courseName) {
-        return getCourseConfig().getInt(courseName.toLowerCase() + ".PlayerLimit") > 0;
-    }
-
+    /**
+     * Get number of Player limit for Course.
+     * @param courseName course name
+     * @return player limit
+     */
     public static int getPlayerLimit(String courseName) {
         return getCourseConfig().getInt(courseName.toLowerCase() + ".PlayerLimit");
     }
 
+    /**
+     * Check if Course has Player Limit.
+     * @param courseName course name
+     * @return course has player limit
+     */
+    public static boolean hasPlayerLimit(String courseName) {
+        return getCourseConfig().getInt(courseName.toLowerCase() + ".PlayerLimit") > 0;
+    }
+
+    /**
+     * Set Player limit for Course.
+     * @param courseName course name
+     * @param limit player limi
+     */
     public static void setPlayerLimit(String courseName, int limit) {
         getCourseConfig().set(courseName.toLowerCase() + ".PlayerLimit", limit);
         persistChanges();
     }
 
+    /**
+     * Get the Event Type Commands for the Course.
+     * The Commands found will be run during the matching Event.
+     * @param courseName course name
+     * @param eventType selected {@link ParkourEventType}
+     * @return commands for that event
+     */
     public static List<String> getEventCommands(String courseName, ParkourEventType eventType) {
         return getCourseConfig().getStringList(courseName.toLowerCase() + "." + eventType.getConfigEntry() + "Command");
     }
 
+    /**
+     * Check if the Course has Event Type Commands for the Course.
+     * @param courseName course name
+     * @param eventType selected {@link ParkourEventType}
+     * @return course has the event type commands
+     */
     public static boolean hasEventCommands(String courseName, ParkourEventType eventType) {
         return getCourseConfig().contains(courseName.toLowerCase() + "." + eventType.getConfigEntry() + "Command");
     }
 
+    /**
+     * Add the Event Type Command to the Course.
+     * @param courseName course name
+     * @param eventType selected {@link ParkourEventType}
+     * @param value command to run
+     */
     public static void addEventCommand(String courseName, ParkourEventType eventType, String value) {
         List<String> commands = getEventCommands(courseName, eventType);
         commands.add(value);
 
         getCourseConfig().set(courseName.toLowerCase() + "." + eventType.getConfigEntry() + "Command", commands);
         persistChanges();
+    }
+
+    /**
+     * Get the Courses {@link ParkourConfiguration}.
+     * @return the courses.yml configuration
+     */
+    private static ParkourConfiguration getCourseConfig() {
+        return Parkour.getConfig(ConfigType.COURSES);
+    }
+
+    /**
+     * Persist any changes made to the config.yml file.
+     */
+    private static void persistChanges() {
+        getCourseConfig().save();
+    }
+
+    private static void sendValue(CommandSender sender, String title, String value) {
+        sender.sendMessage(title + ": " + ChatColor.AQUA + value);
+    }
+
+    private static void sendValue(CommandSender sender, String title, Integer value) {
+        sendValue(sender, title, String.valueOf(value));
+    }
+
+    private static void sendConditionalValue(CommandSender sender, String title, Boolean conditionMet, String value) {
+        if (conditionMet) {
+            sendValue(sender, title, value);
+        }
+    }
+
+    private static void sendConditionalValue(CommandSender sender, String title, Integer value) {
+        if (value != null && value > 0) {
+            sendValue(sender, title, value);
+        }
     }
 }

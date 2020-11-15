@@ -87,6 +87,9 @@ public class BountifulApi extends PluginWrapper {
 
 			} else if (isEnabled()) {
 				BountifulAPI.sendActionBar(player, title);
+
+			} else {
+				player.sendMessage(Parkour.getPrefix() + title);
 			}
 		} else {
 			player.sendMessage(Parkour.getPrefix() + title);

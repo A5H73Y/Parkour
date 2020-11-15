@@ -71,12 +71,12 @@ public class DateTimeUtils {
 	}
 
 	public static String getTimeRemaining(OfflinePlayer player, String courseName) {
-		long daysDelay = convertDaysToMilliseconds(CourseInfo.getRewardDelay(courseName));
+		long hoursDelay = convertHoursToMilliseconds(CourseInfo.getRewardDelay(courseName));
 		long timeDifference = System.currentTimeMillis() - PlayerInfo.getLastRewardedTime(player, courseName);
-		return displayTimeRemaining(daysDelay - timeDifference);
+		return displayTimeRemaining(hoursDelay - timeDifference);
 	}
 
-	private static String displayTimeRemaining(long millis) {
+	public static String displayTimeRemaining(long millis) {
 		MillisecondConverter time = new MillisecondConverter(millis);
 		StringBuilder totalTime = new StringBuilder();
 
@@ -100,7 +100,11 @@ public class DateTimeUtils {
 	}
 
 	public static long convertDaysToMilliseconds(int days) {
-		return days * 86400000L; //(24*60*60*1000)
+		return days * 86400000L; // 24 * 60 * 60 * 1000
+	}
+
+	public static long convertHoursToMilliseconds(double hours) {
+		return (long) (hours * 3600000L); // 60 * 60 * 1000
 	}
 
 //	public void tesT() {

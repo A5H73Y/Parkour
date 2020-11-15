@@ -12,78 +12,16 @@ import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.util.ArrayList;
 import java.util.List;
+import jdk.internal.jline.internal.Nullable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Validation {
-
-    /**
-     * Validate if the argument is numeric
-     * "1" = true, "Hi" = false
-     *
-     * @param input
-     * @return whether the input is numeric
-     */
-    public static boolean isInteger(String input) {
-        try {
-            Integer.parseInt(input);
-            return true;
-        } catch (Exception ignored) {
-        }
-        return false;
-    }
-
-    /**
-     * Validate if the argument is numeric
-     * "1" = true, "1.0" = true, "Hi" = false
-     *
-     * @param input
-     * @return whether the input is numeric
-     */
-    public static boolean isDouble(String input) {
-        try {
-            Double.parseDouble(input);
-            return true;
-        } catch (Exception ignored) {
-        }
-        return false;
-    }
-
-    /**
-     * Validate if the argument is numeric
-     * "1" = true, "Hi" = false, "-1" = false
-     *
-     * @param input
-     * @return whether the input is numeric
-     */
-    public static boolean isPositiveInteger(String input) {
-        return isInteger(input) && Integer.parseInt(input) >= 0;
-    }
-
-    /**
-     * Validate if the argument is numeric
-     * "1" = true, "Hi" = false, "-1" = false
-     *
-     * @param input
-     * @return whether the input is numeric
-     */
-    public static boolean isPositiveDouble(String input) {
-        return isDouble(input) && Double.parseDouble(input) >= 0;
-    }
-
-    /**
-     * Validate if the input is a populated String
-     *
-     * @param input
-     * @return whether the input is a valid String
-     */
-    public static boolean isStringValid(String input) {
-        return input != null && input.trim().length() != 0;
-    }
 
     /**
      * Validate course creation
@@ -101,7 +39,7 @@ public class Validation {
             player.sendMessage(Parkour.getPrefix() + "Course name can not contain '.'");
             return false;
 
-        } else if (isInteger(courseName)) {
+        } else if (ValidationUtils.isInteger(courseName)) {
             player.sendMessage(Parkour.getPrefix() + "Course name can not only be numeric");
             return false;
 
@@ -122,7 +60,7 @@ public class Validation {
      */
     public static boolean courseJoining(Player player, Course course) {
         /* World doesn't exist */
-        if (course.getCheckpoints().isEmpty() ) {
+        if (course.getCheckpoints().isEmpty()) {
             TranslationUtils.sendTranslation("Error.UnknownWorld", player);
             return false;
         }
@@ -285,7 +223,7 @@ public class Validation {
             if (!economyApi.isEnabled()) {
                 player.sendMessage(Parkour.getPrefix() + "Economy is disabled, no wager will be made.");
 
-            } else if (!isPositiveDouble(wagerAmount)) {
+            } else if (!ValidationUtils.isPositiveDouble(wagerAmount)) {
                 player.sendMessage(Parkour.getPrefix() + "Wager must be a positive number.");
                 return false;
 
@@ -361,7 +299,7 @@ public class Validation {
      * @param player
      * @return
      */
-    public static boolean createCheckpoint(Player player, String[] args) {
+    public static boolean createCheckpoint(Player player, @Nullable Integer checkpoint) {
         String selected = PlayerInfo.getSelectedCourse(player).toLowerCase();
 
         if (!Parkour.getInstance().getCourseManager().courseExists(selected)) {
@@ -371,17 +309,17 @@ public class Validation {
 
         int pointcount = CourseInfo.getCheckpointAmount(selected) + 1;
 
-        if (!(args.length <= 1)) {
-            if (!isPositiveInteger(args[1])) {
-                player.sendMessage(Parkour.getPrefix() + "Checkpoint specified is not numeric!");
+        if (checkpoint != null) {
+            if (checkpoint < 1) {
+                player.sendMessage(Parkour.getPrefix() + "Checkpoint specified is not valid!");
                 return false;
             }
-            if (pointcount < Integer.parseInt(args[1])) {
+            if (pointcount < checkpoint) {
                 player.sendMessage(Parkour.getPrefix() + "This checkpoint does not exist! " + ChatColor.RED + "Creation cancelled.");
                 return false;
             }
 
-            pointcount = Integer.parseInt(args[1]);
+            pointcount = checkpoint;
         }
 
         if (pointcount < 1) {

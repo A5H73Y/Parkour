@@ -273,8 +273,8 @@ public class Parkour extends JavaPlugin {
         courseManager = new CourseManager(this);
         checkpointManager = new CheckpointManager(this);
         parkourKitManager = new ParkourKitManager(this);
-        playerManager = new PlayerManager(this);
         lobbyManager = new LobbyManager(this);
+        playerManager = new PlayerManager(this);
         guiManager = new ParkourGuiManager(this);
         soundsManager = new SoundsManager(this);
     }

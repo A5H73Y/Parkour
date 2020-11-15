@@ -22,7 +22,7 @@ public class CreateParkourKitConversation extends ParkourConversation {
         return new ChooseKitName();
     }
 
-    private class ChooseKitName extends StringPrompt {
+    private static class ChooseKitName extends StringPrompt {
 
         public String getPromptText(ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " What would you like to name your ParkourKit?";

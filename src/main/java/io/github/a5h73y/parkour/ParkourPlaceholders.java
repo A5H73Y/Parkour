@@ -8,6 +8,7 @@ import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.util.List;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
@@ -195,7 +196,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             if (arguments.length != 3) {
                 return INVALID_SYNTAX;
             }
-            if (!Validation.isInteger(arguments[2])) {
+            if (!ValidationUtils.isInteger(arguments[2])) {
                 return INVALID_SYNTAX;
             }
             int pos = Integer.parseInt(arguments[2]);
@@ -253,7 +254,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             if (arguments.length != 4) {
                 return INVALID_SYNTAX;
             }
-            if (!Validation.isInteger(arguments[3]) || Integer.parseInt(arguments[3]) < 1) {
+            if (!ValidationUtils.isInteger(arguments[3]) || Integer.parseInt(arguments[3]) < 1) {
                 return INVALID_SYNTAX;
             }
 

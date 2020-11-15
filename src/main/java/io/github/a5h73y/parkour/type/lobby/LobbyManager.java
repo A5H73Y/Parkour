@@ -10,6 +10,7 @@ import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.command.CommandSender;
@@ -35,7 +36,7 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
         setLobby(player, lobbyName);
         TranslationUtils.sendValueTranslation("Lobby.Created", lobbyName, player);
 
-        if (args.length > 2 && Validation.isPositiveInteger(args[2])) {
+        if (args.length > 2 && ValidationUtils.isPositiveInteger(args[2])) {
             LobbyInfo.setRequiredLevel(lobbyName, Integer.parseInt(args[2]));
             TranslationUtils.sendValueTranslation("Lobby.RequiredLevelSet", args[2], player);
         }

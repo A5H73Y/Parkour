@@ -4,6 +4,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
+import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.other.Validation;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
@@ -13,9 +14,8 @@ import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.ArrayList;
 import java.util.List;
-import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.XBlock;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -25,9 +25,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Checkpoint Manager.
+ * No need for cache as they are part of a course's cache.
+ */
 public class CheckpointManager extends AbstractPluginReceiver {
-
-    // no need for cache as they are per course (which are cached)
 
     public CheckpointManager(final Parkour parkour) {
         super(parkour);
@@ -40,27 +42,24 @@ public class CheckpointManager extends AbstractPluginReceiver {
      * The block on which the checkpoint is created must be able to have a pressure plate
      * placed on it (if configured).
      *
-     * @param args
-     * @param player
+     * @param player requesting player
+     * @param checkpoint optional checkpoint number to override
      */
-    public void createCheckpoint(Player player, String[] args) {
-        if (!Validation.createCheckpoint(player, args)) {
+    public void createCheckpoint(Player player, @Nullable Integer checkpoint) {
+        if (!Validation.createCheckpoint(player, checkpoint)) {
             return;
         }
 
         String selectedCourse = PlayerInfo.getSelectedCourse(player);
+        // the checkpoint number to overwrite / create
+        checkpoint = checkpoint != null ? checkpoint : CourseInfo.getCheckpointAmount(selectedCourse) + 1;
         Location location = player.getLocation();
         Block block = location.getBlock();
         Block blockUnder = block.getRelative(BlockFace.DOWN);
 
-        // the checkpoint number to overwrite / create
-        int checkpoint = args.length == 2 ? Integer.parseInt(args[1]) :
-                CourseInfo.getCheckpointAmount(selectedCourse) + 1;
-
         if (parkour.getConfig().isEnforceSafeCheckpoints()) {
             try {
-                // attempt to check if the player is able to create the checkpoint
-                // on their current location.
+                // attempt to check if the player is able to create the checkpoint at their current location.
                 if (!MaterialUtils.isCheckpointSafe(player, block)) {
                     return;
                 }
@@ -75,22 +74,22 @@ public class CheckpointManager extends AbstractPluginReceiver {
         }
 
         // if they are floating in air, place stone below them
-        if (blockUnder.getType().equals(Material.AIR)
-                || blockUnder.getType().equals(XMaterial.CAVE_AIR.parseMaterial())) {
+        if (XBlock.isAir(blockUnder.getType())) {
             blockUnder.setType(Material.STONE);
         }
 
-        Material pressurePlate = MaterialUtils.lookupMaterial(parkour.getConfig().getCheckpointMaterial());
-        block.setType(pressurePlate);
+        block.setType(parkour.getConfig().getCheckpointMaterial());
 
         createCheckpointData(selectedCourse, location, checkpoint);
         parkour.getCourseManager().clearCache(selectedCourse);
-        player.sendMessage(Parkour.getPrefix() + "Checkpoint " + ChatColor.DARK_AQUA + checkpoint + ChatColor.WHITE + " set on " + ChatColor.AQUA + selectedCourse);
+        player.sendMessage(TranslationUtils.getTranslation("Parkour.CheckpointCreated")
+                .replace("%CHECKPOINT%", String.valueOf(checkpoint))
+                .replace(Constants.COURSE_PLACEHOLDER, selectedCourse));
     }
 
     /**
-     * Create and save the checkpoint data.
-     * The location for the player to teleport to and the location for the pressure plate will be created.
+     * Create and persist Checkpoint data.
+     * The Location will be used to store the location to teleport to, and to mark the position of the pressure plate.
      *
      * @param courseName player's selected course
      * @param location checkpoint location
@@ -118,100 +117,22 @@ public class CheckpointManager extends AbstractPluginReceiver {
     }
 
     /**
-     * Delete the course checkpoint data.
-     * When the course is deleted, delete the checkpoint data for the course.
+     * Create a Checkpoint from the Player's current Location.
+     * This can be used to mark a temporary Checkpoint that isn't persisted.
      *
-     * @param courseName
-     */
-    public void deleteCheckpointData(String courseName) {
-        ParkourConfiguration checkpointConfig = Parkour.getConfig(ConfigType.CHECKPOINTS);
-        checkpointConfig.set(courseName, null);
-        checkpointConfig.save();
-    }
-
-    /**
-     * Teleport player to a checkpoint.
-     * If the checkpoint flag is false, it will teleport the player to the start.
-     * Otherwise the player will teleport to the chosen checkpoint.
-     *
-     * @param args
-     * @param player
-     * @param toCheckpoint
-     */
-    public void teleportCheckpoint(Player player, String courseName, @Nullable String checkpoint) {
-        if (!parkour.getCourseManager().courseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
-            return;
-        }
-
-        ParkourConfiguration checkpointsConfig = Parkour.getConfig(ConfigType.CHECKPOINTS);
-        ParkourConfiguration courseConfig = Parkour.getConfig(ConfigType.COURSES);
-
-        courseName = courseName.toLowerCase();
-        // if a checkpoint is specified, or default to 0 (start)
-        String path = checkpoint == null ? courseName + ".0" : courseName + "." + checkpoint;
-
-        World world = Bukkit.getWorld(courseConfig.getString(courseName + "." + "World"));
-        double x = checkpointsConfig.getDouble(path + ".X");
-        double y = checkpointsConfig.getDouble(path + ".Y");
-        double z = checkpointsConfig.getDouble(path + ".Z");
-        float yaw = checkpointsConfig.getInt(path + ".Yaw");
-        float pitch = checkpointsConfig.getInt(path + ".Pitch");
-
-        if (x == 0 && y == 0 && z == 0) {
-            TranslationUtils.sendTranslation("Error.UnknownCheckpoint", player);
-            return;
-        }
-
-        player.teleport(new Location(world, x, y, z, yaw, pitch));
-        String message = TranslationUtils.getValueTranslation("Parkour.Teleport", courseName);
-        player.sendMessage(checkpoint != null ? message + StringUtils.colour(" &f(&3" + checkpoint + "&f)") : message);
-    }
-
-    /**
-     * Delete a checkpoint from the course.
-     * This will only delete the last checkpoint, decreasing the amount of checkpoints.
-     *
-     * @param courseName
-     * @param sender
-     */
-    public void deleteCheckpoint(CommandSender sender, String courseName) {
-        if (!parkour.getCourseManager().courseExists(courseName)) {
-            return;
-        }
-
-        courseName = courseName.toLowerCase();
-        int point = CourseInfo.getCheckpointAmount(courseName);
-
-        if (point <= 0) {
-            sender.sendMessage(Parkour.getPrefix() + courseName + " has no checkpoints!");
-            return;
-        }
-
-        ParkourConfiguration checkpointsConfig = Parkour.getConfig(ConfigType.CHECKPOINTS);
-
-        checkpointsConfig.set(courseName + "." + point, null);
-        checkpointsConfig.set(courseName + ".Checkpoints", point - 1);
-        checkpointsConfig.save();
-        parkour.getCourseManager().clearCache(courseName);
-
-        sender.sendMessage(TranslationUtils.getTranslation("Parkour.DeleteCheckpoint")
-                .replace("%CHECKPOINT%", String.valueOf(point))
-                .replace("%COURSE%", courseName));
-
-        PluginUtils.logToFile("Checkpoint " + point + " was deleted on " + courseName + " by " + sender.getName());
-    }
-
-    /**
-     * Create a new checkpoint based on the players current location.
-     *
-     * @param player
-     * @return checkpoint
+     * @param player requesting player
+     * @return created Checkpoint
      */
     public Checkpoint createCheckpointFromPlayerLocation(Player player) {
         return new Checkpoint(player.getLocation(), 0, 0, 0);
     }
 
+    /**
+     * Find the Checkpoints for a Course.
+     *
+     * @param courseName requested course
+     * @return matching checkpoints
+     */
     public List<Checkpoint> getCheckpoints(String courseName) {
         courseName = courseName.toLowerCase();
 
@@ -249,5 +170,90 @@ public class CheckpointManager extends AbstractPluginReceiver {
         }
 
         return checkpoints;
+    }
+
+    /**
+     * Teleport Player to a checkpoint.
+     * If a checkpoint number is provided that will be the checkpoint loaded.
+     * Otherwise the Player will teleported to the course start (checkpoint 0).
+     *
+     * @param player requesting player
+     * @param courseName the desired course
+     * @param checkpoint optional checkpoint number
+     */
+    public void teleportCheckpoint(Player player, String courseName, @Nullable Integer checkpoint) {
+        if (!parkour.getCourseManager().courseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
+            return;
+        }
+
+        ParkourConfiguration checkpointsConfig = Parkour.getConfig(ConfigType.CHECKPOINTS);
+        ParkourConfiguration courseConfig = Parkour.getConfig(ConfigType.COURSES);
+
+        courseName = courseName.toLowerCase();
+        // if a checkpoint is specified, or default to 0 (start)
+        String path = checkpoint == null ? courseName + ".0" : courseName + "." + checkpoint;
+
+        World world = Bukkit.getWorld(courseConfig.getString(courseName + "." + "World"));
+        double x = checkpointsConfig.getDouble(path + ".X");
+        double y = checkpointsConfig.getDouble(path + ".Y");
+        double z = checkpointsConfig.getDouble(path + ".Z");
+        float yaw = checkpointsConfig.getInt(path + ".Yaw");
+        float pitch = checkpointsConfig.getInt(path + ".Pitch");
+
+        if (x == 0 && y == 0 && z == 0) {
+            TranslationUtils.sendTranslation("Error.UnknownCheckpoint", player);
+            return;
+        }
+
+        player.teleport(new Location(world, x, y, z, yaw, pitch));
+        String message = TranslationUtils.getValueTranslation("Parkour.Teleport", courseName);
+        player.sendMessage(checkpoint != null ? message + StringUtils.colour(" &f(&3" + checkpoint + "&f)") : message);
+    }
+
+    /**
+     * Delete a Checkpoint from the Course.
+     * This will only delete the highest Checkpoint, decreasing the amount of Checkpoints.
+     *
+     * @param sender requesting sender
+     * @param courseName the desired course
+     */
+    public void deleteCheckpoint(CommandSender sender, String courseName) {
+        if (!parkour.getCourseManager().courseExists(courseName)) {
+            return;
+        }
+
+        courseName = courseName.toLowerCase();
+        int point = CourseInfo.getCheckpointAmount(courseName);
+
+        if (point <= 0) {
+            sender.sendMessage(Parkour.getPrefix() + courseName + " has no checkpoints!");
+            return;
+        }
+
+        ParkourConfiguration checkpointsConfig = Parkour.getConfig(ConfigType.CHECKPOINTS);
+
+        checkpointsConfig.set(courseName + "." + point, null);
+        checkpointsConfig.set(courseName + ".Checkpoints", point - 1);
+        checkpointsConfig.save();
+        parkour.getCourseManager().clearCache(courseName);
+
+        sender.sendMessage(TranslationUtils.getTranslation("Parkour.DeleteCheckpoint")
+                .replace("%CHECKPOINT%", String.valueOf(point))
+                .replace(Constants.COURSE_PLACEHOLDER, courseName));
+
+        PluginUtils.logToFile("Checkpoint " + point + " was deleted on " + courseName + " by " + sender.getName());
+    }
+
+    /**
+     * Delete the Course checkpoint data.
+     * When the course is deleted, delete the checkpoint data for the course.
+     *
+     * @param courseName course datat to delete
+     */
+    public void deleteCheckpointData(String courseName) {
+        ParkourConfiguration checkpointConfig = Parkour.getConfig(ConfigType.CHECKPOINTS);
+        checkpointConfig.set(courseName, null);
+        checkpointConfig.save();
     }
 }

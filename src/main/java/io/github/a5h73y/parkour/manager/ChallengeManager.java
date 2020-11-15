@@ -2,6 +2,7 @@ package io.github.a5h73y.parkour.manager;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
+import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.HashSet;
 import java.util.Set;
@@ -114,11 +115,11 @@ public class ChallengeManager extends AbstractPluginReceiver {
             removeChallenge(challenge);
 
             winner.sendMessage(TranslationUtils.getTranslation("Parkour.Challenge.Winner")
-                    .replace("%PLAYER%", opponent.getName())
-                    .replace("%COURSE%", challenge.getCourseName()));
+                    .replace(Constants.PLAYER_PLACEHOLDER, opponent.getName())
+                    .replace(Constants.COURSE_PLACEHOLDER, challenge.getCourseName()));
             opponent.sendMessage(TranslationUtils.getTranslation("Parkour.Challenge.Loser")
-                    .replace("%PLAYER%", winner.getName())
-                    .replace("%COURSE%", challenge.getCourseName()));
+                    .replace(Constants.PLAYER_PLACEHOLDER, winner.getName())
+                    .replace(Constants.COURSE_PLACEHOLDER, challenge.getCourseName()));
 
             if (challenge.getWager() != null) {
                 parkour.getEconomyApi().rewardPlayer(winner, challenge.getWager());

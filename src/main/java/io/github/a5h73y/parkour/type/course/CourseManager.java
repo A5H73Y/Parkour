@@ -10,6 +10,7 @@ import io.github.a5h73y.parkour.enums.ParkourEventType;
 import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
+import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.other.Validation;
 import io.github.a5h73y.parkour.type.Cacheable;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
@@ -23,6 +24,7 @@ import io.github.a5h73y.parkour.utility.PermissionUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -55,7 +57,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      * @return course found
      */
     public boolean courseExists(String courseName) {
-        if (!Validation.isStringValid(courseName)) {
+        if (!ValidationUtils.isStringValid(courseName)) {
             return false;
         }
 
@@ -64,7 +66,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     }
 
     public Course getCourse(String argument) {
-        if (Validation.isInteger(argument)) {
+        if (ValidationUtils.isInteger(argument)) {
             return findByNumber(Integer.parseInt(argument));
 
         } else {
@@ -228,7 +230,8 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             parkour.getPlayerManager().displayParkourPlayers(sender);
 
         } else if (args[1].equalsIgnoreCase("courses")) {
-            int page = (args.length == 3 && args[2] != null && Validation.isPositiveInteger(args[2]) ? Integer.parseInt(args[2]) : 1);
+            int page = (args.length == 3 && args[2] != null
+                    && ValidationUtils.isPositiveInteger(args[2]) ? Integer.parseInt(args[2]) : 1);
             displayCourses(sender, page);
 
         } else if (args[1].equalsIgnoreCase("ranks")) {
@@ -288,7 +291,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         for (int i = 0; i < limited.size(); i++) {
             String courseName = limited.get(i);
             int minimumLevel = CourseInfo.getMinimumLevel(courseName);
-            int rewardLevel = CourseInfo.getRewardLevel(courseName);
+            int rewardLevel = CourseInfo.getRewardParkourLevel(courseName);
             boolean ready = CourseInfo.getReadyStatus(courseName);
 
             StringBuilder sb = new StringBuilder();
@@ -459,7 +462,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        if (!Validation.isPositiveInteger(value)) {
+        if (!ValidationUtils.isPositiveInteger(value)) {
             TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
@@ -491,7 +494,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        if (!Validation.isPositiveInteger(secondsValue)) {
+        if (!ValidationUtils.isPositiveInteger(secondsValue)) {
             TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
@@ -515,7 +518,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        if (!Validation.isPositiveInteger(value)) {
+        if (!ValidationUtils.isPositiveInteger(value)) {
             TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
@@ -536,12 +539,12 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        if (!Validation.isPositiveInteger(parkourLevel)) {
+        if (!ValidationUtils.isPositiveInteger(parkourLevel)) {
             TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
-        CourseInfo.setRewardLevel(courseName, Integer.parseInt(parkourLevel));
+        CourseInfo.setRewardParkourLevel(courseName, Integer.parseInt(parkourLevel));
         TranslationUtils.sendPropertySet(sender, "ParkourLevel reward", courseName, parkourLevel);
     }
 
@@ -558,12 +561,12 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        if (!Validation.isPositiveInteger(parkourLevelAdd)) {
+        if (!ValidationUtils.isPositiveInteger(parkourLevelAdd)) {
             TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
-        CourseInfo.setRewardLevelAdd(courseName, parkourLevelAdd);
+        CourseInfo.setRewardParkourLevelIncrease(courseName, parkourLevelAdd);
         TranslationUtils.sendPropertySet(sender, "ParkourLevel addition reward", courseName, parkourLevelAdd);
     }
 
@@ -598,13 +601,14 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        if (!Validation.isPositiveInteger(delay)) {
+        if (!ValidationUtils.isPositiveDouble(delay)) {
             TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
-        CourseInfo.setRewardDelay(courseName, Integer.parseInt(delay));
-        TranslationUtils.sendPropertySet(sender, "Reward Delay", courseName, delay + " days(s)");
+        CourseInfo.setRewardDelay(courseName, Double.parseDouble(delay));
+        long test = DateTimeUtils.convertHoursToMilliseconds(Double.parseDouble(delay));
+        TranslationUtils.sendPropertySet(sender, "Reward Delay", courseName, DateTimeUtils.displayTimeRemaining(test));
     }
 
     /**
@@ -620,7 +624,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        if (!Validation.isPositiveInteger(reward)) {
+        if (!ValidationUtils.isPositiveInteger(reward)) {
             TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
@@ -640,7 +644,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     public void setCourseReadyStatus(Player player, String courseName) {
         courseName = courseName == null ? PlayerInfo.getSelectedCourse(player) : courseName;
 
-        if (!Validation.isStringValid(courseName)) {
+        if (!ValidationUtils.isStringValid(courseName)) {
             player.sendMessage(Parkour.getPrefix() + "Please select a course, or provide a course argument");
             return;
         }
@@ -784,7 +788,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         String wagerString = "";
         Double wager = null;
 
-        if (args.length == 4 && parkour.getEconomyApi().isEnabled() && Validation.isPositiveDouble(args[3])) {
+        if (args.length == 4 && parkour.getEconomyApi().isEnabled() && ValidationUtils.isPositiveDouble(args[3])) {
             String currencyName = parkour.getEconomyApi().getCurrencyName();
             wager = Double.parseDouble(args[3]);
             wagerString = TranslationUtils.getValueTranslation("Parkour.Challenge.Wager", wager + currencyName, false);
@@ -794,13 +798,13 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         String courseName = args[1].toLowerCase();
 
         target.sendMessage(TranslationUtils.getTranslation("Parkour.Challenge.Receive")
-                .replace("%PLAYER%", player.getName())
-                .replace("%COURSE%", courseName) + wagerString);
+                .replace(Constants.PLAYER_PLACEHOLDER, player.getName())
+                .replace(Constants.COURSE_PLACEHOLDER, courseName) + wagerString);
         TranslationUtils.sendTranslation("Parkour.Accept", false, target);
 
         player.sendMessage(TranslationUtils.getTranslation("Parkour.Challenge.Send")
-                .replace("%PLAYER%", target.getName())
-                .replace("%COURSE%", courseName) + wagerString);
+                .replace(Constants.PLAYER_PLACEHOLDER, target.getName())
+                .replace(Constants.COURSE_PLACEHOLDER, courseName) + wagerString);
         parkour.getChallengeManager().createChallenge(player.getName(), target.getName(), courseName, wager);
     }
 
@@ -823,7 +827,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        if (!Validation.isPositiveInteger(args[3])) {
+        if (!ValidationUtils.isPositiveInteger(args[3])) {
             TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
@@ -871,7 +875,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         }
 
         if (args.length >= 3) {
-            if (!Validation.isPositiveInteger(args[2])) {
+            if (!ValidationUtils.isPositiveInteger(args[2])) {
                 TranslationUtils.sendTranslation("Error.InvalidAmount", player);
                 return;
             }
@@ -916,7 +920,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
                 if (SetCourseConversation.MESSAGE_OPTIONS.contains(args[3].toLowerCase())) {
                     String message = StringUtils.extractMessageFromArgs(args, 4);
 
-                    CourseInfo.setJoinMessage(args[1], args[3], message);
+                    CourseInfo.setEventMessage(args[1], args[3], message);
                     TranslationUtils.sendPropertySet(sender, StringUtils.standardizeText(args[3]) + " Message", args[1],
                             StringUtils.colour(message));
 
@@ -952,7 +956,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        if (!Validation.isPositiveInteger(limit)) {
+        if (!ValidationUtils.isPositiveInteger(limit)) {
             TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
@@ -966,7 +970,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             for (String command : CourseInfo.getEventCommands(courseName, type)) {
                 parkour.getServer().dispatchCommand(
                         parkour.getServer().getConsoleSender(),
-                        command.replace("%PLAYER%", player.getName()));
+                        command.replace(Constants.PLAYER_PLACEHOLDER, player.getName()));
             }
         }
     }

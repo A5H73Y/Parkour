@@ -21,6 +21,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.Conversable;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Console related Parkour commands handling.
@@ -61,7 +62,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 break;
 
             case "cmds":
-                displayCommands();
+                displayConsoleCommands();
                 break;
 
             case "createkit":
@@ -103,11 +104,11 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 if (!ValidationUtils.validateArgs(sender, args, 3)) {
                     return false;
 
-                } else if (getPlayer(sender, args[2]) == null){
+                } else if (findPlayer(sender, args[2]) == null) {
                     return false;
                 }
 
-                parkour.getPlayerManager().joinCourse(getPlayer(sender, args[2]), args[1]);
+                parkour.getPlayerManager().joinCourse(findPlayer(sender, args[2]), args[1]);
                 break;
 
             case "leaderboard":
@@ -124,11 +125,11 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 if (!ValidationUtils.validateArgs(sender, args, 2)) {
                     return false;
 
-                } else if (getPlayer(sender, args[1]) == null){
+                } else if (findPlayer(sender, args[1]) == null) {
                     return false;
                 }
 
-                parkour.getPlayerManager().leaveCourse(getPlayer(sender, args[1]));
+                parkour.getPlayerManager().leaveCourse(findPlayer(sender, args[1]));
                 break;
 
             case "linkkit":
@@ -179,22 +180,22 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 if (!ValidationUtils.validateArgs(sender, args, 2)) {
                     return false;
 
-                } else if (getPlayer(sender, args[1]) == null){
+                } else if (findPlayer(sender, args[1]) == null) {
                     return false;
                 }
 
-                parkour.getPlayerManager().playerDie(getPlayer(sender, args[1]));
+                parkour.getPlayerManager().playerDie(findPlayer(sender, args[1]));
                 break;
 
             case "restart":
                 if (!ValidationUtils.validateArgs(sender, args, 2)) {
                     return false;
 
-                } else if (getPlayer(sender, args[1]) == null){
+                } else if (findPlayer(sender, args[1]) == null) {
                     return false;
                 }
 
-                parkour.getPlayerManager().restartCourse(getPlayer(sender, args[1]));
+                parkour.getPlayerManager().restartCourse(findPlayer(sender, args[1]));
                 break;
 
             case "rewarddelay":
@@ -324,13 +325,21 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
         return true;
     }
 
-    private void displayCommands() {
+    private void displayConsoleCommands() {
         parkour.getCommandUsages().stream()
                 .filter(commandUsage -> commandUsage.getConsoleSyntax() != null)
                 .forEach(commandUsage -> PluginUtils.log(commandUsage.getConsoleSyntax()));
     }
 
-    private Player getPlayer(CommandSender sender, String playerName) {
+    /**
+     * Attempt to find matching Player by name.
+     *
+     * @param sender requesting sender
+     * @param playerName target player name
+     * @return {@link Player}
+     */
+    @Nullable
+    private Player findPlayer(CommandSender sender, String playerName) {
         Player targetPlayer = Bukkit.getPlayer(playerName);
 
         if (targetPlayer == null) {

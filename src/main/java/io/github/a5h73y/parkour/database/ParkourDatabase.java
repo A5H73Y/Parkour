@@ -2,6 +2,7 @@ package io.github.a5h73y.parkour.database;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
+import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.type.Cacheable;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
@@ -276,7 +277,7 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
      * @param time time in milliseconds
      * @param deaths deaths accumulated
      */
-    private void insertTime(String courseName, Player player, long time, int deaths) {
+    public void insertTime(String courseName, Player player, long time, int deaths) {
         int courseId = getCourseId(courseName);
         if (courseId == -1) {
             return;
@@ -398,6 +399,25 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
     }
 
     /**
+     * Display Database Connection summary details.
+     *
+     * @param sender requesting sender
+     */
+    public void displayInformation(CommandSender sender) {
+        try {
+            TranslationUtils.sendHeading("Parkour Database", sender);
+            String type = database instanceof MySQL ? "MySQL" : "SQLite";
+            sender.sendMessage("Database Type: " + type);
+            ResultSet count = database.query("SELECT COUNT(*) FROM course;");
+            sender.sendMessage("Courses: " + count.getInt(1));
+            count = database.query("SELECT COUNT(*) FROM time;");
+            sender.sendMessage("Times: " + count.getInt(1));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    /**
      * Recreate Parkour Courses.
      * Attempt to recreate all the parkour courses into the database.
      * This is required when the database becomes out of sync through manual editing.
@@ -460,7 +480,7 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
         }
 
         String heading = TranslationUtils.getTranslation("Parkour.LeaderboardHeading", false)
-                .replace("%COURSE%", courseName)
+                .replace(Constants.COURSE_PLACEHOLDER, courseName)
                 .replace("%AMOUNT%", String.valueOf(times.size()));
 
         TranslationUtils.sendHeading(heading, sender);
@@ -469,7 +489,7 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
             TimeEntry entry = times.get(i);
             String translation = TranslationUtils.getTranslation("Parkour.LeaderboardEntry", false)
                     .replace("%POSITION%", String.valueOf(i + 1))
-                    .replace("%PLAYER%", entry.getPlayerName())
+                    .replace(Constants.PLAYER_PLACEHOLDER, entry.getPlayerName())
                     .replace("%TIME%", DateTimeUtils.displayCurrentTime(entry.getTime()))
                     .replace("%DEATHS%", String.valueOf(entry.getDeaths()));
 
@@ -629,19 +649,5 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
     @Override
     public void clearCache() {
         resultsCache.clear();
-    }
-
-    public void displayInformation(CommandSender sender) {
-        try {
-            TranslationUtils.sendHeading("Parkour Database", sender);
-            String type = database instanceof MySQL ? "MySQL" : "SQLite";
-            sender.sendMessage("Database Type: " + type);
-            ResultSet count = database.query("SELECT COUNT(*) FROM course;");
-            sender.sendMessage("Courses: " + count.getInt(1));
-            count = database.query("SELECT COUNT(*) FROM time;");
-            sender.sendMessage("Times: " + count.getInt(1));
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
     }
 }

@@ -26,6 +26,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Parkour.Restarting", "Restarting course");
 		this.addDefault("Parkour.Leave", "You left &b%VALUE%");
 		this.addDefault("Parkour.Created", "&b%VALUE% &fhas been created and selected!");
+		this.addDefault("Parkour.CheckpointCreated", "Checkpoint &3%CHECKPOINT% &fhas been set on &b%COURSE%&f!");
 		this.addDefault("Parkour.Selected", "Now editing &b%VALUE%");
 		this.addDefault("Parkour.Deselected", "Finish editing.");
 		this.addDefault("Parkour.WhenReady", "&7When you have finished creating &b%VALUE%&7, enter &b/pa ready");
@@ -60,7 +61,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Parkour.LeaderboardEntry", "%POSITION%) &b%PLAYER% &fin &3%TIME%&f, dying &7%DEATHS% &ftimes");
 		this.addDefault("Parkour.QuietOn", "Quiet Mode: &bON");
 		this.addDefault("Parkour.QuietOff", "Quiet Mode: &bOFF");
-		this.addDefault("Parkour.TestModeOn", "Test Mode: &bON. Simulating &b%VALUE%&f ParkourKit.");
+		this.addDefault("Parkour.TestModeOn", "Test Mode: &bON&f. Simulating &b%VALUE%&f ParkourKit.");
 		this.addDefault("Parkour.TestModeOff", "Test Mode: &bOFF");
 		this.addDefault("Parkour.Challenge.Receive", "You have been challenged by &b%PLAYER% &fto course &b%COURSE%");
 		this.addDefault("Parkour.Challenge.Send", "You have challenged &b%PLAYER% &fto course &b%COURSE%");

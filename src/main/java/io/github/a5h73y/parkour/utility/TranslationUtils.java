@@ -5,6 +5,7 @@ import static io.github.a5h73y.parkour.utility.StringUtils.colour;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.ConfigType;
+import io.github.a5h73y.parkour.other.Constants;
 import java.util.regex.Pattern;
 import org.bukkit.command.CommandSender;
 
@@ -151,7 +152,7 @@ public class TranslationUtils {
 	public static String getPropertySet(String property, String courseName, String value) {
 		return getTranslation("Other.PropertySet")
 				.replace("%PROPERTY%", property)
-				.replace("%COURSE%", courseName)
+				.replace(Constants.COURSE_PLACEHOLDER, courseName)
 				.replace("%VALUE%", value);
 	}
 }
