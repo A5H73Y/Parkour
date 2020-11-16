@@ -192,6 +192,14 @@ public class StringsConfig extends ParkourConfiguration {
 
 		this.addDefault("Display.TimeFormat", "HH:mm:ss:MMM");
 		this.addDefault("Display.DateFormat", "dd/MM/yyyy");
+		this.addDefault("Display.Day", "day");
+		this.addDefault("Display.Days", "days");
+		this.addDefault("Display.Hour", "hour");
+		this.addDefault("Display.Hours", "hours");
+		this.addDefault("Display.Minute", "minute");
+		this.addDefault("Display.Minutes", "minutes");
+		this.addDefault("Display.Second", "second");
+		this.addDefault("Display.Seconds", "seconds");
 
 		this.options().copyDefaults(true);
 	}

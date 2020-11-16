@@ -82,27 +82,27 @@ public class DateTimeUtils {
 		StringJoiner totalTime = new StringJoiner(", ");
 
 		if (time.getDays() > 1) {
-			totalTime.add(time.getDays() + " days"); //TODO translate
+			totalTime.add(time.getDays() + " " + TranslationUtils.getTranslation("Display.Days", false));
 			return totalTime.toString();
 		}
 
 		if (time.getDays() > 0) {
-			totalTime.add("1 day");
+			totalTime.add("1 " + TranslationUtils.getTranslation("Display.Day", false));
 		}
 		if (time.getHours() > 1) {
-			totalTime.add(time.getHours() + " hours");
+			totalTime.add(time.getHours() + " " + TranslationUtils.getTranslation("Display.Hours", false));
 		} else if (time.getHours() > 0) {
-			totalTime.add("1 hour");
+			totalTime.add("1 " + TranslationUtils.getTranslation("Display.Hour", false));
 		}
 		if (time.getMinutes() > 1) {
-			totalTime.add(time.getMinutes() + " minutes");
+			totalTime.add(time.getMinutes() + " " + TranslationUtils.getTranslation("Display.Minutes", false));
 		} else if (time.getMinutes() > 0) {
-			totalTime.add("1 minute");
+			totalTime.add("1 " + TranslationUtils.getTranslation("Display.Minute", false));
 		}
 		if (time.getSeconds() > 1) {
-			totalTime.add(time.getSeconds() + " seconds");
+			totalTime.add(time.getSeconds() + " " + TranslationUtils.getTranslation("Display.Seconds", false));
 		} else if (time.getSeconds() > 0) {
-			totalTime.add("1 second");
+			totalTime.add("1 " + TranslationUtils.getTranslation("Display.Second", false));
 		}
 
 		return totalTime.toString();
