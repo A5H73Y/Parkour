@@ -6,6 +6,7 @@ import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.StringJoiner;
 
 import org.bukkit.OfflinePlayer;
 
@@ -78,24 +79,32 @@ public class DateTimeUtils {
 
 	public static String displayTimeRemaining(long millis) {
 		MillisecondConverter time = new MillisecondConverter(millis);
-		StringBuilder totalTime = new StringBuilder();
+		StringJoiner totalTime = new StringJoiner(", ");
 
 		if (time.getDays() > 1) {
-			totalTime.append(time.getDays());
-			totalTime.append(" days"); //TODO translate
+			totalTime.add(time.getDays() + " days"); //TODO translate
 			return totalTime.toString();
 		}
 
 		if (time.getDays() > 0) {
-			totalTime.append(1);
-			totalTime.append(" day, ");
+			totalTime.add("1 day");
 		}
-		if (time.getHours() > 0) {
-			totalTime.append(time.getHours());
-			totalTime.append(" hours, ");
+		if (time.getHours() > 1) {
+			totalTime.add(time.getHours() + " hours");
+		} else if (time.getHours() > 0) {
+			totalTime.add("1 hour");
 		}
-		totalTime.append(time.getMinutes());
-		totalTime.append(" minutes");
+		if (time.getMinutes() > 1) {
+			totalTime.add(time.getMinutes() + " minutes");
+		} else if (time.getMinutes() > 0) {
+			totalTime.add("1 minute");
+		}
+		if (time.getSeconds() > 1) {
+			totalTime.add(time.getSeconds() + " seconds");
+		} else if (time.getSeconds() > 0) {
+			totalTime.add("1 second");
+		}
+
 		return totalTime.toString();
 	}
 

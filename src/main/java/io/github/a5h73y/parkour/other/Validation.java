@@ -15,11 +15,11 @@ import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.util.ArrayList;
 import java.util.List;
-import jdk.internal.jline.internal.Nullable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 public class Validation {
 
