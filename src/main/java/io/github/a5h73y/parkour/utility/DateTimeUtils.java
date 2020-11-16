@@ -87,15 +87,26 @@ public class DateTimeUtils {
 		}
 
 		if (time.getDays() > 0) {
-			totalTime.append(1);
-			totalTime.append(" day, ");
+			totalTime.append("1 day, ");
 		}
-		if (time.getHours() > 0) {
+		if (time.getHours() > 1) {
 			totalTime.append(time.getHours());
 			totalTime.append(" hours, ");
+		} else if (time.getHours() > 0) {
+			totalTime.append("1 hour, ");
 		}
-		totalTime.append(time.getMinutes());
-		totalTime.append(" minutes");
+		if (time.getMinutes() > 1) {
+			totalTime.append(time.getMinutes());
+			totalTime.append(" minutes, ");
+		} else if (time.getMinutes() > 0) {
+			totalTime.append("1 minute, ");
+		}
+		if (time.getSeconds() > 1) {
+			totalTime.append(time.getSeconds());
+			totalTime.append(" seconds");
+		} else if (time.getSeconds() > 0) {
+			totalTime.append("1 second");
+		}
 		return totalTime.toString();
 	}
 

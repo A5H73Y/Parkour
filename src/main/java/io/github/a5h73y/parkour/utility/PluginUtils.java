@@ -15,7 +15,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -192,13 +191,6 @@ public class PluginUtils {
 
     public static boolean doesGameModeExist(String gameMode) {
         return getGameMode(gameMode) != null;
-    }
-
-    public static void addWhitelistedCommand(String command) {
-        List<String> commands = Parkour.getDefaultConfig().getWhitelistedCommands();
-        commands.add(command);
-        Parkour.getDefaultConfig().set("OnCourse.EnforceParkourCommands.Whitelist", commands);
-        Parkour.getDefaultConfig().save();
     }
 
     /**
