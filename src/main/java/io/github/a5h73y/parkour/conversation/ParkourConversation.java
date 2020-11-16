@@ -59,7 +59,7 @@ public abstract class ParkourConversation implements ConversationAbandonedListen
     }
 
     public void begin() {
-        if (courseName != null && !Parkour.getInstance().getCourseManager().courseExists(courseName)) {
+        if (courseName != null && !Parkour.getInstance().getCourseManager().doesCourseExists(courseName)) {
             conversable.sendRawMessage(TranslationUtils.getValueTranslation("Error.NoExist", courseName));
             return;
         }

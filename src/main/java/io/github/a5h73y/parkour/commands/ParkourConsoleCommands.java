@@ -137,7 +137,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                parkour.getCourseManager().linkParkourKit(sender, args[1], args[2]);
+                parkour.getCourseManager().setParkourKit(sender, args[1], args[2]);
                 break;
 
             case "list":
@@ -227,7 +227,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                parkour.getCourseManager().setRewardOnce(sender, args[1]);
+                parkour.getCourseManager().setRewardOnceStatus(sender, args[1]);
                 break;
 
             case "rewardparkoins":

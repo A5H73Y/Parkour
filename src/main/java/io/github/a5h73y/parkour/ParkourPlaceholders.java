@@ -1,7 +1,6 @@
 package io.github.a5h73y.parkour;
 
 import io.github.a5h73y.parkour.database.TimeEntry;
-import io.github.a5h73y.parkour.other.Validation;
 import io.github.a5h73y.parkour.type.course.Course;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
@@ -204,7 +203,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return INVALID_SYNTAX;
             }
             String courseName = arguments[1];
-            if (!parkour.getCourseManager().courseExists(courseName)) {
+            if (!parkour.getCourseManager().doesCourseExists(courseName)) {
                 return NO_TIME_RECORDED;
             }
 
@@ -231,7 +230,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return INVALID_SYNTAX;
             }
             String courseName = arguments[3];
-            if (!parkour.getCourseManager().courseExists(courseName)) {
+            if (!parkour.getCourseManager().doesCourseExists(courseName)) {
                 return null;
             }
             if (!CourseInfo.hasRewardDelay(courseName)
@@ -245,7 +244,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return INVALID_SYNTAX;
             }
             String courseName = arguments[3];
-            if (!parkour.getCourseManager().courseExists(courseName)) {
+            if (!parkour.getCourseManager().doesCourseExists(courseName)) {
                 return null;
             }
             return String.valueOf(CourseInfo.getCompletions(courseName));
@@ -259,7 +258,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             }
 
             String courseName = arguments[1];
-            if (!parkour.getCourseManager().courseExists(courseName)) {
+            if (!parkour.getCourseManager().doesCourseExists(courseName)) {
                 return null;
             }
 
@@ -293,7 +292,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     }
 
     private TimeEntry getTopPlayerResultForCourse(Player player, String courseName) {
-        if (!parkour.getCourseManager().courseExists(courseName)) {
+        if (!parkour.getCourseManager().doesCourseExists(courseName)) {
             return null;
         }
 

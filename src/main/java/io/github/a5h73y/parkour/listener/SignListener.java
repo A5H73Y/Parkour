@@ -3,7 +3,6 @@ package io.github.a5h73y.parkour.listener;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.other.Validation;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
@@ -155,7 +154,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
 
         switch (lines[1].toLowerCase()) {
             case "join":
-                if (lines[2].isEmpty() || !parkour.getCourseManager().courseExists(lines[2])) {
+                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
                     TranslationUtils.sendValueTranslation("Error.NoExist", lines[2], player);
                     return;
                 }
@@ -164,7 +163,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 break;
 
             case "checkpoint":
-                if (lines[2].isEmpty() || !parkour.getCourseManager().courseExists(lines[2])) {
+                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
                     TranslationUtils.sendValueTranslation("Error.NoExist", lines[2], player);
                     return;
 
@@ -199,7 +198,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 break;
 
             case "stats":
-                if (lines[2].isEmpty() || !parkour.getCourseManager().courseExists(lines[2])) {
+                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
                     TranslationUtils.sendValueTranslation("Error.NoExist", lines[2], player);
                     return;
                 }
@@ -212,7 +211,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 break;
 
             case "finish":
-                if (lines[2].isEmpty() || !parkour.getCourseManager().courseExists(lines[2])) {
+                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
                     TranslationUtils.sendValueTranslation("Error.NoExist", lines[2], player);
 
                 } else if (!parkour.getPlayerManager().isPlaying(player)) {
@@ -231,7 +230,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 break;
 
             case "leaderboards":
-                if (lines[2].isEmpty() || !parkour.getCourseManager().courseExists(lines[2])) {
+                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
                     TranslationUtils.sendValueTranslation("Error.NoExist", lines[2], player);
 
                 } else if (parkour.getPlayerManager().delayPlayer(player, 4, true)) {

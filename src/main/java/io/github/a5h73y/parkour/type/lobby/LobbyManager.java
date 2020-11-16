@@ -18,7 +18,7 @@ import org.bukkit.entity.Player;
 
 public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lobby> {
 
-    private final Map<String, Lobby> lobbyCache = new HashMap<>();
+    private final transient Map<String, Lobby> lobbyCache = new HashMap<>();
 
     public LobbyManager(final Parkour parkour) {
         super(parkour);

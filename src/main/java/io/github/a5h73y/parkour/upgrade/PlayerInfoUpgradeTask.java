@@ -9,10 +9,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-public class PlayerInfoUpgradeTask extends TimedUpgradeTask {
+public class PlayerInfoUpgradeTask extends TimedConfigUpgradeTask {
 
 	public PlayerInfoUpgradeTask(ParkourUpgrader parkourUpgrader) {
-		super(parkourUpgrader);
+		super(parkourUpgrader, parkourUpgrader.getPlayerConfig());
 	}
 
 	@Override
@@ -22,7 +22,7 @@ public class PlayerInfoUpgradeTask extends TimedUpgradeTask {
 
 	@Override
 	protected boolean doWork() {
-		ConfigurationSection playerInfoSection = getParkourUpgrader().getPlayerConfig().getConfigurationSection("PlayerInfo");
+		ConfigurationSection playerInfoSection = getConfig().getConfigurationSection("PlayerInfo");
 
 		if (playerInfoSection == null) {
 			getParkourUpgrader().getLogger().info("Players are already upgraded...");
@@ -44,11 +44,11 @@ public class PlayerInfoUpgradeTask extends TimedUpgradeTask {
 			}
 
 			OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(playerName);
-			Set<String> settings = getParkourUpgrader().getPlayerConfig().getConfigurationSection("PlayerInfo." + playerName).getKeys(false);
+			Set<String> settings = getConfig().getConfigurationSection("PlayerInfo." + playerName).getKeys(false);
 
 			for (String setting : settings) {
-				getParkourUpgrader().getPlayerConfig().set(targetPlayer.getUniqueId() + "." + setting,
-						getParkourUpgrader().getPlayerConfig().get("PlayerInfo." + playerName + "." + setting));
+				getConfig().set(targetPlayer.getUniqueId() + "." + setting,
+						getConfig().get("PlayerInfo." + playerName + "." + setting));
 			}
 
 			if (getParkourUpgrader().getInventoryConfig().contains(playerName)) {
@@ -58,7 +58,7 @@ public class PlayerInfoUpgradeTask extends TimedUpgradeTask {
 			count++;
 		}
 
-		getParkourUpgrader().getPlayerConfig().set("PlayerInfo", null);
+		getConfig().set("PlayerInfo", null);
 		try {
 			getParkourUpgrader().savePlayerConfig();
 			getParkourUpgrader().saveInventoryConfig();

@@ -129,8 +129,8 @@ public class DatabaseUpgradeTask extends TimedUpgradeTask {
 				}
 			}
 
-			getParkourUpgrader().getLogger().info("Done adding players");
-			getParkourUpgrader().getLogger().info("Cleaning up temporary tables");
+			getParkourUpgrader().getLogger().info("Time data has been restored!");
+			getParkourUpgrader().getLogger().info("Cleaning up temporary tables...");
 
 			pDatabase.update("DROP TABLE course_backup;");
 			pDatabase.update("DROP TABLE time_backup;");

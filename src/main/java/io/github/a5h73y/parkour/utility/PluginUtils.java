@@ -270,7 +270,7 @@ public class PluginUtils {
 
         switch (command.toLowerCase()) {
             case "course":
-                if (!parkour.getCourseManager().courseExists(argument)) {
+                if (!parkour.getCourseManager().doesCourseExists(argument)) {
                     TranslationUtils.sendValueTranslation("Error.NoExist", argument, sender);
                     return;
                 }
@@ -290,7 +290,7 @@ public class PluginUtils {
                 break;
 
             case "leaderboard":
-                if (!parkour.getCourseManager().courseExists(argument)) {
+                if (!parkour.getCourseManager().doesCourseExists(argument)) {
                     TranslationUtils.sendValueTranslation("Error.NoExist", argument, sender);
                     return;
                 }
@@ -303,7 +303,7 @@ public class PluginUtils {
                 break;
 
             case "prize":
-                if (!parkour.getCourseManager().courseExists(argument)) {
+                if (!parkour.getCourseManager().doesCourseExists(argument)) {
                     TranslationUtils.sendValueTranslation("Error.NoExist", argument, sender);
                     return;
                 }

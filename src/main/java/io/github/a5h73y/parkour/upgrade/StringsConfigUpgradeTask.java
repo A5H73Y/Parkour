@@ -4,12 +4,11 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.bukkit.configuration.file.FileConfiguration;
 
-public class StringsConfigUpgradeTask extends TimedUpgradeTask {
+public class StringsConfigUpgradeTask extends TimedConfigUpgradeTask {
 
 	public StringsConfigUpgradeTask(ParkourUpgrader parkourUpgrader) {
-		super(parkourUpgrader);
+		super(parkourUpgrader, parkourUpgrader.getStringsConfig());
 	}
 
 	@Override
@@ -20,12 +19,11 @@ public class StringsConfigUpgradeTask extends TimedUpgradeTask {
 	@Override
 	protected boolean doWork() {
 		boolean success = true;
-		Set<String> strings = getParkourUpgrader().getStringsConfig().getConfigurationSection("").getKeys(true);
+		Set<String> strings = getConfig().getConfigurationSection("").getKeys(true);
 		Pattern pattern = Pattern.compile("%.*?%", Pattern.DOTALL);
-		FileConfiguration config = getParkourUpgrader().getStringsConfig();
 
 		for (String string : strings) {
-			String value = getParkourUpgrader().getStringsConfig().getString(string);
+			String value = getConfig().getString(string);
 
 			if (value != null && !value.isEmpty() && !value.startsWith("MemorySection")) {
 				Matcher matcher = pattern.matcher(value);
@@ -33,12 +31,28 @@ public class StringsConfigUpgradeTask extends TimedUpgradeTask {
 
 				// we only want to replace the entries with a single value placeholder
 				if (results == 1) {
-					config.set(string, matcher.replaceAll("%VALUE%"));
+					getConfig().set(string, matcher.replaceAll("%VALUE%"));
 				}
 			}
 		}
 
-		config.set("Event.Checkpoint", "Checkpoint set to &b%CURRENT% &8/ &7%TOTAL%");
+		getConfig().set("Event.Checkpoint", "Checkpoint set to &b%CURRENT% &8/ &7%TOTAL%");
+		transferAndDelete("Other.Item_LastCheckpoint", "Other.Item.LastCheckpoint");
+		transferAndDelete("Other.Item_HideAll", "Other.Item.HideAll");
+		transferAndDelete("Other.Item_Leave", "Other.Item.Leave");
+		transferAndDelete("Other.Item_Restart", "Other.Item.Restart");
+
+		transferAndDelete("Scoreboard.CourseTitle", "Scoreboard.CourseNameTitle");
+		transferAndDelete("Scoreboard.BestTimeTitle", "Scoreboard.BestTimeEverTitle");
+		transferAndDelete("Scoreboard.BestTimeNameTitle", "Scoreboard.BestTimeEverNameTitle");
+		transferAndDelete("Scoreboard.BestTimeNameTitle", "Scoreboard.BestTimeEverNameTitle");
+		// TODO finish me
+
+		// deletes
+		getConfig().set("Parkour.Invite", null);
+		getConfig().set("Mode.Drunk", null);
+		getConfig().set("Mode.Darkness", null);
+		getConfig().set("ParkourGUI", null);
 
 		try {
 			getParkourUpgrader().saveStringsConfig();
@@ -52,8 +66,9 @@ public class StringsConfigUpgradeTask extends TimedUpgradeTask {
 
 	int countMatches(Matcher matcher) {
 		int counter = 0;
-		while (matcher.find())
+		while (matcher.find()) {
 			counter++;
+		}
 		return counter;
 	}
 }

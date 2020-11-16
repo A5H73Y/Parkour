@@ -22,7 +22,7 @@ import org.bukkit.command.CommandSender;
 
 public class ParkourKitManager extends AbstractPluginReceiver implements Cacheable<ParkourKit> {
 
-	private final Map<String, ParkourKit> parkourKitCache = new HashMap<>();
+	private final transient Map<String, ParkourKit> parkourKitCache = new HashMap<>();
 
 	public ParkourKitManager(final Parkour parkour) {
 		super(parkour);

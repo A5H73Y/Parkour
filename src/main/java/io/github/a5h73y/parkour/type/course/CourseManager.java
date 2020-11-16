@@ -29,9 +29,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import com.cryptomorin.xseries.XMaterial;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -40,56 +40,70 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
+/**
+ * Parkour Course Manager.
+ * Keeps a lazy Cache of {@link Course} which can be reused by other players.
+ */
 public class CourseManager extends AbstractPluginReceiver implements Cacheable<Course> {
 
-    private final Map<String, Course> courseCache = new HashMap<>();
+    private final transient Map<String, Course> courseCache = new HashMap<>();
 
     public CourseManager(final Parkour parkour) {
         super(parkour);
     }
 
     /**
-     * Does course exist.
-     * Check if a course exists on the server
+     * Check if Course is known by Parkour.
      *
-     * @param courseName
-     * @return course found
+     * @param courseName course name
+     * @return course exists
      */
-    public boolean courseExists(String courseName) {
+    public boolean doesCourseExists(final String courseName) {
         if (!ValidationUtils.isStringValid(courseName)) {
             return false;
         }
 
-        courseName = courseName.trim().toLowerCase();
-        return CourseInfo.getAllCourseNames().contains(courseName);
+        return CourseInfo.getAllCourseNames().contains(courseName.trim().toLowerCase());
     }
 
-    public Course getCourse(String argument) {
-        if (ValidationUtils.isInteger(argument)) {
-            return findByNumber(Integer.parseInt(argument));
+    /**
+     * Get Course by input field.
+     * If the Course numeric index is provided, that will be retrieved.
+     * Otherwise a search will be made by Course name.
+     *
+     * @param input course name
+     * @return matching Course
+     */
+    @Nullable
+    public Course findCourse(final String input) {
+        if (ValidationUtils.isInteger(input)) {
+            return findByIndex(Integer.parseInt(input));
 
         } else {
-            return findByName(argument);
+            return findByName(input);
         }
     }
 
     /**
-     * Retrieve a course based on its unique name.
-     * Everything is populated from this method (all checkpoints & information).
-     * This should only be used when necessary.
+     * Find Course by unique name.
+     * If the Course is cached it can be returned directly.
+     * Otherwise the entire Course will be populated, including Checkpoints and ParkourKit.
+     * If the Course is in 'Ready' status, it will be added to the Cache.
      *
-     * @param courseName
-     * @return Course
+     * @param courseNameInput course name
+     * @return populated {@link Course}
      */
-    public Course findByName(String courseName) {
-        courseName = courseName.toLowerCase();
+    @Nullable
+    public Course findByName(final String courseNameInput) {
+        String courseName = courseNameInput.toLowerCase();
 
         if (courseCache.containsKey(courseName)) {
             return courseCache.get(courseName);
         }
 
-        if (!courseExists(courseName)) {
+        if (!doesCourseExists(courseName)) {
             return null;
         }
 
@@ -102,40 +116,34 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         return course;
     }
 
-    private Course populateCourse(String courseName) {
-        courseName = courseName.toLowerCase();
-        String parkourKitName = CourseInfo.getParkourKit(courseName);
-        ParkourKit parkourKit = parkour.getParkourKitManager().getParkourKit(parkourKitName);
-        ParkourMode parkourMode = getCourseMode(courseName);
-        List<Checkpoint> checkpoints = parkour.getCheckpointManager().getCheckpoints(courseName);
-
-        return new Course(courseName, checkpoints, parkourKit, parkourMode);
-    }
-
     /**
-     * Retrieve a course based on its list index.
+     * Find Course by list Index.
+     * When displaying the list of courses available, a player can use the shorthand
+     * list index number to join the Course. Results can be found using "/pa list courses"
      * The ID will be based on where it is in the list of courses, meaning it can change.
-     * Find the current ID using "/pa list courses"
      *
-     * @param courseNumber
-     * @return Course
+     * @param courseIndex course index
+     * @return {@link Course}
      */
-    public Course findByNumber(int courseNumber) {
-        if (courseNumber <= 0 || courseNumber > CourseInfo.getAllCourseNames().size()) {
+    @Nullable
+    public Course findByIndex(final int courseIndex) {
+        if (courseIndex <= 0 || courseIndex > CourseInfo.getAllCourseNames().size()) {
             return null;
         }
 
-        String courseName = CourseInfo.getAllCourseNames().get(courseNumber - 1);
+        String courseName = CourseInfo.getAllCourseNames().get(courseIndex - 1);
         return findByName(courseName);
     }
 
     /**
-     * Retrieve a course based on the ParkourSession for a player.
+     * Find the current Course for a Player.
+     * Their matching ParkourSession will be used to retrieve the Course.
      *
-     * @param player
-     * @return
+     * @param player target player
+     * @return {@link Course}
      */
-    public Course findByPlayer(Player player) {
+    @Nullable
+    public Course findByPlayer(final Player player) {
         if (!parkour.getPlayerManager().isPlaying(player)) {
             return null;
         }
@@ -144,21 +152,21 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     }
 
     /**
-     * Create a new Parkour course.
-     * The start of the course is located in courses.yml as checkpoint '0'.
-     * The world is assumed once the course is joined, so having 2 different checkpoints in 2 different worlds is not an option.
-     * All course names are stored in a string list, which is also held in memory.
-     * Course is entered into the database so leaderboards can be associated with it.
+     * Create a new Parkour Course.
+     * The requested Course must first be validated for being unique and valid.
+     * The Course data is created, and an entry will be added to checkpoints data.
+     * The world in which the Course is created is used throughout the Course.
+     * A Course entry will be added to the database to store Player times against it.
      *
-     * @param courseName
-     * @param player
+     * @param player requesting player
+     * @param courseNameInput requested course name
      */
-    public void createCourse(Player player, String courseName) {
-        if (!Validation.courseCreation(courseName, player)) {
+    public void createCourse(final Player player, final String courseNameInput) {
+        if (!Validation.courseCreation(courseNameInput, player)) {
             return;
         }
 
-        courseName = courseName.toLowerCase();
+        String courseName = courseNameInput.toLowerCase();
         Location location = player.getLocation();
         ParkourConfiguration courseConfig = Parkour.getConfig(ConfigType.COURSES);
 
@@ -183,158 +191,28 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     }
 
     /**
-     * Delete a course.
-     * Remove all information stored on the server about the course, including all references from the database.
+     * Select the Course for editing.
+     * This is used for commands that do not require a course parameter, such as "/pa checkpoint".
      *
-     * @param courseName
-     * @param sender
+     * @param player requesting player
+     * @param courseName course name
      */
-    public void deleteCourse(CommandSender sender, String courseName) {
-        if (!courseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
-            return;
-        }
-
-        CourseInfo.deleteCourse(courseName);
-        TranslationUtils.sendValueTranslation("Parkour.Delete", courseName, sender);
-    }
-
-    @Override
-    public int getCacheSize() {
-        return courseCache.size();
-    }
-
-    @Override
-    public void clearCache() {
-        courseCache.clear();
-    }
-
-    public void clearCache(String courseName) {
-        courseCache.remove(courseName.toLowerCase());
-    }
-
-    /**
-     * Displays a list to the player.
-     * Available options: players, courses, ranks & lobbies
-     *
-     * @param args
-     * @param sender
-     */
-    public void displayList(CommandSender sender, String[] args) {
-        if (args.length < 2) {
-            TranslationUtils.sendInvalidSyntax(sender, "list", "(players / courses / ranks / lobbies)");
-            return;
-        }
-
-        if (args[1].equalsIgnoreCase("players")) {
-            parkour.getPlayerManager().displayParkourPlayers(sender);
-
-        } else if (args[1].equalsIgnoreCase("courses")) {
-            int page = (args.length == 3 && args[2] != null
-                    && ValidationUtils.isPositiveInteger(args[2]) ? Integer.parseInt(args[2]) : 1);
-            displayCourses(sender, page);
-
-        } else if (args[1].equalsIgnoreCase("ranks")) {
-            if (!PermissionUtils.hasPermission(sender, Permission.ADMIN_ALL)) {
-                return;
-            }
-            parkour.getPlayerManager().displayParkourRanks(sender);
-
-        } else if (args[1].equalsIgnoreCase("lobbies")) {
-            if (!PermissionUtils.hasPermission(sender, Permission.ADMIN_ALL)) {
-                return;
-            }
-            parkour.getLobbyManager().displayLobbies(sender);
-
-        } else {
-            TranslationUtils.sendInvalidSyntax(sender, "list", "(players / courses / ranks / lobbies)");
-        }
-    }
-
-    /**
-     * Display a list of all the Parkour courses on the server.
-     * Prints the name and unique course ID, separated into pages of 8 results.
-     *
-     * @param sender
-     * @param page
-     */
-    private void displayCourses(CommandSender sender, int page) {
-        if (CourseInfo.getAllCourseNames().size() == 0) {
-            sender.sendMessage(Parkour.getPrefix() + "There are no Parkour courses!");
-            return;
-        }
-
-        if (page <= 0) {
-            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
-            return;
-        }
-
-        int results = 8;
-        int fromIndex = (page - 1) * results;
-
-        List<String> courseList = CourseInfo.getAllCourseNames();
-        if (parkour.getConfig().getBoolean("Other.Display.OnlyReadyCourses")
-                && !PermissionUtils.hasPermission(sender, Permission.ADMIN_READY_BYPASS, false)) {
-            courseList = courseList.stream()
-                    .filter(CourseInfo::getReadyStatus)
-                    .collect(Collectors.toList());
-        }
-
-        if (courseList.size() <= fromIndex) {
-            sender.sendMessage(Parkour.getPrefix() + "This page doesn't exist.");
-            return;
-        }
-
-        sender.sendMessage(Parkour.getPrefix() + courseList.size() + " courses available:");
-        List<String> limited = courseList.subList(fromIndex, Math.min(fromIndex + results, courseList.size()));
-
-        for (int i = 0; i < limited.size(); i++) {
-            String courseName = limited.get(i);
-            int minimumLevel = CourseInfo.getMinimumLevel(courseName);
-            int rewardLevel = CourseInfo.getRewardParkourLevel(courseName);
-            boolean ready = CourseInfo.getReadyStatus(courseName);
-
-            StringBuilder sb = new StringBuilder();
-            sb.append(((fromIndex) + (i + 1)));
-            sb.append(") ");
-            sb.append(ready ? ChatColor.AQUA : ChatColor.RED);
-            sb.append(courseName);
-
-            if (minimumLevel > 0) {
-                sb.append(ChatColor.RED).append(" (").append(minimumLevel).append(")");
-            }
-            if (rewardLevel > 0) {
-                sb.append(ChatColor.GREEN).append(" (").append(rewardLevel).append(")");
-            }
-
-            sender.sendMessage(sb.toString());
-        }
-
-        sender.sendMessage("== " + page + " / " + ((courseList.size() + results - 1) / results) + " ==");
-    }
-
-    /**
-     * Start editing a course.
-     * Used for functions that do not require a course parameter, such as "/pa checkpoint".
-     *
-     * @param player
-     */
-    public void selectCourse(Player player, String courseName) {
-        if (!courseExists(courseName)) {
+    public void selectCourse(final Player player, final String courseName) {
+        if (!doesCourseExists(courseName)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
             return;
         }
 
-        TranslationUtils.sendValueTranslation("Parkour.Selected", courseName, player);
         PlayerInfo.setSelectedCourse(player, courseName);
+        TranslationUtils.sendValueTranslation("Parkour.Selected", courseName, player);
     }
 
     /**
-     * Finish editing a course.
+     * Deselect the Course for editing.
      *
-     * @param player
+     * @param player requesting player
      */
-    public void deselectCourse(Player player) {
+    public void deselectCourse(final Player player) {
         if (PlayerInfo.hasSelectedValidCourse(player)) {
             PlayerInfo.resetSelected(player);
             TranslationUtils.sendTranslation("Parkour.Deselected", player);
@@ -345,31 +223,31 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     }
 
     /**
-     * Overwrite the start location of the course.
+     * Delete a Course from the Server.
+     * Remove all information stored about the course, including all references from the database.
      *
-     * @param player
-     * @param courseName
+     * @param sender requesting sender
+     * @param courseName course name
      */
-    public void setStart(Player player, String courseName) {
-        if (!courseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
+    public void deleteCourse(final CommandSender sender, final String courseName) {
+        if (!doesCourseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
         }
 
-        parkour.getCheckpointManager().createCheckpointData(courseName, player.getLocation(), 0);
-        PluginUtils.logToFile(courseName + " start location was reset by " + player.getName());
-        TranslationUtils.sendPropertySet(player, "Start Location", courseName, "your position");
+        CourseInfo.deleteCourse(courseName);
+        TranslationUtils.sendValueTranslation("Parkour.Delete", courseName, sender);
     }
 
     /**
-     * Create an AutoStart for a course.
-     * Create an AutoStart pressure plate at the player's location for the specified course.
+     * Create an AutoStart for the Course.
+     * A pressure plate will be placed at the player's location and trigger an AutoStart for the Course.
      *
-     * @param args
-     * @param player
+     * @param player requesting player
+     * @param courseName course name
      */
-    public void setAutoStart(Player player, String courseName) {
-        if (!courseExists(courseName)) {
+    public void createAutoStart(final Player player, final String courseName) {
+        if (!doesCourseExists(courseName)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
             return;
         }
@@ -394,14 +272,14 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     }
 
     /**
-     * Find matching Course for AutoStart Location.
-     * Triggered when the player walks on a pressure plate matching AutoStart.
-     * Look for matching config entry for location.
+     * Find the matching Course name for the AutoStart Location.
+     * Request to match the location coordinates to a known AutoStart location, and retrieve the corresponding Course.
      *
-     * @param location
-     * @return Course name
+     * @param location location
+     * @return course name
      */
-    public String getAutoStartCourse(Location location) {
+    @Nullable
+    public String getAutoStartCourse(final Location location) {
         ParkourConfiguration courseConfig = Parkour.getConfig(ConfigType.COURSES);
         String coordinates = location.getBlockX() + "-" + location.getBlockY() + "-" + location.getBlockZ();
 
@@ -420,26 +298,32 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     }
 
     /**
-     * Delete the AutoStart with the given coordinates
+     * Set Course Start Location.
+     * Overwrite the Starting location of a Course to the Player's position.
      *
-     * @param coordinates
-     * @param player
+     * @param player requesting player
+     * @param courseName course name
      */
-    public void deleteAutoStart(String coordinates) {
-        ParkourConfiguration courseConfig = Parkour.getConfig(ConfigType.COURSES);
-        courseConfig.set("CourseInfo.AutoStart." + coordinates, null);
-        courseConfig.save();
+    public void setStartLocation(final Player player, final String courseName) {
+        if (!doesCourseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
+            return;
+        }
+
+        parkour.getCheckpointManager().createCheckpointData(courseName, player.getLocation(), 0);
+        PluginUtils.logToFile(courseName + " start location was reset by " + player.getName());
+        TranslationUtils.sendPropertySet(player, "Start Location", courseName, "your position");
     }
 
     /**
-     * Overwrite the creator of the course.
+     * Overwrite the Creator of the Course.
      *
      * @param sender requesting player
      * @param courseName course name
      * @param value new creator name
      */
-    public void setCreator(CommandSender sender, String courseName, String value) {
-        if (!courseExists(courseName)) {
+    public void setCreator(final CommandSender sender, final String courseName, final String value) {
+        if (!doesCourseExists(courseName)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
         }
@@ -456,8 +340,8 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      * @param courseName course name
      * @param value new maximum deaths
      */
-    public void setMaxDeaths(CommandSender sender, String courseName, String value) {
-        if (!courseExists(courseName)) {
+    public void setMaxDeaths(final CommandSender sender, final String courseName, final String value) {
+        if (!doesCourseExists(courseName)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
         }
@@ -467,7 +351,6 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-
         CourseInfo.setMaximumDeaths(courseName, Integer.parseInt(value));
         clearCache(courseName);
         TranslationUtils.sendPropertySet(sender, "Maximum Deaths", courseName, value);
@@ -475,13 +358,13 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
 
     /**
      * Set Maximum Time for Course in seconds.
-     * Set the maximum amount of deaths a player can accumulate before failing the course.
+     * Set the maximum amount of seconds a player can accumulate before failing the course.
      *
      * @param sender requesting player
      * @param courseName course name
      * @param secondsValue new maximum seconds
      */
-    public void setMaxTime(CommandSender sender, String courseName, String secondsValue) {
+    public void setMaxTime(final CommandSender sender, final String courseName, final String secondsValue) {
         if (!parkour.getConfig().getBoolean("OnCourse.DisplayLiveTime")
                 && !(parkour.getConfig().getBoolean("Scoreboard.Enabled")
                 && parkour.getConfig().getBoolean("Scoreboard.LiveTimer.Enabled"))) {
@@ -489,7 +372,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        if (!courseExists(courseName)) {
+        if (!doesCourseExists(courseName)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
         }
@@ -506,143 +389,16 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     }
 
     /**
-     * Set the mimimum Parkour level required to join the course.
+     * Toggle the Course's Ready status.
+     * When configured a Course may not be joinable by others until it has been flagged as 'ready'.
+     * A Course's data will only be cached when it has been marked as Ready.
+     * If a Course argument is supplied it will be used, otherwise it will use the Player's selected Course.
      *
-     * @param sender requesting player
-     * @param courseName course name
-     * @param value new minimum ParkourLevel
+     * @param player requesting player
+     * @param courseNameInput course name
      */
-    public void setMinLevel(CommandSender sender, String courseName, String value) {
-        if (!courseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
-            return;
-        }
-
-        if (!ValidationUtils.isPositiveInteger(value)) {
-            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
-            return;
-        }
-
-        CourseInfo.setMinimumLevel(courseName, Integer.parseInt(value));
-        TranslationUtils.sendPropertySet(sender, "Minimum ParkourLevel", courseName, value);
-    }
-
-    /**
-     * Set Course's ParkourLevel reward.
-     * Reward the player with the Parkour level on course completion.
-     *
-     * @param sender
-     */
-    public void setRewardParkourLevel(CommandSender sender, String courseName, String parkourLevel) {
-        if (!courseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
-            return;
-        }
-
-        if (!ValidationUtils.isPositiveInteger(parkourLevel)) {
-            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
-            return;
-        }
-
-        CourseInfo.setRewardParkourLevel(courseName, Integer.parseInt(parkourLevel));
-        TranslationUtils.sendPropertySet(sender, "ParkourLevel reward", courseName, parkourLevel);
-    }
-
-    /**
-     * Set Course's ParkourLevel reward addition.
-     * Increment the player's ParkourLevel by this value on course completion.
-     *
-     * @param args
-     * @param sender
-     */
-    public void setRewardParkourLevelAddition(CommandSender sender, String courseName, String parkourLevelAdd) {
-        if (!courseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
-            return;
-        }
-
-        if (!ValidationUtils.isPositiveInteger(parkourLevelAdd)) {
-            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
-            return;
-        }
-
-        CourseInfo.setRewardParkourLevelIncrease(courseName, parkourLevelAdd);
-        TranslationUtils.sendPropertySet(sender, "ParkourLevel addition reward", courseName, parkourLevelAdd);
-    }
-
-    /**
-     * Set RewardOnce status of Course.
-     * Set whether the player only gets the prize for the first time they complete the course.
-     *
-     * @param sender
-     */
-    public void setRewardOnce(CommandSender sender, String courseName) {
-        if (!courseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
-            return;
-        }
-
-        // invert the existing value
-        boolean isEnabled = !CourseInfo.getRewardOnce(courseName);
-        CourseInfo.setRewardOnce(courseName, isEnabled);
-        TranslationUtils.sendPropertySet(sender, "reward once status", courseName, String.valueOf(isEnabled));
-    }
-
-    /**
-     * Set Reward delay for course.
-     * Set the number of days that have to elapse before the prize can be won again by the same player.
-     *
-     * @param args
-     * @param sender
-     */
-    public void setRewardDelay(CommandSender sender, String courseName, String delay) {
-        if (!courseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
-            return;
-        }
-
-        if (!ValidationUtils.isPositiveDouble(delay)) {
-            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
-            return;
-        }
-
-        CourseInfo.setRewardDelay(courseName, Double.parseDouble(delay));
-        long test = DateTimeUtils.convertHoursToMilliseconds(Double.parseDouble(delay));
-        TranslationUtils.sendPropertySet(sender, "Reward Delay", courseName, DateTimeUtils.displayTimeRemaining(test));
-    }
-
-    /**
-     * Reward the player with Parkoins on course completions.
-     * Parkoins are then spent in the store for unlockables.
-     *
-     * @param args
-     * @param sender
-     */
-    public void setRewardParkoins(CommandSender sender, String courseName, String reward) {
-        if (!courseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
-            return;
-        }
-
-        if (!ValidationUtils.isPositiveInteger(reward)) {
-            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
-            return;
-        }
-
-        CourseInfo.setRewardParkoins(courseName, Integer.parseInt(reward));
-        TranslationUtils.sendPropertySet(sender, "Parkoins reward", courseName, reward);
-    }
-
-    /**
-     * Toggle the Course's ready status.
-     * If a course argument is supplied it will use this, otherwise it will use the player's selected course.
-     * A player will not be able to join a course if it's not ready.
-     *
-     * @param args
-     * @param player
-     */
-    public void setCourseReadyStatus(Player player, String courseName) {
-        courseName = courseName == null ? PlayerInfo.getSelectedCourse(player) : courseName;
+    public void setCourseReadyStatus(final Player player, @Nullable final String courseNameInput) {
+        String courseName = courseNameInput == null ? PlayerInfo.getSelectedCourse(player) : courseNameInput;
 
         if (!ValidationUtils.isStringValid(courseName)) {
             player.sendMessage(Parkour.getPrefix() + "Please select a course, or provide a course argument");
@@ -665,16 +421,57 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     }
 
     /**
-     * Link a course to a lobby or another course on completion.
+     * Toggle the Course's RewardOnce status.
+     * Set whether the Player only gets the prize for the first completion of the Course.
      *
-     * @param args
-     * @param player
+     * @param sender requesting sender
+     * @param courseName course name
      */
-    public void linkCourse(Player player, String[] args) {
+    public void setRewardOnceStatus(final CommandSender sender, final String courseName) {
+        if (!doesCourseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            return;
+        }
+
+        // invert the existing value
+        boolean isEnabled = !CourseInfo.getRewardOnce(courseName);
+        CourseInfo.setRewardOnce(courseName, isEnabled);
+        TranslationUtils.sendPropertySet(sender, "reward once status", courseName, String.valueOf(isEnabled));
+    }
+
+    /**
+     * Set the minimum ParkourLevel required to join the Course.
+     *
+     * @param sender requesting player
+     * @param courseName course name
+     * @param value new minimum ParkourLevel
+     */
+    public void setMinimumParkourLevel(final CommandSender sender, final String courseName, final String value) {
+        if (!doesCourseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            return;
+        }
+
+        if (!ValidationUtils.isPositiveInteger(value)) {
+            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+            return;
+        }
+
+        CourseInfo.setMinimumParkourLevel(courseName, Integer.parseInt(value));
+        TranslationUtils.sendPropertySet(sender, "Minimum ParkourLevel", courseName, value);
+    }
+
+    /**
+     * Set the Course to be linked to another Course or Lobby.
+     *
+     * @param player requesting player
+     * @param args command arguments
+     */
+    public void setCourseLink(final Player player, final String... args) {
         String selected = PlayerInfo.getSelectedCourse(player);
 
         if (args.length >= 3 && args[1].equalsIgnoreCase("course")) {
-            if (!courseExists(args[2])) {
+            if (!doesCourseExists(args[2])) {
                 TranslationUtils.sendValueTranslation("Error.NoExist", args[2], player);
                 return;
             }
@@ -711,55 +508,47 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     }
 
     /**
-     * Resets all the statistics to 0 as if the course was just created.
-     * The structure of the course remains untouched.
-     * All course times will be deleted from the database.
+     * Set the Player Limit for Course.
+     * Set a limit on the number of players that can play the Course concurrently.
      *
-     * @param courseName
+     * @param sender requesting sender
+     * @param courseName course name
+     * @param limit player limit
      */
-    public void resetCourse(String courseName) {
-        if (!courseExists(courseName)) {
-            return;
-        }
-
-        courseName = courseName.toLowerCase();
-        ParkourConfiguration courseConfig = Parkour.getConfig(ConfigType.COURSES);
-
-        courseConfig.set(courseName + ".Views", 0);
-        courseConfig.set(courseName + ".Completed", 0);
-        courseConfig.set(courseName + ".Ready", false);
-        courseConfig.set(courseName + ".RewardLevel", null);
-        courseConfig.set(courseName + ".MinimumLevel", null);
-        courseConfig.set(courseName + ".RewardLevelAdd", null);
-        courseConfig.set(courseName + ".MaxDeaths", null);
-        courseConfig.set(courseName + ".Parkoins", null);
-        courseConfig.set(courseName + ".LinkedLobby", null);
-        courseConfig.set(courseName + ".LinkedCourse", null);
-        courseConfig.set(courseName + ".ParkourKit", null);
-        courseConfig.set(courseName + ".Mode", null);
-
-        //TODO go through ConfigSection, setting each value to null (except for structural)
-
-        courseConfig.save();
-        parkour.getDatabase().deleteCourseTimes(courseName);
-    }
-
-    /**
-     * Link ParkourKit to a course.
-     * The name of the ParkourKit must be specified, then will be applied when a player joins the course.
-     *
-     * @param args
-     * @param sender
-     */
-    public void linkParkourKit(CommandSender sender, String courseName, String kitName) {
-        if (!courseExists(courseName)) {
+    public void setPlayerLimit(final CommandSender sender, final String courseName, final String limit) {
+        if (!doesCourseExists(courseName)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
         }
+
+        if (!ValidationUtils.isPositiveInteger(limit)) {
+            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+            return;
+        }
+
+        CourseInfo.setPlayerLimit(courseName, Integer.parseInt(limit));
+        TranslationUtils.sendPropertySet(sender, "Player Limit", courseName, limit);
+    }
+
+    /**
+     * Link ParkourKit to Course.
+     * The ParkourKit will be linked to the Course to be loaded upon Course join.
+     *
+     * @param sender requesting sender
+     * @param courseName course name
+     * @param kitName parkour kit name
+     */
+    public void setParkourKit(final CommandSender sender, final String courseName, final String kitName) {
+        if (!doesCourseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            return;
+        }
+
         if (!ParkourKitInfo.doesParkourKitExist(kitName)) {
             TranslationUtils.sendTranslation("Error.UnknownParkourKit", sender);
             return;
         }
+
         if (CourseInfo.hasParkourKit(courseName)) {
             sender.sendMessage(Parkour.getPrefix() + "This course is already linked to a ParkourKit, continuing anyway...");
         }
@@ -770,53 +559,111 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     }
 
     /**
-     * Challenge a player to a Course.
-     * Invites a player to challenge them in a course, must be confirmed by the recipient before the process initiates.
+     * Set Course's ParkourLevel reward.
+     * Set to reward the Player with the ParkourLevel on course completion.
      *
-     * @param args
-     * @param player
+     * @param sender requesting sender
+     * @param courseName course name
+     * @param parkourLevel parkour level
      */
-    public void challengePlayer(Player player, String[] args) {
-        if (!Validation.challengePlayer(player, args)) {
+    public void setRewardParkourLevel(final CommandSender sender, final String courseName, final String parkourLevel) {
+        if (!doesCourseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
         }
 
-        if (!parkour.getPlayerManager().delayPlayer(player, 10, true)) {
+        if (!ValidationUtils.isPositiveInteger(parkourLevel)) {
+            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
-        String wagerString = "";
-        Double wager = null;
-
-        if (args.length == 4 && parkour.getEconomyApi().isEnabled() && ValidationUtils.isPositiveDouble(args[3])) {
-            String currencyName = parkour.getEconomyApi().getCurrencyName();
-            wager = Double.parseDouble(args[3]);
-            wagerString = TranslationUtils.getValueTranslation("Parkour.Challenge.Wager", wager + currencyName, false);
-        }
-
-        Player target = Bukkit.getPlayer(args[2]);
-        String courseName = args[1].toLowerCase();
-
-        target.sendMessage(TranslationUtils.getTranslation("Parkour.Challenge.Receive")
-                .replace(Constants.PLAYER_PLACEHOLDER, player.getName())
-                .replace(Constants.COURSE_PLACEHOLDER, courseName) + wagerString);
-        TranslationUtils.sendTranslation("Parkour.Accept", false, target);
-
-        player.sendMessage(TranslationUtils.getTranslation("Parkour.Challenge.Send")
-                .replace(Constants.PLAYER_PLACEHOLDER, target.getName())
-                .replace(Constants.COURSE_PLACEHOLDER, courseName) + wagerString);
-        parkour.getChallengeManager().createChallenge(player.getName(), target.getName(), courseName, wager);
+        CourseInfo.setRewardParkourLevel(courseName, Integer.parseInt(parkourLevel));
+        TranslationUtils.sendPropertySet(sender, "ParkourLevel reward", courseName, parkourLevel);
     }
 
     /**
-     * Set JoinItem for a course.
-     * Specify the material and the amount for the course, which will then be given to the player once they join.
+     * Set Course's ParkourLevel reward addition.
+     * Set to reward the Player with an increment to ParkourLevel on course completion.
      *
-     * @param args
-     * @param sender
+     * @param sender requesting sender
+     * @param courseName course name
+     * @param parkourLevelAddition parkour level addition
      */
-    public void addJoinItem(CommandSender sender, String[] args) {
-        if (!courseExists(args[1])) {
+    public void setRewardParkourLevelAddition(final CommandSender sender, final String courseName,
+                                              final String parkourLevelAddition) {
+        if (!doesCourseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            return;
+        }
+
+        if (!ValidationUtils.isPositiveInteger(parkourLevelAddition)) {
+            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+            return;
+        }
+
+        CourseInfo.setRewardParkourLevelIncrease(courseName, parkourLevelAddition);
+        TranslationUtils.sendPropertySet(sender, "ParkourLevel addition reward", courseName, parkourLevelAddition);
+    }
+
+    /**
+     * Set the Reward Delay for the Course.
+     * Set the number of hours that must elapse before the Prize can be awarded again to the same Player.
+     * The Delay can be a decimal, so "0.5" would be 30 minutes, and "48" would be 2 days.
+     *
+     * @param sender requesting sender
+     * @param courseName course name
+     * @param delay prize delay
+     */
+    public void setRewardDelay(final CommandSender sender, final String courseName, final String delay) {
+        if (!doesCourseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            return;
+        }
+
+        if (!ValidationUtils.isPositiveDouble(delay)) {
+            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+            return;
+        }
+
+        CourseInfo.setRewardDelay(courseName, Double.parseDouble(delay));
+        long milliseconds = DateTimeUtils.convertHoursToMilliseconds(Double.parseDouble(delay));
+        TranslationUtils.sendPropertySet(sender, "Reward Delay", courseName,
+                DateTimeUtils.displayTimeRemaining(milliseconds));
+    }
+
+    /**
+     * Set the Parkoins Reward for the Course.
+     *
+     * @param sender requesting sender
+     * @param courseName course name
+     * @param reward amount to reward
+     */
+    public void setRewardParkoins(final CommandSender sender, final String courseName, final String reward) {
+        if (!doesCourseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            return;
+        }
+
+        if (!ValidationUtils.isPositiveInteger(reward)) {
+            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+            return;
+        }
+
+        CourseInfo.setRewardParkoins(courseName, Integer.parseInt(reward));
+        TranslationUtils.sendPropertySet(sender, "Parkoins reward", courseName, reward);
+    }
+
+    /**
+     * Add a Join Item to the Course.
+     * A Material and the Amount can be provided to add the ItemStack(s) to the Player's inventory on Course join.
+     * An optional Material label can be provided to display.
+     * An optional 'unbreakable' flag can be provided to be applied to the Item.
+     *
+     * @param sender requesting sender
+     * @param args command arguments
+     */
+    public void addJoinItem(final CommandSender sender, final String... args) {
+        if (!doesCourseExists(args[1])) {
             TranslationUtils.sendValueTranslation("Error.NoExist", args[1], sender);
             return;
         }
@@ -841,14 +688,149 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     }
 
     /**
-     * Retrieve and display Leaderboard for a course
-     * Can be specified direction using appropriate commands,
-     * or the Leaderboard conversation can be started, to specify what you want to view based on the options
+     * Reset the Course information.
+     * Resets all the statistics of Course as if it were just created.
+     * All course times will be deleted from the database.
+     * The Checkpoints will be unaffected.
      *
-     * @param args
-     * @param player
+     * @param courseNameInput target course name
      */
-    public void getLeaderboards(Player player, String[] args) {
+    public void resetCourse(final String courseNameInput) {
+        if (!doesCourseExists(courseNameInput)) {
+            return;
+        }
+
+        String courseName = courseNameInput.toLowerCase();
+        ParkourConfiguration courseConfig = Parkour.getConfig(ConfigType.COURSES);
+        Set<String> properties = courseConfig.getConfigurationSection(courseName).getKeys(false);
+
+        for (String property : properties) {
+            if (property.equals("Creator") || property.equals("World")) {
+                continue;
+            }
+
+            courseConfig.set(courseName + "." + property, null);
+        }
+
+        courseConfig.save();
+        parkour.getDatabase().deleteCourseTimes(courseName);
+    }
+
+    /**
+     * Execute the appropriate Event Commands for Course.
+     * When a Course has a matching Command for the {@link ParkourEventType}, execute each of them.
+     * The Commands will be dispatched from the Console Sender, and allow for a %PLAYER% placeholder.
+     *
+     * @param player requesting player
+     * @param courseName course name
+     * @param eventType event type
+     */
+    public void runEventCommands(final Player player, final String courseName, final ParkourEventType eventType) {
+        if (CourseInfo.hasEventCommands(courseName, eventType)) {
+            for (String command : CourseInfo.getEventCommands(courseName, eventType)) {
+                parkour.getServer().dispatchCommand(
+                        parkour.getServer().getConsoleSender(),
+                        command.replace(Constants.PLAYER_PLACEHOLDER, player.getName()));
+            }
+        }
+    }
+
+    /**
+     * Process Set Course Command.
+     * This Command can be used to set various attributes about the Course in one place.
+     *
+     * @param sender requesting sender
+     * @param args command arguments
+     */
+    public void processSetCommand(final CommandSender sender, final String... args) {
+        if (!doesCourseExists(args[1])) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", args[1], sender);
+            return;
+        }
+
+        if (args.length == 2 && sender instanceof Player) {
+            new SetCourseConversation((Player) sender).withCourseName(args[1]).begin();
+
+        } else if (args.length == 4) {
+            SetCourseConversation.performAction(sender, args[1], args[2], args[3]);
+
+        } else if (args.length >= 5) {
+            if (args[2].equalsIgnoreCase("message")) {
+                if (SetCourseConversation.MESSAGE_OPTIONS.contains(args[3].toLowerCase())) {
+                    String message = StringUtils.extractMessageFromArgs(args, 4);
+
+                    CourseInfo.setEventMessage(args[1], args[3], message);
+                    TranslationUtils.sendPropertySet(sender, StringUtils.standardizeText(args[3]) + " Message", args[1],
+                            StringUtils.colour(message));
+
+                } else {
+                    TranslationUtils.sendInvalidSyntax(sender, "setcourse",
+                            "(courseName) message [join, leave, finish, checkpoint, checkpointall] [value]");
+                }
+            } else if (args[2].equalsIgnoreCase("command")) {
+                if (SetCourseConversation.COMMAND_OPTIONS.contains(args[3].toLowerCase())) {
+                    String message = StringUtils.extractMessageFromArgs(args, 4);
+                    ParkourEventType type = ParkourEventType.valueOf(args[3].toUpperCase());
+                    CourseInfo.addEventCommand(args[1], type, message);
+                    TranslationUtils.sendPropertySet(sender, type.getConfigEntry() + " command", args[1], "/" + message);
+                } else {
+                    TranslationUtils.sendInvalidSyntax(sender, "setcourse",
+                            "(courseName) message [join, leave, finish, checkpoint, checkpointall] [value]");
+                }
+            }
+        } else {
+            TranslationUtils.sendInvalidSyntax(sender, "setcourse",
+                    "(courseName) [creator, minlevel, maxdeath, maxtime, message] [value]");
+        }
+    }
+
+    /**
+     * Display the Contents of a Reference Data List.
+     * Possible selections include: players, courses, ranks, lobbies
+     *
+     * @param sender requesting sender
+     * @param args command arguments
+     */
+    public void displayList(final CommandSender sender, final String... args) {
+        if (args.length < 2) {
+            TranslationUtils.sendInvalidSyntax(sender, "list", "(players / courses / ranks / lobbies)");
+            return;
+        }
+
+        if (args[1].equalsIgnoreCase("players")) {
+            parkour.getPlayerManager().displayParkourPlayers(sender);
+
+        } else if (args[1].equalsIgnoreCase("courses")) {
+            int page = (args.length == 3 && args[2] != null
+                    && ValidationUtils.isPositiveInteger(args[2]) ? Integer.parseInt(args[2]) : 1);
+            displayCourses(sender, page);
+
+        } else if (args[1].equalsIgnoreCase("ranks")) {
+            if (!PermissionUtils.hasPermission(sender, Permission.ADMIN_ALL)) {
+                return;
+            }
+            parkour.getPlayerManager().displayParkourRanks(sender);
+
+        } else if (args[1].equalsIgnoreCase("lobbies")) {
+            if (!PermissionUtils.hasPermission(sender, Permission.ADMIN_ALL)) {
+                return;
+            }
+            parkour.getLobbyManager().displayLobbies(sender);
+
+        } else {
+            TranslationUtils.sendInvalidSyntax(sender, "list", "(players / courses / ranks / lobbies)");
+        }
+    }
+
+    /**
+     * Request to display Course Leaderboards.
+     * When provided with sufficient command arguments the results will be displayed in the Player's chat.
+     * Otherwise, the Leaderboard Conversation will start to allow the Player to choose which results to display.
+     *
+     * @param player requesting player
+     * @param args command arguments
+     */
+    public void displayLeaderboards(final Player player, final String... args) {
         if (!parkour.getPlayerManager().delayPlayer(player, 3, true)) {
             return;
         }
@@ -858,7 +840,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        if (!courseExists(args[1])) {
+        if (!doesCourseExists(args[1])) {
             TranslationUtils.sendValueTranslation("Error.NoExist", args[1], player);
             return;
         }
@@ -891,87 +873,104 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         parkour.getDatabase().displayTimeEntries(player, args[1], results);
     }
 
-    /**
-     * Retrieves the ParkourMode of a course
-     * Will default to NONE if a mode hasn't been specified.
-     *
-     * @param courseName
-     * @return ParkourMode
-     */
-    public ParkourMode getCourseMode(String courseName) {
-        String mode = CourseInfo.getParkourMode(courseName).toUpperCase();
-        return ParkourMode.valueOf(mode);
+    @Override
+    public int getCacheSize() {
+        return courseCache.size();
     }
 
-    public void processSetCommand(CommandSender sender, String[] args) {
-        if (!courseExists(args[1])) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", args[1], sender);
-            return;
-        }
-
-        if (args.length == 2 && sender instanceof Player) {
-            new SetCourseConversation((Player) sender).withCourseName(args[1]).begin();
-
-        } else if (args.length == 4) {
-            SetCourseConversation.performAction(sender, args[1], args[2], args[3]);
-
-        } else if (args.length >= 5) {
-            if (args[2].equalsIgnoreCase("message")) {
-                if (SetCourseConversation.MESSAGE_OPTIONS.contains(args[3].toLowerCase())) {
-                    String message = StringUtils.extractMessageFromArgs(args, 4);
-
-                    CourseInfo.setEventMessage(args[1], args[3], message);
-                    TranslationUtils.sendPropertySet(sender, StringUtils.standardizeText(args[3]) + " Message", args[1],
-                            StringUtils.colour(message));
-
-                } else {
-                    TranslationUtils.sendInvalidSyntax(sender, "setcourse", "(courseName) message [join, leave, finish, checkpoint, checkpointall] [value]");
-                }
-            } else if (args[2].equalsIgnoreCase("command")) {
-                if (SetCourseConversation.COMMAND_OPTIONS.contains(args[3].toLowerCase())) {
-                    String message = StringUtils.extractMessageFromArgs(args, 4);
-                    ParkourEventType type = ParkourEventType.valueOf(args[3].toUpperCase());
-                    CourseInfo.addEventCommand(args[1], type, message);
-                    TranslationUtils.sendPropertySet(sender, type.getConfigEntry() + " command", args[1], "/" + message);
-                } else {
-                    TranslationUtils.sendInvalidSyntax(sender, "setcourse", "(courseName) message [join, leave, finish, checkpoint, checkpointall] [value]");
-                }
-            }
-        } else {
-            TranslationUtils.sendInvalidSyntax(sender, "setcourse", "(courseName) [creator, minlevel, maxdeath, maxtime, message] [value]");
-        }
+    @Override
+    public void clearCache() {
+        courseCache.clear();
     }
 
     /**
-     * Set player limit  for course.
-     * Set a limit on the number of players that can play the course concurrently.
+     * Clear the specified Course information.
      *
-     * @param sender
-     * @param courseName
-     * @param limit
+     * @param courseName target course name
      */
-    public void setPlayerLimit(CommandSender sender, String courseName, String limit) {
-        if (!courseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+    public void clearCache(final String courseName) {
+        courseCache.remove(courseName.toLowerCase());
+    }
+
+    /**
+     * Construct the {@link Course} object, finding it's relevant information.
+     *
+     * @param courseNameInput course name
+     * @return populated Course
+     */
+    private Course populateCourse(final String courseNameInput) {
+        String courseName = courseNameInput.toLowerCase();
+        String parkourKitName = CourseInfo.getParkourKit(courseName);
+        ParkourKit parkourKit = parkour.getParkourKitManager().getParkourKit(parkourKitName);
+        ParkourMode parkourMode = CourseInfo.getCourseMode(courseName);
+        List<Checkpoint> checkpoints = parkour.getCheckpointManager().getCheckpoints(courseName);
+        return new Course(courseName, checkpoints, parkourKit, parkourMode);
+    }
+
+    /**
+     * Display all available Parkour Courses.
+     * Courses are presented in Menus, in groups of 8.
+     * Information including their name, index number, ready status and level rewards.
+     *
+     * @param sender requesting sender
+     * @param page desired page number
+     */
+    private void displayCourses(CommandSender sender, int page) {
+        if (CourseInfo.getAllCourseNames().size() == 0) {
+            sender.sendMessage(Parkour.getPrefix() + "There are no Parkour courses!");
             return;
         }
 
-        if (!ValidationUtils.isPositiveInteger(limit)) {
+        if (page <= 0) {
             TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
-        CourseInfo.setPlayerLimit(courseName, Integer.parseInt(limit));
-        TranslationUtils.sendPropertySet(sender, "Player Limit", courseName, limit);
-    }
+        int results = 8;
+        int fromIndex = (page - 1) * results;
 
-    public void runEventCommands(Player player, String courseName, ParkourEventType type) {
-        if (CourseInfo.hasEventCommands(courseName, type)) {
-            for (String command : CourseInfo.getEventCommands(courseName, type)) {
-                parkour.getServer().dispatchCommand(
-                        parkour.getServer().getConsoleSender(),
-                        command.replace(Constants.PLAYER_PLACEHOLDER, player.getName()));
-            }
+        List<String> courseList = CourseInfo.getAllCourseNames();
+        if (parkour.getConfig().getBoolean("Other.Display.OnlyReadyCourses")
+                && !PermissionUtils.hasPermission(sender, Permission.ADMIN_READY_BYPASS, false)) {
+            courseList = courseList.stream()
+                    .filter(CourseInfo::getReadyStatus)
+                    .collect(Collectors.toList());
         }
+
+        if (courseList.size() <= fromIndex) {
+            sender.sendMessage(Parkour.getPrefix() + "This page doesn't exist.");
+            return;
+        }
+
+        sender.sendMessage(Parkour.getPrefix() + courseList.size() + " courses available:");
+        List<String> limited = courseList.subList(fromIndex, Math.min(fromIndex + results, courseList.size()));
+
+        for (int i = 0; i < limited.size(); i++) {
+            String courseName = limited.get(i);
+            boolean ready = CourseInfo.getReadyStatus(courseName);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(((fromIndex) + (i + 1)));
+            sb.append(") ");
+            sb.append(ready ? ChatColor.AQUA : ChatColor.RED);
+            sb.append(courseName);
+
+            if (CourseInfo.hasMinimumParkourLevel(courseName)) {
+                sb.append(ChatColor.RED).append(" (")
+                        .append(CourseInfo.getMinimumParkourLevel(courseName)).append(")");
+            }
+            if (CourseInfo.hasRewardParkourLevel(courseName)) {
+                sb.append(ChatColor.GREEN).append(" (")
+                        .append(CourseInfo.getRewardParkourLevel(courseName)).append(")");
+
+            } else if (CourseInfo.hasRewardParkourLevelIncrease(courseName)) {
+                sb.append(ChatColor.GREEN).append(" (+")
+                        .append(CourseInfo.getRewardParkourLevelIncrease(courseName)).append(")");
+            }
+
+            sender.sendMessage(sb.toString());
+        }
+
+        sender.sendMessage("== " + page + " / " + ((courseList.size() + results - 1) / results) + " ==");
     }
 }

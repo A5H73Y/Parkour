@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Set;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class CourseInfoUpgradeTask extends TimedUpgradeTask {
+public class CourseInfoUpgradeTask extends TimedConfigUpgradeTask {
 
 	public CourseInfoUpgradeTask(ParkourUpgrader parkourUpgrader) {
-		super(parkourUpgrader);
+		super(parkourUpgrader, parkourUpgrader.getCoursesConfig());
 	}
 
 	@Override
@@ -19,7 +19,7 @@ public class CourseInfoUpgradeTask extends TimedUpgradeTask {
 	@Override
 	protected boolean doWork() {
 		boolean success = true;
-		List<String> courseNames = getParkourUpgrader().getCoursesConfig().getStringList("Courses");
+		List<String> courseNames = getConfig().getStringList("Courses");
 
 		getParkourUpgrader().getLogger().info("Converting " + courseNames.size() + " courses.");
 		int interval = Math.max(courseNames.size() / 10, 1);
@@ -30,14 +30,19 @@ public class CourseInfoUpgradeTask extends TimedUpgradeTask {
 				double percent = Math.ceil((count * 100.0d) / courseNames.size());
 				getParkourUpgrader().getLogger().info(percent + "% complete...");
 			}
+			
+			transferAndDelete(courseName + ".Finished", courseName + ".Ready");
+			if (getConfig().contains(courseName + ".RewardDelay")) {
+				getConfig().set(courseName + ".RewardDelay", getConfig().getInt(courseName + ".RewardDelay") * 24);
+			}
 
-			int checkpoints = getParkourUpgrader().getCoursesConfig().getInt(courseName + ".Points");
+			int checkpoints = getConfig().getInt(courseName + ".Points");
 			getParkourUpgrader().getCheckpointsConfig().set(courseName + ".Checkpoints", checkpoints);
-			getParkourUpgrader().getCoursesConfig().set(courseName + ".Points", null);
+			getConfig().set(courseName + ".Points", null);
 
 			for (int i = 0; i < checkpoints + 1; i++) {
 				// first we do the checkpoints.yml file
-				ConfigurationSection courseConfigSection = getParkourUpgrader().getCoursesConfig().getConfigurationSection(courseName + "." + i);
+				ConfigurationSection courseConfigSection = getConfig().getConfigurationSection(courseName + "." + i);
 
 				if (courseConfigSection == null) {
 					getParkourUpgrader().getLogger().info("Course " + courseName + " is already upgraded...");
@@ -57,9 +62,9 @@ public class CourseInfoUpgradeTask extends TimedUpgradeTask {
 				Set<String> checkpointData = courseConfigSection.getKeys(false);
 
 				for (String checkpointDatum : checkpointData) {
-					getParkourUpgrader().getCheckpointsConfig().set(courseName + "." + i + "." + checkpointDatum, getParkourUpgrader().getCoursesConfig().getDouble(courseName + "." + i + "." + checkpointDatum));
+					getParkourUpgrader().getCheckpointsConfig().set(courseName + "." + i + "." + checkpointDatum, getConfig().getDouble(courseName + "." + i + "." + checkpointDatum));
 				}
-				getParkourUpgrader().getCoursesConfig().set(courseName + "." + i, null);
+				getConfig().set(courseName + "." + i, null);
 			}
 
 			count++;

@@ -98,10 +98,19 @@ public class CourseInfo {
     /**
      * Get the ParkourMode name for the Course.
      * @param courseName course name
-     * @return the parkour mode set
+     * @return the parkour mode name set
      */
-    public static String getParkourMode(String courseName) {
+    public static String getParkourModeName(String courseName) {
         return getCourseConfig().getString(courseName.toLowerCase() + ".Mode", ParkourMode.NONE.name());
+    }
+
+    /**
+     * Get the matching {@link ParkourMode} for the Course.
+     * @param courseName course name
+     * @return the ParkourMode
+     */
+    public static ParkourMode getCourseMode(String courseName) {
+        return ParkourMode.valueOf(getParkourModeName(courseName).toUpperCase());
     }
 
     /**
@@ -111,7 +120,7 @@ public class CourseInfo {
      * @return course has ParkourMode
      */
     public static boolean hasParkourMode(String courseName) {
-        return !ParkourMode.NONE.name().equals(getParkourMode(courseName));
+        return !ParkourMode.NONE.name().equals(getParkourModeName(courseName));
     }
 
     /**
@@ -157,7 +166,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return minimum ParkourLevel to join Course
      */
-    public static int getMinimumLevel(String courseName) {
+    public static int getMinimumParkourLevel(String courseName) {
         return getCourseConfig().getInt(courseName.toLowerCase() + ".MinimumLevel");
     }
 
@@ -166,8 +175,8 @@ public class CourseInfo {
      * @param courseName course name
      * @return course has minimum ParkourLevel
      */
-    public static boolean hasMinimumLevel(String courseName) {
-        return getMinimumLevel(courseName) > 0;
+    public static boolean hasMinimumParkourLevel(String courseName) {
+        return getMinimumParkourLevel(courseName) > 0;
     }
 
     /**
@@ -175,7 +184,7 @@ public class CourseInfo {
      * @param courseName course name
      * @param parkourLevel minimum parkour level
      */
-    public static void setMinimumLevel(String courseName, int parkourLevel) {
+    public static void setMinimumParkourLevel(String courseName, int parkourLevel) {
         getCourseConfig().set(courseName.toLowerCase() + ".MinimumLevel", parkourLevel);
         persistChanges();
     }
@@ -272,7 +281,7 @@ public class CourseInfo {
      * @return course ready status
      */
     public static boolean getReadyStatus(String courseName) {
-        return getCourseConfig().getBoolean(courseName.toLowerCase() + ".Ready");
+        return getCourseConfig().getBoolean(courseName.toLowerCase() + ".Ready", false);
     }
 
     /**
@@ -621,7 +630,7 @@ public class CourseInfo {
      * @param courseName course name
      */
     public static void displayCourseInfo(CommandSender sender, String courseName) {
-        if (!Parkour.getInstance().getCourseManager().courseExists(courseName)) {
+        if (!Parkour.getInstance().getCourseManager().doesCourseExists(courseName)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
         }
@@ -635,7 +644,7 @@ public class CourseInfo {
         sendValue(sender, "Creator", getCreator(courseName));
         sendValue(sender, "Ready Status", String.valueOf(getReadyStatus(courseName)));
 
-        sendConditionalValue(sender, "Minimum ParkourLevel", getMinimumLevel(courseName));
+        sendConditionalValue(sender, "Minimum ParkourLevel", getMinimumParkourLevel(courseName));
         sendConditionalValue(sender, "ParkourLevel Reward", getRewardParkourLevel(courseName));
         sendConditionalValue(sender, "ParkourLevel Reward Increase", getRewardParkourLevelIncrease(courseName));
         sendConditionalValue(sender, "Parkoins Reward", getRewardParkoins(courseName));
@@ -646,7 +655,7 @@ public class CourseInfo {
         sendConditionalValue(sender, "Linked Course", hasLinkedCourse(courseName), getLinkedCourse(courseName));
         sendConditionalValue(sender, "Linked Lobby", hasLinkedLobby(courseName), getLinkedLobby(courseName));
         sendConditionalValue(sender, "ParkourKit", hasParkourKit(courseName), getLinkedLobby(courseName));
-        sendConditionalValue(sender, "ParkourMode", hasParkourMode(courseName), getParkourMode(courseName));
+        sendConditionalValue(sender, "ParkourMode", hasParkourMode(courseName), getParkourModeName(courseName));
 
         sendConditionalValue(sender, "Material Prize",
                 hasMaterialPrize(courseName) && getMaterialPrizeAmount(courseName) > 0,
@@ -691,7 +700,8 @@ public class CourseInfo {
      * @param potionEffectType potion effect type name
      * @param durationAmplifier duration and amplifier provided
      */
-    public static void addPotionParkourModeEffect(String courseName, String potionEffectType, @Nullable String durationAmplifier) {
+    public static void addPotionParkourModeEffect(String courseName, String potionEffectType,
+                                                  @Nullable String durationAmplifier) {
         List<String> potionEffects = getPotionParkourModeEffects(courseName);
         String potionEffect = potionEffectType;
 
@@ -822,6 +832,15 @@ public class CourseInfo {
         commands.add(value);
 
         getCourseConfig().set(courseName.toLowerCase() + "." + eventType.getConfigEntry() + "Command", commands);
+        persistChanges();
+    }
+
+    /**
+     * Delete the AutoStart at the provided coordinates.
+     * @param coordinates requested coordinates
+     */
+    public static void deleteAutoStart(String coordinates) {
+        getCourseConfig().set("CourseInfo.AutoStart." + coordinates, null);
         persistChanges();
     }
 

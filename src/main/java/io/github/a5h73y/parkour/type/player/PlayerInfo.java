@@ -69,7 +69,7 @@ public class PlayerInfo {
      */
     public static boolean hasSelectedValidCourse(Player player) {
         String selected = getSelectedCourse(player);
-        return Parkour.getInstance().getCourseManager().courseExists(selected);
+        return Parkour.getInstance().getCourseManager().doesCourseExists(selected);
     }
 
     /**

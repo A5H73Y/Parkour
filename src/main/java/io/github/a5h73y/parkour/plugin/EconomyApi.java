@@ -7,7 +7,6 @@ import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.configuration.impl.EconomyConfig;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.other.Constants;
-import io.github.a5h73y.parkour.other.Validation;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -150,7 +149,7 @@ public class EconomyApi extends PluginWrapper {
 				TranslationUtils.sendInvalidSyntax(sender, "econ", "setprize (course) (amount)");
 				return;
 			}
-			if (!Parkour.getInstance().getCourseManager().courseExists(args[2])) {
+			if (!Parkour.getInstance().getCourseManager().doesCourseExists(args[2])) {
 				TranslationUtils.sendValueTranslation("Error.NoExist", args[2], sender);
 				return;
 			}
@@ -168,7 +167,7 @@ public class EconomyApi extends PluginWrapper {
 				TranslationUtils.sendInvalidSyntax(sender, "econ", "setfee (course) (amount)");
 				return;
 			}
-			if (!Parkour.getInstance().getCourseManager().courseExists(args[2])) {
+			if (!Parkour.getInstance().getCourseManager().doesCourseExists(args[2])) {
 				TranslationUtils.sendValueTranslation("Error.NoExist", args[2], sender);
 				return;
 			}

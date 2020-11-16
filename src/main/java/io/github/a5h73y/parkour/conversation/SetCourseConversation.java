@@ -186,7 +186,7 @@ public class SetCourseConversation extends ParkourConversation {
                     break;
 
                 case "minlevel":
-                    parkour.getCourseManager().setMinLevel(sender, courseName, input);
+                    parkour.getCourseManager().setMinimumParkourLevel(sender, courseName, input);
                     break;
 
                 case "maxdeath":

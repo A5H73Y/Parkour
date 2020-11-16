@@ -43,7 +43,7 @@ public class Validation {
             player.sendMessage(Parkour.getPrefix() + "Course name can not only be numeric");
             return false;
 
-        } else if (Parkour.getInstance().getCourseManager().courseExists(courseName)) {
+        } else if (Parkour.getInstance().getCourseManager().doesCourseExists(courseName)) {
             TranslationUtils.sendTranslation("Error.Exist", player);
             return false;
         }
@@ -73,7 +73,7 @@ public class Validation {
         }
 
         /* Players level isn't high enough */
-        int minimumLevel = CourseInfo.getMinimumLevel(course.getName());
+        int minimumLevel = CourseInfo.getMinimumParkourLevel(course.getName());
 
         if (minimumLevel > 0 && !PermissionUtils.hasPermission(player, Permission.ADMIN_LEVEL_BYPASS, false)
                 && !PermissionUtils.hasSpecificPermission(player, Permission.PARKOUR_LEVEL, String.valueOf(minimumLevel), false)) {
@@ -148,7 +148,7 @@ public class Validation {
         }
 
         /* Players level isn't high enough */
-        int minimumLevel = CourseInfo.getMinimumLevel(courseName);
+        int minimumLevel = CourseInfo.getMinimumParkourLevel(courseName);
 
         if (minimumLevel > 0) {
             if (!PermissionUtils.hasPermission(player, Permission.ADMIN_LEVEL_BYPASS, false)
@@ -192,7 +192,7 @@ public class Validation {
             player.sendMessage(Parkour.getPrefix() + "This player is not online!");
             return false;
         }
-        if (!Parkour.getInstance().getCourseManager().courseExists(courseName)) {
+        if (!Parkour.getInstance().getCourseManager().doesCourseExists(courseName)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
             return false;
         }
@@ -302,7 +302,7 @@ public class Validation {
     public static boolean createCheckpoint(Player player, @Nullable Integer checkpoint) {
         String selected = PlayerInfo.getSelectedCourse(player).toLowerCase();
 
-        if (!Parkour.getInstance().getCourseManager().courseExists(selected)) {
+        if (!Parkour.getInstance().getCourseManager().doesCourseExists(selected)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", selected, player);
             return false;
         }
@@ -337,7 +337,7 @@ public class Validation {
      * @return
      */
     public static boolean deleteCourse(String courseName, CommandSender sender) {
-        if (!Parkour.getInstance().getCourseManager().courseExists(courseName)) {
+        if (!Parkour.getInstance().getCourseManager().doesCourseExists(courseName)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return false;
         }
@@ -442,7 +442,7 @@ public class Validation {
     }
 
     public static boolean deleteCheckpoint(CommandSender sender, String courseName) {
-        if (!Parkour.getInstance().getCourseManager().courseExists(courseName)) {
+        if (!Parkour.getInstance().getCourseManager().doesCourseExists(courseName)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return false;
         }

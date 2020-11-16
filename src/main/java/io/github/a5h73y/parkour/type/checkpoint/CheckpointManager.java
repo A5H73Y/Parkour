@@ -182,7 +182,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
      * @param checkpoint optional checkpoint number
      */
     public void teleportCheckpoint(Player player, String courseName, @Nullable Integer checkpoint) {
-        if (!parkour.getCourseManager().courseExists(courseName)) {
+        if (!parkour.getCourseManager().doesCourseExists(courseName)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
             return;
         }
@@ -219,7 +219,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
      * @param courseName the desired course
      */
     public void deleteCheckpoint(CommandSender sender, String courseName) {
-        if (!parkour.getCourseManager().courseExists(courseName)) {
+        if (!parkour.getCourseManager().doesCourseExists(courseName)) {
             return;
         }
 

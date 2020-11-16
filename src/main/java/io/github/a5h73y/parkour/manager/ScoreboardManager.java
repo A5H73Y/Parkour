@@ -4,9 +4,7 @@ import static io.github.a5h73y.parkour.Parkour.PARKOUR;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.database.TimeEntry;
-import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
@@ -36,14 +34,12 @@ public class ScoreboardManager extends AbstractPluginReceiver {
     private static final String CURRENT_DEATHS = ChatColor.DARK_GREEN.toString();
     private static final String CHECKPOINTS = ChatColor.DARK_RED.toString();
     private static final String LIVE_TIMER = ChatColor.DARK_BLUE.toString();
-    private static final String MAX_TIME = ChatColor.DARK_PURPLE.toString();
 
     // final translations
     private final String titleFormat = TranslationUtils.getTranslation("Scoreboard.TitleFormat", false);
     private final String textFormat = TranslationUtils.getTranslation("Scoreboard.TextFormat", false);
     private final String mainHeading = TranslationUtils.getTranslation("Scoreboard.MainHeading", false);
     private final String notCompleted = TranslationUtils.getTranslation("Scoreboard.NotCompleted", false);
-    private final String maxTime = TranslationUtils.getTranslation("Scoreboard.MaxTimeTitle", false);
 
     private final boolean enabled;
     private final int numberOfRowsNeeded;
@@ -124,20 +120,16 @@ public class ScoreboardManager extends AbstractPluginReceiver {
         PlayerScoreboard playerScoreboard = new PlayerScoreboard(player, board, objective);
         registerAllEntries(playerScoreboard);
 
+        // set the static info
         setCourseName(playerScoreboard);
         setBestTimeEver(playerScoreboard);
         setMyBestTimeEver(playerScoreboard);
 
         player.setScoreboard(board);
 
+        // update the dynamic results with their session (could be pre-populated)
         updateScoreboardCheckpoints(player, playerScoreboard.getSession());
         updateScoreboardDeaths(player, playerScoreboard.getSession().getDeaths());
-
-        if (CourseInfo.hasMaximumTime(playerScoreboard.getSession().getCourseName())) {
-            // how do I fix this
-            player.getScoreboard().getTeams().forEach(score -> player.sendMessage(score.getDisplayName() + " - " + score.getPrefix()));
-            playerScoreboard.scoreboard.getTeam(LIVE_TIMER).setDisplayName(maxTime);
-        }
 
         return board;
     }
@@ -153,7 +145,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
         ScoreboardEntry entry = new ScoreboardEntry();
         entry.setEnabled(parkour.getConfig().getBoolean("Scoreboard." + keyName + ".Enabled"));
         entry.setSequence(parkour.getConfig().getInt("Scoreboard." + keyName + ".Sequence"));
-        entry.setTranslation(Parkour.getConfig(ConfigType.STRINGS).getString("Scoreboard." + keyName + "Title"));
+        entry.setTranslation(TranslationUtils.getTranslation("Scoreboard." + keyName + "Title", false));
         return entry;
     }
 
@@ -190,7 +182,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
 
         List<TimeEntry> result = parkour.getDatabase().getTopPlayerCourseResults(
                 playerBoard.getPlayer(), playerBoard.getSession().getCourseName(), 1);
-        String bestTime = result.size() > 0 ? DateTimeUtils.displayCurrentTime(result.get(0).getTime()) : notCompleted;
+        String bestTime = !result.isEmpty() ? DateTimeUtils.displayCurrentTime(result.get(0).getTime()) : notCompleted;
         playerBoard.scoreboard.getTeam(MY_BEST_TIME_EVER).setPrefix(bestTime);
     }
 

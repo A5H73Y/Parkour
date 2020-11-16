@@ -5,15 +5,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import org.bukkit.GameMode;
-import org.bukkit.configuration.file.FileConfiguration;
 
-public class DefaultConfigUpgradeTask extends TimedUpgradeTask {
-
-	private final FileConfiguration defaultConfig;
+public class DefaultConfigUpgradeTask extends TimedConfigUpgradeTask {
 
 	public DefaultConfigUpgradeTask(ParkourUpgrader parkourUpgrader) {
-		super(parkourUpgrader);
-		this.defaultConfig = parkourUpgrader.getDefaultConfig();
+		super(parkourUpgrader, parkourUpgrader.getDefaultConfig());
 	}
 
 	@Override
@@ -41,29 +37,29 @@ public class DefaultConfigUpgradeTask extends TimedUpgradeTask {
 			// TODO more scoreboard
 
 			// update int to actual value
-			defaultConfig.set("OnJoin.SetGameMode", getMatchingGameMode(defaultConfig.getInt("OnJoin.SetGamemode")));
-			defaultConfig.set("OnFinish.BroadcastLevel", getBroadcastLevel(defaultConfig.getInt("OnFinish.BroadcastLevel")));
-			defaultConfig.set("OnFinish.SetGameMode", getMatchingGameMode(defaultConfig.getInt("OnFinish.SetGamemode")));
-			defaultConfig.set("MySQL.URL", "jdbc:mysql://" + defaultConfig.getString("MySQL.Host") + ":" +
-					defaultConfig.getString("MySQL.Port") + "/" + defaultConfig.getString("MySQL.Database"));
+			getConfig().set("OnJoin.SetGameMode", getMatchingGameMode(getConfig().getInt("OnJoin.SetGamemode")));
+			getConfig().set("OnFinish.BroadcastLevel", getBroadcastLevel(getConfig().getInt("OnFinish.BroadcastLevel")));
+			getConfig().set("OnFinish.SetGameMode", getMatchingGameMode(getConfig().getInt("OnFinish.SetGamemode")));
+			getConfig().set("MySQL.URL", "jdbc:mysql://" + getConfig().getString("MySQL.Host") + ":"
+					+ getConfig().getString("MySQL.Port") + "/" + getConfig().getString("MySQL.Database"));
 
 			// miscellaneous
-			defaultConfig.set("OnJoin.Item.HideAllEnabled.Material",
-					defaultConfig.getString("OnJoin.Item.HideAll.Material"));
-			defaultConfig.set("Version", Double.valueOf(Parkour.getInstance().getDescription().getVersion()));
+			getConfig().set("OnJoin.Item.HideAllEnabled.Material",
+					getConfig().getString("OnJoin.Item.HideAll.Material"));
+			getConfig().set("Version", Double.valueOf(Parkour.getInstance().getDescription().getVersion()));
 
 			// deletions
-			defaultConfig.set("OnCourse.Trails", null);
-			defaultConfig.set("OnJoin.SetGamemode", null);
-			defaultConfig.set("OnFinish.SetGamemode", null);
-			defaultConfig.set("MySQL.User", null);
-			defaultConfig.set("MySQL.Host", null);
-			defaultConfig.set("MySQL.Port", null);
-			defaultConfig.set("MySQL.Database", null);
-			defaultConfig.set("MySQL.Table", null);
-			defaultConfig.set("Other.Economy", null);
-			defaultConfig.set("Lobby.Set", null);
-			defaultConfig.set("Lobby.EnforceWorld", null);
+			getConfig().set("OnCourse.Trails", null);
+			getConfig().set("OnJoin.SetGamemode", null);
+			getConfig().set("OnFinish.SetGamemode", null);
+			getConfig().set("MySQL.User", null);
+			getConfig().set("MySQL.Host", null);
+			getConfig().set("MySQL.Port", null);
+			getConfig().set("MySQL.Database", null);
+			getConfig().set("MySQL.Table", null);
+			getConfig().set("Other.Economy", null);
+			getConfig().set("Lobby.Set", null);
+			getConfig().set("Lobby.EnforceWorld", null);
 			getParkourUpgrader().saveDefaultConfig();
 		} catch (IOException e) {
 			getParkourUpgrader().getLogger().severe("An error occurred during upgrade: " + e.getMessage());
@@ -71,11 +67,6 @@ public class DefaultConfigUpgradeTask extends TimedUpgradeTask {
 			success = false;
 		}
 		return success;
-	}
-
-	private void transferAndDelete(String fromPath, String toPath) {
-		defaultConfig.set(toPath, defaultConfig.get(fromPath));
-		defaultConfig.set(fromPath, null);
 	}
 
 	private String getMatchingGameMode(int value) {
@@ -99,8 +90,8 @@ public class DefaultConfigUpgradeTask extends TimedUpgradeTask {
 		List<String> details = Arrays.asList("World", "X", "Y", "Z", "Pitch", "Yaw");
 
 		for (String detail : details) {
-			defaultConfig.set("Lobby.default." + detail, defaultConfig.get("Lobby." + detail));
-			defaultConfig.set("Lobby." + detail, null);
+			getConfig().set("Lobby.default." + detail, getConfig().get("Lobby." + detail));
+			getConfig().set("Lobby." + detail, null);
 		}
 	}
 }

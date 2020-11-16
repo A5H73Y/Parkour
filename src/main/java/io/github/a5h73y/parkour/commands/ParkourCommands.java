@@ -86,7 +86,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getCourseManager().challengePlayer(player, args);
+                parkour.getPlayerManager().challengePlayer(player, args);
                 break;
 
             case "checkpoint":
@@ -210,7 +210,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getCourseManager().getLeaderboards(player, args);
+                parkour.getCourseManager().displayLeaderboards(player, args);
                 break;
 
             case "leave":
@@ -230,7 +230,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getCourseManager().linkCourse(player, args);
+                parkour.getCourseManager().setCourseLink(player, args);
                 break;
 
             case "linkkit":
@@ -242,7 +242,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getCourseManager().linkParkourKit(player, args[1], args[2]);
+                parkour.getCourseManager().setParkourKit(player, args[1], args[2]);
                 break;
 
             case "list":
@@ -381,7 +381,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getCourseManager().setRewardOnce(player, getChosenCourseName(player, args, 1));
+                parkour.getCourseManager().setRewardOnceStatus(player, getChosenCourseName(player, args, 1));
                 break;
 
             case "rewardparkoins":
@@ -425,7 +425,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getCourseManager().setAutoStart(player, getChosenCourseName(player, args, 1));
+                parkour.getCourseManager().createAutoStart(player, getChosenCourseName(player, args, 1));
                 break;
 
             case "setcourse":
@@ -507,7 +507,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getCourseManager().setStart(player, getChosenCourseName(player, args, 1));
+                parkour.getCourseManager().setStartLocation(player, getChosenCourseName(player, args, 1));
                 break;
 
             case "settings":

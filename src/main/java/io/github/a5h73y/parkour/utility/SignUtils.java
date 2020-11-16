@@ -1,7 +1,6 @@
 package io.github.a5h73y.parkour.utility;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.other.Validation;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.lobby.LobbyInfo;
 import org.bukkit.ChatColor;
@@ -61,7 +60,7 @@ public class SignUtils {
             return false;
         }
 
-        if (!Parkour.getInstance().getCourseManager().courseExists(signEvent.getLine(2))) {
+        if (!Parkour.getInstance().getCourseManager().doesCourseExists(signEvent.getLine(2))) {
             TranslationUtils.sendValueTranslation("Error.NoExist", signEvent.getLine(2), player);
             breakSignAndCancelEvent(signEvent);
             return false;
@@ -87,7 +86,7 @@ public class SignUtils {
             return;
         }
 
-        int minimumLevel = CourseInfo.getMinimumLevel(signEvent.getLine(2));
+        int minimumLevel = CourseInfo.getMinimumParkourLevel(signEvent.getLine(2));
 
         if (minimumLevel > 0) {
             signEvent.setLine(3, ChatColor.RED + String.valueOf(minimumLevel));

@@ -164,7 +164,7 @@ public class QuestionManager extends AbstractPluginReceiver {
                     return;
 
                 case DELETE_AUTOSTART:
-                    parkour.getCourseManager().deleteAutoStart(argument);
+                    CourseInfo.deleteAutoStart(argument);
                     TranslationUtils.sendValueTranslation("Parkour.Delete", "AutoStart", sender);
                     PluginUtils.logToFile("AutoStart at " + argument + " was deleted by " + sender.getName());
                     return;

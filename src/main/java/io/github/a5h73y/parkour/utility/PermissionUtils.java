@@ -87,7 +87,7 @@ public class PermissionUtils {
 			return false;
 		}
 
-		if (!Parkour.getInstance().getCourseManager().courseExists(courseName)) {
+		if (!Parkour.getInstance().getCourseManager().doesCourseExists(courseName)) {
 			TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
 			return false;
 		}

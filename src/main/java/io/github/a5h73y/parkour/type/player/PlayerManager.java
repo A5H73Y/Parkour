@@ -66,10 +66,10 @@ import org.bukkit.util.Vector;
 
 public class PlayerManager extends AbstractPluginReceiver {
 
-	private final Map<Player, ParkourSession> parkourPlayers = new WeakHashMap<>();
+	private final transient Map<Player, ParkourSession> parkourPlayers = new WeakHashMap<>();
 
-	private final Map<Player, Long> playerDelay = new HashMap<>();
-	private final Map<Integer, String> parkourRanks = new TreeMap<>();
+	private final transient Map<Player, Long> playerDelay = new HashMap<>();
+	private final transient Map<Integer, String> parkourRanks = new TreeMap<>();
 
 	private final List<Player> quietPlayers = new ArrayList<>();
 	private final List<Player> hiddenPlayers = new ArrayList<>();
@@ -280,7 +280,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	}
 
 	public void joinCourse(Player player, String courseName) {
-		Course course = parkour.getCourseManager().getCourse(courseName);
+		Course course = parkour.getCourseManager().findCourse(courseName);
 
 		if (course == null) {
 			TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
@@ -1401,8 +1401,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 		ParkourSession session = readParkourSession(player);
 
 		if (session != null) {
-			if (parkour.getCourseManager().courseExists(session.getCourseName())) {
-				session.setCourse(parkour.getCourseManager().getCourse(session.getCourseName()));
+			if (parkour.getCourseManager().doesCourseExists(session.getCourseName())) {
+				session.setCourse(parkour.getCourseManager().findCourse(session.getCourseName()));
 				session.recalculateTime();
 				parkourPlayers.put(player, session);
 
@@ -1739,5 +1739,45 @@ public class PlayerManager extends AbstractPluginReceiver {
 		} else {
 			TranslationUtils.sendInvalidSyntax(sender, "setplayer", "(player) [level / rank] [value]");
 		}
+	}
+
+	/**
+	 * Challenge a Player to a Course.
+	 * Sends a Challenge invite to a target Player, this must be accepted by the recipient before the Challenge initiates.
+	 * A wager can be placed which Economy is enabled, and the extra command argument is provided.
+	 *
+	 * @param player requesting player
+	 * @param args command arguments
+	 */
+	public void challengePlayer(final Player player, final String... args) {
+		if (!Validation.challengePlayer(player, args)) {
+			return;
+		}
+
+		if (!parkour.getPlayerManager().delayPlayer(player, 10, true)) {
+			return;
+		}
+
+		String wagerString = "";
+		Double wager = null;
+
+		if (args.length == 4 && parkour.getEconomyApi().isEnabled() && ValidationUtils.isPositiveDouble(args[3])) {
+			String currencyName = parkour.getEconomyApi().getCurrencyName();
+			wager = Double.parseDouble(args[3]);
+			wagerString = TranslationUtils.getValueTranslation("Parkour.Challenge.Wager", wager + currencyName, false);
+		}
+
+		Player target = Bukkit.getPlayer(args[2]);
+		String courseName = args[1].toLowerCase();
+
+		target.sendMessage(TranslationUtils.getTranslation("Parkour.Challenge.Receive")
+				.replace(Constants.PLAYER_PLACEHOLDER, player.getName())
+				.replace(Constants.COURSE_PLACEHOLDER, courseName) + wagerString);
+		TranslationUtils.sendTranslation("Parkour.Accept", false, target);
+
+		player.sendMessage(TranslationUtils.getTranslation("Parkour.Challenge.Send")
+				.replace(Constants.PLAYER_PLACEHOLDER, target.getName())
+				.replace(Constants.COURSE_PLACEHOLDER, courseName) + wagerString);
+		parkour.getChallengeManager().createChallenge(player.getName(), target.getName(), courseName, wager);
 	}
 }
