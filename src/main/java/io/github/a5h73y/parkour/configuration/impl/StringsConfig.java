@@ -189,17 +189,17 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("GUI.JoinCourses.Players", "Players: &b%VALUE%");
 		this.addDefault("GUI.JoinCourses.Checkpoints", "Checkpoints: &b%VALUE%");
 
+//		this.addDefault("Display.TimeFormat", "HH:mm:ss:MMM");
+//		this.addDefault("Display.DateFormat", "dd/MM/yyyy");
 
-		this.addDefault("Display.TimeFormat", "HH:mm:ss:MMM");
-		this.addDefault("Display.DateFormat", "dd/MM/yyyy");
-		this.addDefault("Display.Day", "day");
-		this.addDefault("Display.Days", "days");
-		this.addDefault("Display.Hour", "hour");
-		this.addDefault("Display.Hours", "hours");
-		this.addDefault("Display.Minute", "minute");
-		this.addDefault("Display.Minutes", "minutes");
-		this.addDefault("Display.Second", "second");
-		this.addDefault("Display.Seconds", "seconds");
+		this.addDefault("Display.Day", "%VALUE% day");
+		this.addDefault("Display.Days", "%VALUE% days");
+		this.addDefault("Display.Hour", "%VALUE% hour");
+		this.addDefault("Display.Hours", "%VALUE% hours");
+		this.addDefault("Display.Minute", "%VALUE% minute");
+		this.addDefault("Display.Minutes", "%VALUE% minutes");
+		this.addDefault("Display.Second", "%VALUE% second");
+		this.addDefault("Display.Seconds", "%VALUE% seconds");
 
 		this.options().copyDefaults(true);
 	}

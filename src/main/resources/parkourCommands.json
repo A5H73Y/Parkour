@@ -304,7 +304,7 @@
     "title": "Reward Delay for Course",
     "arguments": "(course) (delay)",
     "example": "/pa rewarddelay tutorial 1",
-    "description": "Limit a course reward for a player to once per day, as in the example. The rate at which the reward is given, is achieved by setting the delay to the number of days which need to elapse before the player can win the same prize again.",
+    "description": "Limit a course reward for a player to once per day, as in the example. The rate at which the reward is given, is achieved by setting the delay to the number of hours which need to elapse before the player can win the same prize again.",
     "permission": "Parkour.Admin.Course",
     "commandGroup": "3",
     "consoleSyntax": "pac rewarddelay (course) (delay)"

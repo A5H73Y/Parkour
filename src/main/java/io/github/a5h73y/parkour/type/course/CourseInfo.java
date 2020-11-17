@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Course Information Utility class.
- * Convenience methods for accessing configuration files.
+ * Convenience methods for accessing course configuration file.
  */
 public class CourseInfo {
 
@@ -586,10 +586,10 @@ public class CourseInfo {
 
     /**
      * Delete the Course and all associated data.
-     * @param courseName course name
+     * @param courseNameInput course name
      */
-    public static void deleteCourse(String courseName) {
-        courseName = courseName.toLowerCase();
+    public static void deleteCourse(final String courseNameInput) {
+        String courseName = courseNameInput.toLowerCase();
 
         List<String> courseList = getAllCourseNames();
         courseList.remove(courseName);
@@ -599,6 +599,7 @@ public class CourseInfo {
 
         Parkour.getInstance().getCheckpointManager().deleteCheckpointData(courseName);
         Parkour.getInstance().getDatabase().deleteCourseAndReferences(courseName);
+        Parkour.getInstance().getCourseManager().clearCache(courseName);
 
         PlayerInfo.removeCompletedCourse(courseName);
     }
@@ -654,7 +655,7 @@ public class CourseInfo {
 
         sendConditionalValue(sender, "Linked Course", hasLinkedCourse(courseName), getLinkedCourse(courseName));
         sendConditionalValue(sender, "Linked Lobby", hasLinkedLobby(courseName), getLinkedLobby(courseName));
-        sendConditionalValue(sender, "ParkourKit", hasParkourKit(courseName), getLinkedLobby(courseName));
+        sendConditionalValue(sender, "ParkourKit", hasParkourKit(courseName), getParkourKit(courseName));
         sendConditionalValue(sender, "ParkourMode", hasParkourMode(courseName), getParkourModeName(courseName));
 
         sendConditionalValue(sender, "Material Prize",

@@ -145,7 +145,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 break;
 
             case "listkit":
-                parkour.getParkourKitManager().listParkourKit(sender, args);
+                parkour.getParkourKitManager().displayParkourKits(sender, args);
                 break;
 
             case "prize":

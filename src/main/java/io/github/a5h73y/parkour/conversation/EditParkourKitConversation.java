@@ -70,7 +70,7 @@ public class EditParkourKitConversation extends ParkourConversation {
 
         // TODO super ugly, but can't find a better way?
         RemoveMaterial(ConversationContext context) {
-            super(ParkourKitInfo.getParkourKitContents(context.getSessionData("kit").toString()).toArray(new String[0]));
+            super(ParkourKitInfo.getParkourKitMaterials(context.getSessionData("kit").toString()).toArray(new String[0]));
         }
 
         @Override

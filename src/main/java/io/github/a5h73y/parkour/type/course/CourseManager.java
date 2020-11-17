@@ -893,7 +893,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     }
 
     /**
-     * Construct the {@link Course} object, finding it's relevant information.
+     * Construct the {@link Course} object, retrieving it's relevant information.
      *
      * @param courseNameInput course name
      * @return populated Course

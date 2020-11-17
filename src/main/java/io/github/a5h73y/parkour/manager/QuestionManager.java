@@ -4,6 +4,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.QuestionType;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
+import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -158,7 +159,7 @@ public class QuestionManager extends AbstractPluginReceiver {
                     return;
 
                 case DELETE_KIT:
-                    parkour.getParkourKitManager().deleteKit(argument);
+                    ParkourKitInfo.deleteKit(argument);
                     TranslationUtils.sendValueTranslation("Parkour.Delete", argument + " ParkourKit", sender);
                     PluginUtils.logToFile("ParkourKit " + argument + " was deleted by " + sender.getName());
                     return;

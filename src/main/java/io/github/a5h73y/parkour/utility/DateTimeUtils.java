@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.StringJoiner;
-
 import org.bukkit.OfflinePlayer;
 
 /**
@@ -81,31 +80,24 @@ public class DateTimeUtils {
 		MillisecondConverter time = new MillisecondConverter(millis);
 		StringJoiner totalTime = new StringJoiner(", ");
 
+		addString(totalTime, "Display.Day", time.getDays());
+
 		if (time.getDays() > 1) {
-			totalTime.add(time.getDays() + " " + TranslationUtils.getTranslation("Display.Days", false));
 			return totalTime.toString();
 		}
 
-		if (time.getDays() > 0) {
-			totalTime.add("1 " + TranslationUtils.getTranslation("Display.Day", false));
-		}
-		if (time.getHours() > 1) {
-			totalTime.add(time.getHours() + " " + TranslationUtils.getTranslation("Display.Hours", false));
-		} else if (time.getHours() > 0) {
-			totalTime.add("1 " + TranslationUtils.getTranslation("Display.Hour", false));
-		}
-		if (time.getMinutes() > 1) {
-			totalTime.add(time.getMinutes() + " " + TranslationUtils.getTranslation("Display.Minutes", false));
-		} else if (time.getMinutes() > 0) {
-			totalTime.add("1 " + TranslationUtils.getTranslation("Display.Minute", false));
-		}
-		if (time.getSeconds() > 1) {
-			totalTime.add(time.getSeconds() + " " + TranslationUtils.getTranslation("Display.Seconds", false));
-		} else if (time.getSeconds() > 0) {
-			totalTime.add("1 " + TranslationUtils.getTranslation("Display.Second", false));
-		}
+		addString(totalTime, "Display.Hour", time.getHours());
+		addString(totalTime, "Display.Minute", time.getMinutes());
+		addString(totalTime, "Display.Second", time.getSeconds());
 
 		return totalTime.toString();
+	}
+
+	private static void addString(StringJoiner joiner, String translationKey, long amount) {
+		if (amount > 0) {
+			String key = translationKey + (amount == 1 ? "" : "s");
+			joiner.add(TranslationUtils.getValueTranslation(key, amount, false));
+		}
 	}
 
 	public static long convertDaysToMilliseconds(int days) {

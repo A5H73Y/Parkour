@@ -61,6 +61,11 @@ public class TranslationUtils {
 				.replaceAll(value == null ? "" : value);
 	}
 
+	// TODO expand, check to see what other objects need wrapping with String.valueOf
+	public static String getValueTranslation(String translationKey, Number value, boolean prefix) {
+		return getValueTranslation(translationKey, String.valueOf(value), prefix);
+	}
+
 	/**
 	 * Get translation of string key with prefix, replacing a value placeholder.
 	 * The string parameter will be matched to an entry in the Strings.yml.

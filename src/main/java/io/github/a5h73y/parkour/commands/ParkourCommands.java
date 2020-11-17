@@ -254,7 +254,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getParkourKitManager().listParkourKit(player, args);
+                parkour.getParkourKitManager().displayParkourKits(player, args);
                 break;
 
             case "lobby":
