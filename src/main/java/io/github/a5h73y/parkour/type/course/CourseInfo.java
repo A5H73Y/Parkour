@@ -294,6 +294,10 @@ public class CourseInfo {
         persistChanges();
     }
 
+    public static void toggleReadyStatus(String courseName) {
+        setReadyStatus(courseName, !getReadyStatus(courseName));
+    }
+
     /**
      * Get Material Prize for Course.
      * @param courseName course name
@@ -471,6 +475,23 @@ public class CourseInfo {
     public static void setRewardOnce(String courseName, boolean enabled) {
         getCourseConfig().set(courseName.toLowerCase() + ".RewardOnce", enabled);
         persistChanges();
+    }
+
+    public static void toggleRewardOnce(String courseName) {
+        setRewardOnce(courseName, !getRewardOnce(courseName));
+    }
+
+    public static boolean getChallengeOnly(String courseName) {
+        return getCourseConfig().getBoolean(courseName.toLowerCase() + ".ChallengeOnly");
+    }
+
+    public static void setChallengeOnly(String courseName, boolean enabled) {
+        getCourseConfig().set(courseName.toLowerCase() + ".ChallengeOnly", enabled);
+        persistChanges();
+    }
+
+    public static void toggleChallengeOnly(String courseName) {
+        setChallengeOnly(courseName, !getChallengeOnly(courseName));
     }
 
     /**

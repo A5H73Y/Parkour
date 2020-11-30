@@ -75,6 +75,11 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 SignUtils.createCheckpointSign(event, player, "Checkpoint");
                 break;
 
+            case "challenge":
+            case "ch":
+                SignUtils.createStandardCourseSign(event, player, "Challenge");
+                break;
+
             default:
                 TranslationUtils.sendTranslation("Error.UnknownSignCommand", player);
                 TranslationUtils.sendTranslation("Help.SignCommands", player);
@@ -238,6 +243,15 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                     parkour.getDatabase().displayTimeEntries(player, lines[2],
                             parkour.getDatabase().getTopCourseResults(lines[2], amount));
                 }
+                break;
+
+            case "challenge":
+                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
+                    TranslationUtils.sendValueTranslation("Error.NoExist", lines[2], player);
+                    return;
+                }
+
+                parkour.getChallengeManager().createOrJoinChallenge(player, lines[2]);
                 break;
 
             default:

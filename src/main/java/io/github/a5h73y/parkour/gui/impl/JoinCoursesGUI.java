@@ -1,20 +1,20 @@
-package io.github.a5h73y.parkour.gui;
+package io.github.a5h73y.parkour.gui.impl;
 
 import de.themoep.inventorygui.GuiElementGroup;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
 import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.gui.AbstractMenu;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
-
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * Join Parkour Courses GUI.
  */
-public class JoinCourses extends AbstractMenu {
+public class JoinCoursesGUI extends AbstractMenu {
 
 	@Override
 	public String getTitle() {
@@ -31,7 +31,7 @@ public class JoinCourses extends AbstractMenu {
 	}
 
 	@Override
-	public GuiElementGroup getGroupContent(InventoryGui parent, Player player) {
+	public void addContent(InventoryGui parent, Player player) {
 		GuiElementGroup group = new GuiElementGroup('g');
 
 		for (String course : CourseInfo.getAllCourseNames()) {
@@ -56,6 +56,6 @@ public class JoinCourses extends AbstractMenu {
 									String.valueOf(CourseInfo.getCheckpointAmount(course)), false)
 					));
 		}
-		return group;
+		parent.addElement(group);
 	}
 }

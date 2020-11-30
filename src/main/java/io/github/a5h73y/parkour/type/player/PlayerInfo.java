@@ -3,14 +3,12 @@ package io.github.a5h73y.parkour.type.player;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.ConfigType;
-import io.github.a5h73y.parkour.event.PlayerParkourLevelEvent;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -146,7 +144,6 @@ public class PlayerInfo {
     public static void setParkourLevel(OfflinePlayer player, int level) {
         getPlayersConfig().set(player.getUniqueId() + ".ParkourLevel", level);
         persistChanges();
-        Bukkit.getServer().getPluginManager().callEvent(new PlayerParkourLevelEvent((Player) player, null, level));
     }
 
     /**

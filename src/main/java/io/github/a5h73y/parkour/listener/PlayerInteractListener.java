@@ -127,11 +127,12 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
                 TranslationUtils.sendTranslation("Mode.Freedom.Load", player);
             }
 
-        } else if (mode == ParkourMode.ROCKETS && MaterialUtils.getMaterialInPlayersHand(player) == XMaterial.FIREWORK_ROCKET.parseMaterial()) {
-            if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-                if (parkour.getPlayerManager().delayPlayer(player, 1, false)) {
-                    parkour.getPlayerManager().rocketLaunchPlayer(player);
-                }
+        } else if (mode == ParkourMode.ROCKETS
+                && MaterialUtils.getMaterialInPlayersHand(player) == XMaterial.FIREWORK_ROCKET.parseMaterial()) {
+
+            int secondDelay = parkour.getConfig().getInt("ParkourModes.Rockets.Delay");
+            if (parkour.getPlayerManager().delayPlayer(player, secondDelay, true, false)) {
+                parkour.getPlayerManager().rocketLaunchPlayer(player);
             }
         }
     }
@@ -171,7 +172,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
                 && checkpoint.getNextCheckpointY() == below.getBlockY()
                 && checkpoint.getNextCheckpointZ() == below.getBlockZ()) {
             if (parkour.getConfig().isFirstCheckAsStart() && session.getCurrentCheckpoint() == 0) {
-                session.resetTimeStarted();
+                session.resetTime();
                 parkour.getBountifulApi().sendActionBar(event.getPlayer(),
                         TranslationUtils.getTranslation("Parkour.TimerStarted", false), true);
             }

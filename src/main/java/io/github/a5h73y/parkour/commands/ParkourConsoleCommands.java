@@ -36,7 +36,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
     public boolean onCommand(@NotNull CommandSender sender,
                              @NotNull Command command,
                              @NotNull String label,
-                             @NotNull String[] args) {
+                             @NotNull String... args) {
         if (sender instanceof Player) {
             sender.sendMessage(Parkour.getPrefix() + "Use '/parkour' for player commands.");
             return false;
@@ -219,7 +219,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                parkour.getCourseManager().setRewardParkourLevelAddition(sender, args[1], args[2]);
+                parkour.getCourseManager().setRewardParkourLevelIncrease(sender, args[1], args[2]);
                 break;
 
             case "rewardonce":
@@ -276,7 +276,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 break;
 
             case "settings":
-                Help.displaySettings(sender);
+                Help.displaySettings(sender, null);
                 break;
 
             case "sql":

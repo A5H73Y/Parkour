@@ -582,27 +582,27 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     }
 
     /**
-     * Set Course's ParkourLevel reward addition.
+     * Set Course's ParkourLevel reward increase.
      * Set to reward the Player with an increment to ParkourLevel on course completion.
      *
      * @param sender requesting sender
      * @param courseName course name
-     * @param parkourLevelAddition parkour level addition
+     * @param parkourLevelIncrease parkour level increase
      */
-    public void setRewardParkourLevelAddition(final CommandSender sender, final String courseName,
-                                              final String parkourLevelAddition) {
+    public void setRewardParkourLevelIncrease(final CommandSender sender, final String courseName,
+                                              final String parkourLevelIncrease) {
         if (!doesCourseExists(courseName)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
         }
 
-        if (!ValidationUtils.isPositiveInteger(parkourLevelAddition)) {
+        if (!ValidationUtils.isPositiveInteger(parkourLevelIncrease)) {
             TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
-        CourseInfo.setRewardParkourLevelIncrease(courseName, parkourLevelAddition);
-        TranslationUtils.sendPropertySet(sender, "ParkourLevel addition reward", courseName, parkourLevelAddition);
+        CourseInfo.setRewardParkourLevelIncrease(courseName, parkourLevelIncrease);
+        TranslationUtils.sendPropertySet(sender, "ParkourLevel increase reward", courseName, parkourLevelIncrease);
     }
 
     /**

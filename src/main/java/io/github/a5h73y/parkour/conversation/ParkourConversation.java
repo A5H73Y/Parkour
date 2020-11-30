@@ -18,6 +18,7 @@ public abstract class ParkourConversation implements ConversationAbandonedListen
     public static final String SESSION_PLAYER_NAME = "playerName";
     public static final String SESSION_TARGET_PLAYER_NAME = "targetPlayerName";
     public static final String SESSION_COURSE_NAME = "courseName";
+
     private final ConversationFactory conversationFactory;
     private final Conversable conversable;
     private String courseName;

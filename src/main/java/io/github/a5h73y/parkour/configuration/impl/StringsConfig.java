@@ -64,15 +64,21 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Parkour.TestModeOn", "Test Mode: &bON&f. Simulating &b%VALUE%&f ParkourKit.");
 		this.addDefault("Parkour.TestModeOff", "Test Mode: &bOFF");
 		this.addDefault("Parkour.Challenge.Receive", "You have been challenged by &b%PLAYER% &fto course &b%COURSE%");
-		this.addDefault("Parkour.Challenge.Send", "You have challenged &b%PLAYER% &fto course &b%COURSE%");
-		this.addDefault("Parkour.Challenge.Wager", " &fwith a wager of &b%VALUE%");
-		this.addDefault("Parkour.Challenge.Terminated", "&b%VALUE% &fhas terminated the challenge!");
-		this.addDefault("Parkour.Challenge.Forfeited", "&b%VALUE% &fhas forfeited the challenge. Complete the course to win!");
-		this.addDefault("Parkour.Challenge.Quit", "You have forfeited the challenge. &b%VALUE% &fmust complete the course to win!");
-		this.addDefault("Parkour.Challenge.Winner", "Congratulations! You beat &b%PLAYER% &fat &b%COURSE%!");
-		this.addDefault("Parkour.Challenge.Loser", "&b%PLAYER% &fhas completed &b%COURSE% &fbefore you!");
 		this.addDefault("Parkour.AlreadyCompleted", "You have already completed this course.");
 		this.addDefault("Parkour.Question", "Please enter &a/pa yes &fto confirm, or &c/pa no &fto cancel.");
+
+		this.addDefault("Parkour.Challenge.Created", "Challenge for &b%VALUE% &fcreated");
+		this.addDefault("Parkour.Challenge.StartCommand", "When ready, enter &b/pa challenge start");
+		this.addDefault("Parkour.Challenge.Wager", " &fwith a wager of &b%VALUE%&f!");
+		this.addDefault("Parkour.Challenge.InviteSent", "A Challenge invite was sent to &b%VALUE%&f!");
+		this.addDefault("Parkour.Challenge.InviteReceived", "You have been Challenged to &b%COURSE% &fby &b%PLAYER%&f!");
+		this.addDefault("Parkour.Challenge.AcceptDecline", "To accept &a/pa accept &for &c/pa decline &fto decline.");
+		this.addDefault("Parkour.Challenge.Joined", "You have joined a Challenge on &b%VALUE%&f. Please wait until the host starts.");
+		this.addDefault("Parkour.Challenge.Terminated", "&b%VALUE% &fhas terminated the challenge!");
+		this.addDefault("Parkour.Challenge.Forfeited", "&b%VALUE% &fhas forfeited the challenge. Complete the course to win!");
+		this.addDefault("Parkour.Challenge.Quit", "You have forfeited the challenge. Another player must complete the course to win!");
+		this.addDefault("Parkour.Challenge.Winner", "Congratulations! You won the challenge on &b%VALUE%!");
+		this.addDefault("Parkour.Challenge.Loser", "&b%PLAYER% &fhas completed &b%COURSE% &fbefore you!");
 
 		this.addDefault("Event.Join", "This server uses &bParkour &3%VALUE%");
 		this.addDefault("Event.Checkpoint", "Checkpoint set to &b%CURRENT% &8/ &7%TOTAL%");

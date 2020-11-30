@@ -1,8 +1,10 @@
 package io.github.a5h73y.parkour.other;
 
 import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.gui.impl.CourseSettingsGUI;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.Optional;
+import jdk.internal.jline.internal.Nullable;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -198,16 +200,26 @@ public final class Help {
      *
      * @param sender
      */
-    public static void displaySettings(CommandSender sender) {
-        TranslationUtils.sendHeading("Parkour Settings", sender);
+    public static void displaySettings(CommandSender sender, @Nullable String courseName) {
         Parkour parkour = Parkour.getInstance();
+        if (sender instanceof Player && courseName != null) {
+            if (!parkour.getCourseManager().doesCourseExists(courseName)) {
+                TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+                return;
+            }
 
-        sender.sendMessage("Version: " + ChatColor.AQUA + parkour.getDescription().getVersion());
-        sender.sendMessage("Economy: " + ChatColor.AQUA + parkour.getEconomyApi().isEnabled());
-        sender.sendMessage("BountifulAPI: " + ChatColor.AQUA + parkour.getBountifulApi().isEnabled());
-        sender.sendMessage("PlaceholderAPI: " + ChatColor.AQUA + parkour.getPlaceholderApi().isEnabled());
-        sender.sendMessage("Disable Commands: " + ChatColor.AQUA + Parkour.getDefaultConfig().isDisableCommandsOnCourse());
-        sender.sendMessage("Enforce world: " + ChatColor.AQUA + Parkour.getDefaultConfig().isJoinEnforceWorld());
-        sender.sendMessage("Less checks: " + ChatColor.AQUA + Parkour.getDefaultConfig().isAttemptLessChecks());
+            parkour.getGuiManager().showMenu((Player) sender, new CourseSettingsGUI(courseName));
+
+        } else {
+            TranslationUtils.sendHeading("Parkour Settings", sender);
+
+            sender.sendMessage("Version: " + ChatColor.AQUA + parkour.getDescription().getVersion());
+            sender.sendMessage("Economy: " + ChatColor.AQUA + parkour.getEconomyApi().isEnabled());
+            sender.sendMessage("BountifulAPI: " + ChatColor.AQUA + parkour.getBountifulApi().isEnabled());
+            sender.sendMessage("PlaceholderAPI: " + ChatColor.AQUA + parkour.getPlaceholderApi().isEnabled());
+            sender.sendMessage("Disable Commands: " + ChatColor.AQUA + Parkour.getDefaultConfig().isDisableCommandsOnCourse());
+            sender.sendMessage("Enforce world: " + ChatColor.AQUA + Parkour.getDefaultConfig().isJoinEnforceWorld());
+            sender.sendMessage("Less checks: " + ChatColor.AQUA + Parkour.getDefaultConfig().isAttemptLessChecks());
+        }
     }
 }

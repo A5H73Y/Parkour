@@ -10,4 +10,6 @@ public class Constants {
 
     public static final String PLAYER_PLACEHOLDER = "%PLAYER%";
 
+    public static final String CHECKPOINT_PLACEHOLDER = "%CHECKPOINT%";
+
 }

@@ -83,7 +83,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
         createCheckpointData(selectedCourse, location, checkpoint);
         parkour.getCourseManager().clearCache(selectedCourse);
         player.sendMessage(TranslationUtils.getTranslation("Parkour.CheckpointCreated")
-                .replace("%CHECKPOINT%", String.valueOf(checkpoint))
+                .replace(Constants.CHECKPOINT_PLACEHOLDER, String.valueOf(checkpoint))
                 .replace(Constants.COURSE_PLACEHOLDER, selectedCourse));
     }
 
@@ -239,7 +239,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
         parkour.getCourseManager().clearCache(courseName);
 
         sender.sendMessage(TranslationUtils.getTranslation("Parkour.DeleteCheckpoint")
-                .replace("%CHECKPOINT%", String.valueOf(point))
+                .replace(Constants.CHECKPOINT_PLACEHOLDER, String.valueOf(point))
                 .replace(Constants.COURSE_PLACEHOLDER, courseName));
 
         PluginUtils.logToFile("Checkpoint " + point + " was deleted on " + courseName + " by " + sender.getName());

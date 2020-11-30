@@ -4,6 +4,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.plugin.EconomyApi;
+import io.github.a5h73y.parkour.type.challenge.Challenge;
 import io.github.a5h73y.parkour.type.course.Course;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
@@ -59,6 +60,8 @@ public class Validation {
      * @return
      */
     public static boolean courseJoining(Player player, Course course) {
+        Parkour parkour = Parkour.getInstance();
+
         /* World doesn't exist */
         if (course.getCheckpoints().isEmpty()) {
             TranslationUtils.sendTranslation("Error.UnknownWorld", player);
@@ -104,12 +107,12 @@ public class Validation {
         }
 
         /* Check if player has enough currency to join */
-        if (!Parkour.getInstance().getEconomyApi().validateCourseJoin(player, course.getName())) {
+        if (!parkour.getEconomyApi().validateCourseJoin(player, course.getName())) {
             return false;
         }
 
         /* Check if the player can leave the course for another */
-        if (Parkour.getInstance().getPlayerManager().isPlaying(player)) {
+        if (parkour.getPlayerManager().isPlaying(player)) {
             if (Parkour.getDefaultConfig().getBoolean("OnCourse.PreventJoiningDifferentCourse")) {
                 TranslationUtils.sendTranslation("Error.JoiningAnotherCourse", player);
                 return false;
@@ -122,9 +125,23 @@ public class Validation {
         }
 
         /* Check if player limit exceeded */
-        if (CourseInfo.hasPlayerLimit(course.getName())) {
-            if (Parkour.getInstance().getPlayerManager().getNumberOfPlayersOnCourse(course.getName()) >= CourseInfo.getPlayerLimit(course.getName())) {
-                TranslationUtils.sendTranslation("Error.LimitExceeded", player);
+        if (CourseInfo.hasPlayerLimit(course.getName())
+                && parkour.getPlayerManager().getNumberOfPlayersOnCourse(course.getName()) >= CourseInfo.getPlayerLimit(course.getName())) {
+            TranslationUtils.sendTranslation("Error.LimitExceeded", player);
+            return false;
+        }
+
+        if (CourseInfo.getChallengeOnly(course.getName())
+                && !parkour.getChallengeManager().hasPlayerBeenChallenged(player)) {
+            player.sendMessage("This Course is limited to Challenges only.");
+            return false;
+        }
+
+        if (parkour.getChallengeManager().hasPlayerBeenChallenged(player)) {
+            Challenge challenge = parkour.getChallengeManager().getChallengeForPlayer(player);
+
+            if (challenge != null && !challenge.getCourseName().equals(course.getName())) {
+                player.sendMessage("You are on a Challenge!");
                 return false;
             }
         }
@@ -162,9 +179,7 @@ public class Validation {
         }
 
         /* Course isn't ready */
-        if (!CourseInfo.getReadyStatus(courseName)
-                && Parkour.getDefaultConfig().getBoolean("OnJoin.EnforceReady")
-                && !PermissionUtils.hasPermissionOrCourseOwnership(player, Permission.ADMIN_READY_BYPASS, courseName)) {
+        if (!CourseInfo.getReadyStatus(courseName) && Parkour.getDefaultConfig().getBoolean("OnJoin.EnforceReady")) {
             return false;
         }
 
@@ -177,64 +192,85 @@ public class Validation {
         return true;
     }
 
-    /**
-     * Validate challenging a player
-     *
-     * @param args
-     * @param player
-     * @return
-     */
-    public static boolean challengePlayer(Player player, String[] args) {
-        String courseName = args[1].toLowerCase();
-        Player targetPlayer = Bukkit.getPlayer(args[2]);
+    public static boolean createChallenge(Player player, String courseNameInput, String wager) {
+        String courseName = courseNameInput.toLowerCase();
+        Parkour parkour = Parkour.getInstance();
+
+        if (!PermissionUtils.hasPermission(player, Permission.BASIC_CHALLENGE)) {
+            return false;
+        }
+
+        if (!parkour.getCourseManager().doesCourseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
+            return false;
+        }
+
+        if (parkour.getPlayerManager().isPlaying(player)) {
+            player.sendMessage(Parkour.getPrefix() + "You are already on a course!");
+            return false;
+        }
+
+        if (!courseJoiningNoMessages(player, courseName)) {
+            player.sendMessage(Parkour.getPrefix() + "You are not able to join this course!");
+            return false;
+        }
+
+        if (!parkour.getPlayerManager().delayPlayer(player, 10, true)) {
+            return false;
+        }
+
+        if (wager != null) {
+            EconomyApi economyApi = parkour.getEconomyApi();
+
+            if (!economyApi.isEnabled()) {
+                player.sendMessage(Parkour.getPrefix() + "Economy is disabled, no wager will be made.");
+
+            } else if (!ValidationUtils.isPositiveDouble(wager)) {
+                player.sendMessage(Parkour.getPrefix() + "Wager must be a positive number.");
+                return false;
+
+            } else if (!economyApi.hasAmount(player, Double.parseDouble(wager))) {
+                player.sendMessage(Parkour.getPrefix() + "You do not have enough funds for this wager.");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean challengePlayer(Player player, Challenge challenge, String targetPlayerName) {
+        Player targetPlayer = Bukkit.getPlayer(targetPlayerName);
+        Parkour parkour = Parkour.getInstance();
 
         if (targetPlayer == null) {
             player.sendMessage(Parkour.getPrefix() + "This player is not online!");
             return false;
         }
-        if (!Parkour.getInstance().getCourseManager().doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
-            return false;
-        }
-        if (Parkour.getInstance().getPlayerManager().isPlaying(player)) {
-            player.sendMessage(Parkour.getPrefix() + "You are already on a course!");
-            return false;
-        }
-        if (Parkour.getInstance().getPlayerManager().isPlaying(targetPlayer)) {
+
+        if (parkour.getPlayerManager().isPlaying(targetPlayer)) {
             player.sendMessage(Parkour.getPrefix() + "This player is already on a course!");
             return false;
         }
+
         if (player.getName().equalsIgnoreCase(targetPlayer.getName())) {
             player.sendMessage(Parkour.getPrefix() + "You can't challenge yourself!");
             return false;
         }
-        if (!courseJoiningNoMessages(player, courseName)) {
-            player.sendMessage(Parkour.getPrefix() + "You are not able to join this course!");
-            return false;
-        }
-        if (!courseJoiningNoMessages(targetPlayer, courseName)) {
+
+        if (!courseJoiningNoMessages(targetPlayer, challenge.getCourseName())) {
             player.sendMessage(Parkour.getPrefix() + "They are not able to join this course!");
             return false;
         }
-        if (args.length == 4) {
-            String wagerAmount = args[3];
-            EconomyApi economyApi = Parkour.getInstance().getEconomyApi();
 
-            if (!economyApi.isEnabled()) {
-                player.sendMessage(Parkour.getPrefix() + "Economy is disabled, no wager will be made.");
+        if (challenge.getWager() != null
+                && !parkour.getEconomyApi().hasAmount(targetPlayer, challenge.getWager())) {
+            player.sendMessage(Parkour.getPrefix() + "They do not have enough funds for this wager.");
+            return false;
+        }
 
-            } else if (!ValidationUtils.isPositiveDouble(wagerAmount)) {
-                player.sendMessage(Parkour.getPrefix() + "Wager must be a positive number.");
-                return false;
-
-            } else if (!economyApi.hasAmount(player, Double.parseDouble(wagerAmount))) {
-                player.sendMessage(Parkour.getPrefix() + "You do not have enough funds for this wager.");
-                return false;
-
-            } else if (!economyApi.hasAmount(targetPlayer, Double.parseDouble(wagerAmount))) {
-                player.sendMessage(Parkour.getPrefix() + "They do not have enough funds for this wager.");
-                return false;
-            }
+        // they've accepted a challenge, but they haven't started the course yet
+        if (parkour.getChallengeManager().getChallengeForPlayer(targetPlayer) != null) {
+            player.sendMessage(Parkour.getPrefix() + "This player is already on a Challenge!");
+            return false;
         }
 
         return true;

@@ -61,7 +61,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 public class PlayerManager extends AbstractPluginReceiver {
@@ -112,7 +111,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 */
 	private void populateParkourPlayers() {
 		for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-			loadParkourSession(onlinePlayer);
+			ParkourSession session = loadParkourSession(onlinePlayer);
 
 			if (PlayerInfo.isQuietMode(onlinePlayer)) {
 				enableQuietMode(onlinePlayer);
@@ -121,6 +120,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 			if (!isPlaying(onlinePlayer)) {
 				continue;
 			}
+
+			parkour.getScoreboardManager().addScoreboard(onlinePlayer, session);
 
 			String currentCourse = getParkourSession(onlinePlayer).getCourse().getName();
 			TranslationUtils.sendValueTranslation("Parkour.Continue", currentCourse, onlinePlayer);
@@ -191,40 +192,37 @@ public class PlayerManager extends AbstractPluginReceiver {
 			return;
 		}
 
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				for (Map.Entry<Player, ParkourSession> parkourSession : parkourPlayers.entrySet()) {
-					Player player = parkourSession.getKey();
-					Course course = parkourSession.getValue().getCourse();
+		Bukkit.getScheduler().runTaskTimer(parkour, () -> {
+			for (Map.Entry<Player, ParkourSession> parkourSession : parkourPlayers.entrySet()) {
+				Player player = parkourSession.getKey();
+				Course course = parkourSession.getValue().getCourse();
 
-					int seconds = parkourSession.getValue().calculateSeconds();
-					String liveTimer = DateTimeUtils.convertSecondsToTime(seconds);
+				int seconds = parkourSession.getValue().calculateSeconds();
+				String liveTimer = DateTimeUtils.convertSecondsToTime(seconds);
 
-					if (course.hasMaxTime()) {
-						parkour.getSoundsManager().playSound(player, SoundType.SECOND_DECREMENT);
-						if (seconds <= 5 || seconds == 10) {
-							liveTimer = ChatColor.RED + liveTimer;
-						}
-					} else {
-						parkour.getSoundsManager().playSound(player, SoundType.SECOND_INCREMENT);
+				if (course.hasMaxTime()) {
+					parkour.getSoundsManager().playSound(player, SoundType.SECOND_DECREMENT);
+					if (seconds <= 5 || seconds == 10) {
+						liveTimer = ChatColor.RED + liveTimer;
 					}
+				} else {
+					parkour.getSoundsManager().playSound(player, SoundType.SECOND_INCREMENT);
+				}
 
-					if (!isInQuietMode(player) && parkour.getConfig().getBoolean("OnCourse.DisplayLiveTime")) {
-						parkour.getBountifulApi().sendActionBar(player, liveTimer, true);
-					}
+				if (!isInQuietMode(player) && parkour.getConfig().getBoolean("OnCourse.DisplayLiveTime")) {
+					parkour.getBountifulApi().sendActionBar(player, liveTimer, true);
+				}
 
-					parkour.getScoreboardManager().updateScoreboardTimer(player, course.hasMaxTime(), liveTimer);
+				parkour.getScoreboardManager().updateScoreboardTimer(player, liveTimer);
 
-					if (course.hasMaxTime() && seconds <= 0) {
-						parkourSession.getValue().setMarkedForDeletion(true);
-						String maxTime = DateTimeUtils.convertSecondsToTime(course.getMaxTime());
-						TranslationUtils.sendValueTranslation("Parkour.MaxTime", maxTime, player);
-						leaveCourse(player);
-					}
+				if (course.hasMaxTime() && seconds <= 0) {
+					parkourSession.getValue().setMarkedForDeletion(true);
+					String maxTime = DateTimeUtils.convertSecondsToTime(course.getMaxTime());
+					TranslationUtils.sendValueTranslation("Parkour.MaxTime", maxTime, player);
+					leaveCourse(player);
 				}
 			}
-		}.runTaskTimer(parkour, 0, 20);
+		}, 0, 20);
 	}
 
 	/**
@@ -234,7 +232,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param player parkour player
 	 */
 	public void teardownParkourPlayer(Player player) {
-		parkour.getChallengeManager().terminateChallenge(player);
+		parkour.getChallengeManager().forfeitChallenge(player);
 		parkour.getQuestionManager().removeQuestion(player);
 		quietPlayers.remove(player);
 		hiddenPlayers.remove(player);
@@ -357,16 +355,16 @@ public class PlayerManager extends AbstractPluginReceiver {
 				TranslationUtils.sendValueTranslation("Parkour.AlreadyCompleted", course.getName(), player);
 			}
 		}
-
+		ParkourSession session;
 		if (canLoadParkourSession(player, course)) {
-			ParkourSession session = loadParkourSession(player);
+			session = loadParkourSession(player);
 			player.teleport(determineDestination(session));
 			TranslationUtils.sendValueTranslation("Parkour.Continue", session.getCourseName(), player);
 		} else {
-			addPlayer(player, new ParkourSession(course));
+			session = addPlayer(player, new ParkourSession(course));
 		}
 		setupParkourMode(player);
-		parkour.getScoreboardManager().addScoreboard(player);
+		parkour.getScoreboardManager().addScoreboard(player, session);
 		if (!silent) {
 			parkour.getCourseManager().runEventCommands(player, course.getName(), ParkourEventType.JOIN);
 		}
@@ -425,7 +423,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			restoreXPLevel(player);
 		}
 		loadInventory(player);
-		parkour.getChallengeManager().terminateChallenge(player);
+		parkour.getChallengeManager().forfeitChallenge(player);
 
 		if (!silent) {
 			parkour.getSoundsManager().playSound(player, SoundType.COURSE_FAILED);
@@ -530,7 +528,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			String message = TranslationUtils.getTranslation("Parkour.Die1");
 
 			if (parkour.getConfig().getBoolean("OnDie.ResetTimeWithNoCheckpoint")) {
-				session.resetTimeStarted();
+				session.resetTime();
 				message += " " + TranslationUtils.getTranslation("Parkour.TimeReset", false);
 			}
 
@@ -790,8 +788,10 @@ public class PlayerManager extends AbstractPluginReceiver {
 	}
 
 	public void rocketLaunchPlayer(Player player) {
+		double force = parkour.getConfig().getBoolean("ParkourModes.Rockets.Invert") ? 1.5 : -1.5;
+
 		Vector velocity = player.getLocation().getDirection().normalize();
-		velocity = velocity.multiply(-1.5);
+		velocity = velocity.multiply(force);
 		velocity = velocity.setY(velocity.getY() / 2);
 		player.setVelocity(velocity);
 		player.getWorld().playEffect(player.getLocation(), Effect.SMOKE, 500);
@@ -982,6 +982,13 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 	}
 
+	public void forceInvisible(Player player) {
+		for (Player players : Bukkit.getOnlinePlayers()) {
+			players.hidePlayer(player);
+		}
+		addHidden(player);
+	}
+
 	public boolean hasHiddenPlayers(Player player) {
 		return hiddenPlayers.contains(player);
 	}
@@ -994,6 +1001,11 @@ public class PlayerManager extends AbstractPluginReceiver {
 		hiddenPlayers.remove(player);
 	}
 
+	public boolean delayPlayer(Player player, int secondsToWait, boolean displayMessage) {
+		return delayPlayer(player, secondsToWait, displayMessage, true);
+	}
+
+
 	/**
 	 * Delay certain actions
 	 * This check can be bypassed by admins / ops
@@ -1003,8 +1015,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param displayMessage display cooldown error
 	 * @return boolean (wait expired)
 	 */
-	public boolean delayPlayer(Player player, int secondsToWait, boolean displayMessage) {
-		if (player.isOp()) {
+	public boolean delayPlayer(Player player, int secondsToWait, boolean displayMessage, boolean opsBypass) {
+		if (player.isOp() && opsBypass) {
 			return true;
 		}
 
@@ -1564,7 +1576,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	private void restoreHealth(Player player) {
 		ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
 
-		double health = Math.min(player.getMaxHealth(), inventoryConfig.getDouble(player.getUniqueId() + ".Health"));
+		double health = Math.min(player.getMaxHealth(), inventoryConfig.getDouble(player.getUniqueId() + ".Health", player.getMaxHealth()));
 		player.setHealth(health);
 		player.setFoodLevel(inventoryConfig.getInt(player.getUniqueId() + ".Hunger"));
 		inventoryConfig.set(player.getUniqueId() + ".Health", null);
@@ -1739,45 +1751,5 @@ public class PlayerManager extends AbstractPluginReceiver {
 		} else {
 			TranslationUtils.sendInvalidSyntax(sender, "setplayer", "(player) [level / rank] [value]");
 		}
-	}
-
-	/**
-	 * Challenge a Player to a Course.
-	 * Sends a Challenge invite to a target Player, this must be accepted by the recipient before the Challenge initiates.
-	 * A wager can be placed which Economy is enabled, and the extra command argument is provided.
-	 *
-	 * @param player requesting player
-	 * @param args command arguments
-	 */
-	public void challengePlayer(final Player player, final String... args) {
-		if (!Validation.challengePlayer(player, args)) {
-			return;
-		}
-
-		if (!parkour.getPlayerManager().delayPlayer(player, 10, true)) {
-			return;
-		}
-
-		String wagerString = "";
-		Double wager = null;
-
-		if (args.length == 4 && parkour.getEconomyApi().isEnabled() && ValidationUtils.isPositiveDouble(args[3])) {
-			String currencyName = parkour.getEconomyApi().getCurrencyName();
-			wager = Double.parseDouble(args[3]);
-			wagerString = TranslationUtils.getValueTranslation("Parkour.Challenge.Wager", wager + currencyName, false);
-		}
-
-		Player target = Bukkit.getPlayer(args[2]);
-		String courseName = args[1].toLowerCase();
-
-		target.sendMessage(TranslationUtils.getTranslation("Parkour.Challenge.Receive")
-				.replace(Constants.PLAYER_PLACEHOLDER, player.getName())
-				.replace(Constants.COURSE_PLACEHOLDER, courseName) + wagerString);
-		TranslationUtils.sendTranslation("Parkour.Accept", false, target);
-
-		player.sendMessage(TranslationUtils.getTranslation("Parkour.Challenge.Send")
-				.replace(Constants.PLAYER_PLACEHOLDER, target.getName())
-				.replace(Constants.COURSE_PLACEHOLDER, courseName) + wagerString);
-		parkour.getChallengeManager().createChallenge(player.getName(), target.getName(), courseName, wager);
 	}
 }

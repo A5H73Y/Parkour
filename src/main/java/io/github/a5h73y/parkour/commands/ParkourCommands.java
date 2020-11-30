@@ -10,6 +10,7 @@ import io.github.a5h73y.parkour.conversation.ParkourModeConversation;
 import io.github.a5h73y.parkour.enums.GuiMenu;
 import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
+import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.other.Help;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
@@ -79,14 +80,11 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "challenge":
-                if (!PermissionUtils.hasPermission(player, Permission.BASIC_CHALLENGE)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 3, 4)) {
+                if (!ValidationUtils.validateArgs(player, args, 2, 10)) {
                     return false;
                 }
 
-                parkour.getPlayerManager().challengePlayer(player, args);
+                parkour.getChallengeManager().processCommand(player, args);
                 break;
 
             case "checkpoint":
@@ -372,7 +370,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getCourseManager().setRewardParkourLevelAddition(player, args[1], args[2]);
+                parkour.getCourseManager().setRewardParkourLevelIncrease(player, args[1], args[2]);
                 break;
 
             case "rewardonce":
@@ -464,7 +462,9 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getLobbyManager().createLobby(player, args);
+                parkour.getLobbyManager().createLobby(player,
+                        args.length > 1 ? args[1] : Constants.DEFAULT,
+                        args.length == 3 ? args[2] : null);
                 break;
 
             case "setmode":
@@ -515,7 +515,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                Help.displaySettings(player);
+                Help.displaySettings(player, args.length == 2 ? args[1] : null);
                 break;
 
             case "sql":
@@ -607,7 +607,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "accept":
-                parkour.getChallengeManager().acceptChallenge(player);
+                parkour.getChallengeManager().acceptChallengeInvite(player);
                 break;
 
             case "decline":

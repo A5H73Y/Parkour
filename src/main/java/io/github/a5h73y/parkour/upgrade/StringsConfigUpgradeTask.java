@@ -54,6 +54,9 @@ public class StringsConfigUpgradeTask extends TimedConfigUpgradeTask {
 		getConfig().set("Mode.Darkness", null);
 		getConfig().set("ParkourGUI", null);
 
+		// changed so much, just start fresh
+		getConfig().set("Parkour.Challenge", null);
+
 		try {
 			getParkourUpgrader().saveStringsConfig();
 		} catch (IOException e) {

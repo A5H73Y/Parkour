@@ -39,6 +39,7 @@ public enum Permission {
 	CREATE_SIGN_STATS("Parkour.CreateSign", "Stats"),
 	CREATE_SIGN_LEADERBOARDS("Parkour.CreateSign", "Leaderboards"),
 	CREATE_SIGN_LOBBY("Parkour.CreateSign", "Lobby"),
+	CREATE_SIGN_CHALLENGE("Parkour.CreateSign", "Challenge"),
 
 	PARKOUR_LEVEL("Parkour.Level", "99999"),
 	PARKOUR_COURSE("Parkour.Course", "*");

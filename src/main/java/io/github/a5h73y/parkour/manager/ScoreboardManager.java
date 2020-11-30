@@ -64,12 +64,12 @@ public class ScoreboardManager extends AbstractPluginReceiver {
         return enabled;
     }
 
-    public void addScoreboard(Player player) {
-        if (!this.enabled) {
+    public void addScoreboard(Player player, ParkourSession session) {
+        if (!this.enabled || session == null) {
             return;
         }
 
-        Scoreboard board = setupScoreboard(player);
+        Scoreboard board = setupScoreboard(player, session);
 
         if (parkour.getConfig().isPreventPlayerCollisions()
                 && PluginUtils.getMinorServerVersion() > 8) {
@@ -79,7 +79,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
         }
     }
 
-    public void updateScoreboardTimer(Player player, boolean hasMaxTime, String liveTime) {
+    public void updateScoreboardTimer(Player player, String liveTime) {
         Scoreboard board = player.getScoreboard();
 
         if (!enabled || !scoreboardDetails.get(LIVE_TIMER).isEnabled()) {
@@ -110,14 +110,14 @@ public class ScoreboardManager extends AbstractPluginReceiver {
                 + " / " + session.getCourse().getNumberOfCheckpoints()));
     }
 
-    private Scoreboard setupScoreboard(Player player) {
+    private Scoreboard setupScoreboard(Player player, ParkourSession session) {
         // Set up the scoreboard itself
         Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
         Objective objective = board.registerNewObjective(player.getName(), PARKOUR);
         objective.setDisplayName(mainHeading);
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-        PlayerScoreboard playerScoreboard = new PlayerScoreboard(player, board, objective);
+        PlayerScoreboard playerScoreboard = new PlayerScoreboard(player, session, board, objective);
         registerAllEntries(playerScoreboard);
 
         // set the static info
@@ -235,9 +235,9 @@ public class ScoreboardManager extends AbstractPluginReceiver {
         private final Scoreboard scoreboard;
         private final Objective objective;
 
-        public PlayerScoreboard(Player player, Scoreboard scoreboard, Objective objective) {
+        public PlayerScoreboard(Player player, ParkourSession session, Scoreboard scoreboard, Objective objective) {
             this.player = player;
-            this.session = parkour.getPlayerManager().getParkourSession(player);
+            this.session = session;
             this.scoreboard = scoreboard;
             this.objective = objective;
         }

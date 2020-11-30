@@ -16,7 +16,7 @@ import io.github.a5h73y.parkour.listener.PlayerInteractListener;
 import io.github.a5h73y.parkour.listener.PlayerListener;
 import io.github.a5h73y.parkour.listener.PlayerMoveListener;
 import io.github.a5h73y.parkour.listener.SignListener;
-import io.github.a5h73y.parkour.manager.ChallengeManager;
+import io.github.a5h73y.parkour.type.challenge.ChallengeManager;
 import io.github.a5h73y.parkour.manager.QuestionManager;
 import io.github.a5h73y.parkour.manager.ScoreboardManager;
 import io.github.a5h73y.parkour.manager.SoundsManager;

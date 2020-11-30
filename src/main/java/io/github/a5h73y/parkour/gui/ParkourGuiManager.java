@@ -40,7 +40,7 @@ public class ParkourGuiManager extends AbstractPluginReceiver {
 		InventoryGui gui = new InventoryGui(parkour, null, PARKOUR_TITLE_PREFIX + menu.getTitle(), menu.getGuiSetup());
 		gui.setFiller(new ItemStack(Parkour.getDefaultConfig().getGuiFillerMaterial(), 1));
 
-		gui.addElement(menu.getGroupContent(gui, player));
+		menu.addContent(gui, player);
 
 		gui.addElement(new GuiPageElement('f', new ItemStack(Material.BOOK),
 				GuiPageElement.PageAction.FIRST, "Go to first page (current: %page%)"));

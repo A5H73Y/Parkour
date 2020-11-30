@@ -96,11 +96,15 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("OnLeaveServer.LeaveCourse", false);
 		this.addDefault("OnLeaveServer.TeleportToLastCheckpoint", false);
 
-		this.addDefault("ParkourModes.Challenge.HidePlayers", true);
-		this.addDefault("ParkourModes.Challenge.CountdownFrom", 5);
+		this.addDefault("ParkourChallenge.HidePlayers", true);
+		this.addDefault("ParkourChallenge.CountdownFrom", 5);
+		this.addDefault("ParkourChallenge.PrepareOnAccept", false);
+
 		this.addDefault("ParkourModes.Speedy.SetSpeed", 0.7);
 		this.addDefault("ParkourModes.Speedy.ResetSpeed", 0.2);
 		this.addDefault("ParkourModes.Dropper.FallDamage", false);
+		this.addDefault("ParkourModes.Rockets.Invert", false);
+		this.addDefault("ParkourModes.Rockets.Delay", 1);
 
 		this.addDefault("DisplayTitle.FadeIn", 5);
 		this.addDefault("DisplayTitle.Stay", 20);

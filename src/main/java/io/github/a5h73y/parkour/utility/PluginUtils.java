@@ -149,37 +149,6 @@ public class PluginUtils {
     }
 
     /**
-     * Replace with Parkour snapshots.
-     */
-    @Deprecated
-    public static void saveAllPlaying(Object obj, String path) {
-        try {
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path));
-            oos.writeObject(obj);
-            oos.flush();
-            oos.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    /**
-     * Replace with Parkour snapshots.
-     */
-    @Deprecated
-    public static Object loadAllPlaying(String path) {
-        Object result = null;
-        try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
-            result = ois.readObject();
-            ois.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return result;
-    }
-
-    /**
      * Find {@link GameMode} by name.
      *
      * @param gameMode requested gamemode

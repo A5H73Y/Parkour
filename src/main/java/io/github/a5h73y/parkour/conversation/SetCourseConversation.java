@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.FixedSetPrompt;
 import org.bukkit.conversations.Prompt;
@@ -96,6 +97,18 @@ public class SetCourseConversation extends ParkourConversation {
         }
     }
 
+    public static class CourseCommandConversation extends ParkourConversation {
+
+        public CourseCommandConversation(Conversable conversable) {
+            super(conversable);
+        }
+
+        @Override
+        public Prompt getEntryPrompt() {
+            return new ChooseCourseCommandOption();
+        }
+    }
+
     private static class ChooseCourseCommandOption extends FixedSetPrompt {
 
         ChooseCourseCommandOption() {
@@ -137,6 +150,18 @@ public class SetCourseConversation extends ParkourConversation {
         }
     }
 
+    public static class CourseMessageConversation extends ParkourConversation {
+
+        public CourseMessageConversation(Conversable conversable) {
+            super(conversable);
+        }
+
+        @Override
+        public Prompt getEntryPrompt() {
+            return new ChooseCourseMessageOption();
+        }
+    }
+
     private static class ChooseCourseMessageOption extends FixedSetPrompt {
 
         ChooseCourseMessageOption() {
@@ -173,6 +198,7 @@ public class SetCourseConversation extends ParkourConversation {
             String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);
             String messageValue = (String) context.getSessionData("setMessageOption");
             CourseInfo.setEventMessage(courseName, messageValue, input);
+            context.getForWhom().sendRawMessage(TranslationUtils.getPropertySet(messageValue + " message", courseName, input));
             return Prompt.END_OF_CONVERSATION;
         }
     }

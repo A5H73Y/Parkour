@@ -6,6 +6,7 @@ import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.kit.ParkourKit;
 import io.github.a5h73y.parkour.type.kit.ParkourKitAction;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
+import io.github.a5h73y.parkour.utility.PlayerUtils;
 import java.util.Arrays;
 import java.util.List;
 import com.cryptomorin.xseries.XBlock;
@@ -131,10 +132,7 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
                     break;
 
                 case NOPOTION:
-                    for (PotionEffect effect : player.getActivePotionEffects()) {
-                        player.removePotionEffect(effect.getType());
-                    }
-
+                    PlayerUtils.removeAllPotionEffects(player);
                     player.setFireTicks(0);
                     break;
             }

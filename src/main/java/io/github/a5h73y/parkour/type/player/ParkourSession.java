@@ -7,6 +7,14 @@ import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import java.io.Serializable;
 import org.bukkit.Location;
 
+/**
+ * Parkour Session.
+ * Keeps track of a Player's progress while on a Course.
+ * The Session is serialized and can be persisted against the Player's UUID.
+ * The Course is transient as it's safer and quicker to retrieve it when needed.
+ * The time is tracked based on start time and any time accumulated.
+ * The secondsAccumulated are used to display a Live Timer to the Player.
+ */
 public class ParkourSession implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -25,78 +33,52 @@ public class ParkourSession implements Serializable {
     private transient Course course;
     private transient boolean markedForDeletion;
 
+
     /**
-     * This is the ParkourSession object.
-     * We use this object to track all the players information while on a course, how
-     * many times they've died etc. When we want to find out what course a
-     * player is on, we will retrieve it through here, Rather than doing a
-     * course lookup for a player name. There is also a "Mode" string, this will
-     * be used to remember different gametypes (in potential updates), one
-     * example is Freedom mode (Which allows you to set checkpoints whereever)
-     *
-     * @param course
+     * Construct a ParkourSession from a Course.
+     * @param course {@link Course}
      */
     public ParkourSession(Course course) {
-        this.timeStarted = System.currentTimeMillis();
         this.course = course;
         this.courseName = course.getName();
-        this.secondsAccumulated = course.hasMaxTime() ? course.getMaxTime() : 0;
+        resetTime();
     }
 
+    /**
+     * Check if all the Course Checkpoints have been achieved.
+     * @return all checkpoints achieved
+     */
     public boolean hasAchievedAllCheckpoints() {
         return currentCheckpoint == course.getNumberOfCheckpoints();
     }
 
-    public ParkourMode getParkourMode() {
-        return course.getParkourMode();
-    }
-
+    /**
+     * Get the current {@link Checkpoint}.
+     * @return current checkpoint
+     */
     public Checkpoint getCheckpoint() {
         return course.getCheckpoints().get(currentCheckpoint);
     }
 
-    public int getDeaths() {
-        return deaths;
-    }
-
-    public int getCurrentCheckpoint() {
-        return currentCheckpoint;
-    }
-
-    public void setCurrentCheckpoint(int currentCheckpoint) {
-        this.currentCheckpoint = currentCheckpoint;
-    }
-
-    public Course getCourse() {
-        return course;
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
-    }
-
-    public String getCourseName() {
-        return courseName;
-    }
-
-    public Location getFreedomLocation() {
-        return freedomLocation;
-    }
-
-    public void setFreedomLocation(Location freedomLocation) {
-        this.freedomLocation = freedomLocation;
-    }
-
-    public void resetTimeStarted() {
+    /**
+     * Reset all Time accumulated.
+     */
+    public void resetTime() {
         this.timeStarted = System.currentTimeMillis();
         this.timeAccumulated = 0;
         this.secondsAccumulated = course.hasMaxTime() ? course.getMaxTime() : 0;
     }
 
+    /**
+     * Increase current Checkpoint.
+     */
     public void increaseCheckpoint() {
         currentCheckpoint++;
     }
 
+    /**
+     * Increase number of Deaths.
+     */
     public void increaseDeath() {
         deaths++;
     }
@@ -107,10 +89,6 @@ public class ParkourSession implements Serializable {
 
     public void markTimeFinished() {
         timeFinished = getCurrentTime();
-    }
-
-    public long getTimeFinished() {
-        return timeFinished;
     }
 
     public long getCurrentTime() {
@@ -128,6 +106,74 @@ public class ParkourSession implements Serializable {
 
     public int calculateSeconds() {
         return course.hasMaxTime() ? secondsAccumulated-- : secondsAccumulated++;
+    }
+
+    /**
+     * Get {@link ParkourMode} for associated Course.
+     * @return ParkourMode
+     */
+    public ParkourMode getParkourMode() {
+        return course.getParkourMode();
+    }
+
+    /**
+     * Get number of Deaths accumulated.
+     * @return number of deaths
+     */
+    public int getDeaths() {
+        return deaths;
+    }
+
+    /**
+     * Get current checkpoint number.
+     * @return current checkpoint
+     */
+    public int getCurrentCheckpoint() {
+        return currentCheckpoint;
+    }
+
+    /**
+     * Set current checkpoint number.
+     * @param currentCheckpoint new checkpoint
+     */
+    public void setCurrentCheckpoint(int currentCheckpoint) {
+        this.currentCheckpoint = currentCheckpoint;
+    }
+
+    /**
+     * Get associated {@link Course}.
+     * @return course
+     */
+    public Course getCourse() {
+        return course;
+    }
+
+    /**
+     * Set associated {@link Course}.
+     * @param course course
+     */
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    /**
+     * Get name of the Course.
+     * @return course name
+     */
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public Location getFreedomLocation() {
+        return freedomLocation;
+    }
+
+    public void setFreedomLocation(Location freedomLocation) {
+        this.freedomLocation = freedomLocation;
+    }
+
+    public long getTimeFinished() {
+        return timeFinished;
     }
 
     public boolean isMarkedForDeletion() {

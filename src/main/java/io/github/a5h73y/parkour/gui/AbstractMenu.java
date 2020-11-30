@@ -14,6 +14,6 @@ public abstract class AbstractMenu {
 
 	public abstract String[] getGuiSetup();
 
-	public abstract GuiElementGroup getGroupContent(InventoryGui parent, Player player);
+	public abstract void addContent(InventoryGui parent, Player player);
 
 }

@@ -32,6 +32,8 @@ public class DefaultConfigUpgradeTask extends TimedConfigUpgradeTask {
 			transferAndDelete("Other.Parkour.CommandPermissions", "Other.Parkour.CommandUsePermissions");
 			transferAndDelete("MySQL.User", "MySQL.Username");
 			transferAndDelete("Lobby.EnforceWorld", "LobbySettings.EnforceWorld");
+			transferAndDelete("ParkourModes.Challenge.HidePlayers", "ParkourChallenge.HidePlayers");
+			transferAndDelete("ParkourModes.Challenge.CountdownFrom", "ParkourChallenge.CountdownFrom");
 
 			transferAndDelete("Scoreboard.Display.CurrentTime", "Scoreboard.LiveTimer.Enabled");
 			// TODO more scoreboard
@@ -60,6 +62,7 @@ public class DefaultConfigUpgradeTask extends TimedConfigUpgradeTask {
 			getConfig().set("Other.Economy", null);
 			getConfig().set("Lobby.Set", null);
 			getConfig().set("Lobby.EnforceWorld", null);
+			getConfig().set("ParkourModes.Challenge", null);
 			getParkourUpgrader().saveDefaultConfig();
 		} catch (IOException e) {
 			getParkourUpgrader().getLogger().severe("An error occurred during upgrade: " + e.getMessage());

@@ -15,7 +15,12 @@ import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
+/**
+ * Parkour Lobby Manager.
+ * Keeps a lazy Cache of {@link Lobby} which can be reused by other players.
+ */
 public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lobby> {
 
     private final transient Map<String, Lobby> lobbyCache = new HashMap<>();
@@ -25,33 +30,33 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
     }
 
     /**
-     * Creating or overwriting a Parkour lobby.
-     * Optional parameters include a name for a custom lobby, as well as a minimum level requirement.
+     * Create or Overwrite Parkour Lobby.
+     * Player's location will be used to create a Lobby with the given name.
+     * Optional ParkourLevel requirement can be provided.
      *
-     * @param args
-     * @param player
+     * @param player requesting player
+     * @param lobbyName desired lobby name
+     * @param requiredLevel ParkourLevel requirement
      */
-    public void createLobby(Player player, String[] args) {
-        String lobbyName = args.length > 1 ? args[1] : Constants.DEFAULT;
+    public void createLobby(Player player, String lobbyName, @Nullable String requiredLevel) {
         setLobby(player, lobbyName);
         TranslationUtils.sendValueTranslation("Lobby.Created", lobbyName, player);
 
-        if (args.length > 2 && ValidationUtils.isPositiveInteger(args[2])) {
-            LobbyInfo.setRequiredLevel(lobbyName, Integer.parseInt(args[2]));
-            TranslationUtils.sendValueTranslation("Lobby.RequiredLevelSet", args[2], player);
+        if (requiredLevel != null && ValidationUtils.isPositiveInteger(requiredLevel)) {
+            LobbyInfo.setRequiredLevel(lobbyName, Integer.parseInt(requiredLevel));
+            TranslationUtils.sendValueTranslation("Lobby.RequiredLevelSet", requiredLevel, player);
         }
     }
 
     /**
-     * Joining the Parkour lobby.
-     * Can be accessed from the commands, and from the framework.
-     * The arguments will be null if its from the framework, if this is
-     * the case we don't send them a message. (Finishing a course etc)
+     * Join the Parkour Lobby.
+     * Teleport the Player to the lobby location if ParkourLevel requirements are met.
+     * Lobby name will be 'default' if not provided.
      *
-     * @param args
-     * @param player
+     * @param player requesting player
+     * @param lobbyName lobby name
      */
-    public void joinLobby(Player player, String lobbyName) {
+    public void joinLobby(Player player, @Nullable String lobbyName) {
         lobbyName = lobbyName == null ? Constants.DEFAULT : lobbyName.toLowerCase();
 
         if (!Validation.isDefaultLobbySet(player)) {
@@ -79,46 +84,29 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
         }
     }
 
-    private Lobby populateLobby(String lobbyName) {
-        Lobby lobby = LobbyInfo.getLobby(lobbyName);
-        lobbyCache.put(lobbyName.toLowerCase(), lobby);
-        return lobby;
-    }
-
     /**
-     * Set or overwrite a lobby.
-     * Arguments will determine if it's a custom lobby.
+     * Delete a Parkour Lobby.
+     * All references to the Lobby will be deleted.
      *
-     * @param args
-     * @param player
-     */
-    private void setLobby(Player player, String lobbyName) {
-        LobbyInfo.setLobby(lobbyName, player.getLocation());
-        PluginUtils.logToFile(lobbyName + " lobby was set by " + player.getName());
-    }
-
-    /**
-     * Delete a Parkour lobby.
-     *
-     * @param lobbyName
-     * @param sender
+     * @param sender requesting sender
+     * @param lobbyName lobby name
      */
     public void deleteLobby(CommandSender sender, String lobbyName) {
-        if (!LobbyInfo.doesLobbyExist(lobbyName)) {
-            TranslationUtils.sendValueTranslation("Error.UnknownLobby", lobbyName, sender);
+        if (!Validation.deleteLobby(sender, lobbyName)) {
             return;
         }
 
         LobbyInfo.deleteLobby(lobbyName);
+        clearCache(lobbyName);
         TranslationUtils.sendValueTranslation("Parkour.Delete", lobbyName + " Lobby", sender);
     }
 
     /**
-     * Calculate the location when the player leaves / quits a course.
-     * Used for finding the lobby if a custom is configured.
+     * Teleport the Player to the determined destination.
+     * When failing or leaving a Course the location destination will be calculated.
      *
-     * @param player
-     * @param session
+     * @param player requesting player
+     * @param session parkour session
      */
     public void teleportToLeaveDestination(Player player, ParkourSession session) {
         String lobbyName = null;
@@ -131,9 +119,8 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
     }
 
     /**
-     * Send a list of custom Lobbies to the player.
-     *
-     * @param sender
+     * Display all Parkour Lobbies to sender.
+     * @param sender requesting sender
      */
     public void displayLobbies(CommandSender sender) {
         TranslationUtils.sendHeading("Available Lobbies", sender);
@@ -148,5 +135,36 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
     @Override
     public void clearCache() {
         lobbyCache.clear();
+    }
+
+    /**
+     * Clear the specified Lobby information.
+     *
+     * @param lobbyName target lobby name
+     */
+    public void clearCache(String lobbyName) {
+        lobbyCache.remove(lobbyName.toLowerCase());
+    }
+
+    /**
+     * Populate Lobby info and add to Cache.
+     * @param lobbyName lobby name
+     * @return populated Lobby
+     */
+    private Lobby populateLobby(String lobbyName) {
+        Lobby lobby = new Lobby(LobbyInfo.getLobbyLocation(lobbyName), LobbyInfo.getRequiredLevel(lobbyName));
+        lobbyCache.put(lobbyName.toLowerCase(), lobby);
+        return lobby;
+    }
+
+    /**
+     * Set the Lobby to Player's Location.
+     * A log entry will be created.
+     * @param player requesting player
+     * @param lobbyName lobby name
+     */
+    private void setLobby(Player player, String lobbyName) {
+        LobbyInfo.setLobby(lobbyName, player.getLocation());
+        PluginUtils.logToFile(lobbyName + " lobby was set by " + player.getName());
     }
 }

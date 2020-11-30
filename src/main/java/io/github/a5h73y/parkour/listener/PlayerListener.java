@@ -3,6 +3,7 @@ package io.github.a5h73y.parkour.listener;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
+import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.GameMode;
@@ -20,6 +21,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 
@@ -48,7 +50,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
     public void onEntityCombust(EntityCombustEvent event) {
         if (event.getEntity() instanceof Player
                 && parkour.getPlayerManager().isPlaying((Player) event.getEntity())) {
-                event.setCancelled(true);
+            event.setCancelled(true);
         }
     }
 
@@ -73,7 +75,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
             if (parkour.getConfig().getBoolean("OnCourse.DisableFallDamage")
                     || (parkour.getPlayerManager().getParkourSession(player).getParkourMode() == ParkourMode.DROPPER
-                            && !parkour.getConfig().getBoolean("ParkourModes.Dropper.FallDamage"))) {
+                    && !parkour.getConfig().getBoolean("ParkourModes.Dropper.FallDamage"))) {
                 event.setDamage(0);
                 event.setCancelled(true);
                 return;
@@ -91,6 +93,13 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
             event.setDamage(0);
             event.setCancelled(true);
             parkour.getPlayerManager().playerDie(player);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        if (parkour.getPlayerManager().isPlaying(event.getPlayer())) {
+            parkour.getPlayerManager().playerDie(event.getPlayer());
         }
     }
 
@@ -134,7 +143,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
                     parkour.getDescription().getVersion(), event.getPlayer());
         }
 
-        parkour.getPlayerManager().loadParkourSession(event.getPlayer());
+        ParkourSession session = parkour.getPlayerManager().loadParkourSession(event.getPlayer());
 
         if (PlayerInfo.isQuietMode(event.getPlayer())) {
             parkour.getPlayerManager().enableQuietMode(event.getPlayer());
@@ -144,10 +153,10 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        String currentCourse = parkour.getPlayerManager().getParkourSession(event.getPlayer()).getCourse().getName();
-        TranslationUtils.sendValueTranslation("Parkour.Continue", currentCourse, event.getPlayer());
+        parkour.getScoreboardManager().addScoreboard(event.getPlayer(), session);
 
-        parkour.getScoreboardManager().addScoreboard(event.getPlayer());
+        String currentCourse = session.getCourse().getName();
+        TranslationUtils.sendValueTranslation("Parkour.Continue", currentCourse, event.getPlayer());
 
         if (parkour.getConfig().getBoolean("OnLeaveServer.TeleportToLastCheckpoint")) {
             parkour.getPlayerManager().playerDie(event.getPlayer());
