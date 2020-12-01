@@ -1423,7 +1423,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 				parkourPlayers.put(player, session);
 
 			} else {
-				player.sendMessage("Your ParkourSession is invalid."); //TODO translate
+				player.sendMessage(TranslationUtils.getTranslation("Error.InvalidSession"));
 				deleteParkourSession(player);
 				parkour.getLobbyManager().joinLobby(player, DEFAULT);
 			}

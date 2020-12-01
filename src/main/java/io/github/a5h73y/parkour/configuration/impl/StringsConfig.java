@@ -126,6 +126,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Error.InvalidQuestionAnswer", "Invalid Question Answer.");
 		this.addDefault("Error.QuestionAnswerChoices", "Please use either &a/pa yes &for &c/pa no");
 		this.addDefault("Error.LimitExceeded", "The player limit for the course has been reached.");
+		this.addDefault("Error.InvalidSession", "Your ParkourSession is invalid.");
 
 		this.addDefault("Help.Command", "&7/pa help &9%VALUE% &0: &7To learn more about the command.");
 		this.addDefault("Help.Commands", "To display the commands menu, enter &b/pa cmds");
