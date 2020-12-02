@@ -4,10 +4,10 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.gui.impl.CourseSettingsGUI;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.Optional;
-import jdk.internal.jline.internal.Nullable;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 public final class Help {
 

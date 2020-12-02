@@ -121,7 +121,7 @@ public class CourseSettingsGUI extends AbstractMenu {
 		},
 				StringUtils.colour("&fSet &b" + title),
 				StringUtils.colour("&fCurrent Value: &3" + currentValue),
-				StringUtils.colour("&7By clicking, you will input a the new value for &b" + courseName)
+				StringUtils.colour("&7By clicking, you will input a new value for &b" + courseName)
 		);
 	}
 

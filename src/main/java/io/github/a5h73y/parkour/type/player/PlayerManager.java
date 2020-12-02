@@ -717,7 +717,17 @@ public class PlayerManager extends AbstractPluginReceiver {
 			player.giveExp(xp);
 		}
 
-		// TODO - move to a different method - Level player
+		// Give level reward to player
+		playerLevelUp(player, courseName);
+
+		parkour.getCourseManager().runEventCommands(player, courseName, ParkourEventType.PRIZE);
+		rewardParkoins(player, CourseInfo.getRewardParkoins(courseName));
+
+		parkour.getEconomyApi().giveEconomyPrize(player, courseName);
+		player.updateInventory();
+	}
+
+	private void playerLevelUp(Player player, String courseName) {
 		int currentLevel = PlayerInfo.getParkourLevel(player);
 		int newParkourLevel = currentLevel;
 
@@ -745,16 +755,10 @@ public class PlayerManager extends AbstractPluginReceiver {
 			PlayerInfo.setParkourLevel(player, newParkourLevel);
 			if (parkour.getConfig().getBoolean("Other.Display.LevelReward")) {
 				player.sendMessage(TranslationUtils.getTranslation("Parkour.RewardLevel")
-						.replace("%LEVEL%", String.valueOf(rewardLevel))
+						.replace("%LEVEL%", String.valueOf(newParkourLevel))
 						.replace(Constants.COURSE_PLACEHOLDER, courseName));
 			}
 		}
-
-		parkour.getCourseManager().runEventCommands(player, courseName, ParkourEventType.PRIZE);
-		rewardParkoins(player, CourseInfo.getRewardParkoins(courseName));
-
-		parkour.getEconomyApi().giveEconomyPrize(player, courseName);
-		player.updateInventory();
 	}
 
 	/**
@@ -1419,7 +1423,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 				parkourPlayers.put(player, session);
 
 			} else {
-				player.sendMessage("Your ParkourSession is invalid."); //TODO translate
+				player.sendMessage(TranslationUtils.getTranslation("Error.InvalidSession"));
 				deleteParkourSession(player);
 				parkour.getLobbyManager().joinLobby(player, DEFAULT);
 			}

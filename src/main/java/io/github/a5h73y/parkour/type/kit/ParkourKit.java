@@ -3,8 +3,8 @@ package io.github.a5h73y.parkour.type.kit;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
-import jdk.internal.jline.internal.Nullable;
 import org.bukkit.Material;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * ParkourKit.
