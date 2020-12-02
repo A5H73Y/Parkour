@@ -90,7 +90,7 @@ public class DateTimeUtils {
 		addString(totalTime, "Display.Minute", time.getMinutes());
 		addString(totalTime, "Display.Second", time.getSeconds());
 
-		return totalTime.toString();
+		return totalTime.toString().isEmpty() ? "0" : totalTime.toString();
 	}
 
 	private static void addString(StringJoiner joiner, String translationKey, long amount) {
