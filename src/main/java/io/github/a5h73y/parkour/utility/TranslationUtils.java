@@ -7,6 +7,7 @@ import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.other.Constants;
 import java.util.regex.Pattern;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -159,5 +160,31 @@ public class TranslationUtils {
 				.replace("%PROPERTY%", property)
 				.replace(Constants.COURSE_PLACEHOLDER, courseName)
 				.replace("%VALUE%", value);
+	}
+
+	public static void sendValue(CommandSender sender, String title, String value) {
+		sender.sendMessage(title + ": " + ChatColor.AQUA + value);
+	}
+
+	public static void sendValue(CommandSender sender, String title, Number value) {
+		sendValue(sender, title, String.valueOf(value));
+	}
+
+	public static void sendConditionalValue(CommandSender sender, String title, Boolean conditionMet, String value) {
+		if (conditionMet) {
+			sendValue(sender, title, value);
+		}
+	}
+
+	public static void sendConditionalValue(CommandSender sender, String title, Number value) {
+		if (value != null && value.doubleValue() > 0) {
+			sendValue(sender, title, String.valueOf(value));
+		}
+	}
+
+	public static void sendConditionalValue(CommandSender sender, String title, String value) {
+		if (ValidationUtils.isStringValid(value)) {
+			sendValue(sender, title, value);
+		}
 	}
 }

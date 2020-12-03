@@ -29,7 +29,7 @@ public class ChatListener extends AbstractPluginReceiver implements Listener {
         }
 
         String finalMessage;
-        String rank = PlayerInfo.getRank(event.getPlayer());
+        String rank = PlayerInfo.getParkourRank(event.getPlayer());
 
         // should we completely override the chat format
         if (parkour.getConfig().isChatPrefixOverride()) {

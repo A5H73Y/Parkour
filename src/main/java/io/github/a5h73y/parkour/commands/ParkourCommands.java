@@ -88,7 +88,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "checkpoint":
-                if (!PlayerInfo.hasSelectedValidCourse(player)) {
+                if (!parkour.getPlayerManager().hasSelectedValidCourse(player)) {
                     TranslationUtils.sendTranslation("Error.Selected", player);
                     return false;
 
@@ -219,7 +219,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 if (!ValidationUtils.validateArgs(player, args, 2, 3)) {
                     return false;
 
-                } else if (!PlayerInfo.hasSelectedValidCourse(player)) {
+                } else if (!parkour.getPlayerManager().hasSelectedValidCourse(player)) {
                     TranslationUtils.sendTranslation("Error.Selected", player);
                     return false;
 

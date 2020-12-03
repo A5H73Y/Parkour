@@ -213,7 +213,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      * @param player requesting player
      */
     public void deselectCourse(final Player player) {
-        if (PlayerInfo.hasSelectedValidCourse(player)) {
+        if (PlayerInfo.hasSelectedCourse(player)) {
             PlayerInfo.resetSelected(player);
             TranslationUtils.sendTranslation("Parkour.Deselected", player);
 

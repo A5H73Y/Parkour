@@ -4,6 +4,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.other.Validation;
+import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
@@ -78,15 +79,6 @@ public class ChallengeManager extends AbstractPluginReceiver {
             createChallenge(requestingPlayer, courseName, null);
             TranslationUtils.sendValueTranslation("Parkour.Challenge.Created", courseName, requestingPlayer);
             TranslationUtils.sendTranslation("Parkour.Challenge.StartCommand", requestingPlayer);
-        }
-    }
-
-    private void addParticipantToChallenge(Challenge challenge, Player player) {
-        if (challenge != null) {
-            challenge.addParticipant(player);
-            if (parkour.getConfig().getBoolean("ParkourChallenge.PrepareOnAccept")) {
-                prepareParticipant(challenge, player);
-            }
         }
     }
 
@@ -339,7 +331,9 @@ public class ChallengeManager extends AbstractPluginReceiver {
                     for (Player participant : challenge.getParticipatingPlayers()) {
                         participant.setWalkSpeed(challenge.getPlayerWalkSpeed());
                         PlayerUtils.removePotionEffect(PotionEffectType.JUMP, participant);
-                        parkour.getPlayerManager().getParkourSession(participant).resetTime();
+                        ParkourSession session = parkour.getPlayerManager().getParkourSession(participant);
+                        session.resetTime();
+                        session.setStartTimer(true);
                         TranslationUtils.sendTranslation("Parkour.Go", participant);
                     }
                 }
@@ -404,6 +398,15 @@ public class ChallengeManager extends AbstractPluginReceiver {
                 }
             }
         }, 0, 5 * 20);
+    }
+
+    private void addParticipantToChallenge(Challenge challenge, Player player) {
+        if (challenge != null) {
+            challenge.addParticipant(player);
+            if (parkour.getConfig().getBoolean("ParkourChallenge.PrepareOnAccept")) {
+                prepareParticipant(challenge, player);
+            }
+        }
     }
 
     private void displayChallengeInfo(Player player) {

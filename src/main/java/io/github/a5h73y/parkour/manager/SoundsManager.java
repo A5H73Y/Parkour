@@ -4,6 +4,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.SoundType;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.Cacheable;
+import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import java.util.EnumMap;
 import java.util.Optional;
@@ -21,7 +22,7 @@ public class SoundsManager extends AbstractPluginReceiver implements Cacheable<S
 	}
 
 	public void playSound(Player player, SoundType soundType) {
-		if (!parkour.getPlayerManager().isInQuietMode(player)) {
+		if (!PlayerInfo.isQuietMode(player)) {
 			SoundDetails details = soundTypes.get(soundType);
 			if (details != null) {
 				player.playSound(player.getLocation(), details.getSound(), details.getVolume(), details.getPitch());

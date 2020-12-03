@@ -32,6 +32,7 @@ public class ParkourSession implements Serializable {
 
     private transient Course course;
     private transient boolean markedForDeletion;
+    private transient boolean startTimer;
 
 
     /**
@@ -182,5 +183,13 @@ public class ParkourSession implements Serializable {
 
     public void setMarkedForDeletion(boolean markedForDeletion) {
         this.markedForDeletion = markedForDeletion;
+    }
+
+    public boolean isStartTimer() {
+        return startTimer;
+    }
+
+    public void setStartTimer(boolean startTimer) {
+        this.startTimer = startTimer;
     }
 }

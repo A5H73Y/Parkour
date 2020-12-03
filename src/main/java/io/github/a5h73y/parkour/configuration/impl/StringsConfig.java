@@ -133,6 +133,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Help.ConsoleCommands", "To display all commands, enter &f/pac cmds");
 		this.addDefault("Help.SignCommands", "To display the sign commands menu, enter &b/pa cmds signs");
 		this.addDefault("Help.CommandSyntax", "&7Syntax: &f/pa %VALUE%");
+		this.addDefault("Help.ConsoleCommandSyntax", "&7Syntax: &f%VALUE%");
 		this.addDefault("Help.CommandExample", "&7Example: &f%VALUE%");
 		this.addDefault("Help.CommandUsage", "&3/pa &b%COMMAND%&e%ARGUMENTS% &0: &f%TITLE%");
 		this.addDefault("Help.SignUsage", "&b%COMMAND% &e%SHORTCUT% &0: &f%DESCRIPTION%");

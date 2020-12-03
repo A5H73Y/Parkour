@@ -13,102 +13,95 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * Centralize player's information retrieval and modifications
- * Massive thanks to horgeon for the inspiration of this change
+ * Player Information Utility class.
+ * Convenience methods for accessing the player configuration file.
  */
 public class PlayerInfo {
 
-    public static ParkourConfiguration getPlayersConfig() {
-        return Parkour.getConfig(ConfigType.PLAYERS);
-    }
-
-    private static void persistChanges() {
-        getPlayersConfig().save();
+    /**
+     * Check if the Player is known to Parkour.
+     * @param player requesting player
+     * @return player has Parkour information
+     */
+    public static boolean hasPlayerInfo(OfflinePlayer player) {
+        return player != null && getPlayersConfig().contains(player.getUniqueId().toString());
     }
 
     /**
-     * Retrieve the player's selected course.
-     *
-     * @param player
-     * @return selected course
+     * Get the Player's selected Course name.
+     * @param player requesting player
+     * @return selected course name
      */
     public static String getSelectedCourse(OfflinePlayer player) {
-        return getPlayersConfig().getString( player.getUniqueId() + ".Selected");
+        return getPlayersConfig().getString(player.getUniqueId() + ".Selected");
     }
 
     /**
-     * Set the player's selected course.
-     *
-     * @param player
-     * @param courseName
+     * Check if Player has selected a Course.
+     * This does not guarantee they've selected a valid course.
+     * @param player requesting player
+     * @return player has selected course
      */
-    public static void setSelectedCourse(OfflinePlayer player, String courseName) {
+    public static boolean hasSelectedCourse(OfflinePlayer player) {
+        return getSelectedCourse(player) != null;
+    }
+
+    /**
+     * Set the Player's selected Course name.
+     * @param player requesting player
+     * @param courseName selected course name
+     */
+    public static void setSelectedCourse(OfflinePlayer player, @NotNull String courseName) {
         getPlayersConfig().set(player.getUniqueId() + ".Selected", courseName.toLowerCase());
         persistChanges();
     }
 
     /**
-     * Deselect the player's selected course.
-     *
-     * @param player
+     * Reset the Player's selected Course Name.
+     * @param player requesting player
      */
     public static void resetSelected(OfflinePlayer player) {
         getPlayersConfig().set(player.getUniqueId() + ".Selected", null);
         persistChanges();
     }
 
+
     /**
-     * Returns if the player has selected a course.
-     *
-     * @param player
-     * @return boolean
+     * Get the Player's last played Course.
+     * The course they most recently joined, but may not have finished.
+     * @param player requesting player
+     * @return course name last played
      */
-    public static boolean hasSelectedValidCourse(Player player) {
-        String selected = getSelectedCourse(player);
-        return Parkour.getInstance().getCourseManager().doesCourseExists(selected);
+    public static String getLastPlayedCourse(OfflinePlayer player) {
+        return getPlayersConfig().getString(player.getUniqueId() + ".LastPlayed");
     }
 
     /**
-     * Returns the amount of Parkoins a player has accumulated.
-     * Parkoins allow you to interact with the new store, making purchases etc.
-     * Points will be rewarded on course completion etc.
-     *
-     * @param player
-     * @return int
+     * Set the Player's last played Course.
+     * @param player requesting player
+     * @param courseName course name last played
      */
-    public static int getParkoins(OfflinePlayer player) {
-        return getPlayersConfig().getInt(player.getUniqueId() + ".Parkoins");
-    }
-
-    /**
-     * Set the amount of player's Parkoins.
-     *
-     * @param player
-     * @param amount
-     */
-    public static void setParkoins(OfflinePlayer player, int amount) {
-        getPlayersConfig().set(player.getUniqueId() + ".Parkoins", amount);
+    public static void setLastPlayedCourse(OfflinePlayer player, String courseName) {
+        getPlayersConfig().set(player.getUniqueId() + ".LastPlayed", courseName.toLowerCase());
         persistChanges();
     }
 
     /**
-     * Return the name of the course the player last completed.
-     *
-     * @param player
-     * @return courseName
+     * Get the Player's last completed Course.
+     * @param player requesting player
+     * @return course name last completed
      */
     public static String getLastCompletedCourse(OfflinePlayer player) {
         return getPlayersConfig().getString(player.getUniqueId() + ".LastCompleted");
     }
 
     /**
-     * Set the last completed course for the player.
-     * Update the completed list of courses for the player.
-     *
-     * @param player
-     * @param courseName
+     * Set the Player's last completed Course.
+     * @param player requesting player
+     * @param courseName course name last completed
      */
     public static void setLastCompletedCourse(OfflinePlayer player, String courseName) {
         getPlayersConfig().set(player.getUniqueId() + ".LastCompleted", courseName.toLowerCase());
@@ -116,50 +109,29 @@ public class PlayerInfo {
     }
 
     /**
-     * Return the name of the course the player last attempted.
-     *
-     * @param player
-     * @return courseName
-     */
-    public static String getLastPlayedCourse(OfflinePlayer player) {
-        return getPlayersConfig().getString(player.getUniqueId() + ".LastPlayed");
-    }
-
-    /**
-     * Get the player's ParkourLevel.
-     *
-     * @param player
-     * @return parkourLevel
-     */
-    public static int getParkourLevel(OfflinePlayer player) {
-        return getPlayersConfig().getInt(player.getUniqueId() + ".ParkourLevel");
-    }
-
-    /**
-     * Set the player's ParkourLevel.
-     *
-     * @param player
-     * @param level
-     */
-    public static void setParkourLevel(OfflinePlayer player, int level) {
-        getPlayersConfig().set(player.getUniqueId() + ".ParkourLevel", level);
-        persistChanges();
-    }
-
-    /**
-     * Return the number of Parkour courses completed for player.
-     *
-     * @param player
-     * @return results
+     * Get the number of Courses completed by Player.
+     * @param player requesting player
+     * @return number of courses completed
      */
     public static int getNumberOfCoursesCompleted(OfflinePlayer player) {
         return getCompletedCourses(player).size();
     }
 
+    /**
+     * Get the Completed Course names for Player.
+     * @param player requesting player
+     * @return completed course names
+     */
     public static List<String> getCompletedCourses(OfflinePlayer player) {
         return getPlayersConfig().getStringList(player.getUniqueId() + ".Completed");
     }
 
+    /**
+     * Get the Uncompleted Course names for Player.
+     * The Courses the player has yet to complete on the server.
+     * @param player requesting player
+     * @return uncompleted course names
+     */
     public static List<String> getUncompletedCourses(OfflinePlayer player) {
         List<String> completedCourses = getCompletedCourses(player);
         return CourseInfo.getAllCourseNames().stream()
@@ -167,6 +139,11 @@ public class PlayerInfo {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Add a Course name to the Player's completions.
+     * @param player requesting player
+     * @param courseName completed course name
+     */
     public static void addCompletedCourse(OfflinePlayer player, String courseName) {
         if (!Parkour.getDefaultConfig().isCompletedCoursesEnabled()) {
             return;
@@ -182,138 +159,18 @@ public class PlayerInfo {
     }
 
     /**
-     * Set the last played course for the player.
-     *
-     * @param player
-     * @param courseName
+     * Remove a Course from each Player's completed courses.
+     * When a Course gets deleted, it must be removed from each player's completed courses.
+     * @param courseName course name
      */
-    public static void setLastPlayedCourse(OfflinePlayer player, String courseName) {
-        getPlayersConfig().set(player.getUniqueId() + ".LastPlayed", courseName.toLowerCase());
-        persistChanges();
-    }
-
-    /**
-     * Get the player's ParkourRank.
-     * If the player has an achieved ParkourRank it will use this,
-     * otherwise the default rank will be returned
-     *
-     * @param player
-     * @return
-     */
-    public static String getRank(OfflinePlayer player) {
-        return getPlayersConfig().getString(player.getUniqueId() + ".Rank",
-                TranslationUtils.getTranslation("Event.DefaultRank", false));
-    }
-
-    /**
-     * Set the player's ParkourRank.
-     *
-     * @param player
-     * @param rank
-     */
-    public static void setRank(OfflinePlayer player, String rank) {
-        getPlayersConfig().set(player.getUniqueId() + ".Rank", rank);
-        persistChanges();
-    }
-
-    /**
-     * Get the time the player last won the reward for the course.
-     *
-     * @param player
-     * @param courseName
-     * @return
-     */
-    public static long getLastRewardedTime(OfflinePlayer player, String courseName) {
-        return getPlayersConfig().getLong(player.getUniqueId() + ".LastRewarded." + courseName.toLowerCase(), 0);
-    }
-
-    /**
-     * Set the time the player wins the reward for the course.
-     *
-     * @param player
-     * @param courseName
-     * @param rewardTime
-     */
-    public static void setLastRewardedTime(OfflinePlayer player, String courseName, long rewardTime) {
-        getPlayersConfig().set(player.getUniqueId() + ".LastRewarded." + courseName.toLowerCase(), rewardTime);
-        persistChanges();
-    }
-
-    /**
-     * Determine if the plugin has any saved information about a player.
-     *
-     * @param player
-     * @return
-     */
-    public static boolean hasPlayerInfo(OfflinePlayer player) {
-        return player != null && getPlayersConfig().contains(player.getUniqueId() + ".");
-    }
-
-    /**
-     * Reset player's Parkour information.
-     * This will remove all trace of the player from the plugin.
-     * All SQL time entries from the player will be removed, and their parkour stats will be deleted from the config.
-     *
-     * @param player
-     */
-    public static void resetPlayer(OfflinePlayer player) {
-        getPlayersConfig().set(player.getUniqueId().toString(), null);
-        persistChanges();
-        Parkour.getInstance().getDatabase().deletePlayerTimes(player);
-    }
-
-    /**
-     * Get RewardRank for a ParkourLevel
-     *
-     * @param parkourLevel
-     * @return
-     */
-    public static String getRewardRank(int parkourLevel) {
-        return getPlayersConfig().getString("ServerInfo.Levels." + parkourLevel + ".Rank");
-    }
-
-    /**
-     * Set ParkourRank for a ParkourLevel
-     *
-     * @param parkourLevel
-     * @param rank
-     */
-    public static void setRewardRank(int parkourLevel, String rank) {
-        getPlayersConfig().set("ServerInfo.Levels." + parkourLevel + ".Rank", rank);
-        persistChanges();
-    }
-
-    /**
-     * Save the Player's Inventory and Armor contents.
-     * @param player
-     */
-    public static void saveInventoryArmor(Player player) {
-        ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
-        inventoryConfig.set(player.getUniqueId() + ".Inventory", Arrays.asList(player.getInventory().getContents()));
-        inventoryConfig.set(player.getUniqueId() + ".Armor", Arrays.asList(player.getInventory().getArmorContents()));
-        inventoryConfig.save();
-    }
-
-    public static ItemStack[] getSavedInventoryContents(Player player) {
-        List<ItemStack> contents = (List<ItemStack>) Parkour.getConfig(ConfigType.INVENTORY)
-                .getList(player.getUniqueId() + ".Inventory");
-        return contents != null ? contents.toArray(new ItemStack[contents.size()]) : null;
-    }
-
-    public static ItemStack[] getSavedArmorContents(Player player) {
-        List<ItemStack> contents = (List<ItemStack>) Parkour.getConfig(ConfigType.INVENTORY)
-                .getList(player.getUniqueId() + ".Armor");
-        return contents != null ? contents.toArray(new ItemStack[contents.size()]) : null;
-    }
-
     public static void removeCompletedCourse(String courseName) {
         if (!Parkour.getDefaultConfig().isCompletedCoursesEnabled()) {
             return;
-
         }
-        Set<String> playersUUIDs = getPlayersConfig().getConfigurationSection("").getKeys(false);
 
-        for (String uuid : playersUUIDs) {
+        Set<String> playersIds = getPlayersConfig().getConfigurationSection("").getKeys(false);
+
+        for (String uuid : playersIds) {
             String completedPath = uuid + ".Completed";
             List<String> completedCourses = getPlayersConfig().getStringList(completedPath);
 
@@ -326,40 +183,235 @@ public class PlayerInfo {
     }
 
     /**
-     * Get the location from which the player joined the course.
-     * This is used to return the player to their original location on course completion.
-     *
-     * @param player
-     * @return location
+     * Get the Player's ParkourLevel.
+     * @param player requesting player
+     * @return parkour level value
+     */
+    public static int getParkourLevel(OfflinePlayer player) {
+        return getPlayersConfig().getInt(player.getUniqueId() + ".ParkourLevel");
+    }
+
+    /**
+     * Increase the Player's ParkourLevel by the amount.
+     * @param player requesting player
+     * @param amount amount to increase
+     */
+    public static void increaseParkourLevel(OfflinePlayer player, int amount) {
+        setParkourLevel(player, getParkourLevel(player) + amount);
+    }
+
+    /**
+     * Set the Player's ParkourLevel.
+     * @param player requesting player
+     * @param level new parkour level value
+     */
+    public static void setParkourLevel(OfflinePlayer player, int level) {
+        getPlayersConfig().set(player.getUniqueId() + ".ParkourLevel", level);
+        persistChanges();
+    }
+
+    /**
+     * Get the Player's ParkourRank.
+     * The default rank value will be used if not set.
+     * @param player requesting player
+     * @return player's parkour rank
+     */
+    public static String getParkourRank(OfflinePlayer player) {
+        return getPlayersConfig().getString(player.getUniqueId() + ".Rank",
+                TranslationUtils.getTranslation("Event.DefaultRank", false));
+    }
+
+    /**
+     * Set the Player's ParkourRank.
+     * @param player target player
+     * @param parkourRank parkour rank value
+     */
+    public static void setParkourRank(OfflinePlayer player, String parkourRank) {
+        getPlayersConfig().set(player.getUniqueId() + ".Rank", parkourRank);
+        persistChanges();
+    }
+
+    /**
+     * Get last rewarded time for Course.
+     * Get the timestamp the Player last received a reward for the completing Course.
+     * @param player requesting player
+     * @param courseName course name
+     * @return last rewarded time
+     */
+    public static long getLastRewardedTime(OfflinePlayer player, String courseName) {
+        return getPlayersConfig().getLong(player.getUniqueId() + ".LastRewarded." + courseName.toLowerCase(), 0);
+    }
+
+    /**
+     * Set the last rewarded time for Course.
+     * @param player requesting player
+     * @param courseName course name
+     * @param rewardTime time of reward given
+     */
+    public static void setLastRewardedTime(OfflinePlayer player, String courseName, long rewardTime) {
+        getPlayersConfig().set(player.getUniqueId() + ".LastRewarded." + courseName.toLowerCase(), rewardTime);
+        persistChanges();
+    }
+
+    /**
+     * Reset Player's Parkour data.
+     * @param player target player
+     */
+    public static void resetPlayerData(OfflinePlayer player) {
+        getPlayersConfig().set(player.getUniqueId().toString(), null);
+        persistChanges();
+    }
+
+    /**
+     * Set the ParkourRank reward for a ParkourLevel.
+     * @param parkourLevel parkour level
+     * @param parkourRank parkour rank value
+     */
+    public static void setRewardParkourRank(int parkourLevel, String parkourRank) {
+        getPlayersConfig().set("ServerInfo.Levels." + parkourLevel + ".Rank", parkourRank);
+        persistChanges();
+    }
+
+    /**
+     * Save the Player's Inventory and Armor contents.
+     * @param player requesting player
+     */
+    public static void saveInventoryArmor(Player player) {
+        ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
+        inventoryConfig.set(player.getUniqueId() + ".Inventory", Arrays.asList(player.getInventory().getContents()));
+        inventoryConfig.set(player.getUniqueId() + ".Armor", Arrays.asList(player.getInventory().getArmorContents()));
+        inventoryConfig.save();
+    }
+
+    /**
+     * Retrieve the Player's saved Inventory contents.
+     * @param player requesting player
+     * @return player's inventory contents
+     */
+    public static ItemStack[] getSavedInventoryContents(Player player) {
+        List<ItemStack> contents = (List<ItemStack>) Parkour.getConfig(ConfigType.INVENTORY)
+                .getList(player.getUniqueId() + ".Inventory");
+        return contents != null ? contents.toArray(new ItemStack[contents.size()]) : null;
+    }
+
+    /**
+     * Retrieve the Player's saved Armor contents.
+     * @param player requesting player
+     * @return player's armor contents
+     */
+    public static ItemStack[] getSavedArmorContents(Player player) {
+        List<ItemStack> contents = (List<ItemStack>) Parkour.getConfig(ConfigType.INVENTORY)
+                .getList(player.getUniqueId() + ".Armor");
+        return contents != null ? contents.toArray(new ItemStack[contents.size()]) : null;
+    }
+
+    /**
+     * Get the Player's Join Location.
+     * The {@link Location} from which the player joined the course.
+     * @param player requesting player
+     * @return saved join location
      */
     public static Location getJoinLocation(Player player) {
         return (Location) getPlayersConfig().get(player.getUniqueId() + ".JoinLocation");
     }
 
+    /**
+     * Check whether the Player has a Join Location set.
+     * @param player requesting player
+     * @return join location set
+     */
     public static boolean hasJoinLocation(Player player) {
         return getPlayersConfig().contains(player.getUniqueId() + ".JoinLocation");
     }
 
-    /** Set the location from which the player has joined a course.
-     *
-     * @param player
+    /**
+     * Set the Player's Join Location.
+     * The player's current position will be saved as their join location.
+     * @param player player
      */
     public static void setJoinLocation(Player player) {
         getPlayersConfig().set(player.getUniqueId() + ".JoinLocation", player.getLocation());
         persistChanges();
     }
 
+    /**
+     * Reset the Player's Join Location.
+     * @param player player
+     */
+    public static void resetJoinLocation(Player player) {
+        getPlayersConfig().set(player.getUniqueId() + ".JoinLocation", null);
+        persistChanges();
+    }
+
+    /**
+     * Check if the Player is in Quiet Mode.
+     * Quite Mode will not message the player as often with non-important messages.
+     * @param player requesting player
+     * @return is quiet mode enabled
+     */
+    public static boolean isQuietMode(Player player) {
+        return getPlayersConfig().getBoolean(player.getUniqueId() + ".QuietMode");
+    }
+
+    /**
+     * Toggle the Player's Quiet Mode status.
+     * @param player requesting player
+     */
+    public static void toggleQuietMode(Player player) {
+        setQuietMode(player, !isQuietMode(player));
+    }
+
+    /**
+     * Set the Player's Quiet Mode status.
+     * @param player target player
+     * @param inQuietMode value to set
+     */
     public static void setQuietMode(Player player, boolean inQuietMode) {
         getPlayersConfig().set(player.getUniqueId() + ".QuietMode", inQuietMode);
         persistChanges();
     }
 
-    public static boolean isQuietMode(Player player) {
-        return getPlayersConfig().getBoolean(player.getUniqueId() + ".QuietMode");
+    /**
+     * Get the number of accumulated Parkoins for Player.
+     * @param player requesting player
+     * @return number of Parkoins
+     */
+    public static double getParkoins(OfflinePlayer player) {
+        return getPlayersConfig().getDouble(player.getUniqueId() + ".Parkoins", 0);
     }
 
-    public static void resetJoinLocation(Player player) {
-        getPlayersConfig().set(player.getUniqueId() + ".JoinLocation", null);
+    /**
+     * Increase the amount of Parkoins the Player has.
+     * @param player requesting player
+     * @param amount amount to increase by
+     */
+    public static void increaseParkoins(OfflinePlayer player, double amount) {
+        setParkoins(player, getParkoins(player) + amount);
+    }
+
+    /**
+     * Set the number of Parkoins for Player.
+     * @param player requesting player
+     * @param amount amount to set
+     */
+    public static void setParkoins(OfflinePlayer player, double amount) {
+        getPlayersConfig().set(player.getUniqueId() + ".Parkoins", amount);
         persistChanges();
     }
+
+    /**
+     * Get the Players {@link ParkourConfiguration}.
+     * @return the players.yml configuration
+     */
+    private static ParkourConfiguration getPlayersConfig() {
+        return Parkour.getConfig(ConfigType.PLAYERS);
+    }
+
+    /**
+     * Persist any changes made to the players.yml file.
+     */
+    private static void persistChanges() {
+        getPlayersConfig().save();
+    }
+
 }

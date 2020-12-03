@@ -167,7 +167,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
         }
 
         // they've selected a known course, or they have admin course permission
-        if (PlayerInfo.hasSelectedValidCourse(player)
+        if (PlayerInfo.hasSelectedCourse(player)
                 || PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE, false)) {
             allowedCommands.addAll(ADMIN_COURSE_COMMANDS);
         }

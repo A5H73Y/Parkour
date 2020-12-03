@@ -82,7 +82,7 @@ public class PermissionUtils {
 	 * @return player has permission or ownership
 	 */
 	public static boolean hasPermissionOrCourseOwnership(Player player, Permission permission, String courseName) {
-		if (!PlayerInfo.hasSelectedValidCourse(player) && courseName == null) {
+		if (!Parkour.getInstance().getPlayerManager().hasSelectedValidCourse(player) && courseName == null) {
 			TranslationUtils.sendTranslation("Error.Selected", player);
 			return false;
 		}

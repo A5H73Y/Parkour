@@ -249,7 +249,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
      * Delete the Course checkpoint data.
      * When the course is deleted, delete the checkpoint data for the course.
      *
-     * @param courseName course datat to delete
+     * @param courseName course checkpoint to delete
      */
     public void deleteCheckpointData(String courseName) {
         ParkourConfiguration checkpointConfig = Parkour.getConfig(ConfigType.CHECKPOINTS);

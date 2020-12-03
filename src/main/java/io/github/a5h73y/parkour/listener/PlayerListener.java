@@ -145,10 +145,6 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
 
         ParkourSession session = parkour.getPlayerManager().loadParkourSession(event.getPlayer());
 
-        if (PlayerInfo.isQuietMode(event.getPlayer())) {
-            parkour.getPlayerManager().enableQuietMode(event.getPlayer());
-        }
-
         if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
             return;
         }
@@ -175,7 +171,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
 
         if (event.getPlayer().isBanned()
                 && parkour.getConfig().getBoolean("Other.OnPlayerBan.ResetParkourInfo")) {
-            PlayerInfo.resetPlayer(event.getPlayer());
+            PlayerInfo.resetPlayerData(event.getPlayer());
             parkour.getPlayerManager().deleteParkourSession(event.getPlayer());
         }
     }

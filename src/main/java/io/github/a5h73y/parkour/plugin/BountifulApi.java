@@ -1,6 +1,7 @@
 package io.github.a5h73y.parkour.plugin;
 
 import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import com.connorlinfoot.bountifulapi.BountifulAPI;
 import net.md_5.bungee.api.ChatMessageType;
@@ -60,7 +61,7 @@ public class BountifulApi extends PluginWrapper {
 	 * @param attemptTitle attempt to show the title
 	 */
 	public void sendFullTitle(Player player, String title, String subTitle, boolean attemptTitle) {
-		if (Parkour.getInstance().getPlayerManager().isInQuietMode(player)) {
+		if (PlayerInfo.isQuietMode(player)) {
 			return;
 		}
 
@@ -77,7 +78,7 @@ public class BountifulApi extends PluginWrapper {
 	}
 
 	public void sendActionBar(Player player, String title, boolean attemptTitle) {
-		if (Parkour.getInstance().getPlayerManager().isInQuietMode(player)) {
+		if (PlayerInfo.isQuietMode(player)) {
 			return;
 		}
 

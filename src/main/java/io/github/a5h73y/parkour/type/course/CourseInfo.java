@@ -1,5 +1,8 @@
 package io.github.a5h73y.parkour.type.course;
 
+import static io.github.a5h73y.parkour.utility.TranslationUtils.sendConditionalValue;
+import static io.github.a5h73y.parkour.utility.TranslationUtils.sendValue;
+
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.ConfigType;
@@ -25,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Course Information Utility class.
- * Convenience methods for accessing course configuration file.
+ * Convenience methods for accessing the course configuration file.
  */
 public class CourseInfo {
 
@@ -875,29 +878,9 @@ public class CourseInfo {
     }
 
     /**
-     * Persist any changes made to the config.yml file.
+     * Persist any changes made to the courses.yml file.
      */
     private static void persistChanges() {
         getCourseConfig().save();
-    }
-
-    private static void sendValue(CommandSender sender, String title, String value) {
-        sender.sendMessage(title + ": " + ChatColor.AQUA + value);
-    }
-
-    private static void sendValue(CommandSender sender, String title, Integer value) {
-        sendValue(sender, title, String.valueOf(value));
-    }
-
-    private static void sendConditionalValue(CommandSender sender, String title, Boolean conditionMet, String value) {
-        if (conditionMet) {
-            sendValue(sender, title, value);
-        }
-    }
-
-    private static void sendConditionalValue(CommandSender sender, String title, Integer value) {
-        if (value != null && value > 0) {
-            sendValue(sender, title, value);
-        }
     }
 }

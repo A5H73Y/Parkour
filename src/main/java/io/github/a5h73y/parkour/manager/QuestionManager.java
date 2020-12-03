@@ -179,13 +179,12 @@ public class QuestionManager extends AbstractPluginReceiver {
                 case RESET_PLAYER:
                     OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(argument);
 
-                    if (!PlayerInfo.hasPlayerInfo(targetPlayer) || !targetPlayer.hasPlayedBefore()) {
+                    if (!PlayerInfo.hasPlayerInfo(targetPlayer)) {
                         TranslationUtils.sendTranslation("Error.UnknownPlayer", sender);
                         return;
                     }
 
-                    PlayerInfo.resetPlayer(targetPlayer);
-                    parkour.getPlayerManager().deleteParkourSession(targetPlayer);
+                    parkour.getPlayerManager().resetPlayer(targetPlayer);
                     TranslationUtils.sendValueTranslation("Parkour.Reset", argument, sender);
                     PluginUtils.logToFile("player " + argument + " was reset by " + sender.getName());
                     return;
@@ -200,7 +199,7 @@ public class QuestionManager extends AbstractPluginReceiver {
                     String[] arguments = argument.split(";");
                     targetPlayer = Bukkit.getOfflinePlayer(arguments[0]);
 
-                    if (!PlayerInfo.hasPlayerInfo(targetPlayer) || !targetPlayer.hasPlayedBefore()) {
+                    if (!PlayerInfo.hasPlayerInfo(targetPlayer)) {
                         TranslationUtils.sendTranslation("Error.UnknownPlayer", sender);
                         return;
                     }

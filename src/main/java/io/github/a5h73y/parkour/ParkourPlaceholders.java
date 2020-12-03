@@ -110,7 +110,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             return String.valueOf(PlayerInfo.getParkourLevel(offlinePlayer));
 
         } else if (command.equals("rank")) {
-            return PlayerInfo.getRank(offlinePlayer);
+            return PlayerInfo.getParkourRank(offlinePlayer);
         }
 
         // online player specific

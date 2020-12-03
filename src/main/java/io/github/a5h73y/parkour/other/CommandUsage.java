@@ -2,6 +2,7 @@ package io.github.a5h73y.parkour.other;
 
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 
 public class CommandUsage {
 
@@ -23,8 +24,13 @@ public class CommandUsage {
 
 	public void displayHelpInformation(CommandSender sender) {
 		TranslationUtils.sendHeading(title, sender);
-		String commandSyntax = arguments != null ? command + " " + arguments : command;
-		sender.sendMessage(TranslationUtils.getValueTranslation("Help.CommandSyntax", commandSyntax, false));
+
+		if (sender instanceof ConsoleCommandSender) {
+			sender.sendMessage(TranslationUtils.getValueTranslation("Help.ConsoleCommandSyntax", consoleSyntax, false));
+		} else {
+			String commandSyntax = arguments != null ? command + " " + arguments : command;
+			sender.sendMessage(TranslationUtils.getValueTranslation("Help.CommandSyntax", commandSyntax, false));
+		}
 		sender.sendMessage(TranslationUtils.getValueTranslation("Help.CommandExample", example, false));
 		TranslationUtils.sendHeading("Description", sender);
 		sender.sendMessage(description);
