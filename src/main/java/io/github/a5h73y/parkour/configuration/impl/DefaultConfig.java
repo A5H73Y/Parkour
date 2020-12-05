@@ -44,6 +44,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("OnJoin.SetGameMode", "SURVIVAL");
 		this.addDefault("OnJoin.TreatFirstCheckpointAsStart", false);
 		this.addDefault("OnJoin.PerCoursePermission", false);
+		this.addDefault("OnJoin.TeleportPlayer", true);
 
 		this.addDefault("OnCourse.AnybodyPlaceBreakBlocks", false);
 		this.addDefault("OnCourse.AdminPlaceBreakBlocks", true);

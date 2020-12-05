@@ -127,6 +127,16 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             ParkourSession session = parkour.getPlayerManager().getParkourSession(player);
             return session == null ? "" : String.valueOf(session.getCurrentCheckpoint());
 
+        } else if (command.equals("current_course_completed")) {
+            ParkourSession session = parkour.getPlayerManager().getParkourSession(player);
+            if (session != null) {
+                boolean resultFound = parkour.getDatabase().hasPlayerAchievedTime(player, session.getCourseName());
+                String key = resultFound ? "PlaceholderAPI.CurrentCourseCompleted" : "PlaceholderAPI.CurrentCourseNotCompleted";
+                return TranslationUtils.getTranslation(key, false);
+            } else {
+                return null;
+            }
+
         } else if (command.equals("current_course_record_deaths")) {
             Course course = parkour.getCourseManager().findByPlayer(player);
             if (course != null) {
@@ -158,6 +168,15 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
 
             TimeEntry result = getTopPlayerResultForCourse(player, arguments[2]);
             return result == null ? NO_TIME_RECORDED : DateTimeUtils.displayCurrentTime(result.getTime());
+
+        } else if (command.startsWith("course_completed")) {
+            if (arguments.length != 3) {
+                return INVALID_SYNTAX;
+            }
+
+            boolean resultFound = parkour.getDatabase().hasPlayerAchievedTime(player, arguments[2]);
+            String key = resultFound ? "PlaceholderAPI.CurrentCourseCompleted" : "PlaceholderAPI.CurrentCourseNotCompleted";
+            return TranslationUtils.getTranslation(key, false);
 
         } else if (command.equals("current_personal_best_deaths")) {
             Course course = parkour.getCourseManager().findByPlayer(player);

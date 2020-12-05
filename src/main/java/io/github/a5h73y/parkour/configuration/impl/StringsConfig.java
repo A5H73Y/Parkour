@@ -209,6 +209,9 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Display.Second", "%VALUE% second");
 		this.addDefault("Display.Seconds", "%VALUE% seconds");
 
+		this.addDefault("PlaceholderAPI.CurrentCourseCompleted", "Yes");
+		this.addDefault("PlaceholderAPI.CurrentCourseNotCompleted", "No");
+
 		this.options().copyDefaults(true);
 	}
 }

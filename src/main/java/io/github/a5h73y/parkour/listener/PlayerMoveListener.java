@@ -111,19 +111,15 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
 
                 case BOUNCE:
                     if (!player.hasPotionEffect(PotionEffectType.JUMP)) {
-                        player.addPotionEffect(
-                                new PotionEffect(PotionEffectType.JUMP,
-                                        kitAction.getDuration(),
-                                        (int) kitAction.getStrength()));
+                        PlayerUtils.applyPotionEffect(PotionEffectType.JUMP, kitAction.getDuration(),
+                                (int) kitAction.getStrength(), player);
                     }
                     break;
 
                 case SPEED:
                     if (!player.hasPotionEffect(PotionEffectType.SPEED)) {
-                        player.addPotionEffect(
-                                new PotionEffect(PotionEffectType.SPEED,
-                                        kitAction.getDuration(),
-                                        (int) kitAction.getStrength()));
+                        PlayerUtils.applyPotionEffect(PotionEffectType.SPEED, kitAction.getDuration(),
+                                (int) kitAction.getStrength(), player);
                     }
                     break;
 

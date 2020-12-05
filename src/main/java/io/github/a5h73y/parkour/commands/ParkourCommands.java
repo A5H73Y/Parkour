@@ -619,6 +619,16 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 TranslationUtils.sendTranslation("Error.NoQuestion", player);
                 break;
 
+            case "config":
+                if (!ValidationUtils.validateArgs(player, args, 2)) {
+                    return false;
+                }
+
+                if (player.isOp() && !args[1].startsWith("MySQL")) {
+                    player.sendMessage(parkour.getConfig().getString(args[1]));
+                }
+                break;
+
             default:
                 TranslationUtils.sendTranslation("Error.UnknownCommand", player);
                 TranslationUtils.sendTranslation("Help.Commands", player);

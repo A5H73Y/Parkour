@@ -47,6 +47,14 @@
     "consoleSyntax": "pac cmds"
   },
   {
+    "command": "config",
+    "title": "Display Config Entry",
+    "arguments": "(config key)",
+    "example": "/pa config Scoreboard.Enabled",
+    "description": "Used as a debug tool to identify the value of a field in the config. Will be used by support to identify any problems on the server. MySQL details are not visible.",
+    "commandGroup": "4"
+  },
+  {
     "command": "create",
     "title": "Create and select Parkour Course",
     "arguments": "(course)",

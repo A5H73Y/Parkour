@@ -28,6 +28,7 @@ import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
 import io.github.a5h73y.parkour.type.lobby.LobbyInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
+import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -180,7 +181,9 @@ public class PlayerManager extends AbstractPluginReceiver {
 			PlayerInfo.setJoinLocation(player);
 		}
 
-		player.teleport(course.getCheckpoints().get(0).getLocation());
+		if (parkour.getConfig().getBoolean("OnJoin.TeleportPlayer")) {
+			player.teleport(course.getCheckpoints().get(0).getLocation());
+		}
 		preparePlayerForCourse(player, course.getName());
 		CourseInfo.incrementViews(course.getName());
 		PlayerInfo.setLastPlayedCourse(player, course.getName());
@@ -317,17 +320,9 @@ public class PlayerManager extends AbstractPluginReceiver {
 	}
 
 	/**
-	 * Increase the ParkourSession checkpoint number
-	 * Once a player activates a new checkpoint, it will setup the next checkpoint ready.
-	 * A message will be sent to the player notifying them of their progression.
-	 *
-	 * @param player
-	 */
-
-	/**
 	 * Increase ParkourSession Checkpoint.
-	 *
-	 * @param player
+	 * The Player will be notified and their Session Checkpoint will be increased.
+	 * @param player requesting player.
 	 */
 	public void increaseCheckpoint(Player player) {
 		ParkourSession session = getParkourSession(player);
@@ -337,11 +332,10 @@ public class PlayerManager extends AbstractPluginReceiver {
 			return;
 		}
 
-		String courseName = session.getCourseName();
 		session.increaseCheckpoint();
 		parkour.getSoundsManager().playSound(player, SoundType.CHECKPOINT_ACHIEVED);
 		parkour.getScoreboardManager().updateScoreboardCheckpoints(player, session);
-		parkour.getCourseManager().runEventCommands(player, courseName, ParkourEventType.CHECKPOINT);
+		parkour.getCourseManager().runEventCommands(player, session.getCourseName(), ParkourEventType.CHECKPOINT);
 
 		boolean showTitle = parkour.getConfig().getBoolean("DisplayTitle.Checkpoint");
 
@@ -364,11 +358,10 @@ public class PlayerManager extends AbstractPluginReceiver {
 	}
 
 	/**
-	 * Player dies while on a course.
-	 * Called when the player 'dies' this can be from real events (Like falling
-	 * from too high), or native Parkour deaths (walking on a deathblock).
-	 *
-	 * @param player target player
+	 * Player Death on Course.
+	 * This can be triggered by real events (like taking too much damage), or native Parkour deaths (death blocks).
+	 * The Player will be teleported to their most recent checkpoint, and their deaths increased.
+	 * @param player requesting player
 	 */
 	public void playerDie(Player player) {
 		if (!isPlaying(player)) {
@@ -427,8 +420,9 @@ public class PlayerManager extends AbstractPluginReceiver {
 	}
 
 	/**
-	 * Start the visual timer either on the ActionBar if DisplayLiveTime is true, or in the scoreboard
-	 * if the scoreboard is enabled and the display current time option is true.
+	 * Start the Course Live Timer.
+	 * Will be enabled / displayed when the Scoreboard LiveTimer is enabled, or as a live Action Bar timer.
+	 * Course Timer may increase or decrease based on whether the Course has a maximum time.
 	 */
 	private void startLiveTimerRunnable() {
 		if (!parkour.getConfig().getBoolean("OnCourse.DisplayLiveTime")
@@ -477,7 +471,17 @@ public class PlayerManager extends AbstractPluginReceiver {
 	}
 
 	/**
-	 * Teardown a Parkour player.
+	 * Teardown all active Parkour Players.
+	 * Remove all in-memory references to each player, persisting any data to a file.
+	 */
+	public void teardownParkourPlayers() {
+		for (Player player : parkourPlayers.keySet()) {
+			createParkourSessionFile(player);
+		}
+	}
+
+	/**
+	 * Teardown a Parkour Player.
 	 * Remove all in-memory references to the player, persisting any data to a file.
 	 *
 	 * @param player parkour player
@@ -490,20 +494,13 @@ public class PlayerManager extends AbstractPluginReceiver {
 		Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () -> stashParkourSession(player));
 	}
 
-	public void teardownParkourPlayers() {
-		for (Player player : parkourPlayers.keySet()) {
-			createParkourSessionFile(player);
-		}
-	}
-
 	/**
-	 * Player finishes a course.
-	 * This will be called when the player completes the course.
-	 * Their reward will be given here, as well as a time entry to the database.
-	 * Inventory is restored before the player is teleported. If the teleport is delayed,
-	 * restore the inventory after the delay.
-	 *
-	 * @param player
+	 * Player Finished a Course.
+	 * Once the Player is validated, the player will be notified of Course Completion.
+	 * Their inventory and armor will be restored and their prize will be rewarded to them.
+	 * They will be teleported to the configured location, to either lobby, course or initial join location.
+	 * If configured, a Time entry will be added to the database.
+	 * @param player requesting player
 	 */
 	public void finishCourse(final Player player) {
 		if (!isPlaying(player)) {
@@ -582,11 +579,9 @@ public class PlayerManager extends AbstractPluginReceiver {
 	}
 
 	/**
-	 * Restart the course progress
-	 * Time and deaths are reset.
-	 * Will take into account treating the first checkpoint as start
-	 *
-	 * @param player
+	 * Restart Course progress.
+	 * Will trigger a silent leave and rejoin of the Course.
+	 * @param player requesting player
 	 */
 	public void restartCourse(Player player) {
 		if (!isPlaying(player)) {
@@ -594,17 +589,22 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		Course course = getParkourSession(player).getCourse();
-		TranslationUtils.sendTranslation("Parkour.Restarting", player);
 		leaveCourse(player, true);
 		deleteParkourSession(player);
 		joinCourse(player, course, true);
+		// if they are restarting the Course, we need to teleport them back
+		if (!parkour.getConfig().getBoolean("OnJoin.TeleportPlayer")) {
+			player.teleport(course.getCheckpoints().get(0).getLocation());
+		}
+		TranslationUtils.sendTranslation("Parkour.Restarting", player);
 	}
 
 	/**
-	 * Reward a player with several forms of prize after course completion.
-	 *
-	 * @param player
-	 * @param courseName
+	 * Reward the Player with the Course Prize.
+	 * A Prize Delay validation be applied after the Player has completed the Course too recently.
+	 * If 'Reward Once' is enabled and they've completed the Course, only the {@code ParkourEventType.FINISH} event will fire.
+	 * @param player requesting player
+	 * @param courseName course name
 	 */
 	public void rewardPrize(Player player, String courseName) {
 		if (!parkour.getConfig().getBoolean("OnFinish.EnablePrizes")) {
@@ -617,9 +617,9 @@ public class PlayerManager extends AbstractPluginReceiver {
 			return;
 		}
 
-		// Check how often prize can be rewarded
+		// check if the Course has a reward delay
 		if (CourseInfo.hasRewardDelay(courseName)) {
-			// if we still have to wait, return out of this function
+			// if the player has not exceeded the Course delay, no prize will be given
 			if (!hasPrizeCooldownDurationPassed(player, courseName, true)) {
 				return;
 			}
@@ -655,17 +655,23 @@ public class PlayerManager extends AbstractPluginReceiver {
 			player.giveExp(xp);
 		}
 
-		// Give level reward to player
-		playerLevelUp(player, courseName);
+		rewardParkourLevel(player, courseName);
+		rewardParkoins(player, CourseInfo.getRewardParkoins(courseName));
+		parkour.getEconomyApi().giveEconomyPrize(player, courseName);
 
 		parkour.getCourseManager().runEventCommands(player, courseName, ParkourEventType.PRIZE);
-		rewardParkoins(player, CourseInfo.getRewardParkoins(courseName));
 
-		parkour.getEconomyApi().giveEconomyPrize(player, courseName);
 		player.updateInventory();
 	}
 
-	private void playerLevelUp(Player player, String courseName) {
+	/**
+	 * Reward ParkourLevel for Course completion.
+	 * If the Course has a ParkourLevel or ParkourLevelIncrease set then update the Player's ParkourLevel.
+	 * If the new ParkourLevel has passed the requirement for a new ParkourRank, the highest one will be awarded.
+	 * @param player requesting player
+	 * @param courseName course name
+	 */
+	private void rewardParkourLevel(Player player, String courseName) {
 		int currentLevel = PlayerInfo.getParkourLevel(player);
 		int newParkourLevel = currentLevel;
 
@@ -690,6 +696,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 				TranslationUtils.sendValueTranslation("Parkour.RewardRank", rewardRank, player);
 			}
 
+			// update parkour level
 			PlayerInfo.setParkourLevel(player, newParkourLevel);
 			if (parkour.getConfig().getBoolean("Other.Display.LevelReward")) {
 				player.sendMessage(TranslationUtils.getTranslation("Parkour.RewardLevel")
@@ -700,11 +707,11 @@ public class PlayerManager extends AbstractPluginReceiver {
 	}
 
 	/**
-	 * Teleport player after course completion
-	 * Based on the linked course or lobby
-	 *
-	 * @param player
-	 * @param courseName
+	 * Teleport the Player after Course Completion.
+	 * Based on config, the Player may or may not be teleported after completion.
+	 * If the Course is linked, these will take priority.
+	 * @param player requesting player
+	 * @param courseName course name
 	 */
 	private void teleportCourseCompletion(Player player, String courseName) {
 		if (CourseInfo.hasLinkedCourse(courseName)) {
@@ -729,6 +736,12 @@ public class PlayerManager extends AbstractPluginReceiver {
 		parkour.getLobbyManager().joinLobby(player, DEFAULT);
 	}
 
+	/**
+	 * Rocket Launch the Player.
+	 * Will apply a fake explosion to the player and give them velocity.
+	 * The direction of the velocity can be configured.
+	 * @param player target player
+	 */
 	public void rocketLaunchPlayer(Player player) {
 		double force = parkour.getConfig().getBoolean("ParkourModes.Rockets.Invert") ? 1.5 : -1.5;
 
@@ -747,34 +760,19 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 */
 	public void applyEffect(Player player, String[] lines) {
 		if (lines[2].equalsIgnoreCase("heal")) {
-			Damageable playerDamage = player;
-			playerDamage.setHealth(playerDamage.getMaxHealth());
-			player.sendMessage(Parkour.getPrefix() + "Healed!");
+			PlayerUtils.fullyHealPlayer(player);
 
 		} else if (lines[2].equalsIgnoreCase("gamemode")) {
-			if (PluginUtils.doesGameModeExist(lines[3].toUpperCase())) {
-				GameMode gameMode = GameMode.valueOf(lines[3].toUpperCase());
-				if (gameMode != player.getGameMode()) {
-					player.setGameMode(gameMode);
-					player.sendMessage(Parkour.getPrefix() + "GameMode set to " + StringUtils.standardizeText(gameMode.name()));
-				}
-			} else {
-				player.sendMessage(Parkour.getPrefix() + "GameMode not recognised.");
-			}
+			PlayerUtils.applyGameModeChange(player, lines[3]);
 
 		} else {
 			// if the user enters 'FIRE_RESISTANCE' or 'DAMAGE_RESIST' treat them the same
 			String effect = lines[2].toUpperCase().replace("RESISTANCE", "RESIST").replace("RESIST", "RESISTANCE");
-			PotionEffectType potionType = PotionEffectType.getByName(effect);
 
-			if (potionType == null) {
-				player.sendMessage(Parkour.getPrefix() + "Unknown Effect!");
-				return;
-			}
 			String[] args = lines[3].split(":");
 			if (args.length == 2) {
-				player.addPotionEffect(new PotionEffect(potionType, Integer.parseInt(args[1]), Integer.parseInt(args[0])));
-				player.sendMessage(Parkour.getPrefix() + potionType.getName() + " Effect Applied!");
+				PlayerUtils.applyPotionEffect(effect, Integer.parseInt(args[1]), Integer.parseInt(args[0]), player);
+				player.sendMessage(Parkour.getPrefix() + effect + " Effect Applied!");
 			} else {
 				player.sendMessage(Parkour.getPrefix() + "Invalid syntax, must follow '(duration):(strength)' example '1000:6'.");
 			}
@@ -805,8 +803,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		} else if (courseMode == ParkourMode.ROCKETS) {
 			TranslationUtils.sendTranslation("Mode.Rockets.JoinText", player);
-			player.getInventory().addItem(MaterialUtils.createItemStack(
-					XMaterial.FIREWORK_ROCKET.parseMaterial(), TranslationUtils.getTranslation("Mode.Rockets.ItemName", false)));
+			player.getInventory().addItem(MaterialUtils.createItemStack(XMaterial.FIREWORK_ROCKET.parseMaterial(),
+					TranslationUtils.getTranslation("Mode.Rockets.ItemName", false)));
 
 		} else if (courseMode == ParkourMode.POTION) {
 			XPotion.addPotionEffectsFromString(player, CourseInfo.getPotionParkourModeEffects(session.getCourseName()));

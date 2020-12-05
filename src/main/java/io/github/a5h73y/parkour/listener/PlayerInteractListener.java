@@ -187,10 +187,6 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             return;
         }
 
-        if (parkour.getPlayerManager().isPlaying(event.getPlayer())) {
-            return;
-        }
-
         if (!parkour.getConfig().isAutoStartEnabled()) {
             return;
         }
@@ -202,14 +198,21 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         }
 
         // Prevent a user spamming the joins
-        if (!parkour.getPlayerManager().delayPlayer(event.getPlayer(), 3, false)) {
+        if (!parkour.getPlayerManager().delayPlayer(event.getPlayer(), 1, false)) {
             return;
         }
 
         String courseName = parkour.getCourseManager().getAutoStartCourse(event.getClickedBlock().getLocation());
 
         if (courseName != null) {
-            parkour.getPlayerManager().joinCourseButDelayed(event.getPlayer(), courseName, parkour.getConfig().getAutoStartDelay());
+            ParkourSession session = parkour.getPlayerManager().getParkourSession(event.getPlayer());
+            if (session != null && session.getCourseName().equals(courseName)) {
+                session.resetTime();
+                parkour.getBountifulApi().sendActionBar(event.getPlayer(),
+                        TranslationUtils.getTranslation("Parkour.TimerStarted", false), true);
+            } else {
+                parkour.getPlayerManager().joinCourseButDelayed(event.getPlayer(), courseName, parkour.getConfig().getAutoStartDelay());
+            }
         }
     }
 }
