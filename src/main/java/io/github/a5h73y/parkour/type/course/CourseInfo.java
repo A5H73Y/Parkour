@@ -518,7 +518,7 @@ public class CourseInfo {
     /**
      * Set the Reward Delay for the Course.
      * @param courseName course name
-     * @param rewardDelay number of days delay //TODO hours
+     * @param rewardDelay number of hours delay
      */
     public static void setRewardDelay(String courseName, double rewardDelay) {
         getCourseConfig().set(courseName.toLowerCase() + ".RewardDelay", rewardDelay);
@@ -530,8 +530,8 @@ public class CourseInfo {
      * @param courseName course name
      * @return Parkoins to reward
      */
-    public static int getRewardParkoins(String courseName) {
-        return getCourseConfig().getInt(courseName.toLowerCase() + ".Parkoins");
+    public static double getRewardParkoins(String courseName) {
+        return getCourseConfig().getDouble(courseName.toLowerCase() + ".Parkoins", 0);
     }
 
     /**
@@ -539,7 +539,7 @@ public class CourseInfo {
      * @param courseName course name
      * @param parkoins Parkoins to reward
      */
-    public static void setRewardParkoins(String courseName, int parkoins) {
+    public static void setRewardParkoins(String courseName, double parkoins) {
         getCourseConfig().set(courseName.toLowerCase() + ".Parkoins", parkoins);
         persistChanges();
     }

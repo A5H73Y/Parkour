@@ -6,6 +6,7 @@ import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
+import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.SignUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
@@ -231,7 +232,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 break;
 
             case "effect":
-                parkour.getPlayerManager().applyEffect(player, lines);
+                applyEffect(player, lines[2], lines[3]);
                 break;
 
             case "leaderboards":
@@ -257,6 +258,27 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
             default:
                 TranslationUtils.sendTranslation("Error.UnknownSignCommand", player);
                 break;
+        }
+    }
+
+    private void applyEffect(Player player, String effect, String argument) {
+        if (effect.equalsIgnoreCase("heal")) {
+            PlayerUtils.fullyHealPlayer(player);
+
+        } else if (effect.equalsIgnoreCase("gamemode")) {
+            PlayerUtils.applyGameModeChange(player, argument);
+
+        } else {
+            // if the user enters 'FIRE_RESISTANCE' or 'DAMAGE_RESIST' treat them the same
+            String effectName = effect.toUpperCase().replace("RESISTANCE", "RESIST").replace("RESIST", "RESISTANCE");
+
+            String[] args = argument.split(":");
+            if (args.length == 2) {
+                PlayerUtils.applyPotionEffect(effectName, Integer.parseInt(args[1]), Integer.parseInt(args[0]), player);
+                player.sendMessage(Parkour.getPrefix() + effectName + " Effect Applied!");
+            } else {
+                player.sendMessage(Parkour.getPrefix() + "Invalid syntax, must follow '(duration):(strength)' example '1000:6'.");
+            }
         }
     }
 }

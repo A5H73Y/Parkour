@@ -186,8 +186,11 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Mode.Rockets.JoinText", "Use the Rocket Launcher to launch yourself");
 		this.addDefault("Mode.Rockets.ItemName", "Rocket Launcher");
 
-		this.addDefault("Placeholder.InvalidSyntax", "Invalid syntax");
-		this.addDefault("Placeholder.NoTimeRecorded", "No time recorded");
+		this.addDefault("PlaceholderAPI.InvalidSyntax", "Invalid syntax");
+		this.addDefault("PlaceholderAPI.NoTimeRecorded", "No time recorded");
+		this.addDefault("PlaceholderAPI.CurrentCourseCompleted", "Yes");
+		this.addDefault("PlaceholderAPI.CurrentCourseNotCompleted", "No");
+		this.addDefault("PlaceholderAPI.TopTenResult", "&f%POSITION%) &b%PLAYER%&f in &a%TIME%");
 
 		this.addDefault("GUI.JoinCourses.Heading", "Parkour Courses");
 		this.addDefault("GUI.JoinCourses.Setup.Line1", "         ");
@@ -208,9 +211,6 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Display.Minutes", "%VALUE% minutes");
 		this.addDefault("Display.Second", "%VALUE% second");
 		this.addDefault("Display.Seconds", "%VALUE% seconds");
-
-		this.addDefault("PlaceholderAPI.CurrentCourseCompleted", "Yes");
-		this.addDefault("PlaceholderAPI.CurrentCourseNotCompleted", "No");
 
 		this.options().copyDefaults(true);
 	}

@@ -106,9 +106,9 @@ public class CourseSettingsGUI extends AbstractMenu {
 	}
 
 	private StaticGuiElement createTextInput(char key, Player player, String title,
-	                                         Integer currentValue,
+	                                         Number currentValue,
 	                                         Consumer<String> valueSetter) {
-		return createTextInput(key, player, title, String.valueOf(currentValue), valueSetter);
+		return createTextInput(key, player, title, currentValue.toString(), valueSetter);
 	}
 
 	private StaticGuiElement createTextInput(char key, Player player, String title,

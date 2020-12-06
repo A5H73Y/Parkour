@@ -113,7 +113,7 @@ public class PlayerInfo {
      * @param player requesting player
      * @return number of courses completed
      */
-    public static int getNumberOfCoursesCompleted(OfflinePlayer player) {
+    public static int getNumberOfCompletedCourses(OfflinePlayer player) {
         return getCompletedCourses(player).size();
     }
 
@@ -124,6 +124,14 @@ public class PlayerInfo {
      */
     public static List<String> getCompletedCourses(OfflinePlayer player) {
         return getPlayersConfig().getStringList(player.getUniqueId() + ".Completed");
+    }
+
+    public static boolean hasCompletedCourse(Player player, String name) {
+        return getCompletedCourses(player).contains(name.toLowerCase());
+    }
+
+    public static int getNumberOfUncompletedCourses(OfflinePlayer player) {
+        return getUncompletedCourses(player).size();
     }
 
     /**

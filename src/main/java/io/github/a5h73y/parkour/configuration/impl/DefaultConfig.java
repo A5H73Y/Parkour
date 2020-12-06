@@ -186,13 +186,13 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("Other.Display.ShowMilliseconds", false);
 		this.addDefault("Other.Display.PrizeCooldown", true);
 		this.addDefault("Other.Display.OnlyReadyCourses", false);
-		this.addDefault("Other.Display.CourseCompleted", false);
 		this.addDefault("Other.OnServerShutdown.BackupFiles", false);
 		this.addDefault("Other.OnPlayerBan.ResetParkourInfo", false);
 
 		this.addDefault("Plugin.BountifulAPI.Enabled", true);
 		this.addDefault("Plugin.Vault.Enabled", true);
 		this.addDefault("Plugin.PlaceholderAPI.Enabled", true);
+		this.addDefault("Plugin.PlaceholderAPI.CacheTime", 15);
 		this.addDefault("Plugin.AAC.Enabled", true);
 
 		this.addDefault("Database.MaximumCoursesCached", 10);

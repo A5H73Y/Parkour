@@ -171,6 +171,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "info":
+            case "player":
                 parkour.getPlayerManager().displayParkourInfo(player, args);
                 break;
 

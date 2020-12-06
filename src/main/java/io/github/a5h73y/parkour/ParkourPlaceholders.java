@@ -1,7 +1,7 @@
 package io.github.a5h73y.parkour;
 
 import io.github.a5h73y.parkour.database.TimeEntry;
-import io.github.a5h73y.parkour.type.course.Course;
+import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
@@ -9,6 +9,9 @@ import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -20,25 +23,39 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ParkourPlaceholders extends PlaceholderExpansion {
 
-    private static final String INVALID_SYNTAX = TranslationUtils.getTranslation("Placeholder.InvalidSyntax", false);
-    private static final String NO_TIME_RECORDED = TranslationUtils.getTranslation("Placeholder.NoTimeRecorded", false);
+    private static final String INVALID_SYNTAX = TranslationUtils.getTranslation("PlaceholderAPI.InvalidSyntax", false);
+    private static final String NO_TIME_RECORDED = TranslationUtils.getTranslation("PlaceholderAPI.NoTimeRecorded", false);
+    private static final String TOP_TEN_RESULT = TranslationUtils.getTranslation("PlaceholderAPI.TopTenResult", false);
 
     private final Parkour parkour;
+    private final Cache<String, String> cache;
 
+    /**
+     * Contruct the Parkour Placeholders functionality.
+     * A Cache is used for repeated expensive calls to the database.
+     * @param parkour plugin instance
+     */
     public ParkourPlaceholders(Parkour parkour) {
         this.parkour = parkour;
+        this.cache = Caffeine.newBuilder()
+                .expireAfterWrite(parkour.getConfig().getInt("Plugin.PlaceholderAPI.CacheTime"), TimeUnit.SECONDS)
+                .maximumSize(100)
+                .build();
     }
 
+    @NotNull
     @Override
     public String getIdentifier() {
         return parkour.getName();
     }
 
+    @NotNull
     @Override
     public String getAuthor() {
         return parkour.getDescription().getAuthors().toString();
     }
 
+    @NotNull
     @Override
     public String getVersion() {
         return parkour.getDescription().getVersion();
@@ -50,272 +67,283 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     }
 
     @Override
-    public String onRequest(OfflinePlayer offlinePlayer,
-                            @NotNull String command) {
-        command = command.toLowerCase();
-        String[] arguments = command.split("_");
+    public String onRequest(final OfflinePlayer offlinePlayer,
+                            final @NotNull String placeholder) {
+        return retrieveValue(offlinePlayer, placeholder.toLowerCase(), placeholder.toLowerCase().split("_"));
+    }
 
-        if (command.equals("version")) {
-            return getVersion();
+    private String retrieveValue(OfflinePlayer offlinePlayer,
+                                 @NotNull String placeholder,
+                                 @NotNull String... arguments) {
 
-        } else if (command.equals("course_count")) {
-            return String.valueOf(CourseInfo.getAllCourseNames().size());
 
-        } else if (command.equals("player_count")) {
-            return String.valueOf(parkour.getPlayerManager().getNumberOfParkourPlayer());
-
-        } else if (command.startsWith("course_record")) {
-            if (arguments.length != 3) {
-                return INVALID_SYNTAX;
-            }
-
-            TimeEntry result = getTopResultForCourse(arguments[2]);
-            return result == null ? NO_TIME_RECORDED : DateTimeUtils.displayCurrentTime(result.getTime());
-
-        } else if (command.startsWith("course_record_deaths")) {
-            if (arguments.length != 4) {
-                return INVALID_SYNTAX;
-            }
-
-            TimeEntry result = getTopResultForCourse(arguments[3]);
-            return result == null ? NO_TIME_RECORDED : String.valueOf(result.getDeaths());
-
-        } else if (command.startsWith("leader_")) {
-            if (arguments.length != 2) {
-                return INVALID_SYNTAX;
-            }
-
-            TimeEntry result = getTopResultForCourse(arguments[1]);
-            return result == null ? NO_TIME_RECORDED : result.getPlayerName();
+        if (arguments.length < 2) {
+            return INVALID_SYNTAX;
         }
 
-        // OfflinePlayer specific
+        // parent command
+        switch (arguments[0]) {
+            case "gl":
+            case "global":
+                return getGlobalPlaceholderValue(placeholder);
+
+            case "pl":
+            case "player":
+                return getPlayerPlaceholderValue(offlinePlayer, arguments);
+
+            case "co":
+            case "course":
+                return getCoursePlaceholderValue(offlinePlayer, arguments);
+
+            case "cu":
+            case "current":
+                return getCurrentCoursePlaceholderValue(offlinePlayer, arguments);
+
+            case "lb":
+            case "leaderboard":
+                if (arguments.length != 4 || !ValidationUtils.isPositiveInteger(arguments[2])) {
+                    return INVALID_SYNTAX;
+                }
+
+                return getCourseLeaderboardPlaceholderValue(arguments);
+
+            case "tt":
+            case "topten":
+                if (arguments.length != 3 || !ValidationUtils.isPositiveInteger(arguments[2])) {
+                    return INVALID_SYNTAX;
+                }
+                return getTopTenPlaceholderValue(arguments);
+
+            default:
+                return INVALID_SYNTAX;
+        }
+    }
+
+    private String getGlobalPlaceholderValue(String placeholder) {
+        switch (placeholder) {
+            case "global_version":
+                return getVersion();
+
+            case "global_course_count":
+                return String.valueOf(CourseInfo.getAllCourseNames().size());
+
+            case "global_player_count":
+                return String.valueOf(parkour.getPlayerManager().getNumberOfParkourPlayer());
+
+            default:
+                return INVALID_SYNTAX;
+        }
+    }
+
+    private String getPlayerPlaceholderValue(OfflinePlayer offlinePlayer, String... arguments) {
         if (offlinePlayer == null) {
             return "";
         }
 
-        if (command.equals("last_completed")) {
-            return PlayerInfo.getLastCompletedCourse(offlinePlayer);
+        switch (arguments[1]) {
+            case "level":
+                return String.valueOf(PlayerInfo.getParkourLevel(offlinePlayer));
 
-        } else if (command.equals("courses_completed")) {
-            return String.valueOf(PlayerInfo.getNumberOfCoursesCompleted(offlinePlayer));
+            case "rank":
+                return String.valueOf(PlayerInfo.getParkourRank(offlinePlayer));
 
-        } else if (command.equals("last_played")) {
-            return PlayerInfo.getLastPlayedCourse(offlinePlayer);
+            case "parkoins":
+                return String.valueOf(PlayerInfo.getParkoins(offlinePlayer));
 
-        } else if (command.equals("parkoins")) {
-            return String.valueOf(PlayerInfo.getParkoins(offlinePlayer));
+            case "last":
+                switch (arguments[2]) {
+                    case "completed":
+                        return PlayerInfo.getLastCompletedCourse(offlinePlayer);
 
-        } else if (command.equals("level")) {
-            return String.valueOf(PlayerInfo.getParkourLevel(offlinePlayer));
+                    case "joined":
+                        return PlayerInfo.getLastPlayedCourse(offlinePlayer);
 
-        } else if (command.equals("rank")) {
-            return PlayerInfo.getParkourRank(offlinePlayer);
+                    default:
+                        return INVALID_SYNTAX;
+                }
+
+            case "courses":
+                switch (arguments[2]) {
+                    case "completed":
+                        return String.valueOf(PlayerInfo.getNumberOfCompletedCourses(offlinePlayer));
+
+                    case "uncompleted":
+                        return String.valueOf(PlayerInfo.getNumberOfUncompletedCourses(offlinePlayer));
+
+                    default:
+                        return INVALID_SYNTAX;
+                }
+
+            case "prize":
+                if ("delay".equals(arguments[2])) {
+                    if (CourseInfo.hasRewardDelay(arguments[3])) {
+                        return DateTimeUtils.getTimeRemaining(offlinePlayer, arguments[3]);
+                    } else {
+                        return "0";
+                    }
+                }
+                return INVALID_SYNTAX;
+
+            default:
+                return INVALID_SYNTAX;
         }
+    }
 
-        // online player specific
+    private String getCoursePlaceholderValue(OfflinePlayer offlinePlayer, String... arguments) {
+        switch (arguments[1]) {
+            case "record":
+                if (arguments.length != 4) {
+                    return INVALID_SYNTAX;
+                }
+
+                return getCourseRecord(arguments[3], arguments[2]);
+
+            case "completed":
+                if (arguments.length != 3) {
+                    return INVALID_SYNTAX;
+                }
+
+                return cache.get(offlinePlayer.getName() + arguments[1] + arguments[2], s ->
+                        getCompletedMessage(offlinePlayer, arguments[2]));
+
+            case "completions":
+                if (arguments.length != 3) {
+                    return INVALID_SYNTAX;
+                }
+
+                return Integer.toString(CourseInfo.getCompletions(arguments[2]));
+
+            case "views":
+                if (arguments.length != 3) {
+                    return INVALID_SYNTAX;
+                }
+
+                return Integer.toString(CourseInfo.getViews(arguments[2]));
+
+            default:
+                return INVALID_SYNTAX;
+        }
+    }
+
+    private String getCurrentCoursePlaceholderValue(OfflinePlayer offlinePlayer, String... arguments) {
         Player player = offlinePlayer.getPlayer();
         if (player == null) {
             return "";
         }
+        ParkourSession session = parkour.getPlayerManager().getParkourSession(player.getPlayer());
 
-        if (command.equals("current_course")) {
-            Course course = parkour.getCourseManager().findByPlayer(player);
-            return course == null ? "" : course.getName();
-
-        } else if (command.equals("current_checkpoint")) {
-            ParkourSession session = parkour.getPlayerManager().getParkourSession(player);
-            return session == null ? "" : String.valueOf(session.getCurrentCheckpoint());
-
-        } else if (command.equals("current_course_completed")) {
-            ParkourSession session = parkour.getPlayerManager().getParkourSession(player);
-            if (session != null) {
-                boolean resultFound = parkour.getDatabase().hasPlayerAchievedTime(player, session.getCourseName());
-                String key = resultFound ? "PlaceholderAPI.CurrentCourseCompleted" : "PlaceholderAPI.CurrentCourseNotCompleted";
-                return TranslationUtils.getTranslation(key, false);
-            } else {
-                return null;
-            }
-
-        } else if (command.equals("current_course_record_deaths")) {
-            Course course = parkour.getCourseManager().findByPlayer(player);
-            if (course != null) {
-                TimeEntry result = getTopResultForCourse(course.getName());
-                return result == null ? NO_TIME_RECORDED : String.valueOf(result.getDeaths());
-            }
+        if (session == null) {
             return "";
+        }
 
-        } else if (command.equals("current_course_record")) {
-            Course course = parkour.getCourseManager().findByPlayer(player);
-            if (course != null) {
-                TimeEntry result = getTopResultForCourse(course.getName());
-                return result == null ? NO_TIME_RECORDED : DateTimeUtils.displayCurrentTime(result.getTime());
-            }
-            return "";
-
-        } else if (command.startsWith("personal_best_deaths")) {
-            if (arguments.length != 4) {
-                return INVALID_SYNTAX;
-            }
-
-            TimeEntry result = getTopPlayerResultForCourse(player, arguments[3]);
-            return result == null ? NO_TIME_RECORDED : String.valueOf(result.getDeaths());
-
-        } else if (command.startsWith("personal_best")) {
-            if (arguments.length != 3) {
-                return INVALID_SYNTAX;
-            }
-
-            TimeEntry result = getTopPlayerResultForCourse(player, arguments[2]);
-            return result == null ? NO_TIME_RECORDED : DateTimeUtils.displayCurrentTime(result.getTime());
-
-        } else if (command.startsWith("course_completed")) {
-            if (arguments.length != 3) {
-                return INVALID_SYNTAX;
-            }
-
-            boolean resultFound = parkour.getDatabase().hasPlayerAchievedTime(player, arguments[2]);
-            String key = resultFound ? "PlaceholderAPI.CurrentCourseCompleted" : "PlaceholderAPI.CurrentCourseNotCompleted";
-            return TranslationUtils.getTranslation(key, false);
-
-        } else if (command.equals("current_personal_best_deaths")) {
-            Course course = parkour.getCourseManager().findByPlayer(player);
-            if (course != null) {
-                TimeEntry result = getTopPlayerResultForCourse(player, course.getName());
-                return result == null ? NO_TIME_RECORDED : String.valueOf(result.getDeaths());
-            }
-            return "";
-
-        } else if (command.equals("current_personal_best")) {
-            Course course = parkour.getCourseManager().findByPlayer(player);
-            if (course != null) {
-                TimeEntry result = getTopPlayerResultForCourse(player, course.getName());
-                return result == null ? NO_TIME_RECORDED : DateTimeUtils.displayCurrentTime(result.getTime());
-            }
-            return "";
-
-        } else if (command.equals("current_course_leader")) {
-            Course course = parkour.getCourseManager().findByPlayer(player);
-            if (course != null) {
-                TimeEntry result = getTopResultForCourse(course.getName());
-                return result == null ? NO_TIME_RECORDED : result.getPlayerName();
-            }
-            return "";
-
-        } else if (command.equals("current_course_timer")) {
-            ParkourSession session = parkour.getPlayerManager().getParkourSession(player);
-            return session == null ? "" : session.getDisplayTime();
-
-        } else if (command.equals("current_course_deaths")) {
-            ParkourSession session = parkour.getPlayerManager().getParkourSession(player);
-            return session == null ? "" : String.valueOf(session.getDeaths());
-
-        } else if (command.startsWith("topten")) {
-            if (arguments.length != 3) {
-                return INVALID_SYNTAX;
-            }
-            if (!ValidationUtils.isInteger(arguments[2])) {
-                return INVALID_SYNTAX;
-            }
-            int pos = Integer.parseInt(arguments[2]);
-            if (pos < 1) {
-                return INVALID_SYNTAX;
-            }
-            String courseName = arguments[1];
-            if (!parkour.getCourseManager().doesCourseExists(courseName)) {
-                return NO_TIME_RECORDED;
-            }
-
-            TimeEntry result = parkour.getDatabase().getNthBestTime(courseName, pos);
-
-            if (result == null) {
-                return NO_TIME_RECORDED;
-            }
-
-            if (command.startsWith("toptenx")) {
-                String nCol = "&f";
-                String tCol = "&f";
-                //check if colour codes specified
-                if (arguments[0].length() == 9 && arguments[0].substring(7).matches("[0-9a-f]+")) {
-                    nCol = "&" + arguments[0].charAt(7);
-                    tCol = "&" + arguments[0].substring(8);
+        switch (arguments[1]) {
+            case "course":
+                if (arguments.length < 3) {
+                    return INVALID_SYNTAX;
                 }
-                return nCol + result.getPlayerName() + "&7 - " + tCol + DateTimeUtils.displayCurrentTime(result.getTime());
-            }
-            return "&f" + pos + ") &b" + result.getPlayerName() + "&f in &a" + DateTimeUtils.displayCurrentTime(result.getTime()) + "&f";
 
-        } else if (command.startsWith("course_prize_delay")) {
-            if (arguments.length != 4) {
+                switch (arguments[2]) {
+                    case "name":
+                        return session.getCourseName();
+
+                    case "deaths":
+                        return String.valueOf(session.getDeaths());
+
+                    case "timer":
+                        return session.getDisplayTime();
+
+                    case "checkpoints":
+                        return String.valueOf(session.getCourse().getNumberOfCheckpoints());
+
+                    case "completed":
+                        return cache.get(player.getName() + arguments[2] + session.getCourseName(), s ->
+                                getCompletedMessage(player, session.getCourseName()));
+
+                    case "record":
+                        if (arguments.length != 4) {
+                            return INVALID_SYNTAX;
+                        }
+                        return getCourseRecord(session.getCourseName(), arguments[3]);
+
+                    case "personal":
+                        if (arguments.length != 5 && !arguments[3].equals("best")) {
+                            return INVALID_SYNTAX;
+                        }
+                        return getPersonalCourseRecord(player, session.getCourseName(), arguments[4]);
+
+                    default:
+                        return INVALID_SYNTAX;
+                }
+
+            case "checkpoint":
+                return String.valueOf(session.getCurrentCheckpoint());
+
+            default:
                 return INVALID_SYNTAX;
-            }
-            String courseName = arguments[3];
-            if (!parkour.getCourseManager().doesCourseExists(courseName)) {
-                return null;
-            }
-            if (!CourseInfo.hasRewardDelay(courseName)
-                    || parkour.getPlayerManager().hasPrizeCooldownDurationPassed(player, courseName, false)) {
-                return "0";
-            }
-            return DateTimeUtils.getTimeRemaining(player, courseName);
+        }
+    }
 
-        } else if (command.startsWith("course_global_completions")) {
-            if (arguments.length != 4) {
-                return INVALID_SYNTAX;
-            }
-            String courseName = arguments[3];
-            if (!parkour.getCourseManager().doesCourseExists(courseName)) {
-                return null;
-            }
-            return String.valueOf(CourseInfo.getCompletions(courseName));
+    private String getCourseLeaderboardPlaceholderValue(String... arguments) {
+        return getCourseRecord(arguments[1], arguments[3], Integer.parseInt(arguments[2]));
+    }
 
-        } else if (command.startsWith("lb") || command.startsWith("leaderboard")) {
-            if (arguments.length != 4) {
-                return INVALID_SYNTAX;
-            }
-            if (!ValidationUtils.isInteger(arguments[3]) || Integer.parseInt(arguments[3]) < 1) {
-                return INVALID_SYNTAX;
-            }
+    private String getTopTenPlaceholderValue(String... arguments) {
+        int position = Integer.parseInt(arguments[2]);
+        TimeEntry result = parkour.getDatabase().getNthBestTime(arguments[1], position);
 
-            String courseName = arguments[1];
-            if (!parkour.getCourseManager().doesCourseExists(courseName)) {
-                return null;
-            }
+        if (result == null) {
+            return NO_TIME_RECORDED;
 
-            int pos = Integer.parseInt(arguments[3]);
-            TimeEntry result = parkour.getDatabase().getNthBestTime(courseName, pos);
+        } else {
+            return TOP_TEN_RESULT.replace(Constants.PLAYER_PLACEHOLDER, result.getPlayerName())
+                    .replace("%POSITION%", Integer.toString(position))
+                    .replace("%TIME%", DateTimeUtils.displayCurrentTime(result.getTime()));
+        }
+    }
 
-            if (result == null) {
-                return NO_TIME_RECORDED;
-            }
+    private TimeEntry getTopPlayerResultForCourse(Player player, String courseName) {
+        List<TimeEntry> time = parkour.getDatabase().getTopPlayerCourseResults(player, courseName, 1);
+        return time.isEmpty() ? null : time.get(0);
+    }
 
-            switch (arguments[2]) {
-                case "player":
-                    return result.getPlayerName();
+    private String getCompletedMessage(OfflinePlayer player, String courseName) {
+        boolean resultFound = parkour.getDatabase().hasPlayerAchievedTime(player, courseName);
+        String key = resultFound ? "PlaceholderAPI.CurrentCourseCompleted" : "PlaceholderAPI.CurrentCourseNotCompleted";
+        return TranslationUtils.getTranslation(key, false);
+    }
 
+    private String getCourseRecord(String courseName, String key) {
+        return getCourseRecord(courseName, key, 1);
+    }
+
+    private String getCourseRecord(String courseName, String key, Integer position) {
+        return cache.get(courseName + key + position, k ->
+                extractResultDetails(parkour.getDatabase().getNthBestTime(courseName, position), key));
+    }
+
+    private String getPersonalCourseRecord(Player player, String courseName, String key) {
+        return cache.get(player.getName() + courseName + key, k ->
+                extractResultDetails(getTopPlayerResultForCourse(player, courseName), key));
+    }
+
+    private String extractResultDetails(TimeEntry result, String key) {
+        if (result == null) {
+            return NO_TIME_RECORDED;
+
+        } else {
+            switch (key) {
                 case "time":
                     return DateTimeUtils.displayCurrentTime(result.getTime());
 
                 case "deaths":
                     return String.valueOf(result.getDeaths());
 
+                case "player":
+                    return result.getPlayerName();
+
                 default:
                     return INVALID_SYNTAX;
             }
         }
-
-        return null;
-    }
-
-    private TimeEntry getTopResultForCourse(String courseName) {
-        return parkour.getDatabase().getNthBestTime(courseName, 1);
-    }
-
-    private TimeEntry getTopPlayerResultForCourse(Player player, String courseName) {
-        if (!parkour.getCourseManager().doesCourseExists(courseName)) {
-            return null;
-        }
-
-        List<TimeEntry> time = parkour.getDatabase().getTopPlayerCourseResults(player, courseName, 1);
-        return time.isEmpty() ? null : time.get(0);
     }
 }

@@ -644,12 +644,12 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        if (!ValidationUtils.isPositiveInteger(reward)) {
+        if (!ValidationUtils.isPositiveDouble(reward)) {
             TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
             return;
         }
 
-        CourseInfo.setRewardParkoins(courseName, Integer.parseInt(reward));
+        CourseInfo.setRewardParkoins(courseName, Double.parseDouble(reward));
         TranslationUtils.sendPropertySet(sender, "Parkoins reward", courseName, reward);
     }
 

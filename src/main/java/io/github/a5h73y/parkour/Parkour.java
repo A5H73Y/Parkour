@@ -89,7 +89,7 @@ public class Parkour extends JavaPlugin {
         instance = this;
 
         if (parkourNeedsUpgrading()) {
-            new ParkourUpgrader(this).begin();
+            Bukkit.getScheduler().runTaskAsynchronously(this, new ParkourUpgrader(this));
             return;
         }
 
