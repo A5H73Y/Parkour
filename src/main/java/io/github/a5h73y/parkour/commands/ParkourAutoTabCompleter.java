@@ -69,7 +69,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
     private static final List<String> CHALLENGE_COMMANDS = Arrays.asList(
             "create", "invite", "begin", "accept", "decline", "terminate", "info");
 
-    public ParkourAutoTabCompleter(Parkour parkour) {
+    public ParkourAutoTabCompleter(final Parkour parkour) {
         super(parkour);
     }
 

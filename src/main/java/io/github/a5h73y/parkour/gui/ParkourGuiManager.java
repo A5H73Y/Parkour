@@ -16,7 +16,7 @@ public class ParkourGuiManager extends AbstractPluginReceiver {
 
 	private static final String PARKOUR_TITLE_PREFIX = "Parkour - ";
 
-	public ParkourGuiManager(Parkour parkour) {
+	public ParkourGuiManager(final Parkour parkour) {
 		super(parkour);
 	}
 
@@ -37,7 +37,7 @@ public class ParkourGuiManager extends AbstractPluginReceiver {
 	 * @param menu requested menu
 	 */
 	public void showMenu(Player player, AbstractMenu menu) {
-		InventoryGui gui = new InventoryGui(parkour, null, PARKOUR_TITLE_PREFIX + menu.getTitle(), menu.getGuiSetup());
+		InventoryGui gui = new InventoryGui(parkour, null, PARKOUR_TITLE_PREFIX + menu.getTitle(), menu.getGuiLayout());
 		gui.setFiller(new ItemStack(Parkour.getDefaultConfig().getGuiFillerMaterial(), 1));
 
 		menu.addContent(gui, player);
@@ -53,5 +53,4 @@ public class ParkourGuiManager extends AbstractPluginReceiver {
 
 		gui.show(player);
 	}
-
 }

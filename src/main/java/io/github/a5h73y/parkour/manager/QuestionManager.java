@@ -24,7 +24,7 @@ public class QuestionManager extends AbstractPluginReceiver {
 
     private final Map<CommandSender, Question> questionMap = new WeakHashMap<>();
 
-    public QuestionManager(Parkour parkour) {
+    public QuestionManager(final Parkour parkour) {
         super(parkour);
     }
 

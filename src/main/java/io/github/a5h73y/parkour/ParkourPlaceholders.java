@@ -35,7 +35,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
      * A Cache is used for repeated expensive calls to the database.
      * @param parkour plugin instance
      */
-    public ParkourPlaceholders(Parkour parkour) {
+    public ParkourPlaceholders(final Parkour parkour) {
         this.parkour = parkour;
         this.cache = Caffeine.newBuilder()
                 .expireAfterWrite(parkour.getConfig().getInt("Plugin.PlaceholderAPI.CacheTime"), TimeUnit.SECONDS)

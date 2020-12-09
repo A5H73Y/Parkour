@@ -26,7 +26,7 @@ public class ParkourUpgrader extends AbstractPluginReceiver implements Runnable 
 	private final FileConfiguration checkpointsConfig;
 	private final FileConfiguration stringsConfig;
 
-	public ParkourUpgrader(Parkour parkour) {
+	public ParkourUpgrader(final Parkour parkour) {
 		super(parkour);
 
 		defaultFile = new File(parkour.getDataFolder(), "config.yml");

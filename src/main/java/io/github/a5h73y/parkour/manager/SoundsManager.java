@@ -16,7 +16,7 @@ public class SoundsManager extends AbstractPluginReceiver implements Cacheable<S
 
 	private final EnumMap<SoundType, SoundDetails> soundTypes = new EnumMap<>(SoundType.class);
 
-	public SoundsManager(Parkour parkour) {
+	public SoundsManager(final Parkour parkour) {
 		super(parkour);
 		populateCache();
 	}

@@ -1,7 +1,7 @@
 package io.github.a5h73y.parkour.other;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.gui.impl.CourseSettingsGUI;
+import io.github.a5h73y.parkour.gui.impl.CourseSettingsGui;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.Optional;
 import org.bukkit.ChatColor;
@@ -208,7 +208,7 @@ public final class Help {
                 return;
             }
 
-            parkour.getGuiManager().showMenu((Player) sender, new CourseSettingsGUI(courseName));
+            parkour.getGuiManager().showMenu((Player) sender, new CourseSettingsGui(courseName));
 
         } else {
             TranslationUtils.sendHeading("Parkour Settings", sender);

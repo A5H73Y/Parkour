@@ -6,6 +6,7 @@ import de.themoep.inventorygui.StaticGuiElement;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.gui.AbstractMenu;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
+import io.github.a5h73y.parkour.type.player.PlayerManager;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.entity.Player;
@@ -14,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Join Parkour Courses GUI.
  */
-public class JoinCoursesGUI extends AbstractMenu {
+public class JoinCoursesGui extends AbstractMenu {
 
 	@Override
 	public String getTitle() {
@@ -22,7 +23,7 @@ public class JoinCoursesGUI extends AbstractMenu {
 	}
 
 	@Override
-	public String[] getGuiSetup() {
+	public String[] getGuiLayout() {
 		return new String[] {
 				TranslationUtils.getTranslation("GUI.JoinCourses.Setup.Line1", false),
 				TranslationUtils.getTranslation("GUI.JoinCourses.Setup.Line2", false),
@@ -33,13 +34,14 @@ public class JoinCoursesGUI extends AbstractMenu {
 	@Override
 	public void addContent(InventoryGui parent, Player player) {
 		GuiElementGroup group = new GuiElementGroup('g');
+		PlayerManager playerManager = Parkour.getInstance().getPlayerManager();
 
 		for (String course : CourseInfo.getAllCourseNames()) {
 			group.addElement(
 					new StaticGuiElement('e',
 							new ItemStack(Parkour.getDefaultConfig().getGuiMaterial()),
 							click -> {
-								Parkour.getInstance().getPlayerManager().joinCourse(player, course);
+								playerManager.joinCourse(player, course);
 								parent.close();
 								return true;
 							},
@@ -51,9 +53,11 @@ public class JoinCoursesGUI extends AbstractMenu {
 							TranslationUtils.getValueTranslation("GUI.JoinCourses.Description",
 									course, false),
 							TranslationUtils.getValueTranslation("GUI.JoinCourses.Players",
-									String.valueOf(Parkour.getInstance().getPlayerManager().getNumberOfPlayersOnCourse(course)), false),
+									Integer.toString(playerManager.getNumberOfPlayersOnCourse(
+											course)), false),
 							TranslationUtils.getValueTranslation("GUI.JoinCourses.Checkpoints",
-									String.valueOf(CourseInfo.getCheckpointAmount(course)), false)
+									String.valueOf(CourseInfo
+											.getCheckpointAmount(course)), false)
 					));
 		}
 		parent.addElement(group);

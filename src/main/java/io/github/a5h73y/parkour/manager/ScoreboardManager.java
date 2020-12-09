@@ -45,7 +45,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
     private final int numberOfRowsNeeded;
     private final Map<String, ScoreboardEntry> scoreboardDetails = new HashMap<>();
 
-    public ScoreboardManager(Parkour parkour) {
+    public ScoreboardManager(final Parkour parkour) {
         super(parkour);
         this.enabled = parkour.getConfig().getBoolean("Scoreboard.Enabled");
 
