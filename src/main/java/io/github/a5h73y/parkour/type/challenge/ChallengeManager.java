@@ -58,8 +58,9 @@ public class ChallengeManager extends AbstractPluginReceiver {
      *
      * @param requestingPlayer requesting Player
      * @param courseName course name
+     * @param wagerValue wager value
      */
-    public void createOrJoinChallenge(Player requestingPlayer, String courseName) {
+    public void createOrJoinChallenge(Player requestingPlayer, String courseName, @Nullable String wagerValue) {
         if (getChallengeForPlayer(requestingPlayer) != null) {
             requestingPlayer.sendMessage("You are already on a Challenge!");
             return;
@@ -72,13 +73,13 @@ public class ChallengeManager extends AbstractPluginReceiver {
                 .findAny();
 
         if (match.isPresent()) {
-            addParticipantToChallenge(match.get(), requestingPlayer);
-            TranslationUtils.sendValueTranslation("Parkour.Challenge.Joined", courseName, requestingPlayer);
-
+            Challenge existingChallenge = match.get();
+            if (Validation.canJoinChallenge(requestingPlayer, requestingPlayer, existingChallenge)) {
+                addParticipantToChallenge(existingChallenge, requestingPlayer);
+                TranslationUtils.sendValueTranslation("Parkour.Challenge.Joined", courseName, requestingPlayer);
+            }
         } else {
-            createChallenge(requestingPlayer, courseName, null);
-            TranslationUtils.sendValueTranslation("Parkour.Challenge.Created", courseName, requestingPlayer);
-            TranslationUtils.sendTranslation("Parkour.Challenge.StartCommand", requestingPlayer);
+            processCreateCommand(requestingPlayer, courseName, wagerValue);
         }
     }
 
@@ -429,7 +430,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
             return;
         }
 
-        Double wagerValue = ValidationUtils.isDouble(wager) ? Double.parseDouble(wager) : null;
+        Double wagerValue = ValidationUtils.isPositiveDouble(wager) ? Double.parseDouble(wager) : null;
         createChallenge(player, courseName, wagerValue);
 
         String translation = TranslationUtils.getValueTranslation("Parkour.Challenge.Created", courseName);

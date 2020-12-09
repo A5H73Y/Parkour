@@ -256,20 +256,26 @@ public class Validation {
             return false;
         }
 
+        return canJoinChallenge(player, targetPlayer, challenge);
+    }
+
+    public static boolean canJoinChallenge(Player player, Player targetPlayer, Challenge challenge) {
+        Parkour parkour = Parkour.getInstance();
+
         if (!courseJoiningNoMessages(targetPlayer, challenge.getCourseName())) {
-            player.sendMessage(Parkour.getPrefix() + "They are not able to join this course!");
+            player.sendMessage(Parkour.getPrefix() + "Player is not able to join this course!");
             return false;
         }
 
         if (challenge.getWager() != null
                 && !parkour.getEconomyApi().hasAmount(targetPlayer, challenge.getWager())) {
-            player.sendMessage(Parkour.getPrefix() + "They do not have enough funds for this wager.");
+            player.sendMessage(Parkour.getPrefix() + "Player does not have enough funds for this wager.");
             return false;
         }
 
         // they've accepted a challenge, but they haven't started the course yet
         if (parkour.getChallengeManager().getChallengeForPlayer(targetPlayer) != null) {
-            player.sendMessage(Parkour.getPrefix() + "This player is already on a Challenge!");
+            player.sendMessage(Parkour.getPrefix() + "Player is already on a Challenge!");
             return false;
         }
 
