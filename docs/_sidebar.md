@@ -8,6 +8,7 @@
     * [ParkourKits](tutorials/parkour-kits.md)
     * [Sign Commands](tutorials/sign-commands.md)
     * [Rewarding the Player](tutorials/rewarding-player.md)
+    * [Challenge Mode](tutorials/challenge-mode.md)
     * [ParkourModes](tutorials/parkour-modes.md)
     * [Administration](tutorials/administration.md)
     * [Plugin Configuration](tutorials/plugin-config.md)

@@ -383,6 +383,15 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getCourseManager().setRewardOnceStatus(player, getChosenCourseName(player, args, 1));
                 break;
 
+            case "challengeonly":
+                if (!PermissionUtils.hasPermissionOrCourseOwnership(player,
+                        Permission.ADMIN_COURSE, getChosenCourseName(player, args, 1))) {
+                    return false;
+                }
+
+                parkour.getCourseManager().setChallengeOnlyStatus(player, getChosenCourseName(player, args, 1));
+                break;
+
             case "rewardparkoins":
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
                     return false;

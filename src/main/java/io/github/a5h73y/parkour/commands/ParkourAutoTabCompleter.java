@@ -37,7 +37,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
     private static final List<String> ADMIN_COURSE_COMMANDS = Arrays.asList(
             "checkpoint", "ready", "setstart", "setcourse", "setautostart", "select", "deselect", "done", "link", "linkkit",
             "addjoinitem", "rewardonce", "rewardlevel", "rewardleveladd", "rewardrank", "rewarddelay", "rewardparkoins",
-            "setmode", "createkit", "editkit", "validatekit", "setplayerlimit");
+            "setmode", "createkit", "editkit", "validatekit", "setplayerlimit", "challengeonly");
 
     private static final List<String> ON_COURSE_COMMANDS = Arrays.asList(
             "back", "leave");
@@ -235,6 +235,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             case "setplayerlimit":
             case "stats":
             case "settings":
+            case "challengeonly":
                 allowedCommands = CourseInfo.getAllCourseNames();
                 break;
             case "test":

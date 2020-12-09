@@ -348,6 +348,16 @@
     "consoleSyntax": "pac rewardonce (course)"
   },
   {
+    "command": "challengeonly",
+    "title": "Toggle Challenge Only status of Course",
+    "arguments": "(course)",
+    "example": "/pa challengeonly tutorial",
+    "description": "Prevent a Player from joining a Course unless they are currently in a Challenge.",
+    "permission": "Parkour.Admin.Course",
+    "commandGroup": "2",
+    "consoleSyntax": "pac challengeonly (course)"
+  },
+  {
     "command": "rewardparkoins",
     "title": "Reward Parkoins",
     "arguments": "(course) (amount)",

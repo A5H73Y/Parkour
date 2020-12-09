@@ -973,4 +973,16 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
 
         sender.sendMessage("== " + page + " / " + ((courseList.size() + results - 1) / results) + " ==");
     }
+
+    public void setChallengeOnlyStatus(CommandSender sender, String courseName) {
+        if (!doesCourseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            return;
+        }
+
+        // invert the existing value
+        boolean isEnabled = !CourseInfo.getChallengeOnly(courseName);
+        CourseInfo.setChallengeOnly(courseName, isEnabled);
+        TranslationUtils.sendPropertySet(sender, "Challenge Only Status", courseName, String.valueOf(isEnabled));
+    }
 }

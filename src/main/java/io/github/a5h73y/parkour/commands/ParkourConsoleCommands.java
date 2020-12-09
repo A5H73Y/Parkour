@@ -230,6 +230,14 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 parkour.getCourseManager().setRewardOnceStatus(sender, args[1]);
                 break;
 
+            case "challengeonly":
+                if (!ValidationUtils.validateArgs(sender, args, 2)) {
+                    return false;
+                }
+
+                parkour.getCourseManager().setChallengeOnlyStatus(sender, args[1]);
+                break;
+
             case "rewardparkoins":
                 if (!ValidationUtils.validateArgs(sender, args, 3)) {
                     return false;
