@@ -6,7 +6,7 @@ public enum ParkourEventType {
 	PRIZE("Prize"),
 	FINISH("Finish"),
 	CHECKPOINT("Checkpoint"),
-//	CHECKPOINT_ALL("CheckpointAll"), TODO
+	CHECKPOINT_ALL("CheckpointAll"),
 	DEATH("Death");
 
 	private final String configEntry;

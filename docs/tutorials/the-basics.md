@@ -62,6 +62,43 @@ To allow for multiple players to stand on a pressure plate at once, in the `conf
 |  |
 | **Parkour.Course.(COURSE)** | **Give the player permission to join a specific Parkour Course.** |
 
+## Parkour Commands
+
+<script>
+  fetch('files/parkourCommands.json')
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(data) {
+      appendData(data);
+    })
+    .catch(function(err) {
+      console.log(err);
+    });
+    
+    function appendData(data) {
+      data = data.reverse();
+      let mainContainer = document.getElementById("parkour-commands");
+
+      for (let i = 0; i < data.length; i++) {
+        mainContainer.insertAdjacentHTML('afterEnd', createCommandSummary(data[i]));
+      }
+    }
+    
+    function createCommandSummary(command) {
+        return `<details>
+                <summary>${command.command} - ${command.title}</summary>
+                <div>
+                    <p>Syntax: <code>/pa ${command.command} ${command.arguments}</code></p>
+                    <p>Example: <code>${command.example}</code></p>
+                    <p>Description: ${command.description}</p>
+                    <p>Permission: ${command.permission || 'None required'}</p>
+                    <p>Console Command: <code>${command.consoleSyntax || 'N/A'}</code></p>
+                </div>
+            </details>`;
+    }
+</script>
+
 ## Command Help
 
 To display the Parkour commands menu, enter `/pa cmds` which will bring up the available command menus.
@@ -76,3 +113,20 @@ If you want to understand more information about a command, you can enter `/pa h
 
 ![Parkour Join Command Help](https://i.imgur.com/f9Qs12M.png "Parkour Join Command Help")
 
+## Terms / Meanings
+
+#### Course
+
+A Parkour Course is a physical path that you've created for the Player to use while using the plugin. You can join a Course (a.k.a level, arena, track), and the plugin will track the Player's progress and apply any effects you interact with.
+
+#### Lobby
+
+A Lobby is simply a location that allows you to join Parkour courses. It also acts as a place for the Player to teleport to when they complete or leave a Course.
+
+#### ParkourKit
+
+A ParkourKit is a set of Materials which act as a set of toolbox for building a Course. Each Material in a ParkourKit must have an action, for example "death", "speed", etc. A Course must have a ParkourKit, even if it's empty.  
+
+#### Config
+
+Parkour is incredibly customisable, allowing you to modify the plugin exactly to what your server requires. In your server, Parkour will have a folder of many configuration files, shortened to config. `config.yml` and `strings.yml` are the only files we suggest you edit, unless you know what you're doing. Some server implementions don't save the changes upon restarting the server, so we highly suggest you use the **/pa reload** when you've made any config changes, then you'll be safe to restart your server without losing any changes.

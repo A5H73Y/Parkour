@@ -20,7 +20,7 @@ Add the following dependency to your list of dependencies and let Maven import t
 
 ```
 <dependency>
-    <groupId>me.A5H73Y</groupId>
+    <groupId>io.github.a5h73y</groupId>
     <artifactId>Parkour</artifactId>
     <version>(INSERT LATEST VERSION)</version>
     <type>jar</type>

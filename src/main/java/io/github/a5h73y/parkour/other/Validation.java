@@ -106,11 +106,6 @@ public class Validation {
             }
         }
 
-        /* Check if player has enough currency to join */
-        if (!parkour.getEconomyApi().validateCourseJoin(player, course.getName())) {
-            return false;
-        }
-
         /* Check if the player can leave the course for another */
         if (parkour.getPlayerManager().isPlaying(player)) {
             if (Parkour.getDefaultConfig().getBoolean("OnCourse.PreventJoiningDifferentCourse")) {
@@ -144,6 +139,11 @@ public class Validation {
                 player.sendMessage("You are on a Challenge!");
                 return false;
             }
+        }
+
+        /* Check if player has enough currency to join */
+        if (!parkour.getEconomyApi().validateAndChargeCourseJoin(player, course.getName())) {
+            return false;
         }
 
         return true;
@@ -395,7 +395,7 @@ public class Validation {
             }
         }
 
-        if (dependentCourses.size() > 0) {
+        if (!dependentCourses.isEmpty()) {
             sender.sendMessage(Parkour.getPrefix() + "This course can not be deleted as there are dependent courses: " + dependentCourses);
             return false;
         }
@@ -427,7 +427,7 @@ public class Validation {
             }
         }
 
-        if (dependentCourses.size() > 0) {
+        if (!dependentCourses.isEmpty()) {
             sender.sendMessage(Parkour.getPrefix() + "This lobby can not be deleted as there are dependent courses: "
                     + dependentCourses);
             return false;
@@ -452,7 +452,7 @@ public class Validation {
         parkourKit = parkourKit.toLowerCase();
         List<String> dependentCourses = ParkourKitInfo.getDependentCourses(parkourKit);
 
-        if (dependentCourses.size() > 0) {
+        if (!dependentCourses.isEmpty()) {
             sender.sendMessage(Parkour.getPrefix() + "This ParkourKit can not be deleted as there are dependent courses: " + dependentCourses);
             return false;
         }

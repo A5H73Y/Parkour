@@ -63,7 +63,7 @@ public class TimeEntry {
      * The player's full UUID including hyphens.
      * @return player UUID including hyphens
      */
-    public String getPlayerUUID() {
+    public String getPlayerUuid() {
         StringBuilder uuid = new StringBuilder(playerId);
         uuid.insert(20, "-");
         uuid.insert(16, "-");

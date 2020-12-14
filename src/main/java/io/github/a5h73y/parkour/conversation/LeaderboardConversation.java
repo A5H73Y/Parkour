@@ -12,6 +12,7 @@ import org.bukkit.conversations.NumericPrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class LeaderboardConversation extends ParkourConversation {
 
@@ -24,15 +25,16 @@ public class LeaderboardConversation extends ParkourConversation {
         return new ChooseCourse();
     }
 
-    private class ChooseCourse extends StringPrompt {
+    private static class ChooseCourse extends StringPrompt {
 
+        @NotNull
         @Override
-        public String getPromptText(ConversationContext context) {
+        public String getPromptText(@NotNull ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " Which course would you like to view?";
         }
 
         @Override
-        public Prompt acceptInput(ConversationContext context, String message) {
+        public Prompt acceptInput(@NotNull ConversationContext context, String message) {
             if (!CourseInfo.getAllCourseNames().contains(message.toLowerCase())) {
                 ParkourConversation.sendErrorMessage(context, "This course does not exist");
                 return this;
@@ -49,47 +51,53 @@ public class LeaderboardConversation extends ParkourConversation {
             super("personal", "global");
         }
 
+        @NotNull
         @Override
-        public String getPromptText(ConversationContext context) {
-            return ChatColor.LIGHT_PURPLE + " What type of leaderboards would you like to see?\n" +
-                    ChatColor.GREEN + formatFixedSet();
+        public String getPromptText(@NotNull ConversationContext context) {
+            return ChatColor.LIGHT_PURPLE + " What type of leaderboards would you like to see?\n"
+                    + ChatColor.GREEN + formatFixedSet();
         }
 
         @Override
-        protected Prompt acceptValidatedInput(ConversationContext context, String choice) {
+        protected Prompt acceptValidatedInput(@NotNull ConversationContext context,
+                                              @NotNull String choice) {
             context.setSessionData("type", choice);
-
             return new ChooseAmount();
         }
     }
 
     private static class ChooseAmount extends NumericPrompt {
 
+        @NotNull
         @Override
-        public String getPromptText(ConversationContext context) {
+        public String getPromptText(@NotNull ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " How many results would you like?";
         }
 
         @Override
-        protected boolean isNumberValid(ConversationContext context, Number input) {
+        protected boolean isNumberValid(@NotNull ConversationContext context,
+                                        @NotNull Number input) {
             return input.intValue() > 0 && input.intValue() <= Parkour.getDefaultConfig().getMaximumCoursesCached();
         }
 
         @Override
-        protected String getFailedValidationText(ConversationContext context, Number invalidInput) {
+        protected String getFailedValidationText(@NotNull ConversationContext context,
+                                                 @NotNull Number invalidInput) {
             return "Amount must be between 1 and " + Parkour.getDefaultConfig().getMaximumCoursesCached() + ".";
         }
 
         @Override
-        protected Prompt acceptValidatedInput(ConversationContext context, Number amount) {
+        protected Prompt acceptValidatedInput(@NotNull ConversationContext context, Number amount) {
             context.setSessionData("amount", amount.intValue());
-
             return new DisplayLeaderboards();
         }
     }
 
     private static class DisplayLeaderboards extends MessagePrompt {
-        public String getPromptText(ConversationContext context) {
+
+        @NotNull
+        @Override
+        public String getPromptText(@NotNull ConversationContext context) {
             final String leaderboardType = (String) context.getSessionData("type");
             final String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);
             final Integer amount = (Integer) context.getSessionData("amount");
@@ -109,7 +117,7 @@ public class LeaderboardConversation extends ParkourConversation {
         }
 
         @Override
-        protected Prompt getNextPrompt(ConversationContext context) {
+        protected Prompt getNextPrompt(@NotNull ConversationContext context) {
             return Prompt.END_OF_CONVERSATION;
         }
     }

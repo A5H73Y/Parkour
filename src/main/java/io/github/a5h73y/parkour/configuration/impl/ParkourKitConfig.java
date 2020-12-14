@@ -25,7 +25,6 @@ public class ParkourKitConfig extends ParkourConfiguration {
 	 * @param name of ParkourKit
 	 */
 	public void createStandardKit(String name) {
-		//TODO is there a better way to do this, because it's nasty
 		Material matching = MaterialUtils.lookupMaterial("SMOOTH_BRICK");
 		this.set("ParkourKit." + name + "." + matching.name() + ".Action", "death");
 		matching = MaterialUtils.lookupMaterial("BRICKS");

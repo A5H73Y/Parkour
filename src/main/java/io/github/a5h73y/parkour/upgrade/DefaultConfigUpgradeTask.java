@@ -40,7 +40,8 @@ public class DefaultConfigUpgradeTask extends TimedConfigUpgradeTask {
 
 			// update int to actual value
 			getConfig().set("OnJoin.SetGameMode", getMatchingGameMode(getConfig().getInt("OnJoin.SetGamemode")));
-			getConfig().set("OnFinish.BroadcastLevel", getBroadcastLevel(getConfig().getInt("OnFinish.BroadcastLevel")));
+			getConfig().set("OnFinish.BroadcastLevel", getBroadcastLevel(
+					getConfig().getInt("OnFinish.BroadcastLevel")));
 			getConfig().set("OnFinish.SetGameMode", getMatchingGameMode(getConfig().getInt("OnFinish.SetGamemode")));
 			getConfig().set("MySQL.URL", "jdbc:mysql://" + getConfig().getString("MySQL.Host") + ":"
 					+ getConfig().getString("MySQL.Port") + "/" + getConfig().getString("MySQL.Database"));

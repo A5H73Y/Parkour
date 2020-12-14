@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * Backup the Parkour Data.
+ */
 public class Backup {
 
     private static final String SOURCE_FOLDER = Parkour.getInstance().getDataFolder().toString();
@@ -25,10 +28,10 @@ public class Backup {
     }
 
     /**
-     * Create a backup of all the configuration files
+     * Create a backup of all the configuration files.
      * A new zip will be generated with the current date containing all parkour files
      *
-     * @param message
+     * @param message output log message
      */
     public static void backupNow(boolean message) {
         if (message) {
@@ -76,8 +79,8 @@ public class Backup {
     }
 
     /**
-     * Traverse a directory and get all files,
-     * and add the file into fileList
+     * Traverse a directory and get all files.
+     * Add each file into fileList.
      *
      * @param node file or directory
      */
@@ -93,11 +96,10 @@ public class Backup {
                 generateFileList(new File(node, filename));
             }
         }
-
     }
 
     /**
-     * Format the file path for zip
+     * Generate the file path for zip.
      *
      * @param file file path
      * @return Formatted file path

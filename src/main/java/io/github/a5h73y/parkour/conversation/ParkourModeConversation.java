@@ -1,11 +1,11 @@
 package io.github.a5h73y.parkour.conversation;
 
+import com.cryptomorin.xseries.XPotion;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.stream.Stream;
-import com.cryptomorin.xseries.XPotion;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.BooleanPrompt;
 import org.bukkit.conversations.Conversable;
@@ -35,8 +35,8 @@ public class ParkourModeConversation extends ParkourConversation {
             super(Stream.of(ParkourMode.values()).map(mode -> mode.name().toLowerCase()).toArray(String[]::new));
         }
 
-        @Override
         @NotNull
+        @Override
         public String getPromptText(@NotNull ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " What type of ParkourMode would you like to set?\n"
                     + ChatColor.GREEN + formatFixedSet();
@@ -69,38 +69,39 @@ public class ParkourModeConversation extends ParkourConversation {
             return XPotion.matchXPotion(input.toUpperCase()).isPresent();
         }
 
+        @NotNull
         @Override
-        @Nullable
         protected Prompt acceptValidatedInput(@NotNull ConversationContext context,
                                               @NotNull String input) {
             context.setSessionData("potion", input.toUpperCase());
             return new WantSpecifyDurationAmplifier();
         }
 
-        @Override
         @NotNull
+        @Override
         public String getPromptText(@NotNull ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " What type of Potion Effect would you like to apply?";
         }
 
-        @Override
         @Nullable
-        protected String getFailedValidationText(@NotNull ConversationContext context, @NotNull String invalidInput) {
+        @Override
+        protected String getFailedValidationText(@NotNull ConversationContext context,
+                                                 @NotNull String invalidInput) {
             return invalidInput + " is an unknown Potion Effect Type.";
         }
     }
 
     private static class WantSpecifyDurationAmplifier extends BooleanPrompt {
 
+        @NotNull
         @Override
-        @Nullable
         protected Prompt acceptValidatedInput(@NotNull ConversationContext context,
                                               boolean input) {
             return input ? new SpecifyDurationAmplifier() : new WantSpecifyJoinMessage();
         }
 
-        @Override
         @NotNull
+        @Override
         public String getPromptText(@NotNull ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " Would you like to provide a duration and amplifier?";
         }
@@ -109,6 +110,13 @@ public class ParkourModeConversation extends ParkourConversation {
     private static class SpecifyDurationAmplifier extends ValidatingPrompt {
 
         private static final String NUMBER_REGEX = "^\\d*,\\d+\\.?\\d*$";
+
+        @NotNull
+        @Override
+        public String getPromptText(@NotNull ConversationContext context) {
+            return ChatColor.LIGHT_PURPLE + " Please specify the duration and amplifier in the format of "
+                    + ChatColor.GREEN + "(duration),(amplifier)";
+        }
 
         @Override
         protected boolean isInputValid(@NotNull ConversationContext context, @NotNull String input) {
@@ -120,25 +128,19 @@ public class ParkourModeConversation extends ParkourConversation {
             context.setSessionData("durationAmplifier", input);
             return new WantSpecifyJoinMessage();
         }
-
-        @Override
-        public @NotNull String getPromptText(@NotNull ConversationContext context) {
-            return ChatColor.LIGHT_PURPLE + " Please specify the duration and amplifier in the format of " +
-                    ChatColor.GREEN + "(duration),(amplifier)";
-        }
     }
 
     private static class WantSpecifyJoinMessage extends BooleanPrompt {
 
+        @NotNull
         @Override
-        @Nullable
         protected Prompt acceptValidatedInput(@NotNull ConversationContext context,
                                               boolean input) {
             return input ? new SpecifyJoinMessage() : new ParkourModePotionDone();
         }
 
-        @Override
         @NotNull
+        @Override
         public String getPromptText(@NotNull ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " Would you like to provide a join message?";
         }
@@ -146,13 +148,16 @@ public class ParkourModeConversation extends ParkourConversation {
 
     private static class SpecifyJoinMessage extends StringPrompt {
 
+        @NotNull
         @Override
-        public @NotNull String getPromptText(@NotNull ConversationContext context) {
+        public String getPromptText(@NotNull ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " Please specify the join message.";
         }
 
+        @NotNull
         @Override
-        public @Nullable Prompt acceptInput(@NotNull ConversationContext context, @Nullable String input) {
+        public Prompt acceptInput(@NotNull ConversationContext context,
+                                  @Nullable String input) {
             context.setSessionData("joinMessage", input);
             return new ParkourModePotionDone();
         }
@@ -160,14 +165,14 @@ public class ParkourModeConversation extends ParkourConversation {
 
     private static class ParkourModePotionDone extends MessagePrompt {
 
+        @NotNull
         @Override
-        @Nullable
         protected Prompt getNextPrompt(@NotNull ConversationContext context) {
             return Prompt.END_OF_CONVERSATION;
         }
 
-        @Override
         @NotNull
+        @Override
         public String getPromptText(@NotNull ConversationContext context) {
             String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);
             String potionEffect = (String) context.getSessionData("potion");

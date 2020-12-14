@@ -9,6 +9,7 @@ import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.FixedSetPrompt;
 import org.bukkit.conversations.Prompt;
+import org.jetbrains.annotations.NotNull;
 
 public class EditParkourKitConversation extends ParkourConversation {
 
@@ -27,14 +28,16 @@ public class EditParkourKitConversation extends ParkourConversation {
             super(ParkourKitInfo.getAllParkourKitNames().toArray(new String[0]));
         }
 
+        @NotNull
         @Override
-        public String getPromptText(ConversationContext context) {
-            return ChatColor.LIGHT_PURPLE + " What ParkourKit would you like to edit?\n" +
-                    ChatColor.GREEN + formatFixedSet();
+        public String getPromptText(@NotNull ConversationContext context) {
+            return ChatColor.LIGHT_PURPLE + " What ParkourKit would you like to edit?\n"
+                    + ChatColor.GREEN + formatFixedSet();
         }
 
         @Override
-        protected Prompt acceptValidatedInput(ConversationContext context, String choice) {
+        protected Prompt acceptValidatedInput(@NotNull ConversationContext context,
+                                              @NotNull String choice) {
             context.setSessionData("kit", choice);
             return new ChooseOption();
         }
@@ -49,14 +52,16 @@ public class EditParkourKitConversation extends ParkourConversation {
             super("add", "remove", "cancel");
         }
 
+        @NotNull
         @Override
-        public String getPromptText(ConversationContext context) {
-            return ChatColor.LIGHT_PURPLE + " What option would you like to perform?\n" +
-                    ChatColor.GREEN + formatFixedSet();
+        public String getPromptText(@NotNull ConversationContext context) {
+            return ChatColor.LIGHT_PURPLE + " What option would you like to perform?\n"
+                    + ChatColor.GREEN + formatFixedSet();
         }
 
         @Override
-        protected Prompt acceptValidatedInput(ConversationContext context, String choice) {
+        protected Prompt acceptValidatedInput(@NotNull ConversationContext context,
+                                              @NotNull String choice) {
             if (choice.equals("add")) {
                 String kitName = context.getSessionData("kit").toString();
                 return new AddKitItemConversation(new ChooseOption(true), kitName).startConversation();
@@ -73,14 +78,16 @@ public class EditParkourKitConversation extends ParkourConversation {
             super(ParkourKitInfo.getParkourKitMaterials(context.getSessionData("kit").toString()).toArray(new String[0]));
         }
 
+        @NotNull
         @Override
-        public String getPromptText(ConversationContext context) {
-            return ChatColor.LIGHT_PURPLE + " What Material would you like to remove?\n" +
-                    ChatColor.GREEN + formatFixedSet();
+        public String getPromptText(@NotNull ConversationContext context) {
+            return ChatColor.LIGHT_PURPLE + " What Material would you like to remove?\n"
+                    + ChatColor.GREEN + formatFixedSet();
         }
 
         @Override
-        protected Prompt acceptValidatedInput(ConversationContext context, String material) {
+        protected Prompt acceptValidatedInput(@NotNull ConversationContext context,
+                                              @NotNull String material) {
             String kitName = (String) context.getSessionData("kit");
 
             Parkour.getConfig(ConfigType.PARKOURKIT).set("ParkourKit." + kitName + "." + material, null);

@@ -7,7 +7,10 @@ import me.konsolas.aac.api.PlayerViolationEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-public class AACApi extends PluginWrapper implements Listener {
+/**
+ * Advanced Anti Cheat Integration.
+ */
+public class AacApi extends PluginWrapper implements Listener {
 
 	@Override
 	public String getPluginName() {
@@ -23,6 +26,12 @@ public class AACApi extends PluginWrapper implements Listener {
 		}
 	}
 
+	/**
+	 * Handle Player Violation Event.
+	 * If a Player is on a Course, prevent the violation.
+	 *
+	 * @param event violation event
+	 */
 	@EventHandler
 	public void onViolation(PlayerViolationEvent event) {
 		if (Parkour.getInstance().getPlayerManager().isPlaying(event.getPlayer())) {

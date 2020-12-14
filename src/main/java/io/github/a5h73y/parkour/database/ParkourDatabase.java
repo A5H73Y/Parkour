@@ -490,8 +490,8 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
             String translation = TranslationUtils.getTranslation("Parkour.LeaderboardEntry", false)
                     .replace("%POSITION%", String.valueOf(i + 1))
                     .replace(Constants.PLAYER_PLACEHOLDER, entry.getPlayerName())
-                    .replace("%TIME%", DateTimeUtils.displayCurrentTime(entry.getTime()))
-                    .replace("%DEATHS%", String.valueOf(entry.getDeaths()));
+                    .replace(Constants.TIME_PLACEHOLDER, DateTimeUtils.displayCurrentTime(entry.getTime()))
+                    .replace(Constants.DEATHS_PLACEHOLDER, String.valueOf(entry.getDeaths()));
 
             sender.sendMessage(translation);
         }

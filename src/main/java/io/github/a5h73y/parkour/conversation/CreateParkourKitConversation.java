@@ -10,6 +10,7 @@ import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
+import org.jetbrains.annotations.NotNull;
 
 public class CreateParkourKitConversation extends ParkourConversation {
 
@@ -24,11 +25,13 @@ public class CreateParkourKitConversation extends ParkourConversation {
 
     private static class ChooseKitName extends StringPrompt {
 
-        public String getPromptText(ConversationContext context) {
+        @NotNull
+        @Override
+        public String getPromptText(@NotNull ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " What would you like to name your ParkourKit?";
         }
 
-        public Prompt acceptInput(ConversationContext context, String name) {
+        public Prompt acceptInput(@NotNull ConversationContext context, String name) {
             if (name.length() == 0) {
                 return Prompt.END_OF_CONVERSATION;
             }
@@ -52,14 +55,15 @@ public class CreateParkourKitConversation extends ParkourConversation {
 
     private static class UseStandardKit extends BooleanPrompt {
 
+        @NotNull
         @Override
-        public String getPromptText(ConversationContext context) {
-            return ChatColor.LIGHT_PURPLE + " Would you like to start with the standard blocks?\n" +
-                    ChatColor.GREEN + "[yes, no]";
+        public String getPromptText(@NotNull ConversationContext context) {
+            return ChatColor.LIGHT_PURPLE + " Would you like to start with the standard blocks?\n"
+                    + ChatColor.GREEN + "[yes, no]";
         }
 
         @Override
-        protected Prompt acceptValidatedInput(ConversationContext context, boolean input) {
+        protected Prompt acceptValidatedInput(@NotNull ConversationContext context, boolean input) {
             String name = context.getSessionData("name").toString();
             ParkourKitConfig parkourKitFile = (ParkourKitConfig) Parkour.getConfig(ConfigType.PARKOURKIT);
 

@@ -32,11 +32,11 @@ public class ValidationUtils {
 	}
 
 	/**
-	 * Validate if the argument is numeric
+	 * Validate if the input is a positive Integer.
 	 * "1" = true, "Hi" = false, "-1" = false
 	 *
-	 * @param input
-	 * @return whether the input is numeric
+	 * @param input text
+	 * @return input is numeric and positive
 	 */
 	public static boolean isPositiveInteger(String input) {
 		return isInteger(input) && Integer.parseInt(input) >= 0;
@@ -57,11 +57,10 @@ public class ValidationUtils {
 	}
 
 	/**
-	 * Validate if the argument is numeric
-	 * "1" = true, "Hi" = false, "-1" = false
+	 * Validate if the input is a positive Double.
 	 *
-	 * @param input
-	 * @return whether the input is numeric
+	 * @param input text
+	 * @return input is numeric and positive
 	 */
 	public static boolean isPositiveDouble(String input) {
 		return isDouble(input) && Double.parseDouble(input) >= 0;

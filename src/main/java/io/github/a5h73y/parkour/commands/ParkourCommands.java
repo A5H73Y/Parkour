@@ -19,7 +19,9 @@ import io.github.a5h73y.parkour.utility.PermissionUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,7 +41,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
     public boolean onCommand(@NotNull CommandSender sender,
                              @NotNull Command command,
                              @NotNull String label,
-                             @NotNull String[] args) {
+                             @NotNull String... args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(Parkour.getPrefix() + "'/parkour' is only available in game.");
             sender.sendMessage(Parkour.getPrefix() + "Use '/pac' for console commands.");
@@ -154,7 +156,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getEconomyApi().processEconomyCommand(player, args);
+                parkour.getEconomyApi().processCommand(player, args);
                 break;
 
             case "editkit":
@@ -172,7 +174,8 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
             case "info":
             case "player":
-                parkour.getPlayerManager().displayParkourInfo(player, args);
+                parkour.getPlayerManager().displayParkourInfo(player,
+                        args.length <= 1 ? (OfflinePlayer) sender : Bukkit.getOfflinePlayer(args[1]));
                 break;
 
             case "join":
@@ -200,7 +203,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getPlayerManager().giveParkourKit(player, args.length == 2 ? args[1] : DEFAULT);
+                parkour.getParkourKitManager().giveParkourKit(player, args.length == 2 ? args[1] : DEFAULT);
                 break;
 
             case "leaderboard":
@@ -266,7 +269,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
             case "perms":
             case "permissions":
-                parkour.getPlayerManager().displayPermissions(player, args.length > 2);
+                parkour.getPlayerManager().displayPermissions(player);
                 break;
 
             case "prize":
@@ -652,7 +655,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
      * If they have provided a course parameter, use that.
      * Otherwise fallback to the player's selected course.
      *
-     * @param player requesting player
+     * @param player player
      * @param args command args
      * @param courseArg position of course argument
      * @return chosen course name

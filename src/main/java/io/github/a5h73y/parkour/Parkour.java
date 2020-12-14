@@ -16,17 +16,17 @@ import io.github.a5h73y.parkour.listener.PlayerInteractListener;
 import io.github.a5h73y.parkour.listener.PlayerListener;
 import io.github.a5h73y.parkour.listener.PlayerMoveListener;
 import io.github.a5h73y.parkour.listener.SignListener;
-import io.github.a5h73y.parkour.type.challenge.ChallengeManager;
 import io.github.a5h73y.parkour.manager.QuestionManager;
 import io.github.a5h73y.parkour.manager.ScoreboardManager;
 import io.github.a5h73y.parkour.manager.SoundsManager;
 import io.github.a5h73y.parkour.other.Backup;
 import io.github.a5h73y.parkour.other.CommandUsage;
 import io.github.a5h73y.parkour.other.ParkourUpdater;
-import io.github.a5h73y.parkour.plugin.AACApi;
+import io.github.a5h73y.parkour.plugin.AacApi;
 import io.github.a5h73y.parkour.plugin.BountifulApi;
 import io.github.a5h73y.parkour.plugin.EconomyApi;
 import io.github.a5h73y.parkour.plugin.PlaceholderApi;
+import io.github.a5h73y.parkour.type.challenge.ChallengeManager;
 import io.github.a5h73y.parkour.type.checkpoint.CheckpointManager;
 import io.github.a5h73y.parkour.type.course.CourseManager;
 import io.github.a5h73y.parkour.type.kit.ParkourKitManager;
@@ -102,10 +102,6 @@ public class Parkour extends JavaPlugin {
         getLogger().info("Enabled Parkour v" + getDescription().getVersion());
         new Metrics(this, BSTATS_ID);
         checkForUpdates();
-
-        PluginUtils.log("v6.0 is currently a very unstable build, "
-                + "expect problems to occur and please raise them in the Discord server.", 2);
-        deleteMe();
     }
 
     /**
@@ -121,24 +117,6 @@ public class Parkour extends JavaPlugin {
         Bukkit.getScheduler().cancelTasks(this);
         PluginUtils.log("Disabled Parkour v" + getDescription().getVersion());
         instance = null;
-    }
-
-    // TODO delete me before release - old 6.0 -> new 6.0 workaround
-    private void deleteMe() {
-        if (getConfig().contains("Lobby.Set")) {
-            List<String> details = Arrays.asList("World", "X", "Y", "Z", "Pitch", "Yaw");
-
-            for (String detail : details) {
-                getConfig().set("Lobby.default." + detail, getConfig().get("Lobby." + detail));
-                getConfig().set("Lobby." + detail, null);
-            }
-
-            getConfig().set("LobbySettings.EnforceWorld", getConfig().getString("Lobby.EnforceWorld"));
-            getConfig().set("Lobby.Set", null);
-            getConfig().set("Lobby.EnforceWorld", null);
-            saveConfig();
-            PluginUtils.log("Your lobbies have been upgraded.");
-        }
     }
 
     /**
@@ -262,7 +240,7 @@ public class Parkour extends JavaPlugin {
         bountifulApi = new BountifulApi();
         economyApi = new EconomyApi();
         placeholderApi = new PlaceholderApi();
-        new AACApi();
+        new AacApi();
     }
 
     private void registerManagers() {

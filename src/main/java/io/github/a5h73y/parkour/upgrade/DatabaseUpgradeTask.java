@@ -105,7 +105,7 @@ public class DatabaseUpgradeTask extends TimedUpgradeTask {
 		boolean success = true;
 		// create a proper Parkour connection
 		// which also setups up the new tables
-		Database pDatabase = Parkour.getInstance().getDatabase().getDatabase();
+		Database database = Parkour.getInstance().getDatabase().getDatabase();
 
 		// TODO check new tables exist
 		getParkourUpgrader().getLogger().info("Transferring data to new tables.");
@@ -113,7 +113,7 @@ public class DatabaseUpgradeTask extends TimedUpgradeTask {
 
 		try {
 			for (Map.Entry<Integer, String> result : courseIdToName.entrySet()) {
-				pDatabase.update("INSERT INTO course (courseId, name) VALUES "
+				database.update("INSERT INTO course (courseId, name) VALUES "
 						+ "('" + result.getKey() + "', '" + result.getValue() + "');");
 			}
 
@@ -124,16 +124,17 @@ public class DatabaseUpgradeTask extends TimedUpgradeTask {
 				String playerId = ParkourDatabase.getPlayerId(targetPlayer);
 
 				for (TimeEntry timeEntry : playerEntry.getValue()) {
-					pDatabase.update("INSERT INTO time (courseId, playerId, playerName, time, deaths) VALUES "
-							+ "(" + timeEntry.getCourseId() + ", '" + playerId + "', '" + playerEntry.getKey() + "', " + timeEntry.getTime() + ", " + timeEntry.getDeaths() + ");");
+					database.update("INSERT INTO time (courseId, playerId, playerName, time, deaths) VALUES "
+							+ "(" + timeEntry.getCourseId() + ", '" + playerId + "', '" + playerEntry.getKey()
+							+ "', " + timeEntry.getTime() + ", " + timeEntry.getDeaths() + ");");
 				}
 			}
 
 			getParkourUpgrader().getLogger().info("Time data has been restored!");
 			getParkourUpgrader().getLogger().info("Cleaning up temporary tables...");
 
-			pDatabase.update("DROP TABLE course_backup;");
-			pDatabase.update("DROP TABLE time_backup;");
+			database.update("DROP TABLE course_backup;");
+			database.update("DROP TABLE time_backup;");
 
 		} catch (SQLException e) {
 			success = false;
@@ -147,7 +148,8 @@ public class DatabaseUpgradeTask extends TimedUpgradeTask {
 		FileConfiguration defaultConfig = getParkourUpgrader().getDefaultConfig();
 
 		if (defaultConfig.getBoolean("MySQL.Use")) {
-			database = new MySQL(defaultConfig.getString("MySQL.URL"), defaultConfig.getString("MySQL.Username"), defaultConfig.getString("MySQL.Password"));
+			database = new MySQL(defaultConfig.getString("MySQL.URL"),
+					defaultConfig.getString("MySQL.Username"), defaultConfig.getString("MySQL.Password"));
 
 		} else {
 			String pathOverride = defaultConfig.getString("SQLite.PathOverride", "");

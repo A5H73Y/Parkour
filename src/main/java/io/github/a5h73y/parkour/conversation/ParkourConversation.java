@@ -26,7 +26,12 @@ public abstract class ParkourConversation implements ConversationAbandonedListen
 
     public abstract Prompt getEntryPrompt();
 
-    public ParkourConversation(Conversable conversable) {
+    /**
+     * Construct a Parkour Conversation.
+     *
+     * @param conversable conversable user
+     */
+    public ParkourConversation(@NotNull Conversable conversable) {
         this.conversable = conversable;
 
         conversationFactory = new ConversationFactory(Parkour.getInstance())
@@ -59,6 +64,10 @@ public abstract class ParkourConversation implements ConversationAbandonedListen
         return this;
     }
 
+    /**
+     * Begin the Parkour Conversation.
+     * Adds any associated information to the Conversation context.
+     */
     public void begin() {
         if (courseName != null && !Parkour.getInstance().getCourseManager().doesCourseExists(courseName)) {
             conversable.sendRawMessage(TranslationUtils.getValueTranslation("Error.NoExist", courseName));

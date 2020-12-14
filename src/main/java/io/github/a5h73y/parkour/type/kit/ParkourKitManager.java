@@ -1,5 +1,6 @@
 package io.github.a5h73y.parkour.type.kit;
 
+import com.cryptomorin.xseries.XMaterial;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.ActionType;
@@ -8,6 +9,7 @@ import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.Cacheable;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
+import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.util.ArrayList;
@@ -18,6 +20,8 @@ import java.util.Set;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -58,6 +62,51 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 	}
 
 	/**
+	 * Give ParkourKit to Player.
+	 * The Contents of the Player's inventory will be filled with the ParkourKit items.
+	 * If configured, the Player's original inventory will be wiped.
+	 *
+	 * @param player requesting player
+	 * @param kitName parkour kit name
+	 */
+	public void giveParkourKit(Player player, String kitName) {
+		if (parkour.getConfig().getBoolean("Other.ParkourKit.ReplaceInventory")) {
+			player.getInventory().clear();
+		}
+
+		ParkourKit kit = getParkourKit(kitName);
+
+		if (kit == null) {
+			player.sendMessage(Parkour.getPrefix() + "Invalid ParkourKit: " + ChatColor.RED + kitName);
+			return;
+		}
+
+		for (Material material : kit.getMaterials()) {
+			String actionName = ParkourKitInfo.getActionTypeForMaterial(kitName, material.name());
+
+			if (actionName == null) {
+				continue;
+			}
+
+			actionName = StringUtils.standardizeText(actionName);
+
+			ItemStack itemStack = MaterialUtils.createItemStack(material,
+					TranslationUtils.getTranslation("Kit." + actionName, false));
+			player.getInventory().addItem(itemStack);
+		}
+
+		if (parkour.getConfig().getBoolean("Other.ParkourKit.GiveSign")) {
+			ItemStack itemStack = MaterialUtils.createItemStack(XMaterial.OAK_SIGN.parseMaterial(),
+					TranslationUtils.getTranslation("Kit.Sign", false));
+			player.getInventory().addItem(itemStack);
+		}
+
+		player.updateInventory();
+		TranslationUtils.sendValueTranslation("Other.Kit", kitName, player);
+		PluginUtils.logToFile(player.getName() + " received the kit");
+	}
+
+	/**
 	 * Validate a ParkourKit.
 	 * Used to identify if there are any problems with the ParkourKit config.
 	 * Examples include an unknown Material, or an unknown Action type.
@@ -95,7 +144,7 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 
 		sender.sendMessage(Parkour.getPrefix() + invalidTypes.size() + " problems with " + ChatColor.AQUA + kitName
 				+ ChatColor.WHITE + " found.");
-		if (invalidTypes.size() > 0) {
+		if (!invalidTypes.isEmpty()) {
 			for (String type : invalidTypes) {
 				sender.sendMessage(ChatColor.RED + type);
 			}
@@ -110,7 +159,7 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 	 * @param sender requesting sender
 	 * @param args command arguments
 	 */
-	public void displayParkourKits(CommandSender sender, String[] args) {
+	public void displayParkourKits(CommandSender sender, String... args) {
 		Set<String> parkourKit = ParkourKitInfo.getAllParkourKitNames();
 
 		// specifying a kit

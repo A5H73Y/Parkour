@@ -292,6 +292,17 @@ public class PlayerInfo {
     }
 
     /**
+     * Save the Player's Health and Food Level.
+     * @param player player
+     */
+    public static void saveHealthFoodLevel(Player player) {
+        ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
+        inventoryConfig.set(player.getUniqueId() + ".Health", player.getHealth());
+        inventoryConfig.set(player.getUniqueId() + ".Hunger", player.getFoodLevel());
+        inventoryConfig.save();
+    }
+
+    /**
      * Retrieve the Player's saved Inventory contents.
      * @param player requesting player
      * @return player's inventory contents

@@ -6,7 +6,6 @@ import io.github.a5h73y.parkour.other.Backup;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -26,6 +25,10 @@ public class ParkourUpgrader extends AbstractPluginReceiver implements Runnable 
 	private final FileConfiguration checkpointsConfig;
 	private final FileConfiguration stringsConfig;
 
+	/**
+	 * Initialise the Parkour Upgrader.
+	 * @param parkour plugin instance
+	 */
 	public ParkourUpgrader(final Parkour parkour) {
 		super(parkour);
 

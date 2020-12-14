@@ -12,4 +12,8 @@ public class Constants {
 
     public static final String CHECKPOINT_PLACEHOLDER = "%CHECKPOINT%";
 
+    public static final String DEATHS_PLACEHOLDER = "%DEATHS%";
+
+    public static final String TIME_PLACEHOLDER = "%TIME%";
+
 }

@@ -26,6 +26,7 @@ public class SetPlayerConversation extends ParkourConversation {
         super(player);
     }
 
+    @NotNull
     @Override
     public Prompt getEntryPrompt() {
         return new ChooseSetCourseOption();
@@ -36,8 +37,8 @@ public class SetPlayerConversation extends ParkourConversation {
             super(SET_PLAYER_OPTIONS.toArray(new String[0]));
         }
 
-        @Override
         @NotNull
+        @Override
         public String getPromptText(@NotNull ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " What player option would you like to set?\n"
                     + ChatColor.GREEN + formatFixedSet();
@@ -53,8 +54,8 @@ public class SetPlayerConversation extends ParkourConversation {
 
     private static class SetCourseOptionValue extends StringPrompt {
 
-        @Override
         @NotNull
+        @Override
         public String getPromptText(@NotNull ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " What value would you like to set?";
         }

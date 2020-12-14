@@ -1,5 +1,6 @@
 package io.github.a5h73y.parkour.manager;
 
+import com.cryptomorin.xseries.XSound;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.SoundType;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
@@ -8,7 +9,6 @@ import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import java.util.EnumMap;
 import java.util.Optional;
-import com.cryptomorin.xseries.XSound;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 

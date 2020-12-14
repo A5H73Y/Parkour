@@ -1,9 +1,8 @@
 package io.github.a5h73y.parkour.utility;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.enums.Permission;
-import io.github.a5h73y.parkour.type.player.PlayerInfo;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
@@ -58,7 +57,8 @@ public class PermissionUtils {
 	 * @param displayMessage display failure message
 	 * @return player has permission
 	 */
-	public static boolean hasSpecificPermission(CommandSender sender, Permission permission, String permissionNode, boolean displayMessage) {
+	public static boolean hasSpecificPermission(CommandSender sender, Permission permission, String permissionNode,
+	                                            boolean displayMessage) {
 		if (sender.isOp()
 				|| sender.hasPermission(Permission.PARKOUR_ALL.getPermission())
 				|| sender.hasPermission(permission.getPermissionRoot() + "." + permissionNode)) {
@@ -107,7 +107,8 @@ public class PermissionUtils {
 	public static boolean hasSignPermission(Player player, String permissionNode, SignChangeEvent sign) {
 		Permission matchingPermission = Permission.valueOf("CREATE_SIGN_" + permissionNode.toUpperCase());
 
-		if (!hasPermission(player, Permission.CREATE_SIGN_ALL, false) && !hasPermission(player, matchingPermission, false)) {
+		if (!hasPermission(player, Permission.CREATE_SIGN_ALL, false)
+				&& !hasPermission(player, matchingPermission, false)) {
 			sign.setCancelled(true);
 			sign.getBlock().breakNaturally();
 			return false;

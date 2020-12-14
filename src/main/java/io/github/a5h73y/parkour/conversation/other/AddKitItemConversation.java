@@ -34,7 +34,8 @@ public class AddKitItemConversation {
         DURATION_DEFAULT.put("bounce", 200);
     }
 
-    private final String[] actionTypes = {"death", "finish", "climb", "launch", "bounce", "speed", "repulse", "norun", "nopotion"};
+    private final String[] actionTypes =
+            {"death", "finish", "climb", "launch", "bounce", "speed", "repulse", "norun", "nopotion"};
     private final Prompt endingConversation;
     private final String kitName;
 
@@ -89,7 +90,8 @@ public class AddKitItemConversation {
         protected Prompt acceptValidatedInput(ConversationContext context, String choice) {
             context.setSessionData("action", choice);
 
-            if (choice.equals("climb") || choice.equals("launch") || choice.equals("bounce") || choice.equals("speed") || choice.equals("repulse")) {
+            if (choice.equals("climb") || choice.equals("launch") || choice.equals("bounce") || choice.equals("speed")
+                    || choice.equals("repulse")) {
                 return new ChooseStrength();
             } else {
                 return new ProcessComplete();
@@ -135,7 +137,8 @@ public class AddKitItemConversation {
         public String getPromptText(ConversationContext context) {
             String action = context.getSessionData("action").toString();
             Integer defaultValue = DURATION_DEFAULT.get(action);
-            return ChatColor.LIGHT_PURPLE + String.format(" What duration do you want the action to last? (default: %d)", defaultValue);
+            return ChatColor.LIGHT_PURPLE + String.format(
+                    " What duration do you want the action to last? (default: %d)", defaultValue);
         }
 
         @Override

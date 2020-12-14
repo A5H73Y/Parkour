@@ -30,10 +30,11 @@ public class CourseInfoUpgradeTask extends TimedConfigUpgradeTask {
 				double percent = Math.ceil((count * 100.0d) / courseNames.size());
 				getParkourUpgrader().getLogger().info(percent + "% complete...");
 			}
-			
+
 			transferAndDelete(courseName + ".Finished", courseName + ".Ready");
 			if (getConfig().contains(courseName + ".RewardDelay")) {
-				getConfig().set(courseName + ".RewardDelay", getConfig().getInt(courseName + ".RewardDelay") * 24);
+				getConfig().set(courseName + ".RewardDelay",
+						getConfig().getInt(courseName + ".RewardDelay") * 24);
 			}
 
 			int checkpoints = getConfig().getInt(courseName + ".Points");
@@ -50,10 +51,12 @@ public class CourseInfoUpgradeTask extends TimedConfigUpgradeTask {
 				}
 
 				if (i > 0) {
-					ConfigurationSection checkpointConfigSection = getParkourUpgrader().getCheckpointsConfig().getConfigurationSection(courseName + "." + i);
+					ConfigurationSection checkpointConfigSection = getParkourUpgrader().getCheckpointsConfig()
+							.getConfigurationSection(courseName + "." + i);
 					Set<String> xyz = checkpointConfigSection.getKeys(false);
 					for (String coordinate : xyz) {
-						getParkourUpgrader().getCheckpointsConfig().set(courseName + "." + i + ".Plate" + coordinate, getParkourUpgrader().getCheckpointsConfig().get(courseName + "." + i + "." + coordinate));
+						getParkourUpgrader().getCheckpointsConfig().set(courseName + "." + i + ".Plate" + coordinate,
+								getParkourUpgrader().getCheckpointsConfig().get(courseName + "." + i + "." + coordinate));
 						getParkourUpgrader().getCheckpointsConfig().set(courseName + "." + i + "." + coordinate, null);
 					}
 				}
@@ -62,7 +65,8 @@ public class CourseInfoUpgradeTask extends TimedConfigUpgradeTask {
 				Set<String> checkpointData = courseConfigSection.getKeys(false);
 
 				for (String checkpointDatum : checkpointData) {
-					getParkourUpgrader().getCheckpointsConfig().set(courseName + "." + i + "." + checkpointDatum, getConfig().getDouble(courseName + "." + i + "." + checkpointDatum));
+					getParkourUpgrader().getCheckpointsConfig().set(courseName + "." + i + "." + checkpointDatum,
+							getConfig().getDouble(courseName + "." + i + "." + checkpointDatum));
 				}
 				getConfig().set(courseName + "." + i, null);
 			}

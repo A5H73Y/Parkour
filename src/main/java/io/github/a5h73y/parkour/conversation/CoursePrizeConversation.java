@@ -39,6 +39,7 @@ public class CoursePrizeConversation extends ParkourConversation {
             super("material", "command", "xp");
         }
 
+        @NotNull
         @Override
         public String getPromptText(@NotNull ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " What type of prize would you like to set?\n"
@@ -66,13 +67,14 @@ public class CoursePrizeConversation extends ParkourConversation {
     /* BEGIN MATERIAL PRIZE */
     private static class ChooseBlock extends StringPrompt {
 
+        @NotNull
         @Override
-        public String getPromptText(ConversationContext context) {
+        public String getPromptText(@NotNull ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " What Material do you want to reward the player with?";
         }
 
         @Override
-        public Prompt acceptInput(ConversationContext context, String message) {
+        public Prompt acceptInput(@NotNull ConversationContext context, String message) {
             Material material = MaterialUtils.lookupMaterial(message.toUpperCase());
 
             if (material == null) {
@@ -88,32 +90,35 @@ public class CoursePrizeConversation extends ParkourConversation {
 
     private static class ChooseAmount extends NumericPrompt {
 
+        @NotNull
         @Override
-        public String getPromptText(ConversationContext context) {
+        public String getPromptText(@NotNull ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " How many would you like to reward the player with?";
         }
 
         @Override
-        protected boolean isNumberValid(ConversationContext context, Number input) {
+        protected boolean isNumberValid(@NotNull ConversationContext context, Number input) {
             return input.intValue() > 0 && input.intValue() <= 255;
         }
 
         @Override
-        protected String getFailedValidationText(ConversationContext context, Number invalidInput) {
+        protected String getFailedValidationText(@NotNull ConversationContext context,
+                                                 @NotNull Number invalidInput) {
             return "Amount must be between 1 and 255.";
         }
 
         @Override
         protected Prompt acceptValidatedInput(ConversationContext context, Number amount) {
             context.setSessionData("amount", amount.intValue());
-
             return new MaterialProcessComplete();
         }
     }
 
     private static class MaterialProcessComplete extends MessagePrompt {
 
-        public String getPromptText(ConversationContext context) {
+        @NotNull
+        @Override
+        public String getPromptText(@NotNull ConversationContext context) {
             String courseName = context.getSessionData(SESSION_COURSE_NAME).toString();
             CourseInfo.setMaterialPrize(courseName,
                     context.getSessionData("material").toString(),
@@ -124,7 +129,7 @@ public class CoursePrizeConversation extends ParkourConversation {
         }
 
         @Override
-        protected Prompt getNextPrompt(ConversationContext context) {
+        protected Prompt getNextPrompt(@NotNull ConversationContext context) {
             return Prompt.END_OF_CONVERSATION;
         }
     }
@@ -132,14 +137,16 @@ public class CoursePrizeConversation extends ParkourConversation {
     /* BEGIN COMMAND PRIZE */
     class ChooseCommand extends StringPrompt {
 
+        @NotNull
         @Override
         public String getPromptText(ConversationContext context) {
-            context.getForWhom().sendRawMessage(ChatColor.GRAY + "Remember you can include %PLAYER% to apply it to that player.\nExample: 'kick %PLAYER%'");
+            context.getForWhom().sendRawMessage(ChatColor.GRAY
+                    + "Remember you can include %PLAYER% to apply it to that player.\nExample: 'kick %PLAYER%'");
             return ChatColor.LIGHT_PURPLE + " What would you like the Command prize to be?";
         }
 
         @Override
-        public Prompt acceptInput(ConversationContext context, String message) {
+        public Prompt acceptInput(@NotNull ConversationContext context, String message) {
             String command = message.replace("/", "");
             context.setSessionData("command", command);
 
@@ -149,14 +156,15 @@ public class CoursePrizeConversation extends ParkourConversation {
 
     private class ChooseRunNow extends BooleanPrompt {
 
+        @NotNull
         @Override
-        public String getPromptText(ConversationContext arg0) {
-            return ChatColor.LIGHT_PURPLE + " Would you like to run this command now? (to test)\n" +
-                    ChatColor.GREEN + "[yes, no]";
+        public String getPromptText(@NotNull ConversationContext context) {
+            return ChatColor.LIGHT_PURPLE + " Would you like to run this command now? (to test)\n"
+                    + ChatColor.GREEN + "[yes, no]";
         }
 
         @Override
-        protected Prompt acceptValidatedInput(ConversationContext context, boolean runNow) {
+        protected Prompt acceptValidatedInput(@NotNull ConversationContext context, boolean runNow) {
             if (runNow) {
                 Parkour.getInstance().getServer().dispatchCommand(
                         Parkour.getInstance().getServer().getConsoleSender(),
@@ -169,7 +177,9 @@ public class CoursePrizeConversation extends ParkourConversation {
 
     private static class CommandProcessComplete extends MessagePrompt {
 
-        public String getPromptText(ConversationContext context) {
+        @NotNull
+        @Override
+        public String getPromptText(@NotNull ConversationContext context) {
             String courseName = context.getSessionData(SESSION_COURSE_NAME).toString();
             CourseInfo.addEventCommand(courseName, ParkourEventType.PRIZE, context.getSessionData("command").toString());
 
@@ -178,7 +188,7 @@ public class CoursePrizeConversation extends ParkourConversation {
         }
 
         @Override
-        protected Prompt getNextPrompt(ConversationContext context) {
+        protected Prompt getNextPrompt(@NotNull ConversationContext context) {
             return Prompt.END_OF_CONVERSATION;
         }
     }
@@ -186,41 +196,45 @@ public class CoursePrizeConversation extends ParkourConversation {
     /* BEGIN XP PRIZE */
     private static class ChooseXP extends NumericPrompt {
 
+        @NotNull
         @Override
-        public String getPromptText(ConversationContext context) {
+        public String getPromptText(@NotNull ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " How much XP would you like to reward the player with?";
         }
 
         @Override
-        protected boolean isNumberValid(ConversationContext context, Number input) {
+        protected boolean isNumberValid(@NotNull ConversationContext context, Number input) {
             return input.intValue() > 0 && input.intValue() <= 10000;
         }
 
         @Override
-        protected String getFailedValidationText(ConversationContext context, Number invalidInput) {
+        protected String getFailedValidationText(@NotNull ConversationContext context,
+                                                 @NotNull Number invalidInput) {
             return "Amount must be between 1 and 10,000.";
         }
 
         @Override
-        protected Prompt acceptValidatedInput(ConversationContext context, Number amount) {
+        protected Prompt acceptValidatedInput(@NotNull ConversationContext context, Number amount) {
             context.setSessionData("amount", amount.intValue());
 
-            return new XPProcessComplete();
+            return new XpProcessComplete();
         }
     }
 
-    private static class XPProcessComplete extends MessagePrompt {
+    private static class XpProcessComplete extends MessagePrompt {
 
-        public String getPromptText(ConversationContext context) {
+        @NotNull
+        @Override
+        public String getPromptText(@NotNull ConversationContext context) {
             String courseName = context.getSessionData(SESSION_COURSE_NAME).toString();
             String amount = context.getSessionData("amount").toString();
-            CourseInfo.setXPPrize(courseName, Integer.parseInt(amount));
+            CourseInfo.setXpPrize(courseName, Integer.parseInt(amount));
 
             return TranslationUtils.getPropertySet("XP Prize", courseName, amount);
         }
 
         @Override
-        protected Prompt getNextPrompt(ConversationContext context) {
+        protected Prompt getNextPrompt(@NotNull ConversationContext context) {
             return Prompt.END_OF_CONVERSATION;
         }
     }

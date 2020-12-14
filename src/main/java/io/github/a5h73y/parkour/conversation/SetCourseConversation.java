@@ -26,16 +26,14 @@ public class SetCourseConversation extends ParkourConversation {
     public static final List<String> SET_COURSE_OPTIONS = Collections.unmodifiableList(
             Arrays.asList("creator", "minlevel", "maxdeath", "maxtime", "command", "message"));
 
-    public static final List<String> COMMAND_OPTIONS =
+    public static final List<String> PARKOUR_EVENT_TYPE_NAMES =
             Stream.of(ParkourEventType.values()).map(type -> type.name().toLowerCase()).collect(Collectors.toList());
-
-    public static final List<String> MESSAGE_OPTIONS = Collections.unmodifiableList(
-            Arrays.asList("join", "leave", "finish", "checkpoint", "checkpointall")); //TODO update to use ParkourEventType
 
     public SetCourseConversation(Player player) {
         super(player);
     }
 
+    @NotNull
     @Override
     public Prompt getEntryPrompt() {
         return new ChooseSetCourseOption();
@@ -47,8 +45,8 @@ public class SetCourseConversation extends ParkourConversation {
             super(SET_COURSE_OPTIONS.toArray(new String[0]));
         }
 
-        @Override
         @NotNull
+        @Override
         public String getPromptText(@NotNull ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " What course option would you like to set?\n"
                     + ChatColor.GREEN + formatFixedSet();
@@ -71,8 +69,8 @@ public class SetCourseConversation extends ParkourConversation {
 
     private static class SetCourseOptionValue extends StringPrompt {
 
-        @Override
         @NotNull
+        @Override
         public String getPromptText(@NotNull ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " What value would you like to set?";
         }
@@ -103,6 +101,7 @@ public class SetCourseConversation extends ParkourConversation {
             super(conversable);
         }
 
+        @NotNull
         @Override
         public Prompt getEntryPrompt() {
             return new ChooseCourseCommandOption();
@@ -112,11 +111,11 @@ public class SetCourseConversation extends ParkourConversation {
     private static class ChooseCourseCommandOption extends FixedSetPrompt {
 
         ChooseCourseCommandOption() {
-            super(COMMAND_OPTIONS.toArray(new String[0]));
+            super(PARKOUR_EVENT_TYPE_NAMES.toArray(new String[0]));
         }
 
-        @Override
         @NotNull
+        @Override
         public String getPromptText(@NotNull ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " Which event would you like to add a command to?\n"
                     + ChatColor.GREEN + formatFixedSet();
@@ -132,8 +131,8 @@ public class SetCourseConversation extends ParkourConversation {
 
     private static class ChooseCourseCommandValue extends StringPrompt {
 
-        @Override
         @NotNull
+        @Override
         public String getPromptText(@NotNull ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " What command would you like to set?";
         }
@@ -156,6 +155,7 @@ public class SetCourseConversation extends ParkourConversation {
             super(conversable);
         }
 
+        @NotNull
         @Override
         public Prompt getEntryPrompt() {
             return new ChooseCourseMessageOption();
@@ -165,11 +165,11 @@ public class SetCourseConversation extends ParkourConversation {
     private static class ChooseCourseMessageOption extends FixedSetPrompt {
 
         ChooseCourseMessageOption() {
-            super(MESSAGE_OPTIONS.toArray(new String[0]));
+            super(PARKOUR_EVENT_TYPE_NAMES.toArray(new String[0]));
         }
 
-        @Override
         @NotNull
+        @Override
         public String getPromptText(@NotNull ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " What message option would you like to set?\n"
                     + ChatColor.GREEN + formatFixedSet();
@@ -185,8 +185,8 @@ public class SetCourseConversation extends ParkourConversation {
 
     private static class ChooseCourseMessageValue extends StringPrompt {
 
-        @Override
         @NotNull
+        @Override
         public String getPromptText(@NotNull ConversationContext context) {
             return ChatColor.LIGHT_PURPLE + " What message would you like to set?";
         }

@@ -81,7 +81,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
     public List<String> onTabComplete(@NotNull CommandSender sender,
                                       @NotNull Command cmd,
                                       @NotNull String alias,
-                                      @NotNull String[] args) {
+                                      @NotNull String... args) {
         if (!(sender instanceof Player)) {
             return null;
         }
@@ -114,7 +114,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
 
     /**
      * Populate the main command options.
-     * @param player requesting player
+     * @param player player
      * @return allowed commands
      */
     private List<String> populateMainCommands(Player player) {
@@ -333,10 +333,8 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             case "setcourse":
                 switch (arg2.toLowerCase()) {
                     case "message":
-                        allowedCommands = SetCourseConversation.MESSAGE_OPTIONS;
-                        break;
                     case "command":
-                        allowedCommands = SetCourseConversation.COMMAND_OPTIONS;
+                        allowedCommands = SetCourseConversation.PARKOUR_EVENT_TYPE_NAMES;
                         break;
                     default:
                         break;

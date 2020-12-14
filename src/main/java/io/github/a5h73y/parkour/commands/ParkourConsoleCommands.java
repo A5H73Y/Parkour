@@ -15,6 +15,7 @@ import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -84,7 +85,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                parkour.getEconomyApi().processEconomyCommand(sender, args);
+                parkour.getEconomyApi().processCommand(sender, args);
                 break;
 
             case "editkit":
@@ -97,7 +98,11 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 break;
 
             case "info":
-                parkour.getPlayerManager().displayParkourInfo(sender, args);
+                if (!ValidationUtils.validateArgs(sender, args, 2)) {
+                    return false;
+                }
+
+                parkour.getPlayerManager().displayParkourInfo(sender, Bukkit.getOfflinePlayer(args[1]));
                 break;
 
             case "join":

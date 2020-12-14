@@ -1,5 +1,6 @@
 package io.github.a5h73y.parkour.type.course;
 
+import com.cryptomorin.xseries.XMaterial;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.conversation.LeaderboardConversation;
@@ -31,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -440,6 +440,25 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     }
 
     /**
+     * Toggle the Course's ChallengeOnly status.
+     * Set whether the Player can only join the Course if they are part of a Challenge.
+     *
+     * @param sender requesting sender
+     * @param courseName course name
+     */
+    public void setChallengeOnlyStatus(CommandSender sender, String courseName) {
+        if (!doesCourseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            return;
+        }
+
+        // invert the existing value
+        boolean isEnabled = !CourseInfo.getChallengeOnly(courseName);
+        CourseInfo.setChallengeOnly(courseName, isEnabled);
+        TranslationUtils.sendPropertySet(sender, "Challenge Only Status", courseName, String.valueOf(isEnabled));
+    }
+
+    /**
      * Set the minimum ParkourLevel required to join the Course.
      *
      * @param sender requesting player
@@ -756,7 +775,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
 
         } else if (args.length >= 5) {
             if (args[2].equalsIgnoreCase("message")) {
-                if (SetCourseConversation.MESSAGE_OPTIONS.contains(args[3].toLowerCase())) {
+                if (SetCourseConversation.PARKOUR_EVENT_TYPE_NAMES.contains(args[3].toLowerCase())) {
                     String message = StringUtils.extractMessageFromArgs(args, 4);
 
                     CourseInfo.setEventMessage(args[1], args[3], message);
@@ -768,7 +787,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
                             "(courseName) message [join, leave, finish, checkpoint, checkpointall] [value]");
                 }
             } else if (args[2].equalsIgnoreCase("command")) {
-                if (SetCourseConversation.COMMAND_OPTIONS.contains(args[3].toLowerCase())) {
+                if (SetCourseConversation.PARKOUR_EVENT_TYPE_NAMES.contains(args[3].toLowerCase())) {
                     String message = StringUtils.extractMessageFromArgs(args, 4);
                     ParkourEventType type = ParkourEventType.valueOf(args[3].toUpperCase());
                     CourseInfo.addEventCommand(args[1], type, message);
@@ -972,17 +991,5 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         }
 
         sender.sendMessage("== " + page + " / " + ((courseList.size() + results - 1) / results) + " ==");
-    }
-
-    public void setChallengeOnlyStatus(CommandSender sender, String courseName) {
-        if (!doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
-            return;
-        }
-
-        // invert the existing value
-        boolean isEnabled = !CourseInfo.getChallengeOnly(courseName);
-        CourseInfo.setChallengeOnly(courseName, isEnabled);
-        TranslationUtils.sendPropertySet(sender, "Challenge Only Status", courseName, String.valueOf(isEnabled));
     }
 }

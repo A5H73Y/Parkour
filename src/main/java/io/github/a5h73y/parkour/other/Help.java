@@ -26,7 +26,7 @@ public final class Help {
      * @param args
      * @param sender
      */
-    public static void lookupCommandHelp(CommandSender sender, String[] args) {
+    public static void lookupCommandHelp(CommandSender sender, String... args) {
         if (args.length == 1) {
             TranslationUtils.sendValueTranslation("Help.Command", "(command)", sender);
             return;
@@ -70,7 +70,7 @@ public final class Help {
      * @param args
      * @param player
      */
-    public static void processCommandsInput(Player player, String[] args) {
+    public static void processCommandsInput(Player player, String... args) {
         if (args.length == 1) {
             displayCommandsIndex(player);
             return;

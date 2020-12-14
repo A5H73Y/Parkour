@@ -24,6 +24,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -46,7 +47,8 @@ public class CourseInfo {
      * @param courseName course name
      * @return linkedCourse
      */
-    public static String getLinkedCourse(String courseName) {
+    @Nullable
+    public static String getLinkedCourse(@NotNull String courseName) {
         return getCourseConfig().getString(courseName.toLowerCase() + ".LinkedCourse");
     }
 
@@ -55,7 +57,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return if linked course is found
      */
-    public static boolean hasLinkedCourse(String courseName) {
+    public static boolean hasLinkedCourse(@NotNull String courseName) {
         return getCourseConfig().contains(courseName.toLowerCase() + ".LinkedCourse");
     }
 
@@ -64,7 +66,7 @@ public class CourseInfo {
      * @param courseName course name
      * @param linkedCourse linked course name
      */
-    public static void setLinkedCourse(String courseName, String linkedCourse) {
+    public static void setLinkedCourse(@NotNull String courseName, @NotNull String linkedCourse) {
         getCourseConfig().set(courseName.toLowerCase() + ".LinkedCourse", linkedCourse.toLowerCase());
         persistChanges();
     }
@@ -75,7 +77,8 @@ public class CourseInfo {
      * @param courseName course name
      * @return linked Lobby name
      */
-    public static String getLinkedLobby(String courseName) {
+    @Nullable
+    public static String getLinkedLobby(@NotNull String courseName) {
         return getCourseConfig().getString(courseName.toLowerCase() + ".LinkedLobby");
     }
 
@@ -84,7 +87,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return if linked lobby is found
      */
-    public static boolean hasLinkedLobby(String courseName) {
+    public static boolean hasLinkedLobby(@NotNull String courseName) {
         return getCourseConfig().contains(courseName.toLowerCase() + ".LinkedLobby");
     }
 
@@ -93,8 +96,8 @@ public class CourseInfo {
      * @param courseName course name
      * @param lobbyName lobby name
      */
-    public static void setLinkedLobby(String courseName, String lobbyName) {
-        getCourseConfig().set(courseName.toLowerCase() + ".LinkedLobby", lobbyName);
+    public static void setLinkedLobby(@NotNull String courseName, @NotNull String lobbyName) {
+        getCourseConfig().set(courseName.toLowerCase() + ".LinkedLobby", lobbyName.toLowerCase());
         persistChanges();
     }
 
@@ -103,7 +106,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return the parkour mode name set
      */
-    public static String getParkourModeName(String courseName) {
+    public static String getParkourModeName(@NotNull String courseName) {
         return getCourseConfig().getString(courseName.toLowerCase() + ".Mode", ParkourMode.NONE.name());
     }
 
@@ -112,7 +115,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return the ParkourMode
      */
-    public static ParkourMode getCourseMode(String courseName) {
+    public static ParkourMode getCourseMode(@NotNull String courseName) {
         return ParkourMode.valueOf(getParkourModeName(courseName).toUpperCase());
     }
 
@@ -122,7 +125,7 @@ public class CourseInfo {
      * @param courseName courseName
      * @return course has ParkourMode
      */
-    public static boolean hasParkourMode(String courseName) {
+    public static boolean hasParkourMode(@NotNull String courseName) {
         return !ParkourMode.NONE.name().equals(getParkourModeName(courseName));
     }
 
@@ -131,7 +134,7 @@ public class CourseInfo {
      * @param courseName course name
      * @param mode ParkourMode
      */
-    public static void setParkourMode(String courseName, ParkourMode mode) {
+    public static void setParkourMode(@NotNull String courseName, @NotNull ParkourMode mode) {
         getCourseConfig().set(courseName.toLowerCase() + ".Mode", mode.name());
         persistChanges();
     }
@@ -141,7 +144,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return number of checkpoints
      */
-    public static int getCheckpointAmount(String courseName) {
+    public static int getCheckpointAmount(@NotNull String courseName) {
         return Parkour.getConfig(ConfigType.CHECKPOINTS).getInt(courseName.toLowerCase() + ".Checkpoints");
     }
 
@@ -150,7 +153,8 @@ public class CourseInfo {
      * @param courseName course name
      * @return creator's name
      */
-    public static String getCreator(String courseName) {
+    @Nullable
+    public static String getCreator(@NotNull String courseName) {
         return getCourseConfig().getString(courseName.toLowerCase() + ".Creator");
     }
 
@@ -159,7 +163,7 @@ public class CourseInfo {
      * @param courseName course name
      * @param playerName player's name
      */
-    public static void setCreator(String courseName, String playerName) {
+    public static void setCreator(@NotNull String courseName, @NotNull String playerName) {
         getCourseConfig().set(courseName.toLowerCase() + ".Creator", playerName);
         persistChanges();
     }
@@ -169,7 +173,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return minimum ParkourLevel to join Course
      */
-    public static int getMinimumParkourLevel(String courseName) {
+    public static int getMinimumParkourLevel(@NotNull String courseName) {
         return getCourseConfig().getInt(courseName.toLowerCase() + ".MinimumLevel");
     }
 
@@ -178,7 +182,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return course has minimum ParkourLevel
      */
-    public static boolean hasMinimumParkourLevel(String courseName) {
+    public static boolean hasMinimumParkourLevel(@NotNull String courseName) {
         return getMinimumParkourLevel(courseName) > 0;
     }
 
@@ -187,7 +191,7 @@ public class CourseInfo {
      * @param courseName course name
      * @param parkourLevel minimum parkour level
      */
-    public static void setMinimumParkourLevel(String courseName, int parkourLevel) {
+    public static void setMinimumParkourLevel(@NotNull String courseName, int parkourLevel) {
         getCourseConfig().set(courseName.toLowerCase() + ".MinimumLevel", parkourLevel);
         persistChanges();
     }
@@ -197,7 +201,8 @@ public class CourseInfo {
      * @param courseName course name
      * @return ParkourKit name.
      */
-    public static String getParkourKit(String courseName) {
+    @Nullable
+    public static String getParkourKit(@NotNull String courseName) {
         return getCourseConfig().getString(courseName.toLowerCase() + ".ParkourKit", Constants.DEFAULT);
     }
 
@@ -206,7 +211,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return course has ParkourKit
      */
-    public static boolean hasParkourKit(String courseName) {
+    public static boolean hasParkourKit(@NotNull String courseName) {
         return getCourseConfig().contains(courseName.toLowerCase() + ".ParkourKit");
     }
 
@@ -215,7 +220,7 @@ public class CourseInfo {
      * @param courseName course name
      * @param parkourKitName parkour kit name
      */
-    public static void setParkourKit(String courseName, String parkourKitName) {
+    public static void setParkourKit(@NotNull String courseName, @NotNull String parkourKitName) {
         getCourseConfig().set(courseName.toLowerCase() + ".ParkourKit", parkourKitName.toLowerCase());
         persistChanges();
     }
@@ -226,7 +231,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return maximum deaths
      */
-    public static int getMaximumDeaths(String courseName) {
+    public static int getMaximumDeaths(@NotNull String courseName) {
         return getCourseConfig().getInt(courseName.toLowerCase() + ".MaxDeaths", -1);
     }
 
@@ -235,7 +240,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return course has maximum deaths set
      */
-    public static boolean hasMaximumDeaths(String courseName) {
+    public static boolean hasMaximumDeaths(@NotNull String courseName) {
         return getMaximumDeaths(courseName) > 0;
     }
 
@@ -244,7 +249,7 @@ public class CourseInfo {
      * @param courseName course name
      * @param amount amount of deaths
      */
-    public static void setMaximumDeaths(String courseName, int amount) {
+    public static void setMaximumDeaths(@NotNull String courseName, int amount) {
         getCourseConfig().set(courseName.toLowerCase() + ".MaxDeaths", amount);
         persistChanges();
     }
@@ -255,7 +260,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return maximum time in seconds
      */
-    public static int getMaximumTime(String courseName) {
+    public static int getMaximumTime(@NotNull String courseName) {
         return getCourseConfig().getInt(courseName.toLowerCase() + ".MaxTime", -1);
     }
 
@@ -264,7 +269,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return course has Maximum Time
      */
-    public static boolean hasMaximumTime(String courseName) {
+    public static boolean hasMaximumTime(@NotNull String courseName) {
         return getMaximumTime(courseName) > 0;
     }
 
@@ -273,7 +278,7 @@ public class CourseInfo {
      * @param courseName course name
      * @param seconds number of seconds
      */
-    public static void setMaximumTime(String courseName, int seconds) {
+    public static void setMaximumTime(@NotNull String courseName, int seconds) {
         getCourseConfig().set(courseName.toLowerCase() + ".MaxTime", seconds);
         persistChanges();
     }
@@ -283,7 +288,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return course ready status
      */
-    public static boolean getReadyStatus(String courseName) {
+    public static boolean getReadyStatus(@NotNull String courseName) {
         return getCourseConfig().getBoolean(courseName.toLowerCase() + ".Ready", false);
     }
 
@@ -292,12 +297,12 @@ public class CourseInfo {
      * @param courseName course name
      * @param ready ready status
      */
-    public static void setReadyStatus(String courseName, boolean ready) {
+    public static void setReadyStatus(@NotNull String courseName, boolean ready) {
         getCourseConfig().set(courseName.toLowerCase() + ".Ready", ready);
         persistChanges();
     }
 
-    public static void toggleReadyStatus(String courseName) {
+    public static void toggleReadyStatus(@NotNull String courseName) {
         setReadyStatus(courseName, !getReadyStatus(courseName));
     }
 
@@ -306,7 +311,8 @@ public class CourseInfo {
      * @param courseName course name
      * @return material of reward
      */
-    public static Material getMaterialPrize(String courseName) {
+    @Nullable
+    public static Material getMaterialPrize(@NotNull String courseName) {
         return MaterialUtils.lookupMaterial(getCourseConfig().getString(courseName.toLowerCase() + ".Prize.Material"));
     }
 
@@ -315,7 +321,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return amount of material prize
      */
-    public static int getMaterialPrizeAmount(String courseName) {
+    public static int getMaterialPrizeAmount(@NotNull String courseName) {
         return getCourseConfig().getInt(courseName.toLowerCase() + ".Prize.Amount", 0);
     }
 
@@ -324,7 +330,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return course has Material prize
      */
-    public static boolean hasMaterialPrize(String courseName) {
+    public static boolean hasMaterialPrize(@NotNull String courseName) {
         return getCourseConfig().contains(courseName.toLowerCase() + ".Prize.Material");
     }
 
@@ -332,11 +338,11 @@ public class CourseInfo {
      * Set the Material Prize for the Course.
      * The Material and Amount to be rewarded for finishing the Course.
      * @param courseName course name
-     * @param material prize material
+     * @param materialName prize material
      * @param amount prize amount
      */
-    public static void setMaterialPrize(String courseName, String material, int amount) {
-        getCourseConfig().set(courseName.toLowerCase() + ".Prize.Material", material);
+    public static void setMaterialPrize(@NotNull String courseName, @NotNull String materialName, int amount) {
+        getCourseConfig().set(courseName.toLowerCase() + ".Prize.Material", materialName);
         getCourseConfig().set(courseName.toLowerCase() + ".Prize.Amount", amount);
         persistChanges();
     }
@@ -346,7 +352,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return XP prize
      */
-    public static int getXPPrize(String courseName) {
+    public static int getXpPrize(@NotNull String courseName) {
         return getCourseConfig().getInt(courseName.toLowerCase() + ".Prize.XP");
     }
 
@@ -355,7 +361,7 @@ public class CourseInfo {
      * @param courseName course name
      * @param amount xp amount
      */
-    public static void setXPPrize(String courseName, int amount) {
+    public static void setXpPrize(@NotNull String courseName, int amount) {
         getCourseConfig().set(courseName.toLowerCase() + ".Prize.XP", amount);
         persistChanges();
     }
@@ -365,7 +371,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return number of completions
      */
-    public static int getCompletions(String courseName) {
+    public static int getCompletions(@NotNull String courseName) {
         return getCourseConfig().getInt(courseName + ".Completed", 0);
     }
 
@@ -374,7 +380,7 @@ public class CourseInfo {
      * @param courseName course
      * @return percentage of completions
      */
-    public static double getCompletionPercent(String courseName) {
+    public static double getCompletionPercent(@NotNull String courseName) {
         return Math.round((getCompletions(courseName) * 1.0 / getViews(courseName)) * 100);
     }
 
@@ -382,7 +388,7 @@ public class CourseInfo {
      * Increment the number of Completions for the Course.
      * @param courseName course name
      */
-    public static void incrementCompletions(String courseName) {
+    public static void incrementCompletions(@NotNull String courseName) {
         getCourseConfig().set(courseName.toLowerCase() + ".Completed", getCompletions(courseName) + 1);
         persistChanges();
     }
@@ -392,7 +398,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return number of views
      */
-    public static int getViews(String courseName) {
+    public static int getViews(@NotNull String courseName) {
         return getCourseConfig().getInt(courseName + ".Views", 0);
     }
 
@@ -400,7 +406,7 @@ public class CourseInfo {
      * Increment the number of Views for the Course.
      * @param courseName course name
      */
-    public static void incrementViews(String courseName) {
+    public static void incrementViews(@NotNull String courseName) {
         getCourseConfig().set(courseName.toLowerCase() + ".Views", getViews(courseName) + 1);
     }
 
@@ -409,7 +415,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return ParkourLevel reward
      */
-    public static int getRewardParkourLevel(String courseName) {
+    public static int getRewardParkourLevel(@NotNull String courseName) {
         return getCourseConfig().getInt(courseName.toLowerCase() + ".RewardLevel");
     }
 
@@ -418,7 +424,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return has ParkourLevel reward
      */
-    public static boolean hasRewardParkourLevel(String courseName) {
+    public static boolean hasRewardParkourLevel(@NotNull String courseName) {
         return getRewardParkourLevel(courseName) > 0;
     }
 
@@ -427,7 +433,7 @@ public class CourseInfo {
      * @param courseName course name
      * @param level ParkourLevel reward
      */
-    public static void setRewardParkourLevel(String courseName, int level) {
+    public static void setRewardParkourLevel(@NotNull String courseName, int level) {
         getCourseConfig().set(courseName.toLowerCase() + ".RewardLevel", level);
         persistChanges();
     }
@@ -438,7 +444,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return ParkourLevel increase reward
      */
-    public static int getRewardParkourLevelIncrease(String courseName) {
+    public static int getRewardParkourLevelIncrease(@NotNull String courseName) {
         return getCourseConfig().getInt(courseName.toLowerCase() + ".RewardLevelAdd");
     }
 
@@ -447,7 +453,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return has ParkourLevel increase reward
      */
-    public static boolean hasRewardParkourLevelIncrease(String courseName) {
+    public static boolean hasRewardParkourLevelIncrease(@NotNull String courseName) {
         return getRewardParkourLevelIncrease(courseName) > 0;
     }
 
@@ -456,7 +462,7 @@ public class CourseInfo {
      * @param courseName course name
      * @param amount ParkourLevel increase reward
      */
-    public static void setRewardParkourLevelIncrease(String courseName, String amount) {
+    public static void setRewardParkourLevelIncrease(@NotNull String courseName, @NotNull String amount) {
         getCourseConfig().set(courseName.toLowerCase() + ".RewardLevelAdd", Integer.parseInt(amount));
         persistChanges();
     }
@@ -466,7 +472,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return reward once status
      */
-    public static boolean getRewardOnce(String courseName) {
+    public static boolean getRewardOnce(@NotNull String courseName) {
         return getCourseConfig().getBoolean(courseName.toLowerCase() + ".RewardOnce");
     }
 
@@ -475,25 +481,43 @@ public class CourseInfo {
      * @param courseName course name
      * @param enabled reward once enabled
      */
-    public static void setRewardOnce(String courseName, boolean enabled) {
+    public static void setRewardOnce(@NotNull String courseName, boolean enabled) {
         getCourseConfig().set(courseName.toLowerCase() + ".RewardOnce", enabled);
         persistChanges();
     }
 
-    public static void toggleRewardOnce(String courseName) {
+    /**
+     * Toggle the Reward Once status of the Course.
+     * @param courseName course name
+     */
+    public static void toggleRewardOnce(@NotNull String courseName) {
         setRewardOnce(courseName, !getRewardOnce(courseName));
     }
 
-    public static boolean getChallengeOnly(String courseName) {
+    /**
+     * Get the Challenge Only status of the Course.
+     * @param courseName course name
+     * @return challenge only status
+     */
+    public static boolean getChallengeOnly(@NotNull String courseName) {
         return getCourseConfig().getBoolean(courseName.toLowerCase() + ".ChallengeOnly");
     }
 
-    public static void setChallengeOnly(String courseName, boolean enabled) {
+    /**
+     * Set the Challenge Only status of the Course.
+     * @param courseName course name
+     * @param enabled challenge only enabled
+     */
+    public static void setChallengeOnly(@NotNull String courseName, boolean enabled) {
         getCourseConfig().set(courseName.toLowerCase() + ".ChallengeOnly", enabled);
         persistChanges();
     }
 
-    public static void toggleChallengeOnly(String courseName) {
+    /**
+     * Toggle the Challenge Only status of the Course.
+     * @param courseName course name
+     */
+    public static void toggleChallengeOnly(@NotNull String courseName) {
         setChallengeOnly(courseName, !getChallengeOnly(courseName));
     }
 
@@ -502,7 +526,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return number of hours delay for Course
      */
-    public static double getRewardDelay(String courseName) {
+    public static double getRewardDelay(@NotNull String courseName) {
         return getCourseConfig().getDouble(courseName.toLowerCase() + ".RewardDelay", 0);
     }
 
@@ -511,7 +535,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return course has reward delay
      */
-    public static boolean hasRewardDelay(String courseName) {
+    public static boolean hasRewardDelay(@NotNull String courseName) {
         return getRewardDelay(courseName) > 0;
     }
 
@@ -520,7 +544,7 @@ public class CourseInfo {
      * @param courseName course name
      * @param rewardDelay number of hours delay
      */
-    public static void setRewardDelay(String courseName, double rewardDelay) {
+    public static void setRewardDelay(@NotNull String courseName, double rewardDelay) {
         getCourseConfig().set(courseName.toLowerCase() + ".RewardDelay", rewardDelay);
         persistChanges();
     }
@@ -530,7 +554,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return Parkoins to reward
      */
-    public static double getRewardParkoins(String courseName) {
+    public static double getRewardParkoins(@NotNull String courseName) {
         return getCourseConfig().getDouble(courseName.toLowerCase() + ".Parkoins", 0);
     }
 
@@ -539,7 +563,7 @@ public class CourseInfo {
      * @param courseName course name
      * @param parkoins Parkoins to reward
      */
-    public static void setRewardParkoins(String courseName, double parkoins) {
+    public static void setRewardParkoins(@NotNull String courseName, double parkoins) {
         getCourseConfig().set(courseName.toLowerCase() + ".Parkoins", parkoins);
         persistChanges();
     }
@@ -551,7 +575,8 @@ public class CourseInfo {
      * @param courseName course name
      * @return populated Join Items
      */
-    public static List<ItemStack> getJoinItems(String courseName) {
+    @NotNull
+    public static List<ItemStack> getJoinItems(@NotNull String courseName) {
         List<ItemStack> joinItems = new ArrayList<>();
         ConfigurationSection joinItemStack = getCourseConfig().getConfigurationSection(courseName.toLowerCase() + ".JoinItems");
 
@@ -590,7 +615,8 @@ public class CourseInfo {
      * @param label item label
      * @param unbreakable unbreakable flag
      */
-    public static void addJoinItem(String courseName, Material material, int amount, String label, boolean unbreakable) {
+    public static void addJoinItem(@NotNull String courseName, @NotNull Material material, int amount,
+                                   @Nullable String label, boolean unbreakable) {
         courseName = courseName.toLowerCase();
 
         getCourseConfig().set(courseName + ".JoinItems." + material.name() + ".Amount", amount);
@@ -604,7 +630,8 @@ public class CourseInfo {
      * @param courseName course name
      * @return world name
      */
-    public static String getWorld(String courseName) {
+    @Nullable
+    public static String getWorld(@NotNull String courseName) {
         return getCourseConfig().getString(courseName.toLowerCase() + ".World");
     }
 
@@ -612,7 +639,7 @@ public class CourseInfo {
      * Delete the Course and all associated data.
      * @param courseNameInput course name
      */
-    public static void deleteCourse(final String courseNameInput) {
+    public static void deleteCourse(@NotNull String courseNameInput) {
         String courseName = courseNameInput.toLowerCase();
 
         List<String> courseList = getAllCourseNames();
@@ -632,7 +659,7 @@ public class CourseInfo {
      * Reset Prizes for Course completion.
      * @param courseName course name
      */
-    public static void resetPrizes(String courseName) {
+    public static void resetPrizes(@NotNull String courseName) {
         getCourseConfig().set(courseName.toLowerCase() + ".Prize", null);
         persistChanges();
     }
@@ -642,7 +669,7 @@ public class CourseInfo {
      * Removes any linked Lobby or Course.
      * @param courseName course name
      */
-    public static void resetLinks(String courseName) {
+    public static void resetLinks(@NotNull String courseName) {
         getCourseConfig().set(courseName.toLowerCase() + ".LinkedLobby", null);
         getCourseConfig().set(courseName.toLowerCase() + ".LinkedCourse", null);
         persistChanges();
@@ -654,7 +681,7 @@ public class CourseInfo {
      * @param sender requesting player
      * @param courseName course name
      */
-    public static void displayCourseInfo(CommandSender sender, String courseName) {
+    public static void displayCourseInfo(@NotNull CommandSender sender, @NotNull String courseName) {
         if (!Parkour.getInstance().getCourseManager().doesCourseExists(courseName)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
@@ -685,7 +712,7 @@ public class CourseInfo {
         sendConditionalValue(sender, "Material Prize",
                 hasMaterialPrize(courseName) && getMaterialPrizeAmount(courseName) > 0,
                 getMaterialPrize(courseName) + " x " + getMaterialPrizeAmount(courseName));
-        sendConditionalValue(sender, "XP Prize", getXPPrize(courseName));
+        sendConditionalValue(sender, "XP Prize", getXpPrize(courseName));
 
         if (Parkour.getInstance().getEconomyApi().isEnabled()) {
             sendConditionalValue(sender, "Join Fee", getEconomyJoiningFee(courseName));
@@ -715,7 +742,8 @@ public class CourseInfo {
      * @param courseName course name
      * @return list of potion effects
      */
-    public static List<String> getPotionParkourModeEffects(String courseName) {
+    @NotNull
+    public static List<String> getPotionParkourModeEffects(@NotNull String courseName) {
         return getCourseConfig().getStringList(courseName.toLowerCase() + ".PotionParkourMode.Effects");
     }
 
@@ -725,7 +753,8 @@ public class CourseInfo {
      * @param potionEffectType potion effect type name
      * @param durationAmplifier duration and amplifier provided
      */
-    public static void addPotionParkourModeEffect(String courseName, String potionEffectType,
+    public static void addPotionParkourModeEffect(@NotNull String courseName,
+                                                  @NotNull String potionEffectType,
                                                   @Nullable String durationAmplifier) {
         List<String> potionEffects = getPotionParkourModeEffects(courseName);
         String potionEffect = potionEffectType;
@@ -744,7 +773,8 @@ public class CourseInfo {
      * @param courseName course name
      * @return join message
      */
-    public static String getPotionJoinMessage(String courseName) {
+    @Nullable
+    public static String getPotionJoinMessage(@NotNull String courseName) {
         return getCourseConfig().getString(courseName.toLowerCase() + ".PotionParkourMode.JoinMessage");
     }
 
@@ -753,7 +783,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return course has potion join message
      */
-    public static boolean hasPotionJoinMessage(String courseName) {
+    public static boolean hasPotionJoinMessage(@NotNull String courseName) {
         return getCourseConfig().contains(courseName.toLowerCase() + ".PotionParkourMode.JoinMessage");
     }
 
@@ -762,7 +792,7 @@ public class CourseInfo {
      * @param courseName course name
      * @param joinMessage join message
      */
-    public static void setPotionJoinMessage(String courseName, String joinMessage) {
+    public static void setPotionJoinMessage(@NotNull String courseName, @Nullable String joinMessage) {
         getCourseConfig().set(courseName.toLowerCase() + ".PotionParkourMode.JoinMessage", joinMessage);
         persistChanges();
     }
@@ -772,7 +802,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return finish reward
      */
-    public static int getEconomyFinishReward(String courseName) {
+    public static int getEconomyFinishReward(@NotNull String courseName) {
         return Parkour.getConfig(ConfigType.ECONOMY).getInt("Price." + courseName.toLowerCase() + ".Finish");
     }
 
@@ -781,8 +811,31 @@ public class CourseInfo {
      * @param courseName course name
      * @return joining fee
      */
-    public static int getEconomyJoiningFee(String courseName) {
+    public static int getEconomyJoiningFee(@NotNull String courseName) {
         return Parkour.getConfig(ConfigType.ECONOMY).getInt("Price." + courseName.toLowerCase() + ".JoinFee");
+    }
+
+    /**
+     * Get the Event Message for this Course.
+     * Possible events found within {@link ParkourEventType}.
+     * @param courseName course name
+     * @param typeName event type name
+     * @return matching event message
+     */
+    @Nullable
+    public static String getEventMessage(@NotNull String courseName, @NotNull String typeName) {
+        return getCourseConfig().getString(courseName + "." + StringUtils.standardizeText(typeName) + "Message");
+    }
+
+    /**
+     * Get the Event Message for this Course.
+     * @param courseName course name
+     * @param type event type
+     * @return matching event message
+     */
+    @Nullable
+    public static String getEventMessage(@NotNull String courseName, @NotNull ParkourEventType type) {
+        return getEventMessage(courseName, type.name());
     }
 
     /**
@@ -792,7 +845,7 @@ public class CourseInfo {
      * @param type event type name
      * @param value message value
      */
-    public static void setEventMessage(String courseName, String type, String value) {
+    public static void setEventMessage(@NotNull String courseName, @NotNull String type, @Nullable String value) {
         getCourseConfig().set(courseName + "." + StringUtils.standardizeText(type) + "Message", value);
         persistChanges();
     }
@@ -802,7 +855,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return player limit
      */
-    public static int getPlayerLimit(String courseName) {
+    public static int getPlayerLimit(@NotNull String courseName) {
         return getCourseConfig().getInt(courseName.toLowerCase() + ".PlayerLimit");
     }
 
@@ -811,7 +864,7 @@ public class CourseInfo {
      * @param courseName course name
      * @return course has player limit
      */
-    public static boolean hasPlayerLimit(String courseName) {
+    public static boolean hasPlayerLimit(@NotNull String courseName) {
         return getCourseConfig().getInt(courseName.toLowerCase() + ".PlayerLimit") > 0;
     }
 
@@ -820,7 +873,7 @@ public class CourseInfo {
      * @param courseName course name
      * @param limit player limi
      */
-    public static void setPlayerLimit(String courseName, int limit) {
+    public static void setPlayerLimit(@NotNull String courseName, int limit) {
         getCourseConfig().set(courseName.toLowerCase() + ".PlayerLimit", limit);
         persistChanges();
     }
@@ -832,7 +885,8 @@ public class CourseInfo {
      * @param eventType selected {@link ParkourEventType}
      * @return commands for that event
      */
-    public static List<String> getEventCommands(String courseName, ParkourEventType eventType) {
+    @NotNull
+    public static List<String> getEventCommands(@NotNull String courseName, @NotNull ParkourEventType eventType) {
         return getCourseConfig().getStringList(courseName.toLowerCase() + "." + eventType.getConfigEntry() + "Command");
     }
 
@@ -842,7 +896,7 @@ public class CourseInfo {
      * @param eventType selected {@link ParkourEventType}
      * @return course has the event type commands
      */
-    public static boolean hasEventCommands(String courseName, ParkourEventType eventType) {
+    public static boolean hasEventCommands(@NotNull String courseName, @NotNull ParkourEventType eventType) {
         return getCourseConfig().contains(courseName.toLowerCase() + "." + eventType.getConfigEntry() + "Command");
     }
 
@@ -852,7 +906,9 @@ public class CourseInfo {
      * @param eventType selected {@link ParkourEventType}
      * @param value command to run
      */
-    public static void addEventCommand(String courseName, ParkourEventType eventType, String value) {
+    public static void addEventCommand(@NotNull String courseName,
+                                       @NotNull ParkourEventType eventType,
+                                       @NotNull String value) {
         List<String> commands = getEventCommands(courseName, eventType);
         commands.add(value);
 
@@ -864,7 +920,7 @@ public class CourseInfo {
      * Delete the AutoStart at the provided coordinates.
      * @param coordinates requested coordinates
      */
-    public static void deleteAutoStart(String coordinates) {
+    public static void deleteAutoStart(@NotNull String coordinates) {
         getCourseConfig().set("CourseInfo.AutoStart." + coordinates, null);
         persistChanges();
     }

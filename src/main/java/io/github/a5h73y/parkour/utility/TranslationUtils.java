@@ -6,6 +6,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.other.Constants;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
 import java.util.regex.Pattern;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -80,11 +81,25 @@ public class TranslationUtils {
 		return getValueTranslation(translationKey, value, true);
 	}
 
-	public static String getCourseMessage(String courseName, String key, String fallback) {
-		ParkourConfiguration courseConfig = Parkour.getConfig(ConfigType.COURSES);
-		String courseMessage = StringUtils.colour(courseConfig.getString(courseName + "." + key,
-				getTranslation(fallback, false)));
-		return valuePlaceholder.matcher(courseMessage).replaceAll(courseName == null ? "" : courseName);
+	/**
+	 * Get Course Event Message.
+	 * Will find the corresponding custom Event message.
+	 * Fallback to the default event message if not found.
+	 *
+	 * @param courseName course name
+	 * @param eventKey event key
+	 * @param fallbackKey fallback translation key
+	 * @return course event message
+	 */
+	public static String getCourseEventMessage(String courseName, String eventKey, String fallbackKey) {
+		String result = CourseInfo.getEventMessage(courseName, eventKey);
+
+		// if there is no custom message, fallback to default
+		if (result == null) {
+			result = getTranslation(fallbackKey, false);
+		}
+
+		return valuePlaceholder.matcher(StringUtils.colour(result)).replaceAll(courseName == null ? "" : courseName);
 	}
 
 	/**

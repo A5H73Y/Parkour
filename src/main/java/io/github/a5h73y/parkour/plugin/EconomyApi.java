@@ -3,7 +3,6 @@ package io.github.a5h73y.parkour.plugin;
 import static org.bukkit.Bukkit.getServer;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.configuration.impl.EconomyConfig;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.other.Constants;
@@ -18,10 +17,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 /**
- * {@link Economy} integration.
+ * Vault Economy integration.
  * When the EconomyAPI class is initialised, an attempt is made to connect to Vault / Economy.
  * If the outcome succeeds and a provider is found, economy will be enabled.
- * If Parkour does not link to a Economy plugin, all attempted purchases will be successful.
+ * If Parkour does not link to an Economy plugin, all attempted purchases will be successful.
  */
 public class EconomyApi extends PluginWrapper {
 
@@ -50,23 +49,54 @@ public class EconomyApi extends PluginWrapper {
 		}
 	}
 
+	/**
+	 * Reward the Player with an amount.
+	 *
+	 * @param player target player
+	 * @param amount amount to reward
+	 * @return transaction success
+	 */
 	public boolean rewardPlayer(Player player, double amount) {
 		return this.economy.depositPlayer(player, amount).transactionSuccess();
 	}
 
+	/**
+	 * Charge the Player an amount.
+	 *
+	 * @param player target player
+	 * @param amount amount to charge
+	 * @return transaction success
+	 */
 	public boolean chargePlayer(Player player, double amount) {
 		return this.economy.withdrawPlayer(player, amount).transactionSuccess();
 	}
 
+	/**
+	 * Check if the Player has the requested amount of currency.
+	 *
+	 * @param player target player
+	 * @param amount amount required
+	 * @return player has sufficient amount
+	 */
 	public boolean hasAmount(Player player, double amount) {
 		return this.economy.has(player, amount);
 	}
 
 	/**
-	 * Give the player the economy prize for the course.
+	 * Get the Economy Currency name.
 	 *
-	 * @param player
-	 * @param courseName
+	 * @return currency name
+	 */
+	public String getCurrencyName() {
+		return economy.currencyNamePlural() == null ? "" : " " + economy.currencyNamePlural();
+	}
+
+	/**
+	 * Reward Player for completing Course.
+	 * If Economy is enabled, give the Player the amount of currency earned.
+	 *
+	 * @param player target player
+	 * @param courseName course name
 	 */
 	public void giveEconomyPrize(Player player, String courseName) {
 		if (isEnabled()) {
@@ -83,11 +113,11 @@ public class EconomyApi extends PluginWrapper {
 	}
 
 	/**
-	 * Send the player a summary of the Economy information.
+	 * Display the Economy information.
 	 *
 	 * @param sender requesting sender
 	 */
-	public void sendEconomyInformation(CommandSender sender) {
+	public void displayEconomyInformation(CommandSender sender) {
 		TranslationUtils.sendHeading("Economy Details", sender);
 		sender.sendMessage("Enabled: " + isEnabled());
 
@@ -99,7 +129,16 @@ public class EconomyApi extends PluginWrapper {
 		}
 	}
 
-	public boolean validateCourseJoin(Player player, String courseName) {
+	/**
+	 * Validate and Charge the Player for joining Course.
+	 * Check if there is a Join Fee for the Course, and that the player has sufficient funds.
+	 * If there is a Fee, charge the Player and continue.
+	 *
+	 * @param player requesting player
+	 * @param courseName course name
+	 * @return Player can join course
+	 */
+	public boolean validateAndChargeCourseJoin(Player player, String courseName) {
 		boolean allowed = true;
 		if (isEnabled()) {
 			int joinFee = CourseInfo.getEconomyJoiningFee(courseName);
@@ -123,86 +162,117 @@ public class EconomyApi extends PluginWrapper {
 		return allowed;
 	}
 
-	public String getCurrencyName() {
-		return economy.currencyNamePlural() == null ? "" : " " + economy.currencyNamePlural();
+	/**
+	 * Set the Finish Reward for the Course.
+	 *
+	 * @param courseName course name
+	 * @param value amount to reward
+	 */
+	public void setFinishReward(String courseName, double value) {
+		Parkour.getConfig(ConfigType.ECONOMY).set("Price." + courseName.toLowerCase() + ".Finish", value);
+		Parkour.getConfig(ConfigType.ECONOMY).save();
 	}
 
 	/**
-	 * TODO
+	 * Set the Joining Fee for the Course.
 	 *
-	 * @param args
-	 * @param sender
+	 * @param courseName course name
+	 * @param value amount to charge
 	 */
-	public void processEconomyCommand(CommandSender sender, String[] args) {
+	public void setJoinFee(String courseName, double value) {
+		Parkour.getConfig(ConfigType.ECONOMY).set("Price." + courseName.toLowerCase() + ".JoinFee", value);
+		Parkour.getConfig(ConfigType.ECONOMY).save();
+	}
+
+	/**
+	 * Process Economy Command input.
+	 * Each of the valid commands will be processed based on input.
+	 *
+	 * @param sender requesting sender
+	 * @param args command arguments
+	 */
+	public void processCommand(CommandSender sender, String... args) {
 		if (!isEnabled()) {
 			TranslationUtils.sendValueTranslation("Error.PluginNotLinked", getPluginName(), sender);
 			return;
 		}
 
-		ParkourConfiguration econConfig = Parkour.getConfig(ConfigType.ECONOMY);
+		switch (args[1].toLowerCase()) {
+			case "setprize":
+				processSetPrizeCommand(sender, args);
+				break;
 
-		if (args[1].equalsIgnoreCase("info")) {
-			sendEconomyInformation(sender);
+			case "setfee":
+				processSetFeeCommand(sender, args);
+				break;
 
-		} else if (args[1].equalsIgnoreCase("setprize")) {
-			if (args.length != 4) {
-				TranslationUtils.sendInvalidSyntax(sender, "econ", "setprize (course) (amount)");
-				return;
-			}
-			if (!Parkour.getInstance().getCourseManager().doesCourseExists(args[2])) {
-				TranslationUtils.sendValueTranslation("Error.NoExist", args[2], sender);
-				return;
-			}
-			if (!ValidationUtils.isPositiveInteger(args[3])) {
-				TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
-				return;
-			}
+			case "recreate":
+				recreateEconomy(sender);
+				break;
 
-			econConfig.set("Price." + args[2].toLowerCase() + ".Finish", Integer.parseInt(args[3]));
-			econConfig.save();
-			TranslationUtils.sendPropertySet(sender, "Economy Prize", args[2], args[3]);
+			case "info":
+				displayEconomyInformation(sender);
+				break;
 
-		} else if (args[1].equalsIgnoreCase("setfee")) {
-			if (args.length != 4) {
-				TranslationUtils.sendInvalidSyntax(sender, "econ", "setfee (course) (amount)");
-				return;
-			}
-			if (!Parkour.getInstance().getCourseManager().doesCourseExists(args[2])) {
-				TranslationUtils.sendValueTranslation("Error.NoExist", args[2], sender);
-				return;
-			}
-			if (!ValidationUtils.isPositiveInteger(args[3])) {
-				TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
-				return;
-			}
-
-			econConfig.set("Price." + args[2].toLowerCase() + ".JoinFee", Integer.parseInt(args[3]));
-			econConfig.save();
-			TranslationUtils.sendPropertySet(sender, "Join Fee", args[2], args[3]);
-
-		} else if (args[1].equalsIgnoreCase("recreate")) {
-			sender.sendMessage(Parkour.getPrefix() + "Starting Recreation...");
-			int changed = recreateEconomy();
-			sender.sendMessage(Parkour.getPrefix() + "Process Complete! " + changed + " courses updated.");
-
-		} else {
-			TranslationUtils.sendInvalidSyntax(sender, "econ", "(info / recreate / setprize / setfee)");
+			default:
+				TranslationUtils.sendInvalidSyntax(sender, "econ", "(info / recreate / setprize / setfee)");
 		}
 	}
 
-	/**
-	 * Recreate the courses economy information
-	 * This includes the cost to join and the finish prize
-	 *
-	 * @return int
-	 */
-	private int recreateEconomy() {
-		EconomyConfig config = (EconomyConfig) Parkour.getConfig(ConfigType.ECONOMY);
+	private void processSetPrizeCommand(CommandSender sender, String... args) {
+		if (args.length != 4) {
+			TranslationUtils.sendInvalidSyntax(sender, "econ", "setprize (course) (amount)");
+			return;
+		}
 
-		int updated = 0;
+		if (!Parkour.getInstance().getCourseManager().doesCourseExists(args[2])) {
+			TranslationUtils.sendValueTranslation("Error.NoExist", args[2], sender);
+			return;
+		}
+
+		if (!ValidationUtils.isPositiveDouble(args[3])) {
+			TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+			return;
+		}
+
+		setFinishReward(args[2], Double.parseDouble(args[3]));
+		TranslationUtils.sendPropertySet(sender, "Economy Prize", args[2], args[3]);
+	}
+
+	private void processSetFeeCommand(CommandSender sender, String... args) {
+		if (args.length != 4) {
+			TranslationUtils.sendInvalidSyntax(sender, "econ", "setfee (course) (amount)");
+			return;
+		}
+
+		if (!Parkour.getInstance().getCourseManager().doesCourseExists(args[2])) {
+			TranslationUtils.sendValueTranslation("Error.NoExist", args[2], sender);
+			return;
+		}
+
+		if (!ValidationUtils.isPositiveDouble(args[3])) {
+			TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+			return;
+		}
+
+		setJoinFee(args[2], Double.parseDouble(args[3]));
+		TranslationUtils.sendPropertySet(sender, "Join Fee", args[2], args[3]);
+	}
+
+	/**
+	 * Recreate the Economy course details.
+	 * Sets a zero-value Joining and Reward amount for the user to easily edit.
+	 *
+	 * @return courses updated
+	 */
+	private int recreateEconomy(CommandSender sender) {
+		EconomyConfig config = (EconomyConfig) Parkour.getConfig(ConfigType.ECONOMY);
+		sender.sendMessage(Parkour.getPrefix() + "Starting Recreation...");
+
+		int changes = 0;
 		for (String course : CourseInfo.getAllCourseNames()) {
 			if (!config.contains(course + ".JoinFee")) {
-				updated++;
+				changes++;
 				config.set(course + ".JoinFee", 0);
 			}
 			if (!config.contains(course + ".FinishReward")) {
@@ -211,6 +281,7 @@ public class EconomyApi extends PluginWrapper {
 		}
 
 		config.save();
-		return updated;
+		sender.sendMessage(Parkour.getPrefix() + "Process Complete! " + changes + " courses updated.");
+		return changes;
 	}
 }

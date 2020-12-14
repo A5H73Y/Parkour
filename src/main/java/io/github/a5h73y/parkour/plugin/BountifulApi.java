@@ -1,16 +1,16 @@
 package io.github.a5h73y.parkour.plugin;
 
+import com.connorlinfoot.bountifulapi.BountifulAPI;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PluginUtils;
-import com.connorlinfoot.bountifulapi.BountifulAPI;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 
 /**
- * {@link com.connorlinfoot.bountifulapi.BountifulAPI} integration.
- * Allow for Titles and ActionBar messages.
+ * BountifulAPI wrapper to provide Title and Action Bar messages to the Player.
+ * BountifulAPI integration will be used when Spigot's implementation isn't supported.
  */
 public class BountifulApi extends PluginWrapper {
 
@@ -35,25 +35,36 @@ public class BountifulApi extends PluginWrapper {
 	}
 
 	/**
-	 * The following methods use the BountifulAPI plugin
-	 * If the user is has 'Quiet mode' enabled, no message will be sent
-	 * If the BountifulAPI plugin is not installed, the message will be sent via chat
+	 * Send the Player the title.
+	 * Quiet Mode will be respected and not message the Player when enabled.
+	 * Attempting the Title will mean either spigot's title implementation or BountifulAPI will be used.
 	 *
-	 * @param player
-	 * @param title
-	 * @param attemptTitle
+	 * @param player target player
+	 * @param title title text
+	 * @param attemptTitle attempt to show the title
 	 */
 	public void sendTitle(Player player, String title, boolean attemptTitle) {
 		sendFullTitle(player, title, "", attemptTitle);
 	}
 
+	/**
+	 * Send the Player the sub title.
+	 * Quiet Mode will be respected and not message the Player when enabled.
+	 * Attempting the Title will mean either spigot's title implementation or BountifulAPI will be used.
+	 *
+	 * @param player target player
+	 * @param subTitle sub title text
+	 * @param attemptTitle attempt to show the title
+	 */
 	public void sendSubTitle(Player player, String subTitle, boolean attemptTitle) {
 		sendFullTitle(player, "", subTitle, attemptTitle);
 	}
 
 	/**
-	 * Send a title message to the player.
+	 * Send the Player a title message.
 	 * Empty strings can be passed to display 'nothing' in either sections.
+	 * Quiet Mode will be respected and not message the Player when enabled.
+	 * Attempting the Title will mean either spigot's title implementation or BountifulAPI will be used.
 	 *
 	 * @param player target player
 	 * @param title main title text
@@ -71,12 +82,24 @@ public class BountifulApi extends PluginWrapper {
 
 			} else if (isEnabled()) {
 				BountifulAPI.sendTitle(player, inDuration, stayDuration, outDuration, title, subTitle);
+
+			} else {
+				player.sendMessage(Parkour.getPrefix() + title);
 			}
 		} else {
 			player.sendMessage(Parkour.getPrefix() + title);
 		}
 	}
 
+	/**
+	 * Send an Action Bar to the Player.
+	 * Quiet Mode will be respected and not message the Player when enabled.
+	 * Attempting the Title will mean either spigot's action bar implementation or BountifulAPI will be used.
+	 *
+	 * @param player target player
+	 * @param title action bar text
+	 * @param attemptTitle attempt to show the title
+	 */
 	public void sendActionBar(Player player, String title, boolean attemptTitle) {
 		if (PlayerInfo.isQuietMode(player)) {
 			return;

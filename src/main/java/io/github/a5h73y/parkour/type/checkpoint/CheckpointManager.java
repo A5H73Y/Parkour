@@ -1,5 +1,6 @@
 package io.github.a5h73y.parkour.type.checkpoint;
 
+import com.cryptomorin.xseries.XBlock;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.ConfigType;
@@ -14,7 +15,6 @@ import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.ArrayList;
 import java.util.List;
-import com.cryptomorin.xseries.XBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;

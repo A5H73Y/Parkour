@@ -61,11 +61,11 @@ We can change what happens to a player after they complete a course; They can ei
 
 After we have created a custom lobby, we can link this course to teleport us to this lobby once we complete the course, this is achieved with the following command `/pa link lobby (lobby name)`.
 
-https://i.imgur.com/gc7UVkX.jpg
+![Course Linked to Lobby](https://i.imgur.com/gc7UVkX.jpg "Course Linked to Lobby")
 
 If we want to link a course to another course, the command becomes `/pa link course (course name)`.
 
-https://i.imgur.com/1YvM8zV.jpg
+![Course Linked to Course](https://i.imgur.com/1YvM8zV.jpg "Course Linked to Course")
 
 If you want to remove the link, simply enter `/pa link reset` which will result in the player being teleported to the default lobby.
 

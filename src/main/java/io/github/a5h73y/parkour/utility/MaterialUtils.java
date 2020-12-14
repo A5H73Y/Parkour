@@ -1,11 +1,11 @@
 package io.github.a5h73y.parkour.utility;
 
+import com.cryptomorin.xseries.XMaterial;
 import io.github.a5h73y.parkour.Parkour;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -122,7 +122,7 @@ public class MaterialUtils {
 	 * @param args
 	 * @param player
 	 */
-	public static void lookupMaterialInformation(Player player, String[] args) {
+	public static void lookupMaterialInformation(Player player, String... args) {
 		Material material;
 		ItemStack data = null;
 

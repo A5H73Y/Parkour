@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class ParkourEvent extends Event implements Cancellable {
 
@@ -30,6 +31,8 @@ public abstract class ParkourEvent extends Event implements Cancellable {
         return player;
     }
 
+    @NotNull
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

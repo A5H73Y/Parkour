@@ -1,5 +1,7 @@
 package io.github.a5h73y.parkour.listener;
 
+import com.cryptomorin.xseries.XBlock;
+import com.cryptomorin.xseries.XMaterial;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
@@ -8,8 +10,6 @@ import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
-import com.cryptomorin.xseries.XBlock;
-import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -116,10 +116,11 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
 
         event.setCancelled(true);
 
-        if (mode == ParkourMode.FREEDOM && MaterialUtils.getMaterialInPlayersHand(player) == XMaterial.REDSTONE_TORCH.parseMaterial()) {
+        if (mode == ParkourMode.FREEDOM
+                && MaterialUtils.getMaterialInPlayersHand(player) == XMaterial.REDSTONE_TORCH.parseMaterial()) {
             if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
-                parkour.getPlayerManager().getParkourSession(player)
-                        .setFreedomLocation(parkour.getCheckpointManager().createCheckpointFromPlayerLocation(player).getLocation());
+                parkour.getPlayerManager().getParkourSession(player).setFreedomLocation(
+                        parkour.getCheckpointManager().createCheckpointFromPlayerLocation(player).getLocation());
                 TranslationUtils.sendTranslation("Mode.Freedom.Save", player);
 
             } else {
@@ -211,7 +212,8 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
                 parkour.getBountifulApi().sendActionBar(event.getPlayer(),
                         TranslationUtils.getTranslation("Parkour.TimerStarted", false), true);
             } else {
-                parkour.getPlayerManager().joinCourseButDelayed(event.getPlayer(), courseName, parkour.getConfig().getAutoStartDelay());
+                parkour.getPlayerManager().joinCourseButDelayed(
+                        event.getPlayer(), courseName, parkour.getConfig().getAutoStartDelay());
             }
         }
     }
