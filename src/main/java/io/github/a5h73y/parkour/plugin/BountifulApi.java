@@ -4,6 +4,7 @@ import com.connorlinfoot.bountifulapi.BountifulAPI;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PluginUtils;
+import io.github.a5h73y.parkour.utility.TranslationUtils;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
@@ -84,10 +85,10 @@ public class BountifulApi extends PluginWrapper {
 				BountifulAPI.sendTitle(player, inDuration, stayDuration, outDuration, title, subTitle);
 
 			} else {
-				player.sendMessage(Parkour.getPrefix() + title);
+				TranslationUtils.sendMessage(player, title);
 			}
 		} else {
-			player.sendMessage(Parkour.getPrefix() + title);
+			TranslationUtils.sendMessage(player, title);
 		}
 	}
 
@@ -113,10 +114,10 @@ public class BountifulApi extends PluginWrapper {
 				BountifulAPI.sendActionBar(player, title);
 
 			} else {
-				player.sendMessage(Parkour.getPrefix() + title);
+				TranslationUtils.sendMessage(player, title);
 			}
 		} else {
-			player.sendMessage(Parkour.getPrefix() + title);
+			TranslationUtils.sendMessage(player, title);
 		}
 	}
 }

@@ -77,7 +77,7 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 		ParkourKit kit = getParkourKit(kitName);
 
 		if (kit == null) {
-			player.sendMessage(Parkour.getPrefix() + "Invalid ParkourKit: " + ChatColor.RED + kitName);
+			TranslationUtils.sendMessage(player, "Invalid ParkourKit: &4" + kitName);
 			return;
 		}
 
@@ -142,12 +142,10 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 			}
 		}
 
-		sender.sendMessage(Parkour.getPrefix() + invalidTypes.size() + " problems with " + ChatColor.AQUA + kitName
-				+ ChatColor.WHITE + " found.");
-		if (!invalidTypes.isEmpty()) {
-			for (String type : invalidTypes) {
-				sender.sendMessage(ChatColor.RED + type);
-			}
+		TranslationUtils.sendMessage(sender, invalidTypes.size() + " problems with &b" + kitName + "&f found.");
+
+		for (String type : invalidTypes) {
+			TranslationUtils.sendMessage(sender, "&4" + type, false);
 		}
 	}
 
@@ -166,7 +164,7 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 		if (args.length == 2) {
 			String kitName = args[1].toLowerCase();
 			if (!parkourKit.contains(kitName)) {
-				sender.sendMessage(Parkour.getPrefix() + "This ParkourKit set does not exist!");
+				TranslationUtils.sendMessage(sender, "This ParkourKit set does not exist!");
 				return;
 			}
 
@@ -177,9 +175,9 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 				String actionTypeName = ParkourKitInfo.getActionTypeForMaterial(kitName, material);
 				ActionType actionType = validateActionType(actionTypeName);
 				if (actionType != null) {
-					sender.sendMessage(material + ": " + ChatColor.GRAY + actionTypeName);
+					TranslationUtils.sendValue(sender, material, actionTypeName);
 				} else {
-					sender.sendMessage("Invalid Action Type: " + actionTypeName);
+					TranslationUtils.sendMessage(sender, "Invalid Action Type: " + actionTypeName);
 				}
 			}
 
@@ -190,6 +188,24 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 				sender.sendMessage("* " + kit);
 			}
 		}
+	}
+
+	/**
+	 * Delete the requested ParkourKit.
+	 *
+	 * @param sender command sender
+	 * @param kitName kit name
+	 */
+	public void deleteParkourKit(CommandSender sender, String kitName) {
+		if (!ParkourKitInfo.doesParkourKitExist(kitName)) {
+			TranslationUtils.sendTranslation("Error.UnknownParkourKit", sender);
+			return;
+		}
+
+		ParkourKitInfo.deleteKit(kitName);
+		clearCache(kitName);
+		TranslationUtils.sendValueTranslation("Parkour.Delete", kitName + " ParkourKit", sender);
+		PluginUtils.logToFile(kitName + " parkourkit was deleted by " + sender.getName());
 	}
 
 	@Override

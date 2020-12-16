@@ -12,7 +12,6 @@ import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
@@ -119,13 +118,11 @@ public class EconomyApi extends PluginWrapper {
 	 */
 	public void displayEconomyInformation(CommandSender sender) {
 		TranslationUtils.sendHeading("Economy Details", sender);
-		sender.sendMessage("Enabled: " + isEnabled());
+		TranslationUtils.sendValue(sender, "Enabled", Boolean.toString(isEnabled()));
 
 		if (isEnabled()) {
-			FileConfiguration config = Parkour.getDefaultConfig();
-			sender.sendMessage("Economy: " + economy.getName());
-
-			// TODO more
+			TranslationUtils.sendValue(sender, "Economy", economy.getName());
+			TranslationUtils.sendValue(sender, "Currency", getCurrencyName());
 		}
 	}
 
@@ -267,7 +264,7 @@ public class EconomyApi extends PluginWrapper {
 	 */
 	private int recreateEconomy(CommandSender sender) {
 		EconomyConfig config = (EconomyConfig) Parkour.getConfig(ConfigType.ECONOMY);
-		sender.sendMessage(Parkour.getPrefix() + "Starting Recreation...");
+		TranslationUtils.sendMessage(sender, "Starting Recreation...");
 
 		int changes = 0;
 		for (String course : CourseInfo.getAllCourseNames()) {
@@ -281,7 +278,7 @@ public class EconomyApi extends PluginWrapper {
 		}
 
 		config.save();
-		sender.sendMessage(Parkour.getPrefix() + "Process Complete! " + changes + " courses updated.");
+		TranslationUtils.sendMessage(sender, "Process Complete! &b" + changes + "&f courses updated.");
 		return changes;
 	}
 }

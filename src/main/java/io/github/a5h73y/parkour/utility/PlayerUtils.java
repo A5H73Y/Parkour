@@ -38,7 +38,7 @@ public class PlayerUtils {
 	public static void fullyHealPlayer(Player player) {
 		Damageable playerDamage = player;
 		playerDamage.setHealth(playerDamage.getMaxHealth());
-		player.sendMessage(Parkour.getPrefix() + "Healed!");
+		TranslationUtils.sendMessage(player, "Healed!");
 	}
 
 	public static void applyGameModeChange(Player player, String gameModeName) {
@@ -46,10 +46,10 @@ public class PlayerUtils {
 			GameMode gameMode = GameMode.valueOf(gameModeName.toUpperCase());
 			if (gameMode != player.getGameMode()) {
 				player.setGameMode(gameMode);
-				player.sendMessage(Parkour.getPrefix() + "GameMode set to " + StringUtils.standardizeText(gameMode.name()));
+				TranslationUtils.sendMessage(player, "GameMode set to &b" + StringUtils.standardizeText(gameMode.name()));
 			}
 		} else {
-			player.sendMessage(Parkour.getPrefix() + "GameMode not recognised.");
+			TranslationUtils.sendMessage(player, "GameMode not recognised.");
 		}
 	}
 }

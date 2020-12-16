@@ -76,7 +76,7 @@ public class ParkourKitInfo {
      * @param kitName parkour kit name
      */
     public static void deleteKit(String kitName) {
-        getParkourKitConfig().set("ParkourKit." + kitName.toUpperCase(), null);
+        getParkourKitConfig().set("ParkourKit." + kitName.toLowerCase(), null);
         getParkourKitConfig().save();
         Parkour.getInstance().getParkourKitManager().clearCache(kitName);
     }

@@ -119,7 +119,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
      */
     private List<String> populateMainCommands(Player player) {
         // if they have an outstanding question, make those the only options
-        if (parkour.getQuestionManager().hasPlayerBeenAskedQuestion(player)) {
+        if (parkour.getQuestionManager().hasBeenAskedQuestion(player)) {
             return QUESTION_ANSWER_COMMANDS;
         }
 

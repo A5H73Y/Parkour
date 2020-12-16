@@ -11,10 +11,16 @@ public class TimeEntry {
     private final long time;
     private final int deaths;
 
-    public TimeEntry(String playerId, String playerName, long time, int deaths) {
-        this(null, playerId, playerName, time, deaths);
-    }
-
+    /**
+     * Construct a Time Entry.
+     * Results from the Database will be inserted.
+     *
+     * @param courseId course ID in the database
+     * @param playerId player UUID
+     * @param playerName player name
+     * @param time time in ms
+     * @param deaths deaths accumulated
+     */
     public TimeEntry(String courseId, String playerId, String playerName, long time, int deaths) {
         this.courseId = courseId;
         this.playerId = playerId;
@@ -23,6 +29,14 @@ public class TimeEntry {
         this.deaths = deaths;
     }
 
+    public TimeEntry(String playerId, String playerName, long time, int deaths) {
+        this(null, playerId, playerName, time, deaths);
+    }
+
+    /**
+     * The Course ID in the database.
+     * @return course ID
+     */
     public String getCourseId() {
         return courseId;
     }

@@ -150,7 +150,7 @@ public class SignUtils {
 
             } else {
                 signEvent.getBlock().breakNaturally();
-                player.sendMessage(Parkour.getPrefix() + "GameMode not recognised.");
+                TranslationUtils.sendMessage(player, "GameMode not recognised.");
             }
 
         } else {
@@ -158,7 +158,7 @@ public class SignUtils {
             PotionEffectType potionType = PotionEffectType.getByName(effect);
 
             if (potionType == null) {
-                player.sendMessage(Parkour.getPrefix() + "Unknown Effect!");
+                TranslationUtils.sendMessage(player, "Unknown Effect!");
                 signEvent.getBlock().breakNaturally();
                 return;
             }
@@ -166,9 +166,9 @@ public class SignUtils {
             String[] args = signEvent.getLine(3).split(":");
             if (args.length != 2) {
                 signEvent.getBlock().breakNaturally();
-                player.sendMessage(Parkour.getPrefix() + "Invalid syntax, must follow '(duration):(strength)' example '1000:6'.");
+                TranslationUtils.sendMessage(player, "Invalid syntax, must follow '(duration):(strength)' example '1000:6'.");
             } else {
-                player.sendMessage(Parkour.getPrefix() + potionType.getName() + " effect sign created, with a strength of " + args[0] + " and a duration of " + args[1]);
+                TranslationUtils.sendMessage(player, potionType.getName() + " effect sign created, with a strength of " + args[0] + " and a duration of " + args[1]);
             }
         }
     }
@@ -194,7 +194,7 @@ public class SignUtils {
 
         if (signEvent.getLine(3).isEmpty() || !ValidationUtils.isPositiveInteger(signEvent.getLine(3))) {
             signEvent.getBlock().breakNaturally();
-            player.sendMessage(Parkour.getPrefix() + "Please specify checkpoint on bottom line!");
+            TranslationUtils.sendMessage(player, "Please specify checkpoint on bottom line!");
             return;
         }
 

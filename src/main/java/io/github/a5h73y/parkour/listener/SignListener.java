@@ -275,9 +275,9 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
             String[] args = argument.split(":");
             if (args.length == 2) {
                 PlayerUtils.applyPotionEffect(effectName, Integer.parseInt(args[1]), Integer.parseInt(args[0]), player);
-                player.sendMessage(Parkour.getPrefix() + effectName + " Effect Applied!");
+                TranslationUtils.sendMessage(player, effectName + " Effect Applied!");
             } else {
-                player.sendMessage(Parkour.getPrefix() + "Invalid syntax, must follow '(duration):(strength)' example '1000:6'.");
+                TranslationUtils.sendMessage(player, "Invalid syntax, must follow '(duration):(strength)' example '1000:6'.");
             }
         }
     }

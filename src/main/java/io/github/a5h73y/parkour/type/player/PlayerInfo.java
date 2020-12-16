@@ -23,7 +23,7 @@ public class PlayerInfo {
 
     /**
      * Check if the Player is known to Parkour.
-     * @param player requesting player
+     * @param player player
      * @return player has Parkour information
      */
     public static boolean hasPlayerInfo(OfflinePlayer player) {
@@ -32,7 +32,7 @@ public class PlayerInfo {
 
     /**
      * Get the Player's selected Course name.
-     * @param player requesting player
+     * @param player player
      * @return selected course name
      */
     public static String getSelectedCourse(OfflinePlayer player) {
@@ -42,7 +42,7 @@ public class PlayerInfo {
     /**
      * Check if Player has selected a Course.
      * This does not guarantee they've selected a valid course.
-     * @param player requesting player
+     * @param player player
      * @return player has selected course
      */
     public static boolean hasSelectedCourse(OfflinePlayer player) {
@@ -51,7 +51,7 @@ public class PlayerInfo {
 
     /**
      * Set the Player's selected Course name.
-     * @param player requesting player
+     * @param player player
      * @param courseName selected course name
      */
     public static void setSelectedCourse(OfflinePlayer player, @NotNull String courseName) {
@@ -61,7 +61,7 @@ public class PlayerInfo {
 
     /**
      * Reset the Player's selected Course Name.
-     * @param player requesting player
+     * @param player player
      */
     public static void resetSelected(OfflinePlayer player) {
         getPlayersConfig().set(player.getUniqueId() + ".Selected", null);
@@ -72,7 +72,7 @@ public class PlayerInfo {
     /**
      * Get the Player's last played Course.
      * The course they most recently joined, but may not have finished.
-     * @param player requesting player
+     * @param player player
      * @return course name last played
      */
     public static String getLastPlayedCourse(OfflinePlayer player) {
@@ -81,7 +81,7 @@ public class PlayerInfo {
 
     /**
      * Set the Player's last played Course.
-     * @param player requesting player
+     * @param player player
      * @param courseName course name last played
      */
     public static void setLastPlayedCourse(OfflinePlayer player, String courseName) {
@@ -91,7 +91,7 @@ public class PlayerInfo {
 
     /**
      * Get the Player's last completed Course.
-     * @param player requesting player
+     * @param player player
      * @return course name last completed
      */
     public static String getLastCompletedCourse(OfflinePlayer player) {
@@ -100,7 +100,7 @@ public class PlayerInfo {
 
     /**
      * Set the Player's last completed Course.
-     * @param player requesting player
+     * @param player player
      * @param courseName course name last completed
      */
     public static void setLastCompletedCourse(OfflinePlayer player, String courseName) {
@@ -110,7 +110,7 @@ public class PlayerInfo {
 
     /**
      * Get the number of Courses completed by Player.
-     * @param player requesting player
+     * @param player player
      * @return number of courses completed
      */
     public static int getNumberOfCompletedCourses(OfflinePlayer player) {
@@ -119,7 +119,7 @@ public class PlayerInfo {
 
     /**
      * Get the Completed Course names for Player.
-     * @param player requesting player
+     * @param player player
      * @return completed course names
      */
     public static List<String> getCompletedCourses(OfflinePlayer player) {
@@ -137,7 +137,7 @@ public class PlayerInfo {
     /**
      * Get the Uncompleted Course names for Player.
      * The Courses the player has yet to complete on the server.
-     * @param player requesting player
+     * @param player player
      * @return uncompleted course names
      */
     public static List<String> getUncompletedCourses(OfflinePlayer player) {
@@ -149,7 +149,7 @@ public class PlayerInfo {
 
     /**
      * Add a Course name to the Player's completions.
-     * @param player requesting player
+     * @param player player
      * @param courseName completed course name
      */
     public static void addCompletedCourse(OfflinePlayer player, String courseName) {
@@ -192,7 +192,7 @@ public class PlayerInfo {
 
     /**
      * Get the Player's ParkourLevel.
-     * @param player requesting player
+     * @param player player
      * @return parkour level value
      */
     public static int getParkourLevel(OfflinePlayer player) {
@@ -201,7 +201,7 @@ public class PlayerInfo {
 
     /**
      * Increase the Player's ParkourLevel by the amount.
-     * @param player requesting player
+     * @param player player
      * @param amount amount to increase
      */
     public static void increaseParkourLevel(OfflinePlayer player, int amount) {
@@ -210,7 +210,7 @@ public class PlayerInfo {
 
     /**
      * Set the Player's ParkourLevel.
-     * @param player requesting player
+     * @param player player
      * @param level new parkour level value
      */
     public static void setParkourLevel(OfflinePlayer player, int level) {
@@ -221,7 +221,7 @@ public class PlayerInfo {
     /**
      * Get the Player's ParkourRank.
      * The default rank value will be used if not set.
-     * @param player requesting player
+     * @param player player
      * @return player's parkour rank
      */
     public static String getParkourRank(OfflinePlayer player) {
@@ -242,7 +242,7 @@ public class PlayerInfo {
     /**
      * Get last rewarded time for Course.
      * Get the timestamp the Player last received a reward for the completing Course.
-     * @param player requesting player
+     * @param player player
      * @param courseName course name
      * @return last rewarded time
      */
@@ -252,7 +252,7 @@ public class PlayerInfo {
 
     /**
      * Set the last rewarded time for Course.
-     * @param player requesting player
+     * @param player player
      * @param courseName course name
      * @param rewardTime time of reward given
      */
@@ -282,7 +282,7 @@ public class PlayerInfo {
 
     /**
      * Save the Player's Inventory and Armor contents.
-     * @param player requesting player
+     * @param player player
      */
     public static void saveInventoryArmor(Player player) {
         ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
@@ -291,6 +291,24 @@ public class PlayerInfo {
         inventoryConfig.save();
     }
 
+    /**
+     * Get the Player's saved Health.
+     * @param player player
+     * @return stored health
+     */
+    public static double getSavedHealth(Player player) {
+        return Parkour.getConfig(ConfigType.INVENTORY).getDouble(player.getUniqueId() + ".Health");
+    }
+
+    /**
+     * Get the Player's saved Health.
+     * @param player player
+     * @return stored health
+     */
+    public static int getSavedFoodLevel(Player player) {
+        return Parkour.getConfig(ConfigType.INVENTORY).getInt(player.getUniqueId() + ".Hunger");
+    }
+    
     /**
      * Save the Player's Health and Food Level.
      * @param player player
@@ -303,8 +321,48 @@ public class PlayerInfo {
     }
 
     /**
+     * Reset the saved Health and Food Level.
+     * @param player player
+     */
+    public static void resetSavedHealthFoodLevel(Player player) {
+        ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
+        inventoryConfig.set(player.getUniqueId() + ".Health", null);
+        inventoryConfig.set(player.getUniqueId() + ".Hunger", null);
+        inventoryConfig.save();
+    }
+
+    /**
+     * Get the Player's Saved XP Level.
+     * @param player player
+     * @return saved XP level
+     */
+    public static int getSavedXpLevel(Player player) {
+        return Parkour.getConfig(ConfigType.INVENTORY).getInt(player.getUniqueId() + ".XPLevel");
+    }
+
+    /**
+     * Save the Player's XP Level.
+     * @param player player
+     */
+    public static void saveXpLevel(Player player) {
+        ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
+        inventoryConfig.set(player.getUniqueId() + ".XPLevel", player.getLevel());
+        inventoryConfig.save();
+    }
+
+    /**
+     * Reset the Player's saved XP Level.
+     * @param player player
+     */
+    public static void resetSavedXpLevel(Player player) {
+        ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
+        inventoryConfig.set(player.getUniqueId() + ".XPLevel", null);
+        inventoryConfig.save();
+    }
+
+    /**
      * Retrieve the Player's saved Inventory contents.
-     * @param player requesting player
+     * @param player player
      * @return player's inventory contents
      */
     public static ItemStack[] getSavedInventoryContents(Player player) {
@@ -315,7 +373,7 @@ public class PlayerInfo {
 
     /**
      * Retrieve the Player's saved Armor contents.
-     * @param player requesting player
+     * @param player player
      * @return player's armor contents
      */
     public static ItemStack[] getSavedArmorContents(Player player) {
@@ -327,7 +385,7 @@ public class PlayerInfo {
     /**
      * Get the Player's Join Location.
      * The {@link Location} from which the player joined the course.
-     * @param player requesting player
+     * @param player player
      * @return saved join location
      */
     public static Location getJoinLocation(Player player) {
@@ -336,7 +394,7 @@ public class PlayerInfo {
 
     /**
      * Check whether the Player has a Join Location set.
-     * @param player requesting player
+     * @param player player
      * @return join location set
      */
     public static boolean hasJoinLocation(Player player) {
@@ -365,7 +423,7 @@ public class PlayerInfo {
     /**
      * Check if the Player is in Quiet Mode.
      * Quite Mode will not message the player as often with non-important messages.
-     * @param player requesting player
+     * @param player player
      * @return is quiet mode enabled
      */
     public static boolean isQuietMode(Player player) {
@@ -374,7 +432,7 @@ public class PlayerInfo {
 
     /**
      * Toggle the Player's Quiet Mode status.
-     * @param player requesting player
+     * @param player player
      */
     public static void toggleQuietMode(Player player) {
         setQuietMode(player, !isQuietMode(player));
@@ -392,7 +450,7 @@ public class PlayerInfo {
 
     /**
      * Get the number of accumulated Parkoins for Player.
-     * @param player requesting player
+     * @param player player
      * @return number of Parkoins
      */
     public static double getParkoins(OfflinePlayer player) {
@@ -401,7 +459,7 @@ public class PlayerInfo {
 
     /**
      * Increase the amount of Parkoins the Player has.
-     * @param player requesting player
+     * @param player player
      * @param amount amount to increase by
      */
     public static void increaseParkoins(OfflinePlayer player, double amount) {
@@ -410,7 +468,7 @@ public class PlayerInfo {
 
     /**
      * Set the number of Parkoins for Player.
-     * @param player requesting player
+     * @param player player
      * @param amount amount to set
      */
     public static void setParkoins(OfflinePlayer player, double amount) {

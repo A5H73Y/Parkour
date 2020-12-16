@@ -52,7 +52,9 @@
     "arguments": "(config key)",
     "example": "/pa config Scoreboard.Enabled",
     "description": "Used as a debug tool to identify the value of a field in the config. Will be used by support to identify any problems on the server. MySQL details are not visible.",
-    "commandGroup": "4"
+    "permission": "Server Operator",
+    "commandGroup": "4",
+    "consoleSyntax": "pac config Scoreboard.Enabled"
   },
   {
     "command": "create",
@@ -500,6 +502,7 @@
   {
     "command": "setstart",
     "title": "Set Start of a Course",
+    "arguments": "[course]",
     "example": "/pa setstart",
     "description": "The start of the selected Course will be overwritten to your current position, rather than having to recreate the Course.",
     "permission": "Parkour.Admin.Course",
@@ -507,12 +510,11 @@
   },
   {
     "command": "settings",
-    "title": "Display Parkour Settings",
-    "example": "/pa settings",
-    "description": "Display the main Parkour settings for the server.",
+    "title": "Display Course Settings GUI",
+    "example": "/pa settings [course]",
+    "description": "TODO.",
     "permission": "Parkour.Admin.*",
-    "commandGroup": "4",
-    "consoleSyntax": "pac settings"
+    "commandGroup": "4"
   },
   {
     "command": "sql",
@@ -581,7 +583,7 @@
     "title": "Whitelist a Non-Parkour Command",
     "arguments": "(command)",
     "example": "/pa whitelist help",
-    "description": "Be default, non-Parkour commands are disabled during the Course unless you whitelist a command that the Players are allowed to use.",
+    "description": "By default, non-Parkour commands are disabled during the Course unless you whitelist a command that the Players are allowed to use.",
     "permission": "Parkour.Admin.*",
     "commandGroup": "4",
     "consoleSyntax": "pac whitelist (command)"

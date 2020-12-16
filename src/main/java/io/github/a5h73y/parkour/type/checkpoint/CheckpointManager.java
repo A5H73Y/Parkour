@@ -6,7 +6,7 @@ import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Constants;
-import io.github.a5h73y.parkour.other.Validation;
+import io.github.a5h73y.parkour.other.ParkourValidation;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
@@ -46,7 +46,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
      * @param checkpoint optional checkpoint number to override
      */
     public void createCheckpoint(Player player, @Nullable Integer checkpoint) {
-        if (!Validation.createCheckpoint(player, checkpoint)) {
+        if (!ParkourValidation.canCreateCheckpoint(player, checkpoint)) {
             return;
         }
 
@@ -208,7 +208,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
 
         player.teleport(new Location(world, x, y, z, yaw, pitch));
         String message = TranslationUtils.getValueTranslation("Parkour.Teleport", courseName);
-        player.sendMessage(checkpoint != null ? message + StringUtils.colour(" &f(&3" + checkpoint + "&f)") : message);
+        TranslationUtils.sendMessage(player, checkpoint != null ? message + " &f(&3" + checkpoint + "&f)" : message, false);
     }
 
     /**
@@ -227,7 +227,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
         int point = CourseInfo.getCheckpointAmount(courseName);
 
         if (point <= 0) {
-            sender.sendMessage(Parkour.getPrefix() + courseName + " has no checkpoints!");
+            TranslationUtils.sendMessage(sender, courseName + " has no Checkpoints!");
             return;
         }
 

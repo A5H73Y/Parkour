@@ -219,7 +219,7 @@ public class DefaultConfig extends ParkourConfiguration {
 	public void addWhitelistedCommand(CommandSender sender, String command) {
 		List<String> whitelistedCommands = getWhitelistedCommands();
 		if (whitelistedCommands.contains(command.toLowerCase())) {
-			sender.sendMessage(Parkour.getPrefix() + "This command is already whitelisted!");
+			TranslationUtils.sendMessage(sender, "This command is already whitelisted!");
 			return;
 		}
 
@@ -227,8 +227,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		set("OnCourse.EnforceParkourCommands.Whitelist", whitelistedCommands);
 		save();
 
-		sender.sendMessage(Parkour.getPrefix() + "Command " + ChatColor.AQUA + command
-				+ ChatColor.WHITE + " added to the whitelisted commands!");
+		TranslationUtils.sendMessage(sender, "Command &b" + command + "&f added to the whitelisted commands!");
 	}
 
 	public String getSignHeader() {
@@ -311,7 +310,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		return this.getBoolean("Other.EnforceSafeCheckpoints");
 	}
 
-	public boolean isFirstCheckAsStart() {
+	public boolean isTreatFirstCheckpointAsStart() {
 		return this.getBoolean("OnJoin.TreatFirstCheckpointAsStart");
 	}
 

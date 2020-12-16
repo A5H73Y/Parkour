@@ -406,12 +406,16 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
     public void displayInformation(CommandSender sender) {
         try {
             TranslationUtils.sendHeading("Parkour Database", sender);
-            String type = database instanceof MySQL ? "MySQL" : "SQLite";
-            sender.sendMessage("Database Type: " + type);
+            String databaseType = database instanceof MySQL ? "MySQL" : "SQLite";
+            TranslationUtils.sendValue(sender, "Database Type", databaseType);
+
             ResultSet count = database.query("SELECT COUNT(*) FROM course;");
-            sender.sendMessage("Courses: " + count.getInt(1));
+            TranslationUtils.sendValue(sender, "Courses", count.getInt(1));
+
             count = database.query("SELECT COUNT(*) FROM time;");
-            sender.sendMessage("Times: " + count.getInt(1));
+            TranslationUtils.sendValue(sender, "Times", count.getInt(1));
+
+            count.close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -475,7 +479,7 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
      */
     public void displayTimeEntries(CommandSender sender, String courseName, List<TimeEntry> times) {
         if (times.isEmpty()) {
-            sender.sendMessage(Parkour.getPrefix() + "No results were found!");
+            TranslationUtils.sendMessage(sender, "No results were found!");
             return;
         }
 

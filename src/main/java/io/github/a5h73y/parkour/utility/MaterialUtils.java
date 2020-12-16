@@ -2,12 +2,10 @@ package io.github.a5h73y.parkour.utility;
 
 import com.cryptomorin.xseries.XMaterial;
 import io.github.a5h73y.parkour.Parkour;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -18,6 +16,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Stairs;
 
 public class MaterialUtils {
+
+	private static List<Material> validCheckpointMaterials;
 
 	/**
 	 * Get the Material in the player's hand.
@@ -134,35 +134,23 @@ public class MaterialUtils {
 			material = data.getType();
 		}
 		if (material != null) {
-			player.sendMessage(Parkour.getPrefix() + "Material: " + material.name());
+			TranslationUtils.sendValue(player, "Material", material.name());
 			if (data != null) {
-				player.sendMessage(Parkour.getPrefix() + "Data: " + data.toString());
+				TranslationUtils.sendValue(player, "Data", data.toString());
 			}
 		} else {
-			player.sendMessage(Parkour.getPrefix() + "Invalid material!");
+			TranslationUtils.sendMessage(player, "Invalid Material!");
 		}
 	}
 
 	public static boolean isCheckpointSafe(Player player, Block block) {
+		List<Material> validMaterials = getValidCheckpointMaterials();
 		Block blockUnder = block.getRelative(BlockFace.DOWN);
-
-		List<Material> validMaterials = new ArrayList<>();
-		Collections.addAll(validMaterials, Material.AIR, XMaterial.CAVE_AIR.parseMaterial(), Material.REDSTONE_BLOCK,
-				XMaterial.ACACIA_SLAB.parseMaterial(), XMaterial.BIRCH_SLAB.parseMaterial(), XMaterial.BRICK_SLAB.parseMaterial(),
-				XMaterial.COBBLESTONE_SLAB.parseMaterial(), XMaterial.DARK_OAK_SLAB.parseMaterial(), XMaterial.DARK_PRISMARINE_SLAB.parseMaterial(),
-				XMaterial.JUNGLE_SLAB.parseMaterial(), XMaterial.NETHER_BRICK_SLAB.parseMaterial(), XMaterial.OAK_SLAB.parseMaterial(),
-				XMaterial.PETRIFIED_OAK_SLAB.parseMaterial(), XMaterial.PRISMARINE_BRICK_SLAB.parseMaterial(), XMaterial.PRISMARINE_SLAB.parseMaterial(),
-				XMaterial.QUARTZ_SLAB.parseMaterial(), XMaterial.RED_SANDSTONE_SLAB.parseMaterial(), XMaterial.SANDSTONE_SLAB.parseMaterial(),
-				XMaterial.SPRUCE_SLAB.parseMaterial(), XMaterial.STONE_BRICK_SLAB.parseMaterial(), XMaterial.STONE_SLAB.parseMaterial());
-
-		if (!Bukkit.getBukkitVersion().contains("1.8")) {
-			validMaterials.add(Material.PURPUR_SLAB);
-		}
 
 		//check if player is standing in a half-block
 		if (!block.getType().equals(Material.AIR) && !block.getType().equals(XMaterial.CAVE_AIR.parseMaterial())
 				&& !block.getType().equals(lookupMaterial(Parkour.getDefaultConfig().getString("OnCourse.CheckpointMaterial")))) {
-			player.sendMessage(Parkour.getPrefix() + "Invalid block for checkpoint: " + ChatColor.AQUA + block.getType());
+			TranslationUtils.sendMessage(player, "Invalid Material for Checkpoint: &b" + block.getType());
 			return false;
 		}
 
@@ -170,11 +158,11 @@ public class MaterialUtils {
 			if (blockUnder.getState().getData() instanceof Stairs) {
 				Stairs stairs = (Stairs) blockUnder.getState().getData();
 				if (!stairs.isInverted()) {
-					player.sendMessage(Parkour.getPrefix() + "Invalid block for checkpoint: " + ChatColor.AQUA + blockUnder.getType());
+					TranslationUtils.sendMessage(player, "Invalid Material for Checkpoint: &b" + blockUnder.getType());
 					return false;
 				}
 			} else if (!validMaterials.contains(blockUnder.getType())) {
-				player.sendMessage(Parkour.getPrefix() + "Invalid block for checkpoint: " + ChatColor.AQUA + blockUnder.getType());
+				TranslationUtils.sendMessage(player, "Invalid Material for Checkpoint: &b" + blockUnder.getType());
 				return false;
 			}
 		}
@@ -185,5 +173,23 @@ public class MaterialUtils {
 		return location1.getBlockX() == location2.getBlockX()
 				&& location1.getBlockY() == location2.getBlockY()
 				&& location1.getBlockZ() == location2.getBlockZ();
+	}
+
+	public static List<Material> getValidCheckpointMaterials() {
+		if (validCheckpointMaterials == null) {
+			validCheckpointMaterials = Arrays.asList(Material.AIR, XMaterial.CAVE_AIR.parseMaterial(), Material.REDSTONE_BLOCK,
+					XMaterial.ACACIA_SLAB.parseMaterial(), XMaterial.BIRCH_SLAB.parseMaterial(), XMaterial.BRICK_SLAB.parseMaterial(),
+					XMaterial.COBBLESTONE_SLAB.parseMaterial(), XMaterial.DARK_OAK_SLAB.parseMaterial(), XMaterial.DARK_PRISMARINE_SLAB.parseMaterial(),
+					XMaterial.JUNGLE_SLAB.parseMaterial(), XMaterial.NETHER_BRICK_SLAB.parseMaterial(), XMaterial.OAK_SLAB.parseMaterial(),
+					XMaterial.PETRIFIED_OAK_SLAB.parseMaterial(), XMaterial.PRISMARINE_BRICK_SLAB.parseMaterial(), XMaterial.PRISMARINE_SLAB.parseMaterial(),
+					XMaterial.QUARTZ_SLAB.parseMaterial(), XMaterial.RED_SANDSTONE_SLAB.parseMaterial(), XMaterial.SANDSTONE_SLAB.parseMaterial(),
+					XMaterial.SPRUCE_SLAB.parseMaterial(), XMaterial.STONE_BRICK_SLAB.parseMaterial(), XMaterial.STONE_SLAB.parseMaterial());
+
+			if (!Bukkit.getBukkitVersion().contains("1.8")) {
+				validCheckpointMaterials.add(Material.PURPUR_SLAB);
+			}
+		}
+
+		return validCheckpointMaterials;
 	}
 }

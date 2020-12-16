@@ -3,7 +3,7 @@ package io.github.a5h73y.parkour.type.challenge;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Constants;
-import io.github.a5h73y.parkour.other.Validation;
+import io.github.a5h73y.parkour.other.ParkourValidation;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -62,7 +62,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
      */
     public void createOrJoinChallenge(Player requestingPlayer, String courseName, @Nullable String wagerValue) {
         if (getChallengeForPlayer(requestingPlayer) != null) {
-            requestingPlayer.sendMessage("You are already on a Challenge!");
+            TranslationUtils.sendTranslation("Error.OnChallenge", requestingPlayer);
             return;
         }
 
@@ -74,7 +74,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
 
         if (match.isPresent()) {
             Challenge existingChallenge = match.get();
-            if (Validation.canJoinChallenge(requestingPlayer, requestingPlayer, existingChallenge)) {
+            if (ParkourValidation.canJoinChallenge(requestingPlayer, requestingPlayer, existingChallenge)) {
                 addParticipantToChallenge(existingChallenge, requestingPlayer);
                 TranslationUtils.sendValueTranslation("Parkour.Challenge.Joined", courseName, requestingPlayer);
             }
@@ -236,20 +236,19 @@ public class ChallengeManager extends AbstractPluginReceiver {
         ChallengeInvite invite = getInviteForPlayer(receivingPlayer);
 
         if (invite == null) {
-            receivingPlayer.sendMessage(Parkour.getPrefix() + "You have not been challenged!");
+            TranslationUtils.sendMessage(receivingPlayer, "You have not been challenged!");
             return;
         }
 
         invites.remove(receivingPlayer);
 
-        // TODO if main player has left
         if (invite.getChallenge() == null) {
-            receivingPlayer.sendMessage("Ummm...");
+            TranslationUtils.sendMessage(receivingPlayer, "This Challenge is no longer valid.");
             return;
         }
 
         if (invite.getChallenge().hasStarted()) {
-            receivingPlayer.sendMessage("The Challenge has already started!");
+            TranslationUtils.sendMessage(receivingPlayer, "The Challenge has already started!");
             return;
         }
 
@@ -257,7 +256,8 @@ public class ChallengeManager extends AbstractPluginReceiver {
 
         TranslationUtils.sendValueTranslation("Parkour.Challenge.Joined",
                 invite.getChallenge().getCourseName(), receivingPlayer);
-        invite.getChallenge().getChallengeHost().sendMessage(receivingPlayer.getName() + " has accepted the challenge!");
+        TranslationUtils.sendMessage(invite.getChallenge().getChallengeHost(),
+                receivingPlayer.getName() + " has accepted the challenge!");
     }
 
     /**
@@ -271,12 +271,13 @@ public class ChallengeManager extends AbstractPluginReceiver {
         ChallengeInvite invite = getInviteForPlayer(receivingPlayer);
 
         if (invite == null) {
-            receivingPlayer.sendMessage(Parkour.getPrefix() + "You have not been challenged!");
+            TranslationUtils.sendMessage(receivingPlayer, "You have not been challenged!");
             return;
         }
 
-        receivingPlayer.sendMessage("You have declined the challenge...");
-        invite.getChallenge().getChallengeHost().sendMessage(receivingPlayer.getName() + " has declined the challenge!");
+        TranslationUtils.sendMessage(receivingPlayer, "You have declined the challenge...");
+        TranslationUtils.sendMessage(invite.getChallenge().getChallengeHost(),
+                receivingPlayer.getName() + " has declined the challenge!");
         invites.remove(receivingPlayer);
     }
 
@@ -381,7 +382,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
                 break;
 
             default:
-                player.sendMessage("Unknown command.");
+                TranslationUtils.sendMessage(player, "Unknown command.");
         }
     }
 
@@ -390,15 +391,16 @@ public class ChallengeManager extends AbstractPluginReceiver {
             Iterator<Player> iterable = invites.keySet().iterator();
             while (iterable.hasNext()) {
                 Player player = iterable.next();
+                ChallengeInvite invite = invites.get(player);
 
-                if (invites.get(player).getTimeInvited() + 15000 < System.currentTimeMillis()) {
-                    invites.get(player).getChallenge().getChallengeHost()
-                            .sendMessage("The invite sent to " + player.getName() + " has expired.");
-                    player.sendMessage("Your Challenge invite has expired"); //TODO remove me
+                if (invite.getTimeInvited() + 15000 < System.currentTimeMillis()) {
+                    TranslationUtils.sendMessage(invite.getChallenge().getChallengeHost(),
+                            "The invite sent to " + player.getName() + " has expired.");
+                    TranslationUtils.sendMessage(player, "Your Challenge invite has expired.");
                     iterable.remove();
                 }
             }
-        }, 0, 5 * 20);
+        }, 0, 100L);
     }
 
     private void addParticipantToChallenge(Challenge challenge, Player player) {
@@ -414,19 +416,19 @@ public class ChallengeManager extends AbstractPluginReceiver {
         Challenge challenge = getChallengeForPlayer(player);
 
         if (challenge == null) {
-            player.sendMessage("You are not on a Challenge.");
+            TranslationUtils.sendMessage(player, "You are not on a Challenge.");
         } else {
-            player.sendMessage(challenge.toString());
+            TranslationUtils.sendMessage(player, challenge.toString());
         }
     }
 
     private void processCreateCommand(Player player, String courseName, @Nullable String wager) {
         if (challenges.containsKey(player)) {
-            player.sendMessage("You have already created a Challenge.");
-            player.sendMessage("To Terminate it, enter /pa challenge terminate");
+            TranslationUtils.sendMessage(player, "You have already created a Challenge!");
+            TranslationUtils.sendMessage(player, "To Terminate it, enter &b/pa challenge terminate");
             return;
 
-        } else if (!Validation.createChallenge(player, courseName, wager)) {
+        } else if (!ParkourValidation.canCreateChallenge(player, courseName, wager)) {
             return;
         }
 
@@ -445,17 +447,17 @@ public class ChallengeManager extends AbstractPluginReceiver {
         Challenge challenge = challenges.get(player);
 
         if (challenge == null) {
-            player.sendMessage("You have not created a challenge.");
+            TranslationUtils.sendMessage(player, "You have not created a Challenge.");
             return;
         }
 
         if (challenge.hasStarted()) {
-            player.sendMessage("Your challenge has already started.");
+            TranslationUtils.sendMessage(player, "Your Challenge has already started.");
             return;
         }
 
         for (String playerName : Arrays.asList(args).subList(2, args.length)) {
-            if (Validation.challengePlayer(player, challenge, playerName)) {
+            if (ParkourValidation.canChallengePlayer(player, challenge, playerName)) {
                 sendInviteToPlayer(challenge, Bukkit.getPlayer(playerName));
                 TranslationUtils.sendValueTranslation("Parkour.Challenge.InviteSent", playerName, player);
             }
@@ -466,12 +468,12 @@ public class ChallengeManager extends AbstractPluginReceiver {
         Challenge challenge = challenges.get(player);
 
         if (challenge == null) {
-            player.sendMessage("You have not created a challenge.");
+            TranslationUtils.sendMessage(player, "You have not created a challenge.");
             return;
         }
 
         if (challenge.getNumberOfParticipants() < 2) {
-            player.sendMessage("You need at least 2 players to start a Challenge.");
+            TranslationUtils.sendMessage(player, "You need at least 2 players to start a Challenge.");
             return;
         }
 
@@ -483,7 +485,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
         ChallengeInvite invite = getInviteForPlayer(player);
 
         if (invite == null) {
-            player.sendMessage("You have not been invited to challenge.");
+            TranslationUtils.sendMessage(player, "You have not been invited to a Challenge.");
             return;
         }
 
@@ -498,7 +500,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
         Challenge challenge = challenges.get(player);
 
         if (challenge == null) {
-            player.sendMessage("You have not created a challenge.");
+            TranslationUtils.sendMessage(player, "You have not created a Challenge.");
             return;
         }
 

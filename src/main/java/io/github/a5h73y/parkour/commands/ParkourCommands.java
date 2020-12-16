@@ -11,7 +11,6 @@ import io.github.a5h73y.parkour.enums.GuiMenu;
 import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Constants;
-import io.github.a5h73y.parkour.other.Help;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
@@ -43,8 +42,8 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                              @NotNull String label,
                              @NotNull String... args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(Parkour.getPrefix() + "'/parkour' is only available in game.");
-            sender.sendMessage(Parkour.getPrefix() + "Use '/pac' for console commands.");
+            TranslationUtils.sendMessage(sender, "'/parkour' is only available in game.");
+            TranslationUtils.sendMessage(sender, "Use '/pac' for console commands.");
             return false;
         }
 
@@ -56,7 +55,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
         }
 
         if (args.length == 0) {
-            player.sendMessage(Parkour.getPrefix() + "Plugin proudly created by " + ChatColor.AQUA + "A5H73Y & steve4744");
+            TranslationUtils.sendMessage(player, "Plugin proudly created by &bA5H73Y &f& &bsteve4744");
             TranslationUtils.sendTranslation("Help.Commands", player);
             return true;
         }
@@ -107,7 +106,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "cmds":
-                Help.processCommandsInput(player, args);
+                ParkourCommandHelp.processCommand(player, args);
                 break;
 
             case "create":
@@ -169,7 +168,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "help":
-                Help.lookupCommandHelp(player, args);
+                ParkourCommandHelp.displayCommandHelp(player, args);
                 break;
 
             case "info":
@@ -302,7 +301,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                player.sendMessage(Parkour.getPrefix() + "Recreating courses...");
+                TranslationUtils.sendMessage(player, "Recreating courses...");
                 parkour.getDatabase().recreateAllCourses();
                 break;
 
@@ -319,8 +318,8 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
             case "request":
             case "bug":
-                player.sendMessage(Parkour.getPrefix() + "To Request a feature or to Report a bug...");
-                player.sendMessage("Click here: " + ChatColor.DARK_AQUA + "https://github.com/A5H73Y/Parkour/issues");
+                TranslationUtils.sendMessage(player, "To Request a feature or to Report a bug...");
+                TranslationUtils.sendMessage(player, "Click here:&3 https://github.com/A5H73Y/Parkour/issues", false);
                 break;
 
             case "reset":
@@ -524,11 +523,12 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "settings":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                if (!PermissionUtils.hasPermissionOrCourseOwnership(player,
+                        Permission.ADMIN_COURSE, getChosenCourseName(player, args, 1))) {
                     return false;
                 }
 
-                Help.displaySettings(player, args.length == 2 ? args[1] : null);
+                parkour.getCourseManager().displaySettingsGui(player, getChosenCourseName(player, args, 1));
                 break;
 
             case "sql":
@@ -585,8 +585,8 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "tutorial":
-                player.sendMessage(Parkour.getPrefix() + "To follow the official Parkour tutorials...");
-                player.sendMessage("Click here: " + ChatColor.DARK_AQUA + "https://a5h73y.github.io/Parkour/");
+                TranslationUtils.sendMessage(player, "To follow the official Parkour tutorials...");
+                TranslationUtils.sendMessage(player, "Click here:&3 https://a5h73y.github.io/Parkour/", false);
                 break;
 
             case "validatekit":
@@ -612,11 +612,10 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
             case "about":
             case "ver":
             case "version":
-                player.sendMessage(Parkour.getPrefix() + "Server is running Parkour " + ChatColor.GRAY
-                        + parkour.getDescription().getVersion());
-                player.sendMessage("This plugin was developed by " + ChatColor.GOLD + "A5H73Y & steve4744");
-                player.sendMessage("Project Page: " + ChatColor.AQUA + "https://www.spigotmc.org/resources/parkour.23685/");
-                player.sendMessage("Discord Server: " + ChatColor.AQUA + "https://discord.gg/Gc8RGYr");
+                TranslationUtils.sendMessage(player, "Server is running Parkour &7" + parkour.getDescription().getVersion());
+                TranslationUtils.sendMessage(player, "Plugin proudly created by &bA5H73Y &f& &bsteve4744", false);
+                TranslationUtils.sendMessage(player, "Project Page:&b https://www.spigotmc.org/resources/parkour.23685/", false);
+                TranslationUtils.sendMessage(player, "Discord Server:&b https://discord.gg/Gc8RGYr", false);
                 break;
 
             case "accept":
@@ -638,7 +637,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 }
 
                 if (player.isOp() && !args[1].startsWith("MySQL")) {
-                    player.sendMessage(parkour.getConfig().getString(args[1]));
+                    TranslationUtils.sendValue(sender, args[1], parkour.getConfig().getString(args[1]));
                 }
                 break;
 

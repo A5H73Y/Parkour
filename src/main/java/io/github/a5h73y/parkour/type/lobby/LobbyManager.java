@@ -3,7 +3,7 @@ package io.github.a5h73y.parkour.type.lobby;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Constants;
-import io.github.a5h73y.parkour.other.Validation;
+import io.github.a5h73y.parkour.other.ParkourValidation;
 import io.github.a5h73y.parkour.type.Cacheable;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
@@ -59,7 +59,7 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
     public void joinLobby(Player player, @Nullable String lobbyName) {
         lobbyName = lobbyName == null ? Constants.DEFAULT : lobbyName.toLowerCase();
 
-        if (!Validation.isDefaultLobbySet(player)) {
+        if (!ParkourValidation.isDefaultLobbySet(player)) {
             return;
         }
 
@@ -70,7 +70,7 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
             return;
         }
 
-        if (!Validation.canJoinLobby(player, lobbyName)) {
+        if (!ParkourValidation.canJoinLobby(player, lobbyName)) {
             return;
         }
 
@@ -85,6 +85,21 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
     }
 
     /**
+     * Teleport the Player to the Default Lobby.
+     * Used as a fallback to quickly get the player back somewhere safe.
+     *
+     * @param player player
+     */
+    public void justTeleportToDefaultLobby(Player player) {
+        if (!ParkourValidation.isDefaultLobbySet(player)) {
+            return;
+        }
+        Lobby lobby = lobbyCache.getOrDefault(Constants.DEFAULT, populateLobby(Constants.DEFAULT));
+        player.teleport(lobby.getLocation());
+        TranslationUtils.sendTranslation("Parkour.Lobby", player);
+    }
+
+    /**
      * Delete a Parkour Lobby.
      * All references to the Lobby will be deleted.
      *
@@ -92,13 +107,14 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
      * @param lobbyName lobby name
      */
     public void deleteLobby(CommandSender sender, String lobbyName) {
-        if (!Validation.deleteLobby(sender, lobbyName)) {
+        if (!ParkourValidation.canDeleteLobby(sender, lobbyName)) {
             return;
         }
 
         LobbyInfo.deleteLobby(lobbyName);
         clearCache(lobbyName);
         TranslationUtils.sendValueTranslation("Parkour.Delete", lobbyName + " Lobby", sender);
+        PluginUtils.logToFile(lobbyName + " lobby was deleted by " + sender.getName());
     }
 
     /**

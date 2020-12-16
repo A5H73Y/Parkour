@@ -57,7 +57,7 @@ public class ChatListener extends AbstractPluginReceiver implements Listener {
 
         Player player = event.getPlayer();
 
-        if (isParkourCommand && parkour.getQuestionManager().hasPlayerBeenAskedQuestion(player)) {
+        if (isParkourCommand && parkour.getQuestionManager().hasBeenAskedQuestion(player)) {
             String[] args = event.getMessage().split(" ");
             if (args.length <= 1) {
                 TranslationUtils.sendTranslation("Error.InvalidQuestionAnswer", player);

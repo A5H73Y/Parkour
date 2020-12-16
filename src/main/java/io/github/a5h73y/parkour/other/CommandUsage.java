@@ -33,13 +33,13 @@ public class CommandUsage {
 		TranslationUtils.sendHeading(title, sender);
 
 		if (sender instanceof ConsoleCommandSender) {
-			sender.sendMessage(TranslationUtils.getValueTranslation(
-					"Help.ConsoleCommandSyntax", consoleSyntax, false));
+			TranslationUtils.sendValueTranslation("Help.ConsoleCommandSyntax", consoleSyntax, false, sender);
+
 		} else {
 			String commandSyntax = arguments != null ? command + " " + arguments : command;
-			sender.sendMessage(TranslationUtils.getValueTranslation("Help.CommandSyntax", commandSyntax, false));
+			TranslationUtils.sendValueTranslation("Help.CommandSyntax", commandSyntax, false, sender);
 		}
-		sender.sendMessage(TranslationUtils.getValueTranslation("Help.CommandExample", example, false));
+		TranslationUtils.sendValueTranslation("Help.CommandExample", example, false, sender);
 		TranslationUtils.sendHeading("Description", sender);
 		sender.sendMessage(description);
 	}

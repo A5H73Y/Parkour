@@ -12,6 +12,7 @@ import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
+import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.ArrayList;
@@ -116,7 +117,15 @@ public class CourseInfo {
      * @return the ParkourMode
      */
     public static ParkourMode getCourseMode(@NotNull String courseName) {
-        return ParkourMode.valueOf(getParkourModeName(courseName).toUpperCase());
+        ParkourMode result;
+        try {
+            result = ParkourMode.valueOf(getParkourModeName(courseName).toUpperCase());
+        } catch (IllegalArgumentException exception) {
+            PluginUtils.log(courseName + " course had invalid ParkourMode.");
+            setParkourMode(courseName, ParkourMode.NONE);
+            result = ParkourMode.NONE;
+        }
+        return result;
     }
 
     /**
@@ -730,7 +739,7 @@ public class CourseInfo {
         }
         for (ParkourEventType value : ParkourEventType.values()) {
             if (hasEventCommands(courseName, value)) {
-                sender.sendMessage(ChatColor.AQUA + value.getConfigEntry() + " Commands");
+                TranslationUtils.sendMessage(sender, "&b" + value.getConfigEntry() + " Commands");
                 getEventCommands(courseName, value).forEach(sender::sendMessage);
             }
         }

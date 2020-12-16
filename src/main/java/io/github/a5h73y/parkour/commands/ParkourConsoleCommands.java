@@ -9,13 +9,11 @@ import io.github.a5h73y.parkour.conversation.EditParkourKitConversation;
 import io.github.a5h73y.parkour.conversation.ParkourModeConversation;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Backup;
-import io.github.a5h73y.parkour.other.Help;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,12 +37,12 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                              @NotNull String label,
                              @NotNull String... args) {
         if (sender instanceof Player) {
-            sender.sendMessage(Parkour.getPrefix() + "Use '/parkour' for player commands.");
+            TranslationUtils.sendMessage(sender, "Use '/parkour' for player commands.");
             return false;
         }
 
         if (args.length == 0) {
-            sender.sendMessage(Parkour.getPrefix() + "proudly created by A5H73Y & steve4744.");
+            TranslationUtils.sendMessage(sender, "Plugin proudly created by &bA5H73Y &f& &bsteve4744");
             TranslationUtils.sendTranslation("Help.ConsoleCommands", sender);
             return true;
         }
@@ -94,7 +92,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 break;
 
             case "help":
-                Help.lookupCommandHelp(sender, args);
+                ParkourCommandHelp.displayCommandHelp(sender, args);
                 break;
 
             case "info":
@@ -288,10 +286,6 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 parkour.getCourseManager().setPlayerLimit(sender, args[1], args[2]);
                 break;
 
-            case "settings":
-                Help.displaySettings(sender, null);
-                break;
-
             case "sql":
                 parkour.getDatabase().displayInformation(sender);
                 break;
@@ -319,7 +313,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
 
             case "yes":
             case "no":
-                if (!parkour.getQuestionManager().hasPlayerBeenAskedQuestion(sender)) {
+                if (!parkour.getQuestionManager().hasBeenAskedQuestion(sender)) {
                     TranslationUtils.sendTranslation("Error.NoQuestion", sender);
                     break;
                 }
@@ -327,12 +321,22 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 parkour.getQuestionManager().answerQuestion(sender, args[0]);
                 break;
 
+            case "config":
+                if (!ValidationUtils.validateArgs(sender, args, 2)) {
+                    return false;
+                }
+
+                if (!args[1].startsWith("MySQL")) {
+                    TranslationUtils.sendValue(sender, args[1], parkour.getConfig().getString(args[1]));
+                }
+                break;
+
             case "backup":
                 Backup.backupNow(true);
                 break;
 
             default:
-                sender.sendMessage("Unknown Command. Enter 'pac cmds' to display all console commands.");
+                TranslationUtils.sendMessage(sender, "Unknown Command. Enter 'pac cmds' to display all console commands.");
                 break;
         }
         return true;
@@ -356,7 +360,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
         Player targetPlayer = Bukkit.getPlayer(playerName);
 
         if (targetPlayer == null) {
-            sender.sendMessage(Parkour.getPrefix() + "Player is not online");
+            TranslationUtils.sendMessage(sender, "Player is not online");
         }
         return targetPlayer;
     }

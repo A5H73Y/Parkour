@@ -29,23 +29,6 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
     }
 
     @EventHandler
-    public void onPlayerMove_ParkourMode(PlayerMoveEvent event) {
-        if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
-            return;
-        }
-
-        ParkourMode courseMode = parkour.getPlayerManager().getParkourSession(event.getPlayer()).getParkourMode();
-
-        if (courseMode == ParkourMode.NONE) {
-            return;
-        }
-
-        if (courseMode == ParkourMode.POTION) {
-            // check they still have the potion effect, if not reapply it
-        }
-    }
-
-    @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
             return;
