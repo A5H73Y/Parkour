@@ -4,7 +4,6 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.CommandUsage;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.Optional;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -174,4 +173,6 @@ public final class ParkourCommandHelp {
         TranslationUtils.sendHeading("Admin Commands", player);
         displayCommands(player, ADMIN_COMMANDS);
     }
+
+    private ParkourCommandHelp() {}
 }

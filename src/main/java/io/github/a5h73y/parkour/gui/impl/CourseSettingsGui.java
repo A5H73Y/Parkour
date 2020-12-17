@@ -6,7 +6,6 @@ import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.conversation.CoursePrizeConversation;
-import io.github.a5h73y.parkour.conversation.ParkourConversation;
 import io.github.a5h73y.parkour.conversation.ParkourModeConversation;
 import io.github.a5h73y.parkour.conversation.SetCourseConversation;
 import io.github.a5h73y.parkour.conversation.other.SingleQuestionConversation;
@@ -91,14 +90,13 @@ public class CourseSettingsGui extends AbstractMenu {
 
 		// start conversation
 		parent.addElement(createConversationStarter('s', "Prize", courseName,
-				new CoursePrizeConversation(player)));
+				course -> new CoursePrizeConversation(player).withCourseName(course).begin()));
 		parent.addElement(createConversationStarter('d', "ParkourMode", courseName,
-				new ParkourModeConversation(player)));
+				course -> new ParkourModeConversation(player).withCourseName(course).begin()));
 		parent.addElement(createConversationStarter('g', "Event Message", courseName,
-				new SetCourseConversation.CourseMessageConversation(player)));
+				course -> new SetCourseConversation.CourseMessageConversation(player).withCourseName(course).begin()));
 		parent.addElement(createConversationStarter('h', "Event Command", courseName,
-				new SetCourseConversation.CourseCommandConversation(player)));
-
+				course -> new SetCourseConversation.CourseCommandConversation(player).withCourseName(course).begin()));
 	}
 
 	private GuiStateElement createSettingToggle(char key, String title, boolean enabled,
@@ -109,7 +107,7 @@ public class CourseSettingsGui extends AbstractMenu {
 						title + "Enabled", // a key to identify this state by
 						XMaterial.GREEN_WOOL.parseItem(), // the item to display as an icon
 						ChatColor.GREEN + title + " Enabled", // explanation text what this element does
-						StringUtils.colour("&7By clicking you will &cdisable &7" + title
+						StringUtils.colour("&7Clicking will &cdisable &7" + title
 								+ " for &b" + courseName)
 				),
 				new GuiStateElement.State(
@@ -117,7 +115,7 @@ public class CourseSettingsGui extends AbstractMenu {
 						title + "Disabled",
 						XMaterial.RED_WOOL.parseItem(),
 						ChatColor.RED + title + " Disabled",
-						StringUtils.colour("&7By clicking you will &aenable &7" + title
+						StringUtils.colour("&7Clicking will &aenable &7" + title
 								+ " for &b" + courseName)
 				)
 		);
@@ -139,19 +137,19 @@ public class CourseSettingsGui extends AbstractMenu {
 		},
 				StringUtils.colour("&fSet &b" + title),
 				StringUtils.colour("&fCurrent Value: &3" + currentValue),
-				StringUtils.colour("&7By clicking, you will input a new value for &b" + courseName)
+				StringUtils.colour("&7Clicking will input a new value for &b" + courseName)
 		);
 	}
 
 	private StaticGuiElement createConversationStarter(char key, String title, String courseName,
-	                                                   ParkourConversation conversation) {
+	                                                   Consumer<String> conversation) {
 		return new StaticGuiElement(key, XMaterial.BOOK.parseItem(), 1, click -> {
 			click.getGui().close();
-			conversation.withCourseName(courseName).begin();
+			conversation.accept(courseName);
 			return false;
 		},
 				StringUtils.colour("&fSet &b" + title),
-				StringUtils.colour("&7By clicking, you will start a conversation for &b" + courseName)
+				StringUtils.colour("&7Clicking will start a conversation for &b" + courseName)
 		);
 	}
 }

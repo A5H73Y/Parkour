@@ -16,10 +16,10 @@ import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
+import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -175,6 +175,14 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
             case "player":
                 parkour.getPlayerManager().displayParkourInfo(player,
                         args.length <= 1 ? (OfflinePlayer) sender : Bukkit.getOfflinePlayer(args[1]));
+                break;
+
+            case "invite":
+                if (!ValidationUtils.validateArgs(player, args, 2, 10)) {
+                    return false;
+                }
+
+                player.performCommand("parkour challenge invite " + StringUtils.extractMessageFromArgs(args, 1));
                 break;
 
             case "join":

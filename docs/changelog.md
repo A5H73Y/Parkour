@@ -19,6 +19,7 @@ This update is a rewrite of v5.3 with performance and usability being at the for
 - Tons of fixes and general usage improvements
 - Console Commands overhaul, most commands are now possible
 - New and improved documentation
+- Permission 'Parkour.Sign' renamed to 'Parkour.CreateSign'
 
 ## New Features
 - Option to save and restore join location
@@ -30,6 +31,8 @@ This update is a rewrite of v5.3 with performance and usability being at the for
 - Customisable Sounds on join / leave / checkpoint / finish etc.
 - New Course Settings GUI
 - Ability to leave a Course and rejoin at the same checkpoint
+- New 'FREE_CHECKPOINT' ParkourMode treats any pressure plate as a Checkpoint.
+- New 'POTION' ParkourMode, allowing you to apply a PotionType to the Player upon joining.
 
 
 ## Technical Information

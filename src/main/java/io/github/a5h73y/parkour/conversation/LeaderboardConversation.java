@@ -40,7 +40,7 @@ public class LeaderboardConversation extends ParkourConversation {
                 return this;
             }
 
-            context.setSessionData("course", message.toLowerCase());
+            context.setSessionData(SESSION_COURSE_NAME, message.toLowerCase());
             return new ChooseType();
         }
     }

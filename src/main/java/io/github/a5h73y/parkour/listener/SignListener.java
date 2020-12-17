@@ -1,6 +1,7 @@
 package io.github.a5h73y.parkour.listener;
 
 import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.enums.GuiMenu;
 import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
@@ -39,6 +40,11 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
             case "join":
             case "j":
                 SignUtils.createJoinCourseSign(event, player);
+                break;
+
+            case "joinall":
+            case "ja":
+                SignUtils.createStandardSign(event, player, "JoinAll");
                 break;
 
             case "finish":
@@ -166,6 +172,14 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 }
 
                 parkour.getPlayerManager().joinCourse(player, lines[2]);
+                break;
+
+            case "joinall":
+                if (!PermissionUtils.hasPermission(player, Permission.BASIC_JOINALL)) {
+                    return;
+                }
+
+                parkour.getGuiManager().showMenu(player, GuiMenu.JOIN_COURSES);
                 break;
 
             case "checkpoint":

@@ -141,7 +141,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
         ParkourConfiguration courseConfig = Parkour.getConfig(ConfigType.COURSES);
 
         int points = checkpointsConfig.getInt(courseName + ".Checkpoints") + 1;
-        World world = Bukkit.getWorld(courseConfig.getString(courseName + "." + "World"));
+        World world = Bukkit.getWorld(courseConfig.getString(courseName + ".World"));
 
         if (world == null) {
             return checkpoints;
@@ -194,7 +194,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
         // if a checkpoint is specified, or default to 0 (start)
         String path = checkpoint == null ? courseName + ".0" : courseName + "." + checkpoint;
 
-        World world = Bukkit.getWorld(courseConfig.getString(courseName + "." + "World"));
+        World world = Bukkit.getWorld(courseConfig.getString(courseName + ".World"));
         double x = checkpointsConfig.getDouble(path + ".X");
         double y = checkpointsConfig.getDouble(path + ".Y");
         double z = checkpointsConfig.getDouble(path + ".Z");

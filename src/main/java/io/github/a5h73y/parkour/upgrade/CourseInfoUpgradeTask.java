@@ -1,6 +1,7 @@
 package io.github.a5h73y.parkour.upgrade;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import org.bukkit.configuration.ConfigurationSection;
@@ -37,6 +38,27 @@ public class CourseInfoUpgradeTask extends TimedConfigUpgradeTask {
 						getConfig().getInt(courseName + ".RewardDelay") * 24);
 			}
 
+			if (getConfig().contains(courseName + ".Mode")) {
+				transferAndDelete(courseName + ".Mode", courseName + ".ParkourMode");
+
+				String parkourMode = getConfig().getString(courseName + ".ParkourMode");
+				if ("DRUNK".equals(parkourMode)) {
+					getConfig().set(courseName + ".ParkourMode", "POTION");
+					getConfig().set(courseName + ".PotionParkourMode.Effects", Collections.singletonList("CONFUSION,1000000,1"));
+					getConfig().set(courseName + ".PotionParkourMode.JoinMessage", "You feel strange...");
+
+				} else if ("DARKNESS".equals(parkourMode)) {
+					getConfig().set(courseName + ".ParkourMode", "POTION");
+					getConfig().set(courseName + ".PotionParkourMode.Effects", Collections.singletonList("BLINDNESS,1000000,1"));
+					getConfig().set(courseName + ".PotionParkourMode.JoinMessage", "It suddenly becomes dark...");
+
+				} else if ("MOON".equals(parkourMode)) {
+					getConfig().set(courseName + ".ParkourMode", "POTION");
+					getConfig().set(courseName + ".PotionParkourMode.Effects", Collections.singletonList("JUMP,1000000,5"));
+					getConfig().set(courseName + ".PotionParkourMode.JoinMessage", "You feel weightless...");
+				}
+			}
+
 			int checkpoints = getConfig().getInt(courseName + ".Points");
 			getParkourUpgrader().getCheckpointsConfig().set(courseName + ".Checkpoints", checkpoints);
 			getConfig().set(courseName + ".Points", null);
@@ -53,11 +75,13 @@ public class CourseInfoUpgradeTask extends TimedConfigUpgradeTask {
 				if (i > 0) {
 					ConfigurationSection checkpointConfigSection = getParkourUpgrader().getCheckpointsConfig()
 							.getConfigurationSection(courseName + "." + i);
-					Set<String> xyz = checkpointConfigSection.getKeys(false);
-					for (String coordinate : xyz) {
-						getParkourUpgrader().getCheckpointsConfig().set(courseName + "." + i + ".Plate" + coordinate,
-								getParkourUpgrader().getCheckpointsConfig().get(courseName + "." + i + "." + coordinate));
-						getParkourUpgrader().getCheckpointsConfig().set(courseName + "." + i + "." + coordinate, null);
+					if (checkpointConfigSection != null) {
+						Set<String> xyz = checkpointConfigSection.getKeys(false);
+						for (String coordinate : xyz) {
+							getParkourUpgrader().getCheckpointsConfig().set(courseName + "." + i + ".Plate" + coordinate,
+									getParkourUpgrader().getCheckpointsConfig().get(courseName + "." + i + "." + coordinate));
+							getParkourUpgrader().getCheckpointsConfig().set(courseName + "." + i + "." + coordinate, null);
+						}
 					}
 				}
 

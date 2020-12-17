@@ -1,6 +1,7 @@
 <!-- docs/_sidebar.md -->
 
 * [Home](/)
+* [New in 6.0](changelog.md)
 * Tutorials
     * [The Basics](tutorials/the-basics.md)
     * [Creating Course](tutorials/creating-course.md) 
@@ -14,4 +15,3 @@
     * [Plugin Configuration](tutorials/plugin-config.md)
     * [Compatible Plugins](tutorials/compatible-plugins.md)
 * [Developer Tutorials](developer.md)
-* [New in 6.0](changelog.md)

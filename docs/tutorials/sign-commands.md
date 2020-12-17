@@ -129,3 +129,11 @@ These work the same way as previous "SetPoint" signs, they simply load the check
 ##### Example
 
 ![Checkpoint Example](https://i.imgur.com/Rp66GzL.png "Checkpoint Example")
+
+## Join All
+
+Present a GUI with all the available Courses to join. Permission "Parkour.Basic.JoinAll" is required for the Player to use.
+
+##### Example
+
+![JoinAll Example](https://i.imgur.com/TODO.png "JoinAll Example")

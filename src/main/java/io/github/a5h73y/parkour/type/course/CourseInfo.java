@@ -108,7 +108,7 @@ public class CourseInfo {
      * @return the parkour mode name set
      */
     public static String getParkourModeName(@NotNull String courseName) {
-        return getCourseConfig().getString(courseName.toLowerCase() + ".Mode", ParkourMode.NONE.name());
+        return getCourseConfig().getString(courseName.toLowerCase() + ".ParkourMode", ParkourMode.NONE.name());
     }
 
     /**
@@ -144,7 +144,7 @@ public class CourseInfo {
      * @param mode ParkourMode
      */
     public static void setParkourMode(@NotNull String courseName, @NotNull ParkourMode mode) {
-        getCourseConfig().set(courseName.toLowerCase() + ".Mode", mode.name());
+        getCourseConfig().set(courseName.toLowerCase() + ".ParkourMode", mode.name());
         persistChanges();
     }
 
@@ -241,7 +241,7 @@ public class CourseInfo {
      * @return maximum deaths
      */
     public static int getMaximumDeaths(@NotNull String courseName) {
-        return getCourseConfig().getInt(courseName.toLowerCase() + ".MaxDeaths", -1);
+        return getCourseConfig().getInt(courseName.toLowerCase() + ".MaxDeaths");
     }
 
     /**
@@ -270,7 +270,7 @@ public class CourseInfo {
      * @return maximum time in seconds
      */
     public static int getMaximumTime(@NotNull String courseName) {
-        return getCourseConfig().getInt(courseName.toLowerCase() + ".MaxTime", -1);
+        return getCourseConfig().getInt(courseName.toLowerCase() + ".MaxTime");
     }
 
     /**

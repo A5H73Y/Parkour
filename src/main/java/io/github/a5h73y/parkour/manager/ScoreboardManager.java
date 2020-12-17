@@ -1,6 +1,6 @@
 package io.github.a5h73y.parkour.manager;
 
-import static io.github.a5h73y.parkour.Parkour.PARKOUR;
+import static io.github.a5h73y.parkour.Parkour.PLUGIN_NAME;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.database.TimeEntry;
@@ -73,7 +73,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
 
         if (parkour.getConfig().isPreventPlayerCollisions()
                 && PluginUtils.getMinorServerVersion() > 8) {
-            Team team = board.registerNewTeam(PARKOUR);
+            Team team = board.registerNewTeam(PLUGIN_NAME);
             team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
             team.addEntry(player.getName());
         }
@@ -113,7 +113,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
     private Scoreboard setupScoreboard(Player player, ParkourSession session) {
         // Set up the scoreboard itself
         Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
-        Objective objective = board.registerNewObjective(player.getName(), PARKOUR);
+        Objective objective = board.registerNewObjective(player.getName(), PLUGIN_NAME);
         objective.setDisplayName(mainHeading);
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 

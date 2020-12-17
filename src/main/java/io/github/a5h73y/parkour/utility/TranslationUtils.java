@@ -4,6 +4,7 @@ import static io.github.a5h73y.parkour.utility.StringUtils.colour;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.ConfigType;
+import io.github.a5h73y.parkour.enums.ParkourEventType;
 import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import java.util.regex.Pattern;
@@ -95,12 +96,12 @@ public class TranslationUtils {
 	 * Fallback to the default event message if not found.
 	 *
 	 * @param courseName course name
-	 * @param eventKey event key
+	 * @param eventType event type
 	 * @param fallbackKey fallback translation key
 	 * @return course event message
 	 */
-	public static String getCourseEventMessage(String courseName, String eventKey, String fallbackKey) {
-		String result = CourseInfo.getEventMessage(courseName, eventKey);
+	public static String getCourseEventMessage(String courseName, ParkourEventType eventType, String fallbackKey) {
+		String result = CourseInfo.getEventMessage(courseName, eventType);
 
 		// if there is no custom message, fallback to default
 		if (result == null) {

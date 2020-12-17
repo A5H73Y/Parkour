@@ -16,6 +16,7 @@ import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -56,6 +57,11 @@ public class ParkourValidation {
     public static boolean canJoinLobby(Player player, String lobbyName) {
         if (!LobbyInfo.doesLobbyExist(lobbyName)) {
             TranslationUtils.sendValueTranslation("Error.UnknownLobby", lobbyName, player);
+            return false;
+        }
+
+        if (Bukkit.getWorld(Parkour.getDefaultConfig().getString("Lobby." + lobbyName + ".World")) == null) {
+            TranslationUtils.sendTranslation("Error.UnknownWorld", player);
             return false;
         }
 

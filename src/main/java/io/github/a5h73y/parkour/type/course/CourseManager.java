@@ -937,13 +937,14 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         }
 
         int limit = 5;
-        boolean personal = true;
+        boolean personal = false;
 
         if (args.length >= 4) {
-            if (args[3].equalsIgnoreCase("global")) {
-                personal = false;
-            } else if (!args[3].equalsIgnoreCase("personal")) {
-                TranslationUtils.sendMessage(player, "Defaulting to 'personal', alternative option: 'global'");
+            String choice = args[3].toLowerCase();
+            if (choice.equals("personal") || choice.equals("local") || choice.equals("mine")) {
+                personal = true;
+            } else {
+                TranslationUtils.sendMessage(player, "Unknown leaderboard scope, for your results use 'local'.");
             }
         }
 
