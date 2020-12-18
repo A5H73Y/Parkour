@@ -12,6 +12,7 @@ import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
@@ -77,13 +78,14 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
      * List of tab-able commands will be built based on the configuration and player permissions.
      * {@inheritDoc}
      */
+    @NotNull
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender,
                                       @NotNull Command cmd,
                                       @NotNull String alias,
                                       @NotNull String... args) {
         if (!(sender instanceof Player)) {
-            return null;
+            return Collections.emptyList();
         }
 
         final Player player = (Player) sender;

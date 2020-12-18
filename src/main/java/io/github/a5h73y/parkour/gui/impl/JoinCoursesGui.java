@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Join Parkour Courses GUI.
  */
-public class JoinCoursesGui extends AbstractMenu {
+public class JoinCoursesGui implements AbstractMenu {
 
 	@Override
 	public String getTitle() {

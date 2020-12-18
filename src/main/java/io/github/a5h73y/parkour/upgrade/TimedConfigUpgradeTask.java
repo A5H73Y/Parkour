@@ -6,7 +6,7 @@ public abstract class TimedConfigUpgradeTask extends TimedUpgradeTask {
 
 	private final FileConfiguration configuration;
 
-	public TimedConfigUpgradeTask(ParkourUpgrader parkourUpgrader, FileConfiguration configuration) {
+	protected TimedConfigUpgradeTask(ParkourUpgrader parkourUpgrader, FileConfiguration configuration) {
 		super(parkourUpgrader);
 		this.configuration = configuration;
 	}

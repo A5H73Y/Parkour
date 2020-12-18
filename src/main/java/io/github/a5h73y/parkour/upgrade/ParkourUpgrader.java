@@ -5,12 +5,12 @@ import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Backup;
 import java.io.File;
 import java.io.IOException;
-import java.util.function.Supplier;
+import java.util.function.BooleanSupplier;
 import java.util.logging.Logger;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class ParkourUpgrader extends AbstractPluginReceiver implements Supplier<Boolean> {
+public class ParkourUpgrader extends AbstractPluginReceiver implements BooleanSupplier {
 
 	private final File defaultFile;
 	private final File playerFile;
@@ -49,7 +49,7 @@ public class ParkourUpgrader extends AbstractPluginReceiver implements Supplier<
 	}
 
 	@Override
-	public Boolean get() {
+	public boolean getAsBoolean() {
 		parkour.getLogger().info("=== Beginning Parkour Upgrade ===");
 		parkour.getLogger().info(String.format("Upgrading from v%s to v%s",
 				defaultConfig.getString("Version"), parkour.getDescription().getVersion()));

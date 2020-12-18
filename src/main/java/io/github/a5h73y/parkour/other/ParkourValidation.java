@@ -34,6 +34,11 @@ public class ParkourValidation {
     public static boolean isDefaultLobbySet(Player player) {
         boolean lobbySet = LobbyInfo.doesLobbyExist();
 
+        if (Bukkit.getWorld(Parkour.getDefaultConfig().getString("Lobby.default.World")) == null) {
+            TranslationUtils.sendTranslation("Error.UnknownWorld", player);
+            lobbySet = false;
+        }
+
         if (!lobbySet) {
             if (PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
                 TranslationUtils.sendMessage(player, "&4Default Lobby has not been set!");
@@ -186,24 +191,21 @@ public class ParkourValidation {
      */
     public static boolean canJoinCourseSilent(Player player, String courseName) {
         /* Player in wrong world */
-        if (Parkour.getDefaultConfig().isJoinEnforceWorld()) {
-            if (!player.getLocation().getWorld().getName().equals(CourseInfo.getWorld(courseName))) {
-                return false;
-            }
+        if (Parkour.getDefaultConfig().isJoinEnforceWorld()
+                && !player.getLocation().getWorld().getName().equals(CourseInfo.getWorld(courseName))) {
+            return false;
         }
 
         /* Players level isn't high enough */
         int minimumLevel = CourseInfo.getMinimumParkourLevel(courseName);
 
-        if (minimumLevel > 0) {
-            if (!PermissionUtils.hasPermission(player, Permission.ADMIN_LEVEL_BYPASS, false)
-                    && !PermissionUtils.hasSpecificPermission(
-                    player, Permission.PARKOUR_LEVEL, String.valueOf(minimumLevel), false)) {
-                int currentLevel = PlayerInfo.getParkourLevel(player);
+        if (minimumLevel > 0
+                && !PermissionUtils.hasPermission(player, Permission.ADMIN_LEVEL_BYPASS, false)
+                && !PermissionUtils.hasSpecificPermission(player, Permission.PARKOUR_LEVEL, String.valueOf(minimumLevel), false)) {
+            int currentLevel = PlayerInfo.getParkourLevel(player);
 
-                if (currentLevel < minimumLevel) {
-                    return false;
-                }
+            if (currentLevel < minimumLevel) {
+                return false;
             }
         }
 

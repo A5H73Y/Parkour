@@ -306,7 +306,7 @@ public class Parkour extends JavaPlugin {
     }
 
     private void upgradeParkour() {
-        CompletableFuture.supplyAsync(() -> new ParkourUpgrader(this).get())
+        CompletableFuture.supplyAsync(() -> new ParkourUpgrader(this).getAsBoolean())
                 .thenAccept(success -> {
                     if (success) {
                         onEnable();

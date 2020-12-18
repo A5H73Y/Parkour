@@ -22,9 +22,9 @@ import org.bukkit.util.Consumer;
 /**
  * Course Settings GUI.
  */
-public class CourseSettingsGui extends AbstractMenu {
+public class CourseSettingsGui implements AbstractMenu {
 
-	private final transient String courseName;
+	private final String courseName;
 
 	public CourseSettingsGui(String courseName) {
 		this.courseName = courseName;

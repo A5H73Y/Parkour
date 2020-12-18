@@ -31,7 +31,7 @@ public abstract class ParkourConversation implements ConversationAbandonedListen
      *
      * @param conversable conversable user
      */
-    public ParkourConversation(@NotNull Conversable conversable) {
+    protected ParkourConversation(@NotNull Conversable conversable) {
         this.conversable = conversable;
 
         conversationFactory = new ConversationFactory(Parkour.getInstance())

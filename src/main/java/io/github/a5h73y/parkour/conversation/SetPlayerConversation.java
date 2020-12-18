@@ -29,11 +29,11 @@ public class SetPlayerConversation extends ParkourConversation {
     @NotNull
     @Override
     public Prompt getEntryPrompt() {
-        return new ChooseSetCourseOption();
+        return new ChooseSetPlayerOption();
     }
 
-    private static class ChooseSetCourseOption extends FixedSetPrompt {
-        ChooseSetCourseOption() {
+    private static class ChooseSetPlayerOption extends FixedSetPrompt {
+        ChooseSetPlayerOption() {
             super(SET_PLAYER_OPTIONS.toArray(new String[0]));
         }
 
@@ -48,11 +48,11 @@ public class SetPlayerConversation extends ParkourConversation {
         protected Prompt acceptValidatedInput(@NotNull ConversationContext context,
                                               @NotNull String choice) {
             context.setSessionData("setOption", choice);
-            return Prompt.END_OF_CONVERSATION;
+            return new SetPlayerOptionValue();
         }
     }
 
-    private static class SetCourseOptionValue extends StringPrompt {
+    private static class SetPlayerOptionValue extends StringPrompt {
 
         @NotNull
         @Override

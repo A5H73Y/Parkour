@@ -419,10 +419,16 @@ public class PlayerManager extends AbstractPluginReceiver {
 			}
 		}
 
+		player.teleport(determineDestination(session));
+
+		// if the Player is in Test Mode, we don't need to run the rest
+		if (isPlayerInTestMode(player)) {
+			TranslationUtils.sendTranslation("Parkour.Die1", player);
+			return;
+		}
+
 		parkour.getScoreboardManager().updateScoreboardDeaths(player, session.getDeaths());
 		parkour.getCourseManager().runEventCommands(player, session.getCourseName(), DEATH);
-
-		player.teleport(determineDestination(session));
 
 		// if it's the first checkpoint
 		if (session.getCurrentCheckpoint() == 0) {

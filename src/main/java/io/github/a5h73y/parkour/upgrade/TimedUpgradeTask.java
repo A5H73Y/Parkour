@@ -10,7 +10,7 @@ public abstract class TimedUpgradeTask {
 
 	protected abstract boolean doWork();
 
-	public TimedUpgradeTask(ParkourUpgrader parkourUpgrader) {
+	protected TimedUpgradeTask(ParkourUpgrader parkourUpgrader) {
 		this.parkourUpgrader = parkourUpgrader;
 	}
 

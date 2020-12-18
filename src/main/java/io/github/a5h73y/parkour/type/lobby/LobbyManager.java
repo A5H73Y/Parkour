@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lobby> {
 
-    private final transient Map<String, Lobby> lobbyCache = new HashMap<>();
+    private final Map<String, Lobby> lobbyCache = new HashMap<>();
 
     public LobbyManager(final Parkour parkour) {
         super(parkour);

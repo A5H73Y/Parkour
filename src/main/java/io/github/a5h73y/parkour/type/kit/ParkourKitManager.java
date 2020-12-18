@@ -13,6 +13,7 @@ import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ParkourKitManager extends AbstractPluginReceiver implements Cacheable<ParkourKit> {
 
-	private final transient Map<String, ParkourKit> parkourKitCache = new HashMap<>();
+	private final Map<String, ParkourKit> parkourKitCache = new HashMap<>();
 
 	public ParkourKitManager(final Parkour parkour) {
 		super(parkour);
@@ -237,7 +238,7 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 	private ParkourKit populateParkourKit(String kitName) {
 		ParkourConfiguration config = Parkour.getConfig(ConfigType.PARKOURKIT);
 		Set<String> rawMaterials = ParkourKitInfo.getParkourKitMaterials(kitName);
-		Map<Material, ParkourKitAction> actionTypes = new HashMap<>();
+		EnumMap<Material, ParkourKitAction> actionTypes = new EnumMap<>(Material.class);
 
 		for (String rawMaterial : rawMaterials) {
 			Material material = validateAndGetMaterial(kitName, rawMaterial);

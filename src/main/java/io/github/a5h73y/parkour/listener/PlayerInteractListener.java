@@ -92,7 +92,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
     }
 
     @EventHandler
-    public void onInventoryInteract_ParkourMode(PlayerInteractEvent event) {
+    public void onInventoryInteractParkourMode(PlayerInteractEvent event) {
         if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
             return;
         }

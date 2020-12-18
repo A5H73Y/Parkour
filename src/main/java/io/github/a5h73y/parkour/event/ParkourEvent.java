@@ -14,7 +14,7 @@ public abstract class ParkourEvent extends Event implements Cancellable {
     private final String courseName;
     private final Player player;
 
-    public ParkourEvent(final Player player, final String courseName) {
+    protected ParkourEvent(final Player player, final String courseName) {
         this.player = player;
         this.courseName = courseName;
     }

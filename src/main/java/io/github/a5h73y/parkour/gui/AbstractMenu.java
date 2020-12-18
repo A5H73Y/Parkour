@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
  * Abstract GUI Menu.
  * Can specify it's layout, and contents of the GUI.
  */
-public abstract class AbstractMenu {
+public interface AbstractMenu {
 
 	/**
 	 * Get the GUI Title.

@@ -178,10 +178,8 @@ public class SignUtils {
             return;
         }
 
-        if (!signEvent.getLine(3).isEmpty()) {
-            if (!ValidationUtils.isPositiveInteger(signEvent.getLine(3))) {
-                signEvent.setLine(3, "");
-            }
+        if (!signEvent.getLine(3).isEmpty() && !ValidationUtils.isPositiveInteger(signEvent.getLine(3))) {
+            signEvent.setLine(3, "");
         }
 
         TranslationUtils.sendValueTranslation("Parkour.SignCreated", "Leaderboard");

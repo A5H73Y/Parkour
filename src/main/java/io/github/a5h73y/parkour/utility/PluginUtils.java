@@ -108,7 +108,8 @@ public class PluginUtils {
              BufferedWriter bw = new BufferedWriter(writer)) {
             bw.write(DateTimeUtils.getDisplayDateTime() + " " + message + System.lineSeparator());
         } catch (IOException e) {
-            System.err.format("IOException: %s%n", e);
+            log(e.getMessage(), 2);
+            log(e.toString(), 2);
         }
     }
 

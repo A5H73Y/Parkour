@@ -20,9 +20,6 @@ public class DateTimeUtils {
 	public static final String HH_MM_SS = "%02d:%02d:%02d";
 	public static final String HH_MM_SS_MS = "%02d:%02d:%02d.%03d";
 
-	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
-			TranslationUtils.getTranslation("", false));
-
 	/**
 	 * Display current date.
 	 *

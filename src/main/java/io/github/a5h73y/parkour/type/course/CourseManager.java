@@ -51,7 +51,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class CourseManager extends AbstractPluginReceiver implements Cacheable<Course> {
 
-    private final transient Map<String, Course> courseCache = new HashMap<>();
+    private final Map<String, Course> courseCache = new HashMap<>();
 
     public CourseManager(final Parkour parkour) {
         super(parkour);

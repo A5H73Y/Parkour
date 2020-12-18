@@ -386,15 +386,14 @@ public class ChallengeManager extends AbstractPluginReceiver {
 
     private void initialiseInviteTimeout() {
         Bukkit.getScheduler().runTaskTimerAsynchronously(parkour, () -> {
-            Iterator<Player> iterable = invites.keySet().iterator();
+            Iterator<Map.Entry<Player, ChallengeInvite>> iterable = invites.entrySet().iterator();
             while (iterable.hasNext()) {
-                Player player = iterable.next();
-                ChallengeInvite invite = invites.get(player);
+                Map.Entry<Player, ChallengeInvite> entry = iterable.next();
 
-                if (invite.getTimeInvited() + 15000 < System.currentTimeMillis()) {
-                    TranslationUtils.sendMessage(invite.getChallenge().getChallengeHost(),
-                            "The invite sent to " + player.getName() + " has expired.");
-                    TranslationUtils.sendMessage(player, "Your Challenge invite has expired.");
+                if (entry.getValue().getTimeInvited() + 15000 < System.currentTimeMillis()) {
+                    TranslationUtils.sendMessage(entry.getValue().getChallenge().getChallengeHost(),
+                            "The invite sent to " + entry.getKey().getName() + " has expired.");
+                    TranslationUtils.sendMessage(entry.getKey(), "Your Challenge invite has expired.");
                     iterable.remove();
                 }
             }

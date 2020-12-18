@@ -24,7 +24,7 @@ public abstract class PluginWrapper {
 	/**
 	 * Initialise the startup of the plugin on Construction of object.
 	 */
-	public PluginWrapper() {
+	protected PluginWrapper() {
 		initialise();
 	}
 

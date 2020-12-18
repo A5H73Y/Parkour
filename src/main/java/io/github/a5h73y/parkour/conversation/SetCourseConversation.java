@@ -134,7 +134,8 @@ public class SetCourseConversation extends ParkourConversation {
         @NotNull
         @Override
         public String getPromptText(@NotNull ConversationContext context) {
-            return ChatColor.LIGHT_PURPLE + " What command would you like to set?";
+            return ChatColor.LIGHT_PURPLE + " What command would you like to set?\n"
+                    + ChatColor.GREEN + "Use the placeholder %PLAYER% to insert the Player's name.";
         }
 
         @Override

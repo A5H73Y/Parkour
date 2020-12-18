@@ -28,9 +28,9 @@ public class ParkourSession implements Serializable {
     private long timeFinished;
 
     private final String courseName;
-    private Location freedomLocation;
 
     private transient Course course;
+    private transient Location freedomLocation;
     private transient boolean markedForDeletion;
     private transient boolean startTimer;
 

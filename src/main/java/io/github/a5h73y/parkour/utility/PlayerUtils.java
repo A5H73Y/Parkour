@@ -16,7 +16,7 @@ public class PlayerUtils {
 	}
 
 	public static void applyPotionEffect(String potionTypeName, int duration, int amplifier, Player... players) {
-		XPotion.matchXPotion(potionTypeName).ifPresent((action) ->
+		XPotion.matchXPotion(potionTypeName).ifPresent(action ->
 				applyPotionEffect(action.parsePotionEffectType(), duration, amplifier, players));
 	}
 
