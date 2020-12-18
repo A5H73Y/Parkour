@@ -34,19 +34,17 @@ public class ParkourValidation {
     public static boolean isDefaultLobbySet(Player player) {
         boolean lobbySet = LobbyInfo.doesLobbyExist();
 
-        if (Bukkit.getWorld(Parkour.getDefaultConfig().getString("Lobby.default.World")) == null) {
-            TranslationUtils.sendTranslation("Error.UnknownWorld", player);
-            lobbySet = false;
-        }
-
         if (!lobbySet) {
-            if (PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+            if (PermissionUtils.hasPermission(player, Permission.ADMIN_ALL, false)) {
                 TranslationUtils.sendMessage(player, "&4Default Lobby has not been set!");
                 TranslationUtils.sendMessage(player, "Type &b'/pa setlobby' &fwhere you want the lobby to be set.");
 
             } else {
                 TranslationUtils.sendMessage(player, "&4Default Lobby has not been set! Please tell the Owner!");
             }
+        } else if (Bukkit.getWorld(Parkour.getDefaultConfig().getString("Lobby.default.World")) == null) {
+            TranslationUtils.sendTranslation("Error.UnknownWorld", player);
+            lobbySet = false;
         }
         return lobbySet;
     }
@@ -253,8 +251,8 @@ public class ParkourValidation {
         }
 
         // they've accepted a challenge, but they haven't started the course yet
-        if (parkour.getChallengeManager().getChallengeForPlayer(targetPlayer) != null) {
-            TranslationUtils.sendMessage(player, "Player is already on a Challenge!");
+        if (parkour.getChallengeManager().hasPlayerBeenChallenged(targetPlayer)) {
+            TranslationUtils.sendMessage(player, "Player has been Challenged already!");
             return false;
         }
 

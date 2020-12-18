@@ -77,6 +77,8 @@ public class ChallengeManager extends AbstractPluginReceiver {
             if (ParkourValidation.canJoinChallenge(requestingPlayer, requestingPlayer, existingChallenge)) {
                 addParticipantToChallenge(existingChallenge, requestingPlayer);
                 TranslationUtils.sendValueTranslation("Parkour.Challenge.Joined", courseName, requestingPlayer);
+                TranslationUtils.sendMessage(existingChallenge.getChallengeHost(),
+                        requestingPlayer.getName() + " has joined the Challenge!");
             }
         } else {
             processCreateCommand(requestingPlayer, courseName, wagerValue);
@@ -218,7 +220,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
             }
 
             if (challenge.getWager() != null) {
-                parkour.getEconomyApi().rewardPlayer(winner, challenge.getWager() * challenge.getNumberOfParticipants());
+                parkour.getEconomyApi().rewardPlayer(winner, challenge.getWager() * (challenge.getNumberOfParticipants() - 1));
             }
         }
     }
@@ -255,7 +257,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
         TranslationUtils.sendValueTranslation("Parkour.Challenge.Joined",
                 invite.getChallenge().getCourseName(), receivingPlayer);
         TranslationUtils.sendMessage(invite.getChallenge().getChallengeHost(),
-                receivingPlayer.getName() + " has accepted the challenge!");
+                receivingPlayer.getName() + " has accepted the Challenge!");
     }
 
     /**
@@ -273,9 +275,9 @@ public class ChallengeManager extends AbstractPluginReceiver {
             return;
         }
 
-        TranslationUtils.sendMessage(receivingPlayer, "You have declined the challenge...");
+        TranslationUtils.sendMessage(receivingPlayer, "You have declined the Challenge...");
         TranslationUtils.sendMessage(invite.getChallenge().getChallengeHost(),
-                receivingPlayer.getName() + " has declined the challenge!");
+                receivingPlayer.getName() + " has declined the Challenge!");
         invites.remove(receivingPlayer);
     }
 
