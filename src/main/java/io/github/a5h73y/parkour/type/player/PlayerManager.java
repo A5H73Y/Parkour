@@ -1315,6 +1315,42 @@ public class PlayerManager extends AbstractPluginReceiver {
 	}
 
 	/**
+	 * Prepare the Player for the ParkourMode.
+	 *
+	 * @param player target player
+	 */
+	public void setupParkourMode(Player player) {
+		ParkourSession session = getParkourSession(player);
+		ParkourMode courseMode = session.getParkourMode();
+
+		if (courseMode == ParkourMode.NONE) {
+			return;
+		}
+
+		if (courseMode == ParkourMode.FREEDOM) {
+			TranslationUtils.sendTranslation("Mode.Freedom.JoinText", player);
+			player.getInventory().addItem(MaterialUtils.createItemStack(XMaterial.REDSTONE_TORCH.parseMaterial(),
+					TranslationUtils.getTranslation("Mode.Freedom.ItemName", false)));
+
+		} else if (courseMode == ParkourMode.SPEEDY) {
+			float speed = Float.parseFloat(parkour.getConfig().getString("ParkourModes.Speedy.SetSpeed"));
+			player.setWalkSpeed(speed);
+
+		} else if (courseMode == ParkourMode.ROCKETS) {
+			TranslationUtils.sendTranslation("Mode.Rockets.JoinText", player);
+			player.getInventory().addItem(MaterialUtils.createItemStack(XMaterial.FIREWORK_ROCKET.parseMaterial(),
+					TranslationUtils.getTranslation("Mode.Rockets.ItemName", false)));
+
+		} else if (courseMode == ParkourMode.POTION) {
+			XPotion.addPotionEffectsFromString(player,
+					CourseInfo.getPotionParkourModeEffects(session.getCourseName()));
+			if (CourseInfo.hasPotionJoinMessage(session.getCourseName())) {
+				TranslationUtils.sendMessage(player, CourseInfo.getPotionJoinMessage(session.getCourseName()));
+			}
+		}
+	}
+
+	/**
 	 * Stash the Player's ParkourSession.
 	 * Persist the ParkourSession to a file under the Player's UUID.
 	 * Mark the current time accumulated, for the time difference to be recalculated when the Player rejoins.
@@ -1724,42 +1760,6 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		parkour.getLobbyManager().joinLobby(player, DEFAULT);
-	}
-
-	/**
-	 * Prepare the Player for the ParkourMode.
-	 *
-	 * @param player target player
-	 */
-	private void setupParkourMode(Player player) {
-		ParkourSession session = getParkourSession(player);
-		ParkourMode courseMode = session.getParkourMode();
-
-		if (courseMode == ParkourMode.NONE) {
-			return;
-		}
-
-		if (courseMode == ParkourMode.FREEDOM) {
-			TranslationUtils.sendTranslation("Mode.Freedom.JoinText", player);
-			player.getInventory().addItem(MaterialUtils.createItemStack(XMaterial.REDSTONE_TORCH.parseMaterial(),
-					TranslationUtils.getTranslation("Mode.Freedom.ItemName", false)));
-
-		} else if (courseMode == ParkourMode.SPEEDY) {
-			float speed = Float.parseFloat(parkour.getConfig().getString("ParkourModes.Speedy.SetSpeed"));
-			player.setWalkSpeed(speed);
-
-		} else if (courseMode == ParkourMode.ROCKETS) {
-			TranslationUtils.sendTranslation("Mode.Rockets.JoinText", player);
-			player.getInventory().addItem(MaterialUtils.createItemStack(XMaterial.FIREWORK_ROCKET.parseMaterial(),
-					TranslationUtils.getTranslation("Mode.Rockets.ItemName", false)));
-
-		} else if (courseMode == ParkourMode.POTION) {
-			XPotion.addPotionEffectsFromString(player,
-					CourseInfo.getPotionParkourModeEffects(session.getCourseName()));
-			if (CourseInfo.hasPotionJoinMessage(session.getCourseName())) {
-				TranslationUtils.sendMessage(player, CourseInfo.getPotionJoinMessage(session.getCourseName()));
-			}
-		}
 	}
 
 	private boolean canLoadParkourSession(Player player, Course course) {

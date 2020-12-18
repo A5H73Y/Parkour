@@ -286,7 +286,8 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                     return;
                 }
 
-                parkour.getChallengeManager().createOrJoinChallenge(player, lines[2], lines[3]);
+                parkour.getChallengeManager().createOrJoinChallenge(player, lines[2],
+                        lines[3].trim().isEmpty() ? null : lines[3]);
                 break;
 
             default:

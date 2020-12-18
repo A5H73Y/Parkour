@@ -333,6 +333,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
                     for (Player participant : challenge.getParticipatingPlayers()) {
                         participant.setWalkSpeed(challenge.getPlayerWalkSpeed());
                         PlayerUtils.removePotionEffect(PotionEffectType.JUMP, participant);
+                        parkour.getPlayerManager().setupParkourMode(participant);
                         ParkourSession session = parkour.getPlayerManager().getParkourSession(participant);
                         session.resetTime();
                         session.setStartTimer(true);
