@@ -173,8 +173,10 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
 
         ParkourSession session = parkour.getPlayerManager().getParkourSession(event.getPlayer());
 
-        if (session.getParkourMode() == ParkourMode.FREE_CHECKPOINT) {
-            // TODO check the location isn't the same block
+        if (session.getParkourMode() == ParkourMode.FREE_CHECKPOINT
+                && parkour.getPlayerManager().delayPlayer(event.getPlayer(), 1, false, false)
+                && (session.getFreedomLocation() == null
+                || !MaterialUtils.sameBlockLocations(event.getPlayer().getLocation(), session.getFreedomLocation()))) {
             session.setFreedomLocation(event.getPlayer().getLocation());
             TranslationUtils.sendTranslation("Event.FreeCheckpoints", event.getPlayer());
             return;
