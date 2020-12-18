@@ -1,130 +1,46 @@
+.markdown-section h1 {
+    font-size: 3rem;
+}
 
-/* Headings */
-h1, h2, h3, h4 {
-    font-family: 'Arvo', serif;
-    display: block;
+.markdown-section h1, .markdown-section h2 {
     border-bottom: 1px solid #ccc;
-    padding-bottom: 5px;
-    color: #232323;
-    margin: 26px 0 10px;
+}
+
+.markdown-section p {
+    line-height: 1.6rem;
+    margin: 1em 0;
+    font-size: 18px;
+}
+
+.sidebar ul li a {
+    font-size: 16px;
+}
+
+.content {
+    padding-top: 0;
+}
+
+img {
+    max-width: 60%;
+}
+
+.app-name-link img {
+    max-width: 30%;
 }
 
 h5 {
-    margin: 10px 0 10px;
-}
-
-/* Large gap between paragraphs */
-p {
-    margin: 0 0 18px;
-}
-
-a {
-    color: #C30000;
-    font-weight: 200;
-    text-decoration: none;
-}
-
-.italic {
-    font-style: italic;
-}
-
-.no-margin {
     margin: 0;
 }
 
-/* Images */
-img {
-    position: relative;
-    display: block;
-    margin: 0 0 10px;
-    padding: 0;
-    vertical-align: middle;
-    text-align: center;
+details > summary {
+    background-color: #f8f8f8;
+    padding: 8px;
+    border: none;
     cursor: pointer;
+    font-size: 18px;
 }
 
-.img-thumbnail {
-    max-width: 70%;
-}
-
-.img-heading {
-    position: relative;
-    display: inline;
-    margin: 0;
-    padding: 0;
-    vertical-align: text-bottom;
-    text-align: center;
-    width: 55px;
-}
-
-/* Fixed width view */
-.wrapper {
-    width: 1050px;
-}
-
-/* Navigation */
-.navigation {
-    width: 270px;
-    float: left;
-    position: fixed;
-    -webkit-font-smoothing: antialiased;
-    height: 100%;
-    background-color: #eee;
-}
-
-.home-menu {
-    text-align: center;
-    width: 50%;
-    margin: 0 auto;
-}
-
-.vertical-menu {
-    padding-top: 30px;
-}
-
-.vertical-menu a {
-    background-color: #eee; /* Grey background color */
-    color: black; /* Black text color */
-    display: block; /* Make the links appear below each other */
-    padding: 12px; /* Add some padding */
-    text-decoration: none; /* Remove underline from links */
-}
-
-.vertical-menu a:hover {
-    background-color: #ccc; /* Dark grey background on mouse-over */
-}
-
-.vertical-menu a.active {
-    background-color: #4CAF50; /* Add a green color to the "active/current" link */
-    color: white;
-}
-
-/* Page content */
-.content {
-    width: 750px;
-    float: right;
-    padding-bottom: 50px;
-}
-
-.card-body {
-    padding: 0.8rem;
-}
-
-pre {
-    overflow: auto;
-    background-color: #f8f9fa;
-    font-size: 13px;
-    color: #333;
-    border-radius: 3px;
-    border: 1px solid #ccc;
-    word-wrap: break-word;
-    padding: 6px 10px;
-    line-height: 19px;
-    margin-top: 10px;
-}
-
-code {
-    font-family: monospace, monospace;
-    display: block;
-    word-wrap: normal;
+details > div {
+    padding: 4px 4px 4px 10px;
+    border: solid thin darkgrey;
 }

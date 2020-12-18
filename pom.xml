@@ -3,13 +3,13 @@
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>me.A5H73Y</groupId>
+	<groupId>io.github.a5h73y</groupId>
 	<artifactId>Parkour</artifactId>
-	<version>5.3</version>
+	<version>6.0</version>
 	<packaging>jar</packaging>
 
 	<name>Parkour</name>
-	<description>The ultimate Parkour plugin</description>
+	<description>The ultimate Parkour plugin.</description>
 	<url>https://a5h73y.github.io/Parkour/</url>
 
 	<properties>
@@ -30,92 +30,128 @@
 	</licenses>
 
 	<repositories>
+		<!-- Spigot API Repo -->
 		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
 		</repository>
+		<!-- Vault Repo -->
 		<repository>
 			<id>vault-repo</id>
-			<url>http://nexus.hc.to/content/repositories/pub_releases</url>
+			<url>https://jitpack.io/</url>
 		</repository>
+		<!-- bStats Repo -->
+		<repository>
+			<id>CodeMC</id>
+			<url>https://repo.codemc.org/repository/maven-public/</url>
+		</repository>
+		<!-- My Bintray Repo -->
 		<repository>
 			<id>a5h73y-repo</id>
 			<url>https://dl.bintray.com/a5h73y/repo/</url>
 		</repository>
+		<!-- Placeholder API Repo -->
 		<repository>
 			<id>placeholderapi-repo</id>
 			<url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
 		</repository>
+		<!-- MySQL database Repo -->
 		<repository>
-			<id>CodeMC</id>
-			<url>https://repo.codemc.org/repository/maven-public</url>
+			<id>husk</id>
+			<url>https://maven.husk.pro/repository/maven-public/</url>
+		</repository>
+		<!-- InventoryGui -->
+		<repository>
+			<id>minebench-repo</id>
+			<url>https://repo.minebench.de/</url>
+		</repository>
+		<!-- AAC API -->
+		<repository>
+			<id>janmm14-public</id>
+			<url>https://repo.janmm14.de/repository/public/</url>
 		</repository>
 	</repositories>
 
 	<dependencies>
-		<!--Spigot API-->
+		<!-- Spigot API -->
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.14.2-R0.1-SNAPSHOT</version>
+			<version>1.16.3-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
-		<!--Bukkit API-->
-		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
-			<version>1.14.2-R0.1-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
-		<!--Vault API-->
+		<!-- Vault API -->
 		<dependency>
 			<groupId>net.milkbowl.vault</groupId>
 			<artifactId>VaultAPI</artifactId>
 			<version>1.7</version>
 			<scope>provided</scope>
 		</dependency>
-		<!--Bountiful API-->
+		<!-- Bountiful API -->
 		<dependency>
 			<groupId>com.connorlinfoot</groupId>
 			<artifactId>BountifulAPI</artifactId>
 			<version>1.6.4</version>
 			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.bukkit</groupId>
+					<artifactId>bukkit</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-		<!--Placeholder API-->
+		<!-- Placeholder API -->
 		<dependency>
 			<groupId>me.clip</groupId>
 			<artifactId>placeholderapi</artifactId>
-			<version>2.10.1</version>
+			<version>2.10.9</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- AAC API -->
+		<dependency>
+			<groupId>de.janmm14</groupId>
+			<artifactId>aac-api</artifactId>
+			<version>4.2.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- bStats -->
 		<dependency>
 			<groupId>org.bstats</groupId>
 			<artifactId>bstats-bukkit</artifactId>
-			<version>1.4</version>
+			<version>1.7</version>
 			<scope>compile</scope>
 		</dependency>
-
-		<!-- Updater -->
+		<!-- MySQL Database -->
 		<dependency>
-			<groupId>com.googlecode.json-simple</groupId>
-			<artifactId>json-simple</artifactId>
-			<version>1.1.1</version>
+			<groupId>pro.husk</groupId>
+			<artifactId>mysql</artifactId>
+			<version>1.4.0</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- InventoryGui -->
+		<dependency>
+			<groupId>de.themoep</groupId>
+			<artifactId>inventorygui</artifactId>
+			<version>1.4.2-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- XSeries -->
+		<dependency>
+			<groupId>com.github.cryptomorin</groupId>
+			<artifactId>XSeries</artifactId>
+			<version>7.7.0</version>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
-		<finalName>${project.artifactId}</finalName>
-		<defaultGoal>clean compile resources:resources package shade:shade</defaultGoal>
+		<finalName>${project.artifactId}-${project.version}</finalName>
+		<defaultGoal>clean package</defaultGoal>
 
 		<resources>
 			<resource>
-				<targetPath>.</targetPath>
+				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
-				<directory>${basedir}</directory>
-				<includes>
-					<include>plugin.yml</include>
-				</includes>
 			</resource>
 		</resources>
 
@@ -133,7 +169,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>3.1.1</version>
+				<version>3.3.0</version>
 				<configuration>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
@@ -144,17 +180,36 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.1</version>
+				<version>3.2.4</version>
 				<configuration>
+					<createDependencyReducedPom>false</createDependencyReducedPom>
 					<artifactSet>
 						<includes>
+							<include>com.github.cryptomorin:*</include>
 							<include>org.bstats:*</include>
+							<include>pro.husk:*</include>
+							<include>com.zaxxer:*</include>
+							<include>org.slf4j:*</include>
+							<include>de.themoep:inventorygui:*</include>
+							<include>com.github.ben-manes.caffeine:*</include>
 						</includes>
 					</artifactSet>
+					<filters>
+						<filter>
+							<artifact>*:*</artifact>
+							<excludes>
+								<exclude>META-INF/</exclude>
+							</excludes>
+						</filter>
+					</filters>
 					<relocations>
 						<relocation>
 							<pattern>org.bstats</pattern>
-							<shadedPattern>me.A5H73Y.parkour</shadedPattern>
+							<shadedPattern>io.github.a5h73y.parkour.bstats</shadedPattern>
+						</relocation>
+						<relocation>
+							<pattern>com.cryptomorin.xseries</pattern>
+							<shadedPattern>io.github.a5h73y.parkour.support</shadedPattern>
 						</relocation>
 					</relocations>
 				</configuration>
@@ -163,6 +218,56 @@
 						<phase>package</phase>
 						<goals>
 							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.2.0</version>
+				<executions>
+					<execution>
+						<id>copy-my-resources</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<overwrite>true</overwrite>
+							<outputDirectory>${basedir}/docs/files/</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/resources</directory>
+									<filtering>false</filtering>
+									<includes>
+										<include>**/*.json</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.1.1</version>
+				<configuration>
+					<configLocation>src/main/resources/a5h73y_checks.xml</configLocation>
+					<encoding>UTF-8</encoding>
+					<consoleOutput>true</consoleOutput>
+					<failsOnError>true</failsOnError>
+					<linkXRef>false</linkXRef>
+				</configuration>
+				<executions>
+					<execution>
+						<id>validate</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>check</goal>
 						</goals>
 					</execution>
 				</executions>

@@ -1,116 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <link href="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link href="//fonts.googleapis.com/css?family=Arvo" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet"/>
-    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" />
-    <title>Parkour Tutorials</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="The ultimate Parkour plugin tutorials.">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta name="theme-color" content="#3F51B5">
+  <meta name="msapplication-TileColor" content="#3F51B5">
+  <meta property="og:site_name" content="Parkour Tutorials" />
+  <meta property="og:image" content="https://a5h73y.github.io/Parkour/_media/logo.jpg" />
+  <meta property="og:url" content="https://a5h73y.github.io/Parkour/" />
+  <meta property="og:title" content="Parkour Tutorials" />
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify/lib/themes/vue.css">
+  <link rel="stylesheet" href="//unpkg.com/docsify-toc@1.0.2/dist/toc.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="shortcut icon" type="image/x-icon" href="_media/favicon.ico" />
+  <title>Parkour Tutorials</title>
 </head>
 <body>
+  <div id="app"></div>
 
-<div class="wrapper">
-    <div id="navigation-placeholder"></div>
+  <script>
+    window.$docsify = {
+      name: 'Parkour Tutorials',
+      homepage: 'index.md',
+      executeScript: true,
+      loadSidebar: true,
+      autoHeader: true,
+      themeColor: '#3F51B5',
 
-    <section>
-        <div class="content">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <h1><img src="img/parkourlogo.png" class="img-heading" alt="Parkour Logo"> Parkour Tutorials</h1>
+      auto2top: true,
+      // logo: '/_media/logo.png',
 
-                        <p class="no-margin">Hello, and welcome to the new home for Parkour Tutorials.</p>
-                        <p>On the left hand side you will find everything there is to know about the Parkour plugin. Follow the tutorial in parts to help learn in simple stages, or skip to the step you want to learn.</p>
+      // search functionality
+      search: {
+        noData: 'No results, if something is missing please notify the Discord!',
+        placeholder: 'Search...'
+      },
 
-                        <div class="row">
-                            <div class="col-6">
-                                <h5>Helpful Parkour Links</h5>
-                                <div class="list-group">
-                                    <a href="https://dev.bukkit.org/projects/parkour" class="list-group-item list-group-item-action">
-                                        Bukkit Page
-                                    </a>
-                                    <a href="https://www.spigotmc.org/resources/parkour.23685/" class="list-group-item list-group-item-action">
-                                        Spigot Page
-                                    </a>
-                                    <a href="https://dev.bukkit.org/projects/parkour/files" class="list-group-item list-group-item-action">
-                                        Downloads
-                                    </a>
-                                    <a href="https://discord.gg/Gc8RGYr" class="list-group-item list-group-item-action">
-                                        Discord Support Server
-                                    </a>
-                                    <a href="https://github.com/A5H73Y/Parkour/" class="list-group-item list-group-item-action">
-                                        GitHub
-                                    </a>
-                                    <a href="https://bstats.org/plugin/bukkit/Parkour" class="list-group-item list-group-item-action">
-                                        bStats
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <h5>My other plugins</h5>
-                                <div class="list-group">
-                                    <a href="https://dev.bukkit.org/projects/carz" class="list-group-item list-group-item-action">
-                                        Carz
-                                    </a>
-                                    <a href="https://dev.bukkit.org/projects/a5h73y" class="list-group-item list-group-item-action">
-                                        NoSwear
-                                    </a>
-                                    <a href="https://dev.bukkit.org/projects/planez" class="list-group-item list-group-item-action">
-                                        Planez
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <h2>Permissions</h2>
-
-                        <h4>Parkour.Basic.*</h4>
-                        <ul>
-                            <li>Parkour.Basic.Create</li>
-                            <li>Parkour.Basic.Kit</li>
-                            <li>Parkour.Basic.TP</li>
-                            <li>Parkour.Basic.TPC</li>
-                            <li>Parkour.Basic.Leaderboard</li>
-                            <li>Parkour.Basic.Invite</li>
-                            <li>Parkour.Basic.Challenge</li>
-                            <li>Parkour.Basic.Signs (needed for when sign permissions is enabled)</li>
-                            <li>Parkour.Basic.Commands (needed for when command permissions is enabled)</li>
-                        </ul>
-
-                        <h4>Parkour.Admin.*</h4>
-                        <ul>
-                            <li>Parkour.Admin.Bypass</li>
-                            <li>Parkour.Admin.Course (This is bypassed if they're the course owner)</li>
-                            <li>Parkour.Admin.Prize</li>
-                            <li>Parkour.Admin.Delete</li>
-                            <li>Parkour.Admin.Reset</li>
-                            <li>Parkour.Admin.Testmode</li>
-                        </ul>
-
-                        <h4>Parkour.Sign.*</h4>
-                        <p class="italic">The sign Permissions are for <strong>creating</strong> the sign. If your players can not interact with Parkour signs check your spawn protection settings, or 3rd party plugins preventing the interaction.</p>
-                        <ul>
-                            <li>Parkour.Sign.Join</li>
-                            <li>Parkour.Sign.Finish</li>
-                            <li>Parkour.Sign.Leave</li>
-                            <li>Parkour.Sign.Effect</li>
-                            <li>Parkour.Sign.Stats</li>
-                            <li>Parkour.Sign.Leaderboards</li>
-                            <li>Parkour.Sign.Lobby</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <footer>
-
-    </footer>
-</div>
-
-<script src="//code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-<script src="js/script.js"></script>
+      // table of contents
+      toc: {
+        headings: 'h1, h2, h3',
+      },
+    }
+  </script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-pagination/dist/docsify-pagination.min.js"></script>
+  <script src="//unpkg.com/docsify-toc@1.0.2/dist/toc.js"></script>
 </body>
-
 </html>
