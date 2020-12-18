@@ -18,7 +18,6 @@ import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;

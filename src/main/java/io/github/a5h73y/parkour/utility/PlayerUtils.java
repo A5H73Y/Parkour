@@ -1,7 +1,6 @@
 package io.github.a5h73y.parkour.utility;
 
 import com.cryptomorin.xseries.XPotion;
-import io.github.a5h73y.parkour.Parkour;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;

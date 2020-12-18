@@ -107,7 +107,6 @@ public class DatabaseUpgradeTask extends TimedUpgradeTask {
 		// which also setups up the new tables
 		Database database = Parkour.getInstance().getDatabase().getDatabase();
 
-		// TODO check new tables exist
 		getParkourUpgrader().getLogger().info("Transferring data to new tables.");
 		getParkourUpgrader().getLogger().info("Re-inserting course data...");
 

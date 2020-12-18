@@ -25,7 +25,7 @@ And it's as simple as that, right click with the tool to save your position, and
 
 ## Potion
 
-This ParkourMode replaces the existing "Darkness" and "Drunk" ParkourModes by allowing you to choose your own Potion Effects to apply the player once they join the Course.
+This ParkourMode replaces the existing "Darkness", "Drunk" and "Jump" ParkourModes by allowing you to choose your own Potion Effects to apply the player once they join the Course.
 
 TODO images
 

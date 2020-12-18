@@ -15,12 +15,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Stairs;
 
+/**
+ * Material Utility methods.
+ */
 public class MaterialUtils {
 
 	private static List<Material> validCheckpointMaterials;
 
 	/**
-	 * Get the Material in the player's hand.
+	 * Get the Material in the Player's hand.
 	 *
 	 * @param player target player
 	 * @return {@link Material}
@@ -30,7 +33,7 @@ public class MaterialUtils {
 	}
 
 	/**
-	 * Get the ItemStack in the player's hand.
+	 * Get the ItemStack in the Player's hand.
 	 *
 	 * @param player target player
 	 * @return {@link ItemStack}
@@ -64,7 +67,6 @@ public class MaterialUtils {
 	 * Create an ItemStack for a single Material.
 	 * Item label is set as display name.
 	 *
-	 *
 	 * @param material {@link Material}
 	 * @param itemLabel item display name
 	 * @return created {@link ItemStack}
@@ -92,11 +94,10 @@ public class MaterialUtils {
 	}
 
 	/**
-	 * Lookup the matching Material
-	 * Use the 1.13 API to lookup the Material,
-	 * It will fall back to XMaterial if it fails to find it
+	 * Lookup the matching Material.
+	 * Uses the {@link XMaterial} library to match a known name.
 	 *
-	 * @param materialName
+	 * @param materialName material name
 	 * @return matching Material
 	 */
 	public static Material lookupMaterial(String materialName) {
@@ -115,12 +116,12 @@ public class MaterialUtils {
 
 
 	/**
-	 * Lookup the Material information requested by player
-	 * Will either lookup the provided argument
-	 * Or lookup the ItemStack in the players main hand
+	 * Lookup the Material information requested by Player.
+	 * If arguments are provided it will try to match a Material based on name.
+	 * Otherwise it will display the Material information of the item in the Player's main hand.
 	 *
-	 * @param args
-	 * @param player
+	 * @param player player
+	 * @param args command arguments
 	 */
 	public static void lookupMaterialInformation(Player player, String... args) {
 		Material material;
@@ -143,6 +144,13 @@ public class MaterialUtils {
 		}
 	}
 
+	/**
+	 * Check if the current Block is safe for a Checkpoint.
+	 *
+	 * @param player player
+	 * @param block block
+	 * @return block is valid
+	 */
 	public static boolean isCheckpointSafe(Player player, Block block) {
 		List<Material> validMaterials = getValidCheckpointMaterials();
 		Block blockUnder = block.getRelative(BlockFace.DOWN);
@@ -169,12 +177,24 @@ public class MaterialUtils {
 		return true;
 	}
 
+	/**
+	 * Check if the Locations have the identical block coordinates.
+	 *
+	 * @param location1 location 1
+	 * @param location2 location 2
+	 * @return same block locations
+	 */
 	public static boolean sameBlockLocations(Location location1, Location location2) {
 		return location1.getBlockX() == location2.getBlockX()
 				&& location1.getBlockY() == location2.getBlockY()
 				&& location1.getBlockZ() == location2.getBlockZ();
 	}
 
+	/**
+	 * Get the known valid checkpoint materials.
+	 *
+	 * @return valid materials
+	 */
 	public static List<Material> getValidCheckpointMaterials() {
 		if (validCheckpointMaterials == null) {
 			validCheckpointMaterials = Arrays.asList(Material.AIR, XMaterial.CAVE_AIR.parseMaterial(), Material.REDSTONE_BLOCK,

@@ -206,9 +206,6 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("GUI.CourseSettings.Setup.Line2", " qwertyu ");
 		this.addDefault("GUI.CourseSettings.Setup.Line3", " ioasdgh ");
 
-//		this.addDefault("Display.TimeFormat", "HH:mm:ss:MMM");
-//		this.addDefault("Display.DateFormat", "dd/MM/yyyy");
-
 		this.addDefault("Display.Day", "%VALUE% day");
 		this.addDefault("Display.Days", "%VALUE% days");
 		this.addDefault("Display.Hour", "%VALUE% hour");

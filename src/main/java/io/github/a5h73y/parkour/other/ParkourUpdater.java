@@ -69,9 +69,10 @@ public class ParkourUpdater {
 			double latestVersion = Double.parseDouble(versionObject.get("name").getAsString());
 
 			if (latestVersion > currentVersion) {
-				plugin.getLogger().info("==== " + plugin.getDescription().getName() + " ====");
-				plugin.getLogger().info("An update is available: v" + latestVersion);
-				plugin.getLogger().info("==============");
+				plugin.getLogger().warning("==== " + plugin.getDescription().getName() + " ====");
+				plugin.getLogger().warning("An update is available: v" + latestVersion);
+				plugin.getLogger().warning("Available at: https://www.spigotmc.org/resources/parkour.23685/");
+				plugin.getLogger().warning("=================");
 			} else {
 				plugin.getLogger().info("No update available.");
 			}

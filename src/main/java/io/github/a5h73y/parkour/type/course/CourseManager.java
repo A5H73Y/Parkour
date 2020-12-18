@@ -799,6 +799,13 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         PluginUtils.logToFile(targetPlayerName + "'s " + courseName + " leaderboards were reset by " + sender.getName());
     }
 
+    /**
+     * Reset the Course Prize.
+     * Will result in the Course using the Default prize.
+     *
+     * @param sender command sender
+     * @param courseName course name
+     */
     public void resetPrize(CommandSender sender, String courseName) {
         if (!doesCourseExists(courseName)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);

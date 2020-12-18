@@ -81,7 +81,7 @@ To allow for multiple players to stand on a pressure plate at once, in the `conf
       let mainContainer = document.getElementById("parkour-commands");
 
       for (let i = 0; i < data.length; i++) {
-        mainContainer.insertAdjacentHTML('afterEnd', createCommandSummary(data[i]));
+        mainContainer.insertAdjacentHTML('afterend', createCommandSummary(data[i]));
       }
     }
     

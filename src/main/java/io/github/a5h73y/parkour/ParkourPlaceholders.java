@@ -1,7 +1,5 @@
 package io.github.a5h73y.parkour;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 import io.github.a5h73y.parkour.database.TimeEntry;
 import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
@@ -10,8 +8,9 @@ import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
+import io.github.a5h73y.parkour.utility.cache.GenericCache;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -28,7 +27,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     private static final String TOP_TEN_RESULT = TranslationUtils.getTranslation("PlaceholderAPI.TopTenResult", false);
 
     private final Parkour parkour;
-    private final Cache<String, String> cache;
+    private final GenericCache<String, String> cache;
 
     /**
      * Contruct the Parkour Placeholders functionality.
@@ -37,10 +36,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
      */
     public ParkourPlaceholders(final Parkour parkour) {
         this.parkour = parkour;
-        this.cache = Caffeine.newBuilder()
-                .expireAfterWrite(parkour.getConfig().getInt("Plugin.PlaceholderAPI.CacheTime"), TimeUnit.SECONDS)
-                .maximumSize(100)
-                .build();
+        this.cache = new GenericCache<>(parkour.getConfig().getLong("Plugin.PlaceholderAPI.CacheTime"));
     }
 
     @NotNull
@@ -203,8 +199,8 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                     return INVALID_SYNTAX;
                 }
 
-                return cache.get(offlinePlayer.getName() + arguments[1] + arguments[2], s ->
-                        getCompletedMessage(offlinePlayer, arguments[2]));
+                return getOrRetrieveCache(offlinePlayer.getName() + arguments[1] + arguments[2],
+                        () -> getCompletedMessage(offlinePlayer, arguments[2]));
 
             case "completions":
                 if (arguments.length != 3) {
@@ -256,8 +252,8 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                         return String.valueOf(session.getCourse().getNumberOfCheckpoints());
 
                     case "completed":
-                        return cache.get(player.getName() + arguments[2] + session.getCourseName(), s ->
-                                getCompletedMessage(player, session.getCourseName()));
+                        return getOrRetrieveCache(player.getName() + arguments[2] + session.getCourseName(),
+                                () -> getCompletedMessage(player, session.getCourseName()));
 
                     case "record":
                         if (arguments.length != 4) {
@@ -317,13 +313,13 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     }
 
     private String getCourseRecord(String courseName, String key, Integer position) {
-        return cache.get(courseName + key + position, k ->
-                extractResultDetails(parkour.getDatabase().getNthBestTime(courseName, position), key));
+        return getOrRetrieveCache(courseName + key + position,
+                () -> extractResultDetails(parkour.getDatabase().getNthBestTime(courseName, position), key));
     }
 
     private String getPersonalCourseRecord(Player player, String courseName, String key) {
-        return cache.get(player.getName() + courseName + key, k ->
-                extractResultDetails(getTopPlayerResultForCourse(player, courseName), key));
+        return getOrRetrieveCache(player.getName() + courseName + key,
+                () -> extractResultDetails(getTopPlayerResultForCourse(player, courseName), key));
     }
 
     private String extractResultDetails(TimeEntry result, String key) {
@@ -345,5 +341,13 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                     return INVALID_SYNTAX;
             }
         }
+    }
+
+    private String getOrRetrieveCache(String key, Supplier<String> callback) {
+        if (!cache.containsKey(key)) {
+            cache.put(key, callback.get());
+        }
+
+        return cache.get(key).orElse(NO_TIME_RECORDED);
     }
 }

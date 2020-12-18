@@ -108,11 +108,4 @@ public class DateTimeUtils {
 		return (long) (hours * 3600000L); // 60 * 60 * 1000
 	}
 
-//	public void tesT() {
-//		LocalDateTime localDateTime = LocalDate.now().format(DateTimeFormatter.ofPattern(""));
-//		SimpleDateFormat formatter= new SimpleDateFormat("HH:mm:ss.SSS");
-//		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-//// Pass date object
-//		String formatted = formatter.format(date );
-//	}
 }

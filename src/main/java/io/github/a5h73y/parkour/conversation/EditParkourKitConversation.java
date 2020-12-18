@@ -73,7 +73,6 @@ public class EditParkourKitConversation extends ParkourConversation {
 
     private class RemoveMaterial extends FixedSetPrompt {
 
-        // TODO super ugly, but can't find a better way?
         RemoveMaterial(ConversationContext context) {
             super(ParkourKitInfo.getParkourKitMaterials(context.getSessionData("kit").toString()).toArray(new String[0]));
         }

@@ -220,8 +220,6 @@ public class ChallengeManager extends AbstractPluginReceiver {
             if (challenge.getWager() != null) {
                 parkour.getEconomyApi().rewardPlayer(winner, challenge.getWager() * challenge.getNumberOfParticipants());
             }
-
-            // TODO do we want to do anything with the losers?
         }
     }
 

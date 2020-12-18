@@ -36,7 +36,10 @@ public class DefaultConfigUpgradeTask extends TimedConfigUpgradeTask {
 			transferAndDelete("ParkourModes.Challenge.CountdownFrom", "ParkourChallenge.CountdownFrom");
 
 			transferAndDelete("Scoreboard.Display.CurrentTime", "Scoreboard.LiveTimer.Enabled");
-			// TODO more scoreboard
+			transferAndDelete("Scoreboard.Display.CourseName", "Scoreboard.CourseName.Enabled");
+			transferAndDelete("Scoreboard.Display.BestTimeEver", "Scoreboard.BestTimeEver.Enabled");
+			transferAndDelete("Scoreboard.Display.BestTimeEverName", "Scoreboard.BestTimeEverName.Enabled");
+			transferAndDelete("Scoreboard.Display.BestTimeByMe", "Scoreboard.MyBestTime.Enabled");
 
 			// update int to actual value
 			getConfig().set("OnJoin.SetGameMode", getMatchingGameMode(getConfig().getInt("OnJoin.SetGamemode")));

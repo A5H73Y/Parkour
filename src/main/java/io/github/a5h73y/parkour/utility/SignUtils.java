@@ -96,11 +96,11 @@ public class SignUtils {
     }
 
     /**
-     * Create lobby join sign.
+     * Create Lobby join sign.
      * Will allow for a custom lobby to be specified on line 2.
      *
-     * @param signEvent
-     * @param player
+     * @param signEvent sign change event
+     * @param player player
      */
     public static void createLobbyJoinSign(SignChangeEvent signEvent, Player player) {
         if (!PermissionUtils.hasSignPermission(player, "Lobby", signEvent)) {

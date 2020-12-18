@@ -45,8 +45,8 @@ public class StringsConfigUpgradeTask extends TimedConfigUpgradeTask {
 		transferAndDelete("Scoreboard.CourseTitle", "Scoreboard.CourseNameTitle");
 		transferAndDelete("Scoreboard.BestTimeTitle", "Scoreboard.BestTimeEverTitle");
 		transferAndDelete("Scoreboard.BestTimeNameTitle", "Scoreboard.BestTimeEverNameTitle");
-		transferAndDelete("Scoreboard.BestTimeNameTitle", "Scoreboard.BestTimeEverNameTitle");
-		// TODO finish me
+		transferAndDelete("Scoreboard.MyBestTimeTitle", "Scoreboard.MyBestTimeTitle");
+		transferAndDelete("Scoreboard.CurrentTimeTitle", "Scoreboard.LiveTimerTitle");
 
 		// deletes
 		getConfig().set("Parkour.Invite", null);
