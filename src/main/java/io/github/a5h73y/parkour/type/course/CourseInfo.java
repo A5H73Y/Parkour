@@ -728,12 +728,12 @@ public class CourseInfo {
         }
 
         if (hasRewardDelay(courseName) && Parkour.getDefaultConfig().isDisplayPrizeCooldown()) {
-            sendValue(sender, "Reward Cooldown", DateTimeUtils.displayTimeRemaining(
+            sendValue(sender, "Reward Cooldown", DateTimeUtils.convertMillisecondsToDateTime(
                     DateTimeUtils.convertHoursToMilliseconds(getRewardDelay(courseName))));
 
             if (sender instanceof Player && !Parkour.getInstance().getPlayerManager().hasPrizeCooldownDurationPassed(
                     (Player) sender, courseName, false)) {
-                sendValue(sender, "Cool down Remaining", DateTimeUtils.getTimeRemaining((Player) sender, courseName));
+                sendValue(sender, "Cool down Remaining", DateTimeUtils.getDelayTimeRemaining((Player) sender, courseName));
             }
         }
         for (ParkourEventType value : ParkourEventType.values()) {

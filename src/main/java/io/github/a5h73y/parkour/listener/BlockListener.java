@@ -18,16 +18,28 @@ public class BlockListener extends AbstractPluginReceiver implements Listener {
         super(parkour);
     }
 
+    /**
+     * Prevent the Player from Placing Blocks.
+     * @param event BlockPlaceEvent
+     */
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         handleBlockPlaceBreakEvent(event.getPlayer(), event);
     }
 
+    /**
+     * Prevent the Player from Breaking Blocks.
+     * @param event BlockBreakEvent
+     */
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         handleBlockPlaceBreakEvent(event.getPlayer(), event);
     }
 
+    /**
+     * Prevent the Player from breaking Hanging Items.
+     * @param event HangingBreakByEntityEvent
+     */
     @EventHandler
     public void onHangingBreakByEntity(HangingBreakByEntityEvent event) {
         if (!(event.getRemover() instanceof Player)) {

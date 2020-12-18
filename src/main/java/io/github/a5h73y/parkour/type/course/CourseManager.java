@@ -664,7 +664,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         CourseInfo.setRewardDelay(courseName, Double.parseDouble(delay));
         long milliseconds = DateTimeUtils.convertHoursToMilliseconds(Double.parseDouble(delay));
         TranslationUtils.sendPropertySet(sender, "Reward Delay", courseName,
-                DateTimeUtils.displayTimeRemaining(milliseconds));
+                DateTimeUtils.convertMillisecondsToDateTime(milliseconds));
     }
 
     /**

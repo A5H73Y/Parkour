@@ -1,5 +1,26 @@
 package io.github.a5h73y.parkour.utility;
 
+import static com.cryptomorin.xseries.XMaterial.ACACIA_SLAB;
+import static com.cryptomorin.xseries.XMaterial.BIRCH_SLAB;
+import static com.cryptomorin.xseries.XMaterial.BRICK_SLAB;
+import static com.cryptomorin.xseries.XMaterial.CAVE_AIR;
+import static com.cryptomorin.xseries.XMaterial.COBBLESTONE_SLAB;
+import static com.cryptomorin.xseries.XMaterial.DARK_OAK_SLAB;
+import static com.cryptomorin.xseries.XMaterial.DARK_PRISMARINE_SLAB;
+import static com.cryptomorin.xseries.XMaterial.JUNGLE_SLAB;
+import static com.cryptomorin.xseries.XMaterial.NETHER_BRICK_SLAB;
+import static com.cryptomorin.xseries.XMaterial.OAK_SLAB;
+import static com.cryptomorin.xseries.XMaterial.PETRIFIED_OAK_SLAB;
+import static com.cryptomorin.xseries.XMaterial.PRISMARINE_BRICK_SLAB;
+import static com.cryptomorin.xseries.XMaterial.PRISMARINE_SLAB;
+import static com.cryptomorin.xseries.XMaterial.QUARTZ_SLAB;
+import static com.cryptomorin.xseries.XMaterial.RED_SANDSTONE_SLAB;
+import static com.cryptomorin.xseries.XMaterial.SANDSTONE_SLAB;
+import static com.cryptomorin.xseries.XMaterial.SPRUCE_SLAB;
+import static com.cryptomorin.xseries.XMaterial.STONE_BRICK_SLAB;
+import static com.cryptomorin.xseries.XMaterial.STONE_SLAB;
+import static com.cryptomorin.xseries.XMaterial.matchXMaterial;
+
 import com.cryptomorin.xseries.XMaterial;
 import io.github.a5h73y.parkour.Parkour;
 import java.util.Arrays;
@@ -104,7 +125,7 @@ public class MaterialUtils {
 		Material material = Material.getMaterial(materialName);
 
 		if (material == null && ValidationUtils.isStringValid(materialName)) {
-			Optional<XMaterial> matching = XMaterial.matchXMaterial(materialName);
+			Optional<XMaterial> matching = matchXMaterial(materialName);
 
 			if (matching.isPresent()) {
 				material = matching.get().parseMaterial();
@@ -156,8 +177,9 @@ public class MaterialUtils {
 		Block blockUnder = block.getRelative(BlockFace.DOWN);
 
 		//check if player is standing in a half-block
-		if (!block.getType().equals(Material.AIR) && !block.getType().equals(XMaterial.CAVE_AIR.parseMaterial())
-				&& !block.getType().equals(lookupMaterial(Parkour.getDefaultConfig().getString("OnCourse.CheckpointMaterial")))) {
+		if (!block.getType().equals(Material.AIR) && !block.getType().equals(CAVE_AIR.parseMaterial())
+				&& !block.getType().equals(lookupMaterial(
+						Parkour.getDefaultConfig().getString("OnCourse.CheckpointMaterial")))) {
 			TranslationUtils.sendMessage(player, "Invalid Material for Checkpoint: &b" + block.getType());
 			return false;
 		}
@@ -166,11 +188,13 @@ public class MaterialUtils {
 			if (blockUnder.getState().getData() instanceof Stairs) {
 				Stairs stairs = (Stairs) blockUnder.getState().getData();
 				if (!stairs.isInverted()) {
-					TranslationUtils.sendMessage(player, "Invalid Material for Checkpoint: &b" + blockUnder.getType());
+					TranslationUtils.sendMessage(player,
+							"Invalid Material for Checkpoint: &b" + blockUnder.getType());
 					return false;
 				}
 			} else if (!validMaterials.contains(blockUnder.getType())) {
-				TranslationUtils.sendMessage(player, "Invalid Material for Checkpoint: &b" + blockUnder.getType());
+				TranslationUtils.sendMessage(player,
+						"Invalid Material for Checkpoint: &b" + blockUnder.getType());
 				return false;
 			}
 		}
@@ -192,18 +216,33 @@ public class MaterialUtils {
 
 	/**
 	 * Get the known valid checkpoint materials.
+	 * We should update XBlock to include `isSlab` check.
 	 *
 	 * @return valid materials
 	 */
 	public static List<Material> getValidCheckpointMaterials() {
 		if (validCheckpointMaterials == null) {
-			validCheckpointMaterials = Arrays.asList(Material.AIR, XMaterial.CAVE_AIR.parseMaterial(), Material.REDSTONE_BLOCK,
-					XMaterial.ACACIA_SLAB.parseMaterial(), XMaterial.BIRCH_SLAB.parseMaterial(), XMaterial.BRICK_SLAB.parseMaterial(),
-					XMaterial.COBBLESTONE_SLAB.parseMaterial(), XMaterial.DARK_OAK_SLAB.parseMaterial(), XMaterial.DARK_PRISMARINE_SLAB.parseMaterial(),
-					XMaterial.JUNGLE_SLAB.parseMaterial(), XMaterial.NETHER_BRICK_SLAB.parseMaterial(), XMaterial.OAK_SLAB.parseMaterial(),
-					XMaterial.PETRIFIED_OAK_SLAB.parseMaterial(), XMaterial.PRISMARINE_BRICK_SLAB.parseMaterial(), XMaterial.PRISMARINE_SLAB.parseMaterial(),
-					XMaterial.QUARTZ_SLAB.parseMaterial(), XMaterial.RED_SANDSTONE_SLAB.parseMaterial(), XMaterial.SANDSTONE_SLAB.parseMaterial(),
-					XMaterial.SPRUCE_SLAB.parseMaterial(), XMaterial.STONE_BRICK_SLAB.parseMaterial(), XMaterial.STONE_SLAB.parseMaterial());
+			validCheckpointMaterials = Arrays.asList(Material.AIR,
+					CAVE_AIR.parseMaterial(),
+					Material.REDSTONE_BLOCK,
+					ACACIA_SLAB.parseMaterial(),
+					BIRCH_SLAB.parseMaterial(),
+					BRICK_SLAB.parseMaterial(),
+					COBBLESTONE_SLAB.parseMaterial(),
+					DARK_OAK_SLAB.parseMaterial(),
+					DARK_PRISMARINE_SLAB.parseMaterial(),
+					JUNGLE_SLAB.parseMaterial(),
+					OAK_SLAB.parseMaterial(),
+					NETHER_BRICK_SLAB.parseMaterial(),
+					PETRIFIED_OAK_SLAB.parseMaterial(),
+					PRISMARINE_BRICK_SLAB.parseMaterial(),
+					PRISMARINE_SLAB.parseMaterial(),
+					QUARTZ_SLAB.parseMaterial(),
+					RED_SANDSTONE_SLAB.parseMaterial(),
+					SANDSTONE_SLAB.parseMaterial(),
+					SPRUCE_SLAB.parseMaterial(),
+					STONE_BRICK_SLAB.parseMaterial(),
+					STONE_SLAB.parseMaterial());
 
 			if (!Bukkit.getBukkitVersion().contains("1.8")) {
 				validCheckpointMaterials.add(Material.PURPUR_SLAB);

@@ -67,13 +67,26 @@ public class DateTimeUtils {
 		return String.format(HH_MM_SS, hours, minutes, seconds);
 	}
 
-	public static String getTimeRemaining(OfflinePlayer player, String courseName) {
+	/**
+	 * Display the Prize Delay time remaining.
+	 * @param player player
+	 * @param courseName course name
+	 * @return formatted time left
+	 */
+	public static String getDelayTimeRemaining(OfflinePlayer player, String courseName) {
 		long hoursDelay = convertHoursToMilliseconds(CourseInfo.getRewardDelay(courseName));
 		long timeDifference = System.currentTimeMillis() - PlayerInfo.getLastRewardedTime(player, courseName);
-		return displayTimeRemaining(hoursDelay - timeDifference);
+		return convertMillisecondsToDateTime(hoursDelay - timeDifference);
 	}
 
-	public static String displayTimeRemaining(long millis) {
+	/**
+	 * Convert the milliseconds to Time Display.
+	 * Will dynamically build a sentence of how many days / hours / minute / seconds.
+	 *
+	 * @param millis milliseconds
+	 * @return time display
+	 */
+	public static String convertMillisecondsToDateTime(long millis) {
 		MillisecondConverter time = new MillisecondConverter(millis);
 		StringJoiner totalTime = new StringJoiner(", ");
 

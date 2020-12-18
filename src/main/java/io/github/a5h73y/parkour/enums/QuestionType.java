@@ -7,11 +7,13 @@ import org.bukkit.command.CommandSender;
 public enum QuestionType {
 
     DELETE_COURSE("You are about to delete Course &b%s&f...",
-            "&7This will remove all information about the Course ever existing, which includes all leaderboard data, course statistics and everything else the plugin knows about it.",
+            "&7This will remove all information about the Course ever existing, which includes all "
+                    + "leaderboard data, course statistics and everything else the plugin knows about it.",
             (sender, value) -> Parkour.getInstance().getCourseManager().deleteCourse(sender, value)),
 
     DELETE_CHECKPOINT("You are about to delete Checkpoint &b%d &ffor Course &b%s&f...",
-            "&7Deleting a checkpoint will impact everybody that is currently playing on the Course. You should not set a Course to ready and then continue to make changes.",
+            "&7Deleting a checkpoint will impact everybody that is currently playing on the Course. "
+                    + "You should not set a Course to ready and then continue to make changes.",
             (sender, value) -> Parkour.getInstance().getCheckpointManager().deleteCheckpoint(sender, value)),
 
     DELETE_LOBBY("You are about to delete Lobby &b%s&f...",
@@ -27,7 +29,8 @@ public enum QuestionType {
             (sender, value) -> Parkour.getInstance().getCourseManager().deleteAutoStart(sender, value)),
 
     RESET_COURSE("You are about to reset Course &b%s&f...",
-            "&7Resetting a Course will delete all the statistics stored, which includes leaderboards and various Parkour attributes. This will NOT affect the spawn or checkpoints.",
+            "&7Resetting a Course will delete all the statistics stored, which includes leaderboards and "
+                    + "various Parkour attributes. This will NOT affect the spawn or checkpoints.",
             (sender, value) -> Parkour.getInstance().getCourseManager().resetCourse(sender, value)),
 
 
@@ -37,11 +40,13 @@ public enum QuestionType {
 
 
     RESET_LEADERBOARD("You are about to reset Leaderboards for &b%s&f...",
-            "&7Resetting the leaderboards will remove all times from the database for this course. This will NOT affect the course in any other way.",
+            "&7Resetting the leaderboards will remove all times from the database for this course. "
+                    + "This will NOT affect the course in any other way.",
             (sender, value) -> Parkour.getInstance().getCourseManager().resetCourseLeaderboards(sender, value)),
 
     RESET_PLAYER_LEADERBOARD("You are about to reset &b%s &fLeaderboards on Course &b%s&f...",
-            "&7Resetting the player's leaderboards will remove all times they have from the database for this course. This will NOT affect the player or course in any other way.",
+            "&7Resetting the player's leaderboards will remove all times they have from the database for this course. "
+                    + "This will NOT affect the player or course in any other way.",
             (sender, value) -> {
                 String[] args = value.split(";");
                 Parkour.getInstance().getCourseManager().resetPlayerCourseLeaderboards(sender, args[0], args[1]);

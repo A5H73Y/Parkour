@@ -29,6 +29,12 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         super(parkour);
     }
 
+    /**
+     * Handle Player Interaction Event.
+     * Used for the Parkour Tools whilst on a Course.
+     *
+     * @param event PlayerInteractEvent
+     */
     @EventHandler
     public void onInventoryInteract(PlayerInteractEvent event) {
         if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
@@ -91,6 +97,12 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         }
     }
 
+    /**
+     * Handle Player Interaction Event.
+     * Used to support the ParkourMode while on a Course.
+     *
+     * @param event PlayerInteractEvent
+     */
     @EventHandler
     public void onInventoryInteractParkourMode(PlayerInteractEvent event) {
         if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
@@ -138,6 +150,12 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         }
     }
 
+    /**
+     * Handle Player Interaction Event.
+     * Used to handle the pressure plate interaction while on a Course.
+     *
+     * @param event PlayerInteractEvent
+     */
     @EventHandler
     public void onCheckpointEvent(PlayerInteractEvent event) {
         if (event.getAction() != Action.PHYSICAL
@@ -182,6 +200,13 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         }
     }
 
+    /**
+     * Handle Player Interaction Event.
+     * Used to handle the pressure plate interaction while NOT on a Course.
+     * This is used to identify if the plate matches an AutoStart location.
+     *
+     * @param event PlayerInteractEvent
+     */
     @EventHandler
     public void onAutoStartEvent(PlayerInteractEvent event) {
         if (event.getAction() != Action.PHYSICAL) {

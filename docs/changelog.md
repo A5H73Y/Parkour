@@ -15,21 +15,21 @@ This update is a rewrite of v5.3 with performance and usability being at the for
 - `/pa finish` has been renamed to `/pa ready`
 - ParkourSessions are now physically persisted instead of held in memory, this should mean considerable speed improvements for large servers
 - PlaceholderAPI placeholders have been modified
-- Improvements to Scoreboard 
-- Tons of fixes and general usage improvements
+- Improvements to Scoreboard
 - Console Commands overhaul, most commands are now possible
 - New and improved documentation
 - Permission 'Parkour.Sign' renamed to 'Parkour.CreateSign'
+- Tons of fixes and general usage improvements
 
 ## New Features
+- New Course Settings GUI
+- New `Potion` ParkourMode for applying Potion Effects.
 - Option to save and restore join location
 - `/pa setcourse` is now used for course options
 - `/pa setplayer` is now used for player options
-- New `Potion` ParkourMode for applying Potion Effects.
 - Ability to display custom messages on join / leave / checkpoint / finish etc.
 - Ability to execute commands on join / leave / checkpoint / finish etc.
 - Customisable Sounds on join / leave / checkpoint / finish etc.
-- New Course Settings GUI
 - Ability to leave a Course and rejoin at the same checkpoint
 - New 'FREE_CHECKPOINT' ParkourMode treats any pressure plate as a Checkpoint.
 - New 'POTION' ParkourMode, allowing you to apply a PotionType to the Player upon joining.

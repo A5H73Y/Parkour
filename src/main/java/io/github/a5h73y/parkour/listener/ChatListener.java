@@ -22,6 +22,12 @@ public class ChatListener extends AbstractPluginReceiver implements Listener {
         super(parkour);
     }
 
+    /**
+     * Handle the Player Chat Event.
+     * Used to insert the Player's ParkourRank into the chat prefix when enabled.
+     *
+     * @param event AsyncPlayerChatEvent
+     */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         if (!parkour.getConfig().isChatPrefix()) {
@@ -47,6 +53,13 @@ public class ChatListener extends AbstractPluginReceiver implements Listener {
         event.setFormat(StringUtils.colour(finalMessage));
     }
 
+    /**
+     * Handle Command Preprocess Event.
+     * Used to prevent non-whitelisted non-parkour commands while on a Course.
+     * Used to force the player to answer an outstanding question.
+     *
+     * @param event PlayerCommandPreprocessEvent
+     */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
         List<String> aliases = parkour.getCommand(Parkour.PLUGIN_NAME).getAliases();

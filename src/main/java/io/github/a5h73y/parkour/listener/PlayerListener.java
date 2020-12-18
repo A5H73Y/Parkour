@@ -31,6 +31,12 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         super(parkour);
     }
 
+    /**
+     * Handle Entity damages Entity.
+     * Prevent a Parkour Player damaging others, also others damaging the Parkour Player.
+     *
+     * @param event EntityDamageByEntityEvent
+     */
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player) {
@@ -46,6 +52,12 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         }
     }
 
+    /**
+     * Handle Player Combust Event.
+     * Prevent the Player from being set on Fire while on a Course.
+     *
+     * @param event EntityCombustEvent
+     */
     @EventHandler
     public void onEntityCombust(EntityCombustEvent event) {
         if (event.getEntity() instanceof Player
@@ -54,6 +66,12 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         }
     }
 
+    /**
+     * Handle Player Damage Event.
+     * Prepare the Player when they receive a certain type of Damage.
+     *
+     * @param event EntityDamageEvent
+     */
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) {
@@ -72,14 +90,15 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-            if (parkour.getConfig().getBoolean("OnCourse.DisableFallDamage")
-                    || (parkour.getPlayerManager().getParkourSession(player).getParkourMode() == ParkourMode.DROPPER
-                    && !parkour.getConfig().getBoolean("ParkourModes.Dropper.FallDamage"))) {
-                event.setDamage(0);
-                event.setCancelled(true);
-                return;
-            }
+        // if the player takes fall damage
+        // cancel damage if globally disabled or the ParkourMode is Dropper and fall damage is enabled
+        if (event.getCause() == EntityDamageEvent.DamageCause.FALL
+                && (parkour.getConfig().getBoolean("OnCourse.DisableFallDamage")
+                || (ParkourMode.DROPPER == parkour.getPlayerManager().getParkourSession(player).getParkourMode()
+                && !parkour.getConfig().getBoolean("ParkourModes.Dropper.FallDamage")))) {
+            event.setDamage(0);
+            event.setCancelled(true);
+            return;
         }
 
         if (parkour.getConfig().isDisablePlayerDamage()) {
@@ -96,6 +115,12 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         }
     }
 
+    /**
+     * Handle Player Respawn Event.
+     * If the Player actually dies, once they respawn treat it like a Parkour death.
+     *
+     * @param event PlayerRespawnEvent
+     */
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         if (parkour.getPlayerManager().isPlaying(event.getPlayer())) {
@@ -103,6 +128,12 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         }
     }
 
+    /**
+     * Handle Player Food Level Change.
+     * Cancel the player from losing their food level while on a Course.
+     *
+     * @param event FoodLevelChangeEvent
+     */
     @EventHandler
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         if (!(event.getEntity() instanceof Player)) {
@@ -114,6 +145,12 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         }
     }
 
+    /**
+     * Handle Player Drops Item.
+     * Cancel the Player from dropping items while on a Course.
+     *
+     * @param event PlayerDropItemEvent
+     */
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
@@ -125,6 +162,12 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         }
     }
 
+    /**
+     * Handle Player Pickup Item.
+     * Cancel the Player from dropping items while on a Course.
+     *
+     * @param event PlayerPickupItemEvent
+     */
     @EventHandler
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
         if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
@@ -136,6 +179,12 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         }
     }
 
+    /**
+     * Handle Player Joining Server.
+     * When the Player joins the server, they may have a ParkourSession to resume.
+     *
+     * @param event PlayerJoinEvent
+     */
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         if (parkour.getConfig().isDisplayWelcomeMessage()) {
@@ -163,6 +212,13 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         }
     }
 
+    /**
+     * Handle Player Quitting Server.
+     * Teardown the Player to remove any of their references before leaving.
+     * If the Player is banned, attempt to delete all their Parkour data.
+     *
+     * @param event PlayerQuitEvent
+     */
     @EventHandler
     public void onPlayerDisconnect(PlayerQuitEvent event) {
         if (parkour.getPlayerManager().isPlaying(event.getPlayer())) {
@@ -171,11 +227,16 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
 
         if (event.getPlayer().isBanned()
                 && parkour.getConfig().getBoolean("Other.OnPlayerBan.ResetParkourInfo")) {
-            PlayerInfo.resetPlayerData(event.getPlayer());
-            parkour.getPlayerManager().deleteParkourSession(event.getPlayer());
+            parkour.getPlayerManager().resetPlayer(event.getPlayer());
         }
     }
 
+    /**
+     * Handle Player Teleporting.
+     * Prevent the Player from leaving the Parkour world while on a Course.
+     *
+     * @param event PlayerTeleportEvent
+     */
     @EventHandler
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
@@ -201,6 +262,12 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         }
     }
 
+    /**
+     * Handle Player Toggling Flight.
+     * Prevent the Player from attempting to fly while on a Course.
+     *
+     * @param event PlayerToggleFlightEvent
+     */
     @EventHandler
     public void onPlayerToggleFlight(PlayerToggleFlightEvent event) {
         if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
@@ -218,6 +285,12 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         }
     }
 
+    /**
+     * Handle Player opening Inventory.
+     * Prevent the Player from opening non-player inventories.
+     *
+     * @param event InventoryOpenEvent
+     */
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent event) {
         if (!(event.getPlayer() instanceof Player)) {

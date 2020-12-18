@@ -42,20 +42,21 @@ public class CourseInfoUpgradeTask extends TimedConfigUpgradeTask {
 				transferAndDelete(courseName + ".Mode", courseName + ".ParkourMode");
 
 				String parkourMode = getConfig().getString(courseName + ".ParkourMode");
+				String potionPath = courseName + ".PotionParkourMode.";
 				if ("DRUNK".equals(parkourMode)) {
 					getConfig().set(courseName + ".ParkourMode", "POTION");
-					getConfig().set(courseName + ".PotionParkourMode.Effects", Collections.singletonList("CONFUSION,1000000,1"));
-					getConfig().set(courseName + ".PotionParkourMode.JoinMessage", "You feel strange...");
+					getConfig().set(potionPath + "Effects", Collections.singletonList("CONFUSION,1000000,1"));
+					getConfig().set(potionPath + "JoinMessage", "You feel strange...");
 
 				} else if ("DARKNESS".equals(parkourMode)) {
 					getConfig().set(courseName + ".ParkourMode", "POTION");
-					getConfig().set(courseName + ".PotionParkourMode.Effects", Collections.singletonList("BLINDNESS,1000000,1"));
-					getConfig().set(courseName + ".PotionParkourMode.JoinMessage", "It suddenly becomes dark...");
+					getConfig().set(potionPath + "Effects", Collections.singletonList("BLINDNESS,1000000,1"));
+					getConfig().set(potionPath + "JoinMessage", "It suddenly becomes dark...");
 
 				} else if ("MOON".equals(parkourMode)) {
 					getConfig().set(courseName + ".ParkourMode", "POTION");
-					getConfig().set(courseName + ".PotionParkourMode.Effects", Collections.singletonList("JUMP,1000000,5"));
-					getConfig().set(courseName + ".PotionParkourMode.JoinMessage", "You feel weightless...");
+					getConfig().set(potionPath + "Effects", Collections.singletonList("JUMP,1000000,5"));
+					getConfig().set(potionPath + "JoinMessage", "You feel weightless...");
 				}
 			}
 
@@ -65,7 +66,8 @@ public class CourseInfoUpgradeTask extends TimedConfigUpgradeTask {
 
 			for (int i = 0; i < checkpoints + 1; i++) {
 				// first we do the checkpoints.yml file
-				ConfigurationSection courseConfigSection = getConfig().getConfigurationSection(courseName + "." + i);
+				ConfigurationSection courseConfigSection
+						= getConfig().getConfigurationSection(courseName + "." + i);
 
 				if (courseConfigSection == null) {
 					getParkourUpgrader().getLogger().info("Course " + courseName + " is already upgraded...");
@@ -78,9 +80,11 @@ public class CourseInfoUpgradeTask extends TimedConfigUpgradeTask {
 					if (checkpointConfigSection != null) {
 						Set<String> xyz = checkpointConfigSection.getKeys(false);
 						for (String coordinate : xyz) {
-							getParkourUpgrader().getCheckpointsConfig().set(courseName + "." + i + ".Plate" + coordinate,
-									getParkourUpgrader().getCheckpointsConfig().get(courseName + "." + i + "." + coordinate));
-							getParkourUpgrader().getCheckpointsConfig().set(courseName + "." + i + "." + coordinate, null);
+							String path = courseName + "." + i + "." + coordinate;
+							getParkourUpgrader().getCheckpointsConfig().set(
+									courseName + "." + i + ".Plate" + coordinate,
+									getParkourUpgrader().getCheckpointsConfig().get(path));
+							getParkourUpgrader().getCheckpointsConfig().set(path, null);
 						}
 					}
 				}
@@ -89,7 +93,8 @@ public class CourseInfoUpgradeTask extends TimedConfigUpgradeTask {
 				Set<String> checkpointData = courseConfigSection.getKeys(false);
 
 				for (String checkpointDatum : checkpointData) {
-					getParkourUpgrader().getCheckpointsConfig().set(courseName + "." + i + "." + checkpointDatum,
+					getParkourUpgrader().getCheckpointsConfig().set(
+							courseName + "." + i + "." + checkpointDatum,
 							getConfig().getDouble(courseName + "." + i + "." + checkpointDatum));
 				}
 				getConfig().set(courseName + "." + i, null);

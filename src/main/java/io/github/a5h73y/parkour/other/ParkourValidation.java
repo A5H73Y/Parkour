@@ -201,7 +201,8 @@ public class ParkourValidation {
 
         if (minimumLevel > 0
                 && !PermissionUtils.hasPermission(player, Permission.ADMIN_LEVEL_BYPASS, false)
-                && !PermissionUtils.hasSpecificPermission(player, Permission.PARKOUR_LEVEL, String.valueOf(minimumLevel), false)) {
+                && !PermissionUtils.hasSpecificPermission(
+                        player, Permission.PARKOUR_LEVEL, String.valueOf(minimumLevel), false)) {
             int currentLevel = PlayerInfo.getParkourLevel(player);
 
             if (currentLevel < minimumLevel) {

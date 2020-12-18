@@ -14,6 +14,12 @@ public abstract class TimedUpgradeTask {
 		this.parkourUpgrader = parkourUpgrader;
 	}
 
+	/**
+	 * Start the Upgrade Task.
+	 * The time difference between start and end will be output on completion.
+	 *
+	 * @return upgrade success
+	 */
 	public boolean start() {
 		Parkour.getInstance().getLogger().info(this.getTitle() + " Upgrade started...");
 		long startTime = System.currentTimeMillis();

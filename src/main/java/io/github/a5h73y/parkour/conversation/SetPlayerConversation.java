@@ -81,6 +81,14 @@ public class SetPlayerConversation extends ParkourConversation {
         }
     }
 
+    /**
+     * Perform Set Player Command.
+     *
+     * @param sender command sender
+     * @param targetPlayer target player
+     * @param setOption option to set
+     * @param input input value
+     */
     public static void performAction(CommandSender sender, OfflinePlayer targetPlayer, String setOption, String input) {
         Parkour parkour = Parkour.getInstance();
         Bukkit.getScheduler().runTaskAsynchronously(parkour, () -> {

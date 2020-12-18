@@ -45,7 +45,7 @@ This allows you to integrate the plugin into the 'dropper' gamemode, allowing yo
 
 Inspired by CodJumping, when you use an RPG's explosion to propel yourself into the air to gain additional height and velocity.
 
-You will be given a 'Rocket Launcher', which is a Rocket by default. Simply right click with the item in your hand and you will have a knockback applied to your player, which you can use to reach new heights and distances. Can only be used once every second, to reduce risk of it being abused.
+You will be given a 'Rocket Launcher', which is a Rocket by default. Simply right click with the item in your hand and you will have a knockback applied to your player, which you can use to reach new heights and distances. The time between reuse can be configured, to reduce risk of it being abused.
 
 
 

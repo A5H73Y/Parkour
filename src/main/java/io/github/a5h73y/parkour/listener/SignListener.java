@@ -27,6 +27,12 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
         super(parkour);
     }
 
+    /**
+     * Handle Sign Change.
+     * Check that the Player has the correct permissions to create Parkour signs.
+     *
+     * @param event SignChangeEvent
+     */
     @EventHandler(ignoreCancelled = true)
     public void onSignCreate(SignChangeEvent event) {
         if (!event.getLine(0).equalsIgnoreCase("[parkour]")
@@ -79,7 +85,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
 
             case "checkpoint":
             case "c":
-                SignUtils.createCheckpointSign(event, player, "Checkpoint");
+                SignUtils.createCheckpointSign(event, player);
                 break;
 
             case "challenge":
@@ -97,6 +103,12 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
         event.setLine(0, parkour.getConfig().getSignHeader());
     }
 
+    /**
+     * Handle Sign Interaction.
+     * When the Player attempts to break a Parkour sign, check they have Permission.
+     *
+     * @param event PlayerInteractEvent
+     */
     @EventHandler(ignoreCancelled = true)
     public void onSignBreak(PlayerInteractEvent event) {
         if (event.getAction() != Action.LEFT_CLICK_BLOCK) {
@@ -128,6 +140,13 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
         }
     }
 
+    /**
+     * Handle Sign Interaction.
+     * When the Player attempts to interact with a Parkour Sign, process the request.
+     * Prevent the player from interaction with non-parkour signs.
+     *
+     * @param event PlayerInteractEvent
+     */
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onSignInteract(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
@@ -237,7 +256,8 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 } else if (!parkour.getPlayerManager().isPlaying(player)) {
                     TranslationUtils.sendTranslation("Error.NotOnAnyCourse", player);
 
-                } else if (!parkour.getPlayerManager().getParkourSession(player).getCourse().getName().equals(lines[2].toLowerCase())) {
+                } else if (!parkour.getPlayerManager().getParkourSession(player).getCourse().getName()
+                        .equals(lines[2].toLowerCase())) {
                     TranslationUtils.sendTranslation("Error.NotOnCourse", player);
 
                 } else {
@@ -280,7 +300,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
             PlayerUtils.fullyHealPlayer(player);
 
         } else if (effect.equalsIgnoreCase("gamemode")) {
-            PlayerUtils.applyGameModeChange(player, argument);
+            PlayerUtils.changeGameMode(player, argument);
 
         } else {
             // if the user enters 'FIRE_RESISTANCE' or 'DAMAGE_RESIST' treat them the same

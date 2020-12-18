@@ -1,6 +1,12 @@
 package io.github.a5h73y.parkour.type.player;
 
-import static io.github.a5h73y.parkour.enums.ParkourEventType.*;
+import static io.github.a5h73y.parkour.enums.ParkourEventType.CHECKPOINT;
+import static io.github.a5h73y.parkour.enums.ParkourEventType.CHECKPOINT_ALL;
+import static io.github.a5h73y.parkour.enums.ParkourEventType.DEATH;
+import static io.github.a5h73y.parkour.enums.ParkourEventType.FINISH;
+import static io.github.a5h73y.parkour.enums.ParkourEventType.JOIN;
+import static io.github.a5h73y.parkour.enums.ParkourEventType.LEAVE;
+import static io.github.a5h73y.parkour.enums.ParkourEventType.PRIZE;
 import static io.github.a5h73y.parkour.other.Constants.DEFAULT;
 import static io.github.a5h73y.parkour.utility.TranslationUtils.sendConditionalValue;
 import static io.github.a5h73y.parkour.utility.TranslationUtils.sendValue;
@@ -856,7 +862,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		if (parkour.getConfig().isDisplayPrizeCooldown() && displayMessage) {
 			TranslationUtils.sendValueTranslation("Error.PrizeCooldown",
-					DateTimeUtils.getTimeRemaining(player, courseName), player);
+					DateTimeUtils.getDelayTimeRemaining(player, courseName), player);
 		}
 		return false;
 	}
@@ -976,7 +982,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 		double amountToDeduct = Math.min(current, parkoins);
 
 		PlayerInfo.setParkoins(player, current - amountToDeduct);
-		TranslationUtils.sendMessage(player, parkoins + " Parkoins deducted! New total: &b" + PlayerInfo.getParkoins(player));
+		TranslationUtils.sendMessage(player, parkoins + " Parkoins deducted! New total: &b"
+				+ PlayerInfo.getParkoins(player));
 	}
 
 	/**
@@ -1254,6 +1261,12 @@ public class PlayerManager extends AbstractPluginReceiver {
 		return parkour.getCourseManager().doesCourseExists(selected);
 	}
 
+	/**
+	 * Reset the Player's Parkour Information.
+	 *
+	 * @param sender command sender
+	 * @param targetPlayerName target player name
+	 */
 	public void resetPlayer(CommandSender sender, String targetPlayerName) {
 		OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(targetPlayerName);
 

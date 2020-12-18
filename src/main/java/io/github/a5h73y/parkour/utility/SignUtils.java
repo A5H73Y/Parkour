@@ -54,7 +54,8 @@ public class SignUtils {
      * @param displayMessage display success message
      * @return sign create success
      */
-    public static boolean createStandardCourseSign(SignChangeEvent signEvent, Player player, String signType, boolean displayMessage) {
+    public static boolean createStandardCourseSign(SignChangeEvent signEvent, Player player,
+                                                   String signType, boolean displayMessage) {
         if (!PermissionUtils.hasSignPermission(player, signType, signEvent)) {
             breakSignAndCancelEvent(signEvent);
             return false;
@@ -130,6 +131,14 @@ public class SignUtils {
         }
     }
 
+    /**
+     * Create Effect Sign.
+     * "heal" and "gamemode" are reserved Effect names.
+     * Other options include any {@link PotionEffectType} names, these must have a duration and amplifier.
+     *
+     * @param signEvent sign change event
+     * @param player player
+     */
     public static void createEffectSign(SignChangeEvent signEvent, Player player) {
         if (!PermissionUtils.hasSignPermission(player, "Effect", signEvent)) {
             return;
@@ -166,13 +175,20 @@ public class SignUtils {
             String[] args = signEvent.getLine(3).split(":");
             if (args.length != 2) {
                 signEvent.getBlock().breakNaturally();
-                TranslationUtils.sendMessage(player, "Invalid syntax, must follow '(duration):(strength)' example '1000:6'.");
+                TranslationUtils.sendMessage(player, "Invalid syntax, must follow '(duration):(amplifier)' example '1000:6'.");
             } else {
-                TranslationUtils.sendMessage(player, potionType.getName() + " effect sign created, with a strength of " + args[0] + " and a duration of " + args[1]);
+                TranslationUtils.sendMessage(player, potionType.getName() + " effect sign created, with a strength of "
+                        + args[0] + " and a duration of " + args[1]);
             }
         }
     }
 
+    /**
+     * Create Leaderboard Sign.
+     *
+     * @param signEvent sign change event
+     * @param player player
+     */
     public static void createLeaderboardsSign(SignChangeEvent signEvent, Player player) {
         if (!createStandardCourseSign(signEvent, player, "Leaderboards", false)) {
             return;
@@ -185,7 +201,13 @@ public class SignUtils {
         TranslationUtils.sendValueTranslation("Parkour.SignCreated", "Leaderboard");
     }
 
-    public static void createCheckpointSign(SignChangeEvent signEvent, Player player, String checkpoint) {
+    /**
+     * Create Checkpoint Sign.
+     *
+     * @param signEvent sign change event
+     * @param player player
+     */
+    public static void createCheckpointSign(SignChangeEvent signEvent, Player player) {
         if (!createStandardCourseSign(signEvent, player, "Checkpoint", false)) {
             return;
         }
@@ -199,6 +221,11 @@ public class SignUtils {
         TranslationUtils.sendValueTranslation("Parkour.SignCreated", "Checkpoint");
     }
 
+    /**
+     * Break the Sign and Cancel Change Event.
+     *
+     * @param event sign change event
+     */
     public static void breakSignAndCancelEvent(SignChangeEvent event) {
         event.getBlock().breakNaturally();
         event.setCancelled(true);

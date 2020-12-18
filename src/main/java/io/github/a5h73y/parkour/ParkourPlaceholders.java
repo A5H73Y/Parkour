@@ -173,7 +173,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             case "prize":
                 if ("delay".equals(arguments[2])) {
                     if (CourseInfo.hasRewardDelay(arguments[3])) {
-                        return DateTimeUtils.getTimeRemaining(offlinePlayer, arguments[3]);
+                        return DateTimeUtils.getDelayTimeRemaining(offlinePlayer, arguments[3]);
                     } else {
                         return "0";
                     }

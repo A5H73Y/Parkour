@@ -7,6 +7,7 @@ import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.kit.ParkourKit;
 import io.github.a5h73y.parkour.type.kit.ParkourKitAction;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
+import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +29,12 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
         super(parkour);
     }
 
+    /**
+     * Handle Player Move.
+     * While the Player is moving on a Course, handle any actions that should be performed.
+     *
+     * @param event PlayerMoveEvent
+     */
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
@@ -53,12 +60,9 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
             return;
         }
 
-        if (parkour.getConfig().isAttemptLessChecks()) {
-            if (event.getTo().getBlockX() == event.getFrom().getBlockX()
-                    && event.getTo().getBlockY() == event.getFrom().getBlockY()
-                    && event.getTo().getBlockZ() == event.getFrom().getBlockZ()) {
-                return;
-            }
+        if (parkour.getConfig().isAttemptLessChecks()
+                && MaterialUtils.sameBlockLocations(event.getFrom(), event.getTo())) {
+            return;
         }
 
         Material belowMaterial = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType();

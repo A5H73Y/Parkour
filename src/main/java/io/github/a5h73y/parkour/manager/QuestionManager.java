@@ -57,6 +57,13 @@ public class QuestionManager extends AbstractPluginReceiver {
         askGenericQuestion(sender, QuestionType.DELETE_COURSE, courseName.toLowerCase());
     }
 
+    /**
+     * Ask the Delete Checkpoint Question.
+     *
+     * @param sender command sender
+     * @param courseName course name
+     * @param checkpoint checkpoint to delete
+     */
     public void askDeleteCheckpointQuestion(CommandSender sender, String courseName, int checkpoint) {
         QuestionType type = QuestionType.DELETE_CHECKPOINT;
         TranslationUtils.sendMessage(sender, String.format(type.getActionSummary(), checkpoint, courseName));
@@ -88,6 +95,13 @@ public class QuestionManager extends AbstractPluginReceiver {
         askGenericQuestion(sender, QuestionType.RESET_LEADERBOARD, courseName.toLowerCase());
     }
 
+    /**
+     * Ask the Reset Player Leaderboards Question.
+     *
+     * @param sender sender
+     * @param courseName course name
+     * @param targetPlayerName target player name
+     */
     public void askResetPlayerLeaderboardQuestion(CommandSender sender, String courseName, String targetPlayerName) {
         QuestionType type = QuestionType.RESET_PLAYER_LEADERBOARD;
         TranslationUtils.sendMessage(sender, String.format(type.getActionSummary(), targetPlayerName, courseName));

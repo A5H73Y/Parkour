@@ -81,7 +81,7 @@ public class CourseSettingsGui implements AbstractMenu {
 		parent.addElement(createTextInput('i', player, "Reward Parkour Level Increase",
 				CourseInfo.getRewardParkourLevelIncrease(courseName),
 				input -> courseManager.setRewardParkourLevelIncrease(player, courseName, input)));
-		parent.addElement(createTextInput('o', player, "Reward Delay", DateTimeUtils.displayTimeRemaining(
+		parent.addElement(createTextInput('o', player, "Reward Delay", DateTimeUtils.convertMillisecondsToDateTime(
 				DateTimeUtils.convertHoursToMilliseconds(CourseInfo.getRewardDelay(courseName))),
 				input -> courseManager.setRewardDelay(player, courseName, input)));
 		parent.addElement(createTextInput('a', player, "Reward Parkoins",
@@ -94,9 +94,11 @@ public class CourseSettingsGui implements AbstractMenu {
 		parent.addElement(createConversationStarter('d', "ParkourMode", courseName,
 				course -> new ParkourModeConversation(player).withCourseName(course).begin()));
 		parent.addElement(createConversationStarter('g', "Event Message", courseName,
-				course -> new SetCourseConversation.CourseMessageConversation(player).withCourseName(course).begin()));
+				course -> new SetCourseConversation.CourseMessageConversation(player)
+						.withCourseName(course).begin()));
 		parent.addElement(createConversationStarter('h', "Event Command", courseName,
-				course -> new SetCourseConversation.CourseCommandConversation(player).withCourseName(course).begin()));
+				course -> new SetCourseConversation.CourseCommandConversation(player)
+						.withCourseName(course).begin()));
 	}
 
 	private GuiStateElement createSettingToggle(char key, String title, boolean enabled,

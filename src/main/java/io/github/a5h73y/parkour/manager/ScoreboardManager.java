@@ -23,6 +23,10 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+/**
+ * Scoreboard Manager.
+ * Controls all the Parkour Scoreboard related functionality.
+ */
 public class ScoreboardManager extends AbstractPluginReceiver {
 
     // For some reason the Scoreboard API is so stupid you have to use a blank string to identify the objective.
@@ -45,6 +49,12 @@ public class ScoreboardManager extends AbstractPluginReceiver {
     private final int numberOfRowsNeeded;
     private final Map<String, ScoreboardEntry> scoreboardDetails = new HashMap<>();
 
+    /**
+     * Construct the Scoreboard Manager.
+     * Each entry has an enabled flag, translation and a sequence number which will be cached.
+     *
+     * @param parkour plugin instance
+     */
     public ScoreboardManager(final Parkour parkour) {
         super(parkour);
         this.enabled = parkour.getConfig().getBoolean("Scoreboard.Enabled");
@@ -64,6 +74,13 @@ public class ScoreboardManager extends AbstractPluginReceiver {
         return enabled;
     }
 
+    /**
+     * Create a Scoreboard for the Player.
+     * The ParkourSession will be used to extract necessary information.
+     *
+     * @param player player
+     * @param session parkour session
+     */
     public void addScoreboard(Player player, ParkourSession session) {
         if (!this.enabled || session == null) {
             return;
@@ -79,6 +96,13 @@ public class ScoreboardManager extends AbstractPluginReceiver {
         }
     }
 
+    /**
+     * Update the Scoreboard Live Timer.
+     * Display the current time value in the Player's Scoreboard.
+     *
+     * @param player player
+     * @param liveTime live time value
+     */
     public void updateScoreboardTimer(Player player, String liveTime) {
         Scoreboard board = player.getScoreboard();
 
@@ -89,6 +113,12 @@ public class ScoreboardManager extends AbstractPluginReceiver {
         board.getTeam(LIVE_TIMER).setPrefix(convertText(liveTime));
     }
 
+    /**
+     * Update the Scoreboard Deaths.
+     *
+     * @param player player
+     * @param deaths death amount
+     */
     public void updateScoreboardDeaths(Player player, int deaths) {
         Scoreboard board = player.getScoreboard();
 
@@ -99,6 +129,12 @@ public class ScoreboardManager extends AbstractPluginReceiver {
         board.getTeam(CURRENT_DEATHS).setPrefix(convertText(String.valueOf(deaths)));
     }
 
+    /**
+     * Update the Scoreboard Checkpoints achieved.
+     *
+     * @param player player
+     * @param session parkour sesssion
+     */
     public void updateScoreboardCheckpoints(Player player, ParkourSession session) {
         Scoreboard board = player.getScoreboard();
 
@@ -110,6 +146,25 @@ public class ScoreboardManager extends AbstractPluginReceiver {
                 + " / " + session.getCourse().getNumberOfCheckpoints()));
     }
 
+    /**
+     * Reset the Player's Scoreboard.
+     *
+     * @param player player
+     */
+    public void removeScoreboard(Player player) {
+        if (this.enabled) {
+            player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+        }
+    }
+
+    /**
+     * Construct the Player's Scoreboard.
+     * Setup the Scoreboard with title and value placeholders.
+     *
+     * @param player player
+     * @param session parkour session
+     * @return created Scoreboard
+     */
     private Scoreboard setupScoreboard(Player player, ParkourSession session) {
         // Set up the scoreboard itself
         Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -213,14 +268,8 @@ public class ScoreboardManager extends AbstractPluginReceiver {
         return text;
     }
 
-    public void removeScoreboard(Player player) {
-        if (this.enabled) {
-            player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-        }
-    }
-
     /**
-     * Each row needs a heading and a text entry
+     * Each row needs a heading and a text entry.
      */
     private int calculateNumberOfRowsNeeded() {
         return (int) (scoreboardDetails.values().stream().filter(ScoreboardEntry::isEnabled).count() * 2);

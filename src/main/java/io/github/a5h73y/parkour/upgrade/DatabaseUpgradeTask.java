@@ -123,9 +123,10 @@ public class DatabaseUpgradeTask extends TimedUpgradeTask {
 				String playerId = ParkourDatabase.getPlayerId(targetPlayer);
 
 				for (TimeEntry timeEntry : playerEntry.getValue()) {
-					database.update("INSERT INTO time (courseId, playerId, playerName, time, deaths) VALUES "
-							+ "(" + timeEntry.getCourseId() + ", '" + playerId + "', '" + playerEntry.getKey()
-							+ "', " + timeEntry.getTime() + ", " + timeEntry.getDeaths() + ");");
+					database.update("INSERT INTO time (courseId, playerId, playerName, time, deaths) VALUES ("
+							+ timeEntry.getCourseId() + ", '" + playerId + "', '"
+							+ playerEntry.getKey() + "', " + timeEntry.getTime() + ", "
+							+ timeEntry.getDeaths() + ");");
 				}
 			}
 
@@ -152,8 +153,8 @@ public class DatabaseUpgradeTask extends TimedUpgradeTask {
 
 		} else {
 			String pathOverride = defaultConfig.getString("SQLite.PathOverride", "");
-			String path = pathOverride.isEmpty()
-					? Parkour.getInstance().getDataFolder() + File.separator + "sqlite-db" + File.separator : pathOverride;
+			String path = !pathOverride.isEmpty() ? pathOverride
+					: Parkour.getInstance().getDataFolder() + File.separator + "sqlite-db" + File.separator;
 
 			database = new SQLite(path, "parkour.db");
 		}
