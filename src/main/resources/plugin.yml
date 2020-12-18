@@ -1,0 +1,17 @@
+name: Parkour
+version: ${project.version}
+description: ${project.description}
+softdepend: [Vault, BountifulAPI, PlaceholderAPI]
+authors:
+  - A5H73Y
+  - steve4744
+main: io.github.a5h73y.parkour.Parkour
+api-version: "1.13"
+website: "https://a5h73y.github.io/Parkour/"
+commands:
+  parkour:
+    aliases: [pa, pkr]
+    description: Parkour commands
+  paconsole:
+    aliases: [pac, parkourc, consolepa]
+    description: Parkour console commands
