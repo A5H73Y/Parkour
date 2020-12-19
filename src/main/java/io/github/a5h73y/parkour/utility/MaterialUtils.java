@@ -13,6 +13,7 @@ import static com.cryptomorin.xseries.XMaterial.OAK_SLAB;
 import static com.cryptomorin.xseries.XMaterial.PETRIFIED_OAK_SLAB;
 import static com.cryptomorin.xseries.XMaterial.PRISMARINE_BRICK_SLAB;
 import static com.cryptomorin.xseries.XMaterial.PRISMARINE_SLAB;
+import static com.cryptomorin.xseries.XMaterial.PURPUR_SLAB;
 import static com.cryptomorin.xseries.XMaterial.QUARTZ_SLAB;
 import static com.cryptomorin.xseries.XMaterial.RED_SANDSTONE_SLAB;
 import static com.cryptomorin.xseries.XMaterial.SANDSTONE_SLAB;
@@ -237,6 +238,7 @@ public class MaterialUtils {
 					PETRIFIED_OAK_SLAB.parseMaterial(),
 					PRISMARINE_BRICK_SLAB.parseMaterial(),
 					PRISMARINE_SLAB.parseMaterial(),
+					PURPUR_SLAB.parseMaterial(),
 					QUARTZ_SLAB.parseMaterial(),
 					RED_SANDSTONE_SLAB.parseMaterial(),
 					SANDSTONE_SLAB.parseMaterial(),
@@ -244,9 +246,6 @@ public class MaterialUtils {
 					STONE_BRICK_SLAB.parseMaterial(),
 					STONE_SLAB.parseMaterial());
 
-			if (!Bukkit.getBukkitVersion().contains("1.8")) {
-				validCheckpointMaterials.add(Material.PURPUR_SLAB);
-			}
 		}
 
 		return validCheckpointMaterials;
