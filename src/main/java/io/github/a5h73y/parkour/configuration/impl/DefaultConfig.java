@@ -86,7 +86,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("OnFinish.TeleportAway", true);
 		this.addDefault("OnFinish.TeleportDelay", 0);
 		this.addDefault("OnFinish.TeleportToJoinLocation", false);
-		this.addDefault("OnFinish.UpdatePlayerDatabaseTime", false);
+		this.addDefault("OnFinish.UpdatePlayerDatabaseTime", true);
 
 		this.addDefault("OnLeave.TeleportToLinkedLobby", false);
 		this.addDefault("OnLeave.DestroyCourseProgress", true);
@@ -163,8 +163,6 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("Sounds.CourseFailed.Volume", 0.1f);
 		this.addDefault("Sounds.CourseFailed.Pitch", 1.75f);
 
-		this.addDefault("ParkourGUI.Enabled", false);
-		this.addDefault("ParkourGUI.Rows", 2);
 		this.addDefault("ParkourGUI.Material", "BOOK");
 		this.addDefault("ParkourGUI.FillerMaterial", "CYAN_STAINED_GLASS_PANE");
 

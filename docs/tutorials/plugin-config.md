@@ -9,11 +9,9 @@ To make changes, edit to the value you want, save the file, then enter `/pa relo
 
 Some properties require the server to restart to apply the changes, these include changes to scoreboard, adding 3rd party plugin support, etc.
 
-![config.yml contents](https://i.imgur.com/jP8p9GY.png "config.yml contents")
+View the annotated configuration file here: [https://pastebin.com/dWCcEgwN](https://pastebin.com/dWCcEgwN).
 
-View the raw annotated configuration file here: https://pastebin.com/eQGLqpVD.
-
-_This is correct as of Parkour v5.1_
+_This is correct as of Parkour v6.0_
 
 ## strings.yml
 
