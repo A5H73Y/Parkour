@@ -180,6 +180,16 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 }
                 return INVALID_SYNTAX;
 
+            case "personal":
+                if (arguments.length != 5 && !arguments[2].equals("best")) {
+                    return INVALID_SYNTAX;
+                }
+                Player player = offlinePlayer.getPlayer();
+                if (player == null) {
+                    return "";
+                }
+                return getPersonalCourseRecord(player, arguments[3], arguments[4]);
+
             default:
                 return INVALID_SYNTAX;
         }
