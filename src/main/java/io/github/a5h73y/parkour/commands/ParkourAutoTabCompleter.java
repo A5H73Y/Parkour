@@ -283,6 +283,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
                 allowedCommands = new ArrayList<>(ParkourKitInfo.getAllParkourKitNames());
                 break;
             case "delete":
+            case "link":
             case "reset":
                 switch (arg1) {
                     case "autostart":
