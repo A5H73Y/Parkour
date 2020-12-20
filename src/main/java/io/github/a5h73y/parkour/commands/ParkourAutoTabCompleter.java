@@ -285,6 +285,8 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             case "delete":
             case "reset":
                 switch (arg1) {
+                    case "autostart":
+                    case "checkpoint":
                     case "course":
                     case "leaderboard":
                     case "prize":
