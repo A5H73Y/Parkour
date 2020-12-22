@@ -42,7 +42,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     @NotNull
     @Override
     public String getIdentifier() {
-        return parkour.getName();
+        return parkour.getName().toLowerCase();
     }
 
     @NotNull
