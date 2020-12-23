@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.yaml.snakeyaml.error.YAMLException;
 
 /**
  * Base Parkour configuration file.
@@ -45,9 +46,10 @@ public abstract class ParkourConfiguration extends YamlConfiguration {
 	public void save() {
 		try {
 			this.save(file);
-		} catch (IOException e) {
+		} catch (IOException | YAMLException e) {
 			PluginUtils.log("Failed to save file: " + getFileName(), 2);
 			e.printStackTrace();
+			reload();
 		}
 	}
 

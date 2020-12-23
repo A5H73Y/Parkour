@@ -203,7 +203,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("MySQL.Password", "Password");
 		this.addDefault("MySQL.LegacyDriver", false);
 
-		this.addDefault("Version", Double.parseDouble(Parkour.getInstance().getDescription().getVersion()));
+		this.addDefault("Version", Parkour.getInstance().getDescription().getVersion());
 
 		this.addDefault("LobbySettings.EnforceWorld", false);
 

@@ -1,5 +1,6 @@
 package io.github.a5h73y.parkour;
 
+import com.g00fy2.versioncompare.Version;
 import com.google.gson.GsonBuilder;
 import io.github.a5h73y.parkour.commands.ParkourAutoTabCompleter;
 import io.github.a5h73y.parkour.commands.ParkourCommands;
@@ -298,9 +299,8 @@ public class Parkour extends JavaPlugin {
      */
     private boolean parkourNeedsUpgrading() {
         if (super.getConfig().contains("Version")) {
-            double existingVersion = super.getConfig().getDouble("Version");
-            double currentVersion = Double.parseDouble(this.getDescription().getVersion());
-            return existingVersion < currentVersion;
+            Version existingVersion = new Version(super.getConfig().getString("Version"));
+            return existingVersion.isLowerThan("6.0");
         }
         return false;
     }

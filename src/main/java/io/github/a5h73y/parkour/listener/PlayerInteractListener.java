@@ -234,10 +234,13 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
 
         if (courseName != null) {
             ParkourSession session = parkour.getPlayerManager().getParkourSession(event.getPlayer());
-            if (session != null && session.getCourseName().equals(courseName)) {
-                session.resetTime();
-                parkour.getBountifulApi().sendActionBar(event.getPlayer(),
-                        TranslationUtils.getTranslation("Parkour.TimerStarted", false), true);
+            if (session != null) {
+                // we only want to do something if the names match
+                if (session.getCourseName().equals(courseName)) {
+                    session.resetTime();
+                    parkour.getBountifulApi().sendActionBar(event.getPlayer(),
+                            TranslationUtils.getTranslation("Parkour.TimerStarted", false), true);
+                }
             } else {
                 parkour.getPlayerManager().joinCourseButDelayed(
                         event.getPlayer(), courseName, parkour.getConfig().getAutoStartDelay());
