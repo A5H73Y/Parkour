@@ -259,6 +259,11 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
 
         Block block = player.getLocation().getBlock();
         String coordinates = block.getX() + "-" + block.getY() + "-" + block.getZ();
+
+        if (parkour.getConfig().isAutoStartIncludeWorld()) {
+            coordinates += "-" + block.getWorld().getName();
+        }
+
         ParkourConfiguration courseConfig = Parkour.getConfig(ConfigType.COURSES);
 
         if (courseConfig.contains("CourseInfo.AutoStart." + coordinates)) {
@@ -287,6 +292,10 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     public String getAutoStartCourse(final Location location) {
         ParkourConfiguration courseConfig = Parkour.getConfig(ConfigType.COURSES);
         String coordinates = location.getBlockX() + "-" + location.getBlockY() + "-" + location.getBlockZ();
+
+        if (parkour.getConfig().isAutoStartIncludeWorld()) {
+            coordinates += "-" + location.getWorld().getName();
+        }
 
         ConfigurationSection entries = courseConfig.getConfigurationSection("CourseInfo.AutoStart");
 

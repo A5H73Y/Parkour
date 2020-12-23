@@ -1098,6 +1098,13 @@ public class PlayerManager extends AbstractPluginReceiver {
 		int newLevel = Integer.parseInt(value);
 		PlayerInfo.setParkourLevel(targetPlayer, newLevel);
 		TranslationUtils.sendMessage(sender, targetPlayer.getName() + "'s ParkourLevel was set to &b" + newLevel);
+
+		if (parkour.getConfig().getBoolean("Other.OnSetPlayerParkourLevel.UpdateParkourRank")) {
+			String parkourRank = getUnlockedParkourRank(targetPlayer, newLevel);
+			if (parkourRank != null) {
+				setParkourRank(sender, targetPlayer, parkourRank);
+			}
+		}
 	}
 
 	/**
@@ -1300,7 +1307,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param rewardLevel rewarded ParkourLevel
 	 * @return unlocked ParkourRank
 	 */
-	public String getUnlockedParkourRank(Player player, int rewardLevel) {
+	@Nullable
+	public String getUnlockedParkourRank(OfflinePlayer player, int rewardLevel) {
 		int currentLevel = PlayerInfo.getParkourLevel(player);
 		String result = null;
 

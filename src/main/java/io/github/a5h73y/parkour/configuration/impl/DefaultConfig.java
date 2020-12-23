@@ -80,8 +80,8 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("OnFinish.DisplayStats", true);
 		this.addDefault("OnFinish.EnablePrizes", true);
 		this.addDefault("OnFinish.EnforceCompletion", true);
-		this.addDefault("OnFinish.CompletedCourses.Enabled", false);
-		this.addDefault("OnFinish.CompletedCourses.JoinMessage", true);
+		this.addDefault("OnFinish.CompletedCourses.Enabled", true);
+		this.addDefault("OnFinish.CompletedCourses.JoinMessage", false);
 		this.addDefault("OnFinish.SetGameMode", "SURVIVAL");
 		this.addDefault("OnFinish.TeleportAway", true);
 		this.addDefault("OnFinish.TeleportDelay", 0);
@@ -120,6 +120,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("AutoStart.Enabled", true);
 		this.addDefault("AutoStart.Material", "BEDROCK");
 		this.addDefault("AutoStart.TickDelay", 0);
+		this.addDefault("AutoStart.IncludeWorldName", false);
 
 		this.addDefault("Scoreboard.Enabled", false);
 		this.addDefault("Scoreboard.CourseName.Enabled", true);
@@ -186,6 +187,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("Other.Display.OnlyReadyCourses", false);
 		this.addDefault("Other.OnServerShutdown.BackupFiles", false);
 		this.addDefault("Other.OnPlayerBan.ResetParkourInfo", false);
+		this.addDefault("Other.OnSetPlayerParkourLevel.UpdateParkourRank", true);
 
 		this.addDefault("Plugin.BountifulAPI.Enabled", true);
 		this.addDefault("Plugin.Vault.Enabled", true);
@@ -314,6 +316,10 @@ public class DefaultConfig extends ParkourConfiguration {
 
 	public boolean isAutoStartEnabled() {
 		return this.getBoolean("AutoStart.Enabled");
+	}
+
+	public boolean isAutoStartIncludeWorld() {
+		return this.getBoolean("AutoStart.IncludeWorldName");
 	}
 
 	public boolean isTeleportToJoinLocation() {
