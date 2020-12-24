@@ -17,7 +17,8 @@ The joining fee and reward amount can be set in game, using `/pa econ setprize (
 
 ## PlaceholderAPI
 
-PlaceholderAPI allows you to use Parkour values within other plugins.
+PlaceholderAPI allows you to use Parkour values within other plugins.  
+_Please note that Parkour Expansion is no longer needed as it has been implemented within the Parkour plugin._
 
 ### Parkour Placeholders
 
@@ -35,6 +36,8 @@ Here are each of the available Placeholders that Parkour provides.
 %parkour_player_courses_completed%
 %parkour_player_courses_uncompleted%
 %parkour_player_prize_delay_(course)%
+%parkour_player_personal_best_(course)_time%
+%parkour_player_personal_best_(course)_deaths%
 %parkour_course_record_player_(course)%
 %parkour_course_record_time_(course)%
 %parkour_course_record_deaths_(course)%
@@ -49,7 +52,6 @@ Here are each of the available Placeholders that Parkour provides.
 %parkour_current_course_record_player%
 %parkour_current_course_record_time%
 %parkour_current_course_record_deaths%
-%parkour_current_course_personal_best_player%
 %parkour_current_course_personal_best_time%
 %parkour_current_course_personal_best_deaths%
 %parkour_current_checkpoint%
