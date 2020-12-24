@@ -617,6 +617,8 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             //Other commands//
+            case "support":
+            case "contact":
             case "about":
             case "ver":
             case "version":

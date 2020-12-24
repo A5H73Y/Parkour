@@ -45,6 +45,7 @@
 			<id>CodeMC</id>
 			<url>https://repo.codemc.org/repository/maven-public/</url>
 		</repository>
+		<!-- VersionCompare Repo -->
 		<repository>
 			<id>g00fy2-repo</id>
 			<url>https://dl.bintray.com/g00fy2/maven/</url>
