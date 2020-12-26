@@ -365,20 +365,26 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		session.increaseCheckpoint();
-		parkour.getSoundsManager().playSound(player, SoundType.CHECKPOINT_ACHIEVED);
-		parkour.getScoreboardManager().updateScoreboardCheckpoints(player, session);
 		parkour.getCourseManager().runEventCommands(player, session.getCourseName(), CHECKPOINT);
-
-		boolean showTitle = parkour.getConfig().getBoolean("DisplayTitle.Checkpoint");
 
 		ParkourEventType eventType = CHECKPOINT;
 		String checkpointTranslation = "Event.Checkpoint";
 
 		if (session.hasAchievedAllCheckpoints()) {
+			if (parkour.getConfig().getBoolean("OnCourse.TreatLastCheckpointAsFinish")) {
+				Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () -> finishCourse(player));
+				return;
+			}
+
 			parkour.getCourseManager().runEventCommands(player, session.getCourseName(), CHECKPOINT_ALL);
 			eventType = CHECKPOINT_ALL;
 			checkpointTranslation = "Event.AllCheckpoints";
 		}
+
+		parkour.getSoundsManager().playSound(player, SoundType.CHECKPOINT_ACHIEVED);
+		parkour.getScoreboardManager().updateScoreboardCheckpoints(player, session);
+
+		boolean showTitle = parkour.getConfig().getBoolean("DisplayTitle.Checkpoint");
 
 		String checkpointMessage = TranslationUtils.getCourseEventMessage(session.getCourse().getName(),
 				eventType, checkpointTranslation)

@@ -2,7 +2,7 @@ sudo: false
 language: java
 dist: trusty
 jdk:
-  - oraclejdk8
+  - openjdk8
 notifications:
   email: false
 cache:

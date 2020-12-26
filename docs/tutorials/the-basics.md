@@ -93,7 +93,7 @@ Each of the Parkour placeholders are available here: [Parkour Placeholders](/tut
         return `<details>
                 <summary>${command.command} - ${command.title}</summary>
                 <div>
-                    <p>Syntax: <code>/pa ${command.command} ${command.arguments}</code></p>
+                    <p>Syntax: <code>/pa ${command.command} ${command.arguments || ''}</code></p>
                     <p>Example: <code>${command.example}</code></p>
                     <p>Description: ${command.description}</p>
                     <p>Permission: ${command.permission || 'None required'}</p>

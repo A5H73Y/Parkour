@@ -68,6 +68,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("OnCourse.PreventJoiningDifferentCourse", false);
 		this.addDefault("OnCourse.PreventPlayerCollisions", false);
 		this.addDefault("OnCourse.SneakToInteractItems", true);
+		this.addDefault("OnCourse.TreatLastCheckpointAsFinish", false);
 		this.addDefault("OnCourse.UseParkourKit", true);
 		this.addDefault("OnCourse.EnforceParkourCommands.Enabled", true);
 		this.addDefault("OnCourse.EnforceParkourCommands.Whitelist", Collections.singletonList("login"));
