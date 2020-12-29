@@ -1,5 +1,7 @@
-package io.github.a5h73y.parkour.upgrade;
+package io.github.a5h73y.parkour.upgrade.major;
 
+import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
+import io.github.a5h73y.parkour.upgrade.TimedConfigUpgradeTask;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +35,9 @@ public class CourseInfoUpgradeTask extends TimedConfigUpgradeTask {
 			}
 
 			transferAndDelete(courseName + ".Finished", courseName + ".Ready");
+			transferAndDelete(courseName + ".Level", courseName + ".RewardLevel");
+			transferAndDelete(courseName + ".LevelAdd", courseName + ".RewardLevelAdd");
+
 			if (getConfig().contains(courseName + ".RewardDelay")) {
 				getConfig().set(courseName + ".RewardDelay",
 						getConfig().getInt(courseName + ".RewardDelay") * 24);

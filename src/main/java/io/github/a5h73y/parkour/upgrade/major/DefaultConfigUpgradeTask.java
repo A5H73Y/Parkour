@@ -1,7 +1,8 @@
-package io.github.a5h73y.parkour.upgrade;
+package io.github.a5h73y.parkour.upgrade.major;
 
 import com.cryptomorin.xseries.XMaterial;
-import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
+import io.github.a5h73y.parkour.upgrade.TimedConfigUpgradeTask;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -53,7 +54,6 @@ public class DefaultConfigUpgradeTask extends TimedConfigUpgradeTask {
 			// miscellaneous
 			getConfig().set("OnJoin.Item.HideAllEnabled.Material",
 					getConfig().getString("OnJoin.Item.HideAll.Material"));
-			getConfig().set("Version", Double.valueOf(Parkour.getInstance().getDescription().getVersion()));
 			if ("SAPLING".equals(getConfig().getString("OnJoin.Item.Leave.Material"))) {
 				getConfig().set("OnJoin.Item.Leave.Material", XMaterial.OAK_SAPLING.parseMaterial().name());
 			}

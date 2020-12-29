@@ -225,7 +225,7 @@ public class PlayerInfo {
      * @return player's parkour rank
      */
     public static String getParkourRank(OfflinePlayer player) {
-        return getPlayersConfig().getString(player.getUniqueId() + ".Rank",
+        return getPlayersConfig().getString(player.getUniqueId() + ".ParkourRank",
                 TranslationUtils.getTranslation("Event.DefaultRank", false));
     }
 
@@ -235,7 +235,7 @@ public class PlayerInfo {
      * @param parkourRank parkour rank value
      */
     public static void setParkourRank(OfflinePlayer player, String parkourRank) {
-        getPlayersConfig().set(player.getUniqueId() + ".Rank", parkourRank);
+        getPlayersConfig().set(player.getUniqueId() + ".ParkourRank", parkourRank);
         persistChanges();
     }
 

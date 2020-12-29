@@ -1,8 +1,6 @@
 Rewarding the Player
 ======
 
-## Description
-
 There are several ways we can reward the player for completing a Course. We are able to reward the Player with ParkourLevels that allow them to unlock new courses, or achieve a ParkourRank that showcases how far they've progressed. All can be configured to match any server requirements, and even allow developers to natively add their own functionality.
 
 ## Course Prizes

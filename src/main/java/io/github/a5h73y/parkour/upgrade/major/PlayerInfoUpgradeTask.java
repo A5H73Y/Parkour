@@ -1,5 +1,7 @@
-package io.github.a5h73y.parkour.upgrade;
+package io.github.a5h73y.parkour.upgrade.major;
 
+import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
+import io.github.a5h73y.parkour.upgrade.TimedConfigUpgradeTask;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -54,6 +56,9 @@ public class PlayerInfoUpgradeTask extends TimedConfigUpgradeTask {
 			if (getParkourUpgrader().getInventoryConfig().contains(playerName)) {
 				convertPlayerInventory(playerName, targetPlayer);
 			}
+
+			transferAndDelete(targetPlayer.getUniqueId() + ".Level", targetPlayer.getUniqueId() + ".ParkourLevel");
+			transferAndDelete(targetPlayer.getUniqueId() + ".Rank", targetPlayer.getUniqueId() + ".ParkourRank");
 
 			count++;
 		}

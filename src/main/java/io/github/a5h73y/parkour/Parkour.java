@@ -300,7 +300,7 @@ public class Parkour extends JavaPlugin {
     private boolean parkourNeedsUpgrading() {
         if (super.getConfig().contains("Version")) {
             Version existingVersion = new Version(super.getConfig().getString("Version"));
-            return existingVersion.isLowerThan("6.0");
+            return existingVersion.isLowerThan(this.getDescription().getVersion());
         }
         return false;
     }

@@ -1,5 +1,7 @@
-package io.github.a5h73y.parkour.upgrade;
+package io.github.a5h73y.parkour.upgrade.major;
 
+import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
+import io.github.a5h73y.parkour.upgrade.TimedConfigUpgradeTask;
 import java.io.IOException;
 import java.util.Set;
 import java.util.regex.Matcher;

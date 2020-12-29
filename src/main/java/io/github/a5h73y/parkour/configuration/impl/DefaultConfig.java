@@ -91,6 +91,7 @@ public class DefaultConfig extends ParkourConfiguration {
 
 		this.addDefault("OnLeave.TeleportToLinkedLobby", false);
 		this.addDefault("OnLeave.DestroyCourseProgress", true);
+		this.addDefault("OnLeave.TeleportAway", true);
 
 		this.addDefault("OnDie.ResetTimeWithNoCheckpoint", false);
 		this.addDefault("OnDie.SetXPBarToDeathCount", false);

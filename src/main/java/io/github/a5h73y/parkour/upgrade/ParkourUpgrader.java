@@ -1,8 +1,15 @@
 package io.github.a5h73y.parkour.upgrade;
 
+import com.g00fy2.versioncompare.Version;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Backup;
+import io.github.a5h73y.parkour.upgrade.major.CourseInfoUpgradeTask;
+import io.github.a5h73y.parkour.upgrade.major.DatabaseUpgradeTask;
+import io.github.a5h73y.parkour.upgrade.major.DefaultConfigUpgradeTask;
+import io.github.a5h73y.parkour.upgrade.major.PlayerInfoUpgradeTask;
+import io.github.a5h73y.parkour.upgrade.major.StringsConfigUpgradeTask;
+import io.github.a5h73y.parkour.upgrade.minor.PartialUpgradeTask;
 import java.io.File;
 import java.io.IOException;
 import java.util.function.BooleanSupplier;
@@ -57,6 +64,39 @@ public class ParkourUpgrader extends AbstractPluginReceiver implements BooleanSu
 		parkour.getLogger().info("Creating backup of current install...");
 		Backup.backupNow(true);
 
+		boolean success = true;
+		Version existingVersion = new Version(defaultConfig.getString("Version"));
+
+		if (existingVersion.isLowerThan("5.0")) {
+			parkour.getLogger().warning("This version is too outdated.");
+			success = false;
+
+		} else if (existingVersion.isLowerThan("6.0")) {
+			success = performFullUpgrade();
+
+		} else {
+			success = performPartialUpgrade();
+		}
+
+		if (success) {
+			try {
+				defaultConfig.set("Version", parkour.getDescription().getVersion());
+				saveDefaultConfig();
+				parkour.reloadConfig();
+				parkour.getLogger().info("Parkour successfully upgraded to v"
+						+ parkour.getDescription().getVersion());
+				parkour.getLogger().info("The plugin will now start up...");
+
+			} catch (IOException e) {
+				parkour.getLogger().severe("An error occurred during upgrade: " + e.getMessage());
+				e.printStackTrace();
+				success = false;
+			}
+		}
+		return success;
+	}
+
+	private boolean performFullUpgrade() {
 		if (!new PlayerInfoUpgradeTask(this).start()) {
 			return false;
 		}
@@ -83,16 +123,11 @@ public class ParkourUpgrader extends AbstractPluginReceiver implements BooleanSu
 
 		parkour.getLogger().info("Setting up Configs and Database...");
 		parkour.registerEssentialManagers();
+		return databaseUpgrade.doMoreWork();
+	}
 
-		if (!databaseUpgrade.doMoreWork()) {
-			return false;
-		}
-
-		parkour.getLogger().info("Parkour successfully upgraded to " + parkour.getDescription().getVersion());
-		parkour.getLogger().info("The plugin will now start up...");
-		parkour.reloadConfig();
-		parkour.onEnable();
-		return true;
+	private boolean performPartialUpgrade() {
+		return new PartialUpgradeTask(this, defaultConfig.getString("Version")).start();
 	}
 
 	public FileConfiguration getDefaultConfig() {

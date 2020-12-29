@@ -1,9 +1,11 @@
-package io.github.a5h73y.parkour.upgrade;
+package io.github.a5h73y.parkour.upgrade.major;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.database.ParkourDatabase;
 import io.github.a5h73y.parkour.database.SQLite;
 import io.github.a5h73y.parkour.database.TimeEntry;
+import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
+import io.github.a5h73y.parkour.upgrade.TimedUpgradeTask;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -101,7 +103,13 @@ public class DatabaseUpgradeTask extends TimedUpgradeTask {
 		return success;
 	}
 
-	protected boolean doMoreWork() {
+	/**
+	 * Proceed to do the additional Database work required.
+	 * Reinserts the times and cleans up the temporary tables.
+	 *
+	 * @return success
+	 */
+	public boolean doMoreWork() {
 		boolean success = true;
 		// create a proper Parkour connection
 		// which also setups up the new tables

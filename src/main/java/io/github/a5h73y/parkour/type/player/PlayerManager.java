@@ -335,11 +335,13 @@ public class PlayerManager extends AbstractPluginReceiver {
 							session.getCourse().getName(), LEAVE, "Parkour.Leave"),
 					parkour.getConfig().getBoolean("DisplayTitle.Leave"));
 
-			if (parkour.getConfig().isTeleportToJoinLocation()
-					&& PlayerInfo.hasJoinLocation(player)) {
-				player.teleport(PlayerInfo.getJoinLocation(player));
-			} else {
-				parkour.getLobbyManager().teleportToLeaveDestination(player, session);
+			if (parkour.getConfig().getBoolean("OnLeave.TeleportAway")) {
+				if (parkour.getConfig().isTeleportToJoinLocation()
+						&& PlayerInfo.hasJoinLocation(player)) {
+					player.teleport(PlayerInfo.getJoinLocation(player));
+				} else {
+					parkour.getLobbyManager().teleportToLeaveDestination(player, session);
+				}
 			}
 			parkour.getCourseManager().runEventCommands(player, session.getCourseName(), LEAVE);
 		}
@@ -586,6 +588,17 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param player requesting player
 	 */
 	public void restartCourse(Player player) {
+		restartCourse(player, false);
+	}
+
+	/**
+	 * Restart Course progress.
+	 * Will trigger a silent leave and rejoin of the Course.
+	 *
+	 * @param player requesting player
+	 * @param doNotTeleport do not teleport the player manually
+	 */
+	public void restartCourse(Player player, boolean doNotTeleport) {
 		if (!isPlaying(player)) {
 			return;
 		}
@@ -595,7 +608,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		deleteParkourSession(player);
 		joinCourse(player, course, true);
 		// if they are restarting the Course, we need to teleport them back
-		if (!parkour.getConfig().getBoolean("OnJoin.TeleportPlayer")) {
+		if (!doNotTeleport && !parkour.getConfig().getBoolean("OnJoin.TeleportPlayer")) {
 			player.teleport(course.getCheckpoints().get(0).getLocation());
 		}
 		TranslationUtils.sendTranslation("Parkour.Restarting", player);
