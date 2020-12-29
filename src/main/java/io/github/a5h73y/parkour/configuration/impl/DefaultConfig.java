@@ -189,6 +189,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("Other.OnServerShutdown.BackupFiles", false);
 		this.addDefault("Other.OnPlayerBan.ResetParkourInfo", false);
 		this.addDefault("Other.OnSetPlayerParkourLevel.UpdateParkourRank", true);
+		this.addDefault("Other.OnVoid.TeleportToLobby", false);
 
 		this.addDefault("Plugin.BountifulAPI.Enabled", true);
 		this.addDefault("Plugin.Vault.Enabled", true);
@@ -341,6 +342,10 @@ public class DefaultConfig extends ParkourConfiguration {
 
 	public boolean isLegacyGroundDetection() {
 		return this.getBoolean("Other.ParkourKit.LegacyGroundDetection");
+	}
+
+	public boolean isVoidDetection() {
+		return this.getBoolean("Other.OnVoid.TeleportToLobby");
 	}
 
 	/* Materials */

@@ -13,6 +13,8 @@ import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -97,6 +99,48 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
         Lobby lobby = lobbyCache.getOrDefault(Constants.DEFAULT, populateLobby(Constants.DEFAULT));
         player.teleport(lobby.getLocation());
         TranslationUtils.sendTranslation("Parkour.Lobby", player);
+    }
+
+    /**
+     * Teleport the Player to the nearest Lobby available.
+     * @param player The player.
+     */
+    public void teleportToNearestLobby(Player player) {
+        Lobby lobby = getNearestLobby(player.getLocation());
+        if (lobby == null) {
+            return;
+        }
+        player.teleport(lobby.getLocation());
+    }
+
+    /**
+     * Attempts to retrieve the nearest lobby for given location.
+     * If no nearest lobby was found, the default lobby will be returned.
+     * If no lobby was set, null is returned.
+     * @param location The location.
+     * @return The nearest lobby.
+     */
+    private Lobby getNearestLobby(Location location) {
+        Lobby nearestLobby = null;
+        double nearestDistance = Double.MAX_VALUE;
+
+        for (Lobby lobby : lobbyCache.values()) {
+            Location lobbyLocation = lobby.getLocation();
+            if (!Objects.equals(location.getWorld(), lobbyLocation.getWorld())) {
+                continue;
+            }
+
+            double distance = lobbyLocation.distanceSquared(lobbyLocation);
+            if (distance < nearestDistance) {
+                nearestDistance = distance;
+                nearestLobby = lobby;
+            }
+        }
+
+        if (nearestLobby == null && LobbyInfo.doesLobbyExist()) {
+            return lobbyCache.getOrDefault(Constants.DEFAULT, populateLobby(Constants.DEFAULT));
+        }
+        return nearestLobby;
     }
 
     /**

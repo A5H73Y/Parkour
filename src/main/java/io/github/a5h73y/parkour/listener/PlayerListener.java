@@ -80,13 +80,21 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
 
         Player player = (Player) event.getEntity();
 
-        if (!parkour.getPlayerManager().isPlaying(player)) {
-            return;
+        boolean playing = parkour.getPlayerManager().isPlaying(player);
+
+        if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
+            if (playing && parkour.getConfig().getBoolean("OnCourse.DieInVoid")) {
+                parkour.getPlayerManager().playerDie(player);
+                return;
+            } else if (!playing && parkour.getConfig().isVoidDetection()) {
+                parkour.getServer().getScheduler().runTaskLater(parkour, () -> {
+                    parkour.getLobbyManager().teleportToNearestLobby(player);
+                }, 1L);
+                return;
+            }
         }
 
-        if (event.getCause() == EntityDamageEvent.DamageCause.VOID
-                && parkour.getConfig().getBoolean("OnCourse.DieInVoid")) {
-            parkour.getPlayerManager().playerDie(player);
+        if (!playing) {
             return;
         }
 
