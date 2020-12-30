@@ -4,7 +4,6 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
-import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Damageable;
@@ -79,7 +78,6 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         }
 
         Player player = (Player) event.getEntity();
-
         boolean playing = parkour.getPlayerManager().isPlaying(player);
 
         if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
@@ -87,9 +85,8 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
                 parkour.getPlayerManager().playerDie(player);
                 return;
             } else if (!playing && parkour.getConfig().isVoidDetection()) {
-                parkour.getServer().getScheduler().runTaskLater(parkour, () -> {
-                    parkour.getLobbyManager().teleportToNearestLobby(player);
-                }, 1L);
+                parkour.getServer().getScheduler().runTaskLater(parkour, () ->
+                        parkour.getLobbyManager().teleportToNearestLobby(player),1L);
                 return;
             }
         }

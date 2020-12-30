@@ -10,6 +10,8 @@ import org.bukkit.Location;
  */
 public class Lobby {
 
+	private final String name;
+
 	private final Location location;
 
 	private final int requiredLevel;
@@ -17,12 +19,18 @@ public class Lobby {
 	/**
 	 * Construct a Lobby from the details.
 	 *
+	 * @param name lobby name
 	 * @param location lobby {@link Location}
 	 * @param requiredLevel required ParkourLevel
 	 */
-	public Lobby(Location location, int requiredLevel) {
+	public Lobby(String name, Location location, int requiredLevel) {
+		this.name = name;
 		this.location = location;
 		this.requiredLevel = requiredLevel;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	/**

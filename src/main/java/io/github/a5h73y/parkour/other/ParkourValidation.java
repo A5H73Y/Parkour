@@ -85,6 +85,37 @@ public class ParkourValidation {
     }
 
     /**
+     * Validate Player joining Lobby Silently.
+     *
+     * @param player player
+     * @param lobbyName lobby name
+     * @return player can join lobby
+     */
+    public static boolean canJoinLobbySilent(Player player, String lobbyName) {
+        if (!LobbyInfo.doesLobbyExist(lobbyName)) {
+            return false;
+        }
+
+        if (Bukkit.getWorld(Parkour.getDefaultConfig().getString("Lobby." + lobbyName + ".World")) == null) {
+            return false;
+        }
+
+        if (Parkour.getDefaultConfig().getBoolean("LobbySettings.EnforceWorld")
+                && !player.getWorld().getName().equals(LobbyInfo.getLobbyLocation(lobbyName).getWorld().getName())) {
+            return false;
+        }
+
+        int level = LobbyInfo.getRequiredLevel(lobbyName);
+
+        if (level > 0 && PlayerInfo.getParkourLevel(player) < level
+                && !PermissionUtils.hasPermission(player, Permission.ADMIN_LEVEL_BYPASS, false)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Validate Player joining Course.
      *
      * @param player player

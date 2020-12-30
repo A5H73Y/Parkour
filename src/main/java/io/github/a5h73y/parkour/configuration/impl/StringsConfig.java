@@ -29,7 +29,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Parkour.CheckpointCreated", "Checkpoint &3%CHECKPOINT% &fhas been set on &b%COURSE%&f!");
 		this.addDefault("Parkour.Selected", "Now editing &b%VALUE%");
 		this.addDefault("Parkour.Deselected", "Finish editing.");
-		this.addDefault("Parkour.WhenReady", "&7When you have finished creating &b%VALUE%&7, enter &b/pa ready");
+		this.addDefault("Parkour.WhenReady", "&7Once you have finished editing &b%VALUE%&7, enter &b/pa ready");
 		this.addDefault("Parkour.Delete", "&b%VALUE% &fhas been deleted!");
 		this.addDefault("Parkour.DeleteCheckpoint", "Checkpoint &b%CHECKPOINT% &fwas deleted on &b%COURSE%");
 		this.addDefault("Parkour.Reset", "&b%VALUE% &fhas been reset!");
@@ -148,7 +148,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Other.PropertySet", "The &3%PROPERTY% &ffor &3%COURSE% &fwas set to &b%VALUE%&f!");
 
 		this.addDefault("Lobby.Created", "&b%VALUE% &flobby created.");
-		this.addDefault("Lobby.RequiredLevelSet", "The required ParkourLevel to join is &b%VALUE%");
+		this.addDefault("Lobby.RequiredLevelSet", "You have set the required ParkourLevel to &b%VALUE%&f.");
 
 		this.addDefault("Scoreboard.MainHeading", "&b&l== Parkour ==");
 		this.addDefault("Scoreboard.TitleFormat", "&b%VALUE%");
