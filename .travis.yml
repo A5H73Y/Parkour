@@ -2,10 +2,7 @@ sudo: false
 language: java
 dist: trusty
 jdk:
-  - oraclejdk9
   - oraclejdk11
-  - openjdk8
-  - openjdk10
   - openjdk11
 notifications:
   email: false
@@ -20,6 +17,7 @@ before_deploy:
 deploy:
   provider: releases
   github_token: $PAT
-  file: "target/Parkour.jar"
+  file: "target/Parkour-*.jar"
+  file_glob: true
   skip_cleanup: true
   api_key: $PAT

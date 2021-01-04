@@ -1486,9 +1486,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 */
 	private void restoreHealthHunger(Player player) {
 		double health = PlayerInfo.getSavedHealth(player);
-		if (health <= 0) {
-			health = player.getMaxHealth();
-		}
+		health = Math.min(Math.max(0, health), player.getMaxHealth());
 		player.setHealth(health);
 		player.setFoodLevel(PlayerInfo.getSavedFoodLevel(player));
 		PlayerInfo.resetSavedHealthFoodLevel(player);
