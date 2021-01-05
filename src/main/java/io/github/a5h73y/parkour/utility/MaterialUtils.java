@@ -25,17 +25,19 @@ import static com.cryptomorin.xseries.XMaterial.matchXMaterial;
 import com.cryptomorin.xseries.XMaterial;
 import io.github.a5h73y.parkour.Parkour;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Stairs;
+import org.bukkit.util.NumberConversions;
 
 /**
  * Material Utility methods.
@@ -249,5 +251,39 @@ public class MaterialUtils {
 		}
 
 		return validCheckpointMaterials;
+	}
+
+	private static double PLAYER_BOUNDINGBOX = 0.3;
+
+	/**
+	 * Get the Materials under the player's feet.
+	 * @param location Player's location
+	 * @return Set of up to 4 Materials
+	 */
+	public static HashSet<Material> getMaterialUnderPlayer(Location location) {
+		HashSet<Material> materials = new HashSet<>();
+		int y = location.getBlockY() - 1;
+		World world = location.getWorld();
+		Block b11 = world.getBlockAt(NumberConversions.floor(location.getX() + PLAYER_BOUNDINGBOX), y,
+				NumberConversions.floor(location.getZ() - PLAYER_BOUNDINGBOX));
+		if (b11.getType() != Material.AIR) {
+			materials.add(b11.getType());
+		}
+		Block b12 = world.getBlockAt(NumberConversions.floor(location.getX() - PLAYER_BOUNDINGBOX), y,
+				NumberConversions.floor(location.getZ() + PLAYER_BOUNDINGBOX));
+		if (b12.getType() != Material.AIR) {
+			materials.add(b12.getType());
+		}
+		Block b21 = world.getBlockAt(NumberConversions.floor(location.getX() + PLAYER_BOUNDINGBOX), y,
+				NumberConversions.floor(location.getZ() + PLAYER_BOUNDINGBOX));
+		if (b21.getType() != Material.AIR) {
+			materials.add(b21.getType());
+		}
+		Block b22 = world.getBlockAt(NumberConversions.floor(location.getX() - PLAYER_BOUNDINGBOX), y,
+				NumberConversions.floor(location.getZ() - PLAYER_BOUNDINGBOX));
+		if (b22.getType() != Material.AIR) {
+			materials.add(b22.getType());
+		}
+		return materials;
 	}
 }

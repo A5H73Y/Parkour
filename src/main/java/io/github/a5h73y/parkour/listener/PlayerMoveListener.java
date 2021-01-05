@@ -65,86 +65,86 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
             return;
         }
 
-        Material belowMaterial = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
-
-        // if player is on half-block or jumping, get actual location.
-        if (!parkour.getConfig().isLegacyGroundDetection()
-                && (!XBlock.isAir(player.getLocation().getBlock().getType()) || !player.isOnGround())) {
-            belowMaterial = player.getLocation().getBlock().getType();
-        }
-
-        ParkourKit kit = session.getCourse().getParkourKit();
-
-        if (belowMaterial.equals(Material.SPONGE)) {
-            player.setFallDistance(0);
-        }
-
-        ParkourKitAction kitAction = kit.getAction(belowMaterial);
-
-        if (kitAction != null) {
-            switch (kitAction.getActionType()) {
-                case FINISH:
-                    parkour.getPlayerManager().finishCourse(player);
-                    break;
-
-                case DEATH:
-                    parkour.getPlayerManager().playerDie(player);
-                    break;
-
-                case LAUNCH:
-                    player.setVelocity(new Vector(0, kitAction.getStrength(), 0));
-                    break;
-
-                case BOUNCE:
-                    if (!player.hasPotionEffect(PotionEffectType.JUMP)) {
-                        PlayerUtils.applyPotionEffect(PotionEffectType.JUMP, kitAction.getDuration(),
-                                (int) kitAction.getStrength(), player);
-                    }
-                    break;
-
-                case SPEED:
-                    if (!player.hasPotionEffect(PotionEffectType.SPEED)) {
-                        PlayerUtils.applyPotionEffect(PotionEffectType.SPEED, kitAction.getDuration(),
-                                (int) kitAction.getStrength(), player);
-                    }
-                    break;
-
-                case NORUN:
-                    player.setSprinting(false);
-                    break;
-
-                case NOPOTION:
-                    PlayerUtils.removeAllPotionEffects(player);
-                    player.setFireTicks(0);
-                    break;
-
-                default:
-                    break;
+        for (Material belowMaterial : MaterialUtils.getMaterialUnderPlayer(player.getLocation())) {
+            // if player is on half-block or jumping, get actual location.
+            if (!parkour.getConfig().isLegacyGroundDetection()
+                    && (!XBlock.isAir(player.getLocation().getBlock().getType()) || !player.isOnGround())) {
+                belowMaterial = player.getLocation().getBlock().getType();
             }
-        } else {
-            for (BlockFace blockFace : BLOCK_FACES) {
-                Material material = player.getLocation().getBlock().getRelative(blockFace).getType();
-                kitAction = kit.getAction(material);
 
-                if (kitAction != null) {
-                    switch (kitAction.getActionType()) {
-                        case CLIMB:
-                            if (!player.isSneaking()) {
-                                player.setVelocity(new Vector(0, kitAction.getStrength(), 0));
-                            }
-                            break;
+            ParkourKit kit = session.getCourse().getParkourKit();
 
-                        case REPULSE:
-                            double strength = kitAction.getStrength();
-                            double x = blockFace == BlockFace.NORTH || blockFace == BlockFace.SOUTH ? 0
-                                    : blockFace == BlockFace.EAST ? -strength : strength;
-                            double z = blockFace == BlockFace.EAST || blockFace == BlockFace.WEST ? 0
-                                    : blockFace == BlockFace.NORTH ? strength : -strength;
+            if (belowMaterial.equals(Material.SPONGE)) {
+                player.setFallDistance(0);
+            }
 
-                            player.setVelocity(new Vector(x, 0.1, z));
-                            break;
+            ParkourKitAction kitAction = kit.getAction(belowMaterial);
 
-                        default:
+            if (kitAction != null) {
+                switch (kitAction.getActionType()) {
+                    case FINISH:
+                        parkour.getPlayerManager().finishCourse(player);
+                        break;
+
+                    case DEATH:
+                        parkour.getPlayerManager().playerDie(player);
+                        break;
+
+                    case LAUNCH:
+                        player.setVelocity(new Vector(0, kitAction.getStrength(), 0));
+                        break;
+
+                    case BOUNCE:
+                        if (!player.hasPotionEffect(PotionEffectType.JUMP)) {
+                            PlayerUtils.applyPotionEffect(PotionEffectType.JUMP, kitAction.getDuration(),
+                                    (int) kitAction.getStrength(), player);
+                        }
+                        break;
+
+                    case SPEED:
+                        if (!player.hasPotionEffect(PotionEffectType.SPEED)) {
+                            PlayerUtils.applyPotionEffect(PotionEffectType.SPEED, kitAction.getDuration(),
+                                    (int) kitAction.getStrength(), player);
+                        }
+                        break;
+
+                    case NORUN:
+                        player.setSprinting(false);
+                        break;
+
+                    case NOPOTION:
+                        PlayerUtils.removeAllPotionEffects(player);
+                        player.setFireTicks(0);
+                        break;
+
+                    default:
+                        break;
+                }
+            } else {
+                for (BlockFace blockFace : BLOCK_FACES) {
+                    Material material = player.getLocation().getBlock().getRelative(blockFace).getType();
+                    kitAction = kit.getAction(material);
+
+                    if (kitAction != null) {
+                        switch (kitAction.getActionType()) {
+                            case CLIMB:
+                                if (!player.isSneaking()) {
+                                    player.setVelocity(new Vector(0, kitAction.getStrength(), 0));
+                                }
+                                break;
+
+                            case REPULSE:
+                                double strength = kitAction.getStrength();
+                                double x = blockFace == BlockFace.NORTH || blockFace == BlockFace.SOUTH ? 0
+                                        : blockFace == BlockFace.EAST ? -strength : strength;
+                                double z = blockFace == BlockFace.EAST || blockFace == BlockFace.WEST ? 0
+                                        : blockFace == BlockFace.NORTH ? strength : -strength;
+
+                                player.setVelocity(new Vector(x, 0.1, z));
+                                break;
+
+                            default:
+                        }
                     }
                 }
             }
