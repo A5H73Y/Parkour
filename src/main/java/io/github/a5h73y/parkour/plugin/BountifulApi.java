@@ -88,7 +88,11 @@ public class BountifulApi extends PluginWrapper {
 				TranslationUtils.sendMessage(player, title);
 			}
 		} else {
-			TranslationUtils.sendMessage(player, title);
+			if (title.isEmpty()) {
+				TranslationUtils.sendMessage(player, subTitle);
+			} else {
+				TranslationUtils.sendMessage(player, title);
+			}
 		}
 	}
 
