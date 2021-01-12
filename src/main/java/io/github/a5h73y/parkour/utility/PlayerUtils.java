@@ -2,6 +2,7 @@ package io.github.a5h73y.parkour.utility;
 
 import com.cryptomorin.xseries.XPotion;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -102,5 +103,17 @@ public class PlayerUtils {
 			player.setGameMode(gameMode);
 			TranslationUtils.sendMessage(player, "GameMode set to &b" + StringUtils.standardizeText(gameMode.name()));
 		}
+	}
+
+	/**
+	 * Teleport Player to Location.
+	 * Reset their fall distance so they don't take damage upon teleportation.
+	 *
+	 * @param player player
+	 * @param location location
+	 */
+	public static void teleportToLocation(Player player, Location location) {
+		player.setFallDistance(0);
+		player.teleport(location);
 	}
 }

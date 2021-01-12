@@ -37,6 +37,7 @@ import io.github.a5h73y.parkour.type.lobby.LobbyInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
+import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -212,7 +213,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		if (parkour.getConfig().getBoolean("OnJoin.TeleportPlayer")) {
-			player.teleport(course.getCheckpoints().get(0).getLocation());
+			PlayerUtils.teleportToLocation(player, course.getCheckpoints().get(0).getLocation());
 		}
 		preparePlayerForCourse(player, course.getName());
 		CourseInfo.incrementViews(course.getName());
@@ -255,7 +256,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		ParkourSession session;
 		if (canLoadParkourSession(player, course)) {
 			session = loadParkourSession(player);
-			player.teleport(determineDestination(session));
+			PlayerUtils.teleportToLocation(player, determineDestination(session));
 			TranslationUtils.sendValueTranslation("Parkour.Continue", session.getCourseName(), player);
 		} else {
 			session = addPlayer(player, new ParkourSession(course));
@@ -338,7 +339,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			if (parkour.getConfig().getBoolean("OnLeave.TeleportAway")) {
 				if (parkour.getConfig().isTeleportToJoinLocation()
 						&& PlayerInfo.hasJoinLocation(player)) {
-					player.teleport(PlayerInfo.getJoinLocation(player));
+					PlayerUtils.teleportToLocation(player, PlayerInfo.getJoinLocation(player));
 				} else {
 					parkour.getLobbyManager().teleportToLeaveDestination(player, session);
 				}
@@ -433,7 +434,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			}
 		}
 
-		player.teleport(determineDestination(session));
+		PlayerUtils.teleportToLocation(player, determineDestination(session));
 
 		// if the Player is in Test Mode, we don't need to run the rest
 		if (isPlayerInTestMode(player)) {
@@ -609,7 +610,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		joinCourse(player, course, true);
 		// if they are restarting the Course, we need to teleport them back
 		if (!doNotTeleport && !parkour.getConfig().getBoolean("OnJoin.TeleportPlayer")) {
-			player.teleport(course.getCheckpoints().get(0).getLocation());
+			PlayerUtils.teleportToLocation(player, course.getCheckpoints().get(0).getLocation());
 		}
 		TranslationUtils.sendTranslation("Parkour.Restarting", player);
 	}
@@ -894,8 +895,12 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param gameModeName GameMode name
 	 */
 	public void preparePlayer(Player player, String gameModeName) {
-		for (PotionEffect effect : player.getActivePotionEffects()) {
-			player.removePotionEffect(effect.getType());
+		PlayerUtils.removeAllPotionEffects(player);
+		ParkourSession session = getParkourSession(player);
+
+		if (session != null && session.getParkourMode() == ParkourMode.POTION) {
+			XPotion.addPotionEffectsFromString(player,
+					CourseInfo.getPotionParkourModeEffects(session.getCourseName()));
 		}
 
 		if (!isPlayerInTestMode(player)) {
@@ -1779,7 +1784,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			}
 
 		} else if (parkour.getConfig().isTeleportToJoinLocation()) {
-			player.teleport(PlayerInfo.getJoinLocation(player));
+			PlayerUtils.teleportToLocation(player, PlayerInfo.getJoinLocation(player));
 			TranslationUtils.sendTranslation("Parkour.JoinLocation", player);
 			return;
 		}

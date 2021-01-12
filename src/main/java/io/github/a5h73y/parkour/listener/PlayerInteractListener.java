@@ -8,6 +8,7 @@ import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
+import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.Bukkit;
@@ -136,7 +137,8 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
                 TranslationUtils.sendTranslation("Mode.Freedom.Save", player);
 
             } else {
-                player.teleport(parkour.getPlayerManager().getParkourSession(player).getFreedomLocation());
+                PlayerUtils.teleportToLocation(player,
+                        parkour.getPlayerManager().getParkourSession(player).getFreedomLocation());
                 TranslationUtils.sendTranslation("Mode.Freedom.Load", player);
             }
 

@@ -5,6 +5,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.utility.ValidationUtils;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
@@ -80,15 +81,19 @@ public class BountifulApi extends PluginWrapper {
 		if (attemptTitle) {
 			if (useSpigotMethods) {
 				player.sendTitle(title, subTitle, inDuration, stayDuration, outDuration);
+				return;
 
 			} else if (isEnabled()) {
 				BountifulAPI.sendTitle(player, inDuration, stayDuration, outDuration, title, subTitle);
-
-			} else {
-				TranslationUtils.sendMessage(player, title);
+				return;
 			}
-		} else {
+		}
+
+		if (ValidationUtils.isStringValid(title)) {
 			TranslationUtils.sendMessage(player, title);
+		}
+		if (ValidationUtils.isStringValid(subTitle)) {
+			TranslationUtils.sendMessage(player, subTitle);
 		}
 	}
 

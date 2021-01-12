@@ -63,7 +63,7 @@
 		<!-- MySQL database Repo -->
 		<repository>
 			<id>husk</id>
-			<url>https://maven.husk.pro/repository/maven-public/</url>
+			<url>https://maven.husk.pro/snapshots/</url>
 		</repository>
 		<!-- InventoryGui -->
 		<repository>
@@ -130,8 +130,14 @@
 		<dependency>
 			<groupId>pro.husk</groupId>
 			<artifactId>mysql</artifactId>
-			<version>1.4.0</version>
+			<version>1.4.1-SNAPSHOT</version>
 			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- InventoryGui -->
 		<dependency>

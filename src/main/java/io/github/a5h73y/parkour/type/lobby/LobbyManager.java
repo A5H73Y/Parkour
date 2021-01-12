@@ -8,6 +8,7 @@ import io.github.a5h73y.parkour.type.Cacheable;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
+import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
@@ -77,7 +78,7 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
         }
 
         Lobby lobby = lobbyCache.getOrDefault(lobbyName, populateLobby(lobbyName));
-        player.teleport(lobby.getLocation());
+        PlayerUtils.teleportToLocation(player, lobby.getLocation());
 
         if (lobbyName.equals(Constants.DEFAULT)) {
             TranslationUtils.sendTranslation("Parkour.Lobby", player);
@@ -97,7 +98,7 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
             return;
         }
         Lobby lobby = lobbyCache.getOrDefault(Constants.DEFAULT, populateLobby(Constants.DEFAULT));
-        player.teleport(lobby.getLocation());
+        PlayerUtils.teleportToLocation(player, lobby.getLocation());
         TranslationUtils.sendTranslation("Parkour.Lobby", player);
     }
 
@@ -108,8 +109,7 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
     public void teleportToNearestLobby(Player player) {
         Lobby lobby = getNearestLobby(player);
         if (lobby != null) {
-            player.setFallDistance(0);
-            player.teleport(lobby.getLocation());
+            PlayerUtils.teleportToLocation(player, lobby.getLocation());
             TranslationUtils.sendValueTranslation("Parkour.LobbyOther", lobby.getName(), player);
         }
     }

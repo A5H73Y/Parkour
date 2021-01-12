@@ -33,10 +33,6 @@ TODO images
 
 Simply sets the players movement speed to what is set in the config.yml. Allows you to run faster and jump further. Movement speed is reset to default once the player leaves.
 
-## Moon
-
-Straight forward, this applies Jump Boost to the player throughout the Course. If the player leaves the effect is removed. This will allow the player to reach new heights and simulate low gravity.
-
 ## Dropper
 
 This allows you to integrate the plugin into the 'dropper' gamemode, allowing you to fall infinitely without dying or taking any fall damage. You can use DeathBlocks to allow the player to die if they hit a block.
@@ -47,6 +43,6 @@ Inspired by CodJumping, when you use an RPG's explosion to propel yourself into 
 
 You will be given a 'Rocket Launcher', which is a Rocket by default. Simply right click with the item in your hand and you will have a knockback applied to your player, which you can use to reach new heights and distances. The time between reuse can be configured, to reduce risk of it being abused.
 
+## Free Checkpoint
 
-
-
+This ParkourMode allows you to treat any Pressure Plate as a checkpoint. Upon walking on a Pressure Plate the player will be notified that a checkpoint has been set, if the player dies they will be taken back to the last checkpoint they set. This allows you to create alternate routes through a course.

@@ -10,6 +10,7 @@ import io.github.a5h73y.parkour.other.ParkourValidation;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
+import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.ArrayList;
@@ -205,7 +206,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
             return;
         }
 
-        player.teleport(new Location(world, x, y, z, yaw, pitch));
+        PlayerUtils.teleportToLocation(player, new Location(world, x, y, z, yaw, pitch));
         String message = TranslationUtils.getValueTranslation("Parkour.Teleport", courseName);
         TranslationUtils.sendMessage(player, checkpoint != null ? message + " &f(&3" + checkpoint + "&f)" : message, false);
     }

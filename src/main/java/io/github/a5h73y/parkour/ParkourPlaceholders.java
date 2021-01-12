@@ -303,7 +303,8 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
         } else {
             return TOP_TEN_RESULT.replace(Constants.PLAYER_PLACEHOLDER, result.getPlayerName())
                     .replace("%POSITION%", Integer.toString(position))
-                    .replace("%TIME%", DateTimeUtils.displayCurrentTime(result.getTime()));
+                    .replace(Constants.TIME_PLACEHOLDER, DateTimeUtils.displayCurrentTime(result.getTime()))
+                    .replace(Constants.DEATHS_PLACEHOLDER, Integer.toString(result.getDeaths()));
         }
     }
 
