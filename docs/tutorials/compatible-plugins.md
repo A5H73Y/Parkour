@@ -5,7 +5,7 @@ Compatible Plugins
 
 Parkour supports the ability to use Economy through the Vault plugin, created by Sleaker.
 
-The configuration option in the config.yml is "Other.Economy.Enabled" and must be set to true. When Parkour starts up, it will print a message whether it connected to the Vault plugin successfully.
+The configuration option in the `config.yml` is `Other.Economy.Enabled` and must be set to `true`. When Parkour starts up, it will print a message whether it has connected to the Vault plugin successfully.
 
 Once successfully linked, you are able to reward players with an amount of currency, as well as charge them for joining a Course.
 

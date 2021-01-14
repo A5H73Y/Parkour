@@ -11,29 +11,29 @@ Start by building your Course and decide where you may want your checkpoints to 
 
 ## Create the Course
 
-Decide where you want the Course to start, stand in the position and face the direction you want the players to teleport to. When you are happy, enter the command `/pa create (course)`.
+Decide where you want the Course to start, stand in the position and face the direction you want the Players to teleport to. When you are happy, enter the command `/pa create (course)`.
 
 ![Create Course](https://i.imgur.com/OcbCbL8.jpg "Create Course")
 
-This example has named the Course "tutorial", the name you have chosen will be used to reference the course later on. If everything was successful, the following message will appear.
+This example has named the Course "tutorial", the name you have chosen will be used to reference the Course later on. If everything was successful, the following message will appear.
 
 *This will create a Course entry in the database, allowing us to now track times against it.*
 
 ![Create Success](https://i.imgur.com/hA8HpnU.jpg "Create Success")
 
-The term "selected" means that you are editing the Course. This can be manually achieved by using the command `/pa select (course)`, you can now execute commands without having to specify the course, for example the following `/pa checkpoint` command does not require you to specify a course.
+The term "selected" means that you are editing the Course. This can be manually achieved by using the command `/pa select (course)`, you can now execute commands without having to specify the Course, for example the following `/pa checkpoint` command does not require you to specify a Course.
 
 ## Create Checkpoints
 
-To create a checkpoint stand where you want your first checkpoint to be, face the direction you want the players to teleport to and enter `/pa checkpoint`.
+To create a checkpoint stand where you want your first checkpoint to be, face the direction you want the Players to teleport to and enter `/pa checkpoint`.
 
 _This will place a pressure plate to activate the checkpoint._
 
 ![Checkpoint Created](https://i.imgur.com/IYgHBJs.jpg "Checkpoint Created")
 
-There is no limit to how many checkpoints you can create, they are automatically generated every time you enter `/pa checkpoint`. The checkpoint is generated for the Course you have selected (editing); To select a course use the command `/pa select (course)`.
+There is no limit to how many checkpoints you can create, they are automatically generated every time you enter `/pa checkpoint`. The checkpoint is generated for the Course you have selected (editing); To select a Course use the command `/pa select (course)`.
 
-Now you've learnt how to create a single checkpoint, repeat the command to create as many checkpoints as you want for the course!
+Now you've learnt how to create a single checkpoint, repeat the command to create as many checkpoints as you want for the Course!
 
 ![Checkpoint 2 Created](https://i.imgur.com/TXum8Wx.jpg "Checkpoint 2 Created")
 ![Checkpoints Created](https://i.imgur.com/nlFsGsC.jpg "Checkpoints Created")
@@ -42,19 +42,19 @@ If you happen to make a mistake, or want to move a checkpoint, you can use the s
 
 ## Ability to Finish Course
 
-For the player to be able to finish the course, we need use a "Finish Block" or a Finish Parkour Sign.
+For the Player to be able to finish the Course, we need use a "Finish Block" or a Finish Parkour Sign.
 
-A "Finish Block" is part of a ParkourKit and will trigger the course being finished when walked upon. For now we can set it to the default Finish Block, you can change it later. Simply enter `/pa kit` to populate your inventory with each item of the default ParkourKit, then find the Material named "Finish Block", and simply place these materials where you want the finish area to be.
+A "Finish Block" is part of a ParkourKit and will trigger the Course being finished when walked upon. For now we can set it to the default Finish Block, you can change it later. Simply enter `/pa kit` to populate your inventory with each item of the default ParkourKit, then find the Material named "Finish Block", and simply place these materials where you want the finish area to be.
 
 For more information on ParkourKits, [click here](parkour-kits.md).
 
 ## Course Ready Status
 
-Once all the checkpoints are created for the course, it's time to set the status of the course to "ready", so other players can join it. To mark the course as ready, enter `/pa ready (course)`.
+Once all the checkpoints are created for the Course, it's time to set the status of the Course to "ready", so other Players can join it. To mark the Course as ready, enter `/pa ready (course)`.
 
-By default, players can not join a course that has not been set to ready (so they don't join a half-finished course), this can be disabled by changing `OnJoin.EnforceReady` to `false` in the `config.yml`.
+By default, Players can not join a Course that has not been set to ready (so they don't join a half-finished Course), this can be disabled by changing `OnJoin.EnforceReady` to `false` in the `config.yml`.
 
-You can enter `/pa done` to stop editing the course.
+You can enter `/pa done` to stop editing the Course.
 
 ![Course Ready](https://i.imgur.com/kd1KkqU.jpg "Course Ready")
 
@@ -67,6 +67,6 @@ _To disable Test Mode, enter `/pa test` again._
 
 ## Teleporting to a Course
 
-If you want to teleport to the start of a course, you can enter `/pa tp (course)`. This will only teleport you, exactly as you are, without starting the course.
+If you want to teleport to the start of a Course, you can enter `/pa tp (course)`. This will only teleport you, exactly as you are, without starting the Course.
 
-If you wish to teleport to a specific checkpoint in the course you can enter `/pa tpc (course) (checkpoint)`.
+If you wish to teleport to a specific checkpoint in the Course you can enter `/pa tpc (course) (checkpoint)`.

@@ -3,9 +3,9 @@ The Basics
 
 ## Beginning Steps
 
-You are recommended to create a world dedicated for Parkour Courses, although Parkour does have multi-world support. Once you have your world chosen, you should create an area where the players can choose which Courses to join; This area is called a 'lobby'. Stand where you want the lobby to be saved and enter the command `/pa setlobby`. This only needs to be done once!
+You are recommended to create a world dedicated for Parkour Courses, although Parkour does have multi-world support. Once you have your world chosen, you should create an area where the Players can choose which Courses to join; This area is called a 'lobby'. Stand where you want the lobby to be saved and enter the command `/pa setlobby`. This only needs to be done once!
 
-When you want to teleport to the Parkour lobby, enter `/pa lobby`. By default, this is where players are teleported to when they complete or leave a Course. We can create many lobbies which have different locations and requirements, which will be covered later in the tutorials.
+When you want to teleport to the Parkour lobby, enter `/pa lobby`. By default, this is where Players are teleported to when they complete or leave a Course. We can create many lobbies which have different locations and requirements, which will be covered later in the tutorials.
 
 You should now have the latest version of Parkour installed, and have a Parkour lobby created.
 
@@ -17,15 +17,15 @@ To disable the Parkour Join message, in the `config.yml` find `Other.Display.Joi
 
 ##### Update Player Database Time
 
-To keep a single database row per player per Course, in the `config.yml` find `OnFinish.UpdatePlayerDatabaseTime` and set it to `true`.
+To keep a single database row per Player per Course, in the `config.yml` find `OnFinish.UpdatePlayerDatabaseTime` and set it to `true`.
 
 ##### Stuck Pressure Plates
 
-To allow for multiple players to stand on a pressure plate at once, in the `config.yml` find `OnCourse.PreventPlateStick` and set it to `true`.
+To allow for multiple Players to stand on a pressure plate at once, in the `config.yml` find `OnCourse.PreventPlateStick` and set it to `true`.
 
 ##### Available Placeholders 
 
-Each of the Parkour placeholders are available here: [Parkour Placeholders](/tutorials/compatible-plugins?id=parkour-placeholders)
+Each of the Parkour PlaceholderAPI placeholders are available here: [Parkour Placeholders](/tutorials/compatible-plugins?id=parkour-placeholders)
 
 ## Permissions
 
@@ -39,7 +39,7 @@ Each of the Parkour placeholders are available here: [Parkour Placeholders](/tut
 | Parkour.Basic.TP | Teleport to a Course. |
 | Parkour.Basic.TPC | Teleport to a Course Checkpoint. |
 | Parkour.Basic.Leaderboard | View Leaderboard results via command. |
-| Parkour.Basic.Challenge | Send Parkour Challenges to other players. |
+| Parkour.Basic.Challenge | Send Parkour Challenges to other Players. |
 | Parkour.Basic.JoinAll | Use the Join All Courses GUI. |
 | Parkour.Basic.Signs | Ability to use Parkour Signs only if Other.Parkour.SignUsePermissions is set to true. |
 | Parkour.Basic.Commands | Ability to use Parkour Commands only if Other.Parkour.CommandUsePermissions is set to true. |
@@ -48,7 +48,7 @@ Each of the Parkour placeholders are available here: [Parkour Placeholders](/tut
 | Parkour.Admin.Course | Perform administration tasks to a Course. |
 | Parkour.Admin.Prize | Configure a Prize for a Course. |
 | Parkour.Admin.Delete | Ability to delete Courses / checkpoints / lobbies / parkourkits. |
-| Parkour.Admin.Reset | Ability to reset Courses, players / leaderboards / prizes. |
+| Parkour.Admin.Reset | Ability to reset Courses, Players / leaderboards / prizes. |
 | Parkour.Admin.TestMode | Ability to activate TestMode. |
 | Parkour.Admin.ReadyBypass | Bypass the ready requirement of a Course. |
 | Parkour.Admin.LevelBypass | Bypass the Parkour Level requirement of a Course. |
@@ -62,9 +62,9 @@ Each of the Parkour placeholders are available here: [Parkour Placeholders](/tut
 | Parkour.CreateSign.Stats | Create a Course Stats sign. |
 | Parkour.CreateSign.Leaderboards | Create a Leaderboards sign. |
 |  |  |
-| **Parkour.Level.(LEVEL)** | **Give the player a specific Parkour Level.** |
+| **Parkour.Level.(LEVEL)** | **Give the Player a specific Parkour Level.** |
 |  |  |
-| **Parkour.Course.(COURSE)** | **Give the player permission to join a specific Parkour Course.** |
+| **Parkour.Course.(COURSE)** | **Give the Player permission to join a specific Parkour Course.** |
 
 ## Parkour Commands
 
@@ -125,7 +125,7 @@ A Parkour Course is a physical path that you've created for the Player to use wh
 
 #### Lobby
 
-A Lobby is simply a location that allows you to join Parkour courses. It also acts as a place for the Player to teleport to when they complete or leave a Course.
+A Lobby is simply a location that allows you to join Parkour Courses. It also acts as a place for the Player to teleport to when they complete or leave a Course.
 
 #### ParkourKit
 
@@ -137,8 +137,8 @@ Parkour is incredibly customisable, allowing you to modify the plugin exactly to
 
 #### ParkourLevel
 
-A Player can earn levels will unlock new courses for them to join. An example is 'course2' will be locked until they complete 'course1'. The reward can either be an exact level, or an addition to their current level. For example you can finish all the 'easy' courses in any order before having enough ParkourLevel to join the 'medium' courses. The Player's ParkourLevel can never decrease, only increase or remain the same.
+A Player can earn levels will unlock new Courses for them to join. An example is 'course2' will be locked until they complete 'course1'. The reward can either be an exact level, or an addition to their current level. For example you can finish all the 'easy' Courses in any order before having enough ParkourLevel to join the 'medium' Courses. The Player's ParkourLevel can never decrease, only increase or remain the same.
 
 #### ParkourRank
 
-When the Parkour chat is enabled, the Player's ParkourRank will be included in their message prefix. The player can achieve a new ParkourRank when passing the required ParkourLevel to unlock it. This can be a status symbol for the Player's that have completed many of the harder courses for example.
+When the Parkour chat is enabled, the Player's ParkourRank will be included in their message prefix. The Player can achieve a new ParkourRank when passing the required ParkourLevel to unlock it. This can be a status symbol for the Player's that have completed many of the harder Courses for example.

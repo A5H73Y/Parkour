@@ -3,7 +3,7 @@ Sign Commands
 
 ## Join Course
 
-A sign used to join a Parkour Course. These should be stored in your Parkour Lobby so they can be easy to find and interact with. Validation will execute when the sign is clicked to make sure the player is allowed to join first before they are teleported away.
+A sign used to join a Parkour Course. These should be stored in your Parkour Lobby so they can be easy to find and interact with. Validation will execute when the sign is clicked to make sure the Player is allowed to join first before they are teleported away.
 
 ##### Syntax
 
@@ -21,7 +21,7 @@ If the Course has a minimum level requirement to join, the level number will be 
 
 ## Finish Course
 
-A Finish sign is used as an alternative to a Finish Block. Validation will execute when the sign is clicked to make sure the player is allowed to finish the Course before they are teleported away.
+A Finish sign is used as an alternative to a Finish Block. Validation will execute when the sign is clicked to make sure the Player is allowed to finish the Course before they are teleported away.
 
 ##### Syntax
 
@@ -53,7 +53,7 @@ If the lobby has a minimum level requirement to join, the level number will be d
 
 ## Leave Course
 
-Create a sign for players to easily leave the Course.
+Create a sign for Players to easily leave the Course.
 
 ##### Example
 
@@ -61,14 +61,14 @@ Create a sign for players to easily leave the Course.
 
 ## Effects Signs
 
-You can apply several effects to the player on the Course. These are activated by right clicking the signs whilst on a course.
+You can apply several effects to the Player on the Course. These are activated by right clicking the signs whilst on a Course.
 
 The effects are derived from PotionEffectType available from the server.
 
 There are 2 hardcoded effects, these include:
 
     Heal
-        Fully restore the player's health.
+        Fully restore the Player's health.
     Gamemode
         Requires a GameMode on the bottom line to apply the GameMode specified.
 
@@ -86,7 +86,7 @@ For resistance effects that may not fit on the line such as `DAMAGE_RESISTANCE` 
 
 ## Course Stats
 
-Display the Course information in the player's chat when they right click the sign.
+Display the Course information in the Player's chat when they right click the sign.
 
 ##### Syntax
 
@@ -98,7 +98,7 @@ Display the Course information in the player's chat when they right click the si
 
 ##### Additional information
 
-Each Course will display the relevant statistics based on how they are set up. Each course would have a dynamic list of information based on how they are setup. For example if the course has a custom lobby set, that would display also.
+Each Course will display the relevant statistics based on how they are set up. Each Course would have a dynamic list of information based on how they are setup. For example if the Course has a custom lobby set, that would display also.
 
 ![Stats Results](https://i.imgur.com/C1pBaJA.png "Stats Results")
 

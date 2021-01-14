@@ -57,7 +57,7 @@ public class CourseSettingsGui implements AbstractMenu {
 				click -> CourseInfo.toggleChallengeOnly(courseName)));
 
 		// input required
-		parent.addElement(createTextInput('q', player, "Owner",
+		parent.addElement(createTextInput('q', player, "Creator",
 				CourseInfo.getCreator(courseName),
 				input -> SetCourseConversation.performAction(player, courseName, "creator", input)));
 		parent.addElement(createTextInput('w', player, "Minimum Parkour Level",

@@ -71,20 +71,20 @@ To view all the created ParkourKits, you can enter `/pa listKit`, which will dis
 
 ## The ParkourBlocks
 
-**Speed**: When the player walks on the block, a SPEED potion will be applied to the player with a configurable strength and duration.
+**Speed**: When the Player walks on the block, a SPEED potion will be applied to the Player with a configurable strength and duration.
 
-**Climb**: When the player walks against the block, they will be levatated as if they were 'climbing' the block. The player can hold SNEAK to not climb the block.
+**Climb**: When the Player walks against the block, they will be levatated as if they were 'climbing' the block. The Player can hold SNEAK to not climb the block.
 
-**Launch**: When the player walks on the block, they will be launched into the air with a configurable strength.
+**Launch**: When the Player walks on the block, they will be launched into the air with a configurable strength.
 
-**Finish**: When the player walks on the block, they will activate the "finish" stage of the course. Validation will be executed to ensure the player has completed the checkpoints, etc.
+**Finish**: When the Player walks on the block, they will activate the "finish" stage of the Course. Validation will be executed to ensure the Player has completed the checkpoints, etc.
 
-**Repulse**: When the player walks against the block, they will be pushed back from it as if being "repulsed" from the block.
+**Repulse**: When the Player walks against the block, they will be pushed back from it as if being "repulsed" from the block.
 
-**NoRun**: When the player runs on the block, they will be forced to walk.
+**NoRun**: When the Player runs on the block, they will be forced to walk.
 
-**NoPotion**: When the player walks on the block, all their current Potions will be removed; including the ones given by the Parkour plugin.
+**NoPotion**: When the Player walks on the block, all their current Potions will be removed; including the ones given by the Parkour plugin.
 
-**Death**: When the player walks on the block, they will activate a "death" on the block, taking them to the last checkpoint.
+**Death**: When the Player walks on the block, they will activate a "death" on the block, taking them to the last checkpoint.
 
-**Sponge**: Any time the player lands on a sponge, the fall damage will be absorbed (unless the height kills them).
+**Sponge**: Any time the Player lands on a sponge, the fall damage will be absorbed (unless the height kills them).
