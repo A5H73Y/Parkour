@@ -342,6 +342,9 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 case "time":
                     return DateTimeUtils.displayCurrentTime(result.getTime());
 
+                case "milliseconds":
+                    return String.valueOf(result.getTime());
+
                 case "deaths":
                     return String.valueOf(result.getDeaths());
 
