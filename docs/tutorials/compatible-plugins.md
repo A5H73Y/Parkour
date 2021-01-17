@@ -38,9 +38,11 @@ Here are each of the available Placeholders that Parkour provides.
 %parkour_player_prize_delay_(course)%
 %parkour_player_personal_best_(course)_time%
 %parkour_player_personal_best_(course)_deaths%
+%parkour_player_personal_best_(course)_milliseconds%
 %parkour_course_record_player_(course)%
 %parkour_course_record_time_(course)%
 %parkour_course_record_deaths_(course)%
+%parkour_course_record_milliseconds_(course)%
 %parkour_course_completed_(course)%
 %parkour_course_completions_(course)%
 %parkour_course_views_(course)%
@@ -121,3 +123,36 @@ Allows for the player's Head to be proudly displayed next to their best times, g
 
 Plugin and image created by steve4744, available here: https://www.spigotmc.org/resources/parkour-top-ten.46268/
 
+
+## LeaderHeads
+
+Leaderheads is a plugin that allows you to create all-time, daily, weekly, and monthly leaderboards from placeholders that return a numeric value.
+
+When used with Parkour, course leaderboards can be created using placeholder `%parkour_player_personal_best_(course)_milliseconds%`
+
+### Creating a LeaderHeads sign for course 'tutorial' showing the player with the best time for the week
+First place a sign, and then while looking at the sign, type:
+
+`/leaderheads setsign %parkour_player_personal_best_tutorial_milliseconds% 1 weekly`
+
+The sign will update to show the number 1 ranked player on course 'tutorial' for the week with the time displayed as milliseconds.
+
+![LeaderHeads Example 1](https://i.imgur.com/LTJ9Dw3.png "LeaderHeads Example 1")
+
+In the file `statistics/parkour_player_personal_best_tutorial_milliseconds.yml`, set the statistic type to milliseconds.
+
+`statistic-type: time-milliseconds`
+
+Reload LeaderHeads and the sign will update to display a formatted time.
+
+![LeaderHeads Example 2](https://i.imgur.com/swbtPkt.png "LeaderHeads Example 2")
+
+The time format can be changed in LeaderHeads's `config.yml`, for example:
+
+`time-format: "{hours}:{minutes}:{seconds}"`
+
+![LeaderHeads Example 3](https://i.imgur.com/XzwLLSL.png "LeaderHeads Example 3")
+
+Currently LeaderHeads does not appear to support displaying milliseconds as part of the formatted time on the sign.
+
+Plugin created by RobiRami, available here: https://www.spigotmc.org/resources/leaderheads.2079/
