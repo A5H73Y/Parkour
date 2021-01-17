@@ -139,9 +139,12 @@ The sign will update to show the number 1 ranked player on course 'tutorial' for
 
 ![LeaderHeads Example 1](https://i.imgur.com/LTJ9Dw3.png "LeaderHeads Example 1")
 
-In the file `statistics/parkour_player_personal_best_tutorial_milliseconds.yml`, set the statistic type to milliseconds.
+In the file `statistics/parkour_player_personal_best_tutorial_milliseconds.yml`, set the statistic type to milliseconds and the order to ascending:
 
-`statistic-type: time-milliseconds`
+```
+statistic-type: time-milliseconds
+order-mode: ascending
+```
 
 Reload LeaderHeads and the sign will update to display a formatted time.
 
