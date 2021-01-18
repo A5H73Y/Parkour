@@ -258,7 +258,7 @@ public class Parkour extends JavaPlugin {
         playerManager = new PlayerManager(this);
         guiManager = new ParkourGuiManager(this);
         soundsManager = new SoundsManager(this);
-        database.recreateAllCourses();
+        database.recreateAllCourses(false);
     }
 
     private void registerCommands() {

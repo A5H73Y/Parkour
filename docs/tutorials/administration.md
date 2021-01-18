@@ -13,13 +13,15 @@ If you delete a Course it will remove all information stored on the server about
 
 ![Deleting Course](https://i.imgur.com/apa5azA.png "Deleting Course")
  
-![Delete Confirm](https://i.imgur.com/8ucihM7.png "Delete Confirm")
+![Delete Confirm](https://i.imgur.com/8ucihM7.png "Delete Confirm")  
+_Command: `/pa delete course (course)`_
 
 ### Delete a Checkpoint
 
 If you want to delete a checkpoint, it will start with the highest number and decrease to the lowest, for safety reasons. For example if your Course has 5 checkpoints, and you enter `/pa delete checkpoint (course)` it will ask if you want to delete checkpoint 5, if you execute the command again it will ask if you want to delete checkpoint 4, etc.
 
-Note that you may want to overwrite a checkpoint if it needs moving, instead of deleting many. For example if you had 5 checkpoints and wanted to move the location of checkpoint 2, you can enter `/pa checkpoint 2` in the desired location.
+Note that you may want to overwrite a checkpoint if it needs moving, instead of deleting many. For example if you had 5 checkpoints and wanted to move the location of checkpoint 2, you can enter `/pa checkpoint 2` in the desired location.  
+_Command: `/pa delete checkpoint (course)`_
 
 ### Delete a Lobby
 
@@ -29,19 +31,22 @@ If there are any Courses that are linked to the Lobby, it will alert you and you
 
 ![Delete Validation](https://i.imgur.com/wCO9jrU.png "Delete Validation")
 
-You must set the dependent Courses to use a different Lobby before this change can be made.
+You must set the dependent Courses to use a different Lobby before this change can be made.  
+_Command: `/pa delete lobby (lobby)`_
 
 ### Delete a ParkourKit
 
 You can delete a ParkourKit by using the command `/pa delete kit (kit name)` this will preform validation to check to see if any Courses are using this kit, that would break if the Course were to be deleted.
 
-If there are any Courses still using this kit it will error and present a list of Courses still dependent on this kit. You must link these Courses to a different kit before you are able to delete it.
+If there are any Courses still using this kit it will error and present a list of Courses still dependent on this kit. You must link these Courses to a different kit before you are able to delete it.  
+_Command: `/pa delete kit (kit)`_
 
 ### Delete an AutoStart
 
 If you want to delete an AutoStart, it will remove the ability to use the location as an AutoStart for the Course.
 
-You must break the pressureplate, then stand in its place and enter `/pa delete autostart (course)`.
+You must break the Pressure Plate, then stand in its place and enter `/pa delete autostart (course)`.  
+_Command: `/pa delete autostart`_
 
 ## Reset Commands
 
@@ -53,19 +58,28 @@ All operations will have to be confirmed or cancelled before the change is made.
 
 ### Reset a Course
 
-This will delete all the statistics stored, which includes leaderboards and various Parkour attributes. This will NOT affect the spawn / checkpoints.
+This will delete all the statistics stored, which includes leaderboards and various Parkour attributes. This will NOT affect the spawn / checkpoints.  
+_Command: `/pa reset course (course)`_
 
 ### Reset a Player
 
-This will delete all their leaderboards across all Courses and delete all various Parkour attributes.
+This will delete all their leaderboards across all Courses and delete all various Parkour attributes.  
+_Command: `/pa reset player (player)`_
 
 ### Reset a Leaderboard
 
-Will remove all the leaderboards for a specified Course.
+Will remove all the leaderboards for a specified Course.  
+_Command: `/pa reset leaderboard (course)`_
+
+### Reset a Player Leaderboard
+
+If you want to remove a certain player's times from a certain Course, you'll need to provide an extra parameter.  
+_Command: `/pa reset leaderboard (course) [player]`_
 
 ### Reset a Prize
 
-This will reset all the prizes for a Course, causing it to use the default prize specified in the `config.yml`.
+This will reset all the prizes for a Course, causing it to use the default prize specified in the `config.yml`.  
+_Command: `/pa reset prize (course)`_
 
 ## Database Information
 
@@ -91,7 +105,7 @@ If you are going to modify the contents of the database, I strongly suggest you 
 
 If your MySQL connection fails, there will be an error in the server console for you to read. It will typically be incorrect login details, so make sure you enter them exactly into the `config.yml`.
 
-### No times are appearing
+### No times appear
 
 Sometimes Parkour gets a bit confused, especially when swapping from SQLite to MySQL and vice versa. Luckily there is a command `/pa recreate` that forces the database to populate the entries of all the Courses that exist on to the server.
 

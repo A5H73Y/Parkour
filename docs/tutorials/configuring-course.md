@@ -8,6 +8,8 @@ You are able to quickly access the Course settings using a GUI, this will act as
 ![Course Settings Conversation](https://i.imgur.com/y03TTJd.png "Course Settings Conversation") 
 ![Course Settings Toggle](https://i.imgur.com/3rg09P6.png "Course Settings Toggle")
 
+_Command: `/pa settings (course)`_
+
 ## Ready Status
 
 By default, Players can not join a Course that has not been set to ready (so they don't join a half-finished Course), this can be disabled by changing `OnJoin.EnforceReady` to `false` in the `config.yml`.
@@ -82,7 +84,8 @@ The items can be given a label to display in the inventory. The items can be mad
 
 ![Add JoinItem Inventory](https://i.imgur.com/WoYOdxb.png "Add JoinItem Inventory")
 
-_Command: `/pa addjoinitem (course) (material) (amount) [label] [unbreakable]` Example: `/pa addjoinitem tutorial ELYTRA 64`_
+_Command: `/pa addjoinitem (course) (material) (amount) [label] [unbreakable]`_  
+_Example: `/pa addjoinitem tutorial ELYTRA 64`_
 
 ## Creating a Parkour Lobby
 
@@ -121,23 +124,32 @@ _Remember that you must have the Course selected (editing), which can be achieve
 
 ## Parkour Events
 
-Parkour allows you to customise behaviours of each Parkour Event to display a message or execute a command.
+Parkour allows you to customise behaviours of each Parkour Event to display a message and / or execute a command.
 
-These events include:
-* Join
-* Leave
-* Prize
-* Finish (Only when RewardOnce is set and achieved)
-* Checkpoint
-* CheckpointAll
-* Death
+The Parkour events include:
+* join
+* leave
+* prize
+* finish _(Only run when RewardOnce is enabled and has already been achieved)_
+* checkpoint
+* checkpoint_all _(When all the checkpoints have been achieved)_
+* death
+* course_record _(When the player achieves a course record or beats their best time)_
 
-### Running Event Commands
+### Running Custom Event Commands
 
 This will allow you to link Parkour to trigger other plugins using a command. You are able to use a `%PLAYER%` placeholder to insert the Player name.
 
-TODO
+![Event Command Example](https://i.imgur.com/patqUxL.png "Event Command Example")
+
+_Command: `/pa setcourse (course) command (event) (command)`_
 
 ### Custom Event Messages
 
-TODO
+You can override the default Parkour messages to a custom per-course message for each event.
+
+![Event Message Example](https://i.imgur.com/ZyOeOom.png "Event Message Example")
+
+![Event Message Set](https://i.imgur.com/5pacqjk.png "Event Message Set")
+
+_Command: `/pa setcourse (course) message (event) (event)`_

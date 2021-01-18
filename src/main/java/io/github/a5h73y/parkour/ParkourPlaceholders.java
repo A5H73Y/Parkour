@@ -202,7 +202,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                     return INVALID_SYNTAX;
                 }
 
-                return getCourseRecord(arguments[3], arguments[2]);
+                return getCourseRecord(arguments[2], arguments[3]);
 
             case "completed":
                 if (arguments.length != 3) {

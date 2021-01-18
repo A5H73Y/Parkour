@@ -39,9 +39,11 @@ You can give the Player Minecraft XP when they complete the Course, which is as 
 
 ### Ecomomy
 
-If the plugin is linked to Vault, you will have an option to specify a numeric amount to reward the Player with on completion.
+If the plugin is linked to Vault, you are able to set a financial reward when the player completes the course.
 
-TODO image
+![Economy Prize Example](https://i.imgur.com/VKjMNk6.png "Economy Prize Example")
+
+_Command: `/pa economy setprize (course) (amount)`_
 
 ## Rewarding ParkourLevels
 
@@ -113,7 +115,7 @@ Unfortunately due to time constraints and more important features, this has been
 
 ## Challenge Mode
 
-You are able to challenge a Player to a Course to see who can complete the Course the fastest. This can become competitive when a monetary wager is introduced (If Economy is enabled), the winner will have the amount added to the account and the loser will have the amount deducted. 
+You are able to challenge a Player to a Course to see who can complete the Course the fastest. This can become competitive when a monetary wager is introduced (If Economy is enabled), the winner will have the amount added to the account and the loser will have the amount deducted.
 _Forfeiting (leaving the Course or server) will be treated as a loss and the wager will be deducted._
 
 To begin you must send the target Player a Challenge request using `/pa challenge (player) (course) [wager]` for example `/pa challenge A5H73Y fastrun`.

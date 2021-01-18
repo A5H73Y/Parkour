@@ -280,6 +280,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "prize":
+            case "setprize":
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_PRIZE)) {
                     return false;
 
@@ -310,7 +311,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 }
 
                 TranslationUtils.sendMessage(player, "Recreating courses...");
-                parkour.getDatabase().recreateAllCourses();
+                parkour.getDatabase().recreateAllCourses(true);
                 break;
 
             case "reload":

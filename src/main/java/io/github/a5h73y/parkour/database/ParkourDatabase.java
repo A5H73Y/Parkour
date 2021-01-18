@@ -427,9 +427,11 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
      * This is required when the database becomes out of sync through manual editing.
      * Times cannot be stored until the course exists in the database.
      */
-    public void recreateAllCourses() {
+    public void recreateAllCourses(boolean displayMessage) {
         Bukkit.getScheduler().runTaskAsynchronously(parkour, () -> {
-            PluginUtils.log("Starting recreation of courses process...");
+            if (displayMessage) {
+                PluginUtils.log("Starting recreation of courses process...");
+            }
             int changes = 0;
             for (String courseName : CourseInfo.getAllCourseNames()) {
                 if (getCourseId(courseName, false) == -1) {
@@ -437,7 +439,9 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
                     changes++;
                 }
             }
-            PluginUtils.log("Process complete. Courses recreated: " + changes);
+            if (displayMessage) {
+                PluginUtils.log("Process complete. Courses recreated: " + changes);
+            }
             if (changes > 0) {
                 PluginUtils.logToFile("Courses recreated: " + changes);
             }

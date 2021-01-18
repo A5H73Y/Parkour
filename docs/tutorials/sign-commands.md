@@ -132,8 +132,11 @@ These work the same way as previous "SetPoint" signs, they simply load the check
 
 ## Join All
 
-Present a GUI with all the available Courses to join. Permission "Parkour.Basic.JoinAll" is required for the Player to use.
+Present a GUI with all the available Courses to join, simply clicking an entry will trigger the Player to join a Course.  
+The layout can be customised from the config, with the ability to navigate through the courses on different pages.
+
+Permission `Parkour.Basic.JoinAll` is required for the Player to use.
 
 ##### Example
 
-![JoinAll Example](https://i.imgur.com/TODO.png "JoinAll Example")
+![JoinAll Example](https://i.imgur.com/LAoFM3s.png "JoinAll Example")

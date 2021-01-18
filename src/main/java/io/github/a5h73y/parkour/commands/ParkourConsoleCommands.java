@@ -152,6 +152,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 break;
 
             case "prize":
+            case "setprize":
                 if (!ValidationUtils.validateArgs(sender, args, 2)) {
                     return false;
                 }
@@ -160,7 +161,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 break;
 
             case "recreate":
-                parkour.getDatabase().recreateAllCourses();
+                parkour.getDatabase().recreateAllCourses(true);
                 break;
 
             case "reload":

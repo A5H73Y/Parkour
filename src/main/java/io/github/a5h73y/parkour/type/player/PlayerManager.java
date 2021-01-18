@@ -2,6 +2,7 @@ package io.github.a5h73y.parkour.type.player;
 
 import static io.github.a5h73y.parkour.enums.ParkourEventType.CHECKPOINT;
 import static io.github.a5h73y.parkour.enums.ParkourEventType.CHECKPOINT_ALL;
+import static io.github.a5h73y.parkour.enums.ParkourEventType.COURSE_RECORD;
 import static io.github.a5h73y.parkour.enums.ParkourEventType.DEATH;
 import static io.github.a5h73y.parkour.enums.ParkourEventType.FINISH;
 import static io.github.a5h73y.parkour.enums.ParkourEventType.JOIN;
@@ -573,6 +574,10 @@ public class PlayerManager extends AbstractPluginReceiver {
 		boolean recordTime = isNewRecord(player, session);
 		parkour.getDatabase().insertOrUpdateTime(
 				courseName, player, session.getTimeFinished(), session.getDeaths(), recordTime);
+
+		if (recordTime) {
+			parkour.getCourseManager().runEventCommands(player, courseName, COURSE_RECORD);
+		}
 
 		PlayerInfo.setLastCompletedCourse(player, courseName);
 		PlayerInfo.addCompletedCourse(player, courseName);
@@ -1578,7 +1583,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		if (parkour.getDatabase().isBestCourseTime(session.getCourse().getName(), session.getTimeFinished())) {
 			if (parkour.getConfig().getBoolean("OnFinish.DisplayNewRecords")) {
 				parkour.getBountifulApi().sendFullTitle(player,
-						TranslationUtils.getTranslation("Parkour.CourseRecord", false),
+						TranslationUtils.getCourseEventMessage(session.getCourseName(), COURSE_RECORD, "Parkour.CourseRecord"),
 						DateTimeUtils.displayCurrentTime(session.getTimeFinished()), true);
 			}
 			return true;
@@ -1587,7 +1592,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		if (parkour.getDatabase().isBestCourseTime(player, session.getCourse().getName(), session.getTimeFinished())) {
 			if (parkour.getConfig().getBoolean("OnFinish.DisplayNewRecords")) {
 				parkour.getBountifulApi().sendFullTitle(player,
-						TranslationUtils.getTranslation("Parkour.BestTime", false),
+						TranslationUtils.getCourseEventMessage(session.getCourseName(), COURSE_RECORD, "Parkour.BestTime"),
 						DateTimeUtils.displayCurrentTime(session.getTimeFinished()), true);
 			}
 			return true;

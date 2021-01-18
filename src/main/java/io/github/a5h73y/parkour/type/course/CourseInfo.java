@@ -738,7 +738,7 @@ public class CourseInfo {
         }
         for (ParkourEventType value : ParkourEventType.values()) {
             if (hasEventCommands(courseName, value)) {
-                TranslationUtils.sendMessage(sender, "&b" + value.getConfigEntry() + " Commands");
+                TranslationUtils.sendMessage(sender, "&3" + value.getConfigEntry() + " Commands", false);
                 getEventCommands(courseName, value).forEach(sender::sendMessage);
             }
         }
