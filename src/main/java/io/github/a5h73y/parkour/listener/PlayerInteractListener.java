@@ -227,6 +227,10 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             return;
         }
 
+        if (parkour.getConfig().getBoolean("OnCourse.PreventPlateStick")) {
+            event.setCancelled(true);
+        }
+
         // Prevent a user spamming the joins
         if (!parkour.getPlayerManager().delayPlayer(event.getPlayer(), 1, false)) {
             return;

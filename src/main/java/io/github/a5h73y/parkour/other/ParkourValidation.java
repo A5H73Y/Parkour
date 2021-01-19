@@ -36,11 +36,11 @@ public class ParkourValidation {
 
         if (!lobbySet) {
             if (PermissionUtils.hasPermission(player, Permission.ADMIN_ALL, false)) {
-                TranslationUtils.sendMessage(player, "&4Default Lobby has not been set!");
+                TranslationUtils.sendMessage(player, "&cDefault Lobby has not been set!");
                 TranslationUtils.sendMessage(player, "Type &b'/pa setlobby' &fwhere you want the lobby to be set.");
 
             } else {
-                TranslationUtils.sendMessage(player, "&4Default Lobby has not been set! Please tell the Owner!");
+                TranslationUtils.sendMessage(player, "&cDefault Lobby has not been set! Please tell the Owner!");
             }
         } else if (Bukkit.getWorld(Parkour.getDefaultConfig().getString("Lobby.default.World")) == null) {
             TranslationUtils.sendTranslation("Error.UnknownWorld", player);

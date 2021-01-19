@@ -41,7 +41,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             "setmode", "createkit", "editkit", "validatekit", "setplayerlimit", "challengeonly");
 
     private static final List<String> ON_COURSE_COMMANDS = Arrays.asList(
-            "back", "leave");
+            "back", "leave", "respawn", "restart");
 
     private static final List<String> QUESTION_ANSWER_COMMANDS = Arrays.asList(
             "yes", "no");

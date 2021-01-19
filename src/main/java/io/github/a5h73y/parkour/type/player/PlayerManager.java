@@ -747,21 +747,9 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 */
 	public void toggleVisibility(Player player, boolean override) {
 		boolean showPlayers = override || hasHiddenPlayers(player);
-		Collection<Player> playerScope;
 
-		if (parkour.getConfig().getBoolean("OnJoin.Item.HideAll.Global") || override) {
-			playerScope = (List<Player>) Bukkit.getOnlinePlayers();
-		} else {
-			playerScope = getOnlineParkourPlayers();
-		}
+		hideOrShowPlayers(player, showPlayers, override);
 
-		for (Player players : playerScope) {
-			if (showPlayers) {
-				player.showPlayer(players);
-			} else {
-				player.hidePlayer(players);
-			}
-		}
 		if (showPlayers) {
 			removeHidden(player);
 			TranslationUtils.sendTranslation("Event.HideAll1", player);
@@ -772,14 +760,34 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 	}
 
+	private void hideOrShowPlayers(Player player, boolean showPlayers, boolean allPlayers) {
+		Collection<Player> playerScope;
+
+		if (parkour.getConfig().getBoolean("OnJoin.Item.HideAll.Global") || allPlayers) {
+			playerScope = (List<Player>) Bukkit.getOnlinePlayers();
+		} else {
+			playerScope = getOnlineParkourPlayers();
+		}
+
+		for (Player eachPlayer : playerScope) {
+			if (showPlayers) {
+				player.showPlayer(eachPlayer);
+			} else {
+				player.hidePlayer(eachPlayer);
+			}
+		}
+	}
+
 	/**
-	 * Force the Player to be visible to all.
+	 * Force the Player to be visible to all (unless chosen to hide all).
 	 *
 	 * @param player target player
 	 */
 	public void forceVisible(Player player) {
-		for (Player players : Bukkit.getOnlinePlayers()) {
-			players.showPlayer(player);
+		for (Player eachPlayer : Bukkit.getOnlinePlayers()) {
+			if (!hasHiddenPlayers(eachPlayer)) {
+				eachPlayer.showPlayer(player);
+			}
 		}
 		if (hasHiddenPlayers(player)) {
 			toggleVisibility(player, true);
@@ -1168,6 +1176,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			if (parkour.getCourseManager().doesCourseExists(session.getCourseName())) {
 				session.setCourse(parkour.getCourseManager().findCourse(session.getCourseName()));
 				session.recalculateTime();
+				session.setStartTimer(true);
 				parkourPlayers.put(player, session);
 				setupParkourMode(player);
 
@@ -1544,6 +1553,11 @@ public class PlayerManager extends AbstractPluginReceiver {
 			player.setFlying(false);
 		}
 
+		if (parkour.getConfig().getBoolean("OnJoin.Item.HideAll.ActivateOnJoin")) {
+			hideOrShowPlayers(player, false, false);
+			addHidden(player);
+		}
+
 		giveParkourTool(player, "OnJoin.Item.LastCheckpoint", "Other.Item.LastCheckpoint");
 		giveParkourTool(player, "OnJoin.Item.HideAll", "Other.Item.HideAll");
 		giveParkourTool(player, "OnJoin.Item.Leave", "Other.Item.Leave");
@@ -1583,7 +1597,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 		if (parkour.getDatabase().isBestCourseTime(session.getCourse().getName(), session.getTimeFinished())) {
 			if (parkour.getConfig().getBoolean("OnFinish.DisplayNewRecords")) {
 				parkour.getBountifulApi().sendFullTitle(player,
-						TranslationUtils.getCourseEventMessage(session.getCourseName(), COURSE_RECORD, "Parkour.CourseRecord"),
+						TranslationUtils.getCourseEventMessage(
+								session.getCourseName(), COURSE_RECORD, "Parkour.CourseRecord"),
 						DateTimeUtils.displayCurrentTime(session.getTimeFinished()), true);
 			}
 			return true;
@@ -1592,7 +1607,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 		if (parkour.getDatabase().isBestCourseTime(player, session.getCourse().getName(), session.getTimeFinished())) {
 			if (parkour.getConfig().getBoolean("OnFinish.DisplayNewRecords")) {
 				parkour.getBountifulApi().sendFullTitle(player,
-						TranslationUtils.getCourseEventMessage(session.getCourseName(), COURSE_RECORD, "Parkour.BestTime"),
+						TranslationUtils.getCourseEventMessage(
+								session.getCourseName(), COURSE_RECORD, "Parkour.BestTime"),
 						DateTimeUtils.displayCurrentTime(session.getTimeFinished()), true);
 			}
 			return true;
