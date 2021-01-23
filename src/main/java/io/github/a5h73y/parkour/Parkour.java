@@ -45,6 +45,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
+import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -320,9 +322,9 @@ public class Parkour extends JavaPlugin {
      */
     private void submitAnalytics() {
         Metrics metrics = new Metrics(this, BSTATS_ID);
-        metrics.addCustomChart(new Metrics.SimplePie("number_of_courses", () ->
+        metrics.addCustomChart(new SimplePie("number_of_courses", () ->
                 Integer.toString(CourseInfo.getAllCourseNames().size())));
-        metrics.addCustomChart(new Metrics.SingleLineChart("parkour_players", () ->
+        metrics.addCustomChart(new SingleLineChart("parkour_players", () ->
                 getPlayerManager().getNumberOfParkourPlayer()));
     }
 }

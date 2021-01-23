@@ -41,6 +41,7 @@ public enum Permission {
 	CREATE_SIGN_LEADERBOARDS(Constants.PARKOUR_CREATE_SIGN, "Leaderboards"),
 	CREATE_SIGN_LOBBY(Constants.PARKOUR_CREATE_SIGN, "Lobby"),
 	CREATE_SIGN_CHALLENGE(Constants.PARKOUR_CREATE_SIGN, "Challenge"),
+	CREATE_SIGN_CHECKPOINT(Constants.PARKOUR_CREATE_SIGN, "Checkpoint"),
 
 	// Other
 	PARKOUR_LEVEL("Parkour.Level", "99999"),
