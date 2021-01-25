@@ -1,0 +1,208 @@
+Parkour:
+  Prefix: '&0[&b跑酷&0] &f'
+  SignHeader: '&0[&b跑酷&0]'
+  ConfigReloaded: 配置已重新加载.
+  SignRemoved: 跑酷标志移除!
+  SignCreated: '&b%VALUE% &f牌子已创建.'
+  Heading: -- &9&l%VALUE% &r--
+  Join: 加入了关卡 &b%VALUE%
+  JoinLives: '&7你有 &3%VALUE% &7条命来完成这个关卡!'
+  JoinTime: '&7你有 &3%VALUE% &7 来完成这个关卡!'
+  JoinLivesAndTime: '&7你拥有 &3%MAXTIME% &7和 &3%LIVES% &7条生命来完成此关卡!'
+  TimerStarted: 开始计时!
+  Restarting: 已经重新开始关卡
+  Leave: 你已离开了 &b%VALUE%
+  Created: '&b%VALUE% &f已创建并选择!'
+  CheckpointCreated: 关卡 &b%COURSE% &f中的存档点 &3%CHECKPOINT% &f已被设定!
+  Selected: 正在修改 &b%VALUE%
+  Deselected: 完成修改.
+  WhenReady: '&7一但您完成修改 &b%VALUE%&7, 请输入 &b/pa ready 来让关卡进入可进入状态'
+  Delete: '&b%VALUE% &f已经删除啦!'
+  DeleteCheckpoint: 关卡 &b%COURSE% &f中的存档点 &3%CHECKPOINT% &f已被删除！
+  Reset: '&b%VALUE% &f已被重置!'
+  FinishBroadcast: 玩家&3%PLAYER% &f完成关卡 &b%COURSE%&f。成绩：&b%DEATHS% &f次死亡, 通关使用时间： &b%TIME%&f!
+  FinishCourse1: 完成关卡 &b%VALUE%&f!
+  FinishCourse2: 你在 &b%TIME%&f里, 死了 &b%DEATHS% &f次
+  Lobby: 你已进入大厅0v0
+  LobbyOther: 你已进入 &b%VALUE% &f大厅
+  JoinLocation: 你已经回到原本的位置
+  Continue: 继续在&b%VALUE%的进度
+  TimeReset: 你已经重新计时!
+  Teleport: 你已经被传送到 &b%VALUE%
+  MaxDeaths: '抱歉,你已经达到最大死亡数了: &b%VALUE%'
+  MaxTime: 抱歉,你已经达到 &b%VALUE%最长时间限制!
+  Die1: 你...倒下了! 请从头出发!
+  Die2: 你阵...亡了! 回到存档点 &b%VALUE%
+  LifeCount: 生命剩余&b%VALUE% &f!
+  Playing: ' 玩家：&b%PLAYER% &f- &8关卡: &7%COURSE% &8死亡数: &7%DEATHS% &8时间: &7%TIME%'
+  Accept: '&7输入 &a/pa accept &7去接受.'
+  RewardLevel: 你因为完成了关卡：&b%COURSE%。&f你经验已经被调到 &b%LEVEL% &f!
+  RewardRank: 你的等级已经被设置为 %VALUE%
+  RankInfo: '* 鉴于你的等级 &b%LEVEL% &f你已经是: %RANK%&f了'
+  RewardParkoins: '已获得：&b%AMOUNT% &fParkoins 跑酷奖励! 新总分: &7%TOTAL%'
+  Countdown: 跑酷将于&b%VALUE% &f秒后开始...
+  Go: Go!Go!Go!
+  BestTime: 你突破自己最快的时间啦，真棒!
+  CourseRecord: 关卡新的记录出现啦!
+  LeaderboardHeading: '关卡：%COURSE% : 前 %AMOUNT% 排行'
+  LeaderboardEntry: '%POSITION%) 玩家：&b%PLAYER% &f在 &3%TIME%&f中, 死亡 &7%DEATHS% &f次'
+  QuietOn: '静音模式: &b开启'
+  QuietOff: '静音模式: &b关闭'
+  TestModeOn: '测试模式: &b开启&f. 模拟 &b%VALUE%&f 跑酷工具包.'
+  TestModeOff: '测试模式: &b关闭'
+  Challenge:
+    Receive: 你收到一份的来自玩家 &b%PLAYER% &f对于关卡 &b%COURSE%&f的挑战
+    Created: 对于&b%VALUE% &f的挑战已创立.
+    StartCommand: 准备完毕后，请输入 &b/pa challenge start 开始你的挑战
+    Wager: ' &f赌注为 &b%VALUE%&f!'
+    InviteSent: 一份战书被发送到 &b%VALUE%&f!
+    InviteReceived: 你在 &b%COURSE% &f的记录将被玩家 &b%PLAYER%&f挑战!
+    AcceptDecline: 接受请输入 &a/pa accept &f或 拒绝请输入 &c/pa decline &f.
+    Joined: 你已加入挑战 &b%VALUE%&f. 请等待游戏开始
+    Terminated: '&b%VALUE% &f已经终止了挑战!'
+    Forfeited: '&b%VALUE% &f已经放弃了挑战。你完成关卡后将获得胜利!'
+    Quit: 你已经放弃这次挑战. 另一名选手必须完成比赛才能获胜!
+    Winner: 恭喜你!你赢了对 &b%VALUE%的挑战!
+    Loser: '&b%PLAYER% &f已经在你前面完成了关卡 &b%COURSE%&f!'
+  AlreadyCompleted: 你已经完成了这次赛跑.
+  Question: 请输入 &a/pa yes &f来确认，或 &c/pa no &f取消.
+Event:
+  Join: 此服务器使用 &bParkour &3%VALUE%
+  Checkpoint: 存档点已经设置为 &b%CURRENT% &8/ &7%TOTAL%
+  FreeCheckpoints: 已经设置好存档点
+  AllCheckpoints: 所有存档点都完成了，真棒!
+  HideAll1: 所有玩家都奇迹般地出现了!
+  HideAll2: 所有玩家都神奇地消失了!
+  Chat: '&0[&b%RANK%&0] &f%PLAYER%&0:&f %MESSAGE%'
+  DefaultRank: Newbie
+Error:
+  NotOnCourse: 您并未在此关卡里!
+  NotOnAnyCourse: 您并未在任何关卡里!
+  TooMany: 参数太多! (%VALUE%)
+  TooLittle: 参数太少! (%VALUE%)
+  Exist: 此关卡已经存在!
+  NoExist: '&b%VALUE% &f并未存在!'
+  Command: 已禁用非跑酷命令!
+  Sign: 非跑酷标志已禁用!
+  Selected: 您尚未选择关卡!
+  WrongWorld: 你在错误的世界中!
+  WorldTeleport: 你已被阻止传送到另一个世界!
+  RequiredLvl: 你需要等级为 &b%VALUE% &f才能加入!
+  NotReady: 此关卡尚未对你开放!
+  NotReadyWarning: 此关卡还没设置好.
+  SignProtected: 这个牌子受保护!
+  Syntax: '&c语法错误: &f/pa &8%COMMAND% &7%ARGUMENTS%'
+  UnknownSignCommand: 未知牌子指令!
+  UnknownCommand: 未知指令!
+  UnknownPlayer: 未找到玩家!
+  UnknownMaterial: '未知材料: &4%VALUE%'
+  UnknownLobby: '%VALUE% 大厅不存在!'
+  UnknownWorld: 请求的世界不存在.
+  UnknownParkourKit: 未知跑酷套装.
+  UnknownCheckpoint: 未知或无效的存档点.
+  Cheating1: 请不要作弊.
+  Cheating2: '&l你必须完成所有数量：&4&l%VALUE% &f&l的存档点!'
+  Cooldown: 慢慢来! 请等待 &b%VALUE% &f秒钟.
+  PrizeCooldown: 你得再等 &b%VALUE% &f 之后才能再次获得这个奖励了哦！
+  NoQuestion: 你还没被提问呢!
+  JoiningAnotherCourse: 当你在一个关卡时，没有办法加入其他关卡哦.
+  AllowViaCommand: 已禁用通过命令加入关卡.
+  PluginNotLinked: '&f无法连接插件 &b%VALUE%.'
+  NoPermission: '你没有权限: &b%VALUE%'
+  InvalidAmount: 数额必须是数字.
+  InvalidQuestionAnswer: 答案无效.
+  QuestionAnswerChoices: 请使用 &a/pa yes &f或 &c/pa no
+  LimitExceeded: 已达到关卡的玩家数量上限.
+  InvalidSession: 您的跑酷时间无效.
+  ChallengeOnly: 本关卡仅限于挑战.
+  OnChallenge: 你正在接受挑战中.
+Help:
+  Command: '输入 &7/pa help &9%VALUE% &0: &7来查询更多指令.'
+  Commands: 显示命令菜单, 请输入 &b/pa cmds
+  ConsoleCommands: 显示所有命令, 请输入 &f/pac cmds
+  SignCommands: 要显示“符号命令”菜单，请输入 &b/pa cmds signs
+  CommandSyntax: '&7语法: &f/pa %VALUE%'
+  ConsoleCommandSyntax: '&7语法: &f%VALUE%'
+  CommandExample: '&7举个栗子: &f%VALUE%'
+  CommandUsage: '&3/pa &b%COMMAND%&e%ARGUMENTS% &0: &f%TITLE%'
+  SignUsage: '&b%COMMAND% &e%SHORTCUT% &0: &f%DESCRIPTION%'
+Other:
+  Item:
+    LastCheckpoint: '&7SHIFT + &6右击返回最后一个存档点'
+    HideAll: '&7SHIFT + &6可开启/关闭其他玩家显示'
+    Leave: '&7SHIFT + &6右击离开该关卡'
+    Restart: '&7SHIFT + &6右键重新开始关卡'
+  Kit: 已收到 &b%VALUE% &f跑酷工具包!
+  PropertySet: 关卡 &3%COURSE% &f的实体 &3%PROPERTY% &f已被设置为 &b%VALUE%&f!
+Lobby:
+  Created: '&b%VALUE% &f大厅已创建.'
+  RequiredLevelSet: 您已将所需的跑酷等级设置为 &b%VALUE%&f.
+Scoreboard:
+  MainHeading: '&b&l== 跑酷天堂 =='
+  TitleFormat: '&b%VALUE%'
+  TextFormat: '&f%VALUE%'
+  NotCompleted: 未完成
+  CourseNameTitle: '关卡:'
+  BestTimeEverTitle: '最佳纪录:'
+  BestTimeEverNameTitle: '最佳玩家:'
+  MyBestTimeTitle: '我的最佳纪录:'
+  CurrentDeathsTitle: '当前死亡:'
+  CheckpointsTitle: '存档点:'
+  LiveTimerTitle: '当前时间:'
+  TimeRemainingTitle: '剩余时间:'
+Economy:
+  Insufficient: 你至少需要 &b%AMOUNT% &f才能加入关卡 &b%COURSE%
+  Fee: 已经从您的余额中扣除了&b%AMOUNT% &f你现在可以进入关卡：&b%COURSE%
+  Reward: 从完成关卡 &b%COURSE% &f中你获得了 &b%AMOUNT%!
+Kit:
+  Speed: '&b速度方块'
+  Climb: '&b攀爬方块'
+  Launch: '&b弹射方块'
+  Finish: '&b终点方块'
+  Norun: '&b禁止跑步方块'
+  Nofall: '&b无摔伤方块'
+  Nopotion: '&b去除效果方块'
+  Sign: '&b标记'
+  Death: '&b死亡方块'
+  Bounce: '&b弹跳块'
+  Repulse: '&b击退方块'
+Mode:
+  Freedom:
+    ItemName: '&6自由工具'
+    JoinText: '已经入 &6自由模式 &f- 右击: &2保存 &f, 左击: &5加载'
+    Save: 位置已保存
+    Load: 位置已加载
+  Rockets:
+    JoinText: 准备好要上天了吗！！！！
+    ItemName: 火箭发射器
+PlaceholderAPI:
+  InvalidSyntax: 无效的语法
+  NoTimeRecorded: 没有时间记录
+  CurrentCourseCompleted: 是
+  CurrentCourseNotCompleted: 否
+  TopTenResult: '&f%POSITION%) &b%PLAYER%&f 在 &a%TIME% 内完成'
+GUI:
+  JoinCourses:
+    Heading: 跑酷关卡选择
+    Setup:
+      Line1: '         '
+      Line2: ' ggggggg '
+      Line3: '  fp nl  '
+    Description: '&f进入 &b%VALUE%'
+    Players: '玩家数量: &b%VALUE%'
+    Checkpoints: '存档点数量: &b%VALUE%'
+  CourseSettings:
+    Heading: '关卡设定：%VALUE% '
+    Setup:
+      Line1: '   zxc   '
+      Line2: ' qwertyu '
+      Line3: ' ioasdgh '
+Display:
+  Day: '%VALUE% 天'
+  Days: '%VALUE% 天'
+  Hour: '%VALUE% 时'
+  Hours: '%VALUE% 时'
+  Minute: '%VALUE% 分'
+  Minutes: '%VALUE% 分'
+  Second: '%VALUE% 秒'
+  Seconds: '%VALUE% 秒'

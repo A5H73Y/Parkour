@@ -19,7 +19,7 @@ When you join a Freedom Course, it will display a message to explain how the too
 
 ![Freedom Information](https://i.imgur.com/JObldpv.png "Freedom Information")
 
-And it's as simple as that, right click with the tool to save your position, and left click to load it.
+It's as simple as that, right click with the tool to save your position, and left click to load it.
 
 ![Freedom Usage](https://i.imgur.com/TZ4p8UM.png "Freedom Usage")
 
@@ -31,7 +31,7 @@ This ParkourMode replaces the existing "Darkness", "Drunk" and "Jump" ParkourMod
 
 _All valid PotionEffectTypes can be [found here](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html)._
 
-When requested, the Duration and Amplifier must be separated with a comma `,` for example `10000:1`.
+When requested, the Duration and Amplifier must be separated with a comma `,` for example `10000,1`.
 
 ![Potion Applied](https://i.imgur.com/EhFL3Ku.png "Potion Applied")
 
