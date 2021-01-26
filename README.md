@@ -1,4 +1,4 @@
-<p align="center"><img src="http://i.imgur.com/OayXKol.png" alt="Parkour Logo"></p>
+<p align="center"><img src="https://i.imgur.com/mBUvVNO.png" alt="Parkour Logo"></p>
 
 [![discord server](https://img.shields.io/discord/328154925949517824.svg)](https://discord.gg/h9d2fSd)
 [![travis-ci](https://travis-ci.org/A5H73Y/Parkour.svg?branch=master)](https://travis-ci.org/A5H73Y/Parkour/branches)
@@ -36,7 +36,7 @@ Add a whole new element of fun to any server, highly competitive gameplay with r
 <dependency>
     <groupId>io.github.a5h73y</groupId>
     <artifactId>Parkour</artifactId>
-    <version>6.0</version>
+    <version>6.3</version>
     <type>jar</type>
     <scope>provided</scope>
 </dependency>
@@ -52,5 +52,5 @@ repositories {
 ```
 
 ```
-compile 'io.github.a5h73y:Parkour:6.0'
+compile 'io.github.a5h73y:Parkour:6.3'
 ```
