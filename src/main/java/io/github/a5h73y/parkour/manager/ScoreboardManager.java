@@ -106,7 +106,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
     public void updateScoreboardTimer(Player player, String liveTime) {
         Scoreboard board = player.getScoreboard();
 
-        if (!enabled || !scoreboardDetails.get(LIVE_TIMER).isEnabled()) {
+        if (!enabled || !scoreboardDetails.get(LIVE_TIMER).isEnabled() || board.getTeam(LIVE_TIMER) == null) {
             return;
         }
 
@@ -122,7 +122,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
     public void updateScoreboardDeaths(Player player, int deaths) {
         Scoreboard board = player.getScoreboard();
 
-        if (!enabled || !scoreboardDetails.get(CURRENT_DEATHS).isEnabled()) {
+        if (!enabled || !scoreboardDetails.get(CURRENT_DEATHS).isEnabled() || board.getTeam(CURRENT_DEATHS) == null) {
             return;
         }
 
@@ -138,7 +138,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
     public void updateScoreboardCheckpoints(Player player, ParkourSession session) {
         Scoreboard board = player.getScoreboard();
 
-        if (!enabled || !scoreboardDetails.get(CHECKPOINTS).isEnabled()) {
+        if (!enabled || !scoreboardDetails.get(CHECKPOINTS).isEnabled() || board.getTeam(CHECKPOINTS) == null) {
             return;
         }
 
