@@ -171,6 +171,14 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 ParkourCommandHelp.displayCommandHelp(player, args);
                 break;
 
+            case "hideall":
+                if (!parkour.getPlayerManager().isPlaying(player)) {
+                    TranslationUtils.sendTranslation("Error.NotOnCourse", player);
+                    return false;
+                }
+                parkour.getPlayerManager().toggleVisibility(player);
+                break;
+
             case "info":
             case "player":
                 parkour.getPlayerManager().displayParkourInfo(player,
@@ -281,14 +289,12 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
             case "prize":
             case "setprize":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_PRIZE)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 2)) {
+                if (!PermissionUtils.hasPermissionOrCourseOwnership(player,
+                        Permission.ADMIN_COURSE, getChosenCourseName(player, args, 1))) {
                     return false;
                 }
 
-                new CoursePrizeConversation(player).withCourseName(args[1]).begin();
+                new CoursePrizeConversation(player).withCourseName(getChosenCourseName(player, args, 1)).begin();
                 break;
 
             case "quiet":
@@ -490,14 +496,12 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
             case "setmode":
             case "setparkourmode":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 2)) {
+                if (!PermissionUtils.hasPermissionOrCourseOwnership(player,
+                        Permission.ADMIN_COURSE, getChosenCourseName(player, args, 1))) {
                     return false;
                 }
 
-                new ParkourModeConversation(player).withCourseName(args[1]).begin();
+                new ParkourModeConversation(player).withCourseName(getChosenCourseName(player, args, 1)).begin();
                 break;
 
             case "setplayer":

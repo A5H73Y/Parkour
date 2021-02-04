@@ -273,7 +273,7 @@ public class TranslationUtils {
 	 * @param value value
 	 */
 	public static void sendConditionalValue(CommandSender sender, String title, Boolean conditionMet, String value) {
-		if (conditionMet) {
+		if (Boolean.TRUE.equals(conditionMet)) {
 			sendValue(sender, title, value);
 		}
 	}

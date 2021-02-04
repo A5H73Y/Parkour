@@ -107,8 +107,8 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
             return times;
         }
 
-        String courseResultsQuery = "SELECT * FROM time"
-                + " WHERE courseId=" + courseId + " ORDER BY time LIMIT " + maxEntries;
+        String courseResultsQuery = "SELECT * FROM time WHERE courseId=" + courseId
+                + " ORDER BY time LIMIT " + maxEntries;
 
         try (ResultSet rs = database.query(courseResultsQuery)) {
             times = processTimes(rs);
@@ -139,8 +139,8 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
             return times;
         }
 
-        String playerResultsQuery = "SELECT * FROM time"
-                + " WHERE courseId=" + courseId + " AND playerId='" + getPlayerId(player) + "' ORDER BY time LIMIT " + maxEntries;
+        String playerResultsQuery = "SELECT * FROM time WHERE courseId=" + courseId
+                + " AND playerId='" + getPlayerId(player) + "' ORDER BY time LIMIT " + maxEntries;
 
         try (ResultSet rs = database.query(playerResultsQuery)) {
             times = processTimes(rs);
@@ -167,8 +167,8 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
             return timeExists;
         }
 
-        String timeExistsQuery = "SELECT 1 FROM time"
-                + " WHERE courseId=" + courseId + " AND playerId='" + getPlayerId(player) + "' LIMIT 1;";
+        String timeExistsQuery = "SELECT 1 FROM time WHERE courseId=" + courseId
+                + " AND playerId='" + getPlayerId(player) + "' LIMIT 1;";
 
         try (ResultSet rs = database.query(timeExistsQuery)) {
             timeExists = rs.next();
@@ -195,8 +195,7 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
             return -1;
         }
 
-        String leaderboardPositionQuery = "SELECT 1 FROM time"
-                + " WHERE courseId=" + courseId + " AND time < " + time;
+        String leaderboardPositionQuery = "SELECT 1 FROM time WHERE courseId=" + courseId + " AND time < " + time;
 
         if (player != null) {
             leaderboardPositionQuery += " AND playerId='" + getPlayerId(player) + "';";
@@ -283,8 +282,8 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
             return;
         }
 
-        String insertTimeUpdate = "INSERT INTO time (courseId, playerId, playerName, time, deaths) "
-                + "VALUES (" + courseId + ", '" + getPlayerId(player) + "', '"
+        String insertTimeUpdate = "INSERT INTO time (courseId, playerId, playerName, time, deaths) VALUES ("
+                + courseId + ", '" + getPlayerId(player) + "', '"
                 + player.getName() + "', " + time + ", " + deaths + ");";
         PluginUtils.debug("Inserting time: " + insertTimeUpdate);
 
@@ -371,8 +370,8 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
 
         PluginUtils.debug("Deleting all times for player " + player.getName() + " for course " + courseName);
         try {
-            database.updateAsync("DELETE FROM time"
-                    + " WHERE playerId='" + getPlayerId(player) + "' AND courseId=" + courseId).get();
+            database.updateAsync("DELETE FROM time WHERE playerId='" + getPlayerId(player)
+                    + "' AND courseId=" + courseId).get();
             resultsCache.remove(courseName.toLowerCase());
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();

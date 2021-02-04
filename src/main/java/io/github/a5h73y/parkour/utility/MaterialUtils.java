@@ -27,7 +27,6 @@ import io.github.a5h73y.parkour.Parkour;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -150,7 +149,7 @@ public class MaterialUtils {
 		ItemStack data = null;
 
 		if (args.length > 1) {
-			material = Material.getMaterial(args[1]);
+			material = Material.getMaterial(args[1].toUpperCase());
 
 		} else {
 			data = getItemStackInPlayersHand(player);
