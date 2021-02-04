@@ -3,7 +3,9 @@ package io.github.a5h73y.parkour.listener;
 import com.cryptomorin.xseries.XBlock;
 import com.cryptomorin.xseries.XMaterial;
 import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.enums.ParkourEventType;
 import io.github.a5h73y.parkour.enums.ParkourMode;
+import io.github.a5h73y.parkour.enums.SoundType;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
@@ -48,7 +50,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             return;
         }
 
-        if (PluginUtils.getMinorServerVersion() > 8 && !event.getHand().equals(EquipmentSlot.HAND)) {
+        if (PluginUtils.getMinorServerVersion() > 8 && !EquipmentSlot.HAND.equals(event.getHand())) {
             return;
         }
 
@@ -72,26 +74,28 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         }
 
         if (materialInHand == parkour.getConfig().getLastCheckpointTool()) {
-            if (parkour.getPlayerManager().delayPlayer(player, 1, false)) {
+            if (parkour.getPlayerManager().delayPlayer(player, 1, false, false)) {
                 event.setCancelled(true);
                 Bukkit.getScheduler().runTask(parkour, () -> parkour.getPlayerManager().playerDie(player));
             }
 
         } else if (materialInHand == parkour.getConfig().getHideAllDisabledTool()
                 || materialInHand == parkour.getConfig().getHideAllEnabledTool()) {
-            if (parkour.getPlayerManager().delayPlayer(player, 1, false)) {
+            if (parkour.getPlayerManager().delayPlayer(player, 1, false, false)) {
                 event.setCancelled(true);
                 parkour.getPlayerManager().toggleVisibility(player);
+                String configPath = parkour.getPlayerManager().hasHiddenPlayers(player) ? "OnJoin.Item.HideAllEnabled" : "OnJoin.Item.HideAll";
+                parkour.getPlayerManager().giveParkourTool(player, configPath, "Other.Item.HideAll");
             }
 
         } else if (materialInHand == parkour.getConfig().getLeaveTool()) {
-            if (parkour.getPlayerManager().delayPlayer(player, 1, false)) {
+            if (parkour.getPlayerManager().delayPlayer(player, 1, false, false)) {
                 event.setCancelled(true);
                 parkour.getPlayerManager().leaveCourse(player);
             }
 
         } else if (materialInHand == parkour.getConfig().getRestartTool()) {
-            if (parkour.getPlayerManager().delayPlayer(player, 1, false)) {
+            if (parkour.getPlayerManager().delayPlayer(player, 1, false, false)) {
                 event.setCancelled(true);
                 Bukkit.getScheduler().runTask(parkour, () -> parkour.getPlayerManager().restartCourse(player));
             }
@@ -179,8 +183,21 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
                 && parkour.getPlayerManager().delayPlayer(event.getPlayer(), 1, false, false)
                 && (session.getFreedomLocation() == null
                 || !MaterialUtils.sameBlockLocations(event.getPlayer().getLocation(), session.getFreedomLocation()))) {
+
             session.setFreedomLocation(event.getPlayer().getLocation());
-            TranslationUtils.sendTranslation("Event.FreeCheckpoints", event.getPlayer());
+            if (parkour.getConfig().isTreatFirstCheckpointAsStart() && session.getFreedomLocation() == null) {
+                session.resetTime();
+                session.setStartTimer(true);
+                parkour.getBountifulApi().sendActionBar(event.getPlayer(),
+                        TranslationUtils.getTranslation("Parkour.TimerStarted", false), true);
+            }
+            parkour.getSoundsManager().playSound(event.getPlayer(), SoundType.CHECKPOINT_ACHIEVED);
+            boolean showTitle = parkour.getConfig().getBoolean("DisplayTitle.Checkpoint");
+
+            String checkpointMessage = TranslationUtils.getCourseEventMessage(session.getCourse().getName(),
+                    ParkourEventType.CHECKPOINT, "Event.FreeCheckpoints");
+
+            parkour.getBountifulApi().sendSubTitle(event.getPlayer(), checkpointMessage, showTitle);
             return;
         }
 

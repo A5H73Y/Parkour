@@ -169,6 +169,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
 
         if (challenge != null) {
             challenge.setForfeited(player, true);
+            player.setWalkSpeed(Constants.DEFAULT_WALK_SPEED);
 
             if (challenge.allPlayersForfeited()) {
                 removeChallenge(challenge.getChallengeHost());
@@ -331,7 +332,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
                     this.cancel();
 
                     for (Player participant : challenge.getParticipatingPlayers()) {
-                        participant.setWalkSpeed(challenge.getPlayerWalkSpeed());
+                        participant.setWalkSpeed(Constants.DEFAULT_WALK_SPEED);
                         PlayerUtils.removePotionEffect(PotionEffectType.JUMP, participant);
                         parkour.getPlayerManager().setupParkourMode(participant);
                         ParkourSession session = parkour.getPlayerManager().getParkourSession(participant);
@@ -354,6 +355,9 @@ public class ChallengeManager extends AbstractPluginReceiver {
     public void processCommand(Player player, String... args) {
         switch (args[1].toLowerCase()) {
             case "create":
+                if (!ValidationUtils.validateArgs(player, args, 3, 4)) {
+                    break;
+                }
                 processCreateCommand(player, args[2], args.length == 4 ? args[3] : null);
                 break;
 

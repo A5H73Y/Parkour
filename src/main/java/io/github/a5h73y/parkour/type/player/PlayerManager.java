@@ -70,7 +70,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -322,7 +321,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			deleteParkourSession(player);
 			removePlayer(player);
 		} else {
-			stashParkourSession(player);
+			stashParkourSession(player, true);
 		}
 		preparePlayer(player, parkour.getConfig().getString("OnFinish.SetGameMode"));
 		restoreHealthHunger(player);
@@ -446,8 +445,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 		parkour.getScoreboardManager().updateScoreboardDeaths(player, session.getDeaths());
 		parkour.getCourseManager().runEventCommands(player, session.getCourseName(), DEATH);
 
-		// if it's the first checkpoint
-		if (session.getCurrentCheckpoint() == 0) {
+		// they haven't yet achieved a checkpoint
+		if (session.getCurrentCheckpoint() == 0 && session.getFreedomLocation() == null) {
 			String message = TranslationUtils.getCourseEventMessage(session.getCourseName(),
 					DEATH, "Parkour.Die1");
 
@@ -480,8 +479,9 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 */
 	public void teardownParkourPlayers() {
 		for (Player player : parkourPlayers.keySet()) {
-			createParkourSessionFile(player);
+			stashParkourSession(player, false);
 		}
+		parkourPlayers.clear();
 	}
 
 	/**
@@ -495,7 +495,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		parkour.getQuestionManager().removeQuestion(player);
 		hiddenPlayers.remove(player);
 		playerDelay.remove(player);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () -> stashParkourSession(player));
+		Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () -> stashParkourSession(player, true));
 	}
 
 	/**
@@ -534,7 +534,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 		preparePlayer(player, parkour.getConfig().getString("OnFinish.SetGameMode"));
 
 		if (hasHiddenPlayers(player)) {
-			toggleVisibility(player, true);
+			hideOrShowPlayers(player, true, true);
+			removeHidden(player);
 		}
 
 		announceCourseFinishMessage(player, session);
@@ -617,7 +618,10 @@ public class PlayerManager extends AbstractPluginReceiver {
 		if (!doNotTeleport && !parkour.getConfig().getBoolean("OnJoin.TeleportPlayer")) {
 			PlayerUtils.teleportToLocation(player, course.getCheckpoints().get(0).getLocation());
 		}
-		TranslationUtils.sendTranslation("Parkour.Restarting", player);
+
+		boolean displayTitle = parkour.getConfig().getBoolean("DisplayTitle.JoinCourse");
+		parkour.getBountifulApi().sendSubTitle(player,
+				TranslationUtils.getTranslation("Parkour.Restarting", false), displayTitle);
 	}
 
 	/**
@@ -743,12 +747,11 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * Used when on a Course and want to remove distraction of other Players.
 	 *
 	 * @param player requesting player
-	 * @param override override to force visibility
+	 * @param forceVisible override to force visibility
 	 */
-	public void toggleVisibility(Player player, boolean override) {
-		boolean showPlayers = override || hasHiddenPlayers(player);
-
-		hideOrShowPlayers(player, showPlayers, override);
+	public void toggleVisibility(Player player, boolean forceVisible) {
+		boolean showPlayers = forceVisible || hasHiddenPlayers(player);
+		hideOrShowPlayers(player, showPlayers, forceVisible);
 
 		if (showPlayers) {
 			removeHidden(player);
@@ -790,7 +793,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 			}
 		}
 		if (hasHiddenPlayers(player)) {
-			toggleVisibility(player, true);
+			hideOrShowPlayers(player, true, true);
+			removeHidden(player);
 		}
 	}
 
@@ -1397,18 +1401,37 @@ public class PlayerManager extends AbstractPluginReceiver {
 	}
 
 	/**
+	 * Give Player Parkour Tool.
+	 *
+	 * @param player player
+	 * @param configPath config path to tool Material
+	 * @param translationKey label translation key
+	 */
+	public void giveParkourTool(Player player, String configPath, String translationKey) {
+		Material material = Material.getMaterial(parkour.getConfig().getString(configPath + ".Material", "AIR"));
+
+		if (material != null && material != Material.AIR && !player.getInventory().contains(material)) {
+			int slot = parkour.getConfig().getInt(configPath + ".Slot");
+			player.getInventory().setItem(slot, MaterialUtils.createItemStack(material,
+					TranslationUtils.getTranslation(translationKey, false)));
+		}
+	}
+
+	/**
 	 * Stash the Player's ParkourSession.
 	 * Persist the ParkourSession to a file under the Player's UUID.
 	 * Mark the current time accumulated, for the time difference to be recalculated when the Player rejoins.
 	 *
 	 * @param player player
 	 */
-	private void stashParkourSession(Player player) {
+	private void stashParkourSession(Player player, boolean removePlaying) {
 		if (isPlaying(player)) {
 			getParkourSession(player).markTimeAccumulated();
 		}
 		createParkourSessionFile(player);
-		parkourPlayers.remove(player);
+		if (removePlaying) {
+			parkourPlayers.remove(player);
+		}
 	}
 
 	/**
@@ -1568,16 +1591,6 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		player.updateInventory();
-	}
-
-	private void giveParkourTool(Player player, String configPath, String translationKey) {
-		Material material = Material.getMaterial(parkour.getConfig().getString(configPath + ".Material", "AIR"));
-
-		if (material != null && material != Material.AIR && !player.getInventory().contains(material)) {
-			int slot = parkour.getConfig().getInt(configPath + ".Slot");
-			player.getInventory().setItem(slot, MaterialUtils.createItemStack(material,
-					TranslationUtils.getTranslation(translationKey, false)));
-		}
 	}
 
 	/**

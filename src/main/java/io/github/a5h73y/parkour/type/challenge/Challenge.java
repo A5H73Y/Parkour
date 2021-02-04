@@ -16,7 +16,6 @@ public class Challenge {
     private final Map<Player, Boolean> participants = new HashMap<>();
     private final String courseName;
     private final Double wager;
-    private final float playerWalkSpeed;
     private boolean started;
 
     /**
@@ -28,7 +27,6 @@ public class Challenge {
      */
     public Challenge(Player challengeHost, String courseName, Double wager) {
         this.challengeHost = challengeHost;
-        this.playerWalkSpeed = challengeHost.getWalkSpeed();
         this.courseName = courseName;
         this.wager = wager;
     }
@@ -63,10 +61,6 @@ public class Challenge {
 
     public Player getChallengeHost() {
         return challengeHost;
-    }
-
-    public float getPlayerWalkSpeed() {
-        return playerWalkSpeed;
     }
 
     public String getCourseName() {

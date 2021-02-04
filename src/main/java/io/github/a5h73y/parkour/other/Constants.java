@@ -16,4 +16,6 @@ public class Constants {
 
     public static final String TIME_PLACEHOLDER = "%TIME%";
 
+    public static final float DEFAULT_WALK_SPEED = 0.2f;
+
 }
