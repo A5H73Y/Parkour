@@ -422,7 +422,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
         if (challenge == null) {
             TranslationUtils.sendMessage(player, "You are not on a Challenge.");
         } else {
-            TranslationUtils.sendMessage(player, challenge.toString());
+            challenge.displayInformation(player);
         }
     }
 

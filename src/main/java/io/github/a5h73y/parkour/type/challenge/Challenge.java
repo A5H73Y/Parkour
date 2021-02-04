@@ -1,8 +1,10 @@
 package io.github.a5h73y.parkour.type.challenge;
 
+import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -81,6 +83,15 @@ public class Challenge {
 
     public boolean allPlayersForfeited() {
         return !participants.containsValue(false);
+    }
+
+    public void displayInformation(CommandSender sender) {
+        TranslationUtils.sendHeading("Challenge Details", sender);
+        TranslationUtils.sendValue(sender, "Host", challengeHost.getName());
+        TranslationUtils.sendValue(sender, "Participants", participants.size());
+        TranslationUtils.sendValue(sender, "Course", courseName);
+        TranslationUtils.sendConditionalValue(sender, "Wager", wager);
+        TranslationUtils.sendValue(sender, "Started", Boolean.toString(started));
     }
 
     @Override
