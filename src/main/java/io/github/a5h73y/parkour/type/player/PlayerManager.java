@@ -70,7 +70,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -420,11 +419,10 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		if (session.getCourse().hasMaxDeaths()) {
 			if (session.getCourse().getMaxDeaths() > session.getDeaths()) {
-				int remainingLives = session.getCourse().getMaxDeaths() - session.getDeaths();
 
 				parkour.getBountifulApi().sendSubTitle(player,
 						TranslationUtils.getValueTranslation(
-								"Parkour.LifeCount", String.valueOf(remainingLives), false),
+								"Parkour.LifeCount", String.valueOf(getRemainingLives(session)), false),
 						parkour.getConfig().getBoolean("DisplayTitle.Death"));
 
 			} else {
@@ -472,6 +470,17 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		preparePlayer(player, parkour.getConfig().getString("OnJoin.SetGameMode"));
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerDeathEvent(player, session.getCourse().getName()));
+	}
+
+	/**
+	 * Get the player's remaining lives.
+	 *
+	 * @param session
+	 * @return number of lives remaining
+	 */
+	public int getRemainingLives(ParkourSession session) {
+		int remainingLives = session.getCourse().getMaxDeaths() - session.getDeaths();
+		return remainingLives > 0 ? remainingLives : 0;
 	}
 
 	/**

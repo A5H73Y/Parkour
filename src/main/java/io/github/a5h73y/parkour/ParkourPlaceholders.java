@@ -277,6 +277,12 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                         }
                         return getPersonalCourseRecord(player, session.getCourseName(), arguments[4]);
 
+                    case "remaining":
+                        if (arguments.length != 4 && !arguments[3].equals("deaths")) {
+                            return INVALID_SYNTAX;
+                        }
+                        return String.valueOf(parkour.getPlayerManager().getRemainingLives(session));
+
                     default:
                         return INVALID_SYNTAX;
                 }
