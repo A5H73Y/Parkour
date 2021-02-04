@@ -441,7 +441,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			return;
 		}
 
-		parkour.getScoreboardManager().updateScoreboardDeaths(player, session.getDeaths());
+		parkour.getScoreboardManager().updateScoreboardDeaths(player, session.getDeaths(), getRemainingLives(session));
 		parkour.getCourseManager().runEventCommands(player, session.getCourseName(), DEATH);
 
 		// if it's the first checkpoint
