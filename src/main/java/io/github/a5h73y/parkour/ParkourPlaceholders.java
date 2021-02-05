@@ -281,7 +281,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                         if (arguments.length != 4 && !arguments[3].equals("deaths")) {
                             return INVALID_SYNTAX;
                         }
-                        return String.valueOf(parkour.getPlayerManager().getRemainingLives(session));
+                        return String.valueOf(parkour.getPlayerManager().getRemainingDeaths(session));
 
                     default:
                         return INVALID_SYNTAX;

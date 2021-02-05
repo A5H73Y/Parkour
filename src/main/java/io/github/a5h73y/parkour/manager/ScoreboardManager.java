@@ -191,7 +191,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
 
         // update the dynamic results with their session (could be pre-populated)
         updateScoreboardCheckpoints(player, playerScoreboard.getSession());
-        updateScoreboardDeaths(player, playerScoreboard.getSession().getDeaths(), parkour.getPlayerManager().getRemainingLives(session));
+        updateScoreboardDeaths(player, playerScoreboard.getSession().getDeaths(), parkour.getPlayerManager().getRemainingDeaths(session));
 
         return board;
     }

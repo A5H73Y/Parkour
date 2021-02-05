@@ -422,7 +422,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 				parkour.getBountifulApi().sendSubTitle(player,
 						TranslationUtils.getValueTranslation(
-								"Parkour.LifeCount", String.valueOf(getRemainingLives(session)), false),
+								"Parkour.LifeCount", String.valueOf(getRemainingDeaths(session)), false),
 						parkour.getConfig().getBoolean("DisplayTitle.Death"));
 
 			} else {
@@ -441,7 +441,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			return;
 		}
 
-		parkour.getScoreboardManager().updateScoreboardDeaths(player, session.getDeaths(), getRemainingLives(session));
+		parkour.getScoreboardManager().updateScoreboardDeaths(player, session.getDeaths(), getRemainingDeaths(session));
 		parkour.getCourseManager().runEventCommands(player, session.getCourseName(), DEATH);
 
 		// they haven't yet achieved a checkpoint
@@ -473,14 +473,14 @@ public class PlayerManager extends AbstractPluginReceiver {
 	}
 
 	/**
-	 * Get the player's remaining lives.
+	 * Get the player's remaining deaths.
 	 *
 	 * @param session
-	 * @return number of lives remaining
+	 * @return number of deaths remaining
 	 */
-	public int getRemainingLives(ParkourSession session) {
-		int remainingLives = session.getCourse().getMaxDeaths() - session.getDeaths();
-		return remainingLives > 0 ? remainingLives : 0;
+	public int getRemainingDeaths(ParkourSession session) {
+		int remainingDeaths = session.getCourse().getMaxDeaths() - session.getDeaths();
+		return remainingDeaths > 0 ? remainingDeaths : 0;
 	}
 
 	/**
