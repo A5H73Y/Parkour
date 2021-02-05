@@ -36,6 +36,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
     private static final String BEST_TIME_EVER_NAME = ChatColor.BLUE.toString();
     private static final String MY_BEST_TIME_EVER = ChatColor.DARK_AQUA.toString();
     private static final String CURRENT_DEATHS = ChatColor.DARK_GREEN.toString();
+    private static final String REMAINING_DEATHS = ChatColor.DARK_GRAY.toString();
     private static final String CHECKPOINTS = ChatColor.DARK_RED.toString();
     private static final String LIVE_TIMER = ChatColor.DARK_BLUE.toString();
 
@@ -64,6 +65,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
         scoreboardDetails.put(BEST_TIME_EVER_NAME, generateScoreboard("BestTimeEverName"));
         scoreboardDetails.put(MY_BEST_TIME_EVER, generateScoreboard("MyBestTime"));
         scoreboardDetails.put(CURRENT_DEATHS, generateScoreboard("CurrentDeaths"));
+        scoreboardDetails.put(REMAINING_DEATHS, generateScoreboard("RemainingDeaths"));
         scoreboardDetails.put(CHECKPOINTS, generateScoreboard("Checkpoints"));
         scoreboardDetails.put(LIVE_TIMER, generateScoreboard("LiveTimer"));
 
@@ -118,15 +120,20 @@ public class ScoreboardManager extends AbstractPluginReceiver {
      *
      * @param player player
      * @param deaths death amount
+     * @param deaths remaining deaths
      */
-    public void updateScoreboardDeaths(Player player, int deaths) {
+    public void updateScoreboardDeaths(Player player, int deaths, int remainingDeaths) {
         Scoreboard board = player.getScoreboard();
 
-        if (!enabled || !scoreboardDetails.get(CURRENT_DEATHS).isEnabled() || board.getTeam(CURRENT_DEATHS) == null) {
+        if (!enabled) {
             return;
         }
-
-        board.getTeam(CURRENT_DEATHS).setPrefix(convertText(String.valueOf(deaths)));
+        if (scoreboardDetails.get(CURRENT_DEATHS).isEnabled() && board.getTeam(CURRENT_DEATHS) != null) {
+            board.getTeam(CURRENT_DEATHS).setPrefix(convertText(String.valueOf(deaths)));
+        }
+        if (scoreboardDetails.get(REMAINING_DEATHS).isEnabled() && board.getTeam(REMAINING_DEATHS) != null) {
+            board.getTeam(REMAINING_DEATHS).setPrefix(convertText(String.valueOf(remainingDeaths)));
+        }
     }
 
     /**
@@ -184,7 +191,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
 
         // update the dynamic results with their session (could be pre-populated)
         updateScoreboardCheckpoints(player, playerScoreboard.getSession());
-        updateScoreboardDeaths(player, playerScoreboard.getSession().getDeaths());
+        updateScoreboardDeaths(player, playerScoreboard.getSession().getDeaths(), parkour.getPlayerManager().getRemainingDeaths(session));
 
         return board;
     }

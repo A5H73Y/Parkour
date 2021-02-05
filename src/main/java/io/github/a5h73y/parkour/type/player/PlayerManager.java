@@ -419,11 +419,10 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		if (session.getCourse().hasMaxDeaths()) {
 			if (session.getCourse().getMaxDeaths() > session.getDeaths()) {
-				int remainingLives = session.getCourse().getMaxDeaths() - session.getDeaths();
 
 				parkour.getBountifulApi().sendSubTitle(player,
 						TranslationUtils.getValueTranslation(
-								"Parkour.LifeCount", String.valueOf(remainingLives), false),
+								"Parkour.LifeCount", String.valueOf(getRemainingDeaths(session)), false),
 						parkour.getConfig().getBoolean("DisplayTitle.Death"));
 
 			} else {
@@ -442,7 +441,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			return;
 		}
 
-		parkour.getScoreboardManager().updateScoreboardDeaths(player, session.getDeaths());
+		parkour.getScoreboardManager().updateScoreboardDeaths(player, session.getDeaths(), getRemainingDeaths(session));
 		parkour.getCourseManager().runEventCommands(player, session.getCourseName(), DEATH);
 
 		// they haven't yet achieved a checkpoint
@@ -471,6 +470,17 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		preparePlayer(player, parkour.getConfig().getString("OnJoin.SetGameMode"));
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerDeathEvent(player, session.getCourse().getName()));
+	}
+
+	/**
+	 * Get the player's remaining deaths.
+	 *
+	 * @param session
+	 * @return number of deaths remaining
+	 */
+	public int getRemainingDeaths(ParkourSession session) {
+		int remainingDeaths = session.getCourse().getMaxDeaths() - session.getDeaths();
+		return remainingDeaths > 0 ? remainingDeaths : 0;
 	}
 
 	/**

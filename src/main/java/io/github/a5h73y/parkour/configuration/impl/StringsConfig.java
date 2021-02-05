@@ -160,6 +160,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Scoreboard.BestTimeEverNameTitle", "Best Player:");
 		this.addDefault("Scoreboard.MyBestTimeTitle", "My Best Time:");
 		this.addDefault("Scoreboard.CurrentDeathsTitle", "Current Deaths:");
+		this.addDefault("Scoreboard.RemainingDeathsTitle", "Remaining Deaths:");
 		this.addDefault("Scoreboard.CheckpointsTitle", "Checkpoints:");
 		this.addDefault("Scoreboard.LiveTimerTitle", "Current Time:");
 		this.addDefault("Scoreboard.TimeRemainingTitle", "Time Remaining:");
