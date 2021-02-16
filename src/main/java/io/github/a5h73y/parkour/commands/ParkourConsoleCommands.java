@@ -202,6 +202,14 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 parkour.getPlayerManager().restartCourse(findPlayer(sender, args[1]));
                 break;
 
+            case "resumable":
+                if (!ValidationUtils.validateArgs(sender, args, 2)) {
+                    return false;
+                }
+
+                parkour.getCourseManager().toggleResumable(sender, args[1]);
+                break;
+
             case "rewarddelay":
                 if (!ValidationUtils.validateArgs(sender, args, 3)) {
                     return false;
@@ -231,7 +239,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                parkour.getCourseManager().setRewardOnceStatus(sender, args[1]);
+                parkour.getCourseManager().toggleRewardOnceStatus(sender, args[1]);
                 break;
 
             case "challengeonly":
@@ -239,7 +247,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                parkour.getCourseManager().setChallengeOnlyStatus(sender, args[1]);
+                parkour.getCourseManager().toggleChallengeOnlyStatus(sender, args[1]);
                 break;
 
             case "rewardparkoins":

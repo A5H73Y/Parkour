@@ -60,7 +60,7 @@ public class ConfigManager {
 	 * Reload each of the configuration files.
 	 */
 	public void reloadConfigs() {
-		for (ParkourConfiguration parkourConfig: parkourConfigs.values()) {
+		for (ParkourConfiguration parkourConfig : parkourConfigs.values()) {
 			parkourConfig.reload();
 		}
 	}

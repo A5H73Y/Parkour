@@ -31,7 +31,7 @@
   {
     "command": "challengeonly",
     "title": "Toggle Challenge Only status of Course",
-    "arguments": "(course)",
+    "arguments": "[course]",
     "example": "/pa challengeonly tutorial",
     "description": "Ability to prevent a Player from joining a Course unless they are currently in a Challenge.",
     "permission": "Parkour.Admin.Course",
@@ -338,6 +338,16 @@
     "consoleSyntax": "pac restart (player)"
   },
   {
+    "command": "resumable",
+    "title": "Toggle Resumable status of Course",
+    "arguments": "[course]",
+    "example": "/pa resumable tutorial",
+    "description": "Toggle the ability for the Player's progress on the Course to be resumed on the next time they join the Course.",
+    "permission": "Parkour.Admin.Course",
+    "commandGroup": "2",
+    "consoleSyntax": "pac resumable (course)"
+  },
+  {
     "command": "rewarddelay",
     "title": "Reward Delay for Course",
     "arguments": "(course) (delay)",
@@ -370,7 +380,7 @@
   {
     "command": "rewardonce",
     "title": "Toggle Reward Once status of Course",
-    "arguments": "(course)",
+    "arguments": "[course]",
     "example": "/pa rewardonce tutorial",
     "description": "Prevent a Player from receiving a reward multiple times for completing a Course, by only allowing them to receive the reward the first time they complete the Course.",
     "permission": "Parkour.Admin.Course",

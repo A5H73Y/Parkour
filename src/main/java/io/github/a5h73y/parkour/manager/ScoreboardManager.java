@@ -120,7 +120,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
      *
      * @param player player
      * @param deaths death amount
-     * @param deaths remaining deaths
+     * @param remainingDeaths remaining deaths
      */
     public void updateScoreboardDeaths(Player player, int deaths, int remainingDeaths) {
         Scoreboard board = player.getScoreboard();
@@ -191,7 +191,8 @@ public class ScoreboardManager extends AbstractPluginReceiver {
 
         // update the dynamic results with their session (could be pre-populated)
         updateScoreboardCheckpoints(player, playerScoreboard.getSession());
-        updateScoreboardDeaths(player, playerScoreboard.getSession().getDeaths(), parkour.getPlayerManager().getRemainingDeaths(session));
+        updateScoreboardDeaths(player, playerScoreboard.getSession().getDeaths(),
+                playerScoreboard.getSession().getRemainingDeaths());
 
         return board;
     }

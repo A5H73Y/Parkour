@@ -74,28 +74,30 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         }
 
         if (materialInHand == parkour.getConfig().getLastCheckpointTool()) {
-            if (parkour.getPlayerManager().delayPlayer(player, 1, false, false)) {
+            if (parkour.getPlayerManager().delayPlayer(player, 1)) {
                 event.setCancelled(true);
                 Bukkit.getScheduler().runTask(parkour, () -> parkour.getPlayerManager().playerDie(player));
             }
 
         } else if (materialInHand == parkour.getConfig().getHideAllDisabledTool()
                 || materialInHand == parkour.getConfig().getHideAllEnabledTool()) {
-            if (parkour.getPlayerManager().delayPlayer(player, 1, false, false)) {
+            if (parkour.getPlayerManager().delayPlayer(player, 1)) {
                 event.setCancelled(true);
                 parkour.getPlayerManager().toggleVisibility(player);
-                String configPath = parkour.getPlayerManager().hasHiddenPlayers(player) ? "OnJoin.Item.HideAllEnabled" : "OnJoin.Item.HideAll";
-                parkour.getPlayerManager().giveParkourTool(player, configPath, "Other.Item.HideAll");
+                player.getInventory().remove(materialInHand);
+                String configPath = parkour.getPlayerManager().hasHiddenPlayers(player)
+                        ? "ParkourTool.HideAllEnabled" : "ParkourTool.HideAll";
+                parkour.getPlayerManager().giveParkourTool(player, configPath, configPath);
             }
 
         } else if (materialInHand == parkour.getConfig().getLeaveTool()) {
-            if (parkour.getPlayerManager().delayPlayer(player, 1, false, false)) {
+            if (parkour.getPlayerManager().delayPlayer(player, 1)) {
                 event.setCancelled(true);
                 parkour.getPlayerManager().leaveCourse(player);
             }
 
         } else if (materialInHand == parkour.getConfig().getRestartTool()) {
-            if (parkour.getPlayerManager().delayPlayer(player, 1, false, false)) {
+            if (parkour.getPlayerManager().delayPlayer(player, 6)) {
                 event.setCancelled(true);
                 Bukkit.getScheduler().runTask(parkour, () -> parkour.getPlayerManager().restartCourse(player));
             }
@@ -150,7 +152,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
                 && MaterialUtils.getMaterialInPlayersHand(player) == XMaterial.FIREWORK_ROCKET.parseMaterial()) {
 
             int secondDelay = parkour.getConfig().getInt("ParkourModes.Rockets.Delay");
-            if (parkour.getPlayerManager().delayPlayer(player, secondDelay, true, false)) {
+            if (parkour.getPlayerManager().delayPlayer(player, secondDelay, "Mode.Rockets.Reloading", false)) {
                 parkour.getPlayerManager().rocketLaunchPlayer(player);
             }
         }
@@ -180,7 +182,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         ParkourSession session = parkour.getPlayerManager().getParkourSession(event.getPlayer());
 
         if (session.getParkourMode() == ParkourMode.FREE_CHECKPOINT
-                && parkour.getPlayerManager().delayPlayer(event.getPlayer(), 1, false, false)
+                && parkour.getPlayerManager().delayPlayer(event.getPlayer(), 1)
                 && (session.getFreedomLocation() == null
                 || !MaterialUtils.sameBlockLocations(event.getPlayer().getLocation(), session.getFreedomLocation()))) {
 
@@ -249,7 +251,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         }
 
         // Prevent a user spamming the joins
-        if (!parkour.getPlayerManager().delayPlayer(event.getPlayer(), 1, false)) {
+        if (!parkour.getPlayerManager().delayPlayer(event.getPlayer(), 1)) {
             return;
         }
 

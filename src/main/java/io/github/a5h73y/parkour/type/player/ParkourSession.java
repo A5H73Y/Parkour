@@ -109,6 +109,11 @@ public class ParkourSession implements Serializable {
         return course.hasMaxTime() ? secondsAccumulated-- : secondsAccumulated++;
     }
 
+    public int getRemainingDeaths() {
+        int remainingDeaths = getCourse().getMaxDeaths() - getDeaths();
+        return Math.max(remainingDeaths, 0);
+    }
+
     /**
      * Get {@link ParkourMode} for associated Course.
      * @return ParkourMode

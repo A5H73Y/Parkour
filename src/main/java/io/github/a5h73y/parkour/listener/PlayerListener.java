@@ -4,6 +4,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
+import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Damageable;
@@ -192,28 +193,36 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
      */
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+
         if (parkour.getConfig().isDisplayWelcomeMessage()) {
             TranslationUtils.sendValueTranslation("Event.Join",
-                    parkour.getDescription().getVersion(), event.getPlayer());
+                    parkour.getDescription().getVersion(), player);
         }
 
-        ParkourSession session = parkour.getPlayerManager().loadParkourSession(event.getPlayer());
-
-        if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
+        if (!PlayerInfo.hasExistingSessionCourseName(player)) {
             return;
         }
 
-        parkour.getScoreboardManager().addScoreboard(event.getPlayer(), session);
+        ParkourSession session = parkour.getPlayerManager().loadParkourSession(player,
+                PlayerInfo.getExistingSessionCourseName(player));
+        PlayerInfo.setExistingSessionCourseName(player, null);
 
-        String currentCourse = session.getCourse().getName();
-        TranslationUtils.sendValueTranslation("Parkour.Continue", currentCourse, event.getPlayer());
-
-        if (parkour.getConfig().getBoolean("OnLeaveServer.TeleportToLastCheckpoint")) {
-            parkour.getPlayerManager().playerDie(event.getPlayer());
+        if (!parkour.getPlayerManager().isPlaying(player)) {
+            return;
         }
 
+        parkour.getScoreboardManager().addScoreboard(player, session);
+        parkour.getPlayerManager().setupParkourMode(player);
+
+        String currentCourse = session.getCourse().getName();
+        TranslationUtils.sendValueTranslation("Parkour.Continue", currentCourse, player);
+
         if (parkour.getConfig().isPlayerLeaveCourseOnLeaveServer()) {
-            parkour.getPlayerManager().leaveCourse(event.getPlayer());
+            parkour.getPlayerManager().leaveCourse(player);
+
+        } else if (parkour.getConfig().getBoolean("OnLeaveServer.TeleportToLastCheckpoint")) {
+            parkour.getPlayerManager().playerDie(player);
         }
     }
 

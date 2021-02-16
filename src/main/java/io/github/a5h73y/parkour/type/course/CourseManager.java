@@ -423,7 +423,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      * @param player requesting player
      * @param courseNameInput course name
      */
-    public void setCourseReadyStatus(final Player player, @Nullable final String courseNameInput) {
+    public void toggleCourseReadyStatus(final Player player, @Nullable final String courseNameInput) {
         String courseName = courseNameInput == null ? PlayerInfo.getSelectedCourse(player) : courseNameInput;
 
         if (!ValidationUtils.isStringValid(courseName)) {
@@ -453,7 +453,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      * @param sender requesting sender
      * @param courseName course name
      */
-    public void setRewardOnceStatus(final CommandSender sender, final String courseName) {
+    public void toggleRewardOnceStatus(final CommandSender sender, final String courseName) {
         if (!doesCourseExists(courseName)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
@@ -472,7 +472,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      * @param sender requesting sender
      * @param courseName course name
      */
-    public void setChallengeOnlyStatus(CommandSender sender, String courseName) {
+    public void toggleChallengeOnlyStatus(CommandSender sender, String courseName) {
         if (!doesCourseExists(courseName)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
             return;
@@ -482,6 +482,30 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         boolean isEnabled = !CourseInfo.getChallengeOnly(courseName);
         CourseInfo.setChallengeOnly(courseName, isEnabled);
         TranslationUtils.sendPropertySet(sender, "Challenge Only Status", courseName, String.valueOf(isEnabled));
+    }
+
+    /**
+     * Toggle the Course's Destroy Course Progress status.
+     * Set whether the Player can resume the Course after leaving the Course.
+     *
+     * @param sender requesting sender
+     * @param courseName course name
+     */
+    public void toggleResumable(CommandSender sender, String courseName) {
+        if (!doesCourseExists(courseName)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            return;
+        }
+
+        if (parkour.getConfig().isLeaveDestroyCourseProgress()) {
+            TranslationUtils.sendMessage(sender, "All Course progress is set to be deleted in the config.");
+            return;
+        }
+
+        // invert the existing value
+        boolean isEnabled = !CourseInfo.getResumable(courseName);
+        CourseInfo.setResumable(courseName, isEnabled);
+        TranslationUtils.sendPropertySet(sender, "Destroy Course Progress", courseName, String.valueOf(isEnabled));
     }
 
     /**
@@ -938,7 +962,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      * @param args command arguments
      */
     public void displayLeaderboards(final Player player, final String... args) {
-        if (!parkour.getPlayerManager().delayPlayer(player, 3, true)) {
+        if (!parkour.getPlayerManager().delayPlayerWithMessage(player, 4)) {
             return;
         }
 

@@ -51,6 +51,7 @@ Here are each of the available Placeholders that Parkour provides.
 %parkour_current_course_timer%
 %parkour_current_course_checkpoints%
 %parkour_current_course_completed%
+%parkour_current_course_remaining_deaths%
 %parkour_current_course_record_player%
 %parkour_current_course_record_time%
 %parkour_current_course_record_deaths%

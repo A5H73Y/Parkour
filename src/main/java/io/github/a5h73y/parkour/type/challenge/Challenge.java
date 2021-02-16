@@ -85,6 +85,12 @@ public class Challenge {
         return !participants.containsValue(false);
     }
 
+    /**
+     * Display Challenge Information.
+     * Print the Challenge summary details to the sender.
+     *
+     * @param sender sender
+     */
     public void displayInformation(CommandSender sender) {
         TranslationUtils.sendHeading("Challenge Details", sender);
         TranslationUtils.sendValue(sender, "Host", challengeHost.getName());

@@ -140,10 +140,14 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Help.CommandUsage", "&3/pa &b%COMMAND%&e%ARGUMENTS% &0: &f%TITLE%");
 		this.addDefault("Help.SignUsage", "&b%COMMAND% &e%SHORTCUT% &0: &f%DESCRIPTION%");
 
-		this.addDefault("Other.Item.LastCheckpoint", "&7SHIFT + &6Right click to go back to last checkpoint");
-		this.addDefault("Other.Item.HideAll", "&7SHIFT + &6Right click to toggle visibility");
-		this.addDefault("Other.Item.Leave", "&7SHIFT + &6Right click to leave course");
-		this.addDefault("Other.Item.Restart", "&7SHIFT + &6Right click to restart course");
+		this.addDefault("ParkourTool.LastCheckpoint", "&7SHIFT + &6Right click to go back to last checkpoint");
+		this.addDefault("ParkourTool.HideAll", "&7SHIFT + &6Right click to toggle visibility");
+		this.addDefault("ParkourTool.HideAllEnabled", "&7SHIFT + &6Right click to toggle visibility");
+		this.addDefault("ParkourTool.Leave", "&7SHIFT + &6Right click to leave course");
+		this.addDefault("ParkourTool.Restart", "&7SHIFT + &6Right click to restart course");
+		this.addDefault("ParkourTool.Freedom", "&6Freedom Tool");
+		this.addDefault("ParkourTool.Rockets", "&6Rocket Launcher");
+
 		this.addDefault("Other.Kit", "&b%VALUE% &fParkourKit received!");
 		this.addDefault("Other.PropertySet", "The &3%PROPERTY% &ffor &3%COURSE% &fwas set to &b%VALUE%&f!");
 
@@ -181,13 +185,11 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Kit.Bounce", "&bBounce Block");
 		this.addDefault("Kit.Repulse", "&bRepulse Block");
 
-		this.addDefault("Mode.Freedom.ItemName", "&6Freedom Tool");
 		this.addDefault("Mode.Freedom.JoinText", "&6Freedom Mode &f- Right click: &2Save&f, Left click: &5Load");
 		this.addDefault("Mode.Freedom.Save", "Position saved");
 		this.addDefault("Mode.Freedom.Load", "Position loaded");
-
 		this.addDefault("Mode.Rockets.JoinText", "Use the Rocket Launcher to launch yourself");
-		this.addDefault("Mode.Rockets.ItemName", "Rocket Launcher");
+		this.addDefault("Mode.Rockets.Reloading", "Reloading rocket...");
 
 		this.addDefault("PlaceholderAPI.InvalidSyntax", "Invalid syntax");
 		this.addDefault("PlaceholderAPI.NoTimeRecorded", "No time recorded");

@@ -30,6 +30,12 @@ A Course can be marked to only be joinable if the Player is part of a Challenge.
 
 _Command: `/pa challengeonly [course]`_
 
+## Destroy Course Progress
+
+By default, a Player's progress will be deleted when they leave a Course. To retain the progress set `OnLeave.DestroyCourseProgress` to `true` in the `config.yml`; each Course will then be "resumable" meaning they can leave at any point and rejoin back to their last achieved checkpoint. However, you can set a Course to be non-resumable to prevent their progress from being saved.
+
+_Command: `/pa resumable [course]`_
+
 ## Course Creator
 
 Each Course must have a Creator, by default this will be set to the Player who used the create Course command. 

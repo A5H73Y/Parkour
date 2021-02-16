@@ -88,6 +88,15 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getChallengeManager().processCommand(player, args);
                 break;
 
+            case "challengeonly":
+                if (!PermissionUtils.hasPermissionOrCourseOwnership(player,
+                        Permission.ADMIN_COURSE, getChosenCourseName(player, args, 1))) {
+                    return false;
+                }
+
+                parkour.getCourseManager().toggleChallengeOnlyStatus(player, getChosenCourseName(player, args, 1));
+                break;
+
             case "checkpoint":
                 if (!parkour.getPlayerManager().hasSelectedValidCourse(player)) {
                     TranslationUtils.sendTranslation("Error.Selected", player);
@@ -308,7 +317,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getCourseManager().setCourseReadyStatus(player, getChosenCourseName(player, args, 1));
+                parkour.getCourseManager().toggleCourseReadyStatus(player, getChosenCourseName(player, args, 1));
                 break;
 
             case "recreate":
@@ -358,6 +367,15 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getPlayerManager().restartCourse(player);
                 break;
 
+            case "resumable":
+                if (!PermissionUtils.hasPermissionOrCourseOwnership(player,
+                        Permission.ADMIN_COURSE, getChosenCourseName(player, args, 1))) {
+                    return false;
+                }
+
+                parkour.getCourseManager().toggleResumable(player, getChosenCourseName(player, args, 1));
+                break;
+
             case "rewarddelay":
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
                     return false;
@@ -397,16 +415,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getCourseManager().setRewardOnceStatus(player, getChosenCourseName(player, args, 1));
-                break;
-
-            case "challengeonly":
-                if (!PermissionUtils.hasPermissionOrCourseOwnership(player,
-                        Permission.ADMIN_COURSE, getChosenCourseName(player, args, 1))) {
-                    return false;
-                }
-
-                parkour.getCourseManager().setChallengeOnlyStatus(player, getChosenCourseName(player, args, 1));
+                parkour.getCourseManager().toggleRewardOnceStatus(player, getChosenCourseName(player, args, 1));
                 break;
 
             case "rewardparkoins":

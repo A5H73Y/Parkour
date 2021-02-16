@@ -14,6 +14,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Player Information Utility class.
@@ -477,6 +478,36 @@ public class PlayerInfo {
     }
 
     /**
+     * Get the existing Session Course name.
+     * The name of the Course they were on when leaving the server.
+     * @param player player
+     * @return session course name
+     */
+    @Nullable
+    public static String getExistingSessionCourseName(Player player) {
+        return getPlayersConfig().getString(player.getUniqueId() + ".ExistingSessionCourseName");
+    }
+
+    /**
+     * Player has existing Session Course name.
+     * @param player player
+     * @return player has existing session course name
+     */
+    public static boolean hasExistingSessionCourseName(Player player) {
+        return getPlayersConfig().contains(player.getUniqueId() + ".ExistingSessionCourseName");
+    }
+
+    /**
+     * Set the existing Session Course name.
+     * @param player player
+     * @param courseName course name
+     */
+    public static void setExistingSessionCourseName(Player player, String courseName) {
+        getPlayersConfig().set(player.getUniqueId() + ".ExistingSessionCourseName", courseName);
+        persistChanges();
+    }
+
+    /**
      * Get the Players {@link ParkourConfiguration}.
      * @return the players.yml configuration
      */
@@ -490,5 +521,4 @@ public class PlayerInfo {
     private static void persistChanges() {
         getPlayersConfig().save();
     }
-
 }

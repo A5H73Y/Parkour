@@ -6,7 +6,7 @@ public enum ParkourMode {
     FREEDOM,
     DROPPER,
     ROCKETS,
-    NORUN, // cancel run toggle event
+    NORUN,
     FREE_CHECKPOINT,
     POTION
 }

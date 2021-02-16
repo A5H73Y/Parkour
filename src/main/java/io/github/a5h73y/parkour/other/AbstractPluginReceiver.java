@@ -13,4 +13,8 @@ public abstract class AbstractPluginReceiver {
 		this.parkour = parkour;
 	}
 
+	public Parkour getParkour() {
+		return this.parkour;
+	}
+
 }

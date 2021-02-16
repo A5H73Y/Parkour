@@ -386,7 +386,7 @@ public class ParkourValidation {
             return false;
         }
 
-        if (!parkour.getPlayerManager().delayPlayer(player, 10, true)) {
+        if (!parkour.getPlayerManager().delayPlayerWithMessage(player, 8)) {
             return false;
         }
 

@@ -273,7 +273,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
                     TranslationUtils.sendValueTranslation("Error.NoExist", lines[2], player);
 
-                } else if (parkour.getPlayerManager().delayPlayer(player, 4, true)) {
+                } else if (parkour.getPlayerManager().delayPlayerWithMessage(player, 4)) {
                     int amount = lines[3].isEmpty() ? 5 : Integer.parseInt(lines[3]);
                     parkour.getDatabase().displayTimeEntries(player, lines[2],
                             parkour.getDatabase().getTopCourseResults(lines[2], amount));

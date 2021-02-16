@@ -879,10 +879,29 @@ public class CourseInfo {
     /**
      * Set Player limit for Course.
      * @param courseName course name
-     * @param limit player limi
+     * @param limit player limit
      */
     public static void setPlayerLimit(@NotNull String courseName, int limit) {
         getCourseConfig().set(courseName.toLowerCase() + ".PlayerLimit", limit);
+        persistChanges();
+    }
+
+    /**
+     * Get Resumable flag for Course.
+     * @param courseName course name
+     * @return course resumable
+     */
+    public static boolean getResumable(String courseName) {
+        return getCourseConfig().getBoolean(courseName.toLowerCase() + ".Resumable", true);
+    }
+
+    /**
+     * Set the Resumable flag for Course.
+     * @param courseName course name
+     * @param value flag value
+     */
+    public static void setResumable(String courseName, boolean value) {
+        getCourseConfig().set(courseName.toLowerCase() + ".Resumable", value);
         persistChanges();
     }
 
