@@ -2,13 +2,13 @@ package io.github.a5h73y.parkour.conversation.other;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.conversation.ParkourConversation;
+import java.util.function.Consumer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
-import org.bukkit.util.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

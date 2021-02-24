@@ -15,9 +15,9 @@ import io.github.a5h73y.parkour.type.course.CourseManager;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import java.util.function.Consumer;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Consumer;
 
 /**
  * Course Settings GUI.
