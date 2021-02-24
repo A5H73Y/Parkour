@@ -1,6 +1,8 @@
 Sign Commands
 ======
 
+**If Parkour signs aren't working for non-ops, this will be because of an external reason. This could include the server.properties spawn-protection or a 3rd party plugin, and not because of the Parkour plugin.**
+
 ## Join Course
 
 A sign used to join a Parkour Course. These should be stored in your Parkour Lobby so they can be easy to find and interact with. Validation will execute when the sign is clicked to make sure the Player is allowed to join first before they are teleported away.

@@ -68,6 +68,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("OnFinish.DefaultPrize.Material", "DIAMOND");
 		this.addDefault("OnFinish.DefaultPrize.Amount", 1);
 		this.addDefault("OnFinish.DefaultPrize.XP", 0);
+		this.addDefault("OnFinish.DefaultPrize.Command", "");
 		this.addDefault("OnFinish.DisplayNewRecords", false);
 		this.addDefault("OnFinish.DisplayStats", true);
 		this.addDefault("OnFinish.EnablePrizes", true);
@@ -249,6 +250,10 @@ public class DefaultConfig extends ParkourConfiguration {
 
 	public String getStrippedSignHeader() {
 		return ChatColor.stripColor(getSignHeader());
+	}
+
+	public String getDefaultPrizeCommand() {
+		return this.getString("OnFinish.DefaultPrize.Command");
 	}
 
 	public boolean isPermissionsForCommands() {

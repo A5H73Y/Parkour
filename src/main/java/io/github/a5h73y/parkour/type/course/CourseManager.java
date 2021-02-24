@@ -485,7 +485,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     }
 
     /**
-     * Toggle the Course's Destroy Course Progress status.
+     * Toggle the Course's Resumable status.
      * Set whether the Player can resume the Course after leaving the Course.
      *
      * @param sender requesting sender
@@ -498,14 +498,14 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         }
 
         if (parkour.getConfig().isLeaveDestroyCourseProgress()) {
-            TranslationUtils.sendMessage(sender, "All Course progress is set to be deleted in the config.");
+            TranslationUtils.sendMessage(sender, "Disable Course progress destruction in the plugin configuration to allow for Courses to be resumable.");
             return;
         }
 
         // invert the existing value
         boolean isEnabled = !CourseInfo.getResumable(courseName);
         CourseInfo.setResumable(courseName, isEnabled);
-        TranslationUtils.sendPropertySet(sender, "Destroy Course Progress", courseName, String.valueOf(isEnabled));
+        TranslationUtils.sendPropertySet(sender, "Resumable", courseName, String.valueOf(isEnabled));
     }
 
     /**
@@ -862,11 +862,20 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     public void runEventCommands(final Player player, final String courseName, final ParkourEventType eventType) {
         if (CourseInfo.hasEventCommands(courseName, eventType)) {
             for (String command : CourseInfo.getEventCommands(courseName, eventType)) {
-                parkour.getServer().dispatchCommand(
-                        parkour.getServer().getConsoleSender(),
-                        command.replace(Constants.PLAYER_PLACEHOLDER, player.getName()));
+                dispatchServerPlayerCommand(command, player.getName());
             }
         }
+    }
+
+    /**
+     * Dispatch a console command with Player placeholder.
+     * @param command command to execute
+     * @param playerName player name
+     */
+    public void dispatchServerPlayerCommand(String command, String playerName) {
+        parkour.getServer().dispatchCommand(
+                parkour.getServer().getConsoleSender(),
+                command.replace(Constants.PLAYER_PLACEHOLDER, playerName));
     }
 
     /**

@@ -689,7 +689,13 @@ public class PlayerManager extends AbstractPluginReceiver {
 		rewardParkoins(player, CourseInfo.getRewardParkoins(courseName));
 		parkour.getEconomyApi().giveEconomyPrize(player, courseName);
 
-		parkour.getCourseManager().runEventCommands(player, courseName, PRIZE);
+		if (CourseInfo.hasEventCommands(courseName, PRIZE)) {
+			parkour.getCourseManager().runEventCommands(player, courseName, PRIZE);
+
+		} else if (ValidationUtils.isStringValid(parkour.getConfig().getDefaultPrizeCommand())) {
+			parkour.getCourseManager().dispatchServerPlayerCommand(
+					parkour.getConfig().getDefaultPrizeCommand(), player.getName());
+		}
 		player.updateInventory();
 	}
 
