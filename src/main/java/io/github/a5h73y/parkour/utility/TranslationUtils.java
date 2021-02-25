@@ -34,7 +34,9 @@ public class TranslationUtils {
 
 		String translated = Parkour.getConfig(ConfigType.STRINGS).getString(translationKey);
 		translated = translated != null ? colour(translated) : "String not found: " + translationKey;
-		return prefix ? Parkour.getPrefix().concat(translated) : translated;
+
+		return (prefix && ValidationUtils.isStringValid(translated))
+				? Parkour.getPrefix().concat(translated) : translated;
 	}
 
 	/**
@@ -120,8 +122,10 @@ public class TranslationUtils {
 	 */
 	public static void sendTranslation(String translationKey, boolean prefix, CommandSender... players) {
 		String translation = getTranslation(translationKey, prefix);
-		for (CommandSender player : players) {
-			player.sendMessage(translation);
+		if (!translation.isEmpty()) {
+			for (CommandSender player : players) {
+				player.sendMessage(translation);
+			}
 		}
 	}
 
@@ -156,9 +160,11 @@ public class TranslationUtils {
 	 */
 	public static void sendValueTranslation(String translationKey, String value, boolean prefix, CommandSender... players) {
 		String translation = getValueTranslation(translationKey, value, prefix);
-		for (CommandSender player : players) {
-			if (player != null) {
-				player.sendMessage(translation);
+		if (!translation.isEmpty()) {
+			for (CommandSender player : players) {
+				if (player != null) {
+					player.sendMessage(translation);
+				}
 			}
 		}
 	}
