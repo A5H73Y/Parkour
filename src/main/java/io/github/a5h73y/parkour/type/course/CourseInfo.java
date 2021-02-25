@@ -703,7 +703,10 @@ public class CourseInfo {
         sendValue(sender, "Checkpoints", getCheckpointAmount(courseName));
         sendValue(sender, "Creator", getCreator(courseName));
         sendValue(sender, "Ready Status", String.valueOf(getReadyStatus(courseName)));
+        sendValue(sender, "Challenge Only", String.valueOf(getChallengeOnly(courseName)));
 
+        sendConditionalValue(sender, "Resumable", !Parkour.getDefaultConfig().isLeaveDestroyCourseProgress(),
+                Boolean.toString(getResumable(courseName)));
         sendConditionalValue(sender, "Minimum ParkourLevel", getMinimumParkourLevel(courseName));
         sendConditionalValue(sender, "ParkourLevel Reward", getRewardParkourLevel(courseName));
         sendConditionalValue(sender, "ParkourLevel Reward Increase", getRewardParkourLevelIncrease(courseName));

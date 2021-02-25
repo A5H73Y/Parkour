@@ -498,7 +498,8 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         }
 
         if (parkour.getConfig().isLeaveDestroyCourseProgress()) {
-            TranslationUtils.sendMessage(sender, "Disable Course progress destruction in the plugin configuration to allow for Courses to be resumable.");
+            TranslationUtils.sendMessage(sender,
+                    "Disable Course progress destruction in the plugin configuration to allow for Courses to be resumable.");
             return;
         }
 

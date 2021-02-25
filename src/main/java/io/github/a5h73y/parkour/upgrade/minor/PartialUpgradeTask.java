@@ -145,7 +145,8 @@ public class PartialUpgradeTask extends TimedUpgradeTask {
 
 		if (sessionsDir.isDirectory()) {
 			// find the ones that are only the uuids
-			for (File sessionFile : sessionsDir.listFiles(pathname -> !pathname.isDirectory() && pathname.getName().split("-").length == 5)) {
+			for (File sessionFile : sessionsDir.listFiles(pathname -> !pathname.isDirectory()
+					&& pathname.getName().split("-").length == 5)) {
 				try (
 						FileInputStream fileInputStream = new FileInputStream(sessionFile);
 						ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)
