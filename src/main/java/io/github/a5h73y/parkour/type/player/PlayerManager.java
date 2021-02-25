@@ -431,7 +431,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 			} else {
 				TranslationUtils.sendValueTranslation("Parkour.MaxDeaths",
-						String.valueOf(session.getCourse().getMaxDeaths()));
+						String.valueOf(session.getCourse().getMaxDeaths()), player);
 				leaveCourse(player);
 				return;
 			}
