@@ -160,9 +160,11 @@ public class TranslationUtils {
 	 */
 	public static void sendValueTranslation(String translationKey, String value, boolean prefix, CommandSender... players) {
 		String translation = getValueTranslation(translationKey, value, prefix);
-		for (CommandSender player : players) {
-			if (player != null) {
-				player.sendMessage(translation);
+		if (!translation.isEmpty()) {
+			for (CommandSender player : players) {
+				if (player != null) {
+					player.sendMessage(translation);
+				}
 			}
 		}
 	}
