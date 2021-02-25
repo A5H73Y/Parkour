@@ -3,6 +3,31 @@ Changelogs
 
 Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon start up. There will be no manual intervention unless stated in breaking changes.
 
+## Parkour 6.4
+### Changes
+* Added ability to remove Parkour messages
+* Added remaining lives placeholder
+* Added remaining lives to scoreboard
+* Added "/pa hideall" command
+* Added selected course shortcut for "/pa setprize" and "/pa setmode"
+* Added ability for each course to be "resumable".
+* Added default course command prize
+* Fix Checkpoint signs
+* Fix NPE when something removes the Scoreboard Parkour created
+* Fix NPE on server restart
+* Fix OnJoin with existing session
+* Fix HideAll toggle
+* Fixes and improvements for free_checkpoint ParkourMode
+* Fixed norun ParkourMode
+* Fix Hide All enabled swap
+* Fix ParkourSession time after a server restart
+* Fix for player losing walk speed on Challenge
+* Fix for GUI on 1.8 servers
+* Fix messages not being sent during some events
+* Improve Restart message to use titles and respect Quiet mode
+* Remove players reappeared message after leaving / finishing
+* Changed "OnJoin.Item" to be "ParkourTool." in the config.yml
+
 ## Parkour 6.3
 ### Changes
 * Added Option to Automatically hide players on Course join
