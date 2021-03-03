@@ -496,17 +496,18 @@
     "example": "/pa setmode tutorial",
     "description": "By default, a Course does not have a ParkourMode attached. Each ParkourMode can affect the interaction with the Course, an example being the \u0027Freedom\u0027 mode allows you to create and load your own checkpoints. Starts a conversation that lets you configure the ParkourMode for the Course, some options require additional details.",
     "permission": "Parkour.Admin.Course",
-    "commandGroup": "3"
+    "commandGroup": "3",
+    "consoleSyntax": "pac setmode (course)"
   },
   {
     "command": "setplayer",
     "title": "Set Player Attributes",
-    "arguments": "(player) (level / rank) (value)",
-    "example": "/pa setmode tutorial",
+    "arguments": "(player) (level / leveladd / rank) (value)",
+    "example": "/pa setplayer A5H73Y level 123",
     "description": "Quickly set Player attributes using a simple command. Manually set the ParkourLevel or ParkourRank of a Player.",
     "permission": "Parkour.Admin.Course",
     "commandGroup": "3",
-    "consoleSyntax": "pac setplayer (player) (level / rank) (value)"
+    "consoleSyntax": "pac setplayer (player) (level / leveladd / rank) (value)"
   },
   {
     "command": "setplayerlimit",

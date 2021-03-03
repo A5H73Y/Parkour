@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 public class SetPlayerConversation extends ParkourConversation {
 
     public static final List<String> SET_PLAYER_OPTIONS = Collections.unmodifiableList(
-            Arrays.asList("level", "rank"));
+            Arrays.asList("level", "leveladd", "rank"));
 
     public SetPlayerConversation(Player player) {
         super(player);
@@ -94,7 +94,11 @@ public class SetPlayerConversation extends ParkourConversation {
         Bukkit.getScheduler().runTaskAsynchronously(parkour, () -> {
             switch (setOption) {
                 case "level":
-                    parkour.getPlayerManager().setParkourLevel(sender, targetPlayer, input);
+                    parkour.getPlayerManager().setParkourLevel(sender, targetPlayer, input, false);
+                    break;
+
+                case "leveladd":
+                    parkour.getPlayerManager().setParkourLevel(sender, targetPlayer, input, true);
                     break;
 
                 case "rank":
@@ -102,8 +106,8 @@ public class SetPlayerConversation extends ParkourConversation {
                     break;
 
                 default:
-                    TranslationUtils.sendInvalidSyntax(sender, "setcourse",
-                            "(courseName) [creator, minlevel, maxdeath, maxtime] [value]");
+                    TranslationUtils.sendInvalidSyntax(sender, "setplayer",
+                            "(player) [level / leveladd / rank] [value]");
             }
         });
     }

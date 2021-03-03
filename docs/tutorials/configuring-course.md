@@ -32,7 +32,7 @@ _Command: `/pa challengeonly [course]`_
 
 ## Resumable Course progress
 
-By default, a Player's progress will be deleted when they leave a Course. To retain the Player's progress set `OnLeave.DestroyCourseProgress` to `true` in the `config.yml`; each Course will then be "resumable" meaning they can leave at any point and rejoin back to their last achieved checkpoint (with their accumulated time and amount of deaths restored).
+By default, a Player's progress will be deleted when they leave a Course. To retain the Player's progress set `OnLeave.DestroyCourseProgress` to `false` in the `config.yml`; each Course will then be "resumable" meaning they can leave at any point and rejoin back to their last achieved checkpoint (with their accumulated time and amount of deaths restored).
 However, you can toggle the resumable status of the Course to set a Course to be non-resumable to prevent their progress from being saved.
 
 _Command: `/pa resumable [course]`_
@@ -96,18 +96,18 @@ _Example: `/pa addjoinitem tutorial ELYTRA 64`_
 
 ## Creating a Parkour Lobby
 
-Parkour can allow Courses to be split into different Lobbys, which could be used to add stages to the server, for example easy, medium and hard Courses. This is made easy by entering `/pa setlobby (name)`. Once submitted, the Lobby will be joinable by all Players.
+Parkour can allow Courses to be grouped into different Lobbies, which could be used to add different stages to the server. For example "easy", "medium" and "hard" Courses. The command `/pa setlobby (name)` is used to create a Lobby in your current position.
 
 ![Parkour Lobby Created](https://i.imgur.com/AGl0p1A.jpg "Parkour Lobby Created")
 
-If you wish to create a Lobby that is restricted to only certain Players, this can be achieved using Parkour Levels, which we will cover in the Administration tutorials. This will enforce the Player to reach a certain level in the Courses to be able to join the Lobby, for example completing all the Courses in the easy Lobby to be able to join the hard Lobby. This is achieved by providing a minimum Parkour level required to join.
+A restriction can be placed on Lobbies to only be joinable by Players with a required ParkourLevel. This will enforce the Player to achieve a certain ParkourLevel in the Courses to be able to join the Lobby, for example completing all the Courses in the easy Lobby to be able to join the hard Lobby. This is achieved by providing a minimum Parkour level required to join.
 
-_Command: `/pa setlobby (name) [level]`_  
+_Command: `/pa setlobby (name) [parkour-level]`_  
 The Lobby will only be joinable by Players with the required Parkour level (when provided).
 
 ![Parkour Level Lobby Created](https://i.imgur.com/py34xti.jpg "Parkour Level Lobby Created")
 
-To teleport to the Lobby, simply enter `/pa lobby (name)`.
+To teleport to the Lobby, simply enter `/pa lobby [name]`.
 
 ## Linking a Course after completion
 

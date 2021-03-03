@@ -97,7 +97,8 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             }
 
         } else if (materialInHand == parkour.getConfig().getRestartTool()) {
-            if (parkour.getPlayerManager().delayPlayer(player, 6)) {
+            if (parkour.getPlayerManager().delayPlayer(player,
+                    parkour.getConfig().getInt("ParkourTool.Restart.SecondCooldown"))) {
                 event.setCancelled(true);
                 Bukkit.getScheduler().runTask(parkour, () -> parkour.getPlayerManager().restartCourse(player));
             }

@@ -103,6 +103,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("ParkourTool.Leave.Slot", 2);
 		this.addDefault("ParkourTool.Restart.Material", "STICK");
 		this.addDefault("ParkourTool.Restart.Slot", 3);
+		this.addDefault("ParkourTool.Restart.SecondCooldown", 6);
 		this.addDefault("ParkourTool.Freedom.Material", XMaterial.REDSTONE_TORCH.parseMaterial().name());
 		this.addDefault("ParkourTool.Freedom.Slot", 4);
 		this.addDefault("ParkourTool.Rockets.Material", XMaterial.FIREWORK_ROCKET.parseMaterial().name());
@@ -193,6 +194,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("Other.Parkour.InventoryManagement", true);
 		this.addDefault("Other.Parkour.SignUsePermissions", false);
 		this.addDefault("Other.Parkour.CommandUsePermissions", false);
+		this.addDefault("Other.Parkour.MaximumParkourLevel", 99999999);
 		this.addDefault("Other.Display.JoinWelcomeMessage", true);
 		this.addDefault("Other.Display.LevelReward", true);
 		this.addDefault("Other.Display.ShowMilliseconds", false);

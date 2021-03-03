@@ -1145,7 +1145,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param targetPlayer target player
 	 * @param value desired parkour level
 	 */
-	public void setParkourLevel(CommandSender sender, OfflinePlayer targetPlayer, String value) {
+	public void setParkourLevel(CommandSender sender, OfflinePlayer targetPlayer, String value, boolean addition) {
 		if (!ValidationUtils.isPositiveInteger(value)) {
 			TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
 			return;
@@ -1157,6 +1157,10 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		int newLevel = Integer.parseInt(value);
+		if (addition) {
+			newLevel += PlayerInfo.getParkourLevel(targetPlayer);
+		}
+		newLevel = Math.min(newLevel, parkour.getConfig().getInt("Other.Parkour.MaximumParkourLevel"));
 		PlayerInfo.setParkourLevel(targetPlayer, newLevel);
 		TranslationUtils.sendMessage(sender, targetPlayer.getName() + "'s ParkourLevel was set to &b" + newLevel);
 
@@ -1333,7 +1337,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			SetPlayerConversation.performAction(sender, targetPlayer, args[2], args[3]);
 
 		} else {
-			TranslationUtils.sendInvalidSyntax(sender, "setplayer", "(player) [level / rank] [value]");
+			TranslationUtils.sendInvalidSyntax(sender, "setplayer", "(player) [level / leveladd / rank] [value]");
 		}
 	}
 
@@ -1851,6 +1855,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 		if (rewardAddLevel > 0) {
 			newParkourLevel = currentLevel + rewardAddLevel;
 		}
+
+		newParkourLevel = Math.min(newParkourLevel, parkour.getConfig().getInt("Other.Parkour.MaximumParkourLevel"));
 
 		// if their parkour level has increased
 		if (newParkourLevel > currentLevel) {
