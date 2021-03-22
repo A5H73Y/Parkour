@@ -863,20 +863,24 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     public void runEventCommands(final Player player, final String courseName, final ParkourEventType eventType) {
         if (CourseInfo.hasEventCommands(courseName, eventType)) {
             for (String command : CourseInfo.getEventCommands(courseName, eventType)) {
-                dispatchServerPlayerCommand(command, player.getName());
+                dispatchServerPlayerCommand(command, player);
             }
         }
     }
 
     /**
-     * Dispatch a console command with Player placeholder.
+     * Dispatch a command with Player placeholder.
+     * If the command start with "player:" it will be executed by the Player.
      * @param command command to execute
-     * @param playerName player name
+     * @param player player
      */
-    public void dispatchServerPlayerCommand(String command, String playerName) {
-        parkour.getServer().dispatchCommand(
-                parkour.getServer().getConsoleSender(),
-                command.replace(Constants.PLAYER_PLACEHOLDER, playerName));
+    public void dispatchServerPlayerCommand(String command, Player player) {
+        command = command.replace(Constants.PLAYER_PLACEHOLDER, player.getName());
+        if (command.startsWith("player:")) {
+            player.performCommand(command.split("player:")[1]);
+        } else {
+            parkour.getServer().dispatchCommand(parkour.getServer().getConsoleSender(), command);
+        }
     }
 
     /**

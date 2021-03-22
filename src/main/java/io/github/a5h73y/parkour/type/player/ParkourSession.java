@@ -71,6 +71,13 @@ public class ParkourSession implements Serializable {
     }
 
     /**
+     * Reset the number of accumulated deaths.
+     */
+    public void resetDeaths() {
+        this.deaths = 0;
+    }
+
+    /**
      * Increase current Checkpoint.
      */
     public void increaseCheckpoint() {

@@ -169,6 +169,19 @@ public class PlayerManager extends AbstractPluginReceiver {
 	}
 
 	/**
+	 * Get the Player names currently on a Course.
+	 *
+	 * @param courseName course name
+	 * @return list of player names
+	 */
+	public List<String> getPlayerNamesOnCourse(@NotNull String courseName) {
+		return parkourPlayers.entrySet().stream()
+				.filter(playerParkourSessionEntry -> playerParkourSessionEntry.getValue().getCourseName().equals(courseName))
+				.map(playerParkourSessionEntry -> playerParkourSessionEntry.getKey().getName())
+				.collect(Collectors.toList());
+	}
+
+	/**
 	 * Request to Join the Player to the Course.
 	 * We can assume that if they are requesting the join using the course name it needs to validated.
 	 *
@@ -455,6 +468,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 			if (parkour.getConfig().getBoolean("OnDie.ResetTimeWithNoCheckpoint")) {
 				session.resetTime();
+				session.resetDeaths();
 				message += " " + TranslationUtils.getTranslation("Parkour.TimeReset", false);
 			}
 
@@ -694,7 +708,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		} else if (ValidationUtils.isStringValid(parkour.getConfig().getDefaultPrizeCommand())) {
 			parkour.getCourseManager().dispatchServerPlayerCommand(
-					parkour.getConfig().getDefaultPrizeCommand(), player.getName());
+					parkour.getConfig().getDefaultPrizeCommand(), player);
 		}
 		player.updateInventory();
 	}

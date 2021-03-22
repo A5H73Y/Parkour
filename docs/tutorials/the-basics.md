@@ -95,8 +95,8 @@ Each of the Parkour PlaceholderAPI placeholders are available here: [Parkour Pla
                 <div>
                     <p>Syntax: <code>/pa ${command.command} ${command.arguments || ''}</code></p>
                     <p>Example: <code>${command.example}</code></p>
+                    <p>Permission: <code>${command.permission || 'None required'}</code></p>
                     <p>Description: ${command.description}</p>
-                    <p>Permission: ${command.permission || 'None required'}</p>
                     <p>Console Command: <code>${command.consoleSyntax || 'N/A'}</code></p>
                 </div>
             </details>`;

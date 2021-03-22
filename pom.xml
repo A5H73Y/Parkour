@@ -14,6 +14,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>8</maven.compiler.source>
+		<maven.compiler.target>8</maven.compiler.target>
 	</properties>
 
 	<issueManagement>
@@ -82,10 +84,16 @@
 		</dependency>
 		<!-- Vault API -->
 		<dependency>
-			<groupId>net.milkbowl.vault</groupId>
+			<groupId>com.github.MilkBowl</groupId>
 			<artifactId>VaultAPI</artifactId>
 			<version>1.7</version>
 			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.bukkit</groupId>
+					<artifactId>bukkit</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- Bountiful API -->
 		<dependency>

@@ -170,6 +170,15 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                         return INVALID_SYNTAX;
                 }
 
+            case "course":
+                if (arguments.length != 4) {
+                    return INVALID_SYNTAX;
+
+                } else if (arguments[3].equals("completed")) {
+                    return getOrRetrieveCache(offlinePlayer.getName() + arguments[2] + arguments[3],
+                            () -> getCompletedMessage(offlinePlayer, arguments[3]));
+                }
+
             case "prize":
                 if ("delay".equals(arguments[2])) {
                     if (CourseInfo.hasRewardDelay(arguments[3])) {
@@ -225,6 +234,34 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 }
 
                 return Integer.toString(CourseInfo.getViews(arguments[2]));
+
+            case "joinfee":
+                if (arguments.length != 3) {
+                    return INVALID_SYNTAX;
+                }
+
+                return Integer.toString(CourseInfo.getEconomyJoiningFee(arguments[2]));
+
+            case "ecoreward":
+                if (arguments.length != 3) {
+                    return INVALID_SYNTAX;
+                }
+
+                return Integer.toString(CourseInfo.getEconomyFinishReward(arguments[2]));
+
+            case "players":
+                if (arguments.length != 3) {
+                    return INVALID_SYNTAX;
+                }
+
+                return Integer.toString(parkour.getPlayerManager().getNumberOfPlayersOnCourse(arguments[2]));
+
+            case "playerlist":
+                if (arguments.length != 3) {
+                    return INVALID_SYNTAX;
+                }
+
+                return String.join(",", parkour.getPlayerManager().getPlayerNamesOnCourse(arguments[2]));
 
             default:
                 return INVALID_SYNTAX;
