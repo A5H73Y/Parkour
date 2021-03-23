@@ -17,11 +17,11 @@ Decide where you want the Course to start, stand in the position and face the di
 
 This example has named the Course "tutorial", the name you have chosen will be used to reference the Course later on. If everything was successful, the following message will appear.
 
-*This will create a Course entry in the database, allowing us to now track times against it.*
-
 ![Create Success](https://i.imgur.com/hA8HpnU.jpg "Create Success")
 
-The term "selected" means that you are editing the Course. This can be manually achieved by using the command `/pa select (course)`, you can now execute commands without having to specify the Course, for example the following `/pa checkpoint` command does not require you to specify a Course.
+*This will create a Course entry in the database, allowing us to now track times against it.*
+
+The term "selected" means that you are editing the Course. This can be manually achieved by using the command `/pa select (course)`, this allows you to execute some commands without having to specify the Course, for example the following `/pa checkpoint` command.
 
 ## Create Checkpoints
 
@@ -31,28 +31,31 @@ _This will place a pressure plate to activate the checkpoint._
 
 ![Checkpoint Created](https://i.imgur.com/IYgHBJs.jpg "Checkpoint Created")
 
-There is no limit to how many checkpoints you can create, they are automatically generated every time you enter `/pa checkpoint`. The checkpoint is generated for the Course you have selected (editing); To select a Course use the command `/pa select (course)`.
+There is no limit to how many checkpoints you can create, they are automatically generated every time you enter `/pa checkpoint`. _The checkpoint is generated for the Course you have selected (editing); To select a Course use the command `/pa select (course)`._
 
-Now you've learnt how to create a single checkpoint, repeat the command to create as many checkpoints as you want for the Course!
+Now you've learnt how to create a single checkpoint, repeat the command to create as many checkpoints as needed for the Course.
 
 ![Checkpoint 2 Created](https://i.imgur.com/TXum8Wx.jpg "Checkpoint 2 Created")
 ![Checkpoints Created](https://i.imgur.com/nlFsGsC.jpg "Checkpoints Created")
 
-If you happen to make a mistake, or want to move a checkpoint, you can use the same command but with an optional number parameter to overwrite that existing checkpoint. For example `/pa checkpoint 2` would overwrite the second checkpoint.
+If you happen to make a mistake, or want to move a checkpoint, you can use the same command but with an optional number parameter to overwrite that existing checkpoint.  
+For example `/pa checkpoint 2` would overwrite the second checkpoint. If preferred, you can [delete the checkpoint](tutorials/administration?id=delete-a-checkpoint).
+
+_Note that these checkpoints have to be achieved sequentially, otherwise they will not work. If you'd prefer there be no restriction to the order they are achieved use the [Free Checkpoint ParkourMode](tutorials/parkour-modes?id=free-checkpoint)._
 
 ## Ability to Finish Course
 
-For the Player to be able to finish the Course we need use a "Finish Block", or a Finish Parkour Sign.
+For the Player to be able to finish the Course they can interact with a "Finish Block", or a Finish Parkour Sign.
 
 A "Finish Block" is part of a ParkourKit and will trigger the Course being finished when walked upon. For now, we can set it to the default Finish Block, you can change it later. Simply enter `/pa kit` to populate your inventory with each item of the default ParkourKit, then find the Material named "Finish Block", and simply place these materials where you want the finish area to be.
 
 For more information on ParkourKits, [click here](parkour-kits.md).
 
-If you prefer the final checkpoint to trigger the Course finish, set `OnCourse.TreatLastCheckpointAsFinish` to `true`.
+If you prefer the final checkpoint to trigger the Course finish, set `OnCourse.TreatLastCheckpointAsFinish` to `true` in the `config.yml`.
 
 ## Course Ready Status
 
-Once all the checkpoints are created for the Course, it's time to set the status of the Course to "ready", so other Players can join it. To mark the Course as ready, enter `/pa ready (course)`.
+Once you've finished setting up the Course, and it's ready for other players to use then it's time to set the status of the Course to "ready". To mark the Course as ready, enter `/pa ready (course)`.
 
 By default, Players can not join a Course that has not been set to ready (so they don't join a half-finished Course), this can be disabled by changing `OnJoin.EnforceReady` to `false` in the `config.yml`.
 

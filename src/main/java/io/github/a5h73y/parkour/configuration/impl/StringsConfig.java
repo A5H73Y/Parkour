@@ -63,7 +63,6 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Parkour.QuietOff", "Quiet Mode: &bOFF");
 		this.addDefault("Parkour.TestModeOn", "Test Mode: &bON&f. Simulating &b%VALUE%&f ParkourKit.");
 		this.addDefault("Parkour.TestModeOff", "Test Mode: &bOFF");
-		this.addDefault("Parkour.Challenge.Receive", "You have been challenged by &b%PLAYER% &fto course &b%COURSE%");
 		this.addDefault("Parkour.AlreadyCompleted", "You have already completed this course.");
 		this.addDefault("Parkour.Question", "Please enter &a/pa yes &fto confirm, or &c/pa no &fto cancel.");
 

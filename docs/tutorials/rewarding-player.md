@@ -67,9 +67,9 @@ This can be used by Admins to manually set a Player's level. This can be done fo
 
 ## What is a ParkourRank?
 
-A ParkourRank is simply a title a Player earns when they reach a certain level.
+A ParkourRank is simply a title a Player earns when they reach a required ParkourLevel. As soon as the Player's ParkourLevel passes the threshold of the next ParkourRank to unlock, it will be applied to the player.
 
-A basic example could be similar to the following, when they reach each ParkourLevel they get the specified ParkourRank:
+A basic example could be similar to the following, when they reach or exceed each ParkourLevel they get the specified ParkourRank:
 
     5 = &3Beginner
     10 = &4Amateur
@@ -83,7 +83,7 @@ There are currently 2 ways to achieve a new ParkourRank.
 
 ### /pa rewardrank (level) (rank)
 
-As demonstrated above, this will create a ParkourRank for a corresponding ParkourLevel, when the achieve that level. It can be colour coded, for example `/pa rewardlevel 50 &1Expert`.
+As demonstrated above, this will create a ParkourRank for a corresponding ParkourLevel. It can be colour coded, for example `/pa rewardlevel 30 &6Expert`.
 
 ### /pa setrank (player) (rank)
 
@@ -91,7 +91,7 @@ This will manually set a Player's ParkourRank to the specified rank. Can be used
 
 ## ParkourRank Configuration
 
-By default this functionality is disabled, to avoid interfering with the Server's chat plugin.
+ParkourRanks are disabled by default to avoid interfering with the Server's chat plugin.
 
 To enable, find `Other.Parkour.ChatRankPrefix.Enabled` in the `config.yml`, and set it to `true`.
 
@@ -99,7 +99,8 @@ You must decide if you want to use Parkour's chat implementation, or extend your
 
 If you choose to use Parkour's chat implementation, the chat string format is found in the `strings.yml` under `Event.Chat`.
 
-If you choose to extend your current chat plugin, you must set `Other.Parkour.ChatRankPrefix.OverrideChat` to `false` in the `config.yml`. You can then add `%RANK%` to your chat plugin format, which the Parkour plugin will detect and replace with the Player's ParkourRank.
+If you choose to extend your current chat plugin, you must set `Other.Parkour.ChatRankPrefix.OverrideChat` to `true` in the `config.yml`. You can then add `%RANK%` to your chat plugin format, which the Parkour plugin will detect and replace with the Player's ParkourRank.  
+Alternatively, if you use a Chat plugin that supports PlaceholderAPI, you can use the `%parkour_player_rank%` placeholder.
 
 ## Delaying / Limiting the Rewards
 
@@ -116,7 +117,7 @@ Unfortunately due to time constraints and more important features, this has been
 ## Challenge Mode
 
 You are able to challenge a Player to a Course to see who can complete the Course the fastest. This can become competitive when a monetary wager is introduced (If Economy is enabled), the winner will have the amount added to the account and the loser will have the amount deducted.
-_Forfeiting (leaving the Course or server) will be treated as a loss and the wager will be deducted._
+_Forfeiting (leaving the Course or server) will be treated as a loss, and the wager will be deducted._
 
 To begin you must send the target Player a Challenge request using `/pa challenge (player) (course) [wager]` for example `/pa challenge A5H73Y fastrun`.
 
