@@ -27,6 +27,7 @@ import io.github.a5h73y.parkour.event.PlayerDeathEvent;
 import io.github.a5h73y.parkour.event.PlayerFinishCourseEvent;
 import io.github.a5h73y.parkour.event.PlayerJoinCourseEvent;
 import io.github.a5h73y.parkour.event.PlayerLeaveCourseEvent;
+import io.github.a5h73y.parkour.event.PlayerParkourLevelEvent;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.other.ParkourValidation;
@@ -1888,6 +1889,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 						.replace("%LEVEL%", String.valueOf(newParkourLevel))
 						.replace(Constants.COURSE_PLACEHOLDER, courseName));
 			}
+			Bukkit.getServer().getPluginManager().callEvent(new PlayerParkourLevelEvent(player, courseName, newParkourLevel));
 		}
 	}
 
