@@ -228,7 +228,9 @@ public class TranslationUtils {
 	 * @param message message to send
 	 */
 	public static void sendMessage(CommandSender sender, String message) {
-		sender.sendMessage(Parkour.getPrefix().concat(colour(message)));
+		if (!message.isEmpty()) {
+			sender.sendMessage(Parkour.getPrefix().concat(colour(message)));
+		}
 	}
 
 	/**
