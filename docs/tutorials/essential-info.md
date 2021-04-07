@@ -1,31 +1,5 @@
-The Basics
+Essential information
 ======
-
-## Beginning Steps
-
-You are recommended to create a world dedicated for Parkour Courses, although Parkour does have multi-world support. Once you have your world chosen, you should create an area where the Players can choose which Courses to join; This area is called a 'lobby'. Stand where you want the lobby to be saved and enter the command `/pa setlobby`. This only needs to be done once!
-
-When you want to teleport to the Parkour lobby, enter `/pa lobby`. By default, this is where Players are teleported to when they complete or leave a Course. We can create many lobbies which have different locations and requirements, which will be covered later in the tutorials.
-
-You should now have the latest version of Parkour installed, and have a Parkour lobby created.
-
-## Frequently Asked Questions
-
-##### Parkour Welcome Message
-
-To disable the Parkour Join message, in the `config.yml` find `Other.Display.JoinWelcomeMessage` and set it to `false`.
-
-##### Update Player Database Time
-
-To keep a single database row per Player per Course, in the `config.yml` find `OnFinish.UpdatePlayerDatabaseTime` and set it to `true`.
-
-##### Stuck Pressure Plates
-
-To allow for multiple Players to stand on a pressure plate at once, in the `config.yml` find `OnCourse.PreventPlateStick` and set it to `true`.
-
-##### Available Placeholders 
-
-Each of the Parkour PlaceholderAPI placeholders are available here: [Parkour Placeholders](/tutorials/compatible-plugins?id=parkour-placeholders)
 
 ## Permissions
 
@@ -68,41 +42,6 @@ Each of the Parkour PlaceholderAPI placeholders are available here: [Parkour Pla
 
 ## Parkour Commands
 
-<script>
-  fetch('files/parkourCommands.json')
-    .then(function(response) {
-      return response.json();
-    })
-    .then(function(data) {
-      appendData(data);
-    })
-    .catch(function(err) {
-      console.log(err);
-    });
-    
-    function appendData(data) {
-      data = data.reverse();
-      let mainContainer = document.getElementById("parkour-commands");
-
-      for (let i = 0; i < data.length; i++) {
-        mainContainer.insertAdjacentHTML('afterend', createCommandSummary(data[i]));
-      }
-    }
-    
-    function createCommandSummary(command) {
-        return `<details>
-                <summary>${command.command} - ${command.title}</summary>
-                <div>
-                    <p>Syntax: <code>/pa ${command.command} ${command.arguments || ''}</code></p>
-                    <p>Example: <code>${command.example}</code></p>
-                    <p>Permission: <code>${command.permission || 'None required'}</code></p>
-                    <p>Description: ${command.description}</p>
-                    <p>Console Command: <code>${command.consoleSyntax || 'N/A'}</code></p>
-                </div>
-            </details>`;
-    }
-</script>
-
 ## Command Help
 
 To display the Parkour commands menu, enter `/pa cmds` which will bring up the available command menus.
@@ -117,6 +56,26 @@ If you want to understand more information about a command, you can enter `/pa h
 
 ![Parkour Join Command Help](https://i.imgur.com/f9Qs12M.png "Parkour Join Command Help")
 
+## Parkour Placeholders
+
+## Frequently Asked Questions
+
+##### Parkour Welcome Message
+
+To disable the Parkour Join message, in the `config.yml` find `Other.Display.JoinWelcomeMessage` and set it to `false`.
+
+##### Update Player Database Time
+
+To keep a single database row per Player per Course, in the `config.yml` find `OnFinish.UpdatePlayerDatabaseTime` and set it to `true`.
+
+##### Stuck Pressure Plates
+
+To allow for multiple Players to stand on a pressure plate at once, in the `config.yml` find `OnCourse.PreventPlateStick` and set it to `true`.
+
+##### Available Placeholders
+
+Each of the Parkour PlaceholderAPI placeholders are available here: [Parkour Placeholders](/tutorials/compatible-plugins?id=parkour-placeholders)
+
 ## Terms / Meanings
 
 #### Course
@@ -129,7 +88,7 @@ A Lobby is simply a location that allows you to join Parkour Courses. It also ac
 
 #### ParkourKit
 
-A ParkourKit is a set of Materials which act as a set of toolbox for building a Course. Each Material in a ParkourKit must have an action, for example "death", "speed", etc. A Course must have a ParkourKit, even if it's empty.  
+A ParkourKit is a set of Materials which act as a set of toolbox for building a Course. Each Material in a ParkourKit must have an action, for example "death", "speed", etc. A Course must have a ParkourKit, even if it's empty.
 
 #### Config
 
@@ -142,3 +101,8 @@ A Player can earn levels will unlock new Courses for them to join. An example is
 #### ParkourRank
 
 When the Parkour chat is enabled, the Player's ParkourRank will be included in their message prefix. The Player can achieve a new ParkourRank when passing the required ParkourLevel to unlock it. This can be a status symbol for the Player's that have completed many of the harder Courses for example.
+
+<script>
+    insertCommandsMarkup();
+    insertPlaceholdersMarkup();
+</script>

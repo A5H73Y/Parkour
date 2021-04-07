@@ -606,7 +606,9 @@ public class CourseInfo {
                 if (displayName != null) {
                     itemMeta.setDisplayName(displayName);
                 }
-                itemMeta.setUnbreakable(unbreakable);
+                if (unbreakable) {
+                    itemMeta.setUnbreakable(true);
+                }
                 itemStack.setItemMeta(itemMeta);
                 joinItems.add(itemStack);
             }

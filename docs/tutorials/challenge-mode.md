@@ -1,7 +1,7 @@
 Challenge Mode
 ======
 
-## What is a Challenge Mode?
+## What is a Challenge?
 
 You are able to challenge other Players to a Course to see who can complete the Course the fastest and prove who is the best. This can become competitive when a monetary wager is introduced (If Economy is enabled), the winner will have the amount added to their account and the loser(s) will have the amount deducted. _Forfeiting (leaving the Course or server) will be treated as a loss, and the wager will be deducted in the event of a Player completing the Course._
 

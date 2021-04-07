@@ -16,6 +16,10 @@
     font-size: 18px;
 }
 
+.markdown-section details p {
+    margin: 0.5em auto;
+}
+
 .sidebar ul li a {
     font-size: 16px;
 }
@@ -30,6 +34,10 @@ img {
 
 .app-name-link img {
     max-width: 30%;
+}
+
+h1.app-name {
+    display: none;
 }
 
 h5 {

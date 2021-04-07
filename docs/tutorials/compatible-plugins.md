@@ -134,12 +134,12 @@ Leaderheads is a plugin that allows you to create all-time, daily, weekly, and m
 
 When used with Parkour, course leaderboards can be created using placeholder `%parkour_player_personal_best_(course)_milliseconds%`
 
-### Creating a LeaderHeads sign for course 'tutorial' showing the player with the best time for the week
+### Creating a LeaderHeads Sign
 First place a sign, and then while looking at the sign, type:
 
 `/leaderheads setsign %parkour_player_personal_best_tutorial_milliseconds% 1 weekly`
 
-The sign will update to show the number 1 ranked player on course 'tutorial' for the week with the time displayed as milliseconds.
+In this example the sign will update to show the number 1 ranked player on course 'tutorial' for the week with the time displayed as milliseconds.
 
 ![LeaderHeads Example 1](https://i.imgur.com/LTJ9Dw3.png "LeaderHeads Example 1")
 
