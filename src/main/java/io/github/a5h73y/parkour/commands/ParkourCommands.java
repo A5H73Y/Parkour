@@ -665,6 +665,18 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 }
                 break;
 
+            case "placeholder":
+                if (!ValidationUtils.validateArgs(player, args, 2)) {
+                    return false;
+                }
+
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                    return false;
+                }
+
+                parkour.getPlaceholderApi().evaluatePlaceholder(player, args[1]);
+                break;
+
             default:
                 TranslationUtils.sendTranslation("Error.UnknownCommand", player);
                 TranslationUtils.sendTranslation("Help.Commands", player);
