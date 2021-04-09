@@ -77,7 +77,6 @@ public class PlayerInfoUpgradeTask extends TimedConfigUpgradeTask {
 
 	private void convertPlayerInventory(String playerName, OfflinePlayer player) {
 		Object inventoryData = getParkourUpgrader().getInventoryConfig().get(playerName + ".Inventory");
-		Object armorData = getParkourUpgrader().getInventoryConfig().get(playerName + ".Armor");
 
 		if (inventoryData == null) {
 			getParkourUpgrader().getLogger().info(playerName + "'s Inventory couldn't be found.");
@@ -93,6 +92,9 @@ public class PlayerInfoUpgradeTask extends TimedConfigUpgradeTask {
 			List<?> lista = (List<?>) inventoryData;
 			inventory = lista.toArray(new ItemStack[0]);
 		}
+
+		Object armorData = getParkourUpgrader().getInventoryConfig().get(playerName + ".Armor");
+
 		if (armorData instanceof ItemStack[]) {
 			armor = (ItemStack[]) armorData;
 		} else if (armorData instanceof List) {

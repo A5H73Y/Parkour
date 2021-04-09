@@ -1,5 +1,8 @@
 package io.github.a5h73y.parkour.utility;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
+import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_UNKNOWN_PLAYER;
+
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.other.ParkourValidation;
@@ -243,7 +246,7 @@ public class PluginUtils {
         switch (command.toLowerCase()) {
             case "course":
                 if (!parkour.getCourseManager().doesCourseExists(argument)) {
-                    TranslationUtils.sendValueTranslation("Error.NoExist", argument, sender);
+                    TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, argument, sender);
                     return;
                 }
 
@@ -254,7 +257,7 @@ public class PluginUtils {
                 OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(argument);
 
                 if (!PlayerInfo.hasPlayerInfo(targetPlayer)) {
-                    TranslationUtils.sendTranslation("Error.UnknownPlayer", sender);
+                    TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, sender);
                     return;
                 }
 
@@ -263,7 +266,7 @@ public class PluginUtils {
 
             case "leaderboard":
                 if (!parkour.getCourseManager().doesCourseExists(argument)) {
-                    TranslationUtils.sendValueTranslation("Error.NoExist", argument, sender);
+                    TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, argument, sender);
                     return;
                 }
 
@@ -276,7 +279,7 @@ public class PluginUtils {
 
             case "prize":
                 if (!parkour.getCourseManager().doesCourseExists(argument)) {
-                    TranslationUtils.sendValueTranslation("Error.NoExist", argument, sender);
+                    TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, argument, sender);
                     return;
                 }
 

@@ -21,12 +21,12 @@ import pro.husk.mysql.MySQL;
 
 public class DatabaseUpgradeTask extends TimedUpgradeTask {
 
+	private final Map<Integer, String> courseIdToName = new HashMap<>();
+	private final Map<String, List<TimeEntry>> playerNameToTimes = new HashMap<>();
+
 	public DatabaseUpgradeTask(ParkourUpgrader parkourUpgrader) {
 		super(parkourUpgrader);
 	}
-
-	private final Map<Integer, String> courseIdToName = new HashMap<>();
-	private final Map<String, List<TimeEntry>> playerNameToTimes = new HashMap<>();
 
 	@Override
 	protected String getTitle() {

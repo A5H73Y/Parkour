@@ -1,8 +1,11 @@
 package io.github.a5h73y.parkour.type.challenge;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.COURSE_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT_WALK_SPEED;
+import static io.github.a5h73y.parkour.other.ParkourConstants.PLAYER_PLACEHOLDER;
+
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.other.ParkourValidation;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
@@ -111,8 +114,8 @@ public class ChallengeManager extends AbstractPluginReceiver {
         if (targetPlayer != null) {
             invites.put(targetPlayer, new ChallengeInvite(challenge));
             targetPlayer.sendMessage(TranslationUtils.getTranslation("Parkour.Challenge.InviteReceived")
-                    .replace(Constants.COURSE_PLACEHOLDER, challenge.getCourseName())
-                    .replace(Constants.PLAYER_PLACEHOLDER, challenge.getChallengeHost().getName()));
+                    .replace(COURSE_PLACEHOLDER, challenge.getCourseName())
+                    .replace(PLAYER_PLACEHOLDER, challenge.getChallengeHost().getName()));
             TranslationUtils.sendTranslation("Parkour.Challenge.AcceptDecline", false, targetPlayer);
         }
     }
@@ -169,7 +172,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
 
         if (challenge != null) {
             challenge.setForfeited(player, true);
-            player.setWalkSpeed(Constants.DEFAULT_WALK_SPEED);
+            player.setWalkSpeed(DEFAULT_WALK_SPEED);
 
             if (challenge.allPlayersForfeited()) {
                 removeChallenge(challenge.getChallengeHost());
@@ -212,8 +215,8 @@ public class ChallengeManager extends AbstractPluginReceiver {
                 }
 
                 loser.sendMessage(TranslationUtils.getTranslation("Parkour.Challenge.Loser")
-                        .replace(Constants.PLAYER_PLACEHOLDER, winner.getName())
-                        .replace(Constants.COURSE_PLACEHOLDER, challenge.getCourseName()));
+                        .replace(PLAYER_PLACEHOLDER, winner.getName())
+                        .replace(COURSE_PLACEHOLDER, challenge.getCourseName()));
 
                 if (challenge.getWager() != null) {
                     parkour.getEconomyApi().chargePlayer(loser, challenge.getWager());
@@ -332,11 +335,11 @@ public class ChallengeManager extends AbstractPluginReceiver {
                     this.cancel();
 
                     for (Player participant : challenge.getParticipatingPlayers()) {
-                        participant.setWalkSpeed(Constants.DEFAULT_WALK_SPEED);
+                        participant.setWalkSpeed(DEFAULT_WALK_SPEED);
                         PlayerUtils.removePotionEffect(PotionEffectType.JUMP, participant);
                         parkour.getPlayerManager().setupParkourMode(participant);
                         ParkourSession session = parkour.getPlayerManager().getParkourSession(participant);
-                        session.resetTime();
+                        session.resetProgress();
                         session.setStartTimer(true);
                         TranslationUtils.sendTranslation("Parkour.Go", participant);
                     }

@@ -44,8 +44,6 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             return;
         }
 
-        Player player = event.getPlayer();
-
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
             return;
         }
@@ -54,6 +52,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             return;
         }
 
+        Player player = event.getPlayer();
         if (!player.isSneaking() && parkour.getConfig().getBoolean("OnCourse.SneakToInteractItems")) {
             return;
         }
@@ -197,7 +196,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             parkour.getSoundsManager().playSound(event.getPlayer(), SoundType.CHECKPOINT_ACHIEVED);
             boolean showTitle = parkour.getConfig().getBoolean("DisplayTitle.Checkpoint");
 
-            String checkpointMessage = TranslationUtils.getCourseEventMessage(session.getCourse().getName(),
+            String checkpointMessage = TranslationUtils.getCourseEventMessage(session,
                     ParkourEventType.CHECKPOINT, "Event.FreeCheckpoints");
 
             parkour.getBountifulApi().sendSubTitle(event.getPlayer(), checkpointMessage, showTitle);
@@ -263,8 +262,10 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             if (session != null) {
                 // we only want to do something if the names match
                 if (session.getCourseName().equals(courseName)) {
-                    Bukkit.getScheduler().runTask(parkour, () ->
-                            parkour.getPlayerManager().restartCourse(event.getPlayer(), true));
+                    Bukkit.getScheduler().runTask(parkour, () -> {
+                        session.resetProgress();
+                        session.setFreedomLocation(null);
+                    });
                 }
             } else {
                 parkour.getPlayerManager().joinCourseButDelayed(

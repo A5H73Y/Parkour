@@ -8,8 +8,14 @@ import static io.github.a5h73y.parkour.enums.ParkourEventType.FINISH;
 import static io.github.a5h73y.parkour.enums.ParkourEventType.JOIN;
 import static io.github.a5h73y.parkour.enums.ParkourEventType.LEAVE;
 import static io.github.a5h73y.parkour.enums.ParkourEventType.PRIZE;
-import static io.github.a5h73y.parkour.other.Constants.DEFAULT;
-import static io.github.a5h73y.parkour.other.Constants.TEST_MODE;
+import static io.github.a5h73y.parkour.other.ParkourConstants.COURSE_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT;
+import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_INVALID_AMOUNT;
+import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
+import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_UNKNOWN_PLAYER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.PARKOUR_LEVEL_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.PARKOUR_RANK_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.TEST_MODE;
 import static io.github.a5h73y.parkour.utility.TranslationUtils.sendConditionalValue;
 import static io.github.a5h73y.parkour.utility.TranslationUtils.sendValue;
 
@@ -30,7 +36,7 @@ import io.github.a5h73y.parkour.event.PlayerLeaveCourseEvent;
 import io.github.a5h73y.parkour.event.PlayerParkourLevelEvent;
 import io.github.a5h73y.parkour.event.PlayerParkourRankEvent;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.other.Constants;
+import io.github.a5h73y.parkour.other.ParkourConstants;
 import io.github.a5h73y.parkour.other.ParkourValidation;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.course.Course;
@@ -86,10 +92,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public class PlayerManager extends AbstractPluginReceiver {
 
-	private final transient Map<Player, ParkourSession> parkourPlayers = new WeakHashMap<>();
+	private final Map<Player, ParkourSession> parkourPlayers = new WeakHashMap<>();
 
-	private final transient Map<Player, Long> playerDelay = new HashMap<>();
-	private final transient Map<Integer, String> parkourRanks = new TreeMap<>();
+	private final Map<Player, Long> playerDelay = new HashMap<>();
+	private final Map<Integer, String> parkourRanks = new TreeMap<>();
 
 	private final List<Player> hiddenPlayers = new ArrayList<>();
 
@@ -134,7 +140,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 */
 	public boolean isPlayerInTestMode(Player player) {
 		ParkourSession session = getParkourSession(player);
-		return session != null && Constants.TEST_MODE.equals(session.getCourse().getName());
+		return session != null && ParkourConstants.TEST_MODE.equals(session.getCourse().getName());
 	}
 
 	/**
@@ -166,7 +172,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 */
 	public int getNumberOfPlayersOnCourse(@NotNull String courseName) {
 		return (int) parkourPlayers.values().stream()
-				.filter(parkourSession -> parkourSession.getCourseName().equals(courseName.toLowerCase()))
+				.filter(parkourSession -> parkourSession.getCourseName().equalsIgnoreCase(courseName))
 				.count();
 	}
 
@@ -178,8 +184,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 */
 	public List<String> getPlayerNamesOnCourse(@NotNull String courseName) {
 		return parkourPlayers.entrySet().stream()
-				.filter(playerParkourSessionEntry -> playerParkourSessionEntry.getValue().getCourseName().equals(courseName))
-				.map(playerParkourSessionEntry -> playerParkourSessionEntry.getKey().getName())
+				.filter(session -> session.getValue().getCourseName().equals(courseName))
+				.map(session -> session.getKey().getName())
 				.collect(Collectors.toList());
 	}
 
@@ -194,7 +200,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		Course course = parkour.getCourseManager().findCourse(courseName);
 
 		if (course == null) {
-			TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
+			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, player);
 			return;
 		}
 
@@ -237,53 +243,29 @@ public class PlayerManager extends AbstractPluginReceiver {
 		preparePlayerForCourse(player, course.getName());
 		CourseInfo.incrementViews(course.getName());
 		PlayerInfo.setLastPlayedCourse(player, course.getName());
+		parkour.getSoundsManager().playSound(player, SoundType.JOIN_COURSE);
 
 		// already on a different course
 		if (isPlaying(player) && !getParkourSession(player).getCourseName().equals(course.getName())) {
 			removePlayer(player);
 		}
 
-		// join message
-		if (!PlayerInfo.isQuietMode(player) && !silent) {
-			boolean displayTitle = parkour.getConfig().getBoolean("DisplayTitle.JoinCourse");
-
-			String subTitle = "";
-			if (course.hasMaxDeaths() && course.hasMaxTime()) {
-				subTitle = TranslationUtils.getTranslation("Parkour.JoinLivesAndTime", false)
-						.replace("%LIVES%", String.valueOf(course.getMaxDeaths()))
-						.replace("%MAXTIME%", DateTimeUtils.convertSecondsToTime(course.getMaxTime()));
-
-			} else if (course.hasMaxDeaths()) {
-				subTitle = TranslationUtils.getValueTranslation(
-						"Parkour.JoinLives", String.valueOf(course.getMaxDeaths()), false);
-
-			} else if (course.hasMaxTime()) {
-				subTitle = TranslationUtils.getValueTranslation("Parkour.JoinTime",
-						DateTimeUtils.convertSecondsToTime(course.getMaxTime()), false);
-			}
-
-			parkour.getBountifulApi().sendFullTitle(player,
-					TranslationUtils.getCourseEventMessage(course.getName(), JOIN, "Parkour.Join"),
-					subTitle, displayTitle);
-
-			if (parkour.getConfig().isCompletedCoursesEnabled()
-					&& PlayerInfo.hasCompletedCourse(player, course.getName())
-					&& parkour.getConfig().getBoolean("OnFinish.CompletedCourses.JoinMessage")) {
-				TranslationUtils.sendValueTranslation("Parkour.AlreadyCompleted", course.getName(), player);
-			}
-		}
+		// set up their session
 		ParkourSession session;
 		if (canLoadParkourSession(player, course)) {
 			session = loadParkourSession(player, course.getName());
 			PlayerUtils.teleportToLocation(player, determineDestination(session));
-			TranslationUtils.sendValueTranslation("Parkour.Continue", session.getCourseName(), player);
+			TranslationUtils.sendValueTranslation("Parkour.Continue", session.getCourse().getDisplayName(), player);
 		} else {
 			session = addPlayer(player, new ParkourSession(course));
 		}
+
+		displayJoinMessage(player, silent, session);
 		setupParkourMode(player);
+
 		parkour.getScoreboardManager().addScoreboard(player, session);
 		if (!silent) {
-			parkour.getCourseManager().runEventCommands(player, course.getName(), JOIN);
+			parkour.getCourseManager().runEventCommands(player, session, JOIN);
 		}
 		if (!parkour.getConfig().isTreatFirstCheckpointAsStart()
 				&& !parkour.getChallengeManager().hasPlayerBeenChallenged(player)) {
@@ -351,8 +333,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		if (!silent) {
 			parkour.getSoundsManager().playSound(player, SoundType.COURSE_FAILED);
 			parkour.getBountifulApi().sendSubTitle(player,
-					TranslationUtils.getCourseEventMessage(
-							session.getCourse().getName(), LEAVE, "Parkour.Leave"),
+					TranslationUtils.getCourseEventMessage(session, LEAVE, "Parkour.Leave"),
 					parkour.getConfig().getBoolean("DisplayTitle.Leave"));
 
 			if (parkour.getConfig().getBoolean("OnLeave.TeleportAway")) {
@@ -363,7 +344,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 					parkour.getLobbyManager().teleportToLeaveDestination(player, session);
 				}
 			}
-			parkour.getCourseManager().runEventCommands(player, session.getCourseName(), LEAVE);
+			parkour.getCourseManager().runEventCommands(player, session, LEAVE);
 		}
 
 		forceVisible(player);
@@ -388,7 +369,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		session.increaseCheckpoint();
-		parkour.getCourseManager().runEventCommands(player, session.getCourseName(), CHECKPOINT);
+		parkour.getCourseManager().runEventCommands(player, session, CHECKPOINT);
 
 		ParkourEventType eventType = CHECKPOINT;
 		String checkpointTranslation = "Event.Checkpoint";
@@ -399,7 +380,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 				return;
 			}
 
-			parkour.getCourseManager().runEventCommands(player, session.getCourseName(), CHECKPOINT_ALL);
+			parkour.getCourseManager().runEventCommands(player, session, CHECKPOINT_ALL);
 			eventType = CHECKPOINT_ALL;
 			checkpointTranslation = "Event.AllCheckpoints";
 		}
@@ -409,8 +390,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		boolean showTitle = parkour.getConfig().getBoolean("DisplayTitle.Checkpoint");
 
-		String checkpointMessage = TranslationUtils.getCourseEventMessage(session.getCourse().getName(),
-				eventType, checkpointTranslation)
+		String checkpointMessage = TranslationUtils.getCourseEventMessage(session, eventType, checkpointTranslation)
 				.replace("%CURRENT%", String.valueOf(session.getCurrentCheckpoint()))
 				.replace("%TOTAL%", String.valueOf(session.getCourse().getNumberOfCheckpoints()));
 
@@ -461,16 +441,14 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		parkour.getScoreboardManager().updateScoreboardDeaths(player, session.getDeaths(), session.getRemainingDeaths());
-		parkour.getCourseManager().runEventCommands(player, session.getCourseName(), DEATH);
+		parkour.getCourseManager().runEventCommands(player, session, DEATH);
 
 		// they haven't yet achieved a checkpoint
 		if (session.getCurrentCheckpoint() == 0 && session.getFreedomLocation() == null) {
-			String message = TranslationUtils.getCourseEventMessage(session.getCourseName(),
-					DEATH, "Parkour.Die1");
+			String message = TranslationUtils.getCourseEventMessage(session, DEATH, "Parkour.Die1");
 
-			if (parkour.getConfig().getBoolean("OnDie.ResetTimeWithNoCheckpoint")) {
-				session.resetTime();
-				session.resetDeaths();
+			if (parkour.getConfig().getBoolean("OnDie.ResetProgressWithNoCheckpoint")) {
+				session.resetProgress();
 				message += " " + TranslationUtils.getTranslation("Parkour.TimeReset", false);
 			}
 
@@ -480,7 +458,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		} else {
 			if (!PlayerInfo.isQuietMode(player)) {
 				TranslationUtils.sendValueTranslation("Parkour.Die2",
-						Integer.toString(session.getCurrentCheckpoint()), player);
+						String.valueOf(session.getCurrentCheckpoint()), player);
 			}
 		}
 
@@ -536,7 +514,6 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		ParkourSession session = getParkourSession(player);
-		final String courseName = session.getCourse().getName();
 
 		if (parkour.getConfig().getBoolean("OnFinish.EnforceCompletion")
 				&& !session.hasAchievedAllCheckpoints()) {
@@ -547,6 +524,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 			playerDie(player);
 			return;
 		}
+
+		final String courseName = session.getCourse().getName();
 
 		session.markTimeFinished();
 		parkour.getSoundsManager().playSound(player, SoundType.COURSE_FINISHED);
@@ -571,32 +550,22 @@ public class PlayerManager extends AbstractPluginReceiver {
 		final long delay = parkour.getConfig().getLong("OnFinish.TeleportDelay");
 		final boolean teleportAway = parkour.getConfig().getBoolean("OnFinish.TeleportAway");
 
-		if (delay <= 0) {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () -> {
 			restoreHealthHunger(player);
 			loadInventoryArmor(player);
-			rewardPrize(player, courseName);
+			rewardPrize(player, session);
 			parkour.getScoreboardManager().removeScoreboard(player);
 			if (teleportAway) {
 				teleportCourseCompletion(player, courseName);
 			}
-		} else {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () -> {
-				restoreHealthHunger(player);
-				loadInventoryArmor(player);
-				rewardPrize(player, courseName);
-				parkour.getScoreboardManager().removeScoreboard(player);
-				if (teleportAway) {
-					teleportCourseCompletion(player, courseName);
-				}
-			}, delay);
-		}
+		}, delay);
 
 		boolean recordTime = isNewRecord(player, session);
 		parkour.getDatabase().insertOrUpdateTime(
 				courseName, player, session.getTimeFinished(), session.getDeaths(), recordTime);
 
 		if (recordTime) {
-			parkour.getCourseManager().runEventCommands(player, courseName, COURSE_RECORD);
+			parkour.getCourseManager().runEventCommands(player, session, COURSE_RECORD);
 		}
 
 		PlayerInfo.setLastCompletedCourse(player, courseName);
@@ -650,16 +619,17 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * If 'Reward Once' is enabled and they've completed the Course, only the {@code ParkourEventType.FINISH} event will fire.
 	 *
 	 * @param player requesting player
-	 * @param courseName course name
+	 * @param session parkour session
 	 */
-	public void rewardPrize(Player player, String courseName) {
+	public void rewardPrize(Player player, ParkourSession session) {
+		String courseName = session.getCourseName();
 		if (!parkour.getConfig().getBoolean("OnFinish.EnablePrizes")) {
 			return;
 		}
 
 		if (CourseInfo.getRewardOnce(courseName)
 				&& parkour.getDatabase().hasPlayerAchievedTime(player, courseName)) {
-			parkour.getCourseManager().runEventCommands(player, courseName, FINISH);
+			parkour.getCourseManager().runEventCommands(player, session, FINISH);
 			return;
 		}
 
@@ -706,11 +676,11 @@ public class PlayerManager extends AbstractPluginReceiver {
 		parkour.getEconomyApi().giveEconomyPrize(player, courseName);
 
 		if (CourseInfo.hasEventCommands(courseName, PRIZE)) {
-			parkour.getCourseManager().runEventCommands(player, courseName, PRIZE);
+			parkour.getCourseManager().runEventCommands(player, session, PRIZE);
 
 		} else if (ValidationUtils.isStringValid(parkour.getConfig().getDefaultPrizeCommand())) {
 			parkour.getCourseManager().dispatchServerPlayerCommand(
-					parkour.getConfig().getDefaultPrizeCommand(), player);
+					parkour.getConfig().getDefaultPrizeCommand(), player, session);
 		}
 		player.updateInventory();
 	}
@@ -1039,8 +1009,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		PlayerInfo.increaseParkoins(player, parkoins);
 		player.sendMessage(TranslationUtils.getTranslation("Parkour.RewardParkoins")
-				.replace("%AMOUNT%", Double.toString(parkoins))
-				.replace("%TOTAL%", Double.toString(PlayerInfo.getParkoins(player))));
+				.replace(ParkourConstants.AMOUNT_PLACEHOLDER, String.valueOf(parkoins))
+				.replace("%TOTAL%", String.valueOf(PlayerInfo.getParkoins(player))));
 	}
 
 	/**
@@ -1111,7 +1081,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 				List<Checkpoint> checkpoints = Collections.singletonList(
 						parkour.getCheckpointManager().createCheckpointFromPlayerLocation(player));
 				ParkourSession session = new ParkourSession(
-						new Course(Constants.TEST_MODE, checkpoints, kit, ParkourMode.NONE));
+						new Course(TEST_MODE, checkpoints, kit, ParkourMode.NONE));
 				addPlayer(player, session);
 				parkour.getBountifulApi().sendActionBar(player, TranslationUtils.getValueTranslation(
 						"Parkour.TestModeOn", kitName, false), true);
@@ -1128,7 +1098,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 */
 	public void displayParkourInfo(CommandSender sender, OfflinePlayer targetPlayer) {
 		if (!PlayerInfo.hasPlayerInfo(targetPlayer)) {
-			TranslationUtils.sendTranslation("Error.UnknownPlayer", sender);
+			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, sender);
 			return;
 		}
 
@@ -1163,12 +1133,12 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 */
 	public void setParkourLevel(CommandSender sender, OfflinePlayer targetPlayer, String value, boolean addition) {
 		if (!ValidationUtils.isPositiveInteger(value)) {
-			TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+			TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
 			return;
 		}
 
 		if (!PlayerInfo.hasPlayerInfo(targetPlayer)) {
-			TranslationUtils.sendTranslation("Error.UnknownPlayer", sender);
+			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, sender);
 			return;
 		}
 
@@ -1198,7 +1168,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 */
 	public void setParkourRank(CommandSender sender, OfflinePlayer targetPlayer, String value) {
 		if (!PlayerInfo.hasPlayerInfo(targetPlayer)) {
-			TranslationUtils.sendTranslation("Error.UnknownPlayer", sender);
+			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, sender);
 			return;
 		}
 
@@ -1284,13 +1254,10 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		TranslationUtils.sendMessage(sender, getNumberOfParkourPlayer() + " players using Parkour: ");
 
-		String playingTemplate = TranslationUtils.getTranslation("Parkour.Playing", false);
+		String playingMessage = TranslationUtils.getTranslation("Parkour.Playing", false);
 		for (Map.Entry<Player, ParkourSession> entry : parkourPlayers.entrySet()) {
-			sender.sendMessage(playingTemplate
-					.replace(Constants.PLAYER_PLACEHOLDER, entry.getKey().getName())
-					.replace(Constants.COURSE_PLACEHOLDER, entry.getValue().getCourse().getName())
-					.replace(Constants.DEATHS_PLACEHOLDER, String.valueOf(entry.getValue().getDeaths()))
-					.replace(Constants.TIME_PLACEHOLDER, entry.getValue().getDisplayTime()));
+			sender.sendMessage(TranslationUtils.replaceAllParkourPlaceholders(
+					playingMessage, entry.getKey(), entry.getValue()));
 		}
 	}
 
@@ -1303,8 +1270,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 		TranslationUtils.sendHeading("Parkour Ranks", sender);
 		parkourRanks.forEach((parkourLevel, parkourRank) ->
 				sender.sendMessage(TranslationUtils.getTranslation("Parkour.RankInfo", false)
-						.replace("%LEVEL%", parkourLevel.toString())
-						.replace("%RANK%", parkourRank)));
+						.replace(PARKOUR_LEVEL_PLACEHOLDER, parkourLevel.toString())
+						.replace(PARKOUR_RANK_PLACEHOLDER, parkourRank)));
 	}
 
 	/**
@@ -1317,7 +1284,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 */
 	public void setRewardParkourRank(CommandSender sender, String parkourLevel, String parkourRank) {
 		if (!ValidationUtils.isPositiveInteger(parkourLevel)) {
-			TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+			TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
 			return;
 		}
 
@@ -1342,7 +1309,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(args[1]);
 
 		if (!PlayerInfo.hasPlayerInfo(targetPlayer)) {
-			TranslationUtils.sendTranslation("Error.UnknownPlayer", sender);
+			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, sender);
 			return;
 		}
 
@@ -1378,7 +1345,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(targetPlayerName);
 
 		if (!PlayerInfo.hasPlayerInfo(targetPlayer)) {
-			TranslationUtils.sendTranslation("Error.UnknownPlayer", sender);
+			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, sender);
 			return;
 		}
 
@@ -1564,11 +1531,10 @@ public class PlayerManager extends AbstractPluginReceiver {
 	private void announceCourseFinishMessage(Player player, ParkourSession session) {
 		if (parkour.getConfig().getBoolean("OnFinish.DisplayStats")) {
 			parkour.getBountifulApi().sendFullTitle(player,
-					TranslationUtils.getCourseEventMessage(
-							session.getCourse().getName(), FINISH, "Parkour.FinishCourse1"),
-					TranslationUtils.getTranslation("Parkour.FinishCourse2", false)
-							.replace(Constants.DEATHS_PLACEHOLDER, session.getDeaths() + "")
-							.replace(Constants.TIME_PLACEHOLDER, session.getDisplayTime()),
+					TranslationUtils.getCourseEventMessage(session, FINISH, "Parkour.FinishCourse1"),
+					TranslationUtils.replaceAllParkourPlaceholders(
+							TranslationUtils.getTranslation("Parkour.FinishCourse2", false),
+							player, session),
 					parkour.getConfig().getBoolean("DisplayTitle.Finish"));
 		}
 
@@ -1577,34 +1543,11 @@ public class PlayerManager extends AbstractPluginReceiver {
 			return;
 		}
 
-		String finishBroadcast = TranslationUtils.getTranslation("Parkour.FinishBroadcast")
-				.replace(Constants.PLAYER_PLACEHOLDER, player.getName())
-				.replace("%PLAYER_DISPLAY%", player.getDisplayName())
-				.replace(Constants.COURSE_PLACEHOLDER, session.getCourse().getName())
-				.replace(Constants.DEATHS_PLACEHOLDER, String.valueOf(session.getDeaths()))
-				.replace(Constants.TIME_PLACEHOLDER, session.getDisplayTime());
+		String finishBroadcast = TranslationUtils.replaceAllParkourPlaceholders(
+				TranslationUtils.getTranslation("Parkour.FinishBroadcast"), player, session);
 
-		switch (parkour.getConfig().getString("OnFinish.BroadcastLevel", "WORLD").toUpperCase()) {
-			case "GLOBAL":
-				for (Player players : Bukkit.getServer().getOnlinePlayers()) {
-					players.sendMessage(finishBroadcast);
-				}
-				return;
-			case "WORLD":
-				for (Player players : player.getWorld().getPlayers()) {
-					players.sendMessage(finishBroadcast);
-				}
-				return;
-			case "PARKOUR":
-				for (Player players : getOnlineParkourPlayers()) {
-					players.sendMessage(finishBroadcast);
-				}
-				return;
-			case "PLAYER":
-				player.sendMessage(finishBroadcast);
-				return;
-			default:
-		}
+		String scope = parkour.getConfig().getString("OnFinish.BroadcastLevel", "WORLD");
+		TranslationUtils.announceParkourMessage(player, scope, finishBroadcast);
 	}
 
 	/**
@@ -1701,7 +1644,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			if (parkour.getConfig().getBoolean("OnFinish.DisplayNewRecords")) {
 				parkour.getBountifulApi().sendFullTitle(player,
 						TranslationUtils.getCourseEventMessage(
-								session.getCourseName(), COURSE_RECORD, "Parkour.CourseRecord"),
+								session, COURSE_RECORD, "Parkour.CourseRecord"),
 						DateTimeUtils.displayCurrentTime(session.getTimeFinished()), true);
 			}
 			return true;
@@ -1711,7 +1654,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			if (parkour.getConfig().getBoolean("OnFinish.DisplayNewRecords")) {
 				parkour.getBountifulApi().sendFullTitle(player,
 						TranslationUtils.getCourseEventMessage(
-								session.getCourseName(), COURSE_RECORD, "Parkour.BestTime"),
+								session, COURSE_RECORD, "Parkour.BestTime"),
 						DateTimeUtils.displayCurrentTime(session.getTimeFinished()), true);
 			}
 			return true;
@@ -1881,17 +1824,19 @@ public class PlayerManager extends AbstractPluginReceiver {
 			if (rewardRank != null) {
 				PlayerInfo.setParkourRank(player, rewardRank);
 				TranslationUtils.sendValueTranslation("Parkour.RewardRank", rewardRank, player);
-				Bukkit.getServer().getPluginManager().callEvent(new PlayerParkourRankEvent(player, courseName, rewardRank));
+				Bukkit.getServer().getPluginManager().callEvent(
+						new PlayerParkourRankEvent(player, courseName, rewardRank));
 			}
 
 			// update parkour level
 			PlayerInfo.setParkourLevel(player, newParkourLevel);
 			if (parkour.getConfig().getBoolean("Other.Display.LevelReward")) {
 				player.sendMessage(TranslationUtils.getTranslation("Parkour.RewardLevel")
-						.replace("%LEVEL%", String.valueOf(newParkourLevel))
-						.replace(Constants.COURSE_PLACEHOLDER, courseName));
+						.replace(PARKOUR_LEVEL_PLACEHOLDER, String.valueOf(newParkourLevel))
+						.replace(COURSE_PLACEHOLDER, courseName));
 			}
-			Bukkit.getServer().getPluginManager().callEvent(new PlayerParkourLevelEvent(player, courseName, newParkourLevel));
+			Bukkit.getServer().getPluginManager().callEvent(
+					new PlayerParkourLevelEvent(player, courseName, newParkourLevel));
 		}
 	}
 
@@ -1976,6 +1921,46 @@ public class PlayerManager extends AbstractPluginReceiver {
 		if (courseMode == ParkourMode.SPEEDY) {
 			float speed = Float.parseFloat(parkour.getConfig().getString("ParkourModes.Speedy.ResetSpeed"));
 			player.setWalkSpeed(speed);
+		}
+	}
+
+	private void displayJoinMessage(Player player, boolean silent, ParkourSession session) {
+		Course course = session.getCourse();
+
+		if (!PlayerInfo.isQuietMode(player) && !silent) {
+			boolean displayTitle = parkour.getConfig().getBoolean("DisplayTitle.JoinCourse");
+
+			String subTitle = "";
+			if (course.hasMaxDeaths() && course.hasMaxTime()) {
+				subTitle = TranslationUtils.getTranslation("Parkour.JoinLivesAndTime", false)
+						.replace("%LIVES%", String.valueOf(course.getMaxDeaths()))
+						.replace("%MAXTIME%", DateTimeUtils.convertSecondsToTime(course.getMaxTime()));
+
+			} else if (course.hasMaxDeaths()) {
+				subTitle = TranslationUtils.getValueTranslation(
+						"Parkour.JoinLives", String.valueOf(course.getMaxDeaths()), false);
+
+			} else if (course.hasMaxTime()) {
+				subTitle = TranslationUtils.getValueTranslation("Parkour.JoinTime",
+						DateTimeUtils.convertSecondsToTime(course.getMaxTime()), false);
+			}
+
+			parkour.getBountifulApi().sendFullTitle(player,
+					TranslationUtils.getCourseEventMessage(session, JOIN, "Parkour.Join"),
+					subTitle, displayTitle);
+
+			if (parkour.getConfig().isCompletedCoursesEnabled()
+					&& PlayerInfo.hasCompletedCourse(player, course.getName())
+					&& parkour.getConfig().getBoolean("OnFinish.CompletedCourses.JoinMessage")) {
+				TranslationUtils.sendValueTranslation("Parkour.AlreadyCompleted",
+						course.getDisplayName(), player);
+			}
+
+			String joinBroadcast = TranslationUtils.replaceAllParkourPlaceholders(
+					TranslationUtils.getTranslation("Parkour.JoinBroadcast"), player, session);
+
+			String scope = parkour.getConfig().getString("OnJoin.BroadcastLevel");
+			TranslationUtils.announceParkourMessage(player, scope, joinBroadcast);
 		}
 	}
 

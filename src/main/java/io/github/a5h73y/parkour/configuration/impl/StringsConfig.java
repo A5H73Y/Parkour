@@ -33,6 +33,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Parkour.Delete", "&b%VALUE% &fhas been deleted!");
 		this.addDefault("Parkour.DeleteCheckpoint", "Checkpoint &b%CHECKPOINT% &fwas deleted on &b%COURSE%");
 		this.addDefault("Parkour.Reset", "&b%VALUE% &fhas been reset!");
+		this.addDefault("Parkour.JoinBroadcast", "&3%PLAYER% &fjoined &b%COURSE%&f!");
 		this.addDefault("Parkour.FinishBroadcast", "&3%PLAYER% &ffinished &b%COURSE% &fwith &b%DEATHS% &fdeaths, in &b%TIME%&f!");
 		this.addDefault("Parkour.FinishCourse1", "Finished &b%VALUE%&f!");
 		this.addDefault("Parkour.FinishCourse2", "In &b%TIME%&f, dying &b%DEATHS% &ftimes");
@@ -128,6 +129,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Error.InvalidSession", "Your ParkourSession is invalid.");
 		this.addDefault("Error.ChallengeOnly", "This Course is limited to Challenges only.");
 		this.addDefault("Error.OnChallenge", "You are already in a Challenge.");
+		this.addDefault("Error.InvalidValue", "Please enter a valid value.");
 
 		this.addDefault("Help.Command", "&7/pa help &9%VALUE% &0: &7To learn more about the command.");
 		this.addDefault("Help.Commands", "To display the commands menu, enter &b/pa cmds");

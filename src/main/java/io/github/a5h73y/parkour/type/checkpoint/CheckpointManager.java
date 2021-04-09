@@ -1,11 +1,14 @@
 package io.github.a5h73y.parkour.type.checkpoint;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.CHECKPOINT_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.COURSE_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
+
 import com.cryptomorin.xseries.XBlock;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.other.ParkourValidation;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
@@ -55,7 +58,6 @@ public class CheckpointManager extends AbstractPluginReceiver {
         checkpoint = checkpoint != null ? checkpoint : CourseInfo.getCheckpointAmount(selectedCourse) + 1;
         Location location = player.getLocation();
         Block block = location.getBlock();
-        Block blockUnder = block.getRelative(BlockFace.DOWN);
 
         if (parkour.getConfig().isEnforceSafeCheckpoints()) {
             try {
@@ -73,6 +75,8 @@ public class CheckpointManager extends AbstractPluginReceiver {
             }
         }
 
+        Block blockUnder = block.getRelative(BlockFace.DOWN);
+
         // if they are floating in air, place stone below them
         if (XBlock.isAir(blockUnder.getType())) {
             blockUnder.setType(Material.STONE);
@@ -83,8 +87,8 @@ public class CheckpointManager extends AbstractPluginReceiver {
         createCheckpointData(selectedCourse, location, checkpoint);
         parkour.getCourseManager().clearCache(selectedCourse);
         player.sendMessage(TranslationUtils.getTranslation("Parkour.CheckpointCreated")
-                .replace(Constants.CHECKPOINT_PLACEHOLDER, String.valueOf(checkpoint))
-                .replace(Constants.COURSE_PLACEHOLDER, selectedCourse));
+                .replace(CHECKPOINT_PLACEHOLDER, String.valueOf(checkpoint))
+                .replace(COURSE_PLACEHOLDER, selectedCourse));
     }
 
     /**
@@ -183,7 +187,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
      */
     public void teleportCheckpoint(Player player, String courseName, @Nullable Integer checkpoint) {
         if (!parkour.getCourseManager().doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, player);
             return;
         }
 
@@ -239,8 +243,8 @@ public class CheckpointManager extends AbstractPluginReceiver {
         parkour.getCourseManager().clearCache(courseName);
 
         sender.sendMessage(TranslationUtils.getTranslation("Parkour.DeleteCheckpoint")
-                .replace(Constants.CHECKPOINT_PLACEHOLDER, String.valueOf(point))
-                .replace(Constants.COURSE_PLACEHOLDER, courseName));
+                .replace(CHECKPOINT_PLACEHOLDER, String.valueOf(point))
+                .replace(COURSE_PLACEHOLDER, courseName));
 
         PluginUtils.logToFile("Checkpoint " + point + " was deleted on " + courseName + " by " + sender.getName());
     }

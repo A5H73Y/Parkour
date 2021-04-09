@@ -36,6 +36,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("OnJoin.TreatFirstCheckpointAsStart", false);
 		this.addDefault("OnJoin.PerCoursePermission", false);
 		this.addDefault("OnJoin.TeleportPlayer", true);
+		this.addDefault("OnJoin.BroadcastLevel", "NONE");
 
 		this.addDefault("OnCourse.AnybodyPlaceBreakBlocks", false);
 		this.addDefault("OnCourse.AdminPlaceBreakBlocks", true);
@@ -85,7 +86,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("OnLeave.DestroyCourseProgress", true);
 		this.addDefault("OnLeave.TeleportAway", true);
 
-		this.addDefault("OnDie.ResetTimeWithNoCheckpoint", false);
+		this.addDefault("OnDie.ResetProgressWithNoCheckpoint", false);
 		this.addDefault("OnDie.SetXPBarToDeathCount", false);
 
 		this.addDefault("OnLeaveServer.LeaveCourse", false);
@@ -153,6 +154,10 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("Scoreboard.RemainingDeaths.Sequence", 8);
 
 		this.addDefault("Sounds.Enabled", true);
+		this.addDefault("Sounds.JoinCourse.Enabled", false);
+		this.addDefault("Sounds.JoinCourse.Sound", "BLOCK_NOTE_BLOCK_PLING");
+		this.addDefault("Sounds.JoinCourse.Volume", 0.05f);
+		this.addDefault("Sounds.JoinCourse.Pitch", 1.75f);
 		this.addDefault("Sounds.SecondIncrement.Enabled", true);
 		this.addDefault("Sounds.SecondIncrement.Sound", "BLOCK_NOTE_BLOCK_PLING");
 		this.addDefault("Sounds.SecondIncrement.Volume", 0.05f);

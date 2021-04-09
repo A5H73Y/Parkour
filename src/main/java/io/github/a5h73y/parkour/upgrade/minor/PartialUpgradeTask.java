@@ -52,6 +52,7 @@ public class PartialUpgradeTask extends TimedUpgradeTask {
 				break;
 		}
 
+		convertOldConfigEntries();
 		return true;
 	}
 
@@ -190,6 +191,23 @@ public class PartialUpgradeTask extends TimedUpgradeTask {
 
 		if (binPath.exists()) {
 			binPath.delete();
+		}
+	}
+
+	/**
+	 * Convert old config entries.
+	 * Can be run at any previous server version as it will check they exist before replacing.
+	 */
+	private void convertOldConfigEntries() {
+		FileConfiguration defaultConfig = getParkourUpgrader().getDefaultConfig();
+
+		convert(defaultConfig, "OnDie.ResetTimeWithNoCheckpoint", "OnDie.ResetProgressWithNoCheckpoint");
+	}
+
+	private void convert(FileConfiguration config, String oldPath, String newPath) {
+		if (config.contains(oldPath)) {
+			config.set(newPath, config.get(oldPath));
+			config.set(oldPath, null);
 		}
 	}
 }

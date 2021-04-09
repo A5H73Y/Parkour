@@ -1,5 +1,6 @@
 package io.github.a5h73y.parkour.utility;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -14,7 +15,7 @@ public class ValidationUtils {
 	 * @return input is a valid String
 	 */
 	public static boolean isStringValid(String input) {
-		return input != null && !input.trim().isEmpty();
+		return !StringUtils.isBlank(input);
 	}
 
 	/**
@@ -27,7 +28,9 @@ public class ValidationUtils {
 		try {
 			Integer.parseInt(input);
 			return true;
-		} catch (Exception ignored) { }
+		} catch (Exception ignored) {
+			// it cannot be parsed as an integer
+		}
 		return false;
 	}
 
@@ -52,7 +55,9 @@ public class ValidationUtils {
 		try {
 			Double.parseDouble(input);
 			return true;
-		} catch (Exception ignored) { }
+		} catch (Exception ignored) {
+			// it cannot be parsed as a double
+		}
 		return false;
 	}
 

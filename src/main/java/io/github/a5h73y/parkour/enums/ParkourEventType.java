@@ -1,5 +1,8 @@
 package io.github.a5h73y.parkour.enums;
 
+import java.util.Locale;
+import org.jetbrains.annotations.NotNull;
+
 public enum ParkourEventType {
 	JOIN("Join"),
 	LEAVE("Leave"),
@@ -18,5 +21,10 @@ public enum ParkourEventType {
 
 	public String getConfigEntry() {
 		return configEntry;
+	}
+
+	@NotNull
+	public String getDisplayName() {
+		return this.name().toLowerCase(Locale.ROOT);
 	}
 }

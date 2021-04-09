@@ -50,6 +50,14 @@ public class Course implements Serializable {
     }
 
     /**
+     * Get the Course's display name.
+     * @return display course name
+     */
+    public String getDisplayName() {
+        return CourseInfo.getCourseDisplayName(name);
+    }
+
+    /**
      * Get number of Checkpoints on Course.
      * @return number of checkpoints
      */

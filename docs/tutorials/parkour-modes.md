@@ -3,9 +3,9 @@ Parkour Modes
 
 ## What is a ParkourMode?
 
-A Course can have a ParkourMode assigned to it, these allow the Courses to behave differently and add a new dynamic. Below I will list each ParkourMode and the difference they make once applied.
+A Course can have a ParkourMode assigned to it, these allow the Courses to behave differently and add a new dynamic. Below each ParkourMode is listed with the gameplay affects they make once applied.
 
-To set a ParkourMode to a Course, you start the conversation by entering `/pa setmode (course)`, which will talk you through the setup process of each option. Some ParkourModes require additional information to setup.
+To set a ParkourMode to a Course, you start the conversation by entering `/pa setmode (course)`, which will talk you through the setup process of each option. Some ParkourModes require additional information to set up.
 
 _If you want to remove a ParkourMode, you can set the mode back to "None"._
 
@@ -47,7 +47,7 @@ This allows you to integrate the plugin into the 'dropper' GameMode, allowing yo
 
 Inspired by CodJumping, when you use an RPG's explosion to propel yourself into the air to gain additional height and velocity.
 
-You will be given a 'Rocket Launcher', which is a Rocket by default. Simply right click with the item in your hand and you will have a knockback applied to your Player, which you can use to reach new heights and distances. The time between reuse can be configured, to reduce risk of it being abused.
+You will be given a 'Rocket Launcher', which is a Rocket by default. Simply right click with the item in your hand, and you will have a knock-back applied to your Player, which you can use to reach new heights and distances. The time between reuse can be configured, to reduce risk of it being abused.
 
 ![Rocket Launcher Item](https://i.imgur.com/5xFkFHR.png "Rocket Launcher Item")
 

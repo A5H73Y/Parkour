@@ -1,6 +1,6 @@
 # Parkour Tutorials - Home <!-- {docsify-ignore-all} -->
 
-Welcome! This website documents the various features of the Parkour plugin. If you want to learn everything there is to know, then go through the parts step by step. Otherwise, just skip to the part(s) you are interested in.  
+Welcome! This website documents the various features of the Parkour plugin. If you want to learn everything there is to know, then go through each part step by step. Otherwise, just skip to the part(s) you are interested in.  
 Use the Search bar in the top left to quickly find anything you're looking for.
 
 *Note that this website is accurate for Parkour v6.0 onwards.*
@@ -25,4 +25,12 @@ Parkour allows you to create unlimited Courses, each with unlimited checkpoints,
 
 Whether you are setting the plugin up as a mini-game, or as a dedicated Parkour server, the powerful configuration will allow you to choose exactly how you want the plugin to work. A 'ParkourKit' is a set of customisable Materials which will add a whole new level of fun to each Course.
 
-Parkour uses a database to store all the leaderboards for each Course, allowing for powerful and customisable results. By default, the plugin will create a SQLite database locally in the plugins folder, in a folder named 'sqlite-db', however if you wish to use a MySQL server of your choice, this can be configured in the `config.yml`.
+Parkour uses a database to store all the leaderboards for each Course, allowing for powerful and customisable results. By default, the plugin will create a SQLite database locally in the `plugins` folder, in a folder named `sqlite-db`, however if you wish to use a MySQL server of your choice, this can be configured in the `config.yml`.
+
+## Featured Servers
+
+These are servers that utilise the Parkour plugin well for you to try it out.
+
+    Name: Fancycraft
+    Server IP: fancycraft.cc
+    Version: 1.16.5

@@ -69,7 +69,7 @@ public class StringsConfigUpgradeTask extends TimedConfigUpgradeTask {
 		return success;
 	}
 
-	int countMatches(Matcher matcher) {
+	private int countMatches(Matcher matcher) {
 		int counter = 0;
 		while (matcher.find()) {
 			counter++;

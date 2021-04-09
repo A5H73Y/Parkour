@@ -1,8 +1,9 @@
 package io.github.a5h73y.parkour.type.lobby;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT;
+
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.other.ParkourValidation;
 import io.github.a5h73y.parkour.type.Cacheable;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
@@ -60,7 +61,7 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
      * @param lobbyName lobby name
      */
     public void joinLobby(Player player, @Nullable String lobbyName) {
-        lobbyName = lobbyName == null ? Constants.DEFAULT : lobbyName.toLowerCase();
+        lobbyName = lobbyName == null ? DEFAULT : lobbyName.toLowerCase();
 
         if (!ParkourValidation.isDefaultLobbySet(player)) {
             return;
@@ -80,7 +81,7 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
         Lobby lobby = lobbyCache.getOrDefault(lobbyName, populateLobby(lobbyName));
         PlayerUtils.teleportToLocation(player, lobby.getLocation());
 
-        if (lobbyName.equals(Constants.DEFAULT)) {
+        if (lobbyName.equals(DEFAULT)) {
             TranslationUtils.sendTranslation("Parkour.Lobby", player);
         } else {
             TranslationUtils.sendValueTranslation("Parkour.LobbyOther", lobbyName, player);
@@ -97,7 +98,7 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
         if (!ParkourValidation.isDefaultLobbySet(player)) {
             return;
         }
-        Lobby lobby = lobbyCache.getOrDefault(Constants.DEFAULT, populateLobby(Constants.DEFAULT));
+        Lobby lobby = lobbyCache.getOrDefault(DEFAULT, populateLobby(DEFAULT));
         PlayerUtils.teleportToLocation(player, lobby.getLocation());
         TranslationUtils.sendTranslation("Parkour.Lobby", player);
     }
@@ -214,6 +215,6 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
                 .filter(lobby -> lobby.getLocation().getWorld() == player.getWorld())
                 .filter(lobby -> ParkourValidation.canJoinLobbySilent(player, lobby.getName()))
                 .min(Comparator.comparingDouble(o -> player.getLocation().distanceSquared(o.getLocation())))
-                .orElse(lobbyCache.getOrDefault(Constants.DEFAULT, populateLobby(Constants.DEFAULT)));
+                .orElse(lobbyCache.getOrDefault(DEFAULT, populateLobby(DEFAULT)));
     }
 }

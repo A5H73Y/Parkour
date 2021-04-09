@@ -5,7 +5,7 @@ Sign Commands
 
 ## Join Course
 
-A sign used to join a Parkour Course. These should be stored in your Parkour Lobby so they can be easy to find and interact with. Validation will execute when the sign is clicked to make sure the Player is allowed to join first before they are teleported away.
+A sign used to join a Parkour Course. These should be stored in your Parkour Lobby, so they can be easy to find and interact with. Validation will execute when the sign is clicked to make sure the Player is allowed to join first before they are teleported away.
 
 ##### Syntax
 
@@ -47,7 +47,7 @@ A Parkour lobby is an area of Parkour Join signs, which you are teleported to wh
 
 ##### Additional information
 
-If no lobby name is specified the default lobby will be used.
+If a lobby name is not specified the default lobby will be used.
 
 If the lobby has a minimum level requirement to join, the level number will be displayed underneath.
 
@@ -61,7 +61,7 @@ Create a sign for Players to easily leave the Course.
 
 ![Leave Example](https://i.imgur.com/Zgnyw6w.png "Leave Example")
 
-## Effects Signs
+## Effect Signs
 
 You can apply several effects to the Player on the Course. These are activated by right clicking the signs whilst on a Course.
 
@@ -100,7 +100,7 @@ Display the Course information in the Player's chat when they right click the si
 
 ##### Additional information
 
-Each Course will display the relevant statistics based on how they are set up. Each Course would have a dynamic list of information based on how they are setup. For example if the Course has a custom lobby set, that would display also.
+Each Course will display the relevant statistics based on how they are set up. Each Course would have a dynamic list of information based on how they are set up. For example if the Course has a custom lobby set, that would display also.
 
 ![Stats Results](https://i.imgur.com/C1pBaJA.png "Stats Results")
 

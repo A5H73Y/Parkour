@@ -80,7 +80,7 @@ Each of the Parkour PlaceholderAPI placeholders are available here: [Parkour Pla
 
 #### Course
 
-A Parkour Course is a physical path that you've created for the Player to use while using the plugin. You can join a Course (a.k.a level, arena, track), and the plugin will track the Player's progress and apply any effects you interact with.
+A Parkour Course is a physical path that you've created for the Player to use while using the plugin. You can join a Course (a.k.a. level, arena, track), and the plugin will track the Player's progress and apply any effects you interact with.
 
 #### Lobby
 
@@ -92,11 +92,11 @@ A ParkourKit is a set of Materials which act as a set of toolbox for building a 
 
 #### Config
 
-Parkour is incredibly customisable, allowing you to modify the plugin exactly to what your server requires. In your server, Parkour will have a folder of many configuration files, shortened to config. `config.yml` and `strings.yml` are the only files we suggest you edit, unless you know what you're doing. Some server implementions don't save the changes upon restarting the server, so we highly suggest you use the **/pa reload** when you've made any config changes, then you'll be safe to restart your server without losing any changes.
+Parkour is incredibly customisable, allowing you to modify the plugin exactly to what your server requires. In your server, Parkour will have a folder of many configuration files, shortened to config. `config.yml` & `strings.yml` are the only files we suggest you edit, unless you know what you're doing. Some server implementations don't save the changes upon restarting the server, so we highly suggest you use the **/pa reload** when you've made any config changes, then you'll be safe to restart your server without losing any changes.
 
 #### ParkourLevel
 
-A Player can earn levels will unlock new Courses for them to join. An example is 'course2' will be locked until they complete 'course1'. The reward can either be an exact level, or an addition to their current level. For example you can finish all the 'easy' Courses in any order before having enough ParkourLevel to join the 'medium' Courses. The Player's ParkourLevel can never decrease, only increase or remain the same.
+A Player can earn levels will unlock new Courses for them to join. An example is 'course2' will be locked until they complete 'course1'. The reward can either be an exact level, or an addition to their current level. For example, you can finish all the 'easy' Courses in any order before having enough ParkourLevel to join the 'medium' Courses. The Player's ParkourLevel can never decrease, only increase or remain the same.
 
 #### ParkourRank
 

@@ -1,5 +1,7 @@
 package io.github.a5h73y.parkour.conversation;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
+
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.ChatColor;
@@ -70,7 +72,7 @@ public abstract class ParkourConversation implements ConversationAbandonedListen
      */
     public void begin() {
         if (courseName != null && !Parkour.getInstance().getCourseManager().doesCourseExists(courseName)) {
-            conversable.sendRawMessage(TranslationUtils.getValueTranslation("Error.NoExist", courseName));
+            conversable.sendRawMessage(TranslationUtils.getValueTranslation(ERROR_NO_EXIST, courseName));
             return;
         }
 

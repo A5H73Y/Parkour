@@ -3,7 +3,7 @@ Parkour Kits
 
 ## What is a ParkourKit?
 
-Parkour brings a whole new level to the kits, now referred to as ParkourKits. Each Course can now have it's own set of blocks to make each unique. You are able to specify exactly what you want the ParkourKit to consist of, allowing you to have as many of each type of action as you'd like. For example you could have 10 death blocks and a finish block, or have 3 of each type of action... it's completely configurable.
+Parkour brings a whole new level to the kits, now referred to as ParkourKits. Each Course can now have its own set of blocks to make each unique. You are able to specify exactly what you want the ParkourKit to consist of, allowing you to have as many of each type of action as you'd like. For example, you could have 10 death blocks, and a finish block, or have 3 of each type of action... it's completely configurable.
 
 ![Default ParkourKit](https://i.imgur.com/cYWhkHN.jpg "Default ParkourKit")
 
@@ -15,13 +15,13 @@ There is a "default" kit that each Course will use automatically by default, alt
 
 You are able to create a ParkourKit to be as customized as you'd like. Each ParkourKit must have a unique name to refer to them, this is used to link it to a Course, or to simulate using Test Mode. You are now able to choose as many or as little of each type of action; 'Action' meaning the result of walking on the specified Material.
 
-For example, I could choose the Material TNT, and when I walk on it I want the action to be "death".
+For example, I could choose the Material TNT, and once a Player walks upon it, the action could be "death".
 
-To start the conversation of creating a new ParkourKit, enter `/pa createKit`. The first step is providing a unique name for the Kit. Then followed by specifying a Material and the corresponding action you want it to be.
+To start the conversation of creating a new ParkourKit, enter `/pa createKit`. The first step is providing a unique name for the Kit. Then followed by specifying a Material, and the corresponding action you want it to be.
 
 ![Creating ParkourKit](https://i.imgur.com/TTlhZ6W.png "Creating ParkourKit")
 
-Some actions require you to provide more information, for example a Speed block must have a strength, so it knows how fast to make you, and a duration for the effect to last. The default values for each will be presented so you can choose if it should be more / less powerful or duration lasting.
+Some actions require you to provide more information, for example a Speed block must have a strength, so it knows how fast to make you, and a duration for the effect to last. The default values for each will be presented, so you can choose if it should be more / less powerful or duration lasting.
 
 ![Creating ParkourKit Extra](https://i.imgur.com/WEDf8pU.png "Creating ParkourKit Extra")
 
@@ -31,17 +31,17 @@ Once successfully created, we can enter `/pa kit [Kit name]` to populate our hot
 
 _A Sign is always provided to your inventory by default after retrieving a kit, to allow you to easily create Parkour signs for your Course._
 
-If something has gone wrong with your Kit and errors are appearing or Materials are missing, there is a validation command that will check your Kit for problems and display them.
+If something has gone wrong with your Kit and errors appear or Materials are missing, there is a validation command that will check your Kit for problems and display them.
 
 This is achieved by entering `/pa validateKit [Kit name]`.
 
-**Do not manually edit the ParkourKits from the config, as this is the main cause of problems. Instead edit them using the following tutorials.**
+**Do not manually edit the ParkourKits from the config, as this is the main cause of problems. Instead, edit them using the following tutorials.**
 
 ## Editing a ParkourKit
 
 You are able to modify the contents of a ParkourKit at any point, including the default kit. This is done using the command `/pa editKit` then specifying the name of the ParkourKit.
 
-You will have the option to add or remove a material. If you choose to add a material you will go through the the process of adding an material and a corresponding action, then you will have the option to continue editing the kit.
+You will have the option to add or remove a material. If you choose to add a material you will go through the process of adding a Material with a corresponding action, then you will have the option to continue editing the kit.
 
 ![Editing ParkourKit](https://i.imgur.com/yikde5m.png "Editing ParkourKit")
 

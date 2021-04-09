@@ -1,6 +1,7 @@
 package io.github.a5h73y.parkour.commands;
 
-import static io.github.a5h73y.parkour.other.Constants.DEFAULT;
+import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT;
+import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_INVALID_AMOUNT;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.conversation.CoursePrizeConversation;
@@ -10,7 +11,6 @@ import io.github.a5h73y.parkour.conversation.ParkourModeConversation;
 import io.github.a5h73y.parkour.enums.GuiMenu;
 import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
@@ -107,7 +107,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
 
                 } else if (args.length == 2 && !ValidationUtils.isPositiveInteger(args[1])) {
-                    TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+                    TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
                     return false;
                 }
 
@@ -499,7 +499,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 }
 
                 parkour.getLobbyManager().createLobby(player,
-                        args.length > 1 ? args[1] : Constants.DEFAULT,
+                        args.length > 1 ? args[1] : DEFAULT,
                         args.length == 3 ? args[2] : null);
                 break;
 
@@ -599,7 +599,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
 
                 } else if (!ValidationUtils.isPositiveInteger(args[2])) {
-                    TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+                    TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
                     return false;
                 }
 

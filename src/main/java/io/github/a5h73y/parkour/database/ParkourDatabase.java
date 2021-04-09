@@ -2,7 +2,7 @@ package io.github.a5h73y.parkour.database;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.other.Constants;
+import io.github.a5h73y.parkour.other.ParkourConstants;
 import io.github.a5h73y.parkour.type.Cacheable;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
@@ -487,8 +487,8 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
         }
 
         String heading = TranslationUtils.getTranslation("Parkour.LeaderboardHeading", false)
-                .replace(Constants.COURSE_PLACEHOLDER, courseName)
-                .replace("%AMOUNT%", String.valueOf(times.size()));
+                .replace(ParkourConstants.COURSE_PLACEHOLDER, courseName)
+                .replace(ParkourConstants.AMOUNT_PLACEHOLDER, String.valueOf(times.size()));
 
         TranslationUtils.sendHeading(heading, sender);
 
@@ -496,9 +496,9 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
             TimeEntry entry = times.get(i);
             String translation = TranslationUtils.getTranslation("Parkour.LeaderboardEntry", false)
                     .replace("%POSITION%", String.valueOf(i + 1))
-                    .replace(Constants.PLAYER_PLACEHOLDER, entry.getPlayerName())
-                    .replace(Constants.TIME_PLACEHOLDER, DateTimeUtils.displayCurrentTime(entry.getTime()))
-                    .replace(Constants.DEATHS_PLACEHOLDER, String.valueOf(entry.getDeaths()));
+                    .replace(ParkourConstants.PLAYER_PLACEHOLDER, entry.getPlayerName())
+                    .replace(ParkourConstants.TIME_PLACEHOLDER, DateTimeUtils.displayCurrentTime(entry.getTime()))
+                    .replace(ParkourConstants.DEATHS_PLACEHOLDER, String.valueOf(entry.getDeaths()));
 
             sender.sendMessage(translation);
         }

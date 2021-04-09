@@ -4,6 +4,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.ParkourEventType;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -24,10 +25,10 @@ import org.jetbrains.annotations.Nullable;
 public class SetCourseConversation extends ParkourConversation {
 
     public static final List<String> SET_COURSE_OPTIONS = Collections.unmodifiableList(
-            Arrays.asList("creator", "minlevel", "maxdeath", "maxtime", "command", "message"));
+            Arrays.asList("displayname", "creator", "minlevel", "maxdeath", "maxtime", "command", "message"));
 
     public static final List<String> PARKOUR_EVENT_TYPE_NAMES =
-            Stream.of(ParkourEventType.values()).map(type -> type.name().toLowerCase()).collect(Collectors.toList());
+            Stream.of(ParkourEventType.values()).map(ParkourEventType::getDisplayName).collect(Collectors.toList());
 
     public SetCourseConversation(Player player) {
         super(player);
@@ -79,14 +80,13 @@ public class SetCourseConversation extends ParkourConversation {
         public Prompt acceptInput(@NotNull ConversationContext context,
                                   @Nullable String input) {
 
-            String setOption = (String) context.getSessionData("setOption");
-
-            if (input == null || input.trim().isEmpty()) {
+            if (!ValidationUtils.isStringValid(input)) {
                 return null;
             }
 
             String playerName = (String) context.getSessionData(SESSION_PLAYER_NAME);
             String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);
+            String setOption = (String) context.getSessionData("setOption");
             Player player = Bukkit.getPlayer(playerName);
 
             performAction(player, courseName, setOption, input);
@@ -233,9 +233,13 @@ public class SetCourseConversation extends ParkourConversation {
                     parkour.getCourseManager().setMaxTime(sender, courseName, input);
                     break;
 
+                case "displayname":
+                    parkour.getCourseManager().setDisplayName(sender, courseName, input);
+                    break;
+
                 default:
                     TranslationUtils.sendInvalidSyntax(sender, "setcourse",
-                            "(courseName) [creator, minlevel, maxdeath, maxtime] [value]");
+                            "(courseName) [displayname, creator, minlevel, maxdeath, maxtime] [value]");
             }
         });
     }

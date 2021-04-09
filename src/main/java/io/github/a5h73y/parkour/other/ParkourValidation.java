@@ -1,5 +1,7 @@
 package io.github.a5h73y.parkour.other;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
+
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.enums.Permission;
@@ -123,13 +125,13 @@ public class ParkourValidation {
      * @return player can join course
      */
     public static boolean canJoinCourse(Player player, Course course) {
-        Parkour parkour = Parkour.getInstance();
-
         /* World doesn't exist */
         if (course.getCheckpoints().isEmpty()) {
             TranslationUtils.sendTranslation("Error.UnknownWorld", player);
             return false;
         }
+
+        Parkour parkour = Parkour.getInstance();
 
         /* Player in wrong world */
         if (parkour.getConfig().isJoinEnforceWorld()
@@ -143,7 +145,7 @@ public class ParkourValidation {
 
         if (minimumLevel > 0 && !PermissionUtils.hasPermission(player, Permission.ADMIN_LEVEL_BYPASS, false)
                 && !PermissionUtils.hasSpecificPermission(
-                player, Permission.PARKOUR_LEVEL, String.valueOf(minimumLevel), false)) {
+                        player, Permission.PARKOUR_LEVEL, String.valueOf(minimumLevel), false)) {
             int currentLevel = PlayerInfo.getParkourLevel(player);
 
             if (currentLevel < minimumLevel) {
@@ -268,12 +270,12 @@ public class ParkourValidation {
      * @return target player can join challenge
      */
     public static boolean canJoinChallenge(Player player, Player targetPlayer, Challenge challenge) {
-        Parkour parkour = Parkour.getInstance();
-
         if (!canJoinCourseSilent(targetPlayer, challenge.getCourseName())) {
             TranslationUtils.sendMessage(player, "Player is not able to join this Course!");
             return false;
         }
+
+        Parkour parkour = Parkour.getInstance();
 
         if (challenge.getWager() != null
                 && !parkour.getEconomyApi().hasAmount(targetPlayer, challenge.getWager())) {
@@ -329,7 +331,7 @@ public class ParkourValidation {
         String selected = PlayerInfo.getSelectedCourse(player).toLowerCase();
 
         if (!Parkour.getInstance().getCourseManager().doesCourseExists(selected)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", selected, player);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, selected, player);
             return false;
         }
 
@@ -364,15 +366,15 @@ public class ParkourValidation {
      * @return player can create challenge
      */
     public static boolean canCreateChallenge(Player player, String courseNameInput, String wager) {
-        String courseName = courseNameInput.toLowerCase();
-        Parkour parkour = Parkour.getInstance();
-
         if (!PermissionUtils.hasPermission(player, Permission.BASIC_CHALLENGE)) {
             return false;
         }
 
+        String courseName = courseNameInput.toLowerCase();
+        Parkour parkour = Parkour.getInstance();
+
         if (!parkour.getCourseManager().doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, player);
             return false;
         }
 
@@ -447,7 +449,7 @@ public class ParkourValidation {
      */
     public static boolean canDeleteCourse(CommandSender sender, String courseName) {
         if (!Parkour.getInstance().getCourseManager().doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return false;
         }
 
@@ -479,7 +481,7 @@ public class ParkourValidation {
      */
     public static boolean canDeleteCheckpoint(CommandSender sender, String courseName) {
         if (!Parkour.getInstance().getCourseManager().doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return false;
         }
 

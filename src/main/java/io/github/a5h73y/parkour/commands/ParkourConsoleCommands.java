@@ -1,6 +1,6 @@
 package io.github.a5h73y.parkour.commands;
 
-import static io.github.a5h73y.parkour.other.Constants.DEFAULT;
+import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.conversation.CoursePrizeConversation;

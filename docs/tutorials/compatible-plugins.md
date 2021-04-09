@@ -143,14 +143,14 @@ In this example the sign will update to show the number 1 ranked player on cours
 
 ![LeaderHeads Example 1](https://i.imgur.com/LTJ9Dw3.png "LeaderHeads Example 1")
 
-In the file `statistics/parkour_player_personal_best_tutorial_milliseconds.yml`, set the statistic type to milliseconds and the order to ascending:
+In the file `statistics/parkour_player_personal_best_tutorial_milliseconds.yml`, set the statistic type to `time-milliseconds` and the order to `ascending`:
 
 ```
 statistic-type: time-milliseconds
 order-mode: ascending
 ```
 
-Reload LeaderHeads and the sign will update to display a formatted time.
+Reload LeaderHeads, and the sign will update to display a formatted time.
 
 ![LeaderHeads Example 2](https://i.imgur.com/swbtPkt.png "LeaderHeads Example 2")
 
@@ -160,6 +160,6 @@ The time format can be changed in LeaderHeads's `config.yml`, for example:
 
 ![LeaderHeads Example 3](https://i.imgur.com/XzwLLSL.png "LeaderHeads Example 3")
 
-Currently LeaderHeads does not appear to support displaying milliseconds as part of the formatted time on the sign.
+Currently, LeaderHeads does not appear to support displaying milliseconds as part of the formatted time on the sign.
 
 Plugin created by RobiRami, available here: https://www.spigotmc.org/resources/leaderheads.2079/

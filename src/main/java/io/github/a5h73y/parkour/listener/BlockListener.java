@@ -59,7 +59,7 @@ public class BlockListener extends AbstractPluginReceiver implements Listener {
         }
 
         if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL, false)
-                || (!parkour.getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks"))) {
+                || !parkour.getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks")) {
             event.setCancelled(true);
         }
     }

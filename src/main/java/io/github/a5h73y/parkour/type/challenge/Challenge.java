@@ -97,7 +97,7 @@ public class Challenge {
         TranslationUtils.sendValue(sender, "Participants", participants.size());
         TranslationUtils.sendValue(sender, "Course", courseName);
         TranslationUtils.sendConditionalValue(sender, "Wager", wager);
-        TranslationUtils.sendValue(sender, "Started", Boolean.toString(started));
+        TranslationUtils.sendValue(sender, "Started", String.valueOf(started));
     }
 
     @Override

@@ -64,7 +64,7 @@ public class ParkourUpgrader extends AbstractPluginReceiver implements BooleanSu
 		parkour.getLogger().info("Creating backup of current install...");
 		Backup.backupNow(true);
 
-		boolean success = true;
+		boolean success;
 		Version existingVersion = new Version(defaultConfig.getString("Version"));
 
 		if (existingVersion.isLowerThan("5.0")) {

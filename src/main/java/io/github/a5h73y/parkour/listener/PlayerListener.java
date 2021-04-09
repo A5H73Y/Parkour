@@ -44,11 +44,10 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
                 event.setCancelled(true);
             }
 
-        } else if (event.getDamager() instanceof Player) {
-            if (parkour.getPlayerManager().isPlaying((Player) event.getDamager())
-                    && parkour.getConfig().isPreventAttackingEntities()) {
-                event.setCancelled(true);
-            }
+        } else if (event.getDamager() instanceof Player
+                && parkour.getPlayerManager().isPlaying((Player) event.getDamager())
+                && parkour.getConfig().isPreventAttackingEntities()) {
+            event.setCancelled(true);
         }
     }
 

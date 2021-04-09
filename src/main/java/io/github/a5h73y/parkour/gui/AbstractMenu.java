@@ -14,7 +14,7 @@ public interface AbstractMenu {
 	 *
 	 * @return gui title
 	 */
-	public abstract String getTitle();
+	String getTitle();
 
 	/**
 	 * Get the layout of the GUI setup.
@@ -22,7 +22,7 @@ public interface AbstractMenu {
 	 *
 	 * @return gui layout
 	 */
-	public abstract String[] getGuiLayout();
+	String[] getGuiLayout();
 
 	/**
 	 * Add Content to the InventoryGui.
@@ -30,6 +30,6 @@ public interface AbstractMenu {
 	 * @param parent parent inventory to add contents to
 	 * @param player requesting player
 	 */
-	public abstract void addContent(InventoryGui parent, Player player);
+	void addContent(InventoryGui parent, Player player);
 
 }

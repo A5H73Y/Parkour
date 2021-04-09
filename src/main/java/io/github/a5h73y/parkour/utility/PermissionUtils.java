@@ -1,5 +1,7 @@
 package io.github.a5h73y.parkour.utility;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
+
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
@@ -88,7 +90,7 @@ public class PermissionUtils {
 		}
 
 		if (!Parkour.getInstance().getCourseManager().doesCourseExists(courseName)) {
-			TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
+			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, player);
 			return false;
 		}
 

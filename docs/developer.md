@@ -41,7 +41,7 @@ softdepend: [Parkour]
 
 This will allow Parkour to fully initialize before you start to use it.
 
-Now you need to check if the Parkour plugin has started correctly within the code, this is for you to check and handle. But will look something like: 
+Now you need to check if the Parkour plugin has started correctly within the code, this is for you to check and handle. This will look something like: 
 
 ```
 Plugin parkour = getServer().getPluginManager().getPlugin("Parkour");
@@ -52,7 +52,7 @@ if (parkour != null && parkour.isEnabled()) {
 }
 ```
 
-If your Plugin successfully links with Parkour, your plugin can now interact with Parkour and listen to some of the events it fires.
+If your Plugin successfully links with Parkour, your plugin can now interact with Parkour and listen to the events it fires.
 
 ## Parkour Events
 
@@ -65,7 +65,7 @@ There are a list of Events that Parkour creates, that you can listen to:
 - PlayerFinishCourseEvent
 - PlayerParkourLevelEvent
 
-Each of these will give you at least the Player object and the Course name for you to use. The Checkpoint and Level event will give you the relevant values also.
+Each of these will give you at least the Player Object and the Course name for you to use. The Checkpoint and Level event will give you the relevant values also.
 
 To listen for a Parkour event you must create a Listener class and register it correctly, then create an EventHandler like any normal event:
 

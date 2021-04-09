@@ -1,9 +1,11 @@
 package io.github.a5h73y.parkour.listener;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.PARKOUR_RANK_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.PLAYER_PLACEHOLDER;
+
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
@@ -40,14 +42,14 @@ public class ChatListener extends AbstractPluginReceiver implements Listener {
         // should we completely override the chat format
         if (parkour.getConfig().isChatPrefixOverride()) {
             finalMessage = TranslationUtils.getTranslation("Event.Chat", false)
-                    .replace("%RANK%", rank)
-                    .replace(Constants.PLAYER_PLACEHOLDER, event.getPlayer().getDisplayName())
+                    .replace(PARKOUR_RANK_PLACEHOLDER, rank)
+                    .replace(PLAYER_PLACEHOLDER, event.getPlayer().getDisplayName())
                     .replace("%MESSAGE%", event.getMessage());
         } else {
             // or do we use the existing format, just replacing the Parkour variables
             finalMessage = event.getFormat()
-                    .replace("%RANK%", rank)
-                    .replace(Constants.PLAYER_PLACEHOLDER, event.getPlayer().getDisplayName());
+                    .replace(PARKOUR_RANK_PLACEHOLDER, rank)
+                    .replace(PLAYER_PLACEHOLDER, event.getPlayer().getDisplayName());
         }
 
         event.setFormat(StringUtils.colour(finalMessage));
@@ -89,7 +91,7 @@ public class ChatListener extends AbstractPluginReceiver implements Listener {
 
             boolean allowed = false;
             for (String word : parkour.getConfig().getWhitelistedCommands()) {
-                if (event.getMessage().startsWith("/" + word + " ") || (event.getMessage().equalsIgnoreCase("/" + word))) {
+                if (event.getMessage().startsWith("/" + word + " ") || event.getMessage().equalsIgnoreCase("/" + word)) {
                     allowed = true;
                     break;
                 }

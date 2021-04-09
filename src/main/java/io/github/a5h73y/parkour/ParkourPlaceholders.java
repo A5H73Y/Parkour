@@ -1,7 +1,11 @@
 package io.github.a5h73y.parkour;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.DEATHS_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.PLAYER_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.TIME_PLACEHOLDER;
+
 import io.github.a5h73y.parkour.database.TimeEntry;
-import io.github.a5h73y.parkour.other.Constants;
+import io.github.a5h73y.parkour.other.ParkourConstants;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
@@ -42,7 +46,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     @NotNull
     @Override
     public String getIdentifier() {
-        return parkour.getName().toLowerCase();
+        return Parkour.PLUGIN_NAME;
     }
 
     @NotNull
@@ -141,7 +145,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return String.valueOf(PlayerInfo.getParkourLevel(offlinePlayer));
 
             case "rank":
-                return String.valueOf(PlayerInfo.getParkourRank(offlinePlayer));
+                return PlayerInfo.getParkourRank(offlinePlayer);
 
             case "parkoins":
                 return String.valueOf(PlayerInfo.getParkoins(offlinePlayer));
@@ -171,12 +175,11 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 }
 
             case "course":
-                if (arguments.length != 4) {
-                    return INVALID_SYNTAX;
-
-                } else if (arguments[3].equals("completed")) {
+                if (arguments.length == 4 && arguments[3].equals("completed")) {
                     return getOrRetrieveCache(offlinePlayer.getName() + arguments[2] + arguments[3],
                             () -> getCompletedMessage(offlinePlayer, arguments[3]));
+                } else {
+                    return INVALID_SYNTAX;
                 }
 
             case "prize":
@@ -226,35 +229,35 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                     return INVALID_SYNTAX;
                 }
 
-                return Integer.toString(CourseInfo.getCompletions(arguments[2]));
+                return String.valueOf(CourseInfo.getCompletions(arguments[2]));
 
             case "views":
                 if (arguments.length != 3) {
                     return INVALID_SYNTAX;
                 }
 
-                return Integer.toString(CourseInfo.getViews(arguments[2]));
+                return String.valueOf(CourseInfo.getViews(arguments[2]));
 
             case "joinfee":
                 if (arguments.length != 3) {
                     return INVALID_SYNTAX;
                 }
 
-                return Integer.toString(CourseInfo.getEconomyJoiningFee(arguments[2]));
+                return String.valueOf(CourseInfo.getEconomyJoiningFee(arguments[2]));
 
             case "ecoreward":
                 if (arguments.length != 3) {
                     return INVALID_SYNTAX;
                 }
 
-                return Integer.toString(CourseInfo.getEconomyFinishReward(arguments[2]));
+                return String.valueOf(CourseInfo.getEconomyFinishReward(arguments[2]));
 
             case "players":
                 if (arguments.length != 3) {
                     return INVALID_SYNTAX;
                 }
 
-                return Integer.toString(parkour.getPlayerManager().getNumberOfPlayersOnCourse(arguments[2]));
+                return String.valueOf(parkour.getPlayerManager().getNumberOfPlayersOnCourse(arguments[2]));
 
             case "playerlist":
                 if (arguments.length != 3) {
@@ -288,6 +291,9 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 switch (arguments[2]) {
                     case "name":
                         return session.getCourseName();
+
+                    case "displayname":
+                        return session.getCourse().getDisplayName();
 
                     case "deaths":
                         return String.valueOf(session.getDeaths());
@@ -344,10 +350,10 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             return NO_TIME_RECORDED;
 
         } else {
-            return TOP_TEN_RESULT.replace(Constants.PLAYER_PLACEHOLDER, result.getPlayerName())
-                    .replace("%POSITION%", Integer.toString(position))
-                    .replace(Constants.TIME_PLACEHOLDER, DateTimeUtils.displayCurrentTime(result.getTime()))
-                    .replace(Constants.DEATHS_PLACEHOLDER, Integer.toString(result.getDeaths()));
+            return TOP_TEN_RESULT.replace(PLAYER_PLACEHOLDER, result.getPlayerName())
+                    .replace("%POSITION%", String.valueOf(position))
+                    .replace(TIME_PLACEHOLDER, DateTimeUtils.displayCurrentTime(result.getTime()))
+                    .replace(DEATHS_PLACEHOLDER, String.valueOf(result.getDeaths()));
         }
     }
 

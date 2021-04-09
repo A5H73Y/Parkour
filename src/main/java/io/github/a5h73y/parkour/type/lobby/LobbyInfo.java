@@ -2,7 +2,7 @@ package io.github.a5h73y.parkour.type.lobby;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
-import io.github.a5h73y.parkour.other.Constants;
+import io.github.a5h73y.parkour.other.ParkourConstants;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -27,7 +27,7 @@ public class LobbyInfo {
 	 * @return default parkour kit exists
 	 */
 	public static boolean doesLobbyExist() {
-		return doesLobbyExist(Constants.DEFAULT);
+		return doesLobbyExist(ParkourConstants.DEFAULT);
 	}
 
 	/**
@@ -119,5 +119,9 @@ public class LobbyInfo {
 	public static void setRequiredLevel(String lobbyName, Integer requiredLevel) {
 		Parkour.getDefaultConfig().set("Lobby." + lobbyName.toLowerCase() + ".RequiredLevel", requiredLevel);
 		Parkour.getDefaultConfig().save();
+	}
+
+	private LobbyInfo() {
+		throw new IllegalStateException("Utility class");
 	}
 }

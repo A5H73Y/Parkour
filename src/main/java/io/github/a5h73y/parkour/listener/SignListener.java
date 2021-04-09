@@ -1,5 +1,7 @@
 package io.github.a5h73y.parkour.listener;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
+
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.GuiMenu;
 import io.github.a5h73y.parkour.enums.Permission;
@@ -186,7 +188,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
         switch (lines[1].toLowerCase()) {
             case "join":
                 if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
-                    TranslationUtils.sendValueTranslation("Error.NoExist", lines[2], player);
+                    TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, lines[2], player);
                     return;
                 }
 
@@ -203,7 +205,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
 
             case "checkpoint":
                 if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
-                    TranslationUtils.sendValueTranslation("Error.NoExist", lines[2], player);
+                    TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, lines[2], player);
                     return;
 
                 } else if (!parkour.getPlayerManager().isPlaying(player)) {
@@ -211,11 +213,11 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                     return;
                 }
 
-                ParkourSession session = parkour.getPlayerManager().getParkourSession(player);
-
                 if (lines[3].isEmpty() || !ValidationUtils.isPositiveInteger(lines[3])) {
                     return;
                 }
+
+                ParkourSession session = parkour.getPlayerManager().getParkourSession(player);
 
                 if (session.hasAchievedAllCheckpoints()) {
                     return;
@@ -238,7 +240,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
 
             case "stats":
                 if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
-                    TranslationUtils.sendValueTranslation("Error.NoExist", lines[2], player);
+                    TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, lines[2], player);
                     return;
                 }
 
@@ -251,13 +253,13 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
 
             case "finish":
                 if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
-                    TranslationUtils.sendValueTranslation("Error.NoExist", lines[2], player);
+                    TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, lines[2], player);
 
                 } else if (!parkour.getPlayerManager().isPlaying(player)) {
                     TranslationUtils.sendTranslation("Error.NotOnAnyCourse", player);
 
                 } else if (!parkour.getPlayerManager().getParkourSession(player).getCourse().getName()
-                        .equals(lines[2].toLowerCase())) {
+                        .equalsIgnoreCase(lines[2])) {
                     TranslationUtils.sendTranslation("Error.NotOnCourse", player);
 
                 } else {
@@ -271,7 +273,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
 
             case "leaderboards":
                 if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
-                    TranslationUtils.sendValueTranslation("Error.NoExist", lines[2], player);
+                    TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, lines[2], player);
 
                 } else if (parkour.getPlayerManager().delayPlayerWithMessage(player, 4)) {
                     int amount = lines[3].isEmpty() ? 5 : Integer.parseInt(lines[3]);
@@ -282,7 +284,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
 
             case "challenge":
                 if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
-                    TranslationUtils.sendValueTranslation("Error.NoExist", lines[2], player);
+                    TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, lines[2], player);
                     return;
                 }
 

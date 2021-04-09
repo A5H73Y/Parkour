@@ -49,6 +49,7 @@ import org.bstats.charts.SimplePie;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 public class Parkour extends JavaPlugin {
 
@@ -131,6 +132,7 @@ public class Parkour extends JavaPlugin {
      * @return default config
      */
     @Override
+    @NotNull
     public DefaultConfig getConfig() {
         return (DefaultConfig) this.configManager.get(ConfigType.DEFAULT);
     }
@@ -323,7 +325,7 @@ public class Parkour extends JavaPlugin {
     private void submitAnalytics() {
         Metrics metrics = new Metrics(this, BSTATS_ID);
         metrics.addCustomChart(new SimplePie("number_of_courses", () ->
-                Integer.toString(CourseInfo.getAllCourseNames().size())));
+                String.valueOf(CourseInfo.getAllCourseNames().size())));
         metrics.addCustomChart(new SingleLineChart("parkour_players", () ->
                 getPlayerManager().getNumberOfParkourPlayer()));
     }

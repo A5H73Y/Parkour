@@ -1,5 +1,7 @@
 package io.github.a5h73y.parkour.utility;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
+
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.lobby.LobbyInfo;
@@ -62,7 +64,7 @@ public class SignUtils {
         }
 
         if (!Parkour.getInstance().getCourseManager().doesCourseExists(signEvent.getLine(2))) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", signEvent.getLine(2), player);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, signEvent.getLine(2), player);
             breakSignAndCancelEvent(signEvent);
             return false;
         }

@@ -1,5 +1,8 @@
 package io.github.a5h73y.parkour.enums;
 
+import java.util.Locale;
+import org.jetbrains.annotations.NotNull;
+
 public enum ActionType {
 	FINISH,
 	DEATH,
@@ -9,5 +12,10 @@ public enum ActionType {
 	NORUN,
 	NOPOTION,
 	CLIMB,
-	REPULSE
+	REPULSE;
+
+	@NotNull
+	public String getDisplayName() {
+		return this.name().toLowerCase(Locale.ROOT);
+	}
 }

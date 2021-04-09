@@ -1,8 +1,9 @@
 package io.github.a5h73y.parkour.conversation;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.PLAYER_PLACEHOLDER;
+
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.ParkourEventType;
-import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -29,7 +30,7 @@ public class CoursePrizeConversation extends ParkourConversation {
         return new PrizeType();
     }
 
-    MessagePrompt getCommandProcessCompletePrompt() {
+    private MessagePrompt getCommandProcessCompletePrompt() {
         return new CommandProcessComplete();
     }
 
@@ -169,7 +170,7 @@ public class CoursePrizeConversation extends ParkourConversation {
                 Parkour.getInstance().getServer().dispatchCommand(
                         Parkour.getInstance().getServer().getConsoleSender(),
                         context.getSessionData("command").toString()
-                                .replace(Constants.PLAYER_PLACEHOLDER, context.getSessionData(SESSION_PLAYER_NAME).toString()));
+                                .replace(PLAYER_PLACEHOLDER, context.getSessionData(SESSION_PLAYER_NAME).toString()));
             }
             return getCommandProcessCompletePrompt();
         }

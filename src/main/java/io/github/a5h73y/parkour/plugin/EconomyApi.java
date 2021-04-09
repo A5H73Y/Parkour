@@ -1,11 +1,14 @@
 package io.github.a5h73y.parkour.plugin;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.AMOUNT_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.COURSE_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_INVALID_AMOUNT;
+import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 import static org.bukkit.Bukkit.getServer;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.impl.EconomyConfig;
 import io.github.a5h73y.parkour.enums.ConfigType;
-import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -105,8 +108,8 @@ public class EconomyApi extends PluginWrapper {
 				rewardPlayer(player, reward);
 
 				player.sendMessage(TranslationUtils.getTranslation("Economy.Reward")
-						.replace("%AMOUNT%", reward + getCurrencyName())
-						.replace(Constants.COURSE_PLACEHOLDER, courseName));
+						.replace(AMOUNT_PLACEHOLDER, reward + getCurrencyName())
+						.replace(COURSE_PLACEHOLDER, courseName));
 			}
 		}
 	}
@@ -118,7 +121,7 @@ public class EconomyApi extends PluginWrapper {
 	 */
 	public void displayEconomyInformation(CommandSender sender) {
 		TranslationUtils.sendHeading("Economy Details", sender);
-		TranslationUtils.sendValue(sender, "Enabled", Boolean.toString(isEnabled()));
+		TranslationUtils.sendValue(sender, "Enabled", String.valueOf(isEnabled()));
 
 		if (isEnabled()) {
 			TranslationUtils.sendValue(sender, "Economy", economy.getName());
@@ -143,15 +146,15 @@ public class EconomyApi extends PluginWrapper {
 			if (joinFee > 0) {
 				if (!hasAmount(player, joinFee)) {
 					player.sendMessage(TranslationUtils.getTranslation("Economy.Insufficient")
-							.replace("%AMOUNT%", joinFee + getCurrencyName())
-							.replace(Constants.COURSE_PLACEHOLDER, courseName));
+							.replace(AMOUNT_PLACEHOLDER, joinFee + getCurrencyName())
+							.replace(COURSE_PLACEHOLDER, courseName));
 					allowed = false;
 
 				} else {
 					chargePlayer(player, joinFee);
 					player.sendMessage(TranslationUtils.getTranslation("Economy.Fee")
-							.replace("%AMOUNT%", joinFee + getCurrencyName())
-							.replace(Constants.COURSE_PLACEHOLDER, courseName));
+							.replace(AMOUNT_PLACEHOLDER, joinFee + getCurrencyName())
+							.replace(COURSE_PLACEHOLDER, courseName));
 				}
 			}
 		}
@@ -223,12 +226,12 @@ public class EconomyApi extends PluginWrapper {
 		}
 
 		if (!Parkour.getInstance().getCourseManager().doesCourseExists(args[2])) {
-			TranslationUtils.sendValueTranslation("Error.NoExist", args[2], sender);
+			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, args[2], sender);
 			return;
 		}
 
 		if (!ValidationUtils.isPositiveDouble(args[3])) {
-			TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+			TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
 			return;
 		}
 
@@ -243,12 +246,12 @@ public class EconomyApi extends PluginWrapper {
 		}
 
 		if (!Parkour.getInstance().getCourseManager().doesCourseExists(args[2])) {
-			TranslationUtils.sendValueTranslation("Error.NoExist", args[2], sender);
+			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, args[2], sender);
 			return;
 		}
 
 		if (!ValidationUtils.isPositiveDouble(args[3])) {
-			TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+			TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
 			return;
 		}
 

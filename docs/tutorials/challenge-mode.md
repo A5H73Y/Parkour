@@ -3,7 +3,7 @@ Challenge Mode
 
 ## What is a Challenge?
 
-You are able to challenge other Players to a Course to see who can complete the Course the fastest and prove who is the best. This can become competitive when a monetary wager is introduced (If Economy is enabled), the winner will have the amount added to their account and the loser(s) will have the amount deducted. _Forfeiting (leaving the Course or server) will be treated as a loss, and the wager will be deducted in the event of a Player completing the Course._
+You are able to challenge other Players to a Course to see who can complete the Course the fastest and prove who is the best. This can become competitive when a monetary wager is introduced (If Economy is enabled), the winner will have the amount `(wager * (participants - 1))` added to their account, and the loser(s) will have the amount deducted. _Forfeiting (leaving the Course or server) will be treated as a loss, and the wager will be deducted in the event of a Player completing the Course._
 
 A new Challenge can be created manually by using a command and which can then invite other players. Alternatively you can interact with a Challenge sign to join with other Players interested in a Challenge.
 
@@ -13,7 +13,7 @@ Each challenge must have a host, they have elevated permissions to invite and st
 
 ### Command
 
-If a Player has permission to create a Challenge then they can specify a Course and the wager they are placing.
+If a Player has permission to create a Challenge then they can specify a Course, followed by an optional wager they are placing.
 
 _Command: /pa challenge create (course) \[wager]_
 
@@ -43,9 +43,9 @@ _Command: /pa invite (players...)_
 
 ## Starting the Challenge
 
-Once the host happy there are sufficient players they can initiate the Challenge countdown. Depending on the config, the player's will be teleported to the start of the Course unable to move while the Countdown begins, once the Countdowns ends their movement is restored and the Course begins as normal.
+Once the host happy there are sufficient players they can initiate the Challenge countdown. Depending on the config, the player's will be teleported to the start of the Course unable to move while the Countdown begins, once the Countdowns ends their movement is restored, and the Course begins as normal.
 
-The first Player to finish the Course is declared the winner and the participants are notified. If there is a wager the amount will be deducted from each participant and rewarded to the winning Player.
+The first Player to finish the Course is declared the winner, and the participants are notified. If there is a wager the amount will be deducted from each participant and rewarded to the winning Player.
 
 _Command: /pa challenge info_
 
@@ -54,4 +54,3 @@ _Command: /pa challenge info_
 _Command: /pa challenge begin_
 
 ![Challenge Begin](https://i.imgur.com/CMMcOX5.png "Challenge Begin")
-

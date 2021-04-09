@@ -309,7 +309,7 @@ public class PlayerInfo {
     public static int getSavedFoodLevel(Player player) {
         return Parkour.getConfig(ConfigType.INVENTORY).getInt(player.getUniqueId() + ".Hunger");
     }
-    
+
     /**
      * Save the Player's Health and Food Level.
      * @param player player
@@ -369,7 +369,7 @@ public class PlayerInfo {
     public static ItemStack[] getSavedInventoryContents(Player player) {
         List<ItemStack> contents = (List<ItemStack>) Parkour.getConfig(ConfigType.INVENTORY)
                 .getList(player.getUniqueId() + ".Inventory");
-        return contents != null ? contents.toArray(new ItemStack[contents.size()]) : null;
+        return contents != null ? contents.toArray(new ItemStack[0]) : null;
     }
 
     /**
@@ -380,7 +380,7 @@ public class PlayerInfo {
     public static ItemStack[] getSavedArmorContents(Player player) {
         List<ItemStack> contents = (List<ItemStack>) Parkour.getConfig(ConfigType.INVENTORY)
                 .getList(player.getUniqueId() + ".Armor");
-        return contents != null ? contents.toArray(new ItemStack[contents.size()]) : null;
+        return contents != null ? contents.toArray(new ItemStack[0]) : null;
     }
 
     /**
@@ -442,10 +442,10 @@ public class PlayerInfo {
     /**
      * Set the Player's Quiet Mode status.
      * @param player target player
-     * @param inQuietMode value to set
+     * @param quietMode value to set
      */
-    public static void setQuietMode(Player player, boolean inQuietMode) {
-        getPlayersConfig().set(player.getUniqueId() + ".QuietMode", inQuietMode);
+    public static void setQuietMode(Player player, boolean quietMode) {
+        getPlayersConfig().set(player.getUniqueId() + ".QuietMode", quietMode);
         persistChanges();
     }
 
@@ -520,5 +520,9 @@ public class PlayerInfo {
      */
     private static void persistChanges() {
         getPlayersConfig().save();
+    }
+
+    private PlayerInfo() {
+        throw new IllegalStateException("Utility class");
     }
 }

@@ -123,11 +123,12 @@ public class ScoreboardManager extends AbstractPluginReceiver {
      * @param remainingDeaths remaining deaths
      */
     public void updateScoreboardDeaths(Player player, int deaths, int remainingDeaths) {
-        Scoreboard board = player.getScoreboard();
-
         if (!enabled) {
             return;
         }
+
+        Scoreboard board = player.getScoreboard();
+
         if (scoreboardDetails.get(CURRENT_DEATHS).isEnabled() && board.getTeam(CURRENT_DEATHS) != null) {
             board.getTeam(CURRENT_DEATHS).setPrefix(convertText(String.valueOf(deaths)));
         }
@@ -217,7 +218,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
             return;
         }
 
-        playerBoard.scoreboard.getTeam(COURSE_NAME).setPrefix(playerBoard.getSession().getCourseName());
+        playerBoard.scoreboard.getTeam(COURSE_NAME).setPrefix(playerBoard.getSession().getCourse().getDisplayName());
     }
 
     private void setBestTimeEver(PlayerScoreboard playerBoard) {

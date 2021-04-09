@@ -31,8 +31,9 @@ public class CreateParkourKitConversation extends ParkourConversation {
             return ChatColor.LIGHT_PURPLE + " What would you like to name your ParkourKit?";
         }
 
+        @Override
         public Prompt acceptInput(@NotNull ConversationContext context, String name) {
-            if (name.length() == 0) {
+            if (name.isEmpty()) {
                 return Prompt.END_OF_CONVERSATION;
             }
 
@@ -43,7 +44,7 @@ public class CreateParkourKitConversation extends ParkourConversation {
 
             name = name.toLowerCase();
 
-            if (Parkour.getConfig(ConfigType.PARKOURKIT).contains("ParkourKit." + name)) {
+            if (Parkour.getConfig(ConfigType.PARKOURKIT).contains(ParkourKitConfig.PARKOUR_KIT_CONFIG_PREFIX + name)) {
                 ParkourConversation.sendErrorMessage(context, "This ParkourKit already exists");
                 return this;
             }

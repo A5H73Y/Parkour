@@ -32,7 +32,7 @@ public class ParkourModeConversation extends ParkourConversation {
     private static class ChooseParkourMode extends FixedSetPrompt {
 
         ChooseParkourMode() {
-            super(Stream.of(ParkourMode.values()).map(mode -> mode.name().toLowerCase()).toArray(String[]::new));
+            super(Stream.of(ParkourMode.values()).map(ParkourMode::getDisplayName).toArray(String[]::new));
         }
 
         @NotNull
@@ -46,7 +46,7 @@ public class ParkourModeConversation extends ParkourConversation {
         protected Prompt acceptValidatedInput(@NotNull ConversationContext context,
                                               @NotNull String choice) {
 
-            if (choice.equals(ParkourMode.POTION.name().toLowerCase())) {
+            if (choice.equals(ParkourMode.POTION.getDisplayName())) {
                 return new ChoosePotionEffect();
             }
 
@@ -186,7 +186,7 @@ public class ParkourModeConversation extends ParkourConversation {
             Parkour.getInstance().getCourseManager().clearCache(courseName);
 
             return TranslationUtils.getPropertySet("ParkourMode", courseName,
-                    ParkourMode.POTION.name().toLowerCase() + " (" + potionEffect + ")");
+                    ParkourMode.POTION.getDisplayName() + " (" + potionEffect + ")");
         }
     }
 }

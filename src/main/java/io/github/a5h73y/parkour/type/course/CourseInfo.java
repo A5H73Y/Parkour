@@ -1,5 +1,6 @@
 package io.github.a5h73y.parkour.type.course;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT;
 import static io.github.a5h73y.parkour.utility.TranslationUtils.sendConditionalValue;
 import static io.github.a5h73y.parkour.utility.TranslationUtils.sendValue;
 
@@ -8,7 +9,6 @@ import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.enums.ParkourEventType;
 import io.github.a5h73y.parkour.enums.ParkourMode;
-import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
@@ -39,6 +39,35 @@ public class CourseInfo {
      */
     public static List<String> getAllCourseNames() {
         return getCourseConfig().getStringList("Courses");
+    }
+
+    /**
+     * Get the Course's display name.
+     * Fallback to the course name.
+     * @param courseName course name
+     * @return course display name
+     */
+    public static String getCourseDisplayName(@NotNull String courseName) {
+        return StringUtils.colour(
+                getCourseConfig().getString(courseName.toLowerCase() + ".DisplayName", courseName.toLowerCase()));
+    }
+
+    /**
+     * Check if the Course has a Display Name.
+     * @param courseName course name
+     * @return course has display name
+     */
+    public static boolean hasCourseDisplayName(@NotNull String courseName) {
+        return getCourseConfig().contains(courseName.toLowerCase() + ".DisplayName");
+    }
+
+    /**
+     * Set the Course's display name.
+     * @param courseName course name
+     * @param courseDisplayName course display name
+     */
+    public static void setCourseDisplayName(@NotNull String courseName, @NotNull String courseDisplayName) {
+        getCourseConfig().set(courseName.toLowerCase() + ".DisplayName", courseDisplayName);
     }
 
     /**
@@ -211,7 +240,7 @@ public class CourseInfo {
      */
     @Nullable
     public static String getParkourKit(@NotNull String courseName) {
-        return getCourseConfig().getString(courseName.toLowerCase() + ".ParkourKit", Constants.DEFAULT);
+        return getCourseConfig().getString(courseName.toLowerCase() + ".ParkourKit", DEFAULT);
     }
 
     /**
@@ -699,6 +728,8 @@ public class CourseInfo {
 
         TranslationUtils.sendHeading(StringUtils.standardizeText(courseName) + " statistics", sender);
 
+        sendConditionalValue(sender, "Display Name", hasCourseDisplayName(courseName), getCourseDisplayName(courseName));
+
         sendValue(sender, "Views", getViews(courseName));
         sendValue(sender, "Completions", getCompletions(courseName)
                 + " (" + getCompletionPercent(courseName) + "%)");
@@ -708,7 +739,7 @@ public class CourseInfo {
         sendValue(sender, "Challenge Only", String.valueOf(getChallengeOnly(courseName)));
 
         sendConditionalValue(sender, "Resumable", !Parkour.getDefaultConfig().isLeaveDestroyCourseProgress(),
-                Boolean.toString(getResumable(courseName)));
+                String.valueOf(getResumable(courseName)));
         sendConditionalValue(sender, "Minimum ParkourLevel", getMinimumParkourLevel(courseName));
         sendConditionalValue(sender, "ParkourLevel Reward", getRewardParkourLevel(courseName));
         sendConditionalValue(sender, "ParkourLevel Reward Increase", getRewardParkourLevelIncrease(courseName));
@@ -970,5 +1001,9 @@ public class CourseInfo {
      */
     private static void persistChanges() {
         getCourseConfig().save();
+    }
+
+    private CourseInfo() {
+        throw new IllegalStateException("Utility class");
     }
 }

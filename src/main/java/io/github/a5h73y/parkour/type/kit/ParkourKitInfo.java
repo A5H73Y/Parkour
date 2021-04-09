@@ -1,5 +1,7 @@
 package io.github.a5h73y.parkour.type.kit;
 
+import static io.github.a5h73y.parkour.configuration.impl.ParkourKitConfig.PARKOUR_KIT_CONFIG_PREFIX;
+
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.ConfigType;
@@ -40,7 +42,8 @@ public class ParkourKitInfo {
      * @return material names for kit
      */
     public static Set<String> getParkourKitMaterials(String kitName) {
-        ConfigurationSection section = getParkourKitConfig().getConfigurationSection("ParkourKit." + kitName.toLowerCase());
+        ConfigurationSection section =
+                getParkourKitConfig().getConfigurationSection(PARKOUR_KIT_CONFIG_PREFIX + kitName.toLowerCase());
         return section != null ? section.getKeys(false) : new HashSet<>();
     }
 
@@ -51,7 +54,7 @@ public class ParkourKitInfo {
      * @return matching action type name
      */
     public static String getActionTypeForMaterial(String kitName, String material) {
-        return getParkourKitConfig().getString("ParkourKit." + kitName.toLowerCase()
+        return getParkourKitConfig().getString(PARKOUR_KIT_CONFIG_PREFIX + kitName.toLowerCase()
                 + "." + material.toUpperCase() + ".Action");
     }
 
@@ -76,7 +79,7 @@ public class ParkourKitInfo {
      * @param kitName parkour kit name
      */
     public static void deleteKit(String kitName) {
-        getParkourKitConfig().set("ParkourKit." + kitName.toLowerCase(), null);
+        getParkourKitConfig().set(PARKOUR_KIT_CONFIG_PREFIX + kitName.toLowerCase(), null);
         getParkourKitConfig().save();
         Parkour.getInstance().getParkourKitManager().clearCache(kitName);
     }
@@ -87,5 +90,9 @@ public class ParkourKitInfo {
      */
     private static ParkourConfiguration getParkourKitConfig() {
         return Parkour.getConfig(ConfigType.PARKOURKIT);
+    }
+
+    private ParkourKitInfo() {
+        throw new IllegalStateException("Utility class");
     }
 }

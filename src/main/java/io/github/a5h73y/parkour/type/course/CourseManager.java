@@ -1,5 +1,9 @@
 package io.github.a5h73y.parkour.type.course;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_INVALID_AMOUNT;
+import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
+import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_UNKNOWN_PLAYER;
+
 import com.cryptomorin.xseries.XMaterial;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
@@ -12,13 +16,13 @@ import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.gui.impl.CourseSettingsGui;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.other.Constants;
 import io.github.a5h73y.parkour.other.ParkourValidation;
 import io.github.a5h73y.parkour.type.Cacheable;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.kit.ParkourKit;
 import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
 import io.github.a5h73y.parkour.type.lobby.LobbyInfo;
+import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
@@ -202,7 +206,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     public void selectCourse(final Player player, final String courseName) {
         if (!doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, player);
             return;
         }
 
@@ -234,7 +238,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     public void deleteCourse(final CommandSender sender, final String courseName) {
         if (!doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
 
@@ -253,7 +257,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     public void createAutoStart(final Player player, final String courseName) {
         if (!doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, player);
             return;
         }
 
@@ -332,7 +336,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     public void setStartLocation(final Player player, final String courseName) {
         if (!doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, player);
             return;
         }
 
@@ -350,7 +354,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     public void setCreator(final CommandSender sender, final String courseName, final String value) {
         if (!doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
 
@@ -368,12 +372,12 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     public void setMaxDeaths(final CommandSender sender, final String courseName, final String value) {
         if (!doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
 
         if (!ValidationUtils.isPositiveInteger(value)) {
-            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+            TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
             return;
         }
 
@@ -399,12 +403,12 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         }
 
         if (!doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
 
         if (!ValidationUtils.isPositiveInteger(secondsValue)) {
-            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+            TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
             return;
         }
 
@@ -455,14 +459,14 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     public void toggleRewardOnceStatus(final CommandSender sender, final String courseName) {
         if (!doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
 
         // invert the existing value
         boolean isEnabled = !CourseInfo.getRewardOnce(courseName);
         CourseInfo.setRewardOnce(courseName, isEnabled);
-        TranslationUtils.sendPropertySet(sender, "reward once status", courseName, String.valueOf(isEnabled));
+        TranslationUtils.sendPropertySet(sender, "Reward Once Status", courseName, String.valueOf(isEnabled));
     }
 
     /**
@@ -474,7 +478,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     public void toggleChallengeOnlyStatus(CommandSender sender, String courseName) {
         if (!doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
 
@@ -493,7 +497,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     public void toggleResumable(CommandSender sender, String courseName) {
         if (!doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
 
@@ -510,6 +514,28 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     }
 
     /**
+     * Set the Course Display name for the Course.
+     * This will be presented when sending a message to Player(s) instead of storage.
+     * @param sender requesting sender
+     * @param courseName course name
+     * @param input course display name
+     */
+    public void setDisplayName(CommandSender sender, String courseName, String input) {
+        if (!doesCourseExists(courseName)) {
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
+            return;
+        }
+
+        if (!ValidationUtils.isStringValid(input)) {
+            TranslationUtils.sendTranslation("Error.InvalidValue", sender);
+            return;
+        }
+
+        CourseInfo.setCourseDisplayName(courseName, input);
+        TranslationUtils.sendPropertySet(sender, "Course Display Name", courseName, StringUtils.colour(input));
+    }
+
+    /**
      * Set the minimum ParkourLevel required to join the Course.
      *
      * @param sender requesting player
@@ -518,12 +544,12 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     public void setMinimumParkourLevel(final CommandSender sender, final String courseName, final String value) {
         if (!doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
 
         if (!ValidationUtils.isPositiveInteger(value)) {
-            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+            TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
             return;
         }
 
@@ -542,7 +568,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
 
         if (args.length >= 3 && args[1].equalsIgnoreCase("course")) {
             if (!doesCourseExists(args[2])) {
-                TranslationUtils.sendValueTranslation("Error.NoExist", args[2], player);
+                TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, args[2], player);
                 return;
             }
 
@@ -587,12 +613,12 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     public void setPlayerLimit(final CommandSender sender, final String courseName, final String limit) {
         if (!doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
 
         if (!ValidationUtils.isPositiveInteger(limit)) {
-            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+            TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
             return;
         }
 
@@ -610,7 +636,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     public void setParkourKit(final CommandSender sender, final String courseName, final String kitName) {
         if (!doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
 
@@ -638,12 +664,12 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     public void setRewardParkourLevel(final CommandSender sender, final String courseName, final String parkourLevel) {
         if (!doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
 
         if (!ValidationUtils.isPositiveInteger(parkourLevel)) {
-            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+            TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
             return;
         }
 
@@ -662,12 +688,12 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     public void setRewardParkourLevelIncrease(final CommandSender sender, final String courseName,
                                               final String parkourLevelIncrease) {
         if (!doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
 
         if (!ValidationUtils.isPositiveInteger(parkourLevelIncrease)) {
-            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+            TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
             return;
         }
 
@@ -686,12 +712,12 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     public void setRewardDelay(final CommandSender sender, final String courseName, final String delay) {
         if (!doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
 
         if (!ValidationUtils.isPositiveDouble(delay)) {
-            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+            TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
             return;
         }
 
@@ -710,12 +736,12 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     public void setRewardParkoins(final CommandSender sender, final String courseName, final String reward) {
         if (!doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
 
         if (!ValidationUtils.isPositiveDouble(reward)) {
-            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+            TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
             return;
         }
 
@@ -734,7 +760,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     public void addJoinItem(final CommandSender sender, final String... args) {
         if (!doesCourseExists(args[1])) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", args[1], sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, args[1], sender);
             return;
         }
 
@@ -745,7 +771,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         }
 
         if (!ValidationUtils.isPositiveInteger(args[3])) {
-            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+            TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
             return;
         }
 
@@ -767,7 +793,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     public void resetCourse(final CommandSender sender, final String courseNameInput) {
         if (!doesCourseExists(courseNameInput)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseNameInput, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseNameInput, sender);
             return;
         }
 
@@ -798,7 +824,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     public void resetCourseLeaderboards(CommandSender sender, String courseName) {
         if (!doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
 
@@ -816,14 +842,14 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     public void resetPlayerCourseLeaderboards(CommandSender sender, String targetPlayerName, String courseName) {
         if (!doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
 
         OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(targetPlayerName);
 
         if (!PlayerInfo.hasPlayerInfo(targetPlayer)) {
-            TranslationUtils.sendTranslation("Error.UnknownPlayer", sender);
+            TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, sender);
             return;
         }
 
@@ -842,7 +868,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     public void resetPrize(CommandSender sender, String courseName) {
         if (!doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
 
@@ -857,13 +883,13 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      * The Commands will be dispatched from the Console Sender, and allow for a %PLAYER% placeholder.
      *
      * @param player requesting player
-     * @param courseName course name
+     * @param session parkour session
      * @param eventType event type
      */
-    public void runEventCommands(final Player player, final String courseName, final ParkourEventType eventType) {
-        if (CourseInfo.hasEventCommands(courseName, eventType)) {
-            for (String command : CourseInfo.getEventCommands(courseName, eventType)) {
-                dispatchServerPlayerCommand(command, player);
+    public void runEventCommands(final Player player, final ParkourSession session, final ParkourEventType eventType) {
+        if (CourseInfo.hasEventCommands(session.getCourseName(), eventType)) {
+            for (String command : CourseInfo.getEventCommands(session.getCourseName(), eventType)) {
+                dispatchServerPlayerCommand(command, player, session);
             }
         }
     }
@@ -874,8 +900,8 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      * @param command command to execute
      * @param player player
      */
-    public void dispatchServerPlayerCommand(String command, Player player) {
-        command = command.replace(Constants.PLAYER_PLACEHOLDER, player.getName());
+    public void dispatchServerPlayerCommand(String command, Player player, ParkourSession session) {
+        command = TranslationUtils.replaceAllParkourPlaceholders(command, player, session);
         if (command.startsWith("player:")) {
             player.performCommand(command.split("player:")[1]);
         } else {
@@ -892,7 +918,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     public void processSetCommand(final CommandSender sender, final String... args) {
         if (!doesCourseExists(args[1])) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", args[1], sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, args[1], sender);
             return;
         }
 
@@ -925,10 +951,16 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
                     TranslationUtils.sendInvalidSyntax(sender, "setcourse",
                             "(courseName) message [join, leave, finish, checkpoint, checkpointall] [value]");
                 }
+            } else if (args[2].equalsIgnoreCase("displayname")) {
+                SetCourseConversation.performAction(sender, args[1], args[2], StringUtils.extractMessageFromArgs(args, 3));
+
+            } else {
+                TranslationUtils.sendInvalidSyntax(sender, "setcourse",
+                        "(courseName) [displayname, creator, minlevel, maxdeath, maxtime, message] [value]");
             }
         } else {
             TranslationUtils.sendInvalidSyntax(sender, "setcourse",
-                    "(courseName) [creator, minlevel, maxdeath, maxtime, message] [value]");
+                    "(courseName) [displayname, creator, minlevel, maxdeath, maxtime, message] [value]");
         }
     }
 
@@ -949,8 +981,8 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             parkour.getPlayerManager().displayParkourPlayers(sender);
 
         } else if (args[1].equalsIgnoreCase("courses")) {
-            int page = (args.length == 3 && args[2] != null
-                    && ValidationUtils.isPositiveInteger(args[2]) ? Integer.parseInt(args[2]) : 1);
+            int page = args.length == 3 && args[2] != null
+                    && ValidationUtils.isPositiveInteger(args[2]) ? Integer.parseInt(args[2]) : 1;
             displayCourses(sender, page);
 
         } else if (args[1].equalsIgnoreCase("ranks")) {
@@ -976,7 +1008,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      * @param args command arguments
      */
     public void displayLeaderboards(final Player player, final String... args) {
-        if (!parkour.getPlayerManager().delayPlayerWithMessage(player, 4)) {
+        if (!parkour.getPlayerManager().delayPlayerWithMessage(player, 1)) {
             return;
         }
 
@@ -986,7 +1018,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         }
 
         if (!doesCourseExists(args[1])) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", args[1], player);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, args[1], player);
             return;
         }
 
@@ -1004,7 +1036,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
 
         if (args.length >= 3) {
             if (!ValidationUtils.isPositiveInteger(args[2])) {
-                TranslationUtils.sendTranslation("Error.InvalidAmount", player);
+                TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, player);
                 return;
             }
             limit = Integer.parseInt(args[2]);
@@ -1027,7 +1059,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     public void displaySettingsGui(Player player, String courseName) {
         if (!parkour.getCourseManager().doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, player);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, player);
             return;
         }
 
@@ -1083,7 +1115,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         }
 
         if (page <= 0) {
-            TranslationUtils.sendTranslation("Error.InvalidAmount", sender);
+            TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
             return;
         }
 
@@ -1111,22 +1143,22 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             boolean ready = CourseInfo.getReadyStatus(courseName);
 
             StringBuilder sb = new StringBuilder();
-            sb.append(((fromIndex) + (i + 1)));
-            sb.append(") ");
-            sb.append(ready ? ChatColor.AQUA : ChatColor.RED);
-            sb.append(courseName);
+            sb.append(fromIndex + (i + 1))
+                    .append(") ")
+                    .append(ready ? ChatColor.AQUA : ChatColor.RED)
+                    .append(courseName);
 
             if (CourseInfo.hasMinimumParkourLevel(courseName)) {
                 sb.append(ChatColor.RED).append(" (")
-                        .append(CourseInfo.getMinimumParkourLevel(courseName)).append(")");
+                        .append(CourseInfo.getMinimumParkourLevel(courseName)).append(')');
             }
             if (CourseInfo.hasRewardParkourLevel(courseName)) {
                 sb.append(ChatColor.GREEN).append(" (")
-                        .append(CourseInfo.getRewardParkourLevel(courseName)).append(")");
+                        .append(CourseInfo.getRewardParkourLevel(courseName)).append(')');
 
             } else if (CourseInfo.hasRewardParkourLevelIncrease(courseName)) {
                 sb.append(ChatColor.GREEN).append(" (+")
-                        .append(CourseInfo.getRewardParkourLevelIncrease(courseName)).append(")");
+                        .append(CourseInfo.getRewardParkourLevelIncrease(courseName)).append(')');
             }
 
             sender.sendMessage(sb.toString());

@@ -9,7 +9,7 @@ All of which you will have to confirm before the action is complete.
 
 ### Delete a Course
 
-If you delete a Course it will remove all information stored on the server about it, including all references from the database so only use as a last resort. If preferred, you can reset a Course which will keep it's structure (start location & checkpoints), but reset all of it's stats and leaderboards.
+If you delete a Course it will remove all information stored on the server about it, including all references from the database so only use as a last resort. If preferred, you can reset a Course which will keep its structure (start location & checkpoints), but reset all of its stats and leaderboards.
 
 ![Deleting Course](https://i.imgur.com/apa5azA.png "Deleting Course")
  
@@ -87,7 +87,7 @@ You have the choice of MySQL or SQLite for the database implementation. If you a
 
 ### MySQL
 
-MySQL is typically a remote connection and will usually be given to you if you have a online server management system, it is generally more powerful but can come of a cost of speed if the connection is poor.
+MySQL is typically a remote connection and will usually be given to you if you have an online server management system, it is generally more powerful but can come of a cost of speed if the connection is poor.
 
 The connection properties are found in the `config.yml`. The server will require a restart if you have made any changes.
 

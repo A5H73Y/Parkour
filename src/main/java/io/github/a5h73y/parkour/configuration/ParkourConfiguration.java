@@ -29,7 +29,7 @@ public abstract class ParkourConfiguration extends YamlConfiguration {
 	/**
 	 * Setup the file.
 	 */
-	void setupFile(File dataFolder) {
+	protected void setupFile(File dataFolder) {
 		file = new File(dataFolder, getFileName());
 		createIfNotExists();
 		// load it if it already exists
@@ -38,6 +38,8 @@ public abstract class ParkourConfiguration extends YamlConfiguration {
 		initializeConfig();
 		// persist any changes
 		save();
+		// reload the config again - not entirely sure why
+		reload();
 	}
 
 	/**

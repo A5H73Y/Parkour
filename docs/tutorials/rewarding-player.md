@@ -11,7 +11,7 @@ This will start a conversation of what you want the prize to be, these can be st
 
 ![Course Prize](https://i.imgur.com/syeM4Cn.jpg "Course Prize")
 
-This was made to be as simple as possible, breaking the stages up so you answer each question with what you want. Follow each conversation as demonstrated below:
+This was made to be as simple as possible, to allow you to answer each question with what you want. Follow each conversation as demonstrated below:
 
 ### Material
 
@@ -21,9 +21,9 @@ You can provide the Player with a Material for completing the Course, and you ca
 
 ### Commands
 
-You are able to execute multiple commands when a Player completes the Course, simply choose the "command" option and it will ask you for the command to execute. Note that these commands will be run by the server, so will have elevated permission to run anything.
+You are able to execute multiple commands when a Player completes the Course, simply choose the "command" option, and it will ask you for the command to execute. Note that these commands will be run by the server, so will have elevated permission to run anything.
 
-You can use the placeholder `%PLAYER%` to insert the Players name at execution, it will have to be exactly that or it will not be recognized by the plugin. As a basic example I have set the command prize to `give %PLAYER% minecraft:torch 10` when they complete, the plugin will give you the option to run the command to test to see if it works correctly, by inserting your name into the placeholder.
+You can use the placeholder `%PLAYER%` to insert the Players name at execution, this is case-sensitive to be recognized by the plugin. As a basic example I have set the command prize to `give %PLAYER% minecraft:torch 10` when they complete, the plugin will give you the option to run the command to test to see if it works correctly, by inserting your name into the placeholder.
 
 ![Command Prize](https://i.imgur.com/i9Vfb98.jpg "Command Prize")
 
@@ -59,7 +59,7 @@ The main purpose of this is incremental Courses, so you would have to complete t
 
 This means when you complete the specified Course, your level has the amount added to it. So if you had a ParkourLevel of 10, and completed the Course which had a rewardLevelAdd of 2, your new ParkourLevel becomes 12.
 
-The main purpose for this is for lobbies where you have to complete all of the Courses to unlock a new lobby; If you had an "Easy" lobby with 5 Courses, you would set the level requirement for "Medium" to 5, and add a rewardLevelAdd to 1 for each Course in Easy, so they can be completed in any order. NOTE: For this you would have to enable `/pa rewardonce (course)` so they only get leveled up once per Course.
+The main purpose for this is for lobby setups where you have to complete all the Courses to unlock a new lobby; If you had an "Easy" lobby with 5 Courses, you would set the level requirement for "Medium" lobby to 5, and add a rewardLevelAdd to 1 for each Course in Easy, so they can be completed in any order. NOTE: For this you would have to enable `/pa rewardonce (course)` so they only get leveled up once per Course.
 
 ### /pa setlevel (player) (level)
 
@@ -113,12 +113,3 @@ You can also have the Player only be rewarded a single time after they complete 
 Parkoins are a currency within the Parkour plugin that can be configured like any other prize.
 
 Unfortunately due to time constraints and more important features, this has been underutilized by the plugin itself. Fortunately due to the easy developer API, you can create a plugin that can build on top of Parkour that uses the currency. An example could be requiring a certain amount of Parkoins before a Course can be purchased to join.
-
-## Challenge Mode
-
-You are able to challenge a Player to a Course to see who can complete the Course the fastest. This can become competitive when a monetary wager is introduced (If Economy is enabled), the winner will have the amount added to the account and the loser will have the amount deducted.
-_Forfeiting (leaving the Course or server) will be treated as a loss, and the wager will be deducted._
-
-To begin you must send the target Player a Challenge request using `/pa challenge (player) (course) [wager]` for example `/pa challenge A5H73Y fastrun`.
-
-If the target Player accepts using `/pa accept` then both Players are teleported to the start of the Course and a countdown is initiated. It can be configured for the opponent to be invisible for the duration of the challenge.

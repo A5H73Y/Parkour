@@ -1,5 +1,7 @@
 package io.github.a5h73y.parkour.conversation;
 
+import static io.github.a5h73y.parkour.configuration.impl.ParkourKitConfig.PARKOUR_KIT_CONFIG_PREFIX;
+
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.conversation.other.AddKitItemConversation;
 import io.github.a5h73y.parkour.enums.ConfigType;
@@ -89,7 +91,7 @@ public class EditParkourKitConversation extends ParkourConversation {
                                               @NotNull String material) {
             String kitName = (String) context.getSessionData("kit");
 
-            Parkour.getConfig(ConfigType.PARKOURKIT).set("ParkourKit." + kitName + "." + material, null);
+            Parkour.getConfig(ConfigType.PARKOURKIT).set(PARKOUR_KIT_CONFIG_PREFIX + kitName + "." + material, null);
             Parkour.getConfig(ConfigType.PARKOURKIT).save();
             Parkour.getInstance().getParkourKitManager().clearCache(kitName);
             for (String courseName : ParkourKitInfo.getDependentCourses(kitName)) {

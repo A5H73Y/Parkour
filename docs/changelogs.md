@@ -39,7 +39,7 @@ Please note that each version of Parkour is backwards compatible with the previo
 * Fix for Player's health being too large
 * Reset FallTicks when teleporting player
 * Apply PreventPlateStick setting to AutoStart pressure plates
-* Fix timer after server reconnect
+* Fix timer after a server reconnect
 * Fix showing player when HideAll enabled
 
 ### Breaking Changes
@@ -51,14 +51,14 @@ Please note that each version of Parkour is backwards compatible with the previo
 * Fixed ParkourLevel and ParkourRank format
 * Added option to not teleport Player on Leave
 * Treat AutoStart as a Restart if already on Course to prevent exploitation
-* Option to teleport to nearest Lobby when taking void damage (not on Course) Thanks to FrankHeijden
+* Option to teleport to the nearest Lobby when taking void damage (not on Course) Thanks to FrankHeijden
 * Fix Placeholders when cache expired
 
 ## Parkour 6.1
 ### Changes
 * Reimplemented placeholders: `%parkour_player_personal_best_(course)_time%` & `%parkour_player_personal_best_(course)_deaths%`
 * Placeholders fix for not matching lowercase
-* Added option to append world name to AutoStart
+* Added option to append the world name to AutoStart
 * Various fixes and improvements
 
 ## Parkour 6.0

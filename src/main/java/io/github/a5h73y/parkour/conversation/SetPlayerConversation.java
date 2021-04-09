@@ -2,6 +2,7 @@ package io.github.a5h73y.parkour.conversation;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -64,14 +65,13 @@ public class SetPlayerConversation extends ParkourConversation {
         public Prompt acceptInput(@NotNull ConversationContext context,
                                   @Nullable String input) {
 
-            String setOption = (String) context.getSessionData("setOption");
-
-            if (input == null || input.trim().isEmpty()) {
+            if (!ValidationUtils.isStringValid(input)) {
                 return null;
             }
 
             String playerName = (String) context.getSessionData(SESSION_PLAYER_NAME);
             String targetPlayerName = (String) context.getSessionData(SESSION_TARGET_PLAYER_NAME);
+            String setOption = (String) context.getSessionData("setOption");
             Player player = Bukkit.getPlayer(playerName);
             OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(targetPlayerName);
 
