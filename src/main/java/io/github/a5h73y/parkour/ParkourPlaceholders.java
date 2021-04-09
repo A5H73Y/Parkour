@@ -208,6 +208,13 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
 
     private String getCoursePlaceholderValue(OfflinePlayer offlinePlayer, String... arguments) {
         switch (arguments[1]) {
+            case "displayname":
+                if (arguments.length != 3) {
+                    return INVALID_SYNTAX;
+                }
+
+                return CourseInfo.getCourseDisplayName(arguments[2]);
+
             case "record":
                 if (arguments.length != 4) {
                     return INVALID_SYNTAX;

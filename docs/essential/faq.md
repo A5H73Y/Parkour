@@ -5,17 +5,9 @@ Frequently Asked Questions
 
 To disable the Parkour Join message, in the `config.yml` find `Other.Display.JoinWelcomeMessage` and set it to `false`.
 
-##### Update Player Database Time
-
-To keep a single database row per Player per Course, in the `config.yml` find `OnFinish.UpdatePlayerDatabaseTime` and set it to `true`.
-
 ##### Stuck Pressure Plates
 
 To allow for multiple Players to stand on a pressure plate at once, in the `config.yml` find `OnCourse.PreventPlateStick` and set it to `true`.
-
-##### Available Placeholders
-
-Each of the Parkour PlaceholderAPI placeholders are available here: [Parkour Placeholders](/tutorials/compatible-plugins?id=parkour-placeholders)
 
 ## Terms / Meanings
 

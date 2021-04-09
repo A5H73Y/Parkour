@@ -94,6 +94,11 @@
     "description": "These are values with context to a provided Course.",
     "placeholders": [
       {
+        "placeholder": "%parkour_course_displayname_(course)%",
+        "output": "&4Easy &6Course",
+        "description": "TODO."
+      },
+      {
         "placeholder": "%parkour_course_record_(course)_time%",
         "output": "00:01:23",
         "description": "TODO."

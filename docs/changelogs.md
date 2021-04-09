@@ -3,6 +3,30 @@ Changelogs
 
 Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon start up. There will be no manual intervention unless stated in breaking changes.
 
+## Parkour 6.5
+### Changes
+* Added Course display names `/pa setcourse (course) displayname (value)` (with new placeholders)
+* Added Join Broadcast (OnJoin.BroadcastLevel)
+* Added "JoinCourse" Sounds
+* Added "%parkour_player_course_completed_(course)%" placeholder
+* Added "%parkour_course_joinfee_(course)%" placeholder
+* Added "%parkour_course_ecoreward_(course)%" placeholder
+* Added "%parkour_course_players_(course)%" placeholder
+* Added "%parkour_course_playerlist_(course)%" placeholder
+* Added ability for commands to be run from Player starting with prefix "player:"
+* Added "addlevel" to "setplayer" command
+* Added optional Maximum ParkourLevel (ParkourTool.Restart.SecondCooldown)
+* Added "ParkourTool.Restart.SecondCooldown" for Restart tool countdown (Other.Parkour.MaximumParkourLevel)
+* Added new 'PlayerParkourRankEvent' event
+* Added "/pa placeholder (placeholder)" to quickly test placeholder integration and expected output.
+* Improvement to not send messages if blank
+* Fix `PlayerParkourLevelEvent` not being fired
+* Fix for 'Unbreakable' flag on 1.8 servers
+* Made Parkour messages more consistent (replacing internal Parkour placeholders)
+* Renamed "ResetTimeWithNoCheckpoint" to "ResetProgressWithNoCheckpoint" as all session details are reset now
+* Changed AutoStart reactivation to reset session rather than restart course
+* Fixed config issues after a fresh install
+
 ## Parkour 6.4
 ### Changes
 * Added ability to remove Parkour messages
