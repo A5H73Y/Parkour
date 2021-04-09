@@ -20,52 +20,7 @@ The joining fee and reward amount can be set in game, using `/pa econ setprize (
 PlaceholderAPI allows you to use Parkour values within other plugins.  
 _Please note that Parkour Expansion is no longer needed as it has been implemented within the Parkour plugin._
 
-### Parkour Placeholders
-
-Here are each of the available Placeholders that Parkour provides.
-
-```
-%parkour_global_version%
-%parkour_global_course_count%
-%parkour_global_player_count%
-%parkour_player_level%
-%parkour_player_rank%
-%parkour_player_parkoins%
-%parkour_player_last_completed%
-%parkour_player_last_joined%
-%parkour_player_courses_completed%
-%parkour_player_courses_uncompleted%
-%parkour_player_prize_delay_(course)%
-%parkour_player_personal_best_(course)_time%
-%parkour_player_personal_best_(course)_deaths%
-%parkour_player_personal_best_(course)_milliseconds%
-%parkour_course_record_(course)_player%
-%parkour_course_record_(course)_time%
-%parkour_course_record_(course)_deaths%
-%parkour_course_record_(course)_milliseconds%
-%parkour_course_completed_(course)%
-%parkour_course_completions_(course)%
-%parkour_course_views_(course)%
-%parkour_current_course_name%
-%parkour_current_course_deaths%
-%parkour_current_course_timer%
-%parkour_current_course_checkpoints%
-%parkour_current_course_completed%
-%parkour_current_course_remaining_deaths%
-%parkour_current_course_record_player%
-%parkour_current_course_record_time%
-%parkour_current_course_record_deaths%
-%parkour_current_course_record_milliseconds%
-%parkour_current_course_personal_best_time%
-%parkour_current_course_personal_best_deaths%
-%parkour_current_course_personal_best_milliseconds%
-%parkour_current_checkpoint%
-%parkour_leaderboard_(course)_(position)_player%
-%parkour_leaderboard_(course)_(position)_time%
-%parkour_leaderboard_(course)_(position)_deaths%
-%parkour_leaderboard_(course)_(position)_milliseconds%
-%parkour_topten_(course)_(position)%
-```
+[All of the Parkour Placeholders are available here](essential/placeholders.md).
 
 ## Holographic Displays
 

@@ -1,9 +1,13 @@
 <!-- docs/_sidebar.md -->
 
-- Getting started
-
-  - [Home](index.md)
-  - [Essential Information](tutorials/essential-info.md)
+- [Home](index.md)
+    
+- Essential Information
+  - [Commands](essential/commands.md)
+  - [Permissions](essential/permissions.md)
+  - [Placeholders](essential/placeholders.md)
+  - [FAQ](essential/faq.md)
+  
 
 - Tutorials
 

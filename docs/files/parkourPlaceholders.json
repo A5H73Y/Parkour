@@ -1,6 +1,7 @@
 [
   {
     "heading": "Global Placeholders",
+    "alias": "gl",
     "description": "These are global Parkour values.",
     "placeholders": [
       {
@@ -22,6 +23,7 @@
   },
   {
     "heading": "Player Placeholders",
+    "alias": "pl",
     "description": "These are values with context to the provided Player.",
     "placeholders": [
       {
@@ -50,11 +52,6 @@
         "description": "The latest Course the Player joined."
       },
       {
-        "placeholder": "%parkour_player_course_completed_(course)%",
-        "output": "Yes",
-        "description": "Completion status for whether the Player completed the specified Course. Output configurable in strings.yml."
-      },
-      {
         "placeholder": "%parkour_player_courses_completed%",
         "output": "10",
         "description": "The number of Courses the Player has completed."
@@ -63,6 +60,11 @@
         "placeholder": "%parkour_player_courses_uncompleted%",
         "output": "2",
         "description": "The number of Courses the Player has yet to be completed."
+      },
+      {
+        "placeholder": "%parkour_player_course_completed_(course)%",
+        "output": "Yes",
+        "description": "Completion status for whether the Player completed the specified Course. Output configurable in strings.yml."
       },
       {
         "placeholder": "%parkour_player_prize_delay_(course)%",
@@ -75,24 +77,77 @@
         "description": "The Player's personal best time on the specified Course."
       },
       {
+        "placeholder": "%parkour_player_personal_best_(course)_milliseconds%",
+        "output": "123456",
+        "description": "The Player's personal best time, in milliseconds, on the specified Course."
+      },
+      {
         "placeholder": "%parkour_player_personal_best_(course)_deaths%",
         "output": "3",
         "description": "The number of deaths accumulated for the Player's personal best time on the specified Course."
+      }
+    ]
+  },
+  {
+    "heading": "Course Placeholders",
+    "alias": "co",
+    "description": "These are values with context to a provided Course.",
+    "placeholders": [
+      {
+        "placeholder": "%parkour_course_record_(course)_time%",
+        "output": "00:01:23",
+        "description": "TODO."
       },
       {
-        "placeholder": "%parkour_player_personal_best_(course)_milliseconds%",
+        "placeholder": "%parkour_course_record_(course)_milliseconds%",
         "output": "123456",
-        "description": "The Player's personal best time, in milliseconds, on the specified Course."
+        "description": "TODO."
       },
       {
-        "placeholder": "%parkour_player_personal_best_(course)_milliseconds%",
-        "output": "123456",
-        "description": "The Player's personal best time, in milliseconds, on the specified Course."
+        "placeholder": "%parkour_course_record_(course)_deaths%",
+        "output": "3",
+        "description": "TODO."
+      },
+      {
+        "placeholder": "%parkour_course_record_(course)_player%",
+        "output": "3",
+        "description": "TODO."
+      },
+      {
+        "placeholder": "%parkour_course_completions_(course)%",
+        "output": "50",
+        "description": "TODO."
+      },
+      {
+        "placeholder": "%parkour_course_views_(course)%",
+        "output": "100",
+        "description": "TODO."
+      },
+      {
+        "placeholder": "%parkour_course_joinfee_(course)%",
+        "output": "10",
+        "description": "TODO."
+      },
+      {
+        "placeholder": "%parkour_course_ecoreward_(course)%",
+        "output": "100",
+        "description": "TODO."
+      },
+      {
+        "placeholder": "%parkour_course_players_(course)%",
+        "output": "3",
+        "description": "TODO."
+      },
+      {
+        "placeholder": "%parkour_course_playerlist_(course)%",
+        "output": "A5H73Y, steve4744, notch",
+        "description": "TODO."
       }
     ]
   },
   {
     "heading": "Current Course Placeholders",
+    "alias": "cu",
     "description": "These are values with context to the provided Player and their current Course.",
     "placeholders": [
       {
@@ -101,9 +156,113 @@
         "description": "The name of the Course the Player is currently on."
       },
       {
+        "placeholder": "%parkour_current_course_displayname%",
+        "output": "&4Easy &6Course",
+        "description": "The display name of the Course the Player is currently on, falls back to course name if not set."
+      },
+      {
         "placeholder": "%parkour_current_course_deaths%",
         "output": "3",
-        "description": "The accumulated of the Course the Player is currently on."
+        "description": "TODO."
+      },
+      {
+        "placeholder": "%parkour_current_course_timer%",
+        "output": "00:01:23",
+        "description": "TODO."
+      },
+      {
+        "placeholder": "%parkour_current_course_checkpoints%",
+        "output": "8",
+        "description": "TODO."
+      },
+      {
+        "placeholder": "%parkour_current_course_completed%",
+        "output": "Yes",
+        "description": "TODO. (Configurable in 'PlaceholderAPI.CurrentCourseCompleted')"
+      },
+      {
+        "placeholder": "%parkour_current_course_record_time%",
+        "output": "00:01:23",
+        "description": "TODO."
+      },
+      {
+        "placeholder": "%parkour_current_course_record_milliseconds%",
+        "output": "123456",
+        "description": "TODO."
+      },
+      {
+        "placeholder": "%parkour_current_course_record_deaths%",
+        "output": "3",
+        "description": "TODO."
+      },
+      {
+        "placeholder": "%parkour_current_course_record_player%",
+        "output": "3",
+        "description": "TODO."
+      },
+      {
+        "placeholder": "%parkour_current_course_personal_best_time%",
+        "output": "3",
+        "description": "TODO."
+      },
+      {
+        "placeholder": "%parkour_current_course_personal_best_milliseconds%",
+        "output": "3",
+        "description": "TODO."
+      },
+      {
+        "placeholder": "%parkour_current_course_personal_best_deaths%",
+        "output": "3",
+        "description": "TODO."
+      },
+      {
+        "placeholder": "%parkour_current_course_remaining_deaths%",
+        "output": "3",
+        "description": "TODO."
+      },
+      {
+        "placeholder": "%parkour_current_checkpoint%",
+        "output": "3",
+        "description": "TODO."
+      }
+    ]
+  },
+  {
+    "heading": "Leaderboard Placeholders",
+    "alias": "lb",
+    "description": "Leaderboard... TODO",
+    "placeholders": [
+      {
+        "placeholder": "%parkour_leaderboard_(course)_(position)_time%",
+        "output": "00:01:23",
+        "description": "TODO"
+      },
+      {
+        "placeholder": "%parkour_leaderboard_(course)_(position)_milliseconds%",
+        "output": "123456",
+        "description": "TODO"
+      },
+      {
+        "placeholder": "%parkour_leaderboard_(course)_(position)_deaths%",
+        "output": "3",
+        "description": "TODO"
+      },
+      {
+        "placeholder": "%parkour_leaderboard_(course)_(position)_player%",
+        "output": "A5H73Y",
+        "description": "TODO"
+      }
+    ]
+  },
+  {
+    "heading": "TopTen Placeholders",
+    "alias": "tt",
+    "description": "Top Ten... TODO",
+    "placeholders": [
+      {
+        "placeholder": "%parkour_topten_(course)_(position)%",
+        "output": "1) A5H73Y TODO",
+        "description": "TODO"
       }
     ]
   }

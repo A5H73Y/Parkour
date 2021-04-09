@@ -5,7 +5,6 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.PLAYER_PLACEHOLDER
 import static io.github.a5h73y.parkour.other.ParkourConstants.TIME_PLACEHOLDER;
 
 import io.github.a5h73y.parkour.database.TimeEntry;
-import io.github.a5h73y.parkour.other.ParkourConstants;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
@@ -216,14 +215,6 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
 
                 return getCourseRecord(arguments[2], arguments[3]);
 
-            case "completed":
-                if (arguments.length != 3) {
-                    return INVALID_SYNTAX;
-                }
-
-                return getOrRetrieveCache(offlinePlayer.getName() + arguments[1] + arguments[2],
-                        () -> getCompletedMessage(offlinePlayer, arguments[2]));
-
             case "completions":
                 if (arguments.length != 3) {
                     return INVALID_SYNTAX;
@@ -264,7 +255,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                     return INVALID_SYNTAX;
                 }
 
-                return String.join(",", parkour.getPlayerManager().getPlayerNamesOnCourse(arguments[2]));
+                return String.join(", ", parkour.getPlayerManager().getPlayerNamesOnCourse(arguments[2]));
 
             default:
                 return INVALID_SYNTAX;
