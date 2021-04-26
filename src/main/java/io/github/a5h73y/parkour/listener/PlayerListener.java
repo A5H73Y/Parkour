@@ -39,10 +39,10 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
      */
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (event.getEntity() instanceof Player) {
-            if (parkour.getPlayerManager().isPlaying((Player) event.getEntity())) {
-                event.setCancelled(true);
-            }
+        if (event.getEntity() instanceof Player
+                && parkour.getPlayerManager().isPlaying((Player) event.getEntity())
+                && parkour.getConfig().isPreventEntitiesAttacking()) {
+            event.setCancelled(true);
 
         } else if (event.getDamager() instanceof Player
                 && parkour.getPlayerManager().isPlaying((Player) event.getDamager())

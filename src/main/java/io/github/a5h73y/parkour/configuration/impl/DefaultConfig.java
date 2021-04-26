@@ -57,6 +57,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("OnCourse.PreventPlateStick", false);
 		this.addDefault("OnCourse.PreventOpeningOtherInventories", false);
 		this.addDefault("OnCourse.PreventAttackingEntities", false);
+		this.addDefault("OnCourse.PreventEntitiesAttacking", true);
 		this.addDefault("OnCourse.PreventJoiningDifferentCourse", false);
 		this.addDefault("OnCourse.PreventPlayerCollisions", false);
 		this.addDefault("OnCourse.SneakToInteractItems", true);
@@ -119,6 +120,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("ParkourModes.Dropper.FallDamage", false);
 		this.addDefault("ParkourModes.Rockets.Invert", false);
 		this.addDefault("ParkourModes.Rockets.Delay", 1);
+		this.addDefault("ParkourModes.FreeCheckpoint.ManualCheckpointCommandEnabled", false);
 
 		this.addDefault("DisplayTitle.FadeIn", 5);
 		this.addDefault("DisplayTitle.Stay", 20);
@@ -321,6 +323,10 @@ public class DefaultConfig extends ParkourConfiguration {
 
 	public boolean isPreventAttackingEntities() {
 		return this.getBoolean("OnCourse.PreventAttackingEntities");
+	}
+
+	public boolean isPreventEntitiesAttacking() {
+		return this.getBoolean("OnCourse.PreventEntitiesAttacking");
 	}
 
 	public boolean isPreventPlayerCollisions() {

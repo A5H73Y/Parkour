@@ -246,6 +246,13 @@
     "commandGroup": "1"
   },
   {
+    "command": "manualcheckpoint",
+    "title": "Set Player Manual Checkpoint",
+    "example": "/pa manualcheckpoint",
+    "description": "Allows the Player to mark their current position as their manual checkpoint. This is exclusive to the Free_Checkpoint ParkourMode, and must be enabled in the config. This will allow external plugins to mark the Player's checkpoint for them using the command.",
+    "commandGroup": "1"
+  },
+  {
     "command": "material",
     "title": "Display Material information",
     "arguments": "[material]",
@@ -269,6 +276,15 @@
     "permission": "Parkour.Admin.Prize",
     "commandGroup": "3",
     "consoleSyntax": "pac prize (course)"
+  },
+  {
+    "command": "placeholder",
+    "title": "Parse Parkour Placeholder",
+    "arguments": "(placeholder)",
+    "example": "/pa placeholder %parkour_global_version%",
+    "description": "Shortcut command to evaluate the Placeholder value using PlaceholderAPI. Validation will be done to ensure the Parkour plugin has successfully integrated with Placeholders first. The command will evaluate the equivalent to '/papi parse me (placeholder)'.",
+    "permission": "Parkour.Admin.*",
+    "commandGroup": "4"
   },
   {
     "command": "quiet",

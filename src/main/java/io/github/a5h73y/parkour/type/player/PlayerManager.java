@@ -1980,4 +1980,21 @@ public class PlayerManager extends AbstractPluginReceiver {
 		hiddenPlayers.remove(player);
 	}
 
+	public void setManualCheckpoint(Player player) {
+		if (!isPlaying(player)) {
+			TranslationUtils.sendTranslation("Error.NotOnAnyCourse", player);
+			return;
+		}
+
+		ParkourSession session = getParkourSession(player);
+
+		if (ParkourMode.FREE_CHECKPOINT == session.getParkourMode()
+				&& parkour.getConfig().getBoolean("ParkourModes.FreeCheckpoint.ManualCheckpointCommandEnabled")) {
+			session.setFreedomLocation(player.getLocation());
+			TranslationUtils.sendTranslation("Event.FreeCheckpoints", player);
+
+		} else {
+			TranslationUtils.sendMessage(player, "You are currently unable to set a Checkpoint.");
+		}
+	}
 }

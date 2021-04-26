@@ -287,6 +287,10 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getLobbyManager().joinLobby(player, args.length > 1 ? args[1] : DEFAULT);
                 break;
 
+            case "manualcheckpoint":
+                parkour.getPlayerManager().setManualCheckpoint(player);
+                break;
+
             case "material":
                 MaterialUtils.lookupMaterialInformation(player, args);
                 break;
@@ -294,6 +298,18 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
             case "perms":
             case "permissions":
                 parkour.getPlayerManager().displayPermissions(player);
+                break;
+
+            case "placeholder":
+                if (!ValidationUtils.validateArgs(player, args, 2)) {
+                    return false;
+                }
+
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                    return false;
+                }
+
+                parkour.getPlaceholderApi().evaluatePlaceholder(player, args[1]);
                 break;
 
             case "prize":
@@ -663,18 +679,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 if (player.isOp() && !args[1].startsWith("MySQL")) {
                     TranslationUtils.sendValue(sender, args[1], parkour.getConfig().getString(args[1]));
                 }
-                break;
-
-            case "placeholder":
-                if (!ValidationUtils.validateArgs(player, args, 2)) {
-                    return false;
-                }
-
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
-                    return false;
-                }
-
-                parkour.getPlaceholderApi().evaluatePlaceholder(player, args[1]);
                 break;
 
             default:

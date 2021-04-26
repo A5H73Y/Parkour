@@ -60,6 +60,14 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 PluginUtils.cacheCommand(sender, args.length == 2 ? args[1] : null);
                 break;
 
+            case "challengeonly":
+                if (!ValidationUtils.validateArgs(sender, args, 2)) {
+                    return false;
+                }
+
+                parkour.getCourseManager().toggleChallengeOnlyStatus(sender, args[1]);
+                break;
+
             case "cmds":
                 displayConsoleCommands();
                 break;
@@ -240,14 +248,6 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 }
 
                 parkour.getCourseManager().toggleRewardOnceStatus(sender, args[1]);
-                break;
-
-            case "challengeonly":
-                if (!ValidationUtils.validateArgs(sender, args, 2)) {
-                    return false;
-                }
-
-                parkour.getCourseManager().toggleChallengeOnlyStatus(sender, args[1]);
                 break;
 
             case "rewardparkoins":
