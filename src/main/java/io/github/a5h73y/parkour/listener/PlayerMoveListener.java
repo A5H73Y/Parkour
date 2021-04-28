@@ -74,6 +74,9 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
         }
 
         ParkourKit kit = session.getCourse().getParkourKit();
+        if (kit == null) {
+            return;
+        }
 
         if (belowMaterial.equals(Material.SPONGE)) {
             player.setFallDistance(0);
