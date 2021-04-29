@@ -305,7 +305,11 @@ public class ParkourValidation {
             return false;
 
         } else if (courseName.contains(".")) {
-            TranslationUtils.sendMessage(player, "Course name can not contain '.'!");
+            TranslationUtils.sendMessage(player, "Course name can not contain &4.&f!");
+            return false;
+
+        } else if (courseName.contains("_")) {
+            TranslationUtils.sendMessage(player, "Course name can not contain &4_&f as it will break Placeholders. Instead, set a Course Display name.");
             return false;
 
         } else if (ValidationUtils.isInteger(courseName)) {

@@ -13,9 +13,9 @@ It's important to know that YAML has very strict formatting rules and will fail 
 
 This configuration file is very large and can look daunting at first, but each section is broken up into logical sections with clear names to hopefully make it easier.
 
-View the annotated configuration file here: [https://pastebin.com/dWCcEgwN](https://pastebin.com/dWCcEgwN).
+View the annotated configuration file here: [https://pastebin.com/TZicmuhi](https://pastebin.com/TZicmuhi).
 
-_This is correct as of Parkour v6.0_
+_This is correct as of Parkour v6.5_
 
 ## strings.yml
 

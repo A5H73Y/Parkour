@@ -32,5 +32,9 @@ Parkour uses a database to store all the leaderboards for each Course, allowing 
 These are servers that utilise the Parkour plugin well for you to try it out.
 
     Name: Fancycraft
-    Server IP: fancycraft.cc
+    IP: fancycraft.cc
+    Version: 1.16.5
+
+    Name: Mythic-Realm
+    IP: play.mythic-realm.net
     Version: 1.16.5
