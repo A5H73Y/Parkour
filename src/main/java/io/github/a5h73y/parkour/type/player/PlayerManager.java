@@ -1228,6 +1228,9 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 */
 	public void deleteParkourSessions(OfflinePlayer player) {
 		File playersFolder = new File(getParkourSessionsDirectory() + File.separator + player.getUniqueId().toString());
+		if (Files.notExists(playersFolder.toPath())) {
+			return;
+		}
 
 		try (Stream<Path> paths = Files.walk(playersFolder.toPath())) {
 			paths.sorted(Comparator.reverseOrder())
