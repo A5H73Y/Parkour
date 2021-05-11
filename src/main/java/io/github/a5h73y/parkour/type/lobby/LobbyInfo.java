@@ -3,6 +3,7 @@ package io.github.a5h73y.parkour.type.lobby;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
 import io.github.a5h73y.parkour.other.ParkourConstants;
+import java.util.Collections;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -19,7 +20,9 @@ public class LobbyInfo {
 	 * @return lobby names
 	 */
 	public static Set<String> getAllLobbyNames() {
-		return Parkour.getDefaultConfig().getConfigurationSection("Lobby").getKeys(false);
+		return Parkour.getDefaultConfig().isConfigurationSection("Lobby")
+					? Parkour.getDefaultConfig().getConfigurationSection("Lobby").getKeys(false)
+					: Collections.emptySet();
 	}
 
 	/**

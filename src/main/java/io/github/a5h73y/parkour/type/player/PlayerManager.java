@@ -558,15 +558,14 @@ public class PlayerManager extends AbstractPluginReceiver {
 			if (teleportAway) {
 				teleportCourseCompletion(player, courseName);
 			}
+			boolean recordTime = isNewRecord(player, session);
+			parkour.getDatabase().insertOrUpdateTime(
+					courseName, player, session.getTimeFinished(), session.getDeaths(), recordTime);
+
+			if (recordTime) {
+				parkour.getCourseManager().runEventCommands(player, session, COURSE_RECORD);
+			}
 		}, delay);
-
-		boolean recordTime = isNewRecord(player, session);
-		parkour.getDatabase().insertOrUpdateTime(
-				courseName, player, session.getTimeFinished(), session.getDeaths(), recordTime);
-
-		if (recordTime) {
-			parkour.getCourseManager().runEventCommands(player, session, COURSE_RECORD);
-		}
 
 		PlayerInfo.setLastCompletedCourse(player, courseName);
 		PlayerInfo.addCompletedCourse(player, courseName);
@@ -1229,6 +1228,9 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 */
 	public void deleteParkourSessions(OfflinePlayer player) {
 		File playersFolder = new File(getParkourSessionsDirectory() + File.separator + player.getUniqueId().toString());
+		if (Files.notExists(playersFolder.toPath())) {
+			return;
+		}
 
 		try (Stream<Path> paths = Files.walk(playersFolder.toPath())) {
 			paths.sorted(Comparator.reverseOrder())
