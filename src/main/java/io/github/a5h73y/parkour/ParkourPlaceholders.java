@@ -174,7 +174,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 }
 
             case "course":
-                if (arguments.length == 4 && arguments[3].equals("completed")) {
+                if (arguments.length == 4 && arguments[2].equals("completed")) {
                     return getOrRetrieveCache(offlinePlayer.getName() + arguments[2] + arguments[3],
                             () -> getCompletedMessage(offlinePlayer, arguments[3]));
                 } else {
