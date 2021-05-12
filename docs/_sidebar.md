@@ -7,7 +7,6 @@
   - [Permissions](essential/permissions.md)
   - [Placeholders](essential/placeholders.md)
   - [FAQ](essential/faq.md)
-  
 
 - Tutorials
 
