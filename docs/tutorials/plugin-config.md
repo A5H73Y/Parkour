@@ -30,3 +30,5 @@ _When in doubt, run your `strings.yml` contents through a validator such as: [ht
 Here are translations submitted by users for a specific language, I take no responsibility for their accuracy.
 
 [Chinese / Mandarin (CH)](files/translations/ch/strings.yml)
+
+[Spanish (ES)](files/translations/es/strings.yml)

@@ -68,6 +68,7 @@ public class CourseInfo {
      */
     public static void setCourseDisplayName(@NotNull String courseName, @NotNull String courseDisplayName) {
         getCourseConfig().set(courseName.toLowerCase() + ".DisplayName", courseDisplayName);
+        persistChanges();
     }
 
     /**
@@ -445,6 +446,7 @@ public class CourseInfo {
      */
     public static void incrementViews(@NotNull String courseName) {
         getCourseConfig().set(courseName.toLowerCase() + ".Views", getViews(courseName) + 1);
+        persistChanges();
     }
 
     /**
