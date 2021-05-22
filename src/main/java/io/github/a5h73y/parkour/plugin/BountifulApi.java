@@ -1,6 +1,6 @@
 package io.github.a5h73y.parkour.plugin;
 
-import com.connorlinfoot.bountifulapi.BountifulAPI;
+//import com.connorlinfoot.bountifulapi.BountifulAPI;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PluginUtils;
@@ -84,7 +84,7 @@ public class BountifulApi extends PluginWrapper {
 				return;
 
 			} else if (isEnabled()) {
-				BountifulAPI.sendTitle(player, inDuration, stayDuration, outDuration, title, subTitle);
+//				BountifulAPI.sendTitle(player, inDuration, stayDuration, outDuration, title, subTitle);
 				return;
 			}
 		}
@@ -116,7 +116,7 @@ public class BountifulApi extends PluginWrapper {
 				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(title));
 
 			} else if (isEnabled()) {
-				BountifulAPI.sendActionBar(player, title);
+//				BountifulAPI.sendActionBar(player, title);
 
 			} else {
 				TranslationUtils.sendMessage(player, title);

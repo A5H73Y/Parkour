@@ -96,18 +96,18 @@
 			</exclusions>
 		</dependency>
 		<!-- Bountiful API -->
-		<dependency>
-			<groupId>com.connorlinfoot</groupId>
-			<artifactId>BountifulAPI</artifactId>
-			<version>1.6.4</version>
-			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.bukkit</groupId>
-					<artifactId>bukkit</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.connorlinfoot</groupId>-->
+<!--			<artifactId>BountifulAPI</artifactId>-->
+<!--			<version>1.6.4</version>-->
+<!--			<scope>provided</scope>-->
+<!--			<exclusions>-->
+<!--				<exclusion>-->
+<!--					<groupId>org.bukkit</groupId>-->
+<!--					<artifactId>bukkit</artifactId>-->
+<!--				</exclusion>-->
+<!--			</exclusions>-->
+<!--		</dependency>-->
 		<!-- Placeholder API -->
 		<dependency>
 			<groupId>me.clip</groupId>
