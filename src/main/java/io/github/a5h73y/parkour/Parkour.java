@@ -1,6 +1,5 @@
 package io.github.a5h73y.parkour;
 
-import com.g00fy2.versioncompare.Version;
 import com.google.gson.GsonBuilder;
 import io.github.a5h73y.parkour.commands.ParkourAutoTabCompleter;
 import io.github.a5h73y.parkour.commands.ParkourCommands;
@@ -44,6 +43,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+import io.github.g00fy2.versioncompare.Version;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bstats.charts.SingleLineChart;

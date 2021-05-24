@@ -1,6 +1,5 @@
 package io.github.a5h73y.parkour.upgrade;
 
-import com.g00fy2.versioncompare.Version;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Backup;
@@ -14,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.function.BooleanSupplier;
 import java.util.logging.Logger;
+import io.github.g00fy2.versioncompare.Version;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
