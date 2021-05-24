@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.a5h73y</groupId>
 	<artifactId>Parkour</artifactId>
-	<version>6.5</version>
+	<version>6.5.1</version>
 	<packaging>jar</packaging>
 
 	<name>Parkour</name>
@@ -46,11 +46,6 @@
 		<repository>
 			<id>g00fy2-repo</id>
 			<url>https://dl.bintray.com/g00fy2/maven/</url>
-		</repository>
-		<!-- My Bintray Repo -->
-		<repository>
-			<id>a5h73y-repo</id>
-			<url>https://dl.bintray.com/a5h73y/repo/</url>
 		</repository>
 		<!-- Placeholder API Repo -->
 		<repository>
@@ -205,17 +200,6 @@
 				<configuration>
 					<createDependencyReducedPom>false</createDependencyReducedPom>
 					<minimizeJar>true</minimizeJar>
-					<artifactSet>
-						<includes>
-							<include>com.github.cryptomorin:*</include>
-							<include>org.bstats:*</include>
-							<include>pro.husk:*</include>
-							<include>com.zaxxer:*</include>
-							<include>org.slf4j:*</include>
-							<include>de.themoep:*</include>
-							<include>com.g00fy2:*</include>
-						</includes>
-					</artifactSet>
 					<filters>
 						<filter>
 							<artifact>*:*</artifact>
