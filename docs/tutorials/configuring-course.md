@@ -134,14 +134,16 @@ _Remember that you must have the Course selected (editing), which can be achieve
 Parkour allows you to customise behaviours of each Parkour Event to display a message and / or execute a command.
 
 The Parkour events include:
-* join
-* leave
-* prize
-* finish _(Only run when RewardOnce is enabled and has already been achieved)_
-* checkpoint
-* checkpoint_all _(When all the checkpoints have been achieved)_
-* death
-* course_record _(When the player achieves a course record or beats their best time)_
+* Join
+* Leave
+* Prize _(prize given to Player for completion)_
+* NoPrize _(prize not given due to RewardOnce)_
+* Finish _(every time the player finished a Course)_
+* Checkpoint
+* CheckpointAll _(all the checkpoints have been achieved)_
+* Death
+* PlayerCourseRecord _(player beats their best time)_
+* GlobalCourseRecord _(player beats the global best time)_
 
 ### Running Custom Event Commands
 
