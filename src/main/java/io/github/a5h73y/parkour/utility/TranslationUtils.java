@@ -375,4 +375,17 @@ public class TranslationUtils {
 				.replace(TIME_PLACEHOLDER, session.getDisplayTime())
 				.replace(CHECKPOINT_PLACEHOLDER, String.valueOf(session.getCurrentCheckpoint()));
 	}
+
+	/**
+	 * Replace all Player Placeholders with their value counterpart.
+	 * Used for inserting values before sending messages internally.
+	 *
+	 * @param input input
+	 * @param player player
+	 * @return updated input message
+	 */
+	public static String replaceAllPlayerPlaceholders(String input, Player player) {
+		return input.replace(PLAYER_PLACEHOLDER, player.getName())
+				.replace(PLAYER_DISPLAY_PLACEHOLDER, player.getDisplayName());
+	}
 }

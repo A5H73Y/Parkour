@@ -23,7 +23,7 @@ import io.github.a5h73y.parkour.other.Backup;
 import io.github.a5h73y.parkour.other.CommandUsage;
 import io.github.a5h73y.parkour.other.ParkourUpdater;
 import io.github.a5h73y.parkour.plugin.AacApi;
-import io.github.a5h73y.parkour.plugin.BountifulApi;
+import io.github.a5h73y.parkour.plugin.TitleUtils;
 import io.github.a5h73y.parkour.plugin.EconomyApi;
 import io.github.a5h73y.parkour.plugin.PlaceholderApi;
 import io.github.a5h73y.parkour.type.challenge.ChallengeManager;
@@ -41,7 +41,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import io.github.g00fy2.versioncompare.Version;
 import org.bstats.bukkit.Metrics;
@@ -59,7 +58,7 @@ public class Parkour extends JavaPlugin {
     private static final int SPIGOT_PLUGIN_ID = 23685;
     private static Parkour instance;
 
-    private BountifulApi bountifulApi;
+    private TitleUtils titleUtils;
     private EconomyApi economyApi;
     private PlaceholderApi placeholderApi;
 
@@ -222,8 +221,8 @@ public class Parkour extends JavaPlugin {
         return soundsManager;
     }
 
-    public BountifulApi getBountifulApi() {
-        return bountifulApi;
+    public TitleUtils getBountifulApi() {
+        return titleUtils;
     }
 
     public EconomyApi getEconomyApi() {
@@ -244,7 +243,7 @@ public class Parkour extends JavaPlugin {
     }
 
     private void setupPlugins() {
-        bountifulApi = new BountifulApi();
+        titleUtils = new TitleUtils();
         economyApi = new EconomyApi();
         placeholderApi = new PlaceholderApi();
         new AacApi();
@@ -310,12 +309,9 @@ public class Parkour extends JavaPlugin {
     }
 
     private void upgradeParkour() {
-        CompletableFuture.supplyAsync(() -> new ParkourUpgrader(this).getAsBoolean())
-                .thenAccept(success -> {
-                    if (success) {
-                        onEnable();
-                    }
-                });
+        if (new ParkourUpgrader(this).beginUpgrade()) {
+            onEnable();
+        }
     }
 
     /**

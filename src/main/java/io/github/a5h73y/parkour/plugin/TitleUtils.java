@@ -1,6 +1,5 @@
 package io.github.a5h73y.parkour.plugin;
 
-//import com.connorlinfoot.bountifulapi.BountifulAPI;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PluginUtils;
@@ -11,12 +10,12 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 
 /**
- * BountifulAPI wrapper to provide Title and Action Bar messages to the Player.
- * BountifulAPI integration will be used when Spigot's implementation isn't supported.
+ * TitleUtils wrapper to provide Title and Action Bar messages to the Player.
  */
-public class BountifulApi extends PluginWrapper {
+// TODO have a proper tidy up
+public class TitleUtils extends PluginWrapper {
 
-	private boolean useSpigotMethods;
+	private boolean serverSupported;
 	private int inDuration;
 	private int stayDuration;
 	private int outDuration;
@@ -30,7 +29,7 @@ public class BountifulApi extends PluginWrapper {
 	protected void initialise() {
 		super.initialise();
 
-		useSpigotMethods = PluginUtils.getMinorServerVersion() > 10;
+		serverSupported = PluginUtils.getMinorServerVersion() > 10;
 		inDuration = Parkour.getDefaultConfig().getTitleIn();
 		stayDuration = Parkour.getDefaultConfig().getTitleStay();
 		outDuration = Parkour.getDefaultConfig().getTitleOut();
@@ -78,15 +77,9 @@ public class BountifulApi extends PluginWrapper {
 			return;
 		}
 
-		if (attemptTitle) {
-			if (useSpigotMethods) {
-				player.sendTitle(title, subTitle, inDuration, stayDuration, outDuration);
-				return;
-
-			} else if (isEnabled()) {
-//				BountifulAPI.sendTitle(player, inDuration, stayDuration, outDuration, title, subTitle);
-				return;
-			}
+		if (attemptTitle && serverSupported) {
+			player.sendTitle(title, subTitle, inDuration, stayDuration, outDuration);
+			return;
 		}
 
 		if (ValidationUtils.isStringValid(title)) {
@@ -112,11 +105,8 @@ public class BountifulApi extends PluginWrapper {
 		}
 
 		if (attemptTitle) {
-			if (useSpigotMethods) {
+			if (serverSupported) {
 				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(title));
-
-			} else if (isEnabled()) {
-//				BountifulAPI.sendActionBar(player, title);
 
 			} else {
 				TranslationUtils.sendMessage(player, title);

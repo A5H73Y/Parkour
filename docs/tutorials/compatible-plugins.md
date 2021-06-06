@@ -61,19 +61,6 @@ Add a line for each detail you want to display:
 `/hd addline Leader_tutorial {slow}Time: %parkour_leaderboard_tutorial_1_time%`  
 `/hd addline Leader_tutorial {slow}Deaths: %parkour_leaderboard_tutorial_1_deaths%`
 
-## BountifulAPI
-
-BountifulAPI supports the ability to display titles and various other notifications on older server versions, rather than printing the messages into the chat.
-
-_Spigot's implementation will be attempted first, then fallback to BountifulAPI if installed._
-
-![Bountiful Example 1](https://i.imgur.com/E8BighB.png "Bountiful Example 1")
-![Bountiful Example 2](https://i.imgur.com/fDsUmHV.png "Bountiful Example 2")
-![Bountiful Example 3](https://i.imgur.com/bRvhdp8.png "Bountiful Example 3")
-
-Created by connorlinfoot, available here: https://www.spigotmc.org/resources/bountifulapi-1-8-1-13.1394/
-
-
 ## Parkour Top Ten
 
 Allows for the player's Head to be proudly displayed next to their best times, great for a competitive Parkour server.

@@ -27,6 +27,7 @@ import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PermissionUtils;
+import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -889,23 +890,8 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
     public void runEventCommands(final Player player, final ParkourSession session, final ParkourEventType eventType) {
         if (CourseInfo.hasEventCommands(session.getCourseName(), eventType)) {
             for (String command : CourseInfo.getEventCommands(session.getCourseName(), eventType)) {
-                dispatchServerPlayerCommand(command, player, session);
+                PlayerUtils.dispatchServerPlayerCommand(command, player, session);
             }
-        }
-    }
-
-    /**
-     * Dispatch a command with Player placeholder.
-     * If the command start with "player:" it will be executed by the Player.
-     * @param command command to execute
-     * @param player player
-     */
-    public void dispatchServerPlayerCommand(String command, Player player, ParkourSession session) {
-        command = TranslationUtils.replaceAllParkourPlaceholders(command, player, session);
-        if (command.startsWith("player:")) {
-            player.performCommand(command.split("player:")[1]);
-        } else {
-            parkour.getServer().dispatchCommand(parkour.getServer().getConsoleSender(), command);
         }
     }
 
@@ -932,24 +918,24 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             if (args[2].equalsIgnoreCase("message")) {
                 if (SetCourseConversation.PARKOUR_EVENT_TYPE_NAMES.contains(args[3].toLowerCase())) {
                     String message = StringUtils.extractMessageFromArgs(args, 4);
-
                     CourseInfo.setEventMessage(args[1], args[3], message);
                     TranslationUtils.sendPropertySet(sender, StringUtils.standardizeText(args[3]) + " Message", args[1],
                             StringUtils.colour(message));
 
                 } else {
                     TranslationUtils.sendInvalidSyntax(sender, "setcourse",
-                            "(courseName) message [join, leave, finish, checkpoint, checkpointall] [value]");
+                            "(courseName) message [" + ParkourEventType.getAllParkourEventTypes() + "] [value]");
                 }
             } else if (args[2].equalsIgnoreCase("command")) {
                 if (SetCourseConversation.PARKOUR_EVENT_TYPE_NAMES.contains(args[3].toLowerCase())) {
                     String message = StringUtils.extractMessageFromArgs(args, 4);
                     ParkourEventType type = ParkourEventType.valueOf(args[3].toUpperCase());
                     CourseInfo.addEventCommand(args[1], type, message);
-                    TranslationUtils.sendPropertySet(sender, type.getConfigEntry() + " command", args[1], "/" + message);
+                    TranslationUtils.sendPropertySet(sender, StringUtils.standardizeText(args[3]) + " Command", args[1], "/" + message);
+
                 } else {
                     TranslationUtils.sendInvalidSyntax(sender, "setcourse",
-                            "(courseName) message [join, leave, finish, checkpoint, checkpointall] [value]");
+                            "(courseName) command [" + ParkourEventType.getAllParkourEventTypes() + "] [value]");
                 }
             } else if (args[2].equalsIgnoreCase("displayname")) {
                 SetCourseConversation.performAction(sender, args[1], args[2], StringUtils.extractMessageFromArgs(args, 3));

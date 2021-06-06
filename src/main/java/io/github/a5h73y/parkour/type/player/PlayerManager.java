@@ -2,11 +2,13 @@ package io.github.a5h73y.parkour.type.player;
 
 import static io.github.a5h73y.parkour.enums.ParkourEventType.CHECKPOINT;
 import static io.github.a5h73y.parkour.enums.ParkourEventType.CHECKPOINT_ALL;
-import static io.github.a5h73y.parkour.enums.ParkourEventType.COURSE_RECORD;
 import static io.github.a5h73y.parkour.enums.ParkourEventType.DEATH;
 import static io.github.a5h73y.parkour.enums.ParkourEventType.FINISH;
+import static io.github.a5h73y.parkour.enums.ParkourEventType.GLOBAL_COURSE_RECORD;
 import static io.github.a5h73y.parkour.enums.ParkourEventType.JOIN;
 import static io.github.a5h73y.parkour.enums.ParkourEventType.LEAVE;
+import static io.github.a5h73y.parkour.enums.ParkourEventType.NO_PRIZE;
+import static io.github.a5h73y.parkour.enums.ParkourEventType.PLAYER_COURSE_RECORD;
 import static io.github.a5h73y.parkour.enums.ParkourEventType.PRIZE;
 import static io.github.a5h73y.parkour.other.ParkourConstants.COURSE_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT;
@@ -539,6 +541,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		announceCourseFinishMessage(player, session);
 		CourseInfo.incrementCompletions(courseName);
 		teardownParkourMode(player);
+		Bukkit.getServer().getPluginManager().callEvent(new PlayerFinishCourseEvent(player, courseName));
 		removePlayer(player);
 
 		parkour.getChallengeManager().completeChallenge(player);
@@ -547,25 +550,16 @@ public class PlayerManager extends AbstractPluginReceiver {
 			restoreXpLevel(player);
 		}
 
-		final long delay = parkour.getConfig().getLong("OnFinish.TeleportDelay");
-		final boolean teleportAway = parkour.getConfig().getBoolean("OnFinish.TeleportAway");
-
 		Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () -> {
 			restoreHealthHunger(player);
 			loadInventoryArmor(player);
 			rewardPrize(player, session);
 			parkour.getScoreboardManager().removeScoreboard(player);
-			if (teleportAway) {
+			if (parkour.getConfig().getBoolean("OnFinish.TeleportAway")) {
 				teleportCourseCompletion(player, courseName);
 			}
-			boolean recordTime = isNewRecord(player, session);
-			parkour.getDatabase().insertOrUpdateTime(
-					courseName, player, session.getTimeFinished(), session.getDeaths(), recordTime);
-
-			if (recordTime) {
-				parkour.getCourseManager().runEventCommands(player, session, COURSE_RECORD);
-			}
-		}, delay);
+			submitPlayerLeaderboard(player, session);
+		}, parkour.getConfig().getLong("OnFinish.TeleportDelay"));
 
 		PlayerInfo.setLastCompletedCourse(player, courseName);
 		PlayerInfo.addCompletedCourse(player, courseName);
@@ -573,7 +567,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		forceVisible(player);
 		deleteParkourSession(player, courseName);
-		Bukkit.getServer().getPluginManager().callEvent(new PlayerFinishCourseEvent(player, courseName));
+		parkour.getCourseManager().runEventCommands(player, session, FINISH);
 	}
 
 	/**
@@ -583,28 +577,29 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param player requesting player
 	 */
 	public void restartCourse(Player player) {
-		restartCourse(player, false);
-	}
-
-	/**
-	 * Restart Course progress.
-	 * Will trigger a silent leave and rejoin of the Course.
-	 *
-	 * @param player requesting player
-	 * @param doNotTeleport do not teleport the player manually
-	 */
-	public void restartCourse(Player player, boolean doNotTeleport) {
 		if (!isPlaying(player)) {
 			return;
 		}
 
-		Course course = getParkourSession(player).getCourse();
-		leaveCourse(player, true);
-		deleteParkourSession(player, course.getName());
-		joinCourse(player, course, true);
-		// if they are restarting the Course, we need to teleport them back
-		if (!doNotTeleport && !parkour.getConfig().getBoolean("OnJoin.TeleportPlayer")) {
-			PlayerUtils.teleportToLocation(player, course.getCheckpoints().get(0).getLocation());
+		ParkourSession session = getParkourSession(player);
+		Course course = session.getCourse();
+
+		if (parkour.getConfig().getBoolean("OnRestart.FullPlayerRestart")) {
+			leaveCourse(player, true);
+			deleteParkourSession(player, course.getName());
+			joinCourse(player, course, true);
+
+			// if they are restarting the Course, we need to teleport them back
+			// this is because the joinCourse will not teleport the Player if disabled
+			if (!parkour.getConfig().getBoolean("OnJoin.TeleportPlayer")) {
+				PlayerUtils.teleportToLocation(player, course.getCheckpoints().get(0).getLocation());
+			}
+		} else {
+			session.resetProgress();
+			session.setFreedomLocation(null);
+			preparePlayer(player, parkour.getConfig().getString("OnJoin.SetGameMode"));
+			PlayerUtils.teleportToLocation(player, determineDestination(session));
+			parkour.getScoreboardManager().addScoreboard(player, session);
 		}
 
 		boolean displayTitle = parkour.getConfig().getBoolean("DisplayTitle.JoinCourse");
@@ -628,7 +623,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		if (CourseInfo.getRewardOnce(courseName)
 				&& parkour.getDatabase().hasPlayerAchievedTime(player, courseName)) {
-			parkour.getCourseManager().runEventCommands(player, session, FINISH);
+			parkour.getCourseManager().runEventCommands(player, session, NO_PRIZE);
 			return;
 		}
 
@@ -678,8 +673,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 			parkour.getCourseManager().runEventCommands(player, session, PRIZE);
 
 		} else if (ValidationUtils.isStringValid(parkour.getConfig().getDefaultPrizeCommand())) {
-			parkour.getCourseManager().dispatchServerPlayerCommand(
-					parkour.getConfig().getDefaultPrizeCommand(), player, session);
+			PlayerUtils.dispatchServerPlayerCommand(parkour.getConfig().getDefaultPrizeCommand(), player, session);
 		}
 		player.updateInventory();
 	}
@@ -758,6 +752,28 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 	}
 
+	private void submitPlayerLeaderboard(Player player, ParkourSession session) {
+		TimeResult timeResult = calculateTimeResult(player, session);
+
+		parkour.getDatabase().insertOrUpdateTime(session.getCourseName(), player, session.getTimeFinished(),
+				session.getDeaths(), timeResult != TimeResult.NONE);
+
+		if (timeResult != TimeResult.NONE) {
+			ParkourEventType eventType = timeResult == TimeResult.GLOBAL_BEST ? GLOBAL_COURSE_RECORD : PLAYER_COURSE_RECORD;
+			String fallbackKey = timeResult == TimeResult.GLOBAL_BEST ? "Parkour.CourseRecord" : "Parkour.BestTime";
+
+			parkour.getCourseManager().runEventCommands(player, session, eventType);
+
+			if (parkour.getConfig().getBoolean("OnFinish.DisplayNewRecords")) {
+				String displayTime = DateTimeUtils.displayCurrentTime(session.getTimeFinished());
+
+				parkour.getBountifulApi().sendFullTitle(player,
+						TranslationUtils.getCourseEventMessage(session, eventType, fallbackKey),
+						displayTime, false);
+			}
+		}
+	}
+
 	private void hideOrShowPlayers(Player player, boolean showPlayers, boolean allPlayers) {
 		Collection<Player> playerScope;
 
@@ -769,9 +785,9 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		for (Player eachPlayer : playerScope) {
 			if (showPlayers) {
-				player.showPlayer(eachPlayer);
+				PlayerUtils.showPlayer(player, eachPlayer);
 			} else {
-				player.hidePlayer(eachPlayer);
+				PlayerUtils.hidePlayer(player, eachPlayer);
 			}
 		}
 	}
@@ -800,7 +816,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 */
 	public void forceInvisible(Player player) {
 		for (Player players : Bukkit.getOnlinePlayers()) {
-			players.hidePlayer(player);
+			PlayerUtils.hidePlayer(players, player);
 		}
 		addHidden(player);
 	}
@@ -1634,34 +1650,21 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param player player
 	 * @param session parkour session
 	 */
-	private boolean isNewRecord(Player player, ParkourSession session) {
+	private TimeResult calculateTimeResult(Player player, ParkourSession session) {
+		TimeResult result = TimeResult.NONE;
+
 		// if they aren't updating the row, it will be inserted whether or not it's their best time
-		// for sake of performance, if we don't care if it's their best time just return
-		if (!parkour.getConfig().getBoolean("OnFinish.DisplayNewRecords")
-				&& !parkour.getConfig().getBoolean("OnFinish.UpdatePlayerDatabaseTime")) {
-			return false;
-		}
+		if (parkour.getConfig().getBoolean("OnFinish.DisplayNewRecords")
+				|| parkour.getConfig().getBoolean("OnFinish.UpdatePlayerDatabaseTime")) {
 
-		if (parkour.getDatabase().isBestCourseTime(session.getCourse().getName(), session.getTimeFinished())) {
-			if (parkour.getConfig().getBoolean("OnFinish.DisplayNewRecords")) {
-				parkour.getBountifulApi().sendFullTitle(player,
-						TranslationUtils.getCourseEventMessage(
-								session, COURSE_RECORD, "Parkour.CourseRecord"),
-						DateTimeUtils.displayCurrentTime(session.getTimeFinished()), true);
-			}
-			return true;
-		}
+			if (parkour.getDatabase().isBestCourseTime(session.getCourse().getName(), session.getTimeFinished())) {
+				result = TimeResult.GLOBAL_BEST;
 
-		if (parkour.getDatabase().isBestCourseTime(player, session.getCourse().getName(), session.getTimeFinished())) {
-			if (parkour.getConfig().getBoolean("OnFinish.DisplayNewRecords")) {
-				parkour.getBountifulApi().sendFullTitle(player,
-						TranslationUtils.getCourseEventMessage(
-								session, COURSE_RECORD, "Parkour.BestTime"),
-						DateTimeUtils.displayCurrentTime(session.getTimeFinished()), true);
+			} else if (parkour.getDatabase().isBestCourseTime(player, session.getCourse().getName(), session.getTimeFinished())) {
+				result = TimeResult.PLAYER_BEST;
 			}
-			return true;
 		}
-		return false;
+		return result;
 	}
 
 	/**

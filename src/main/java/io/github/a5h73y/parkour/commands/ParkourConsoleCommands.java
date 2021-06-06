@@ -7,10 +7,13 @@ import io.github.a5h73y.parkour.conversation.CoursePrizeConversation;
 import io.github.a5h73y.parkour.conversation.CreateParkourKitConversation;
 import io.github.a5h73y.parkour.conversation.EditParkourKitConversation;
 import io.github.a5h73y.parkour.conversation.ParkourModeConversation;
+import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Backup;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
+import io.github.a5h73y.parkour.utility.PermissionUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
+import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import org.bukkit.Bukkit;
@@ -272,6 +275,14 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 }
 
                 parkour.getCourseManager().processSetCommand(sender, args);
+                break;
+
+            case "setlobbycommand":
+                if (!ValidationUtils.validateArgs(sender, args, 3, 100)) {
+                    return false;
+                }
+
+                parkour.getLobbyManager().addLobbyCommand(sender, args[1], StringUtils.extractMessageFromArgs(args, 2));
                 break;
 
             case "setmode":

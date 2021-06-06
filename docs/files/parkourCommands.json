@@ -479,6 +479,15 @@
     "commandGroup": "4"
   },
   {
+    "command": "setlobbycommand",
+    "title": "Add a Parkour Lobby Command",
+    "arguments": "[lobby] [command]",
+    "example": "/pa setlobbycommand default give %PLAYER% minecraft:diamond 1",
+    "description": "Add a command to be executed when the Player teleports to the specified Lobby.",
+    "permission": "Parkour.Admin.*",
+    "commandGroup": "4"
+  },
+  {
     "command": "setmaxdeath",
     "title": "Set Maximum Deaths for Course",
     "arguments": "(course) (amount)",

@@ -4,6 +4,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
 import io.github.a5h73y.parkour.other.ParkourConstants;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -121,6 +122,22 @@ public class LobbyInfo {
 	 */
 	public static void setRequiredLevel(String lobbyName, Integer requiredLevel) {
 		Parkour.getDefaultConfig().set("Lobby." + lobbyName.toLowerCase() + ".RequiredLevel", requiredLevel);
+		Parkour.getDefaultConfig().save();
+	}
+
+	public static List<String> getLobbyCommands(String lobbyName) {
+		return Parkour.getDefaultConfig().getStringList("Lobby." + lobbyName + ".Commands");
+	}
+
+	public static boolean hasLobbyCommand(String lobbyName) {
+		return Parkour.getDefaultConfig().contains("Lobby." + lobbyName + ".Commands");
+	}
+
+	public static void addLobbyCommand(String lobbyName, String command) {
+		List<String> commands = getLobbyCommands(lobbyName);
+		commands.add(command);
+
+		Parkour.getDefaultConfig().set("Lobby." + lobbyName + ".Commands", commands);
 		Parkour.getDefaultConfig().save();
 	}
 

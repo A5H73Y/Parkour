@@ -81,11 +81,34 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
         Lobby lobby = lobbyCache.getOrDefault(lobbyName, populateLobby(lobbyName));
         PlayerUtils.teleportToLocation(player, lobby.getLocation());
 
+        if (LobbyInfo.hasLobbyCommand(lobbyName)) {
+            for (String command : LobbyInfo.getLobbyCommands(lobbyName)) {
+                PlayerUtils.dispatchServerPlayerCommand(command, player);
+            }
+        }
+
         if (lobbyName.equals(DEFAULT)) {
             TranslationUtils.sendTranslation("Parkour.Lobby", player);
         } else {
             TranslationUtils.sendValueTranslation("Parkour.LobbyOther", lobbyName, player);
         }
+    }
+
+    /**
+     * Add a Command to be executed when the Player visits a Lobby.
+     *
+     * @param sender player
+     * @param lobbyName lobby name
+     * @param command command to run
+     */
+    public void addLobbyCommand(CommandSender sender, String lobbyName, String command) {
+        if (!LobbyInfo.doesLobbyExist(lobbyName)) {
+            TranslationUtils.sendValueTranslation("Error.UnknownLobby", lobbyName, sender);
+            return;
+        }
+
+        LobbyInfo.addLobbyCommand(lobbyName, command);
+        TranslationUtils.sendPropertySet(sender, "Lobby Command", lobbyName, "/" + command);
     }
 
     /**

@@ -11,13 +11,12 @@ import io.github.a5h73y.parkour.upgrade.major.StringsConfigUpgradeTask;
 import io.github.a5h73y.parkour.upgrade.minor.PartialUpgradeTask;
 import java.io.File;
 import java.io.IOException;
-import java.util.function.BooleanSupplier;
 import java.util.logging.Logger;
 import io.github.g00fy2.versioncompare.Version;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class ParkourUpgrader extends AbstractPluginReceiver implements BooleanSupplier {
+public class ParkourUpgrader extends AbstractPluginReceiver {
 
 	private final File defaultFile;
 	private final File playerFile;
@@ -55,8 +54,7 @@ public class ParkourUpgrader extends AbstractPluginReceiver implements BooleanSu
 		stringsConfig = YamlConfiguration.loadConfiguration(stringsFile);
 	}
 
-	@Override
-	public boolean getAsBoolean() {
+	public boolean beginUpgrade() {
 		parkour.getLogger().info("=== Beginning Parkour Upgrade ===");
 		parkour.getLogger().info(String.format("Upgrading from v%s to v%s",
 				defaultConfig.getString("Version"), parkour.getDescription().getVersion()));
@@ -69,6 +67,7 @@ public class ParkourUpgrader extends AbstractPluginReceiver implements BooleanSu
 
 		if (existingVersion.isLowerThan("5.0")) {
 			parkour.getLogger().warning("This version is too outdated.");
+			parkour.getLogger().warning("Please upgrade to 4.8 and then reinstall this version.");
 			success = false;
 
 		} else if (existingVersion.isLowerThan("6.0")) {
