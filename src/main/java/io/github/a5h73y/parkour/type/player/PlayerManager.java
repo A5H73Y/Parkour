@@ -759,7 +759,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 				session.getDeaths(), timeResult != TimeResult.NONE);
 
 		if (timeResult != TimeResult.NONE) {
-			ParkourEventType eventType = timeResult == TimeResult.GLOBAL_BEST ? GLOBAL_COURSE_RECORD : PLAYER_COURSE_RECORD;
+			ParkourEventType eventType = timeResult == TimeResult.GLOBAL_BEST
+					? GLOBAL_COURSE_RECORD : PLAYER_COURSE_RECORD;
 			String fallbackKey = timeResult == TimeResult.GLOBAL_BEST ? "Parkour.CourseRecord" : "Parkour.BestTime";
 
 			parkour.getCourseManager().runEventCommands(player, session, eventType);
@@ -1460,6 +1461,28 @@ public class PlayerManager extends AbstractPluginReceiver {
 	}
 
 	/**
+	 * Set a Manual Checkpoint at the Player's Location.
+	 * @param player player
+	 */
+	public void setManualCheckpoint(Player player) {
+		if (!isPlaying(player)) {
+			TranslationUtils.sendTranslation("Error.NotOnAnyCourse", player);
+			return;
+		}
+
+		ParkourSession session = getParkourSession(player);
+
+		if (ParkourMode.FREE_CHECKPOINT == session.getParkourMode()
+				&& parkour.getConfig().getBoolean("ParkourModes.FreeCheckpoint.ManualCheckpointCommandEnabled")) {
+			session.setFreedomLocation(player.getLocation());
+			TranslationUtils.sendTranslation("Event.FreeCheckpoints", player);
+
+		} else {
+			TranslationUtils.sendMessage(player, "You are currently unable to set a Checkpoint.");
+		}
+	}
+
+	/**
 	 * Stash the Player's ParkourSession.
 	 * Persist the ParkourSession to a file under the Player's UUID.
 	 * Mark the current time accumulated, for the time difference to be recalculated when the Player rejoins.
@@ -1660,7 +1683,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 			if (parkour.getDatabase().isBestCourseTime(session.getCourse().getName(), session.getTimeFinished())) {
 				result = TimeResult.GLOBAL_BEST;
 
-			} else if (parkour.getDatabase().isBestCourseTime(player, session.getCourse().getName(), session.getTimeFinished())) {
+			} else if (parkour.getDatabase().isBestCourseTime(player,
+					session.getCourse().getName(), session.getTimeFinished())) {
 				result = TimeResult.PLAYER_BEST;
 			}
 		}
@@ -1983,23 +2007,5 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 */
 	private void removeHidden(Player player) {
 		hiddenPlayers.remove(player);
-	}
-
-	public void setManualCheckpoint(Player player) {
-		if (!isPlaying(player)) {
-			TranslationUtils.sendTranslation("Error.NotOnAnyCourse", player);
-			return;
-		}
-
-		ParkourSession session = getParkourSession(player);
-
-		if (ParkourMode.FREE_CHECKPOINT == session.getParkourMode()
-				&& parkour.getConfig().getBoolean("ParkourModes.FreeCheckpoint.ManualCheckpointCommandEnabled")) {
-			session.setFreedomLocation(player.getLocation());
-			TranslationUtils.sendTranslation("Event.FreeCheckpoints", player);
-
-		} else {
-			TranslationUtils.sendMessage(player, "You are currently unable to set a Checkpoint.");
-		}
 	}
 }

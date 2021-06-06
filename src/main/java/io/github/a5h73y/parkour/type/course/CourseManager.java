@@ -931,7 +931,8 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
                     String message = StringUtils.extractMessageFromArgs(args, 4);
                     ParkourEventType type = ParkourEventType.valueOf(args[3].toUpperCase());
                     CourseInfo.addEventCommand(args[1], type, message);
-                    TranslationUtils.sendPropertySet(sender, StringUtils.standardizeText(args[3]) + " Command", args[1], "/" + message);
+                    TranslationUtils.sendPropertySet(sender,
+                            StringUtils.standardizeText(args[3]) + " Command", args[1], "/" + message);
 
                 } else {
                     TranslationUtils.sendInvalidSyntax(sender, "setcourse",

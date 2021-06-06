@@ -32,6 +32,10 @@ public enum ParkourEventType {
 		return this.name().toLowerCase(Locale.ROOT);
 	}
 
+	/**
+	 * Get possible event types, comma separated.
+	 * @return event types list
+	 */
 	public static String getAllParkourEventTypes() {
 		return Arrays.stream(values())
 				.map(Enum::name)

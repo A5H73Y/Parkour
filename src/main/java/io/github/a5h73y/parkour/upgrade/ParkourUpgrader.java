@@ -9,10 +9,10 @@ import io.github.a5h73y.parkour.upgrade.major.DefaultConfigUpgradeTask;
 import io.github.a5h73y.parkour.upgrade.major.PlayerInfoUpgradeTask;
 import io.github.a5h73y.parkour.upgrade.major.StringsConfigUpgradeTask;
 import io.github.a5h73y.parkour.upgrade.minor.PartialUpgradeTask;
+import io.github.g00fy2.versioncompare.Version;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
-import io.github.g00fy2.versioncompare.Version;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -54,6 +54,10 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 		stringsConfig = YamlConfiguration.loadConfiguration(stringsFile);
 	}
 
+	/**
+	 * Begin the Parkour upgrade process.
+	 * @return upgrade success
+	 */
 	public boolean beginUpgrade() {
 		parkour.getLogger().info("=== Beginning Parkour Upgrade ===");
 		parkour.getLogger().info(String.format("Upgrading from v%s to v%s",
