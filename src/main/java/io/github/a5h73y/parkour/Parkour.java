@@ -22,7 +22,6 @@ import io.github.a5h73y.parkour.manager.SoundsManager;
 import io.github.a5h73y.parkour.other.Backup;
 import io.github.a5h73y.parkour.other.CommandUsage;
 import io.github.a5h73y.parkour.other.ParkourUpdater;
-import io.github.a5h73y.parkour.plugin.AacApi;
 import io.github.a5h73y.parkour.plugin.EconomyApi;
 import io.github.a5h73y.parkour.plugin.PlaceholderApi;
 import io.github.a5h73y.parkour.plugin.TitleUtils;
@@ -246,7 +245,6 @@ public class Parkour extends JavaPlugin {
         titleUtils = new TitleUtils();
         economyApi = new EconomyApi();
         placeholderApi = new PlaceholderApi();
-        new AacApi();
     }
 
     private void registerManagers() {
