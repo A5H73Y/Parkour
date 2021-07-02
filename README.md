@@ -26,16 +26,16 @@ Add a whole new element of fun to any server, highly competitive gameplay with r
 ## Maven
 ```
 <repository>
-    <id>a5h73y-repo</id>
-    <url>https://dl.bintray.com/a5h73y/repo/</url>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
 </repository>
 ```
 
 ```
 <dependency>
-    <groupId>io.github.a5h73y</groupId>
+    <groupId>com.github.A5H73Y</groupId>
     <artifactId>Parkour</artifactId>
-    <version>6.5</version>
+    <version>6.6</version>
     <type>jar</type>
     <scope>provided</scope>
 </dependency>
@@ -45,11 +45,11 @@ Add a whole new element of fun to any server, highly competitive gameplay with r
 ```
 repositories { 
     maven { 
-        url "https://dl.bintray.com/a5h73y/repo"
+        url "https://jitpack.io"
     } 
 }
 ```
 
 ```
-compile 'io.github.a5h73y:Parkour:6.5'
+compile 'com.github.A5H73Y:Parkour:6.6'
 ```

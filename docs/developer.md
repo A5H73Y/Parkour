@@ -9,8 +9,8 @@ You will want to add Parkour's repository to the list of repositories so that yo
 
 ```
 <repository>
-    <id>a5h73y-repo</id>
-    <url>https://dl.bintray.com/a5h73y/repo/</url>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
 </repository>
 ```
 
@@ -18,7 +18,7 @@ Add the following dependency to your list of dependencies and let Maven import t
 
 ```
 <dependency>
-    <groupId>io.github.a5h73y</groupId>
+    <groupId>com.github.A5H73Y</groupId>
     <artifactId>Parkour</artifactId>
     <version>(INSERT LATEST VERSION)</version>
     <type>jar</type>

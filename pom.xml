@@ -118,7 +118,7 @@
 		<dependency>
 			<groupId>com.github.cryptomorin</groupId>
 			<artifactId>XSeries</artifactId>
-			<version>7.9.1.1</version>
+			<version>8.1.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<!-- Version Compare -->
@@ -250,12 +250,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<distributionManagement>
-		<repository>
-			<id>bintray-a5h73y-repo</id>
-			<name>A5H73Y-repo</name>
-			<url>https://api.bintray.com/maven/a5h73y/repo/Parkour/;publish=1</url>
-		</repository>
-	</distributionManagement>
 </project>
