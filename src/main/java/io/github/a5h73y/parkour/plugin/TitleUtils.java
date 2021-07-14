@@ -58,7 +58,7 @@ public class TitleUtils extends PluginWrapper {
 	 * @param attemptTitle attempt to show the title
 	 */
 	public void sendSubTitle(Player player, String subTitle, boolean attemptTitle) {
-		sendFullTitle(player, "", subTitle, attemptTitle);
+		sendFullTitle(player, " ", subTitle, attemptTitle);
 	}
 
 	/**
