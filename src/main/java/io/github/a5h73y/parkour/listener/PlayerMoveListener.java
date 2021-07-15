@@ -113,8 +113,11 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
                     break;
 
                 case POTION:
-                       PlayerUtils.applyPotionEffect(PotionEffectType.getByName(kitAction.getEffect()), kitAction.getDuration(),
-                            (int) kitAction.getStrength(), player);
+                    PotionEffectType effect = PotionEffectType.getByName(kitAction.getEffect());
+                    if (effect != null) {
+                        PlayerUtils.applyPotionEffect(effect, kitAction.getDuration(),
+                                (int) kitAction.getStrength(), player);
+                    }
                     break;
 
                 case NORUN:
