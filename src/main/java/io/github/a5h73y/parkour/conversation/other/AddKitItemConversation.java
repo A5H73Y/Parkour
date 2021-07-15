@@ -18,6 +18,7 @@ import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -123,16 +124,26 @@ public class AddKitItemConversation {
         }
     }
 
-    private class ChoosePotionEffect extends StringPrompt {
+    private class ChoosePotionEffect extends FixedSetPrompt {
+
+        ChoosePotionEffect() {
+            super(Arrays.stream(PotionEffectType.values()).map(PotionEffectType::getName).toArray(String[]::new));
+        }
 
         @Override
         @NotNull
         public String getPromptText(@NotNull ConversationContext context) {
-            return ChatColor.LIGHT_PURPLE + " What potion effect do you want to apply to the block?";
+            return ChatColor.LIGHT_PURPLE + " What potion effect do you want to apply to " + context.getSessionData(MATERIAL) + "?\n"
+                    + ChatColor.GREEN + formatFixedSet();
         }
 
         @Override
-        public Prompt acceptInput(@NotNull ConversationContext context, String message) {
+        protected boolean isInputValid(@NotNull ConversationContext context, @NotNull String input) {
+            return super.isInputValid(context, input.toUpperCase(Locale.ROOT));
+        }
+
+        @Override
+        public Prompt acceptValidatedInput(@NotNull ConversationContext context, String message) {
             PotionEffectType effect = PotionEffectType.getByName(message.toUpperCase());
 
             if (effect == null) {
