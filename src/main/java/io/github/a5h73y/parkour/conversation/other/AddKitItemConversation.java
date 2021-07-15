@@ -83,7 +83,7 @@ public class AddKitItemConversation {
                 return this;
             }
 
-            if (Parkour.getDefaultConfig().contains(PARKOUR_KIT_CONFIG_PREFIX + kitName + "." + material.name())) {
+            if (Parkour.getConfig(ConfigType.PARKOURKIT).contains(PARKOUR_KIT_CONFIG_PREFIX + kitName + "." + material.name())) {
                 sendErrorMessage(context, material.name() + " already exists in this ParkourKit!");
                 return this;
             }
