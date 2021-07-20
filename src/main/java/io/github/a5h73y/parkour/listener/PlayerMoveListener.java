@@ -112,6 +112,14 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
                     }
                     break;
 
+                case POTION:
+                    PotionEffectType effect = PotionEffectType.getByName(kitAction.getEffect());
+                    if (effect != null) {
+                        PlayerUtils.applyPotionEffect(effect, kitAction.getDuration(),
+                                (int) kitAction.getStrength(), player);
+                    }
+                    break;
+
                 case NORUN:
                     player.setSprinting(false);
                     break;

@@ -7,6 +7,7 @@ import static io.github.a5h73y.parkour.enums.ActionType.CLIMB;
 import static io.github.a5h73y.parkour.enums.ActionType.LAUNCH;
 import static io.github.a5h73y.parkour.enums.ActionType.REPULSE;
 import static io.github.a5h73y.parkour.enums.ActionType.SPEED;
+import static io.github.a5h73y.parkour.enums.ActionType.POTION;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
@@ -17,6 +18,7 @@ import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -26,6 +28,7 @@ import org.bukkit.conversations.FixedSetPrompt;
 import org.bukkit.conversations.NumericPrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
 public class AddKitItemConversation {
@@ -44,8 +47,10 @@ public class AddKitItemConversation {
         STRENGTH_DEFAULT.put(BOUNCE.getDisplayName(), 5.0);
         STRENGTH_DEFAULT.put(SPEED.getDisplayName(), 5.0);
         STRENGTH_DEFAULT.put(REPULSE.getDisplayName(), 0.4);
+        STRENGTH_DEFAULT.put(POTION.getDisplayName(), 5.0);
         DURATION_DEFAULT.put(SPEED.getDisplayName(), 200);
         DURATION_DEFAULT.put(BOUNCE.getDisplayName(), 200);
+        DURATION_DEFAULT.put(POTION.getDisplayName(), 200);
     }
 
     private final Prompt endingConversation;
@@ -78,7 +83,7 @@ public class AddKitItemConversation {
                 return this;
             }
 
-            if (Parkour.getDefaultConfig().contains(PARKOUR_KIT_CONFIG_PREFIX + kitName + "." + material.name())) {
+            if (Parkour.getConfig(ConfigType.PARKOURKIT).contains(PARKOUR_KIT_CONFIG_PREFIX + kitName + "." + material.name())) {
                 sendErrorMessage(context, material.name() + " already exists in this ParkourKit!");
                 return this;
             }
@@ -111,9 +116,43 @@ public class AddKitItemConversation {
                     || choice.equals(SPEED.getDisplayName())
                     || choice.equals(REPULSE.getDisplayName())) {
                 return new ChooseStrength();
+            } else if (choice.equals(POTION.getDisplayName())) {
+                return new ChoosePotionEffect();
             } else {
                 return new ProcessComplete();
             }
+        }
+    }
+
+    private class ChoosePotionEffect extends FixedSetPrompt {
+
+        ChoosePotionEffect() {
+            super(Arrays.stream(PotionEffectType.values()).map(PotionEffectType::getName).toArray(String[]::new));
+        }
+
+        @Override
+        @NotNull
+        public String getPromptText(@NotNull ConversationContext context) {
+            return ChatColor.LIGHT_PURPLE + " What potion effect do you want to apply to " + context.getSessionData(MATERIAL) + "?\n"
+                    + ChatColor.GREEN + formatFixedSet();
+        }
+
+        @Override
+        protected boolean isInputValid(@NotNull ConversationContext context, @NotNull String input) {
+            return super.isInputValid(context, input.toUpperCase(Locale.ROOT));
+        }
+
+        @Override
+        public Prompt acceptValidatedInput(@NotNull ConversationContext context, String message) {
+            PotionEffectType effect = PotionEffectType.getByName(message.toUpperCase());
+
+            if (effect == null) {
+                sendErrorMessage(context, TranslationUtils.getValueTranslation("Error.UnknownPotionEffectType",
+                        message.toUpperCase(), false));
+                return this;
+            }
+            context.setSessionData(POTION, effect.getName());
+            return new ChooseStrength();
         }
     }
 
@@ -142,7 +181,9 @@ public class AddKitItemConversation {
             context.setSessionData(STRENGTH, amount);
 
             String action = context.getSessionData(ACTION).toString();
-            if (action.equals(SPEED.getDisplayName()) || action.equals(BOUNCE.getDisplayName())) {
+            if (action.equals(SPEED.getDisplayName())
+                    || action.equals(BOUNCE.getDisplayName())
+                    || action.equals(POTION.getDisplayName())) {
                 return new ChooseDuration();
             } else {
                 return new ProcessComplete();
@@ -193,6 +234,7 @@ public class AddKitItemConversation {
             String action = context.getSessionData(ACTION).toString();
             boolean hasStrength = context.getSessionData(STRENGTH) != null;
             boolean hasDuration = context.getSessionData(DURATION) != null;
+            boolean hasEffect = context.getSessionData(POTION) != null;
 
             ParkourConfiguration parkourKitConfig = Parkour.getConfig(ConfigType.PARKOURKIT);
             String path = PARKOUR_KIT_CONFIG_PREFIX + kitName + "." + material;
@@ -205,12 +247,16 @@ public class AddKitItemConversation {
             if (hasDuration) {
                 parkourKitConfig.set(path + ".Duration", context.getSessionData(DURATION));
             }
+            if (hasEffect) {
+                parkourKitConfig.set(path + ".Effect", context.getSessionData(POTION).toString());
+            }
 
             parkourKitConfig.save();
 
             if (addAnother) {
                 context.setSessionData(STRENGTH, null);
                 context.setSessionData(DURATION, null);
+                context.setSessionData(POTION, null);
                 return new ChooseMaterial();
             }
 

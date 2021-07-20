@@ -59,6 +59,17 @@ public class ParkourKitInfo {
     }
 
     /**
+     * Get the PotionEffectType name for Material for the ParkourKit.
+     * @param kitName parkour kit name
+     * @param material material name
+     * @return matching action type name
+     */
+    public static String getEffectTypeForMaterial(String kitName, String material) {
+        return getParkourKitConfig().getString(PARKOUR_KIT_CONFIG_PREFIX + kitName.toLowerCase()
+                + "." + material.toUpperCase() + ".Effect");
+    }
+
+    /**
      * Get Parkour Courses linked to the ParkourKit.
      * @param kitName parkour kit name
      * @return List Parkour course names

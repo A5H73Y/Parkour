@@ -108,7 +108,8 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Error.UnknownSignCommand", "Unknown sign command!");
 		this.addDefault("Error.UnknownCommand", "Unknown command!");
 		this.addDefault("Error.UnknownPlayer", "Unknown Parkour player!");
-		this.addDefault("Error.UnknownMaterial", "Unknown Material: &4%VALUE%");
+		this.addDefault("Error.UnknownMaterial", "Unknown Material: &4%VALUE%&c");
+		this.addDefault("Error.UnknownPotionEffectType", "Unknown Potion Effect type: &4%VALUE%&c");
 		this.addDefault("Error.UnknownLobby", "%VALUE% lobby does not exist!");
 		this.addDefault("Error.UnknownWorld", "The requested world doesn't exist.");
 		this.addDefault("Error.UnknownParkourKit", "Unknown ParkourKit.");
@@ -185,6 +186,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Kit.Death", "&bDeath Block");
 		this.addDefault("Kit.Bounce", "&bBounce Block");
 		this.addDefault("Kit.Repulse", "&bRepulse Block");
+		this.addDefault("Kit.Potion", "&bPotion Block");
 
 		this.addDefault("Mode.Freedom.JoinText", "&6Freedom Mode &f- Right click: &2Save&f, Left click: &5Load");
 		this.addDefault("Mode.Freedom.Save", "Position saved");
