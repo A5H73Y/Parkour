@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.a5h73y</groupId>
 	<artifactId>Parkour</artifactId>
-	<version>6.6</version>
+	<version>6.7</version>
 	<packaging>jar</packaging>
 
 	<name>Parkour</name>
@@ -37,9 +37,9 @@
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
 		</repository>
-		<!-- Vault Repo -->
+		<!-- Jitpack Repo -->
 		<repository>
-			<id>vault-repo</id>
+			<id>jitpack-repo</id>
 			<url>https://jitpack.io/</url>
 		</repository>
 		<!-- Placeholder API Repo -->
@@ -71,7 +71,7 @@
 		<dependency>
 			<groupId>com.github.MilkBowl</groupId>
 			<artifactId>VaultAPI</artifactId>
-			<version>1.7</version>
+			<version>1.7.1</version>
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
@@ -84,8 +84,21 @@
 		<dependency>
 			<groupId>me.clip</groupId>
 			<artifactId>placeholderapi</artifactId>
-			<version>2.10.9</version>
+			<version>2.10.10</version>
 			<scope>provided</scope>
+		</dependency>
+		<!-- Bountiful API -->
+		<dependency>
+			<groupId>com.github.ConnorLinfoot</groupId>
+			<artifactId>BountifulAPI</artifactId>
+			<version>1f1ef523a4bea125592ce3a11a163aca5d159761</version>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.bukkit</groupId>
+					<artifactId>bukkit</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- bStats -->
 		<dependency>
@@ -118,7 +131,7 @@
 		<dependency>
 			<groupId>com.github.cryptomorin</groupId>
 			<artifactId>XSeries</artifactId>
-			<version>8.1.0</version>
+			<version>8.3.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<!-- Version Compare -->

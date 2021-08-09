@@ -147,6 +147,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("ParkourTool.HideAllEnabled", "&7SHIFT + &6Right click to toggle visibility");
 		this.addDefault("ParkourTool.Leave", "&7SHIFT + &6Right click to leave course");
 		this.addDefault("ParkourTool.Restart", "&7SHIFT + &6Right click to restart course");
+		this.addDefault("ParkourTool.RestartConfirmation", "Please use the Restart Tool again to confirm.");
 		this.addDefault("ParkourTool.Freedom", "&6Freedom Tool");
 		this.addDefault("ParkourTool.Rockets", "&6Rocket Launcher");
 

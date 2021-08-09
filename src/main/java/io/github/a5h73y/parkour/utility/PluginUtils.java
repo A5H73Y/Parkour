@@ -14,6 +14,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -158,8 +159,21 @@ public class PluginUtils {
         return GameMode.valueOf(gameMode.toUpperCase());
     }
 
+    /**
+     * Check if the GameMode exists.
+     * @param gameMode gamemode
+     * @return gamemode is valid
+     */
     public static boolean doesGameModeExist(String gameMode) {
-        return getGameMode(gameMode) != null;
+        boolean valid = true;
+
+        try {
+            GameMode.valueOf(gameMode.toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            valid = false;
+        }
+
+        return valid;
     }
 
     /**

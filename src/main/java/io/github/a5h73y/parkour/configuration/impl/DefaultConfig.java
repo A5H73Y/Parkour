@@ -87,7 +87,8 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("OnLeave.DestroyCourseProgress", true);
 		this.addDefault("OnLeave.TeleportAway", true);
 
-		this.addDefault("OnRestart.FullPlayerRestart", true);
+		this.addDefault("OnRestart.FullPlayerRestart", false);
+		this.addDefault("OnRestart.RequireConfirmation", false);
 
 		this.addDefault("OnDie.ResetProgressWithNoCheckpoint", false);
 		this.addDefault("OnDie.SetXPBarToDeathCount", false);
@@ -107,7 +108,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("ParkourTool.Leave.Slot", 2);
 		this.addDefault("ParkourTool.Restart.Material", "STICK");
 		this.addDefault("ParkourTool.Restart.Slot", 3);
-		this.addDefault("ParkourTool.Restart.SecondCooldown", 2);
+		this.addDefault("ParkourTool.Restart.SecondCooldown", 1);
 		this.addDefault("ParkourTool.Freedom.Material", XMaterial.REDSTONE_TORCH.parseMaterial().name());
 		this.addDefault("ParkourTool.Freedom.Slot", 4);
 		this.addDefault("ParkourTool.Rockets.Material", XMaterial.FIREWORK_ROCKET.parseMaterial().name());

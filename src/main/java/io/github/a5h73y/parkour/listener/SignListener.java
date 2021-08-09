@@ -207,31 +207,13 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
                     TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, lines[2], player);
                     return;
-
-                } else if (!parkour.getPlayerManager().isPlaying(player)) {
-                    TranslationUtils.sendTranslation("Error.NotOnCourse", player);
-                    return;
                 }
 
                 if (lines[3].isEmpty() || !ValidationUtils.isPositiveInteger(lines[3])) {
                     return;
                 }
 
-                ParkourSession session = parkour.getPlayerManager().getParkourSession(player);
-
-                if (session.hasAchievedAllCheckpoints()) {
-                    return;
-                }
-
-                if (session.getCurrentCheckpoint() >= Integer.parseInt(lines[3])) {
-                    return;
-                }
-
-                if (session.getCurrentCheckpoint() + 1 < Integer.parseInt(lines[3])) {
-                    return;
-                }
-
-                parkour.getPlayerManager().increaseCheckpoint(player);
+                parkour.getPlayerManager().manuallyIncreaseCheckpoint(player, Integer.parseInt(lines[3]));
                 break;
 
             case "lobby":

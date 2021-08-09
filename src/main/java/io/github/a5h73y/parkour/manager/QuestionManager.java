@@ -16,6 +16,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public class QuestionManager extends AbstractPluginReceiver {
 
+    public static final String YES = "yes";
+    public static final String NO = "no";
+
     private final Map<CommandSender, Question> questionMap = new WeakHashMap<>();
 
     public QuestionManager(final Parkour parkour) {
@@ -32,6 +35,11 @@ public class QuestionManager extends AbstractPluginReceiver {
         return questionMap.containsKey(sender);
     }
 
+    public boolean hasBeenAskedQuestion(CommandSender sender, QuestionType questionType) {
+        return hasBeenAskedQuestion(sender)
+                && questionMap.get(sender).getType().equals(questionType);
+    }
+
     /**
      * Submit an answer to the Question.
      *
@@ -39,11 +47,11 @@ public class QuestionManager extends AbstractPluginReceiver {
      * @param answer question answer
      */
     public void answerQuestion(@NotNull CommandSender sender, @NotNull String answer) {
-        if ("yes".equalsIgnoreCase(answer)) {
+        if (YES.equalsIgnoreCase(answer)) {
             questionMap.get(sender).doIt(sender);
             removeQuestion(sender);
 
-        } else if ("no".equalsIgnoreCase(answer)) {
+        } else if (NO.equalsIgnoreCase(answer)) {
             TranslationUtils.sendMessage(sender, "Question cancelled!");
             removeQuestion(sender);
 
@@ -111,6 +119,14 @@ public class QuestionManager extends AbstractPluginReceiver {
 
     public void askResetPrizeQuestion(CommandSender sender, String courseName) {
         askGenericQuestion(sender, QuestionType.RESET_PRIZES, courseName.toLowerCase());
+    }
+
+    public void askRestartProgressQuestion(CommandSender sender, String courseName) {
+        QuestionType restart = QuestionType.RESTART_COURSE;
+        TranslationUtils.sendMessage(sender, String.format(restart.getActionSummary(), courseName.toLowerCase()));
+        TranslationUtils.sendMessage(sender, restart.getDescription(), false);
+        TranslationUtils.sendTranslation("ParkourTool.RestartConfirmation", false, sender);
+        questionMap.put(sender, new Question(restart, courseName.toLowerCase()));
     }
 
     public void removeQuestion(CommandSender sender) {

@@ -22,9 +22,9 @@ import io.github.a5h73y.parkour.manager.SoundsManager;
 import io.github.a5h73y.parkour.other.Backup;
 import io.github.a5h73y.parkour.other.CommandUsage;
 import io.github.a5h73y.parkour.other.ParkourUpdater;
+import io.github.a5h73y.parkour.plugin.BountifulApi;
 import io.github.a5h73y.parkour.plugin.EconomyApi;
 import io.github.a5h73y.parkour.plugin.PlaceholderApi;
-import io.github.a5h73y.parkour.plugin.TitleUtils;
 import io.github.a5h73y.parkour.type.challenge.ChallengeManager;
 import io.github.a5h73y.parkour.type.checkpoint.CheckpointManager;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
@@ -57,7 +57,7 @@ public class Parkour extends JavaPlugin {
     private static final int SPIGOT_PLUGIN_ID = 23685;
     private static Parkour instance;
 
-    private TitleUtils titleUtils;
+    private BountifulApi bountifulApi;
     private EconomyApi economyApi;
     private PlaceholderApi placeholderApi;
 
@@ -220,8 +220,8 @@ public class Parkour extends JavaPlugin {
         return soundsManager;
     }
 
-    public TitleUtils getBountifulApi() {
-        return titleUtils;
+    public BountifulApi getBountifulApi() {
+        return bountifulApi;
     }
 
     public EconomyApi getEconomyApi() {
@@ -242,7 +242,7 @@ public class Parkour extends JavaPlugin {
     }
 
     private void setupPlugins() {
-        titleUtils = new TitleUtils();
+        bountifulApi = new BountifulApi();
         economyApi = new EconomyApi();
         placeholderApi = new PlaceholderApi();
     }

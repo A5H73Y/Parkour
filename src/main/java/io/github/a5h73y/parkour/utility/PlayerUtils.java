@@ -189,4 +189,16 @@ public class PlayerUtils {
 			server.dispatchCommand(server.getConsoleSender(), command);
 		}
 	}
+
+	/**
+	 * Set the Player's GameMode.
+	 * If the GameMode is invalid it will not be changed.
+	 * @param player player
+	 * @param gameMode gameMode name
+	 */
+	public static void setGameMode(Player player, String gameMode) {
+		if (player != null && PluginUtils.doesGameModeExist(gameMode)) {
+			player.setGameMode(PluginUtils.getGameMode(gameMode));
+		}
+	}
 }

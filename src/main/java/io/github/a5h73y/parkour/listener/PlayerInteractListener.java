@@ -5,7 +5,9 @@ import com.cryptomorin.xseries.XMaterial;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.ParkourEventType;
 import io.github.a5h73y.parkour.enums.ParkourMode;
+import io.github.a5h73y.parkour.enums.QuestionType;
 import io.github.a5h73y.parkour.enums.SoundType;
+import io.github.a5h73y.parkour.manager.QuestionManager;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
@@ -98,8 +100,18 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         } else if (materialInHand == parkour.getConfig().getRestartTool()) {
             if (parkour.getPlayerManager().delayPlayer(player,
                     parkour.getConfig().getInt("ParkourTool.Restart.SecondCooldown"))) {
-                event.setCancelled(true);
-                Bukkit.getScheduler().runTask(parkour, () -> parkour.getPlayerManager().restartCourse(player));
+
+                if (parkour.getConfig().getBoolean("OnRestart.RequireConfirmation")) {
+                    if (!parkour.getQuestionManager().hasBeenAskedQuestion(player, QuestionType.RESTART_COURSE)) {
+                        String courseName = parkour.getPlayerManager().getParkourSession(player).getCourseName();
+                        parkour.getQuestionManager().askRestartProgressQuestion(player, courseName);
+                    } else {
+                        parkour.getQuestionManager().answerQuestion(player, QuestionManager.YES);
+                    }
+                } else {
+                    event.setCancelled(true);
+                    Bukkit.getScheduler().runTask(parkour, () -> parkour.getPlayerManager().restartCourse(player));
+                }
             }
         }
     }

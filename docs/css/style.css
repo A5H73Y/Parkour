@@ -51,8 +51,15 @@ details > summary {
     cursor: pointer;
     font-size: 18px;
 }
+details tbody {
+    width: 100%;
+    display: table;
+}
 
-details > div {
-    padding: 4px 4px 4px 10px;
-    border: solid thin darkgrey;
+details th {
+    width: 15%;
+}
+
+.markdown-section code {
+    margin: 0;
 }

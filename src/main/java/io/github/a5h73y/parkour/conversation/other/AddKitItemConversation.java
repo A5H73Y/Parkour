@@ -5,9 +5,9 @@ import static io.github.a5h73y.parkour.conversation.ParkourConversation.sendErro
 import static io.github.a5h73y.parkour.enums.ActionType.BOUNCE;
 import static io.github.a5h73y.parkour.enums.ActionType.CLIMB;
 import static io.github.a5h73y.parkour.enums.ActionType.LAUNCH;
+import static io.github.a5h73y.parkour.enums.ActionType.POTION;
 import static io.github.a5h73y.parkour.enums.ActionType.REPULSE;
 import static io.github.a5h73y.parkour.enums.ActionType.SPEED;
-import static io.github.a5h73y.parkour.enums.ActionType.POTION;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
@@ -133,8 +133,8 @@ public class AddKitItemConversation {
         @Override
         @NotNull
         public String getPromptText(@NotNull ConversationContext context) {
-            return ChatColor.LIGHT_PURPLE + " What potion effect do you want to apply to " + context.getSessionData(MATERIAL) + "?\n"
-                    + ChatColor.GREEN + formatFixedSet();
+            return ChatColor.LIGHT_PURPLE + " What potion effect do you want to apply to "
+                    + context.getSessionData(MATERIAL) + "?\n" + ChatColor.GREEN + formatFixedSet();
         }
 
         @Override
@@ -232,22 +232,19 @@ public class AddKitItemConversation {
         protected Prompt acceptValidatedInput(@NotNull ConversationContext context, boolean addAnother) {
             String material = context.getSessionData(MATERIAL).toString();
             String action = context.getSessionData(ACTION).toString();
-            boolean hasStrength = context.getSessionData(STRENGTH) != null;
-            boolean hasDuration = context.getSessionData(DURATION) != null;
-            boolean hasEffect = context.getSessionData(POTION) != null;
 
             ParkourConfiguration parkourKitConfig = Parkour.getConfig(ConfigType.PARKOURKIT);
             String path = PARKOUR_KIT_CONFIG_PREFIX + kitName + "." + material;
 
             parkourKitConfig.set(path + ".Action", action);
 
-            if (hasStrength) {
+            if (context.getSessionData(STRENGTH) != null) {
                 parkourKitConfig.set(path + ".Strength", context.getSessionData(STRENGTH));
             }
-            if (hasDuration) {
+            if (context.getSessionData(DURATION) != null) {
                 parkourKitConfig.set(path + ".Duration", context.getSessionData(DURATION));
             }
-            if (hasEffect) {
+            if (context.getSessionData(POTION) != null) {
                 parkourKitConfig.set(path + ".Effect", context.getSessionData(POTION).toString());
             }
 

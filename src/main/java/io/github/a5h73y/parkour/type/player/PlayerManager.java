@@ -357,6 +357,29 @@ public class PlayerManager extends AbstractPluginReceiver {
 	}
 
 	/**
+	 * Manually Increase Player Checkpoint.
+	 * Set the Player's checkpoint to the checkpoint provided.
+	 * @param player player
+	 * @param checkpoint checkpoint
+	 */
+	public void manuallyIncreaseCheckpoint(Player player, int checkpoint) {
+		if (!parkour.getPlayerManager().isPlaying(player)) {
+			TranslationUtils.sendTranslation("Error.NotOnCourse", player);
+			return;
+		}
+
+		ParkourSession session = parkour.getPlayerManager().getParkourSession(player);
+
+		if (session.hasAchievedAllCheckpoints()
+				|| session.getCurrentCheckpoint() >= checkpoint
+				|| session.getCurrentCheckpoint() + 1 < checkpoint) {
+			return;
+		}
+
+		parkour.getPlayerManager().increaseCheckpoint(player);
+	}
+
+	/**
 	 * Increase ParkourSession Checkpoint.
 	 * The Player will be notified and their Session Checkpoint will be increased.
 	 *
@@ -943,7 +966,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		}
 
 		if (!isPlayerInTestMode(player)) {
-			player.setGameMode(PluginUtils.getGameMode(gameModeName));
+			PlayerUtils.setGameMode(player, gameModeName);
 		}
 
 		Damageable playerDamage = player;

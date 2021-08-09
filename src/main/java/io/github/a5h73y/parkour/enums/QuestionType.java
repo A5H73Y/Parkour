@@ -3,6 +3,7 @@ package io.github.a5h73y.parkour.enums;
 import io.github.a5h73y.parkour.Parkour;
 import java.util.function.BiConsumer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public enum QuestionType {
 
@@ -54,7 +55,11 @@ public enum QuestionType {
 
     RESET_PRIZES("You are about to reset the prizes for &b%s&f...",
             "Resetting the prizes for this course will set the prize to the default prize found in the main configuration file.",
-            (sender, value) -> Parkour.getInstance().getCourseManager().resetPrize(sender, value));
+            (sender, value) -> Parkour.getInstance().getCourseManager().resetPrize(sender, value)),
+
+    RESTART_COURSE("You are about to restart your progress on &b%s&f...",
+            "All of your current progress will be lost, taking you back to the start of the Course with your time and deaths reset.",
+            (sender, value) -> Parkour.getInstance().getPlayerManager().restartCourse((Player) sender));
 
     private final String actionSummary;
     private final String description;

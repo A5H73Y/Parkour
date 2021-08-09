@@ -10,6 +10,12 @@
     "consoleSyntax": "pac addjoinitem (course) (material) (amount) [label] [unbreakable]"
   },
   {
+    "command": "backup",
+    "title": "Full Parkour Configuration Backup",
+    "description": "CONSOLE ONLY - Creates a timestamped zip backup of the current Parkour configuration folder, including any subfolders.",
+    "consoleSyntax": "pac backup"
+  },
+  {
     "command": "cache",
     "title": "Parkour Cache commands",
     "arguments": "[course / database / lobby / parkourkit / sound / all]",
@@ -440,6 +446,12 @@
     "description": "Places a pressure plate that will automatically trigger a join of the Course specified in the argument. A configured Material will appear below the pressure plate to identify it, and for better performance.",
     "permission": "Parkour.Admin.Course",
     "commandGroup": "3"
+  },
+  {
+    "command": "setcheckpoint",
+    "title": "Set Player Manual Checkpoint",
+    "description": "CONSOLE ONLY - Allows the Player's checkpoint to be manually set using a console command. This will allow multiple external actions to increase the player's current checkpoint. Checkpoint provided must match the Player's next checkpoint to achieve.",
+    "consoleSyntax": "pac setcheckpoint (player) (checkpoint)"
   },
   {
     "command": "setcourse",

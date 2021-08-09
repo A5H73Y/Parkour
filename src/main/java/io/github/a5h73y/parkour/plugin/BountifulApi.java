@@ -1,5 +1,6 @@
 package io.github.a5h73y.parkour.plugin;
 
+import com.connorlinfoot.bountifulapi.BountifulAPI;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PluginUtils;
@@ -10,12 +11,12 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 
 /**
- * TitleUtils wrapper to provide Title and Action Bar messages to the Player.
+ * BountifulAPI wrapper to provide Title and Action Bar messages to the Player.
+ * BountifulAPI integration will be used when Spigot's implementation isn't supported.
  */
-// TODO have a proper tidy up
-public class TitleUtils extends PluginWrapper {
+public class BountifulApi extends PluginWrapper {
 
-	private boolean serverSupported;
+	private boolean useSpigotMethods;
 	private int inDuration;
 	private int stayDuration;
 	private int outDuration;
@@ -29,7 +30,7 @@ public class TitleUtils extends PluginWrapper {
 	protected void initialise() {
 		super.initialise();
 
-		serverSupported = PluginUtils.getMinorServerVersion() > 10;
+		useSpigotMethods = PluginUtils.getMinorServerVersion() > 10;
 		inDuration = Parkour.getDefaultConfig().getTitleIn();
 		stayDuration = Parkour.getDefaultConfig().getTitleStay();
 		outDuration = Parkour.getDefaultConfig().getTitleOut();
@@ -45,7 +46,7 @@ public class TitleUtils extends PluginWrapper {
 	 * @param attemptTitle attempt to show the title
 	 */
 	public void sendTitle(Player player, String title, boolean attemptTitle) {
-		sendFullTitle(player, title, "", attemptTitle);
+		sendFullTitle(player, title, " ", attemptTitle);
 	}
 
 	/**
@@ -77,9 +78,15 @@ public class TitleUtils extends PluginWrapper {
 			return;
 		}
 
-		if (attemptTitle && serverSupported) {
-			player.sendTitle(title, subTitle, inDuration, stayDuration, outDuration);
-			return;
+		if (attemptTitle) {
+			if (useSpigotMethods) {
+				player.sendTitle(title, subTitle, inDuration, stayDuration, outDuration);
+				return;
+
+			} else if (isEnabled()) {
+				BountifulAPI.sendTitle(player, inDuration, stayDuration, outDuration, title, subTitle);
+				return;
+			}
 		}
 
 		if (ValidationUtils.isStringValid(title)) {
@@ -105,8 +112,11 @@ public class TitleUtils extends PluginWrapper {
 		}
 
 		if (attemptTitle) {
-			if (serverSupported) {
+			if (useSpigotMethods) {
 				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(title));
+
+			} else if (isEnabled()) {
+				BountifulAPI.sendActionBar(player, title);
 
 			} else {
 				TranslationUtils.sendMessage(player, title);

@@ -7,11 +7,9 @@ import io.github.a5h73y.parkour.conversation.CoursePrizeConversation;
 import io.github.a5h73y.parkour.conversation.CreateParkourKitConversation;
 import io.github.a5h73y.parkour.conversation.EditParkourKitConversation;
 import io.github.a5h73y.parkour.conversation.ParkourModeConversation;
-import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Backup;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
-import io.github.a5h73y.parkour.utility.PermissionUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -268,6 +266,22 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
 
                 parkour.getPlayerManager().setRewardParkourRank(sender, args[1], args[2]);
                 break;
+
+            case "setcheckpoint":
+                if (!ValidationUtils.validateArgs(sender, args, 3)) {
+                    return false;
+
+                } else if (findPlayer(sender, args[1]) == null) {
+                    return false;
+
+                } else if (!ValidationUtils.isPositiveInteger(args[2])) {
+                    return false;
+                }
+
+                parkour.getPlayerManager().manuallyIncreaseCheckpoint(
+                        findPlayer(sender, args[1]), Integer.parseInt(args[2]));
+                break;
+
 
             case "setcourse":
                 if (!ValidationUtils.validateArgs(sender, args, 2, 100)) {

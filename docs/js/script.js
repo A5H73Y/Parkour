@@ -28,20 +28,39 @@ function appendData(data, elementId, markupCallback) {
     data = data.reverse();
     let mainContainer = document.getElementById(elementId);
 
-    for (let i = 0; i < data.length; i++) {
-        mainContainer.insertAdjacentHTML('afterend', markupCallback(data[i]));
+    for (const datum of data) {
+        mainContainer.insertAdjacentHTML('afterend', markupCallback(datum));
     }
 }
 
 function createCommandSummary(command) {
     return `<details>
-                <summary>${command.command} - ${command.title}</summary>
+                <summary><strong>${command.command}</strong> - ${command.title}</summary>
                 <div>
-                    <p>Syntax: <code>/pa ${command.command} ${command.arguments || ''}</code></p>
-                    <p>Example: <code>${command.example}</code></p>
-                    <p>Permission: <code>${command.permission || 'None required'}</code></p>
-                    <p>Console Command: <code>${command.consoleSyntax || 'N/A'}</code></p>
-                    <p>Description: ${command.description}</p>
+                    <table>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Syntax</th>
+                            <td><code>/pa ${command.command} ${command.arguments || ''}</code></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Example</th>
+                            <td><code>${command.example}</code></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Permission</th>
+                            <td><code>${command.permission || 'None required'}</code></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Console Command</th>
+                            <td><code>${command.consoleSyntax || 'N/A'}</code></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Description</th>
+                            <td>${command.description}</td>
+                        </tr>
+                    </tbody>
+                    </table>
                 </div>
             </details>`;
 }
@@ -53,15 +72,26 @@ function createPlaceholderSummary(placeholderGroup) {
 
 function createPlaceholderDetailsSummary(placeholderGroup) {
     let result = '';
-
-    for (let i = 0; i < placeholderGroup.placeholders.length; i++) {
-        let placeholder = placeholderGroup.placeholders[i];
+    for (const placeholder of placeholderGroup.placeholders) {
         result += `<details>
-            <summary>${placeholder.placeholder}</summary>
+            <summary><strong>${placeholder.placeholder}</strong></summary>
             <div>
-                <p>Placeholder: <code>${placeholder.placeholder}</code></p>
-                <p>Example output: <code>${placeholder.output}</code></p>
-                <p>Description: ${placeholder.description}</p>
+                <table>
+                <tbody>
+                    <tr>
+                        <th scope="row">Placeholder</th>
+                        <td><code>${placeholder.placeholder}</code></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Example output</th>
+                        <td><code>${placeholder.output}</code></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Description</th>
+                        <td>${placeholder.description}</td>
+                    </tr>
+                </tbody>
+                </table>
             </div>
         </details>`;
     }
