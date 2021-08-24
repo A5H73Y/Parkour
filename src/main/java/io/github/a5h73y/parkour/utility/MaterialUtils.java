@@ -6,13 +6,9 @@ import static com.cryptomorin.xseries.XMaterial.BRICK_SLAB;
 import static com.cryptomorin.xseries.XMaterial.CAVE_AIR;
 import static com.cryptomorin.xseries.XMaterial.COBBLESTONE_SLAB;
 import static com.cryptomorin.xseries.XMaterial.DARK_OAK_SLAB;
-import static com.cryptomorin.xseries.XMaterial.DARK_PRISMARINE_SLAB;
 import static com.cryptomorin.xseries.XMaterial.JUNGLE_SLAB;
 import static com.cryptomorin.xseries.XMaterial.NETHER_BRICK_SLAB;
 import static com.cryptomorin.xseries.XMaterial.OAK_SLAB;
-import static com.cryptomorin.xseries.XMaterial.PETRIFIED_OAK_SLAB;
-import static com.cryptomorin.xseries.XMaterial.PRISMARINE_BRICK_SLAB;
-import static com.cryptomorin.xseries.XMaterial.PRISMARINE_SLAB;
 import static com.cryptomorin.xseries.XMaterial.PURPUR_SLAB;
 import static com.cryptomorin.xseries.XMaterial.QUARTZ_SLAB;
 import static com.cryptomorin.xseries.XMaterial.RED_SANDSTONE_SLAB;
@@ -27,6 +23,7 @@ import io.github.a5h73y.parkour.Parkour;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -167,6 +164,11 @@ public class MaterialUtils {
 
 	/**
 	 * Check if the current Block is safe for a Checkpoint.
+	 * In all versions, invalid blocks are doors, trapdoors, fences, fence_gates and walls - the
+	 * pressure plate will either break when placed, break in-game or not trigger when stepped on.
+	 * In pre-1.13 versions, checkpoints created on non-occluding blocks will either replace the
+	 * block with the pressure plate, or register a checkpoint but fail to create the pressure
+	 * plate on the block. Exceptions to this are inverted stairs and 'upper' slabs.
 	 *
 	 * @param player player
 	 * @param block block
@@ -181,9 +183,18 @@ public class MaterialUtils {
 			return false;
 		}
 
-		List<Material> validMaterials = getValidCheckpointMaterials();
+		final String[] invalidBlocks = {"door", "wall", "fence"};
 		Block blockUnder = block.getRelative(BlockFace.DOWN);
+		if (Stream.of(invalidBlocks).anyMatch(blockUnder.getType().toString().toLowerCase()::contains)) {
+			TranslationUtils.sendMessage(player, "Invalid Material for Checkpoint: &b" + blockUnder.getType());
+			return false;
+		}
 
+		if (PluginUtils.getMinorServerVersion() > 12) {
+			return true;
+		}
+
+		List<Material> validMaterials = getValidCheckpointMaterials();
 		if (!blockUnder.getType().isOccluding()) {
 			if (blockUnder.getState().getData() instanceof Stairs) {
 				Stairs stairs = (Stairs) blockUnder.getState().getData();
@@ -193,9 +204,9 @@ public class MaterialUtils {
 					return false;
 				}
 			} else if (!validMaterials.contains(blockUnder.getType())) {
-				TranslationUtils.sendMessage(player,
-						"Invalid Material for Checkpoint: &b" + blockUnder.getType());
-				return false;
+					TranslationUtils.sendMessage(player,
+							"Invalid Material for Checkpoint: &b" + blockUnder.getType());
+					return false;
 			}
 		}
 		return true;
@@ -220,7 +231,7 @@ public class MaterialUtils {
 	 *
 	 * @return valid materials
 	 */
-	public static List<Material> getValidCheckpointMaterials() {
+	private static List<Material> getValidCheckpointMaterials() {
 		if (validCheckpointMaterials == null) {
 			validCheckpointMaterials = Arrays.asList(Material.AIR,
 					CAVE_AIR.parseMaterial(),
@@ -230,13 +241,9 @@ public class MaterialUtils {
 					BRICK_SLAB.parseMaterial(),
 					COBBLESTONE_SLAB.parseMaterial(),
 					DARK_OAK_SLAB.parseMaterial(),
-					DARK_PRISMARINE_SLAB.parseMaterial(),
 					JUNGLE_SLAB.parseMaterial(),
 					OAK_SLAB.parseMaterial(),
 					NETHER_BRICK_SLAB.parseMaterial(),
-					PETRIFIED_OAK_SLAB.parseMaterial(),
-					PRISMARINE_BRICK_SLAB.parseMaterial(),
-					PRISMARINE_SLAB.parseMaterial(),
 					PURPUR_SLAB.parseMaterial(),
 					QUARTZ_SLAB.parseMaterial(),
 					RED_SANDSTONE_SLAB.parseMaterial(),
@@ -244,7 +251,6 @@ public class MaterialUtils {
 					SPRUCE_SLAB.parseMaterial(),
 					STONE_BRICK_SLAB.parseMaterial(),
 					STONE_SLAB.parseMaterial());
-
 		}
 
 		return validCheckpointMaterials;
