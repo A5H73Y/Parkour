@@ -2,6 +2,22 @@ Changelogs
 ======
 
 Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon start up. There will be no manual intervention unless stated in breaking changes.
+## Parkour 6.7
+### Changes
+* Added Potion ParkourBlock
+* Added configurable time formats
+* Added "setcheckpoint" console command to allow for external actions to increase the player's current checkpoint.
+* Added option to confirm Restart tool
+* Added ability to prevent GameMode being set
+* Added Freedom ParkourMode cooldown option
+* Added ability to insert PlaceholderAPI values in the ParkourRank chat
+* Added ability to remove AutoStart by breaking pressure plates
+* Added option to not reset Player's potions
+* Fix setting Freedom location in air
+* Fix NPE with missing command group
+* Improvements to "safe" checkpoints
+* Fixes for titles not appearing
+* Reintroduced BountifulAPI support
 
 ## Parkour 6.6
 ### Changes

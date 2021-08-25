@@ -204,12 +204,12 @@ public class AddKitItemConversation {
 
         @Override
         protected boolean isNumberValid(@NotNull ConversationContext context, @NotNull Number input) {
-            return input.intValue() >= 0 && input.intValue() <= 500;
+            return input.intValue() >= 0 && input.intValue() <= 9999;
         }
 
         @Override
         protected String getFailedValidationText(@NotNull ConversationContext context, @NotNull Number invalidInput) {
-            return "Amount must be between 0 and 500.";
+            return "Amount must be between 0 and 9999.";
         }
 
         @Override

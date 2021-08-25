@@ -3,7 +3,7 @@ Parkour Kits
 
 ## What is a ParkourKit?
 
-Parkour brings a whole new level to the kits, now referred to as ParkourKits. Each Course can now have its own set of blocks to make each unique. You are able to specify exactly what you want the ParkourKit to consist of, allowing you to have as many of each type of action as you'd like. For example, you could have 10 death blocks, and a finish block, or have 3 of each type of action... it's completely configurable.
+Parkour brings a whole new level to the kits, now referred to as ParkourKits. Each Course can now have its own set of [ParkourBlocks](#the-parkourblocks) to make each unique. You are able to specify exactly what you want the ParkourKit to consist of, allowing you to have as many of each type of action as you'd like. For example, you could have 10 death blocks, and a finish block, or have 3 of each type of action... it's completely configurable.
 
 ![Default ParkourKit](https://i.imgur.com/cYWhkHN.jpg "Default ParkourKit")
 
@@ -78,6 +78,10 @@ _All example videos use the default ParkourKit configuration._
 **Death**: When the Player walks on the block, they will activate a "death" on the block, taking them to the last checkpoint.
 
 [Death Block](https://thumbs.gfycat.com/PleasedShorttermBoto-mobile.mp4 ':include :type=video loop controls')
+
+**Potion**: When the Player walks on the block, a configured potion will be applied to the Player with a configurable strength and duration.
+
+
 
 **Speed**: When the Player walks on the block, a SPEED potion will be applied to the Player with a configurable strength and duration.
 

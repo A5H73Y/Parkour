@@ -33,10 +33,12 @@ You will need to install a few plugins to achieve this:
 
 Once the plugins have all installed successfully, we can create a few examples of what is possible. For demonstration purposes, I will be using a Course named "tutorial".
 
-Parkour will cache these results, we still suggest to using the `slow` refresh rate. The supported refresh rates are:
-* `{slow}` - 10 seconds
-* `{medium}` - 1 seconds
-* `{fast}` - 0.1 seconds
+Parkour will cache database results, so we still suggest to using the `slow` refresh rate. The supported refresh rates are:
+* `{slowest}` - 10 seconds
+* `{slow}` - 5 seconds
+* `{medium}` - 1 second
+* `{fast}` - 0.5 seconds
+* `{fastest}` - 0.1 seconds
 
 ### Parkour Leaderboards
 First we create a new Parkour leaderboard Hologram using the command and giving it a title.  
@@ -67,8 +69,29 @@ Allows for the player's Head to be proudly displayed next to their best times, g
 
 ![Parkour Top Ten](https://i.imgur.com/c2n6QUM.png "Parkour Top Ten")
 
-Plugin and image created by steve4744, available here: https://www.spigotmc.org/resources/parkour-top-ten.46268/
+Plugin and image created by steve4744, available here: [https://www.spigotmc.org/resources/parkour-top-ten.46268/](https://www.spigotmc.org/resources/parkour-top-ten.46268/)
 
+## PlateCommands
+
+PlateCommands was created as an extension to Parkour with more powerful functionality. A pressure plate can perform command(s) that can be executed by the server or player.
+
+### Multiple acting Checkpoints
+Multiple pressure plates can achieve the same Checkpoint, instead of the limitation of a single pressure plate in Parkour:
+
+`/pc create pac setcheckpoint %player% 1`
+
+### Teleport the Player
+Whilst on a Course you may want the Player to be teleported to a different location, this can be done using:
+
+`/pc create tp %player% x y z`
+
+### Other Player actions
+You can let the Player enter pre-determined commands using the "player:" prefix in the command which will execute the command as if the Player entered it.
+An example could be walking on a pressure plate to leave the Course:
+
+`/pc create player:pac leave %player%`
+
+Plugin created by A5H73Y, available here: [https://www.spigotmc.org/resources/platecommands.90578/](https://www.spigotmc.org/resources/platecommands.90578/).
 
 ## LeaderHeads
 
@@ -104,4 +127,4 @@ The time format can be changed in LeaderHeads's `config.yml`, for example:
 
 Currently, LeaderHeads does not appear to support displaying milliseconds as part of the formatted time on the sign.
 
-Plugin created by RobiRami, available here: https://www.spigotmc.org/resources/leaderheads.2079/
+Plugin created by RobiRami, available here: [https://www.spigotmc.org/resources/leaderheads.2079/](https://www.spigotmc.org/resources/leaderheads.2079/).
