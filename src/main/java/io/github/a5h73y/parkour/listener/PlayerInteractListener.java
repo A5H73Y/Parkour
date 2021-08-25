@@ -5,6 +5,7 @@ import com.cryptomorin.xseries.XMaterial;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.enums.ParkourEventType;
 import io.github.a5h73y.parkour.enums.ParkourMode;
+import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.enums.QuestionType;
 import io.github.a5h73y.parkour.enums.SoundType;
 import io.github.a5h73y.parkour.manager.QuestionManager;
@@ -12,6 +13,7 @@ import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
+import io.github.a5h73y.parkour.utility.PermissionUtils;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -25,9 +27,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
+// TODO combine some of these methods, as most of them start the same way
+// TODO breakout some of the crazy big if statements into a method. (Freedom tool etc.)
 public class PlayerInteractListener extends AbstractPluginReceiver implements Listener {
 
     public PlayerInteractListener(final Parkour parkour) {
@@ -149,12 +154,17 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
 
         if (mode == ParkourMode.FREEDOM
                 && MaterialUtils.getMaterialInPlayersHand(player) == XMaterial.REDSTONE_TORCH.parseMaterial()) {
-            if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
+            if ((event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+                    || event.getAction().equals(Action.RIGHT_CLICK_AIR))
+                    && player.isOnGround()
+                    && parkour.getPlayerManager().delayPlayer(event.getPlayer(), parkour.getConfig().getInt(
+                    "ParkourTool.Freedom.SecondCooldown"))) {
                 parkour.getPlayerManager().getParkourSession(player).setFreedomLocation(
                         parkour.getCheckpointManager().createCheckpointFromPlayerLocation(player).getLocation());
                 TranslationUtils.sendTranslation("Mode.Freedom.Save", player);
 
-            } else {
+            } else if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)
+                    || event.getAction().equals(Action.LEFT_CLICK_AIR)) {
                 PlayerUtils.teleportToLocation(player,
                         parkour.getPlayerManager().getParkourSession(player).getFreedomLocation());
                 TranslationUtils.sendTranslation("Mode.Freedom.Load", player);
@@ -163,7 +173,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         } else if (mode == ParkourMode.ROCKETS
                 && MaterialUtils.getMaterialInPlayersHand(player) == XMaterial.FIREWORK_ROCKET.parseMaterial()) {
 
-            int secondDelay = parkour.getConfig().getInt("ParkourModes.Rockets.Delay");
+            int secondDelay = parkour.getConfig().getInt("ParkourModes.Rockets.SecondCooldown");
             if (parkour.getPlayerManager().delayPlayer(player, secondDelay, "Mode.Rockets.Reloading", false)) {
                 parkour.getPlayerManager().rocketLaunchPlayer(player);
             }
@@ -282,6 +292,26 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             } else {
                 parkour.getPlayerManager().joinCourseButDelayed(
                         event.getPlayer(), courseName, parkour.getConfig().getAutoStartDelay());
+            }
+        }
+    }
+
+    /**
+     * On pressure plate break event.
+     * @param event block break event
+     */
+    @EventHandler
+    public void onPlateBreak(BlockBreakEvent event) {
+        if (event.getBlock().getType().name().endsWith("PRESSURE_PLATE")
+                && !event.getPlayer().isSneaking()
+                && parkour.getCourseManager().getAutoStartCourse(event.getBlock().getLocation()) != null) {
+            if (!PermissionUtils.hasPermission(event.getPlayer(), Permission.ADMIN_DELETE)) {
+                event.setCancelled(true);
+
+            } else {
+                Location location = event.getBlock().getLocation();
+                String coordinates = location.getBlockX() + "-" + location.getBlockY() + "-" + location.getBlockZ();
+                parkour.getCourseManager().deleteAutoStart(event.getPlayer(), coordinates);
             }
         }
     }

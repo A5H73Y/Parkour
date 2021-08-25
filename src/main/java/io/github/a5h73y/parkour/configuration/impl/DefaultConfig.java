@@ -6,13 +6,19 @@ import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.enums.SoundType;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
+import java.util.TimeZone;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 
 public class DefaultConfig extends ParkourConfiguration {
+
+	private DateFormat detailedTimeOutput;
+	private DateFormat standardTimeOutput;
 
 	@Override
 	protected String getFileName() {
@@ -111,6 +117,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("ParkourTool.Restart.SecondCooldown", 1);
 		this.addDefault("ParkourTool.Freedom.Material", XMaterial.REDSTONE_TORCH.parseMaterial().name());
 		this.addDefault("ParkourTool.Freedom.Slot", 4);
+		this.addDefault("ParkourTool.Freedom.SecondCooldown", 1);
 		this.addDefault("ParkourTool.Rockets.Material", XMaterial.FIREWORK_ROCKET.parseMaterial().name());
 		this.addDefault("ParkourTool.Rockets.Slot", 4);
 
@@ -122,7 +129,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("ParkourModes.Speedy.ResetSpeed", 0.2);
 		this.addDefault("ParkourModes.Dropper.FallDamage", false);
 		this.addDefault("ParkourModes.Rockets.Invert", false);
-		this.addDefault("ParkourModes.Rockets.Delay", 1);
+		this.addDefault("ParkourModes.Rockets.SecondCooldown", 1);
 		this.addDefault("ParkourModes.FreeCheckpoint.ManualCheckpointCommandEnabled", false);
 
 		this.addDefault("DisplayTitle.FadeIn", 5);
@@ -207,9 +214,13 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("Other.Parkour.MaximumParkourLevel", 99999999);
 		this.addDefault("Other.Display.JoinWelcomeMessage", true);
 		this.addDefault("Other.Display.LevelReward", true);
-		this.addDefault("Other.Display.ShowMilliseconds", false);
 		this.addDefault("Other.Display.PrizeCooldown", true);
 		this.addDefault("Other.Display.OnlyReadyCourses", false);
+
+		this.addDefault("Other.Time.StandardFormat", "HH:mm:ss");
+		this.addDefault("Other.Time.DetailedFormat", "HH:mm:ss:SSS");
+		this.addDefault("Other.Time.TimeZone", "GMT");
+
 		this.addDefault("Other.OnServerShutdown.BackupFiles", false);
 		this.addDefault("Other.OnPlayerBan.ResetParkourInfo", false);
 		this.addDefault("Other.OnSetPlayerParkourLevel.UpdateParkourRank", true);
@@ -231,6 +242,12 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("Version", Parkour.getInstance().getDescription().getVersion());
 
 		this.addDefault("LobbySettings.EnforceWorld", false);
+
+		TimeZone timeZone = TimeZone.getTimeZone(this.getTimeZone());
+		detailedTimeOutput = new SimpleDateFormat(this.getDetailedTimeFormat());
+		detailedTimeOutput.setTimeZone(timeZone);
+		standardTimeOutput = new SimpleDateFormat(this.getStandardTimeFormat());
+		standardTimeOutput.setTimeZone(timeZone);
 
 		this.options().copyDefaults(true);
 	}
@@ -265,6 +282,18 @@ public class DefaultConfig extends ParkourConfiguration {
 
 	public String getDefaultPrizeCommand() {
 		return this.getString("OnFinish.DefaultPrize.Command");
+	}
+
+	public String getStandardTimeFormat() {
+		return this.getString("Other.Time.StandardFormat");
+	}
+
+	public String getDetailedTimeFormat() {
+		return this.getString("Other.Time.DetailedFormat");
+	}
+
+	public String getTimeZone() {
+		return this.getString("Other.Time.TimeZone");
 	}
 
 	public boolean isPermissionsForCommands() {
@@ -333,10 +362,6 @@ public class DefaultConfig extends ParkourConfiguration {
 
 	public boolean isPreventPlayerCollisions() {
 		return this.getBoolean("OnCourse.PreventPlayerCollisions");
-	}
-
-	public boolean isDisplayMilliseconds() {
-		return this.getBoolean("Other.Display.ShowMilliseconds");
 	}
 
 	public boolean isEnforceSafeCheckpoints() {
@@ -455,5 +480,15 @@ public class DefaultConfig extends ParkourConfiguration {
 
 	public int getMaximumCoursesCached() {
 		return this.getInt("Database.MaximumCoursesCached");
+	}
+
+	/* Time formats */
+
+	public DateFormat getDetailedTimeOutput() {
+		return detailedTimeOutput;
+	}
+
+	public DateFormat getStandardTimeOutput() {
+		return standardTimeOutput;
 	}
 }

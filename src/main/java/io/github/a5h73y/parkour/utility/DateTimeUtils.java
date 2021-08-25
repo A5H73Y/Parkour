@@ -6,6 +6,7 @@ import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.StringJoiner;
 import org.bukkit.OfflinePlayer;
 
@@ -17,8 +18,25 @@ public class DateTimeUtils {
 	public static final String DD_MM_YYYY = "dd-MM-yyyy";
 	public static final String DD_MM_YYYY_HH_MM_SS = "[dd/MM/yyyy | HH:mm:ss]";
 
-	public static final String HH_MM_SS = "%02d:%02d:%02d";
-	public static final String HH_MM_SS_MS = "%02d:%02d:%02d.%03d";
+	/**
+	 * Display time representation of milliseconds.
+	 *
+	 * @param milliseconds milliseconds
+	 * @return detailed formatted time
+	 */
+	public static String displayCurrentTime(long milliseconds) {
+		return Parkour.getDefaultConfig().getDetailedTimeOutput().format(new Date(milliseconds));
+	}
+
+	/**
+	 * Convert the number of seconds into a standard time format.
+	 *
+	 * @param totalSeconds number of seconds
+	 * @return standard formatted time
+	 */
+	public static String convertSecondsToTime(int totalSeconds) {
+		return Parkour.getDefaultConfig().getStandardTimeOutput().format(new Date(totalSeconds * 1000L));
+	}
 
 	/**
 	 * Display current date.
@@ -38,33 +56,6 @@ public class DateTimeUtils {
 	public static String getDisplayDateTime() {
 		LocalDateTime localDateTime = LocalDateTime.now();
 		return localDateTime.format(DateTimeFormatter.ofPattern(DD_MM_YYYY_HH_MM_SS));
-	}
-
-	/**
-	 * Display time representation of milliseconds.
-	 * Convert milliseconds into formatted time HH:MM:SS(.sss).
-	 *
-	 * @param milliseconds milliseconds
-	 * @return formatted time: HH:MM:SS.(sss)
-	 */
-	public static String displayCurrentTime(long milliseconds) {
-		MillisecondConverter time = new MillisecondConverter(milliseconds);
-		String pattern = Parkour.getDefaultConfig().isDisplayMilliseconds() ? HH_MM_SS_MS : HH_MM_SS;
-		return String.format(pattern, time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds());
-	}
-
-	/**
-	 * Convert the number of seconds into a HH:MM:SS format.
-	 *
-	 * @param totalSeconds number of seconds
-	 * @return formatted time HH:MM:SS
-	 */
-	public static String convertSecondsToTime(int totalSeconds) {
-		int hours = totalSeconds / 3600;
-		int minutes = (totalSeconds % 3600) / 60;
-		int seconds = totalSeconds % 60;
-
-		return String.format(HH_MM_SS, hours, minutes, seconds);
 	}
 
 	/**

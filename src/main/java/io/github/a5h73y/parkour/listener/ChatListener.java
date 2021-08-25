@@ -20,6 +20,8 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class ChatListener extends AbstractPluginReceiver implements Listener {
 
+    private static final String MESSAGE_PLACEHOLDER = "%MESSAGE%";
+
     public ChatListener(final Parkour parkour) {
         super(parkour);
     }
@@ -44,14 +46,14 @@ public class ChatListener extends AbstractPluginReceiver implements Listener {
             finalMessage = TranslationUtils.getTranslation("Event.Chat", false)
                     .replace(PARKOUR_RANK_PLACEHOLDER, rank)
                     .replace(PLAYER_PLACEHOLDER, event.getPlayer().getDisplayName())
-                    .replace("%MESSAGE%", event.getMessage());
+                    .replace(MESSAGE_PLACEHOLDER, event.getMessage());
         } else {
             // or do we use the existing format, just replacing the Parkour variables
             finalMessage = event.getFormat()
                     .replace(PARKOUR_RANK_PLACEHOLDER, rank)
                     .replace(PLAYER_PLACEHOLDER, event.getPlayer().getDisplayName());
         }
-
+        finalMessage = parkour.getPlaceholderApi().parsePlaceholders(event.getPlayer(), finalMessage);
         event.setFormat(StringUtils.colour(finalMessage));
     }
 

@@ -117,7 +117,7 @@ public final class ParkourCommandHelp {
      */
     private static void displayCommands(Player player, String commandGroup) {
         Parkour.getInstance().getCommandUsages().stream()
-                .filter(commandUsage -> commandUsage.getCommandGroup().equals(commandGroup))
+                .filter(commandUsage -> commandGroup.equals(commandUsage.getCommandGroup()))
                 .forEach(commandUsage -> commandUsage.displayCommandUsage(player));
     }
 

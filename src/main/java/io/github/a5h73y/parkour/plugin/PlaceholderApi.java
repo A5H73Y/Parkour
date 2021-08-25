@@ -42,4 +42,12 @@ public class PlaceholderApi extends PluginWrapper {
 			TranslationUtils.sendMessage(player, PlaceholderAPI.setPlaceholders(player, placeholder), false);
 		}
 	}
+
+	public String parsePlaceholders(Player player, String input) {
+		if (isEnabled()) {
+			return PlaceholderAPI.setPlaceholders(player, input);
+		} else {
+			return input;
+		}
+	}
 }
