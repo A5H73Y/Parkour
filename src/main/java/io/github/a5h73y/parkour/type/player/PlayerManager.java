@@ -957,7 +957,10 @@ public class PlayerManager extends AbstractPluginReceiver {
 	 * @param gameModeName GameMode name
 	 */
 	public void preparePlayer(Player player, String gameModeName) {
-		PlayerUtils.removeAllPotionEffects(player);
+		if (parkour.getConfig().getBoolean("Other.Parkour.ResetPotionEffects")) {
+			PlayerUtils.removeAllPotionEffects(player);
+		}
+
 		ParkourSession session = getParkourSession(player);
 
 		if (session != null && session.getParkourMode() == ParkourMode.POTION) {

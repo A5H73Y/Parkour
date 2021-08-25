@@ -212,6 +212,7 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("Other.Parkour.SignUsePermissions", false);
 		this.addDefault("Other.Parkour.CommandUsePermissions", false);
 		this.addDefault("Other.Parkour.MaximumParkourLevel", 99999999);
+		this.addDefault("Other.Parkour.ResetPotionEffects", true);
 		this.addDefault("Other.Display.JoinWelcomeMessage", true);
 		this.addDefault("Other.Display.LevelReward", true);
 		this.addDefault("Other.Display.PrizeCooldown", true);

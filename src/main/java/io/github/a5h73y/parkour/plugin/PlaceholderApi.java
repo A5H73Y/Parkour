@@ -43,6 +43,14 @@ public class PlaceholderApi extends PluginWrapper {
 		}
 	}
 
+	/**
+	 * Parse PlaceholderAPI variables in the input.
+	 * Any Placeholders in the text input will be replaced by PlaceholderAPI.
+	 *
+	 * @param player player context
+	 * @param input input
+	 * @return updated input
+	 */
 	public String parsePlaceholders(Player player, String input) {
 		if (isEnabled()) {
 			return PlaceholderAPI.setPlaceholders(player, input);

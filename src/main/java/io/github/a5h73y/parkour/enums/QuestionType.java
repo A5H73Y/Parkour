@@ -58,7 +58,8 @@ public enum QuestionType {
             (sender, value) -> Parkour.getInstance().getCourseManager().resetPrize(sender, value)),
 
     RESTART_COURSE("You are about to restart your progress on &b%s&f...",
-            "All of your current progress will be lost, taking you back to the start of the Course with your time and deaths reset.",
+            "All of your current progress will be lost, taking you back to the start of the Course " +
+                    "with your time and deaths reset.",
             (sender, value) -> Parkour.getInstance().getPlayerManager().restartCourse((Player) sender));
 
     private final String actionSummary;

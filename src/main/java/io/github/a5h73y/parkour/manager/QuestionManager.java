@@ -121,6 +121,12 @@ public class QuestionManager extends AbstractPluginReceiver {
         askGenericQuestion(sender, QuestionType.RESET_PRIZES, courseName.toLowerCase());
     }
 
+    /**
+     * Ask the Restart Progress Question..
+     *
+     * @param sender sender
+     * @param courseName course name
+     */
     public void askRestartProgressQuestion(CommandSender sender, String courseName) {
         QuestionType restart = QuestionType.RESTART_COURSE;
         TranslationUtils.sendMessage(sender, String.format(restart.getActionSummary(), courseName.toLowerCase()));

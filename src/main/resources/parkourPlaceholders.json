@@ -6,7 +6,7 @@
     "placeholders": [
       {
         "placeholder": "%parkour_global_version%",
-        "output": "6.5",
+        "output": "6.7",
         "description": "The installed version of the Parkour plugin."
       },
       {
