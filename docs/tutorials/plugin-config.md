@@ -145,6 +145,14 @@ OnLeave:
   DestroyCourseProgress: true
   # Should the Player be teleported away to their destination
   TeleportAway: true
+
+# All the options for when the Player restarts the Course
+OnRestart:
+  # When the Player restarts the Course should it do the full Leave and Join cycle, or should it just reset their progress
+  # Leaving this as true has been known to have major performance impacts
+  FullPlayerRestart: false
+  # Should be Player be asked to confirm if they want to restart their progress in case they accidentally use the Restart Tool
+  RequireConfirmation: false
  
 # All the options for when the Player dies on a Course
 OnDie:

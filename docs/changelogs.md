@@ -13,6 +13,7 @@ Please note that each version of Parkour is backwards compatible with the previo
 * Added ability to insert PlaceholderAPI values in the ParkourRank chat
 * Added ability to remove AutoStart by breaking pressure plates
 * Added option to not reset Player's potions
+* Added more Course Placeholders
 * Fix setting Freedom location in air
 * Fix NPE with missing command group
 * Improvements to "safe" checkpoints
