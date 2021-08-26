@@ -12,6 +12,7 @@ import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.cache.GenericCache;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -25,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ParkourPlaceholders extends PlaceholderExpansion {
 
+    private static final String UNKNOWN_COURSE = TranslationUtils.getTranslation("PlaceholderAPI.UnknownCourse", false);
     private static final String INVALID_SYNTAX = TranslationUtils.getTranslation("PlaceholderAPI.InvalidSyntax", false);
     private static final String NO_TIME_RECORDED = TranslationUtils.getTranslation("PlaceholderAPI.NoTimeRecorded", false);
     private static final String TOP_TEN_RESULT = TranslationUtils.getTranslation("PlaceholderAPI.TopTenResult", false);
@@ -92,7 +94,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
 
             case "co":
             case "course":
-                return getCoursePlaceholderValue(offlinePlayer, arguments);
+                return getCoursePlaceholderValue(arguments);
 
             case "cu":
             case "current":
@@ -206,7 +208,11 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
         }
     }
 
-    private String getCoursePlaceholderValue(OfflinePlayer offlinePlayer, String... arguments) {
+    private String getCoursePlaceholderValue(String... arguments) {
+        if (!CourseInfo.doesCourseExists(arguments[2])) {
+            return UNKNOWN_COURSE;
+        }
+
         switch (arguments[1]) {
             case "displayname":
                 if (arguments.length != 3) {
@@ -235,6 +241,62 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 }
 
                 return String.valueOf(CourseInfo.getViews(arguments[2]));
+
+            case "creator":
+                if (arguments.length != 3) {
+                    return INVALID_SYNTAX;
+                }
+
+                return String.valueOf(CourseInfo.getCreator(arguments[2]));
+
+            case "minparkourlevel":
+                if (arguments.length != 3) {
+                    return INVALID_SYNTAX;
+                }
+
+                return String.valueOf(CourseInfo.getMinimumParkourLevel(arguments[2]));
+
+            case "rewardparkourlevel":
+                if (arguments.length != 3) {
+                    return INVALID_SYNTAX;
+                }
+
+                return String.valueOf(CourseInfo.getRewardParkourLevel(arguments[2]));
+
+            case "rewardparkourleveladd":
+                if (arguments.length != 3) {
+                    return INVALID_SYNTAX;
+                }
+
+                return String.valueOf(CourseInfo.getRewardParkourLevelIncrease(arguments[2]));
+
+            case "parkourmode":
+                if (arguments.length != 3) {
+                    return INVALID_SYNTAX;
+                }
+
+                return CourseInfo.getParkourModeName(arguments[2]);
+
+            case "maxdeaths":
+                if (arguments.length != 3) {
+                    return INVALID_SYNTAX;
+                }
+
+                return String.valueOf(CourseInfo.getMaximumDeaths(arguments[2]));
+
+            case "maxtime":
+                if (arguments.length != 3) {
+                    return INVALID_SYNTAX;
+                }
+
+                return DateTimeUtils.convertSecondsToTime(CourseInfo.getMaximumTime(arguments[2]));
+
+            case "checkpoints":
+                if (arguments.length != 3) {
+                    return INVALID_SYNTAX;
+                }
+
+                return String.valueOf(CourseInfo.getCheckpointAmount(arguments[2]));
 
             case "joinfee":
                 if (arguments.length != 3) {
@@ -325,7 +387,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                         return String.valueOf(session.getRemainingDeaths());
 
                     default:
-                        return INVALID_SYNTAX;
+                        return getCoursePlaceholderValue("", arguments[2], session.getCourseName());
                 }
 
             case "checkpoint":

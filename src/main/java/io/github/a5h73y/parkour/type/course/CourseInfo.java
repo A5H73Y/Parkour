@@ -15,6 +15,7 @@ import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -32,6 +33,19 @@ import org.jetbrains.annotations.Nullable;
  * Convenience methods for accessing the course configuration file.
  */
 public class CourseInfo {
+
+    /**
+     * Check if Course exists.
+     * @param courseName course name
+     * @return course exists
+     */
+    public static boolean doesCourseExists(@NotNull String courseName) {
+        if (!ValidationUtils.isStringValid(courseName)) {
+            return false;
+        }
+
+        return getAllCourseNames().contains(courseName.trim().toLowerCase());
+    }
 
     /**
      * Get List of all Parkour course names.
@@ -410,7 +424,7 @@ public class CourseInfo {
      * @return number of completions
      */
     public static int getCompletions(@NotNull String courseName) {
-        return getCourseConfig().getInt(courseName + ".Completed", 0);
+        return getCourseConfig().getInt(courseName.toLowerCase() + ".Completed", 0);
     }
 
     /**
@@ -437,7 +451,7 @@ public class CourseInfo {
      * @return number of views
      */
     public static int getViews(@NotNull String courseName) {
-        return getCourseConfig().getInt(courseName + ".Views", 0);
+        return getCourseConfig().getInt(courseName.toLowerCase() + ".Views", 0);
     }
 
     /**
@@ -720,14 +734,14 @@ public class CourseInfo {
      * Displays all information stored about Course.
      * Dynamically displays data based on what has been set.
      * @param sender requesting player
-     * @param courseName course name
+     * @param courseNameRaw course name
      */
-    public static void displayCourseInfo(@NotNull CommandSender sender, @NotNull String courseName) {
-        if (!Parkour.getInstance().getCourseManager().doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseName, sender);
+    public static void displayCourseInfo(@NotNull CommandSender sender, @NotNull String courseNameRaw) {
+        if (!Parkour.getInstance().getCourseManager().doesCourseExists(courseNameRaw)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseNameRaw, sender);
             return;
         }
-
+        String courseName = courseNameRaw.toLowerCase();
         TranslationUtils.sendHeading(StringUtils.standardizeText(courseName) + " statistics", sender);
 
         sendConditionalValue(sender, "Display Name", hasCourseDisplayName(courseName), getCourseDisplayName(courseName));
@@ -870,7 +884,7 @@ public class CourseInfo {
      */
     @Nullable
     public static String getEventMessage(@NotNull String courseName, @NotNull String typeName) {
-        return getCourseConfig().getString(courseName + "." + StringUtils.standardizeText(typeName) + "Message");
+        return getCourseConfig().getString(courseName.toLowerCase() + "." + StringUtils.standardizeText(typeName) + "Message");
     }
 
     /**
@@ -892,7 +906,7 @@ public class CourseInfo {
      * @param value message value
      */
     public static void setEventMessage(@NotNull String courseName, @NotNull String type, @Nullable String value) {
-        getCourseConfig().set(courseName + "." + StringUtils.standardizeText(type) + "Message", value);
+        getCourseConfig().set(courseName.toLowerCase() + "." + StringUtils.standardizeText(type) + "Message", value);
         persistChanges();
     }
 

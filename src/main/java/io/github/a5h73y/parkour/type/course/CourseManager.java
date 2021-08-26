@@ -68,6 +68,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      * @param courseName course name
      * @return course exists
      */
+    //TODO remove me
     public boolean doesCourseExists(final String courseName) {
         if (!ValidationUtils.isStringValid(courseName)) {
             return false;

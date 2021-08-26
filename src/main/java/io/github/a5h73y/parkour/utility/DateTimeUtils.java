@@ -35,7 +35,8 @@ public class DateTimeUtils {
 	 * @return standard formatted time
 	 */
 	public static String convertSecondsToTime(int totalSeconds) {
-		return StringUtils.colour(Parkour.getDefaultConfig().getStandardTimeOutput().format(new Date(totalSeconds * 1000L)));
+		return StringUtils.colour(Parkour.getDefaultConfig().getStandardTimeOutput()
+				.format(new Date(totalSeconds * 1000L)));
 	}
 
 	/**

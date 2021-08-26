@@ -147,6 +147,46 @@
         "placeholder": "%parkour_course_playerlist_(course)%",
         "output": "A5H73Y, steve4744, notch",
         "description": "The names of online Parkour players on the specified Course."
+      },
+      {
+        "placeholder": "%parkour_course_creator_(course)%",
+        "output": "A5H73Y",
+        "description": "The creator of the specified Course."
+      },
+      {
+        "placeholder": "%parkour_course_minparkourlevel_(course)%",
+        "output": "10",
+        "description": "The minimum ParkourLevel required to join the Course."
+      },
+      {
+        "placeholder": "%parkour_course_rewardparkourlevel_(course)%",
+        "output": "10",
+        "description": "The ParkourLevel rewarded for completing the Course."
+      },
+      {
+        "placeholder": "%parkour_course_rewardparkourleveladd_(course)%",
+        "output": "1",
+        "description": "The added ParkourLevel rewarded for completing the Course."
+      },
+      {
+        "placeholder": "%parkour_course_parkourmode_(course)%",
+        "output": "FREEDOM",
+        "description": "The ParkourMode set on the Course."
+      },
+      {
+        "placeholder": "%parkour_course_maxdeaths_(course)%",
+        "output": "10",
+        "description": "The maximum number of deaths allowed for the Course."
+      },
+      {
+        "placeholder": "%parkour_course_maxtime_(course)%",
+        "output": "00:01:20",
+        "description": "The maximum time allowed for the Course."
+      },
+      {
+        "placeholder": "%parkour_course_checkpoints_(course)%",
+        "output": "3",
+        "description": "The number of Checkpoints on the Course."
       }
     ]
   },
@@ -184,6 +224,11 @@
         "placeholder": "%parkour_current_course_completed%",
         "output": "Yes",
         "description": "Completion status for whether the Player completed the current Course. Output configurable in strings.yml (PlaceholderAPI.CurrentCourseCompleted & PlaceholderAPI.CurrentCourseNotCompleted)."
+      },
+      {
+        "placeholder": "%parkour_current_course_(Course Placeholder)%",
+        "output": "(dynamic)",
+        "description": "Replace (Course Placeholder) with any Placeholder found in the 'Course Placeholders' section for the Course detail to be displayed. For example '%parkour_current_course_creator%'."
       },
       {
         "placeholder": "%parkour_current_course_record_time%",

@@ -195,6 +195,7 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("Mode.Rockets.JoinText", "Use the Rocket Launcher to launch yourself");
 		this.addDefault("Mode.Rockets.Reloading", "Reloading rocket...");
 
+		this.addDefault("PlaceholderAPI.UnknownCourse", "Unknown Course");
 		this.addDefault("PlaceholderAPI.InvalidSyntax", "Invalid syntax");
 		this.addDefault("PlaceholderAPI.NoTimeRecorded", "No time recorded");
 		this.addDefault("PlaceholderAPI.CurrentCourseCompleted", "Yes");
