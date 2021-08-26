@@ -26,13 +26,13 @@ OnJoin:
   FillHealth:
     Enabled: true
     Amount: 20
-  # What GameMode should the Player be while on the Course
+  # What GameMode should the Player be while on the Course. This can be set to 'KEEP' to not override the Player's GameMode.
   SetGameMode: SURVIVAL
-  # Treat the first Checkpoint as the start of the Course
+  # Treat the first Checkpoint as the start of the Course. The timer will be started upon achieving the first checkpoint.
   TreatFirstCheckpointAsStart: false
   # Require a permission for every single course (Parkour.Course.(CourseName))
   PerCoursePermission: false
-  # Should the Player be teleported to the starting point. Used for AutoStarts for a seamless start of a Course.
+  # Should the Player be teleported to the starting point. Can be disabled for AutoStarts for a seamless start of a Course.
   TeleportPlayer: true
   # What is the join broadcast message level, options include:
   # "GLOBAL" = Every Player on the server, "WORLD" = Every Player on the World, "PARKOUR" = Every Parkour Player, "PLAYER" = Just the Player, nobody else. 
@@ -44,9 +44,9 @@ OnCourse:
   AnybodyPlaceBreakBlocks: false
   # Should Admins be able to break and place blocks are usual
   AdminPlaceBreakBlocks: true
-  # Should Parkour attempt to perform less checks for the ParkourKits. (This may break some behaviour)
+  # Should Parkour attempt to perform fewer checks for the ParkourKits. (This may break some behaviour)
   AttemptLessChecks: false
-  # Which Material should the pressure plates be made out of
+  # Which Material should the Checkpoint pressure plates be made out of
   CheckpointMaterial: STONE_PLATE
   # Should the Player die when they touch liquid (Water or Lava)
   DieInLiquid: false
@@ -66,15 +66,15 @@ OnCourse:
   DisplayLiveTime: false
   # Should the player be prevented from interacting with non-Parkour signs
   EnforceParkourSigns: true
-  # Should the player be prevented from teleporting to another World
+  # Should the player be prevented from teleporting to another World while on a Course
   EnforceWorld:
     Enabled: true
     # If they are allowed to be teleported away, should they leave the Course as a result
     LeaveCourse: false
   # If they are allowed to be teleported away, should they leave the Course as a result
   MaxFallTicks: 80
-  # Prevent the Pressure Plate from being locked in a pressed position when a Player is stood on it
-  # This will allow people to still achieve the Checkpoint while others are on a Plate, with a cost of Redstone no longer being fired from it
+  # Prevent the Pressure Plate from being 'stuck' in a pressed position when a Player is stood on it
+  # This will allow people to still achieve the Checkpoint while others are on a Plate. This will mean that Redstone no longer being fired from it
   PreventPlateStick: false
   # Should the Player be prevented from opening any non-player inventories
   PreventOpeningOtherInventories: false
@@ -84,7 +84,7 @@ OnCourse:
   PreventEntitiesAttacking: true
   # Should the Player be prevented from joining another Course whilst on one
   PreventJoiningDifferentCourse: false
-  # Should players have their collisions removed
+  # Should players have their collisions removed. You need to have the Scoreboard enabled for this to work.
   PreventPlayerCollisions: false
   # Should the Players have to be sneaking to activate the Parkour Tools
   SneakToInteractItems: true
@@ -115,7 +115,7 @@ OnFinish:
   DisplayNewRecords: false
   # Should the player be sent a summary of their stats after finishing
   DisplayStats: true
-  # Should Course Prizes be enabled
+  # Should Course Prizes be enabled, this includes every kind of prize such as ParkourLevels & ParkourRanks etc.
   EnablePrizes: true
   # Should the Player have to achieve all the Checkpoints before being able to finish
   # Prevents cheaters from skipping checkpoints
@@ -125,7 +125,7 @@ OnFinish:
     Enabled: true
     # Should the Player be notified if they have already completed the joined Course
     JoinMessage: false
-  # What GameMode should the Player be when finishing / leaving the Course 
+  # What GameMode should the Player be when finishing / leaving the Course. This can be set to 'KEEP' to not override the Player's GameMode.
   SetGameMode: SURVIVAL
   # Should the Player be teleported away after finishing a Course
   TeleportAway: true
@@ -138,7 +138,7 @@ OnFinish:
  
 # All the options for when the Player leaves a Course
 OnLeave:
-  # Should the Player be teleported to the Linked Lobby, instead of the default
+  # Should the Player be teleported to the Linked Lobby, instead of the default Lobby
   TeleportToLinkedLobby: false
   # Should the Player's progress be destroyed when they leave a Course
   # If this is false, the Player will be able to re-join the same Course at the checkpoint and time accumulated as before
@@ -182,10 +182,13 @@ ParkourTool:
   Restart:
     Material: STICK
     Slot: 3
-    SecondCooldown: 6
+    # How many seconds must pass between each Restart usage
+    SecondCooldown: 1
   Freedom:
     Material: REDSTONE_TORCH
     Slot: 4
+    # How many seconds must pass between each Save Checkpoint usage
+    SecondCooldown: 1
   Rockets:
     Material: FIREWORK_ROCKET
     Slot: 4
@@ -344,27 +347,39 @@ Other:
       Enabled: false
       # Should the plugin override the Chat with its own format, otherwise it will simply replace the %RANK% placeholder
       OverrideChat: true
-    # Should Parkour Signs be protected
+    # Should destroying Parkour Signs be prevented by non-admins
     SignProtection: true
-    # Should Parkour take control of the Players inventory when joining / leaving a Course
+    # Should Parkour control the Player's inventory when joining / leaving a Course
     InventoryManagement: true
     # Should the Player require an additional Permission to interact with Parkour signs
     SignUsePermissions: false
     # Should the Player require an additional Permission to use Parkour commands
     CommandUsePermissions: false
-    # What should be the maximum ParkourLevel achievable
+    # What should be the maximum achievable ParkourLevel 
     MaximumParkourLevel: 99999999
+    # Should the Player's potion effects be reset during Parkour events such as joining, dying, leaving, finishing etc.
+    ResetPotionEffects: true
+    
   Display:
     # Should the plugin display a Join message to the Player "This server uses Parkour v6.X"
     JoinWelcomeMessage: true
     # Should the Player be notified when they earn a new ParkourLevel
     LevelReward: true
-    # Should the Database times include the milliseconds in the display
-    ShowMilliseconds: false
     # Should the Player be notified of the remaining Course Prize Cooldown
     PrizeCooldown: true
     # Should the Course list exclude courses that aren't marked as ready
     OnlyReadyCourses: false
+    
+  # Time output settings
+  # Colour codes can be used, however they need to be in a format which is ignored by the format processor. Surround each colour code with ''&b'' for it to be ignored.
+  # For Example: DetailedFormat: '''&b''mm''&4'':''&5''ss''&4'':''&6''SSS'
+  Time:
+    # The Standard Time output format, with no millisecond information. Used with whole seconds 
+    StandardFormat: "HH:mm:ss"
+    # The Detailed Time output format, with millisecond information. Used in leaderboard times
+    DetailedFormat: "HH:mm:ss:SSS"
+    # The TimeZone to use. Only change if you're having weird output.
+    TimeZone: "GMT"
  
   # Should the Parkour config files be backed up after every server shutdown
   OnServerShutdown:
@@ -393,8 +408,6 @@ Plugin:
     Enabled: true
     # How many seconds should database results be cached for
     CacheTime: 15
-  AAC:
-    Enabled: false
  
 # How many time results should be cached per Course
 Database:
@@ -406,6 +419,7 @@ SQLite:
  
 # MySQL Connection settings
 # Values will need to be updated to match your sql server before a connection can be made. Check server start up logs for any connection issues.
+# Replace each placeholder provided with your values i.e. (PORT) -> 3306
 MySQL:
   Use: false
   URL: jdbc:mysql://(HOST):(PORT)/(DATABASE)?useSSL=false
@@ -417,13 +431,10 @@ MySQL:
 LobbySettings:
   EnforceWorld: false
  
-# Currently installed version of the plugin
-Version: '6.5'
-```
-<!-- TODO: Update to 6.7 -->
-<!-- TODO: Add Time section details that says wrap each colour code with `''&b''` for it to be ignored by the time formatter. -->
+# The installed version of the plugin, used by the updater to automatically update your config
+Version: '6.7'
 
-_This is correct as of Parkour v6.5_
+_This is correct as of Parkour v6.7_
 
 ## strings.yml
 

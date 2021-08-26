@@ -227,10 +227,10 @@ public class DefaultConfig extends ParkourConfiguration {
 		this.addDefault("Other.OnSetPlayerParkourLevel.UpdateParkourRank", true);
 		this.addDefault("Other.OnVoid.TeleportToLobby", false);
 
+		this.addDefault("Plugin.BountifulAPI.Enabled", true);
 		this.addDefault("Plugin.Vault.Enabled", true);
 		this.addDefault("Plugin.PlaceholderAPI.Enabled", true);
 		this.addDefault("Plugin.PlaceholderAPI.CacheTime", 15);
-		this.addDefault("Plugin.AAC.Enabled", true);
 
 		this.addDefault("Database.MaximumCoursesCached", 10);
 		this.addDefault("SQLite.PathOverride", "");

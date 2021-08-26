@@ -1,68 +1,70 @@
 Parkour:
   Prefix: '&0[&bParkour&0] &f'
   SignHeader: '&0[&bParkour&0]'
-  ConfigReloaded: La config ha sido recargada.
-  SignRemoved: ¡Letrero de Parkour quitado!
-  SignCreated: '&fLetrero &b%VALUE% creado.'
+  ConfigReloaded: La configuración ha sido recargada.
+  SignRemoved: ¡Cartel de parkour eliminado!
+  SignCreated: 'Cartel creado: &b%VALUE%'
   Heading: -- &9&l%VALUE% &r--
-  Join: Te has unido a &b%VALUE%
-  JoinLives: '&7¡Tienes &3%VALUE% &7vidas para terminar este circuito!'
-  JoinTime: '&7¡Tienes &3%VALUE% &7para terminar este circuito!'
-  JoinLivesAndTime: '&7Tienes &3%MAXTIME% &7y &3%LIVES% &7vidas para terminar este circuito!'
-  TimerStarted: ¡Empieza el tiempo!
-  Restarting: Reiniciando el circuito
+  Join: Has entrado a &b%VALUE%
+  JoinLives: '&7Tienes &3%VALUE% &7lives en este parkour!'
+  JoinTime: '&7Tienes &3%VALUE% &7para finalizar este parkour!'
+  JoinLivesAndTime: '&7Tienes &3%MAXTIME% &7y &3%LIVES% &7lives para finalizar este
+    parkour!'
+  TimerStarted: Temporizador iniciado!
+  Restarting: Reiniciando parkour...
   Leave: Has salido de &b%VALUE%
-  Created: '&b¡%VALUE% &fha sido creado y seleccionado!'
-  CheckpointCreated: Checkpoint &3%CHECKPOINT% &fha sido guardado en &b%COURSE%&f!
-  Selected: Editando ahora &b%VALUE%
-  Deselected: Editado terminado.
-  WhenReady: '&7Una vez hayas terminado de editar &b%VALUE%&7, escribe &b/pa ready'
-  Delete: '!&b%VALUE% &fha sido eliminado!'
-  DeleteCheckpoint: El Checkpoint &b%CHECKPOINT% &fha salido eliminado de &b%COURSE%
-  Reset: '&b¡%VALUE% &fha sido reiniciado!'
-  JoinBroadcast: '&3%PLAYER% &fse ha unido a &b%COURSE%&f!'
-  FinishBroadcast: '&3%PLAYER% &fha terminado &b%COURSE% &fcon &b%DEATHS% &fdeaths, en &b%TIME%&f!'
-  FinishCourse1:  ¡&b%VALUE%&f terminado!
+  Created: '&b%VALUE% &fha sido creado y seleccionado!'
+  CheckpointCreated: Checkpoint &3%CHECKPOINT% &fha sido establecido en &b%COURSE%&f!
+  Selected: Has seleccionado &b%VALUE%
+  Deselected: Edicción finalizada.
+  WhenReady: '&7Una vez finalizada la edicción &b%VALUE%&7, escribe &b/pa ready'
+  Delete: '&b%VALUE% &fha sido eliminado!'
+  DeleteCheckpoint: Checkpoint &b%CHECKPOINT% &fha sido eliminado de &b%COURSE%
+  Reset: '&b%VALUE% &fha sido reseteado!'
+  JoinBroadcast: '&3%PLAYER% &fha entrado a &b%COURSE%&f!'
+  FinishBroadcast: '&3%PLAYER% &fha finalizado &b%COURSE% &fcon &b%DEATHS% &fmuertes,
+    en &b%TIME%&f!'
+  FinishCourse1: ¡&b%VALUE% &ffinalizado!
   FinishCourse2: En &b%TIME%&f, muriendo &b%DEATHS% &fveces
-  Lobby: Te has unido al lobby
-  LobbyOther: Te has unido al lobby &b%VALUE%
-  JoinLocation: Has vuelto a tu posicion original
-  Continue: Continuando el progreso en &b%VALUE%
-  TimeReset: ¡Tu tiempo ha sido reiniciado!
+  Lobby: Has entrado al lobby
+  LobbyOther: Has entrado al lobby de &b%VALUE%
+  JoinLocation: Has vuelto a tu ubicación original.
+  Continue: Sesion reanudada &b%VALUE%
+  TimeReset: Tu tiempo se ha reiniciado!
   Teleport: Te has teletransportado a &b%VALUE%
-  MaxDeaths: 'Lo sentimos, has alcanzado el maximo de muertes: &b%VALUE%'
-  MaxTime: Lo sentimos, has alcanzado el maximo tiempo disponible de %VALUE%!
-  Die1: ¡Has muerto! ¡Volviendo al principio!
-  Die2: ¡Has muerto! Volviendo al checkpoint &b%VALUE%
-  LifeCount: '&b¡%VALUE% &fvidas restantes!'
-  Playing: ' &b%PLAYER% &f- &8C: &7%COURSE% &8D: &7%DEATHS% &8T: &7%TIME%'
+  MaxDeaths: 'Lo siento, alcanzaste la cantidad máxima de muertes: &b%VALUE%'
+  MaxTime: Lo sentimos, ha alcanzado el límite de tiempo máximo de %VALUE%!
+  Die1: Moriste! ¡Volviendo al principio!
+  Die2: Moriste! Volviendo al último checkpoint &b%VALUE%
+  LifeCount: '&b%VALUE% &fvidas restantes!'
+  Playing: ' &b%PLAYER% &f- &8P: &7%COURSE% &8M: &7%DEATHS% &8T: &7%TIME%'
   Accept: '&7Escribe &a/pa accept &7para aceptar.'
-  RewardLevel: Tu nivel ha sido establecido en &b%LEVEL% &fpor completar &b%COURSE%&f!
-  RewardRank: Tu rango ha sido establecido a %VALUE%
-  RankInfo: '* Por el nivel &b%LEVEL% &fganas: %RANK%'
-  RewardParkoins: '&b%AMOUNT% &fParkoins recompensados! Total actual: &7%TOTAL%'
+  RewardLevel: Tu nivel se ha establecido en &b%LEVEL% &fpor completar &b%COURSE%&f!
+  RewardRank: Tu rango se ha establecido en %VALUE%
+  RankInfo: '* Por nivel &b%LEVEL% &fTú ganas: %RANK%'
+  RewardParkoins: '&b%AMOUNT% &fParkoins recompensados! Total: &7%TOTAL%'
   Countdown: Empezando en &b%VALUE% &fsegundos...
-  Go: ¡Empieza!
-  BestTime: ¡Tu nuevo mejor tiempo!
-  CourseRecord: ¡Nuevo record de circuito!
+  Go: Vamos!
+  BestTime: Has marcado el mejor tiempo!
+  CourseRecord: Nuevo record de este parkour!
   LeaderboardHeading: '%COURSE% : Los mejores %AMOUNT% resultados'
-  LeaderboardEntry: '%POSITION%) &b%PLAYER% &fen &3%TIME%&f, con &7%DEATHS% &fmuertes'
+  LeaderboardEntry: '%POSITION%) &b%PLAYER% &fin &3%TIME%&f, muriendo &7%DEATHS% &fveces'
   QuietOn: 'Modo Silencioso: &bON'
   QuietOff: 'Modo Silencioso: &bOFF'
   TestModeOn: 'Modo Test: &bON&f. Simulando &b%VALUE%&f ParkourKit.'
   TestModeOff: 'Modo Test: &bOFF'
-  AlreadyCompleted: Ya has completado este circuito.
+  AlreadyCompleted: Ya has completado este parkour.
   Question: Por favor, escribe &a/pa yes &fpara confirmar, o &c/pa no &fpara cancelar.
   Challenge:
     Created: Desafio para &b%VALUE% &fcreado
-    StartCommand: Cuando estes listo, escribe &b/pa challenge start
-    Wager: ' &f¡Con una apuesta de &b%VALUE%&f!'
-    InviteSent: ¡Un desafio ha sido enviado a &b%VALUE%&f!
-    InviteReceived: ¡Has sido desafiado a &b%COURSE% &fpor &b%PLAYER%&f!
-    AcceptDecline: Para aceptar &a/pa accept &fo &c/pa decline &fpara rechazar.
-    Joined: Te has unido a un desafio en &b%VALUE%&f. Por favor, espera hasta que el host 
+    StartCommand: Cuando estés listo, escribe &b/pa challenge start
+    Wager: ' &fcon una apuesta de &b%VALUE%&f!'
+    InviteSent: Se envió una invitación al desafío a &b%VALUE%&f!
+    InviteReceived: Has sido desafiado a &b%COURSE% &fpor &b%PLAYER%&f!
+    AcceptDecline: Para aceptar &a/pa accept &fpara cancelar &c/pa decline.
+    Joined: Te has unido a un challenge en &b%VALUE%&f. Espere hasta que el anfitrión
       empiece.
-    Terminated: '&b¡%VALUE% &fha terminado el desafio!'
+    Terminated: '&b%VALUE% &fha terminado el desafío!'
     Forfeited: '&b%VALUE% &fha perdido el desafío. ¡Completa el curso para ganar!'
     Quit: Has perdido el desafio. Otro jugador debe completar el circuito para ganar!
     Winner: ¡Felicidades! ¡Has ganado el reto en &b%VALUE%!
@@ -71,83 +73,85 @@ Event:
   Join: Este servidor usa &bParkour &3%VALUE%
   Checkpoint: Checkpoint guardado a &b%CURRENT% &8/ &7%TOTAL%
   FreeCheckpoints: Checkpoint guardado
-  AllCheckpoints: ¡Has llegado a todos los checkpoints!
+  AllCheckpoints: Has completado todos los checkpoints!
   HideAll1: ¡Todos los jugadores han reaparecido magicamente!
   HideAll2: ¡Todos los jugadores han desaparecido magicamente!
   Chat: '&0[&b%RANK%&0] &f%PLAYER%&0:&f %MESSAGE%'
-  DefaultRank: Miembro
+  DefaultRank: Novato
 Error:
-  NotOnCourse: ¡No estas en este circuito!
-  NotOnAnyCourse: ¡No estas en ningun circuito!
-  TooMany: ¡Demasiados argumentos! (%VALUE%)
-  TooLittle: ¡No hay suficientes argumentos! (%VALUE%)
-  Exist: ¡Este circuito ya existe!
-  NoExist: '&b¡%VALUE% &fno existe!'
-  Command: ¡Los comandos que no son del parkour han sido deshabilitados!
-  Sign: ¡Los letreros que no son del parkour han sido deshabilitados!
-  Selected: ¡No has elegido un circuito!
-  WrongWorld: ¡Estas en el mundo equivocado!
-  WorldTeleport: ¡Se ha evitado la teletransportación a un mundo diferente.!
-  RequiredLvl: Necesitas ser de nivel &b%VALUE% &fpara unirte!
-  NotReady: ¡Este circuito aun no esta listo para ser jugado!
-  NotReadyWarning: Este circuito aun no esta preparado.
-  SignProtected: ¡El letreto esta protegido!
-  Syntax: '&cInvalid Syntax: &f/pa &8%COMMAND% &7%ARGUMENTS%'
-  UnknownSignCommand: ¡Comando de Letrero desconocido!
-  UnknownCommand: ¡Comando desconocido!
-  UnknownPlayer: ¡Jugador de Parkour Desconocido!
+  NotOnCourse: No estás en este parkour!
+  NotOnAnyCourse: No estás en un parkour!
+  TooMany: Demasiados argumentos! (%VALUE%)
+  TooLittle: No hay suficientes argumentos! (%VALUE%)
+  Exist: Este curso ya existe!
+  NoExist: '&b%VALUE% &fno existe!'
+  Command: Los comandos que no son de Parkour se han desactivado!
+  Sign: Se han desactivado los carteles que no son de Parkour!
+  Selected: No has seleccionado un parkour!
+  WrongWorld: Estas en el mundo equivocado!
+  WorldTeleport: Se ha evitado la teletransportación a un mundo diferente.!
+  RequiredLvl: Requieres nivel &b%VALUE% &fpara entrar!
+  NotReady: Este parkour aún no está listo para que lo juegues!
+  NotReadyWarning: Este parkour aún no está listo.
+  SignProtected: Este cartel está protegido!
+  Syntax: '&cSintaxis invalida: &f/pa &8%COMMAND% &7%ARGUMENTS%'
+  UnknownSignCommand: Comando de cartel desconocido!
+  UnknownCommand: Comando desconocido!
+  UnknownPlayer: Jugador desconocido de parkour!
   UnknownMaterial: 'Material desconocido: &4%VALUE%'
-  UnknownLobby: '¡El Lobby %VALUE% no existe!'
-  UnknownWorld: El mundo requerido no existe.
-  UnknownParkourKit: ParkourKit Desconocido.
+  UnknownLobby: El lobby %VALUE% no existe!
+  UnknownWorld: El mundo solicitado no existe.
+  UnknownParkourKit: ParkourKit desconocido.
   UnknownCheckpoint: Checkpoint desconocido o invalido.
-  Cheating1: Por favor, no uses hacks.
-  Cheating2: '&lDebes alcanzar los &4&l%VALUE% &f&lcheckpoints!'
-  Cooldown: ¡Ve mas despacio!Por favor, espera &b%VALUE% &fsegundos mas.
-  PrizeCooldown: ¡Tienes que esperar &b%VALUE% &fantes de recibir este premio otra vez!
-  NoQuestion: ¡No se te ha hecho una pregunta!
-  JoiningAnotherCourse: No puedes unirte a otro circuito mientras ya estas en uno.
-  AllowViaCommand: Unirte a un circuito via comando ha sido deshabilitado.
+  Cheating1: Por favor no hagas trampa.
+  Cheating2: '&lDebes lograr &4&l%VALUE% &f&lcheckpoints!'
+  Cooldown: Calma! Por favor espera &b%VALUE% &fsegundos mas.
+  PrizeCooldown: Tienes que esperar &b%VALUE% &fantes de que puedas recibir este premio
+    nuevamente!
+  NoQuestion: No se le ha hecho una pregunta!
+  JoiningAnotherCourse: No puede unirse a otro parkour mientras está en uno ya.
+  AllowViaCommand: Se ha deshabilitado la posibilidad de unirse a un parkour mediante
+    el comando.
   PluginNotLinked: '&b%VALUE% &fno ha sido vinculado.'
-  NoPermission: 'No tienes el Permiso: &b%VALUE%'
-  InvalidAmount: La cantidad tiene que ser numerica.
-  InvalidQuestionAnswer: Respuesta de Pregunta No Valida.
-  QuestionAnswerChoices: Por favor, utiliza &a/pa yes &fo &c/pa no
-  LimitExceeded: El limite del jugador para este circuito ha sido alcanzado.
-  InvalidSession: Tu sesion de parkour es invalido.
-  ChallengeOnly: Este circuito esta limitado solo a Retos.
-  OnChallenge: Ya estas en un Reto.
-  InvalidValue: Por favor, introduce un valor valido.
+  NoPermission: 'No tienes permiso: &b%VALUE%'
+  InvalidAmount: La cantidad debe ser numérica.
+  InvalidQuestionAnswer: Respuesta inválida a la pregunta.
+  QuestionAnswerChoices: Por favor use &a/pa yes &fo &c/pa no
+  LimitExceeded: Se ha alcanzado el límite de jugadores para el curso.
+  InvalidSession: Tu ParkourSession no es válida.
+  ChallengeOnly: Este parkour está limitado a challenges únicamente.
+  OnChallenge: Ya estás en un Challenge.
+  InvalidValue: Por favor escribe un valor válido.
 Help:
-  Command: '&7/pa help &9%VALUE% &0: &7para aprender mas sobre los comandos.'
-  Commands: Para desplegar todo el menu de comandos, escribe &b/pa cmds
-  ConsoleCommands: Para desplegar todos los comandos, escribe &f/pac cmds
-  SignCommands: Para desplegar el menu de comandos de los letreros, escribe &b/pa cmds signs
-  CommandSyntax: '&7Syntax: &f/pa %VALUE%'
-  ConsoleCommandSyntax: '&7Syntax: &f%VALUE%'
-  CommandExample: '&7Example: &f%VALUE%'
+  Command: '&7/pa help &9%VALUE% &0: &7Para mas información sobre el comando.'
+  Commands: Para mostrar el menú de comandos, escribe &b/pa cmds
+  ConsoleCommands: Para mostrar todos los comandos, escribe &f/pac cmds
+  SignCommands: Para mostrar el menú de comandos de carteles, escribe &b/pa cmds signs
+  CommandSyntax: '&7Sintaxis: &f/pa %VALUE%'
+  ConsoleCommandSyntax: '&7Sintaxis: &f%VALUE%'
+  CommandExample: '&7Ejemplo: &f%VALUE%'
   CommandUsage: '&3/pa &b%COMMAND%&e%ARGUMENTS% &0: &f%TITLE%'
   SignUsage: '&b%COMMAND% &e%SHORTCUT% &0: &f%DESCRIPTION%'
 ParkourTool:
-  LastCheckpoint: '&7SHIFT + &6Click Derecho para volver a tu ultimo checkpoint'
-  HideAll: '&7SHIFT + &6Click Derecho para activar la visibilidad'
-  HideAllEnabled: '&7SHIFT + &6Click derecho para activar la visibilidad'
-  Leave: '&7SHIFT + &6Click derecho para salir del circuito'
-  Restart: '&7SHIFT + &6Click derecho para reiniciar el circuito'
-  Freedom: '&6Herramienta de Libertad'
-  Rockets: '&6Lanzador de Cohete'
+  LastCheckpoint: '&7SHIFT + &6Click derecho para volver al último checkpoint'
+  HideAll: '&7SHIFT + &6Click derecho para alternar la visibilidad'
+  HideAllEnabled: '&7SHIFT + &6Click derecho para alternar la visibilidad'
+  Leave: '&7SHIFT + &6Click derecho para salir del parkour'
+  Restart: '&7SHIFT + &6Click derecho para reiniciar el parkour'
+  Freedom: '&6Herramienta libre'
+  Rockets: '&6Lanzacohetes'
 Other:
-  Kit: '&b%VALUE% &fKir de Parkour recibido!'
+  Kit: '&b%VALUE% &fParkourKit recibido!'
   PropertySet: El &3%PROPERTY% &fpara &3%COURSE% &ffue guardado como &b%VALUE%&f!
 Lobby:
-  Created: '&b%VALUE% &flobby creado.'
-  RequiredLevelSet: Has guardado el Nivel de Parkour necesario a &b%VALUE%&f.
+  Created: '&fLobby &b%VALUE% &fcreado.'
+  RequiredLevelSet: Ha establecido el nivel de parkour requerido en &b%VALUE%&f.
 Scoreboard:
   MainHeading: '&b&l== Parkour =='
   TitleFormat: '&b%VALUE%'
   TextFormat: '&f%VALUE%'
   NotCompleted: No Completado
-  CourseNameTitle: 'Circuito:'
+  CourseNameTitle: 'Parkour:'
   BestTimeEverTitle: 'Mejor tiempo:'
   BestTimeEverNameTitle: 'Mejor jugador:'
   MyBestTimeTitle: 'Mi mejor tiempo:'
@@ -157,35 +161,35 @@ Scoreboard:
   LiveTimerTitle: 'Tiempo actual:'
   TimeRemainingTitle: 'Tiempo restante:'
 Economy:
-  Insufficient: Necesitas por lo menos &b%AMOUNT% &fpara unirte a &b%COURSE%
-  Fee: 'Has pagado &b%AMOUNT% &fpor unirte a &b%COURSE%'
-  Reward: Has ganado &b%AMOUNT% &fpor completar &b%COURSE%&f!
+  Insufficient: Necesitas al menos &b%AMOUNT% &fantes de unirte a &b%COURSE%
+  Fee: '&b%AMOUNT% &fse ha deducido de su saldo por unirse a &b%COURSE%'
+  Reward: Ganaste &b%AMOUNT% &fpor completar el parkour -> &b%COURSE%&f!
 Kit:
-  Speed: '&bVelocidad'
+  Speed: '&bBloque de velocidad'
   Climb: '&bEscalada'
-  Launch: '&bBloque DESPEGUE'
-  Finish: '&bBloque FIN'
-  Norun: '&bNo correr'
-  Nofall: '&bNo caida'
-  Nopotion: '&bSin pocion'
-  Sign: '&bLetrero'
-  Death: '&bMuerte'
-  Bounce: '&bRebote'
-  Repulse: '&bRechazo'
+  Launch: '&bBloque de lanzamiento'
+  Finish: '&bBloque de finalizado'
+  Norun: '&bBloque de no correr'
+  Nofall: '&bBloque de no caída'
+  Nopotion: '&bBloque de no poción'
+  Sign: '&bCartel'
+  Death: '&bBloque de muerte'
+  Bounce: '&bBloque de bote'
+  Repulse: '&bBloque de rechazo'
 Mode:
   Freedom:
-    JoinText: '&6Modo Libertad Mode &f- Click Derecho: &2Guardar&f, Click Izquiero: &5Guardado'
-    Save: Posicion guardada
-    Load: Posicion cargada
+    JoinText: '&6Modo libre &f- Cick derecho: &2Save&f, Click izquierdo: &5Load'
+    Save: Posición guardada
+    Load: Posición cargada
   Rockets:
-    JoinText: Usa el Lanzador de Cohete para despegar
-    Reloading: Recargando el cohete...
+    JoinText: Usa el lanzacohetes para lanzarte
+    Reloading: Recargando lanzacohetes...
 PlaceholderAPI:
-  InvalidSyntax: Syntax Invalido
-  NoTimeRecorded: Sin tiempo guardado
-  CurrentCourseCompleted: 'Yes'
+  InvalidSyntax: Sintaxis inválida
+  NoTimeRecorded: Sin tiempo registrado
+  CurrentCourseCompleted: Sí
   CurrentCourseNotCompleted: 'No'
-  TopTenResult: '&f%POSITION%) &b%PLAYER%&f in &a%TIME%'
+  TopTenResult: '&f%POSITION%) &b%PLAYER%&f en &a%TIME%'
 GUI:
   JoinCourses:
     Heading: Parkour Courses
@@ -193,18 +197,18 @@ GUI:
       Line1: '         '
       Line2: ' ggggggg '
       Line3: '  fp nl  '
-    Description: '&fJoin &b%VALUE%'
+    Description: '&fEntrar a &b%VALUE%'
     Players: 'Jugadores: &b%VALUE%'
     Checkpoints: 'Checkpoints: &b%VALUE%'
   CourseSettings:
-    Heading: '%VALUE% Settings'
+    Heading: Ajustes de %VALUE%
     Setup:
       Line1: '   zxc   '
       Line2: ' qwertyu '
       Line3: ' ioasdgh '
 Display:
-  Day: '%VALUE% dia'
-  Days: '%VALUE% dias'
+  Day: '%VALUE% día'
+  Days: '%VALUE% días'
   Hour: '%VALUE% hora'
   Hours: '%VALUE% horas'
   Minute: '%VALUE% minuto'
