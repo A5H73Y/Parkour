@@ -12,6 +12,8 @@ import org.bukkit.entity.Player;
  */
 public class PlaceholderApi extends PluginWrapper {
 
+	private ParkourPlaceholders placeholders;
+
 	@Override
 	public String getPluginName() {
 		return "PlaceholderAPI";
@@ -22,7 +24,8 @@ public class PlaceholderApi extends PluginWrapper {
 		super.initialise();
 
 		if (isEnabled()) {
-			new ParkourPlaceholders(Parkour.getInstance()).register();
+			placeholders = new ParkourPlaceholders(Parkour.getInstance());
+			placeholders.register();
 		}
 	}
 
@@ -56,6 +59,16 @@ public class PlaceholderApi extends PluginWrapper {
 			return PlaceholderAPI.setPlaceholders(player, input);
 		} else {
 			return input;
+		}
+	}
+
+	public ParkourPlaceholders getPlaceholders() {
+		return placeholders;
+	}
+
+	public void clearCache() {
+		if (isEnabled()) {
+			this.getPlaceholders().clearCache();
 		}
 	}
 }

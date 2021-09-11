@@ -832,6 +832,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         }
 
         parkour.getDatabase().deleteCourseTimes(courseName);
+        parkour.getPlaceholderApi().clearCache();
         TranslationUtils.sendValueTranslation("Parkour.Reset", courseName + " Leaderboards", sender);
         PluginUtils.logToFile(courseName + " leaderboards were reset by " + sender.getName());
     }
@@ -857,6 +858,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         }
 
         parkour.getDatabase().deletePlayerCourseTimes(targetPlayer, courseName);
+        parkour.getPlaceholderApi().clearCache();
         TranslationUtils.sendValueTranslation("Parkour.Reset", targetPlayerName + "'s "
                 + courseName + " Leaderboards", sender);
         PluginUtils.logToFile(targetPlayerName + "'s " + courseName + " leaderboards were reset by " + sender.getName());

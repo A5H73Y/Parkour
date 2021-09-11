@@ -786,6 +786,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 					? GLOBAL_COURSE_RECORD : PLAYER_COURSE_RECORD;
 			String fallbackKey = timeResult == TimeResult.GLOBAL_BEST ? "Parkour.CourseRecord" : "Parkour.BestTime";
 
+			parkour.getPlaceholderApi().clearCache();
 			parkour.getCourseManager().runEventCommands(player, session, eventType);
 
 			if (parkour.getConfig().getBoolean("OnFinish.DisplayNewRecords")) {
@@ -1408,6 +1409,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		PlayerInfo.resetPlayerData(targetPlayer);
 		deleteParkourSessions(targetPlayer);
 		parkour.getDatabase().deletePlayerTimes(targetPlayer);
+		parkour.getPlaceholderApi().clearCache();
 		removePlayer(targetPlayer.getPlayer());
 	}
 

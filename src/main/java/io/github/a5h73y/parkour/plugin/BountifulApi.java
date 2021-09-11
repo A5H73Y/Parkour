@@ -89,9 +89,17 @@ public class BountifulApi extends PluginWrapper {
 			}
 		}
 
-		if (ValidationUtils.isStringValid(title) && ValidationUtils.isStringValid(subTitle)) {
-			TranslationUtils.sendMessage(player, title + subTitle);
+		StringBuilder message = new StringBuilder();
+
+		if (ValidationUtils.isStringValid(title)) {
+			message.append(title);
 		}
+
+		if (ValidationUtils.isStringValid(subTitle)) {
+			message.append(subTitle);
+		}
+
+		TranslationUtils.sendMessage(player, message.toString());
 	}
 
 	/**

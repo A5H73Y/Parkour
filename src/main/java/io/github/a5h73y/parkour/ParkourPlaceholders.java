@@ -474,4 +474,8 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
 
         return cache.get(key).orElse(NO_TIME_RECORDED);
     }
+
+    public void clearCache() {
+        this.cache.clear();
+    }
 }
