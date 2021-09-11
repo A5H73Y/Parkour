@@ -813,6 +813,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
 
         courseConfig.save();
         parkour.getDatabase().deleteCourseTimes(courseName);
+        PlayerInfo.removeCompletedCourse(courseName);
         TranslationUtils.sendValueTranslation("Parkour.Reset", courseName, sender);
         PluginUtils.logToFile(courseName + " course was reset by " + sender.getName());
     }
