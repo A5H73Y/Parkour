@@ -441,6 +441,7 @@ LobbySettings:
  
 # The installed version of the plugin, used by the updater to automatically update your config
 Version: '6.7'
+```
 
 _This is correct as of Parkour v6.7_
 
