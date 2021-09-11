@@ -331,6 +331,7 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
         PluginUtils.debug("Deleting all Player times for " + player.getName());
         try {
             database.updateAsync("DELETE FROM time WHERE playerId='" + getPlayerId(player) + "'").get();
+            clearCache();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
