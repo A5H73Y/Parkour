@@ -470,15 +470,18 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 		// they haven't yet achieved a checkpoint
 		if (session.getCurrentCheckpoint() == 0 && session.getFreedomLocation() == null) {
-			String message = TranslationUtils.getCourseEventMessage(session, DEATH, "Parkour.Die1");
+			StringBuilder message = new StringBuilder(TranslationUtils.getCourseEventMessage(session, DEATH, "Parkour.Die1"));
 
 			if (parkour.getConfig().getBoolean("OnDie.ResetProgressWithNoCheckpoint")) {
 				session.resetProgress();
-				message += " " + TranslationUtils.getTranslation("Parkour.TimeReset", false);
+				if (message.length() != 0) {
+					message.append(" ");
+				}
+				message.append(TranslationUtils.getTranslation("Parkour.TimeReset", false));
 			}
 
 			if (!PlayerInfo.isQuietMode(player)) {
-				TranslationUtils.sendMessage(player, message);
+				TranslationUtils.sendMessage(player, message.toString());
 			}
 		} else {
 			if (!PlayerInfo.isQuietMode(player)) {
