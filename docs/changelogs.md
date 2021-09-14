@@ -2,6 +2,11 @@ Changelogs
 ======
 
 Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon start up. There will be no manual intervention unless stated in breaking changes.
+## Parkour 6.7.1
+### Changes
+* Clear PlaceholderAPI cache on database updates
+* Fixes to Parkour messages being sent to Players
+
 ## Parkour 6.7
 ### Changes
 * Added Potion ParkourBlock

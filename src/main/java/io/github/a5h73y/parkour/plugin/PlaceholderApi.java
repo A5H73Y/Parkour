@@ -66,6 +66,9 @@ public class PlaceholderApi extends PluginWrapper {
 		return placeholders;
 	}
 
+	/**
+	 * Clear PlaceholderAPI cache.
+	 */
 	public void clearCache() {
 		if (isEnabled()) {
 			this.getPlaceholders().clearCache();
