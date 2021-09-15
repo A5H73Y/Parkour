@@ -12,7 +12,6 @@ import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.cache.GenericCache;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -94,6 +93,9 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
 
             case "co":
             case "course":
+                if (arguments.length < 3) {
+                    return INVALID_SYNTAX;
+                }
                 return getCoursePlaceholderValue(arguments);
 
             case "cu":
@@ -152,6 +154,9 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return String.valueOf(PlayerInfo.getParkoins(offlinePlayer));
 
             case "last":
+                if (arguments.length < 3) {
+                    return INVALID_SYNTAX;
+                }
                 switch (arguments[2]) {
                     case "completed":
                         return PlayerInfo.getLastCompletedCourse(offlinePlayer);
@@ -164,6 +169,9 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 }
 
             case "courses":
+                if (arguments.length < 3) {
+                    return INVALID_SYNTAX;
+                }
                 switch (arguments[2]) {
                     case "completed":
                         return String.valueOf(PlayerInfo.getNumberOfCompletedCourses(offlinePlayer));
@@ -184,6 +192,9 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 }
 
             case "prize":
+                if (arguments.length < 4) {
+                    return INVALID_SYNTAX;
+                }
                 if ("delay".equals(arguments[2])) {
                     if (CourseInfo.hasRewardDelay(arguments[3])) {
                         return DateTimeUtils.getDelayTimeRemaining(offlinePlayer, arguments[3]);
@@ -215,10 +226,6 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
 
         switch (arguments[1]) {
             case "displayname":
-                if (arguments.length != 3) {
-                    return INVALID_SYNTAX;
-                }
-
                 return CourseInfo.getCourseDisplayName(arguments[2]);
 
             case "record":
@@ -229,101 +236,45 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return getCourseRecord(arguments[2], arguments[3]);
 
             case "completions":
-                if (arguments.length != 3) {
-                    return INVALID_SYNTAX;
-                }
-
                 return String.valueOf(CourseInfo.getCompletions(arguments[2]));
 
             case "views":
-                if (arguments.length != 3) {
-                    return INVALID_SYNTAX;
-                }
-
                 return String.valueOf(CourseInfo.getViews(arguments[2]));
 
             case "creator":
-                if (arguments.length != 3) {
-                    return INVALID_SYNTAX;
-                }
-
                 return String.valueOf(CourseInfo.getCreator(arguments[2]));
 
             case "minparkourlevel":
-                if (arguments.length != 3) {
-                    return INVALID_SYNTAX;
-                }
-
                 return String.valueOf(CourseInfo.getMinimumParkourLevel(arguments[2]));
 
             case "rewardparkourlevel":
-                if (arguments.length != 3) {
-                    return INVALID_SYNTAX;
-                }
-
                 return String.valueOf(CourseInfo.getRewardParkourLevel(arguments[2]));
 
             case "rewardparkourleveladd":
-                if (arguments.length != 3) {
-                    return INVALID_SYNTAX;
-                }
-
                 return String.valueOf(CourseInfo.getRewardParkourLevelIncrease(arguments[2]));
 
             case "parkourmode":
-                if (arguments.length != 3) {
-                    return INVALID_SYNTAX;
-                }
-
                 return CourseInfo.getParkourModeName(arguments[2]);
 
             case "maxdeaths":
-                if (arguments.length != 3) {
-                    return INVALID_SYNTAX;
-                }
-
                 return String.valueOf(CourseInfo.getMaximumDeaths(arguments[2]));
 
             case "maxtime":
-                if (arguments.length != 3) {
-                    return INVALID_SYNTAX;
-                }
-
                 return DateTimeUtils.convertSecondsToTime(CourseInfo.getMaximumTime(arguments[2]));
 
             case "checkpoints":
-                if (arguments.length != 3) {
-                    return INVALID_SYNTAX;
-                }
-
                 return String.valueOf(CourseInfo.getCheckpointAmount(arguments[2]));
 
             case "joinfee":
-                if (arguments.length != 3) {
-                    return INVALID_SYNTAX;
-                }
-
                 return String.valueOf(CourseInfo.getEconomyJoiningFee(arguments[2]));
 
             case "ecoreward":
-                if (arguments.length != 3) {
-                    return INVALID_SYNTAX;
-                }
-
                 return String.valueOf(CourseInfo.getEconomyFinishReward(arguments[2]));
 
             case "players":
-                if (arguments.length != 3) {
-                    return INVALID_SYNTAX;
-                }
-
                 return String.valueOf(parkour.getPlayerManager().getNumberOfPlayersOnCourse(arguments[2]));
 
             case "playerlist":
-                if (arguments.length != 3) {
-                    return INVALID_SYNTAX;
-                }
-
                 return String.join(", ", parkour.getPlayerManager().getPlayerNamesOnCourse(arguments[2]));
 
             default:
