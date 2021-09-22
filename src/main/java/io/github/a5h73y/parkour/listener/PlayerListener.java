@@ -214,13 +214,15 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         parkour.getScoreboardManager().addScoreboard(player, session);
         parkour.getPlayerManager().setupParkourMode(player);
 
+        if (parkour.getConfig().isPlayerLeaveCourseOnLeaveServer()) {
+            parkour.getPlayerManager().leaveCourse(player);
+            return;
+        }
+
         String currentCourse = session.getCourse().getName();
         TranslationUtils.sendValueTranslation("Parkour.Continue", currentCourse, player);
 
-        if (parkour.getConfig().isPlayerLeaveCourseOnLeaveServer()) {
-            parkour.getPlayerManager().leaveCourse(player);
-
-        } else if (parkour.getConfig().getBoolean("OnLeaveServer.TeleportToLastCheckpoint")) {
+        if (parkour.getConfig().getBoolean("OnLeaveServer.TeleportToLastCheckpoint")) {
             parkour.getPlayerManager().playerDie(player);
         }
     }
