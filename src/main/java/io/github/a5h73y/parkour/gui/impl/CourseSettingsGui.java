@@ -10,9 +10,9 @@ import io.github.a5h73y.parkour.conversation.ParkourModeConversation;
 import io.github.a5h73y.parkour.conversation.SetCourseConversation;
 import io.github.a5h73y.parkour.conversation.other.SingleQuestionConversation;
 import io.github.a5h73y.parkour.gui.AbstractMenu;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
+import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.type.course.CourseManager;
-import io.github.a5h73y.parkour.utility.DateTimeUtils;
+import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.function.Consumer;
@@ -47,45 +47,46 @@ public class CourseSettingsGui implements AbstractMenu {
 	@Override
 	public void addContent(InventoryGui parent, Player player) {
 		CourseManager courseManager = Parkour.getInstance().getCourseManager();
+		CourseConfig courseConfig = CourseConfig.getConfig(courseName);
 
 		// toggleable
-		parent.addElement(createSettingToggle('z', "Ready Status", CourseInfo.getReadyStatus(courseName),
-				click -> CourseInfo.toggleReadyStatus(courseName)));
-		parent.addElement(createSettingToggle('x', "Reward Once", CourseInfo.getRewardOnce(courseName),
-				click -> CourseInfo.toggleRewardOnce(courseName)));
-		parent.addElement(createSettingToggle('c', "Challenge Only", CourseInfo.getChallengeOnly(courseName),
-				click -> CourseInfo.toggleChallengeOnly(courseName)));
+		parent.addElement(createSettingToggle('z', "Ready Status", courseConfig.getReadyStatus(),
+				click -> courseConfig.toggleReadyStatus()));
+		parent.addElement(createSettingToggle('x', "Reward Once", courseConfig.getRewardOnce(),
+				click -> courseConfig.toggleRewardOnce()));
+		parent.addElement(createSettingToggle('c', "Challenge Only", courseConfig.getChallengeOnly(),
+				click -> courseConfig.toggleChallengeOnly()));
 
 		// input required
 		parent.addElement(createTextInput('q', player, "Creator",
-				CourseInfo.getCreator(courseName),
+				courseConfig.getCreator(),
 				input -> SetCourseConversation.performAction(player, courseName, "creator", input)));
 		parent.addElement(createTextInput('w', player, "Minimum Parkour Level",
-				CourseInfo.getMinimumParkourLevel(courseName),
+				courseConfig.getMinimumParkourLevel(),
 				input -> SetCourseConversation.performAction(player, courseName, "minlevel", input)));
 		parent.addElement(createTextInput('e', player, "Maximum Deaths",
-				CourseInfo.getMaximumDeaths(courseName),
+				courseConfig.getMaximumDeaths(),
 				input -> SetCourseConversation.performAction(player, courseName, "maxdeath", input)));
 		parent.addElement(createTextInput('r', player, "Maximum Time",
-				DateTimeUtils.convertSecondsToTime(CourseInfo.getMaximumTime(courseName)),
+				DateTimeUtils.convertSecondsToTime(courseConfig.getMaximumTime()),
 				input -> SetCourseConversation.performAction(player, courseName, "maxtime", input)));
 		parent.addElement(createTextInput('t', player, "Player Limit",
-				CourseInfo.getPlayerLimit(courseName),
+				courseConfig.getPlayerLimit(),
 				input -> courseManager.setPlayerLimit(player, courseName, input)));
 		parent.addElement(createTextInput('y', player, "ParkourKit",
-				CourseInfo.getParkourKit(courseName),
+				courseConfig.getParkourKit(),
 				input -> courseManager.setParkourKit(player, courseName, input)));
 		parent.addElement(createTextInput('u', player, "Reward Parkour Level",
-				CourseInfo.getRewardParkourLevel(courseName),
+				courseConfig.getRewardParkourLevel(),
 				input -> courseManager.setRewardParkourLevel(player, courseName, input)));
 		parent.addElement(createTextInput('i', player, "Reward Parkour Level Increase",
-				CourseInfo.getRewardParkourLevelIncrease(courseName),
+				courseConfig.getRewardParkourLevelIncrease(),
 				input -> courseManager.setRewardParkourLevelIncrease(player, courseName, input)));
 		parent.addElement(createTextInput('o', player, "Reward Delay", DateTimeUtils.convertMillisecondsToDateTime(
-				DateTimeUtils.convertHoursToMilliseconds(CourseInfo.getRewardDelay(courseName))),
+						DateTimeUtils.convertHoursToMilliseconds(courseConfig.getRewardDelay())),
 				input -> courseManager.setRewardDelay(player, courseName, input)));
 		parent.addElement(createTextInput('a', player, "Reward Parkoins",
-				CourseInfo.getRewardParkoins(courseName),
+				courseConfig.getRewardParkoins(),
 				input -> courseManager.setRewardParkoins(player, courseName, input)));
 
 		// start conversation

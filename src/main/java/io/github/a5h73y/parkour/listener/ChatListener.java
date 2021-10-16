@@ -4,10 +4,10 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.PARKOUR_RANK_PLACE
 import static io.github.a5h73y.parkour.other.ParkourConstants.PLAYER_PLACEHOLDER;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.enums.Permission;
+import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.type.player.PlayerInfo;
-import io.github.a5h73y.parkour.utility.PermissionUtils;
+import io.github.a5h73y.parkour.type.player.PlayerConfig;
+import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.List;
@@ -34,15 +34,15 @@ public class ChatListener extends AbstractPluginReceiver implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        if (!parkour.getConfig().isChatPrefix()) {
+        if (!parkour.getParkourConfig().isChatPrefix()) {
             return;
         }
 
         String finalMessage;
-        String rank = PlayerInfo.getParkourRank(event.getPlayer());
+        String rank = PlayerConfig.getConfig(event.getPlayer()).getParkourRank();
 
         // should we completely override the chat format
-        if (parkour.getConfig().isChatPrefixOverride()) {
+        if (parkour.getParkourConfig().isChatPrefixOverride()) {
             finalMessage = TranslationUtils.getTranslation("Event.Chat", false)
                     .replace(PARKOUR_RANK_PLACEHOLDER, rank)
                     .replace(PLAYER_PLACEHOLDER, event.getPlayer().getDisplayName())
@@ -86,13 +86,13 @@ public class ChatListener extends AbstractPluginReceiver implements Listener {
         }
 
         if (!isParkourCommand && parkour.getPlayerManager().isPlaying(player)) {
-            if (!parkour.getConfig().isDisableCommandsOnCourse()
+            if (!parkour.getParkourConfig().isDisableCommandsOnCourse()
                     || PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
                 return;
             }
 
             boolean allowed = false;
-            for (String word : parkour.getConfig().getWhitelistedCommands()) {
+            for (String word : parkour.getParkourConfig().getWhitelistedCommands()) {
                 if (event.getMessage().startsWith("/" + word + " ") || event.getMessage().equalsIgnoreCase("/" + word)) {
                     allowed = true;
                     break;

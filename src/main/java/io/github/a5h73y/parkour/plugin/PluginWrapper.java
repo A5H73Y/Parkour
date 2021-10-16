@@ -3,6 +3,7 @@ package io.github.a5h73y.parkour.plugin;
 import static org.bukkit.Bukkit.getServer;
 
 import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import org.bukkit.plugin.Plugin;
 
@@ -10,7 +11,7 @@ import org.bukkit.plugin.Plugin;
  * 3rd party Plugin Wrapper.
  * Created to wrap start-up functionality of the plugins.
  */
-public abstract class PluginWrapper {
+public abstract class PluginWrapper extends AbstractPluginReceiver {
 
 	private boolean enabled = false;
 
@@ -24,7 +25,8 @@ public abstract class PluginWrapper {
 	/**
 	 * Initialise the startup of the plugin on Construction of object.
 	 */
-	protected PluginWrapper() {
+	protected PluginWrapper(Parkour parkour) {
+		super(parkour);
 		initialise();
 	}
 
@@ -33,7 +35,7 @@ public abstract class PluginWrapper {
 	 */
 	protected void initialise() {
 		// if the config prevents integration, don't begin setup.
-		if (!Parkour.getDefaultConfig().getBoolean("Plugin." + getPluginName() + ".Enabled")) {
+		if (!parkour.getParkourConfig().getBoolean("Plugin." + getPluginName() + ".Enabled")) {
 			return;
 		}
 
@@ -48,9 +50,7 @@ public abstract class PluginWrapper {
 					+ "Version: " + externalPlugin.getDescription().getVersion(), 0);
 
 		} else {
-			PluginUtils.log("[" + getPluginName() + "] Plugin is missing, disabling config option.", 1);
-			Parkour.getDefaultConfig().set("Plugin." + getPluginName() + ".Enabled", false);
-			Parkour.getDefaultConfig().save();
+			PluginUtils.log("[" + getPluginName() + "] Plugin is missing, link was unsuccessful.", 1);
 		}
 	}
 

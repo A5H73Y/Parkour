@@ -3,12 +3,11 @@ package io.github.a5h73y.parkour.listener;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.enums.GuiMenu;
-import io.github.a5h73y.parkour.enums.Permission;
+import io.github.a5h73y.parkour.gui.GuiMenu;
+import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
-import io.github.a5h73y.parkour.type.player.ParkourSession;
-import io.github.a5h73y.parkour.utility.PermissionUtils;
+import io.github.a5h73y.parkour.type.course.CourseConfig;
+import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.SignUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -102,7 +101,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 return;
         }
 
-        event.setLine(0, parkour.getConfig().getSignHeader());
+        event.setLine(0, parkour.getParkourConfig().getSignHeader());
     }
 
     /**
@@ -122,13 +121,13 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        if (!parkour.getConfig().getBoolean("Other.Parkour.SignProtection")) {
+        if (!parkour.getParkourConfig().getBoolean("Other.Parkour.SignProtection")) {
             return;
         }
 
         String[] lines = ((Sign) event.getClickedBlock().getState()).getLines();
 
-        if (!ChatColor.stripColor(lines[0]).equalsIgnoreCase(parkour.getConfig().getStrippedSignHeader())) {
+        if (!ChatColor.stripColor(lines[0]).equalsIgnoreCase(parkour.getParkourConfig().getStrippedSignHeader())) {
             return;
         }
 
@@ -163,12 +162,12 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
         Sign sign = (Sign) event.getClickedBlock().getState();
         String[] lines = sign.getLines();
 
-        if (!ChatColor.stripColor(lines[0]).equalsIgnoreCase(parkour.getConfig().getStrippedSignHeader())) {
+        if (!ChatColor.stripColor(lines[0]).equalsIgnoreCase(parkour.getParkourConfig().getStrippedSignHeader())) {
             if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
                 return;
             }
 
-            if (!parkour.getConfig().getBoolean("OnCourse.EnforceParkourSigns")) {
+            if (!parkour.getParkourConfig().getBoolean("OnCourse.EnforceParkourSigns")) {
                 return;
             }
 
@@ -177,7 +176,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        if (parkour.getConfig().isPermissionForSignInteraction()
+        if (parkour.getParkourConfig().isPermissionForSignInteraction()
                 && !PermissionUtils.hasPermission(event.getPlayer(), Permission.BASIC_SIGNS)) {
             return;
         }
@@ -226,7 +225,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                     return;
                 }
 
-                CourseInfo.displayCourseInfo(player, lines[2]);
+                CourseConfig.displayCourseInfo(player, lines[2]);
                 break;
 
             case "leave":
@@ -259,8 +258,8 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
 
                 } else if (parkour.getPlayerManager().delayPlayerWithMessage(player, 4)) {
                     int amount = lines[3].isEmpty() ? 5 : Integer.parseInt(lines[3]);
-                    parkour.getDatabase().displayTimeEntries(player, lines[2],
-                            parkour.getDatabase().getTopCourseResults(lines[2], amount));
+                    parkour.getDatabaseManager().displayTimeEntries(player, lines[2],
+                            parkour.getDatabaseManager().getTopCourseResults(lines[2], amount));
                 }
                 break;
 

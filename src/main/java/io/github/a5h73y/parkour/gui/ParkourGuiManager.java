@@ -3,7 +3,6 @@ package io.github.a5h73y.parkour.gui;
 import de.themoep.inventorygui.GuiPageElement;
 import de.themoep.inventorygui.InventoryGui;
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.enums.GuiMenu;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -38,7 +37,7 @@ public class ParkourGuiManager extends AbstractPluginReceiver {
 	 */
 	public void showMenu(Player player, AbstractMenu menu) {
 		InventoryGui gui = new InventoryGui(parkour, null, PARKOUR_TITLE_PREFIX + menu.getTitle(), menu.getGuiLayout());
-		gui.setFiller(new ItemStack(Parkour.getDefaultConfig().getGuiFillerMaterial(), 1));
+		gui.setFiller(new ItemStack(parkour.getParkourConfig().getGuiFillerMaterial(), 1));
 
 		menu.addContent(gui, player);
 

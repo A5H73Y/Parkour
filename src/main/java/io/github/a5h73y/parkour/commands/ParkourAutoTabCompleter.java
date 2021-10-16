@@ -3,13 +3,10 @@ package io.github.a5h73y.parkour.commands;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.conversation.SetCourseConversation;
 import io.github.a5h73y.parkour.conversation.SetPlayerConversation;
-import io.github.a5h73y.parkour.enums.Permission;
+import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
-import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
-import io.github.a5h73y.parkour.type.lobby.LobbyInfo;
-import io.github.a5h73y.parkour.type.player.PlayerInfo;
-import io.github.a5h73y.parkour.utility.PermissionUtils;
+import io.github.a5h73y.parkour.type.player.PlayerConfig;
+import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -56,7 +53,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             "courses", "players", "ranks", "lobbies");
 
     private static final List<String> ECONOMY_COMMANDS = Arrays.asList(
-            "info", "recreate", "setprize", "setfee");
+            "info", "setprize", "setfee");
 
     private static final List<String> LINK_COMMANDS = Arrays.asList(
             "course", "lobby", "reset");
@@ -169,7 +166,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
         }
 
         // they've selected a known course, or they have admin course permission
-        if (PlayerInfo.hasSelectedCourse(player)
+        if (PlayerConfig.getConfig(player).hasSelectedCourse()
                 || PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE, false)) {
             allowedCommands.addAll(ADMIN_COURSE_COMMANDS);
         }
@@ -215,7 +212,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
                 break;
             case "lobby":
             case "setlobbycommand":
-                allowedCommands = new ArrayList<>(LobbyInfo.getAllLobbyNames());
+                allowedCommands = new ArrayList<>(parkour.getConfigManager().getLobbyConfig().getAllLobbyNames());
                 break;
             case "join":
             case "course":
@@ -240,13 +237,13 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             case "settings":
             case "challengeonly":
             case "resumable":
-                allowedCommands = CourseInfo.getAllCourseNames();
+                allowedCommands = parkour.getCourseManager().getCourseNames();
                 break;
             case "test":
             case "kit":
             case "listkit":
             case "validatekit":
-                allowedCommands = new ArrayList<>(ParkourKitInfo.getAllParkourKitNames());
+                allowedCommands = new ArrayList<>(parkour.getConfigManager().getParkourKitConfig().getAllParkourKitNames());
                 break;
             default:
                 break;
@@ -275,14 +272,14 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
                 switch (arg1) {
                     case "setfee":
                     case "setprize":
-                        allowedCommands = CourseInfo.getAllCourseNames();
+                        allowedCommands = parkour.getCourseManager().getCourseNames();
                         break;
                     default:
                         break;
                 }
                 break;
             case "linkkit":
-                allowedCommands = new ArrayList<>(ParkourKitInfo.getAllParkourKitNames());
+                allowedCommands = new ArrayList<>(parkour.getConfigManager().getParkourKitConfig().getAllParkourKitNames());
                 break;
             case "delete":
             case "link":
@@ -293,13 +290,13 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
                     case "course":
                     case "leaderboard":
                     case "prize":
-                        allowedCommands = CourseInfo.getAllCourseNames();
+                        allowedCommands = parkour.getCourseManager().getCourseNames();
                         break;
                     case "kit":
-                        allowedCommands = new ArrayList<>(ParkourKitInfo.getAllParkourKitNames());
+                        allowedCommands = new ArrayList<>(parkour.getConfigManager().getParkourKitConfig().getAllParkourKitNames());
                         break;
                     case "lobby":
-                        allowedCommands = new ArrayList<>(LobbyInfo.getAllLobbyNames());
+                        allowedCommands = new ArrayList<>(parkour.getConfigManager().getLobbyConfig().getAllLobbyNames());
                         break;
                     case "player":
                         allowedCommands = getAllOnlinePlayerNames();
@@ -311,7 +308,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             case "challenge":
                 switch (arg1) {
                     case "create":
-                        allowedCommands = CourseInfo.getAllCourseNames();
+                        allowedCommands = parkour.getCourseManager().getCourseNames();
                         break;
                     case "invite":
                         allowedCommands = getAllOnlinePlayerNames();

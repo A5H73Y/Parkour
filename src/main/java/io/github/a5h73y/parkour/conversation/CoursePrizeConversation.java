@@ -3,8 +3,8 @@ package io.github.a5h73y.parkour.conversation;
 import static io.github.a5h73y.parkour.other.ParkourConstants.PLAYER_PLACEHOLDER;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.enums.ParkourEventType;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
+import io.github.a5h73y.parkour.type.course.ParkourEventType;
+import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.ChatColor;
@@ -121,7 +121,7 @@ public class CoursePrizeConversation extends ParkourConversation {
         @Override
         public String getPromptText(@NotNull ConversationContext context) {
             String courseName = context.getSessionData(SESSION_COURSE_NAME).toString();
-            CourseInfo.setMaterialPrize(courseName,
+            CourseConfig.getConfig(courseName).setMaterialPrize(
                     context.getSessionData("material").toString(),
                     Integer.parseInt(context.getSessionData("amount").toString()));
 
@@ -182,7 +182,7 @@ public class CoursePrizeConversation extends ParkourConversation {
         @Override
         public String getPromptText(@NotNull ConversationContext context) {
             String courseName = context.getSessionData(SESSION_COURSE_NAME).toString();
-            CourseInfo.addEventCommand(courseName, ParkourEventType.PRIZE, context.getSessionData("command").toString());
+            CourseConfig.getConfig(courseName).addEventCommand(ParkourEventType.PRIZE, context.getSessionData("command").toString());
 
             return TranslationUtils.getPropertySet("Command Prize", courseName,
                     "/" + context.getSessionData("command"));
@@ -229,7 +229,7 @@ public class CoursePrizeConversation extends ParkourConversation {
         public String getPromptText(@NotNull ConversationContext context) {
             String courseName = context.getSessionData(SESSION_COURSE_NAME).toString();
             String amount = context.getSessionData("amount").toString();
-            CourseInfo.setXpPrize(courseName, Integer.parseInt(amount));
+            CourseConfig.getConfig(courseName).setXpPrize(Integer.parseInt(amount));
 
             return TranslationUtils.getPropertySet("XP Prize", courseName, amount);
         }

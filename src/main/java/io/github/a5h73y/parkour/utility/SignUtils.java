@@ -3,8 +3,8 @@ package io.github.a5h73y.parkour.utility;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
-import io.github.a5h73y.parkour.type.lobby.LobbyInfo;
+import io.github.a5h73y.parkour.type.course.CourseConfig;
+import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
@@ -89,7 +89,7 @@ public class SignUtils {
             return;
         }
 
-        int minimumLevel = CourseInfo.getMinimumParkourLevel(signEvent.getLine(2));
+        int minimumLevel = CourseConfig.getConfig(signEvent.getLine(2)).getMinimumParkourLevel();
 
         if (minimumLevel > 0) {
             signEvent.setLine(3, ChatColor.RED + String.valueOf(minimumLevel));
@@ -119,15 +119,15 @@ public class SignUtils {
         } else {
             String lobbyName = signEvent.getLine(2);
 
-            if (!LobbyInfo.doesLobbyExist(lobbyName)) {
+            if (!Parkour.getLobbyConfig().doesLobbyExist(lobbyName)) {
                 TranslationUtils.sendValueTranslation("Error.UnknownLobby", signEvent.getLine(2), player);
                 signEvent.setLine(2, "");
                 signEvent.setLine(3, "-----");
                 return;
             }
 
-            if (LobbyInfo.hasRequiredLevel(lobbyName)) {
-                signEvent.setLine(3, ChatColor.RED + LobbyInfo.getRequiredLevel(lobbyName).toString());
+            if (Parkour.getLobbyConfig().hasRequiredLevel(lobbyName)) {
+                signEvent.setLine(3, ChatColor.RED + Parkour.getLobbyConfig().getRequiredLevel(lobbyName).toString());
             }
             TranslationUtils.sendValueTranslation("Parkour.SignCreated", "Lobby", player);
         }

@@ -1,14 +1,13 @@
 package io.github.a5h73y.parkour;
 
 import com.google.gson.GsonBuilder;
+import io.github.a5h73y.parkour.commands.CommandUsage;
 import io.github.a5h73y.parkour.commands.ParkourAutoTabCompleter;
 import io.github.a5h73y.parkour.commands.ParkourCommands;
 import io.github.a5h73y.parkour.commands.ParkourConsoleCommands;
 import io.github.a5h73y.parkour.configuration.ConfigManager;
-import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
-import io.github.a5h73y.parkour.database.ParkourDatabase;
-import io.github.a5h73y.parkour.enums.ConfigType;
+import io.github.a5h73y.parkour.database.DatabaseManager;
 import io.github.a5h73y.parkour.gui.ParkourGuiManager;
 import io.github.a5h73y.parkour.listener.BlockListener;
 import io.github.a5h73y.parkour.listener.ChatListener;
@@ -16,29 +15,36 @@ import io.github.a5h73y.parkour.listener.PlayerInteractListener;
 import io.github.a5h73y.parkour.listener.PlayerListener;
 import io.github.a5h73y.parkour.listener.PlayerMoveListener;
 import io.github.a5h73y.parkour.listener.SignListener;
-import io.github.a5h73y.parkour.manager.QuestionManager;
-import io.github.a5h73y.parkour.manager.ScoreboardManager;
-import io.github.a5h73y.parkour.manager.SoundsManager;
+import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Backup;
-import io.github.a5h73y.parkour.other.CommandUsage;
 import io.github.a5h73y.parkour.other.ParkourUpdater;
 import io.github.a5h73y.parkour.plugin.BountifulApi;
 import io.github.a5h73y.parkour.plugin.EconomyApi;
 import io.github.a5h73y.parkour.plugin.PlaceholderApi;
+import io.github.a5h73y.parkour.type.Teardownable;
 import io.github.a5h73y.parkour.type.challenge.ChallengeManager;
 import io.github.a5h73y.parkour.type.checkpoint.CheckpointManager;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.course.CourseManager;
+import io.github.a5h73y.parkour.type.course.autostart.AutoStartConfig;
+import io.github.a5h73y.parkour.type.course.autostart.AutoStartManager;
+import io.github.a5h73y.parkour.type.kit.ParkourKitConfig;
 import io.github.a5h73y.parkour.type.kit.ParkourKitManager;
+import io.github.a5h73y.parkour.type.lobby.LobbyConfig;
 import io.github.a5h73y.parkour.type.lobby.LobbyManager;
+import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.type.player.PlayerManager;
+import io.github.a5h73y.parkour.type.player.quiet.QuietModeManager;
+import io.github.a5h73y.parkour.type.player.rank.ParkourRankManager;
+import io.github.a5h73y.parkour.type.player.scoreboard.ScoreboardManager;
+import io.github.a5h73y.parkour.type.question.QuestionManager;
+import io.github.a5h73y.parkour.type.sounds.SoundsManager;
 import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
 import io.github.a5h73y.parkour.utility.PluginUtils;
-import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.g00fy2.versioncompare.Version;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,8 +52,9 @@ import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 public class Parkour extends JavaPlugin {
 
@@ -57,24 +64,28 @@ public class Parkour extends JavaPlugin {
     private static final int SPIGOT_PLUGIN_ID = 23685;
     private static Parkour instance;
 
+    private AutoStartManager autoStartManager;
+    private ChallengeManager challengeManager;
+    private CheckpointManager checkpointManager;
+    private ConfigManager configManager;
+    private CourseManager courseManager;
+    private DatabaseManager databaseManager;
+    private LobbyManager lobbyManager;
+    private PlayerManager playerManager;
+    private ParkourGuiManager guiManager;
+    private ParkourKitManager parkourKitManager;
+    private ParkourRankManager parkourRankManager;
+    private QuestionManager questionManager;
+    private QuietModeManager quietModeManager;
+    private ScoreboardManager scoreboardManager;
+    private SoundsManager soundsManager;
+
+    private List<CommandUsage> commandUsages;
+    private List<AbstractPluginReceiver> managers = new ArrayList<>();
+
     private BountifulApi bountifulApi;
     private EconomyApi economyApi;
     private PlaceholderApi placeholderApi;
-
-    private ParkourDatabase database;
-    private List<CommandUsage> commandUsages;
-
-    private ConfigManager configManager;
-    private ScoreboardManager scoreboardManager;
-    private ChallengeManager challengeManager;
-    private QuestionManager questionManager;
-    private PlayerManager playerManager;
-    private CourseManager courseManager;
-    private CheckpointManager checkpointManager;
-    private LobbyManager lobbyManager;
-    private ParkourKitManager parkourKitManager;
-    private ParkourGuiManager guiManager;
-    private SoundsManager soundsManager;
 
     /**
      * Get the plugin's instance.
@@ -113,11 +124,11 @@ public class Parkour extends JavaPlugin {
      */
     @Override
     public void onDisable() {
-        if (getConfig().getBoolean("Other.OnServerShutdown.BackupFiles")) {
+        if (getParkourConfig().getBoolean("Other.OnServerShutdown.BackupFiles")) {
             Backup.backupNow();
         }
-        getPlayerManager().teardownParkourPlayers();
-        getDatabase().closeConnection();
+
+        teardownManagers();
         Bukkit.getScheduler().cancelTasks(this);
         PluginUtils.log("Disabled Parkour v" + getDescription().getVersion());
         instance = null;
@@ -130,28 +141,12 @@ public class Parkour extends JavaPlugin {
      * @return default config
      */
     @Override
-    @NotNull
-    public DefaultConfig getConfig() {
-        return (DefaultConfig) this.configManager.get(ConfigType.DEFAULT);
+    public FileConfiguration getConfig() {
+        throw new UnsupportedOperationException("Use getDefaultConfig()");
     }
 
-    /**
-     * Get the matching {@link ParkourConfiguration} for the given {@link ConfigType}.
-     *
-     * @param type {@link ConfigType}
-     * @return matching {@link ParkourConfiguration}
-     */
-    public static ParkourConfiguration getConfig(ConfigType type) {
-        return instance.configManager.get(type);
-    }
-
-    /**
-     * Save the Default config.
-     * Overrides the default saveConfig() method.
-     */
-    @Override
-    public void saveConfig() {
-        getConfig().save();
+    public DefaultConfig getParkourConfig() {
+        return configManager.getDefaultConfig();
     }
 
     /**
@@ -160,113 +155,73 @@ public class Parkour extends JavaPlugin {
      * @return {@link DefaultConfig}
      */
     public static DefaultConfig getDefaultConfig() {
-        return instance.getConfig();
+        return instance.getParkourConfig();
+    }
+
+    public static ParkourKitConfig getParkourKitConfig() {
+        return instance.getConfigManager().getParkourKitConfig();
+    }
+
+    public static LobbyConfig getLobbyConfig() {
+        return instance.getConfigManager().getLobbyConfig();
+    }
+
+    public static AutoStartConfig getAutoStartConfig() {
+        return instance.getConfigManager().getAutoStartConfig();
+    }
+
+    public static PlayerConfig getPlayerConfig(OfflinePlayer player) {
+        return PlayerConfig.getConfig(player);
     }
 
     /**
-     * The Parkour message prefix.
-     *
-     * @return parkour prefix from the config.
+     * Save the Default config.
+     * Overrides the default saveConfig() method.
      */
-    public static String getPrefix() {
-        return TranslationUtils.getTranslation("Parkour.Prefix", false);
-    }
-
-    public ConfigManager getConfigManager() {
-        return configManager;
-    }
-
-    public ParkourDatabase getDatabase() {
-        return database;
-    }
-
-    public ScoreboardManager getScoreboardManager() {
-        return scoreboardManager;
-    }
-
-    public ChallengeManager getChallengeManager() {
-        return challengeManager;
-    }
-
-    public QuestionManager getQuestionManager() {
-        return questionManager;
-    }
-
-    public PlayerManager getPlayerManager() {
-        return playerManager;
-    }
-
-    public CourseManager getCourseManager() {
-        return courseManager;
-    }
-
-    public CheckpointManager getCheckpointManager() {
-        return checkpointManager;
-    }
-
-    public LobbyManager getLobbyManager() {
-        return lobbyManager;
-    }
-
-    public ParkourKitManager getParkourKitManager() {
-        return parkourKitManager;
-    }
-
-    public ParkourGuiManager getGuiManager() {
-        return guiManager;
-    }
-
-    public SoundsManager getSoundsManager() {
-        return soundsManager;
-    }
-
-    public BountifulApi getBountifulApi() {
-        return bountifulApi;
-    }
-
-    public EconomyApi getEconomyApi() {
-        return economyApi;
-    }
-
-    public PlaceholderApi getPlaceholderApi() {
-        return placeholderApi;
-    }
-
-    public List<CommandUsage> getCommandUsages() {
-        return commandUsages;
+    @Override
+    public void saveConfig() {
+        getParkourConfig().write();
     }
 
     public void registerEssentialManagers() {
         configManager = new ConfigManager(this.getDataFolder());
-        database = new ParkourDatabase(this);
-    }
-
-    private void setupPlugins() {
-        bountifulApi = new BountifulApi();
-        economyApi = new EconomyApi();
-        placeholderApi = new PlaceholderApi();
+        databaseManager = (DatabaseManager) registerManager(new DatabaseManager(this));
     }
 
     private void registerManagers() {
         registerEssentialManagers();
-        scoreboardManager = new ScoreboardManager(this);
-        challengeManager = new ChallengeManager(this);
-        questionManager = new QuestionManager(this);
-        courseManager = new CourseManager(this);
-        checkpointManager = new CheckpointManager(this);
-        parkourKitManager = new ParkourKitManager(this);
-        lobbyManager = new LobbyManager(this);
-        playerManager = new PlayerManager(this);
-        guiManager = new ParkourGuiManager(this);
-        soundsManager = new SoundsManager(this);
-        database.recreateAllCourses(false);
+        scoreboardManager = (ScoreboardManager) registerManager(new ScoreboardManager(this));
+        challengeManager = (ChallengeManager) registerManager(new ChallengeManager(this));
+        questionManager = (QuestionManager) registerManager(new QuestionManager(this));
+        parkourKitManager = (ParkourKitManager) registerManager(new ParkourKitManager(this));
+        courseManager = (CourseManager) registerManager(new CourseManager(this));
+        checkpointManager = (CheckpointManager) registerManager(new CheckpointManager(this));
+        lobbyManager = (LobbyManager) registerManager(new LobbyManager(this));
+        parkourRankManager = (ParkourRankManager) registerManager(new ParkourRankManager(this));
+        playerManager = (PlayerManager) registerManager(new PlayerManager(this));
+        guiManager = (ParkourGuiManager) registerManager(new ParkourGuiManager(this));
+        soundsManager = (SoundsManager) registerManager(new SoundsManager(this));
+        autoStartManager = (AutoStartManager) registerManager(new AutoStartManager(this));
+        quietModeManager = (QuietModeManager) registerManager(new QuietModeManager(this));
+        databaseManager.recreateAllCourses(false);
+    }
+
+    private AbstractPluginReceiver registerManager(AbstractPluginReceiver manager) {
+        this.managers.add(manager);
+        return manager;
+    }
+
+    private void setupPlugins() {
+        bountifulApi = new BountifulApi(this);
+        economyApi = new EconomyApi(this);
+        placeholderApi = new PlaceholderApi(this);
     }
 
     private void registerCommands() {
         getCommand(PLUGIN_NAME).setExecutor(new ParkourCommands(this));
         getCommand("paconsole").setExecutor(new ParkourConsoleCommands(this));
 
-        if (this.getConfig().getBoolean("Other.UseAutoTabCompletion")) {
+        if (this.getParkourConfig().getBoolean("Other.UseAutoTabCompletion")) {
             getCommand(PLUGIN_NAME).setTabCompleter(new ParkourAutoTabCompleter(this));
         }
 
@@ -289,7 +244,7 @@ public class Parkour extends JavaPlugin {
      * Check to see if a newer version exists on Spigot.
      */
     private void checkForUpdates() {
-        if (getConfig().getBoolean("Other.CheckForUpdates")) {
+        if (getParkourConfig().getBoolean("Other.CheckForUpdates")) {
             new ParkourUpdater(this, SPIGOT_PLUGIN_ID).checkForUpdateAsync();
         }
     }
@@ -312,6 +267,13 @@ public class Parkour extends JavaPlugin {
         }
     }
 
+    private void teardownManagers() {
+        managers.stream()
+                .filter(Teardownable.class::isInstance)
+                .map(Teardownable.class::cast)
+                .forEach(Teardownable::teardown);
+    }
+
     /**
      * Submit bStats analytics.
      * Can be disabled through the bStats config.yml.
@@ -319,8 +281,84 @@ public class Parkour extends JavaPlugin {
     private void submitAnalytics() {
         Metrics metrics = new Metrics(this, BSTATS_ID);
         metrics.addCustomChart(new SimplePie("number_of_courses", () ->
-                String.valueOf(CourseInfo.getAllCourseNames().size())));
+                String.valueOf(courseManager.getCourseNames().size())));
         metrics.addCustomChart(new SingleLineChart("parkour_players", () ->
                 getPlayerManager().getNumberOfParkourPlayer()));
+    }
+
+    public AutoStartManager getAutoStartManager() {
+        return autoStartManager;
+    }
+
+    public ChallengeManager getChallengeManager() {
+        return challengeManager;
+    }
+
+    public CheckpointManager getCheckpointManager() {
+        return checkpointManager;
+    }
+
+    public ConfigManager getConfigManager() {
+        return configManager;
+    }
+
+    public CourseManager getCourseManager() {
+        return courseManager;
+    }
+
+    public DatabaseManager getDatabaseManager() {
+        return databaseManager;
+    }
+
+    public LobbyManager getLobbyManager() {
+        return lobbyManager;
+    }
+
+    public PlayerManager getPlayerManager() {
+        return playerManager;
+    }
+
+    public ParkourGuiManager getGuiManager() {
+        return guiManager;
+    }
+
+    public ParkourKitManager getParkourKitManager() {
+        return parkourKitManager;
+    }
+
+    public ParkourRankManager getParkourRankManager() {
+        return parkourRankManager;
+    }
+
+    public QuestionManager getQuestionManager() {
+        return questionManager;
+    }
+
+    public QuietModeManager getQuietModeManager() {
+        return quietModeManager;
+    }
+
+    public ScoreboardManager getScoreboardManager() {
+        return scoreboardManager;
+    }
+
+    public SoundsManager getSoundsManager() {
+        return soundsManager;
+    }
+
+    public List<CommandUsage> getCommandUsages() {
+        return commandUsages;
+    }
+
+    public BountifulApi getBountifulApi() {
+        return bountifulApi;
+    }
+
+    public EconomyApi getEconomyApi() {
+        return economyApi;
+    }
+
+    public PlaceholderApi getPlaceholderApi() {
+        return placeholderApi;
     }
 }

@@ -1,5 +1,9 @@
 package io.github.a5h73y.parkour.database;
 
+import java.util.UUID;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 /**
  * Representation model of a `Time` stored in the database.
  */
@@ -84,5 +88,10 @@ public class TimeEntry {
         uuid.insert(12, "-");
         uuid.insert(8, "-");
         return uuid.toString();
+    }
+
+    public String lookupPlayerName() {
+        Player player = Bukkit.getPlayer(UUID.fromString(getPlayerUuid()));
+        return player != null ? player.getName() : "Unknown Player";
     }
 }

@@ -1,11 +1,11 @@
 package io.github.a5h73y.parkour.type.player;
 
-import io.github.a5h73y.parkour.enums.ParkourMode;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.course.Course;
-import io.github.a5h73y.parkour.utility.DateTimeUtils;
+import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
 import java.io.Serializable;
 import org.bukkit.Location;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Parkour Session.
@@ -34,7 +34,6 @@ public class ParkourSession implements Serializable {
     private transient boolean markedForDeletion;
     private transient boolean startTimer;
 
-
     /**
      * Construct a ParkourSession from a Course.
      * @param course {@link Course}
@@ -59,6 +58,15 @@ public class ParkourSession implements Serializable {
      */
     public Checkpoint getCheckpoint() {
         return course.getCheckpoints().get(currentCheckpoint);
+    }
+
+    @Nullable
+    public Checkpoint getNextCheckpoint() {
+        Checkpoint checkpoint = null;
+        if (currentCheckpoint + 1 < course.getCheckpoints().size()) {
+            checkpoint = course.getCheckpoints().get(currentCheckpoint + 1);
+        }
+        return checkpoint;
     }
 
     /**

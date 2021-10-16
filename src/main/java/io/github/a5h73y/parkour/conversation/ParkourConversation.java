@@ -52,7 +52,7 @@ public abstract class ParkourConversation implements ConversationAbandonedListen
     @Override
     public void conversationAbandoned(ConversationAbandonedEvent event) {
         if (!event.gracefulExit()) {
-            event.getContext().getForWhom().sendRawMessage(Parkour.getPrefix() + "Conversation aborted...");
+            event.getContext().getForWhom().sendRawMessage(TranslationUtils.getPluginPrefix() + "Conversation aborted...");
         }
     }
 

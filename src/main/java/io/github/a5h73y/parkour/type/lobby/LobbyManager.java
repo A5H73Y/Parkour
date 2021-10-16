@@ -3,12 +3,11 @@ package io.github.a5h73y.parkour.type.lobby;
 import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.ParkourValidation;
-import io.github.a5h73y.parkour.type.Cacheable;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
+import io.github.a5h73y.parkour.type.CacheableParkourManager;
+import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
-import io.github.a5h73y.parkour.type.player.PlayerInfo;
+import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -25,12 +24,17 @@ import org.jetbrains.annotations.Nullable;
  * Parkour Lobby Manager.
  * Keeps a lazy Cache of {@link Lobby} which can be reused by other players.
  */
-public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lobby> {
+public class LobbyManager extends CacheableParkourManager {
 
     private final Map<String, Lobby> lobbyCache = new HashMap<>();
 
     public LobbyManager(final Parkour parkour) {
         super(parkour);
+    }
+
+    @Override
+    protected LobbyConfig getConfig() {
+        return parkour.getConfigManager().getLobbyConfig();
     }
 
     /**
@@ -47,7 +51,7 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
         TranslationUtils.sendValueTranslation("Lobby.Created", lobbyName, player);
 
         if (requiredLevel != null && ValidationUtils.isPositiveInteger(requiredLevel)) {
-            LobbyInfo.setRequiredLevel(lobbyName, Integer.parseInt(requiredLevel));
+            getConfig().setRequiredLevel(lobbyName, Integer.parseInt(requiredLevel));
             TranslationUtils.sendValueTranslation("Lobby.RequiredLevelSet", requiredLevel, player);
         }
     }
@@ -69,7 +73,7 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
 
         // if they are on a course, force them to leave, which will ultimately run this method again.
         if (parkour.getPlayerManager().isPlaying(player)) {
-            PlayerInfo.resetJoinLocation(player);
+            PlayerConfig.getConfig(player).setJoinLocation(null);
             parkour.getPlayerManager().leaveCourse(player);
             return;
         }
@@ -81,8 +85,8 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
         Lobby lobby = lobbyCache.getOrDefault(lobbyName, populateLobby(lobbyName));
         PlayerUtils.teleportToLocation(player, lobby.getLocation());
 
-        if (LobbyInfo.hasLobbyCommand(lobbyName)) {
-            for (String command : LobbyInfo.getLobbyCommands(lobbyName)) {
+        if (getConfig().hasLobbyCommand(lobbyName)) {
+            for (String command : getConfig().getLobbyCommands(lobbyName)) {
                 PlayerUtils.dispatchServerPlayerCommand(command, player);
             }
         }
@@ -102,12 +106,12 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
      * @param command command to run
      */
     public void addLobbyCommand(CommandSender sender, String lobbyName, String command) {
-        if (!LobbyInfo.doesLobbyExist(lobbyName)) {
+        if (!getConfig().doesLobbyExist(lobbyName)) {
             TranslationUtils.sendValueTranslation("Error.UnknownLobby", lobbyName, sender);
             return;
         }
 
-        LobbyInfo.addLobbyCommand(lobbyName, command);
+        getConfig().addLobbyCommand(lobbyName, command);
         TranslationUtils.sendPropertySet(sender, "Lobby Command", lobbyName, "/" + command);
     }
 
@@ -150,7 +154,7 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
             return;
         }
 
-        LobbyInfo.deleteLobby(lobbyName);
+        getConfig().deleteLobby(lobbyName);
         clearCache(lobbyName);
         TranslationUtils.sendValueTranslation("Parkour.Delete", lobbyName + " Lobby", sender);
         PluginUtils.logToFile(lobbyName + " lobby was deleted by " + sender.getName());
@@ -166,8 +170,8 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
     public void teleportToLeaveDestination(Player player, ParkourSession session) {
         String lobbyName = null;
 
-        if (parkour.getConfig().getBoolean("OnLeave.TeleportToLinkedLobby")) {
-            lobbyName = CourseInfo.getLinkedLobby(session.getCourse().getName());
+        if (parkour.getParkourConfig().getBoolean("OnLeave.TeleportToLinkedLobby")) {
+            lobbyName = CourseConfig.getConfig(session.getCourse().getName()).getLinkedLobby();
         }
 
         joinLobby(player, lobbyName);
@@ -179,7 +183,7 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
      */
     public void displayLobbies(CommandSender sender) {
         TranslationUtils.sendHeading("Available Lobbies", sender);
-        LobbyInfo.getAllLobbyNames().forEach(s -> sender.sendMessage("* " + s));
+        getConfig().getAllLobbyNames().forEach(s -> sender.sendMessage("* " + s));
     }
 
     @Override
@@ -208,7 +212,7 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
      */
     private Lobby populateLobby(@NotNull String lobbyName) {
         Lobby lobby = new Lobby(lobbyName.toLowerCase(),
-                LobbyInfo.getLobbyLocation(lobbyName), LobbyInfo.getRequiredLevel(lobbyName));
+                getConfig().getLobbyLocation(lobbyName), getConfig().getRequiredLevel(lobbyName));
         lobbyCache.put(lobbyName.toLowerCase(), lobby);
         return lobby;
     }
@@ -220,7 +224,7 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
      * @param lobbyName lobby name
      */
     private void setLobby(Player player, String lobbyName) {
-        LobbyInfo.setLobby(lobbyName, player.getLocation());
+        getConfig().setLobby(lobbyName, player.getLocation());
         PluginUtils.logToFile(lobbyName + " lobby was set by " + player.getName());
     }
 

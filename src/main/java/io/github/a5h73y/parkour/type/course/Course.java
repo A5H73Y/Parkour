@@ -1,21 +1,30 @@
 package io.github.a5h73y.parkour.type.course;
 
-import io.github.a5h73y.parkour.enums.ParkourMode;
+import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.configuration.serializable.ParkourSerializable;
+import io.github.a5h73y.parkour.other.ParkourConstants;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.kit.ParkourKit;
-import java.io.Serializable;
+import io.github.a5h73y.parkour.type.player.ParkourMode;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.bukkit.util.NumberConversions;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Parkour Course.
  * Stores references to the Checkpoints that consist of the Course.
  * The ParkourKit will be used to apply the appropriate actions while on the course.
  */
-public class Course implements Serializable {
+public class Course implements ParkourSerializable {
 
     private static final long serialVersionUID = 1L;
 
     private final String name;
+    private final String displayName;
     private final List<Checkpoint> checkpoints;
     private final ParkourKit parkourKit;
     private final ParkourMode parkourMode;
@@ -32,13 +41,15 @@ public class Course implements Serializable {
      * @param parkourKit the {@link ParkourKit} for the Course
      * @param parkourMode the {@link ParkourMode} to apply
      */
-    public Course(String name, List<Checkpoint> checkpoints, ParkourKit parkourKit, ParkourMode parkourMode) {
+    public Course(String name, String displayName, List<Checkpoint> checkpoints,
+                  ParkourKit parkourKit, ParkourMode parkourMode, int maxDeaths, int maxTime) {
         this.name = name;
+        this.displayName = displayName;
         this.checkpoints = checkpoints;
         this.parkourKit = parkourKit;
         this.parkourMode = parkourMode;
-        this.maxDeaths = CourseInfo.getMaximumDeaths(name);
-        this.maxTime = CourseInfo.getMaximumTime(name);
+        this.maxDeaths = maxDeaths;
+        this.maxTime = maxTime;
     }
 
     /**
@@ -51,10 +62,10 @@ public class Course implements Serializable {
 
     /**
      * Get the Course's display name.
-     * @return display course name
+     * @return course display name
      */
     public String getDisplayName() {
-        return CourseInfo.getCourseDisplayName(name);
+        return displayName;
     }
 
     /**
@@ -123,4 +134,40 @@ public class Course implements Serializable {
         return maxTime;
     }
 
+    @Override
+    @NotNull
+    public Map<String, Object> serialize() {
+        Map<String, Object> data = new HashMap<>();
+
+        data.put("Name", this.getName());
+        data.put("DisplayName", this.getDisplayName());
+        data.put("ParkourMode", this.getParkourMode().name());
+        data.put("ParkourKit", this.getParkourKit().getName());
+        data.put("MaxDeaths", this.getMaxDeaths());
+        data.put("MaxTime", this.getMaxTime());
+        data.put("Checkpoint", this.getCheckpoints().stream().map(Checkpoint::serialize).collect(Collectors.toList()));
+
+        return data;
+    }
+
+    public static Course deserialize(Map<String, Object> input) {
+        String name = String.valueOf(input.get("Name"));
+        String displayName = String.valueOf(input.getOrDefault("DisplayName", input.get("Name")));
+        String parkourModeName = String.valueOf(input.getOrDefault("ParkourMode", ParkourMode.NONE));
+        String parkourKitName = String.valueOf(input.getOrDefault("ParkourKit", ParkourConstants.DEFAULT));
+        int maxDeaths = NumberConversions.toInt(input.get("MaxDeaths"));
+        int maxTime = NumberConversions.toInt(input.get("MaxTime"));
+
+        List<Checkpoint> checkpoints = new ArrayList<>();
+        ParkourKit parkourKit = Parkour.getInstance().getParkourKitManager().getParkourKit(parkourKitName);
+
+        if (input.containsKey("Checkpoint")) {
+            checkpoints = ((Map<String, Object>) input.get("Checkpoint")).values().stream()
+                    .map(checkpointData -> Checkpoint.deserialize((Map<String, Object>) checkpointData))
+                    .collect(Collectors.toList());
+        }
+
+        return new Course(name, displayName, checkpoints, parkourKit,
+                ParkourMode.valueOf(parkourModeName), maxDeaths, maxTime);
+    }
 }

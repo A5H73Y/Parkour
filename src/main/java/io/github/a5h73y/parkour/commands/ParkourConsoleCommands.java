@@ -9,7 +9,7 @@ import io.github.a5h73y.parkour.conversation.EditParkourKitConversation;
 import io.github.a5h73y.parkour.conversation.ParkourModeConversation;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.Backup;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
+import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -129,8 +129,8 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                parkour.getDatabase().displayTimeEntries(sender, args[1],
-                        parkour.getDatabase().getTopCourseResults(args[1], Integer.parseInt(args[2])));
+                parkour.getDatabaseManager().displayTimeEntries(sender, args[1],
+                        parkour.getDatabaseManager().getTopCourseResults(args[1], Integer.parseInt(args[2])));
                 break;
 
             case "leave":
@@ -170,7 +170,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 break;
 
             case "recreate":
-                parkour.getDatabase().recreateAllCourses(true);
+                parkour.getDatabaseManager().recreateAllCourses(true);
                 break;
 
             case "reload":
@@ -264,7 +264,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                parkour.getPlayerManager().setRewardParkourRank(sender, args[1], args[2]);
+                parkour.getParkourRankManager().setRewardParkourRank(sender, args[1], args[2]);
                 break;
 
             case "setcheckpoint":
@@ -321,7 +321,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 break;
 
             case "sql":
-                parkour.getDatabase().displayInformation(sender);
+                parkour.getDatabaseManager().displayInformation(sender);
                 break;
 
             case "stats":
@@ -330,7 +330,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                CourseInfo.displayCourseInfo(sender, args[1]);
+                CourseConfig.displayCourseInfo(sender, args[1]);
                 break;
 
             case "validatekit":
@@ -342,7 +342,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                parkour.getConfig().addWhitelistedCommand(sender, args[1]);
+                parkour.getParkourConfig().addWhitelistedCommand(sender, args[1]);
                 break;
 
             case "yes":
@@ -361,7 +361,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 }
 
                 if (!args[1].startsWith("MySQL")) {
-                    TranslationUtils.sendValue(sender, args[1], parkour.getConfig().getString(args[1]));
+                    TranslationUtils.sendValue(sender, args[1], parkour.getParkourConfig().getString(args[1]));
                 }
                 break;
 

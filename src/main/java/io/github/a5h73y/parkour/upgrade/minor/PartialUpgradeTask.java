@@ -142,7 +142,7 @@ public class PartialUpgradeTask extends TimedUpgradeTask {
 	}
 
 	private void convertParkourSessions() {
-		File sessionsDir = new File(getParkourUpgrader().getParkour().getDataFolder() + File.separator + "sessions");
+		File sessionsDir = new File(getParkourUpgrader().getParkour().getDataFolder() + "/sessions/");
 
 		if (sessionsDir.isDirectory()) {
 			// find the ones that are only the uuids
@@ -156,8 +156,8 @@ public class PartialUpgradeTask extends TimedUpgradeTask {
 					Files.delete(sessionFile.toPath());
 
 					if (session.getCourseName() != null) {
-						File newSessionFile = new File(sessionsDir + File.separator
-								+ sessionFile.getName(), session.getCourseName());
+						File newSessionFile = new File(sessionsDir + sessionFile.getName(),
+								session.getCourseName());
 						saveNewSession(newSessionFile, session);
 					}
 

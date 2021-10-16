@@ -119,12 +119,12 @@
   {
     "command": "economy",
     "title": "Display Economy information",
-    "arguments": "(info / recreate / setprize / setfee)",
+    "arguments": "(info / setprize / setfee)",
     "example": "/pa economy info",
-    "description": "If you have linked Parkour to a compatible Economy plugin, you are able to set the fee to join a Course, set the prize for completing a Course, and recreate all the Courses to synchronise with the config.",
+    "description": "If you have linked Parkour to a compatible Economy plugin, you are able to set the fee to join a Course and set the prize for completing a Course.",
     "permission": "Parkour.Admin.*",
     "commandGroup": "4",
-    "consoleSyntax": "pac economy (info / recreate / setprize / setfee)"
+    "consoleSyntax": "pac economy (info / setprize / setfee)"
   },
   {
     "command": "editkit",

@@ -7,9 +7,7 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 import static org.bukkit.Bukkit.getServer;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.configuration.impl.EconomyConfig;
-import io.github.a5h73y.parkour.enums.ConfigType;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
+import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
@@ -27,6 +25,10 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 public class EconomyApi extends PluginWrapper {
 
 	private Economy economy;
+
+	public EconomyApi(Parkour parkour) {
+		super(parkour);
+	}
 
 	@Override
 	public String getPluginName() {
@@ -102,7 +104,7 @@ public class EconomyApi extends PluginWrapper {
 	 */
 	public void giveEconomyPrize(Player player, String courseName) {
 		if (isEnabled()) {
-			int reward = CourseInfo.getEconomyFinishReward(courseName);
+			double reward = CourseConfig.getConfig(courseName).getEconomyFinishReward();
 
 			if (reward > 0) {
 				rewardPlayer(player, reward);
@@ -141,7 +143,7 @@ public class EconomyApi extends PluginWrapper {
 	public boolean validateAndChargeCourseJoin(Player player, String courseName) {
 		boolean allowed = true;
 		if (isEnabled()) {
-			int joinFee = CourseInfo.getEconomyJoiningFee(courseName);
+			double joinFee = CourseConfig.getConfig(courseName).getEconomyJoiningFee();
 
 			if (joinFee > 0) {
 				if (!hasAmount(player, joinFee)) {
@@ -160,28 +162,6 @@ public class EconomyApi extends PluginWrapper {
 		}
 
 		return allowed;
-	}
-
-	/**
-	 * Set the Finish Reward for the Course.
-	 *
-	 * @param courseName course name
-	 * @param value amount to reward
-	 */
-	public void setFinishReward(String courseName, double value) {
-		Parkour.getConfig(ConfigType.ECONOMY).set("Price." + courseName.toLowerCase() + ".Finish", value);
-		Parkour.getConfig(ConfigType.ECONOMY).save();
-	}
-
-	/**
-	 * Set the Joining Fee for the Course.
-	 *
-	 * @param courseName course name
-	 * @param value amount to charge
-	 */
-	public void setJoinFee(String courseName, double value) {
-		Parkour.getConfig(ConfigType.ECONOMY).set("Price." + courseName.toLowerCase() + ".JoinFee", value);
-		Parkour.getConfig(ConfigType.ECONOMY).save();
 	}
 
 	/**
@@ -206,16 +186,12 @@ public class EconomyApi extends PluginWrapper {
 				processSetFeeCommand(sender, args);
 				break;
 
-			case "recreate":
-				recreateEconomy(sender);
-				break;
-
 			case "info":
 				displayEconomyInformation(sender);
 				break;
 
 			default:
-				TranslationUtils.sendInvalidSyntax(sender, "econ", "(info / recreate / setprize / setfee)");
+				TranslationUtils.sendInvalidSyntax(sender, "econ", "(info / setprize / setfee)");
 		}
 	}
 
@@ -235,7 +211,7 @@ public class EconomyApi extends PluginWrapper {
 			return;
 		}
 
-		setFinishReward(args[2], Double.parseDouble(args[3]));
+		CourseConfig.getConfig(args[2]).setEconomyFinishReward(Double.parseDouble(args[3]));
 		TranslationUtils.sendPropertySet(sender, "Economy Prize", args[2], args[3]);
 	}
 
@@ -255,33 +231,7 @@ public class EconomyApi extends PluginWrapper {
 			return;
 		}
 
-		setJoinFee(args[2], Double.parseDouble(args[3]));
+		CourseConfig.getConfig(args[2]).setEconomyJoiningFee(Double.parseDouble(args[3]));
 		TranslationUtils.sendPropertySet(sender, "Join Fee", args[2], args[3]);
-	}
-
-	/**
-	 * Recreate the Economy course details.
-	 * Sets a zero-value Joining and Reward amount for the user to easily edit.
-	 *
-	 * @return courses updated
-	 */
-	private int recreateEconomy(CommandSender sender) {
-		EconomyConfig config = (EconomyConfig) Parkour.getConfig(ConfigType.ECONOMY);
-		TranslationUtils.sendMessage(sender, "Starting Recreation...");
-
-		int changes = 0;
-		for (String course : CourseInfo.getAllCourseNames()) {
-			if (!config.contains(course + ".JoinFee")) {
-				changes++;
-				config.set(course + ".JoinFee", 0);
-			}
-			if (!config.contains(course + ".FinishReward")) {
-				config.set(course + ".FinishReward", 0);
-			}
-		}
-
-		config.save();
-		TranslationUtils.sendMessage(sender, "Process Complete! &b" + changes + "&f courses updated.");
-		return changes;
 	}
 }

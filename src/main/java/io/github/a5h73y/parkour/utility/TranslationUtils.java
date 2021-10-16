@@ -9,9 +9,8 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.TIME_PLACEHOLDER;
 import static io.github.a5h73y.parkour.utility.StringUtils.colour;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.enums.ConfigType;
-import io.github.a5h73y.parkour.enums.ParkourEventType;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
+import io.github.a5h73y.parkour.type.course.ParkourEventType;
+import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
 import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
@@ -40,11 +39,11 @@ public class TranslationUtils {
 			return "Invalid translation.";
 		}
 
-		String translated = Parkour.getConfig(ConfigType.STRINGS).getString(translationKey);
+		String translated = Parkour.getInstance().getConfigManager().getStringsConfig().getString(translationKey);
 		translated = translated != null ? colour(translated) : "String not found: " + translationKey;
 
 		return prefix && ValidationUtils.isStringValid(translated)
-				? Parkour.getPrefix().concat(translated) : translated;
+				? getPluginPrefix().concat(translated) : translated;
 	}
 
 	/**
@@ -111,7 +110,7 @@ public class TranslationUtils {
 	 * @return course event message
 	 */
 	public static String getCourseEventMessage(ParkourSession session, ParkourEventType eventType, String fallbackKey) {
-		String result = CourseInfo.getEventMessage(session.getCourseName(), eventType);
+		String result = CourseConfig.getConfig(session.getCourseName()).getEventMessage(eventType);
 
 		// if there is no custom message, fallback to default
 		if (result == null) {
@@ -237,7 +236,7 @@ public class TranslationUtils {
 	 */
 	public static void sendMessage(CommandSender sender, String message) {
 		if (!message.isEmpty()) {
-			sender.sendMessage(Parkour.getPrefix().concat(colour(message)));
+			sender.sendMessage(getPluginPrefix().concat(colour(message)));
 		}
 	}
 
@@ -387,5 +386,9 @@ public class TranslationUtils {
 	public static String replaceAllPlayerPlaceholders(String input, Player player) {
 		return input.replace(PLAYER_PLACEHOLDER, player.getName())
 				.replace(PLAYER_DISPLAY_PLACEHOLDER, player.getDisplayName());
+	}
+
+	public static String getPluginPrefix() {
+		return getTranslation("Parkour.Prefix", false);
 	}
 }

@@ -4,62 +4,60 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_INVALID_AMOU
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_UNKNOWN_PLAYER;
 
-import com.cryptomorin.xseries.XMaterial;
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.conversation.LeaderboardConversation;
 import io.github.a5h73y.parkour.conversation.SetCourseConversation;
 import io.github.a5h73y.parkour.database.TimeEntry;
-import io.github.a5h73y.parkour.enums.ConfigType;
-import io.github.a5h73y.parkour.enums.ParkourEventType;
-import io.github.a5h73y.parkour.enums.ParkourMode;
-import io.github.a5h73y.parkour.enums.Permission;
 import io.github.a5h73y.parkour.gui.impl.CourseSettingsGui;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.ParkourValidation;
-import io.github.a5h73y.parkour.type.Cacheable;
-import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
-import io.github.a5h73y.parkour.type.kit.ParkourKit;
-import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
-import io.github.a5h73y.parkour.type.lobby.LobbyInfo;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
-import io.github.a5h73y.parkour.type.player.PlayerInfo;
-import io.github.a5h73y.parkour.utility.DateTimeUtils;
+import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
-import io.github.a5h73y.parkour.utility.PermissionUtils;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
-import java.util.Collections;
+import io.github.a5h73y.parkour.utility.permission.Permission;
+import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
+import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Parkour Course Manager.
  * Keeps a lazy Cache of {@link Course} which can be reused by other players.
  */
-public class CourseManager extends AbstractPluginReceiver implements Cacheable<Course> {
+public class CourseManager extends AbstractPluginReceiver {
 
+    // all known course names, regardless of ready status
+    private final List<String> courseNames = new ArrayList<>();
+    // cached Course data, populated with checkpoints etc.
     private final Map<String, Course> courseCache = new HashMap<>();
 
     public CourseManager(final Parkour parkour) {
         super(parkour);
+        populateCourseCache();
+    }
+
+    public List<String> getCourseNames() {
+        return courseNames;
     }
 
     /**
@@ -68,13 +66,12 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      * @param courseName course name
      * @return course exists
      */
-    //TODO remove me
     public boolean doesCourseExists(final String courseName) {
         if (!ValidationUtils.isStringValid(courseName)) {
             return false;
         }
 
-        return CourseInfo.getAllCourseNames().contains(courseName.trim().toLowerCase());
+        return courseNames.contains(courseName.trim().toLowerCase());
     }
 
     /**
@@ -105,7 +102,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      * @return populated {@link Course}
      */
     @Nullable
-    public Course findByName(final String courseNameInput) {
+    public Course findByName(@NotNull final String courseNameInput) {
         String courseName = courseNameInput.toLowerCase();
 
         if (courseCache.containsKey(courseName)) {
@@ -116,10 +113,20 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return null;
         }
 
-        Course course = populateCourse(courseName);
-        // if course is ready, cache it.
-        if (CourseInfo.getReadyStatus(courseName)) {
-            courseCache.put(courseName, course);
+        Course course = null;
+
+        try {
+            CourseConfig config = CourseConfig.getConfig(courseName);
+            // deserialize Course from config
+            course = config.getCourse();
+
+            // if course is ready, cache it.
+            if (config.getReadyStatus()) {
+                courseCache.put(courseName, course);
+            }
+        } catch (Exception ex) {
+            PluginUtils.log("Failed to load Course " + courseName, 2);
+            ex.printStackTrace();
         }
 
         return course;
@@ -136,11 +143,11 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      */
     @Nullable
     public Course findByIndex(final int courseIndex) {
-        if (courseIndex <= 0 || courseIndex > CourseInfo.getAllCourseNames().size()) {
+        if (courseIndex <= 0 || courseIndex > courseNames.size()) {
             return null;
         }
 
-        String courseName = CourseInfo.getAllCourseNames().get(courseIndex - 1);
+        String courseName = courseNames.get(courseIndex - 1);
         return findByName(courseName);
     }
 
@@ -176,27 +183,14 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         }
 
         String courseName = courseNameInput.toLowerCase();
-        Location location = player.getLocation();
-        ParkourConfiguration courseConfig = Parkour.getConfig(ConfigType.COURSES);
 
-        courseConfig.set(courseName + ".Creator", player.getName());
-        courseConfig.set(courseName + ".Views", 0);
-        courseConfig.set(courseName + ".Completed", 0);
-        courseConfig.set(courseName + ".World", location.getWorld().getName());
-
-        parkour.getCheckpointManager().createCheckpointData(courseName, player.getLocation(), 0);
-
-        List<String> courseList = CourseInfo.getAllCourseNames();
-        courseList.add(courseName);
-        Collections.sort(courseList);
-        courseConfig.set("Courses", courseList);
-        courseConfig.save();
-
-        PlayerInfo.setSelectedCourse(player, courseName);
+        CourseConfig.getConfig(courseName).createCourseData(player);
+        courseNames.add(courseName);
+        PlayerConfig.getConfig(player).setSelectedCourse(courseName);
 
         TranslationUtils.sendValueTranslation("Parkour.Created", courseName, player);
         TranslationUtils.sendValueTranslation("Parkour.WhenReady", courseName, false, player);
-        parkour.getDatabase().insertCourse(courseName);
+        parkour.getDatabaseManager().insertCourse(courseName);
     }
 
     /**
@@ -212,7 +206,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        PlayerInfo.setSelectedCourse(player, courseName);
+        PlayerConfig.getConfig(player).setSelectedCourse(courseName);
         TranslationUtils.sendValueTranslation("Parkour.Selected", courseName, player);
     }
 
@@ -222,8 +216,10 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      * @param player requesting player
      */
     public void deselectCourse(final Player player) {
-        if (PlayerInfo.hasSelectedCourse(player)) {
-            PlayerInfo.resetSelected(player);
+        PlayerConfig playerConfig = PlayerConfig.getConfig(player);
+
+        if (playerConfig.hasSelectedCourse()) {
+            playerConfig.resetSelected();
             TranslationUtils.sendTranslation("Parkour.Deselected", player);
 
         } else {
@@ -244,89 +240,12 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        CourseInfo.deleteCourse(courseName);
+        CourseConfig.deleteCourseData(courseName);
+        parkour.getDatabaseManager().deleteCourseTimes(courseName);
         clearCache(courseName);
+        parkour.getConfigManager().getCourseCompletionsConfig().removeCompletedCourse(courseName);
         TranslationUtils.sendValueTranslation("Parkour.Delete", courseName, sender);
         PluginUtils.logToFile(courseName + " course was deleted by " + sender.getName());
-    }
-
-    /**
-     * Create an AutoStart for the Course.
-     * A pressure plate will be placed at the player's location and trigger an AutoStart for the Course.
-     *
-     * @param player requesting player
-     * @param courseName course name
-     */
-    public void createAutoStart(final Player player, final String courseName) {
-        if (!doesCourseExists(courseName)) {
-            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, player);
-            return;
-        }
-
-        Block block = player.getLocation().getBlock();
-        String coordinates = block.getX() + "-" + block.getY() + "-" + block.getZ();
-
-        if (parkour.getConfig().isAutoStartIncludeWorld()) {
-            coordinates += "-" + block.getWorld().getName();
-        }
-
-        ParkourConfiguration courseConfig = Parkour.getConfig(ConfigType.COURSES);
-
-        if (courseConfig.contains("CourseInfo.AutoStart." + coordinates)) {
-            TranslationUtils.sendMessage(player, "There is already an AutoStart here!");
-            return;
-        }
-
-        courseConfig.set("CourseInfo.AutoStart." + coordinates, courseName.toLowerCase());
-        courseConfig.save();
-
-        block.setType(XMaterial.STONE_PRESSURE_PLATE.parseMaterial());
-        Block blockUnder = block.getRelative(BlockFace.DOWN);
-        blockUnder.setType(parkour.getConfig().getAutoStartMaterial());
-
-        TranslationUtils.sendPropertySet(player, "AutoStart", courseName, "your position");
-    }
-
-    /**
-     * Find the matching Course name for the AutoStart Location.
-     * Request to match the location coordinates to a known AutoStart location, and retrieve the corresponding Course.
-     *
-     * @param location location
-     * @return course name
-     */
-    @Nullable
-    public String getAutoStartCourse(final Location location) {
-        ParkourConfiguration courseConfig = Parkour.getConfig(ConfigType.COURSES);
-        String coordinates = location.getBlockX() + "-" + location.getBlockY() + "-" + location.getBlockZ();
-
-        if (parkour.getConfig().isAutoStartIncludeWorld()) {
-            coordinates += "-" + location.getWorld().getName();
-        }
-
-        ConfigurationSection entries = courseConfig.getConfigurationSection("CourseInfo.AutoStart");
-
-        if (entries != null) {
-            // Go through each entry to find matching coordinates, then return the course
-            for (String entry : entries.getKeys(false)) {
-                if (entry.equals(coordinates)) {
-                    return courseConfig.getString("CourseInfo.AutoStart." + entry);
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Delete the AutoStart at the given coordinates.
-     *
-     * @param sender command sender
-     * @param coordinates coordinates
-     */
-    public void deleteAutoStart(CommandSender sender, String coordinates) {
-        CourseInfo.deleteAutoStart(coordinates);
-        TranslationUtils.sendValueTranslation("Parkour.Delete", "AutoStart", sender);
-        PluginUtils.logToFile("AutoStart at " + coordinates + " was deleted by " + sender.getName());
     }
 
     /**
@@ -342,7 +261,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        parkour.getCheckpointManager().createCheckpointData(courseName, player.getLocation(), 0);
+        CourseConfig.getConfig(courseName).createCheckpointData(player.getLocation(), 0);
         PluginUtils.logToFile(courseName + " start location was reset by " + player.getName());
         TranslationUtils.sendPropertySet(player, "Start Location", courseName, "your position");
     }
@@ -360,7 +279,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        CourseInfo.setCreator(courseName, value);
+        CourseConfig.getConfig(courseName).setCreator(value);
         TranslationUtils.sendPropertySet(sender, "Creator", courseName, value);
     }
 
@@ -383,7 +302,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        CourseInfo.setMaximumDeaths(courseName, Integer.parseInt(value));
+        CourseConfig.getConfig(courseName).setMaximumDeaths(Integer.parseInt(value));
         clearCache(courseName);
         TranslationUtils.sendPropertySet(sender, "Maximum Deaths", courseName, value);
     }
@@ -397,9 +316,9 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      * @param secondsValue new maximum seconds
      */
     public void setMaxTime(final CommandSender sender, final String courseName, final String secondsValue) {
-        if (!parkour.getConfig().getBoolean("OnCourse.DisplayLiveTime")
-                && !(parkour.getConfig().getBoolean("Scoreboard.Enabled")
-                && parkour.getConfig().getBoolean("Scoreboard.LiveTimer.Enabled"))) {
+        if (!parkour.getParkourConfig().getBoolean("OnCourse.DisplayLiveTime")
+                && !(parkour.getParkourConfig().getBoolean("Scoreboard.Enabled")
+                && parkour.getParkourConfig().getBoolean("Scoreboard.LiveTimer.Enabled"))) {
             TranslationUtils.sendMessage(sender, "The live timer is disabled!");
             return;
         }
@@ -415,7 +334,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         }
 
         int seconds = Integer.parseInt(secondsValue);
-        CourseInfo.setMaximumTime(courseName, seconds);
+        CourseConfig.getConfig(courseName).setMaximumTime(seconds);
         clearCache(courseName);
         TranslationUtils.sendPropertySet(sender, "Maximum Time Limit", courseName, DateTimeUtils.convertSecondsToTime(seconds));
     }
@@ -430,7 +349,8 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      * @param courseNameInput course name
      */
     public void toggleCourseReadyStatus(final Player player, @Nullable final String courseNameInput) {
-        String courseName = courseNameInput == null ? PlayerInfo.getSelectedCourse(player) : courseNameInput;
+        PlayerConfig playerConfig = PlayerConfig.getConfig(player);
+        String courseName = courseNameInput == null ? playerConfig.getSelectedCourse() : courseNameInput;
 
         if (!ValidationUtils.isStringValid(courseName)) {
             TranslationUtils.sendMessage(player, "Please select a Course, or provide a Course name");
@@ -441,11 +361,13 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        boolean ready = !CourseInfo.getReadyStatus(courseName);
-        CourseInfo.setReadyStatus(courseName, ready);
+        CourseConfig courseConfig = CourseConfig.getConfig(courseName);
+
+        boolean ready = !courseConfig.getReadyStatus();
+        courseConfig.setReadyStatus(ready);
 
         if (ready) {
-            PlayerInfo.resetSelected(player);
+            playerConfig.resetSelected();
         }
 
         TranslationUtils.sendPropertySet(player, "Ready Status", courseName, String.valueOf(ready));
@@ -466,8 +388,9 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         }
 
         // invert the existing value
-        boolean isEnabled = !CourseInfo.getRewardOnce(courseName);
-        CourseInfo.setRewardOnce(courseName, isEnabled);
+        CourseConfig courseConfig = CourseConfig.getConfig(courseName);
+        boolean isEnabled = !courseConfig.getRewardOnce();
+        courseConfig.setRewardOnce(isEnabled);
         TranslationUtils.sendPropertySet(sender, "Reward Once Status", courseName, String.valueOf(isEnabled));
     }
 
@@ -485,8 +408,9 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         }
 
         // invert the existing value
-        boolean isEnabled = !CourseInfo.getChallengeOnly(courseName);
-        CourseInfo.setChallengeOnly(courseName, isEnabled);
+        CourseConfig courseConfig = CourseConfig.getConfig(courseName);
+        boolean isEnabled = !courseConfig.getChallengeOnly();
+        courseConfig.setChallengeOnly(isEnabled);
         TranslationUtils.sendPropertySet(sender, "Challenge Only Status", courseName, String.valueOf(isEnabled));
     }
 
@@ -503,15 +427,16 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        if (parkour.getConfig().isLeaveDestroyCourseProgress()) {
+        if (parkour.getParkourConfig().isLeaveDestroyCourseProgress()) {
             TranslationUtils.sendMessage(sender,
                     "Disable Course progress destruction in the plugin configuration to allow for Courses to be resumable.");
             return;
         }
 
         // invert the existing value
-        boolean isEnabled = !CourseInfo.getResumable(courseName);
-        CourseInfo.setResumable(courseName, isEnabled);
+        CourseConfig courseConfig = CourseConfig.getConfig(courseName);
+        boolean isEnabled = !courseConfig.getResumable();
+        courseConfig.setResumable(isEnabled);
         TranslationUtils.sendPropertySet(sender, "Resumable", courseName, String.valueOf(isEnabled));
     }
 
@@ -533,7 +458,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        CourseInfo.setCourseDisplayName(courseName, input);
+        CourseConfig.getConfig(courseName).setCourseDisplayName(input);
         TranslationUtils.sendPropertySet(sender, "Course Display Name", courseName, StringUtils.colour(input));
     }
 
@@ -555,7 +480,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        CourseInfo.setMinimumParkourLevel(courseName, Integer.parseInt(value));
+        CourseConfig.getConfig(courseName).setMinimumParkourLevel(Integer.parseInt(value));
         TranslationUtils.sendPropertySet(sender, "Minimum ParkourLevel", courseName, value);
     }
 
@@ -566,7 +491,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      * @param args command arguments
      */
     public void setCourseLink(final Player player, final String... args) {
-        String selected = PlayerInfo.getSelectedCourse(player);
+        String selectedCourse = PlayerConfig.getConfig(player).getSelectedCourse();
 
         if (args.length >= 3 && args[1].equalsIgnoreCase("course")) {
             if (!doesCourseExists(args[2])) {
@@ -574,31 +499,33 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
                 return;
             }
 
-            if (CourseInfo.hasLinkedLobby(selected)) {
+            CourseConfig courseConfig = CourseConfig.getConfig(selectedCourse);
+            if (courseConfig.hasLinkedLobby()) {
                 TranslationUtils.sendMessage(player, "This Course is linked to a Lobby!");
                 return;
             }
 
-            CourseInfo.setLinkedCourse(selected, args[2]);
-            TranslationUtils.sendPropertySet(player, "Linked Course", selected, args[2]);
+            courseConfig.setLinkedCourse(args[2]);
+            TranslationUtils.sendPropertySet(player, "Linked Course", selectedCourse, args[2]);
 
         } else if (args.length >= 3 && args[1].equalsIgnoreCase("lobby")) {
-            if (!LobbyInfo.doesLobbyExist(args[2])) {
+            if (!parkour.getConfigManager().getLobbyConfig().doesLobbyExist(args[2])) {
                 TranslationUtils.sendValueTranslation("Error.UnknownLobby", args[2], player);
                 return;
             }
 
-            if (CourseInfo.hasLinkedCourse(selected)) {
+            CourseConfig courseConfig = CourseConfig.getConfig(selectedCourse);
+            if (courseConfig.hasLinkedCourse()) {
                 TranslationUtils.sendMessage(player, "This Course is linked to a Course!");
                 return;
             }
 
-            CourseInfo.setLinkedLobby(selected, args[2]);
-            TranslationUtils.sendPropertySet(player, "Linked Lobby", selected, args[2]);
+            courseConfig.setLinkedLobby(args[2]);
+            TranslationUtils.sendPropertySet(player, "Linked Lobby", selectedCourse, args[2]);
 
         } else if (args[1].equalsIgnoreCase("reset")) {
-            CourseInfo.resetLinks(selected);
-            TranslationUtils.sendPropertySet(player, "Linked Status", selected, "none");
+            CourseConfig.getConfig(selectedCourse).resetLinks();
+            TranslationUtils.sendPropertySet(player, "Linked Status", selectedCourse, "none");
 
         } else {
             TranslationUtils.sendInvalidSyntax(player, "Link", "(course / lobby / reset) (courseName / lobbyName)");
@@ -624,7 +551,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        CourseInfo.setPlayerLimit(courseName, Integer.parseInt(limit));
+        CourseConfig.getConfig(courseName).setPlayerLimit(Integer.parseInt(limit));
         TranslationUtils.sendPropertySet(sender, "Player Limit", courseName, limit);
     }
 
@@ -642,16 +569,18 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        if (!ParkourKitInfo.doesParkourKitExist(kitName)) {
+        if (!parkour.getConfigManager().getParkourKitConfig().doesParkourKitExist(kitName)) {
             TranslationUtils.sendTranslation("Error.UnknownParkourKit", sender);
             return;
         }
 
-        if (CourseInfo.hasParkourKit(courseName)) {
+        CourseConfig courseConfig = CourseConfig.getConfig(courseName);
+
+        if (courseConfig.hasParkourKit()) {
             TranslationUtils.sendMessage(sender, "This Course is already linked to a ParkourKit, continuing anyway...");
         }
 
-        CourseInfo.setParkourKit(courseName, kitName);
+        courseConfig.setParkourKit(kitName);
         clearCache(courseName);
         TranslationUtils.sendPropertySet(sender, "ParkourKit", courseName, kitName);
     }
@@ -675,7 +604,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        CourseInfo.setRewardParkourLevel(courseName, Integer.parseInt(parkourLevel));
+        CourseConfig.getConfig(courseName).setRewardParkourLevel(Integer.parseInt(parkourLevel));
         TranslationUtils.sendPropertySet(sender, "ParkourLevel reward", courseName, parkourLevel);
     }
 
@@ -699,7 +628,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        CourseInfo.setRewardParkourLevelIncrease(courseName, parkourLevelIncrease);
+        CourseConfig.getConfig(courseName).setRewardParkourLevelIncrease(parkourLevelIncrease);
         TranslationUtils.sendPropertySet(sender, "ParkourLevel increase reward", courseName, parkourLevelIncrease);
     }
 
@@ -723,7 +652,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        CourseInfo.setRewardDelay(courseName, Double.parseDouble(delay));
+        CourseConfig.getConfig(courseName).setRewardDelay(Double.parseDouble(delay));
         long milliseconds = DateTimeUtils.convertHoursToMilliseconds(Double.parseDouble(delay));
         TranslationUtils.sendPropertySet(sender, "Reward Delay", courseName,
                 DateTimeUtils.convertMillisecondsToDateTime(milliseconds));
@@ -747,7 +676,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        CourseInfo.setRewardParkoins(courseName, Double.parseDouble(reward));
+        CourseConfig.getConfig(courseName).setRewardParkoins(Double.parseDouble(reward));
         TranslationUtils.sendPropertySet(sender, "Parkoins reward", courseName, reward);
     }
 
@@ -781,7 +710,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         String label = args.length >= 5 ? args[4] : StringUtils.standardizeText(material.name());
         boolean unbreakable = args.length == 6 && Boolean.parseBoolean(args[5]);
 
-        CourseInfo.addJoinItem(args[1], material, amount, label, unbreakable);
+        CourseConfig.getConfig(args[1]).addJoinItem(material, amount, label, unbreakable);
         TranslationUtils.sendPropertySet(sender, "Add Join Item", args[1], material.name() + " x" + amount);
     }
 
@@ -800,20 +729,10 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         }
 
         String courseName = courseNameInput.toLowerCase();
-        ParkourConfiguration courseConfig = Parkour.getConfig(ConfigType.COURSES);
-        Set<String> properties = courseConfig.getConfigurationSection(courseName).getKeys(false);
 
-        for (String property : properties) {
-            if (property.equals("Creator") || property.equals("World")) {
-                continue;
-            }
-
-            courseConfig.set(courseName + "." + property, null);
-        }
-
-        courseConfig.save();
-        parkour.getDatabase().deleteCourseTimes(courseName);
-        PlayerInfo.removeCompletedCourse(courseName);
+        CourseConfig.getConfig(courseName).resetCourseData();
+        parkour.getDatabaseManager().deleteCourseTimes(courseName);
+        parkour.getConfigManager().getCourseCompletionsConfig().removeCompletedCourse(courseName);
         TranslationUtils.sendValueTranslation("Parkour.Reset", courseName, sender);
         PluginUtils.logToFile(courseName + " course was reset by " + sender.getName());
     }
@@ -831,7 +750,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        parkour.getDatabase().deleteCourseTimes(courseName);
+        parkour.getDatabaseManager().deleteCourseTimes(courseName);
         parkour.getPlaceholderApi().clearCache();
         TranslationUtils.sendValueTranslation("Parkour.Reset", courseName + " Leaderboards", sender);
         PluginUtils.logToFile(courseName + " leaderboards were reset by " + sender.getName());
@@ -852,12 +771,12 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
 
         OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(targetPlayerName);
 
-        if (!PlayerInfo.hasPlayerInfo(targetPlayer)) {
+        if (!PlayerConfig.hasPlayerConfig(targetPlayer)) {
             TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, sender);
             return;
         }
 
-        parkour.getDatabase().deletePlayerCourseTimes(targetPlayer, courseName);
+        parkour.getDatabaseManager().deletePlayerCourseTimes(targetPlayer, courseName);
         parkour.getPlaceholderApi().clearCache();
         TranslationUtils.sendValueTranslation("Parkour.Reset", targetPlayerName + "'s "
                 + courseName + " Leaderboards", sender);
@@ -877,7 +796,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             return;
         }
 
-        CourseInfo.resetPrizes(courseName);
+        CourseConfig.getConfig(courseName).resetPrizes();
         TranslationUtils.sendValueTranslation("Parkour.Reset", courseName + " Prizes", sender);
         PluginUtils.logToFile(courseName + " prizes were reset by " + sender.getName());
     }
@@ -892,8 +811,9 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      * @param eventType event type
      */
     public void runEventCommands(final Player player, final ParkourSession session, final ParkourEventType eventType) {
-        if (CourseInfo.hasEventCommands(session.getCourseName(), eventType)) {
-            for (String command : CourseInfo.getEventCommands(session.getCourseName(), eventType)) {
+        CourseConfig courseConfig = CourseConfig.getConfig(session.getCourseName());
+        if (courseConfig.hasEventCommands(eventType)) {
+            for (String command : courseConfig.getEventCommands(eventType)) {
                 PlayerUtils.dispatchServerPlayerCommand(command, player, session);
             }
         }
@@ -922,7 +842,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             if (args[2].equalsIgnoreCase("message")) {
                 if (SetCourseConversation.PARKOUR_EVENT_TYPE_NAMES.contains(args[3].toLowerCase())) {
                     String message = StringUtils.extractMessageFromArgs(args, 4);
-                    CourseInfo.setEventMessage(args[1], args[3], message);
+                    CourseConfig.getConfig(args[1]).setEventMessage(args[3], message);
                     TranslationUtils.sendPropertySet(sender, StringUtils.standardizeText(args[3]) + " Message", args[1],
                             StringUtils.colour(message));
 
@@ -934,7 +854,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
                 if (SetCourseConversation.PARKOUR_EVENT_TYPE_NAMES.contains(args[3].toLowerCase())) {
                     String message = StringUtils.extractMessageFromArgs(args, 4);
                     ParkourEventType type = ParkourEventType.valueOf(args[3].toUpperCase());
-                    CourseInfo.addEventCommand(args[1], type, message);
+                    CourseConfig.getConfig(args[1]).addEventCommand(type, message);
                     TranslationUtils.sendPropertySet(sender,
                             StringUtils.standardizeText(args[3]) + " Command", args[1], "/" + message);
 
@@ -977,7 +897,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
             displayCourses(sender, page);
 
         } else if (args[1].equalsIgnoreCase("ranks")) {
-            parkour.getPlayerManager().displayParkourRanks(sender);
+            parkour.getParkourRankManager().displayParkourRanks(sender);
 
         } else if (args[1].equalsIgnoreCase("lobbies")) {
             if (!PermissionUtils.hasPermission(sender, Permission.ADMIN_ALL)) {
@@ -1035,11 +955,11 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
 
         List<TimeEntry> results;
         if (personal) {
-            results = parkour.getDatabase().getTopPlayerCourseResults(player, args[1], limit);
+            results = parkour.getDatabaseManager().getTopPlayerCourseResults(player, args[1], limit);
         } else {
-            results = parkour.getDatabase().getTopCourseResults(args[1], limit);
+            results = parkour.getDatabaseManager().getTopCourseResults(args[1], limit);
         }
-        parkour.getDatabase().displayTimeEntries(player, args[1], results);
+        parkour.getDatabaseManager().displayTimeEntries(player, args[1], results);
     }
 
     /**
@@ -1057,16 +977,6 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         parkour.getGuiManager().showMenu(player, new CourseSettingsGui(courseName));
     }
 
-    @Override
-    public int getCacheSize() {
-        return courseCache.size();
-    }
-
-    @Override
-    public void clearCache() {
-        courseCache.clear();
-    }
-
     /**
      * Clear the specified Course information.
      *
@@ -1076,19 +986,12 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         courseCache.remove(courseName.toLowerCase());
     }
 
-    /**
-     * Construct the {@link Course} object, retrieving it's relevant information.
-     *
-     * @param courseNameInput course name
-     * @return populated Course
-     */
-    private Course populateCourse(final String courseNameInput) {
-        String courseName = courseNameInput.toLowerCase();
-        String parkourKitName = CourseInfo.getParkourKit(courseName);
-        ParkourKit parkourKit = parkour.getParkourKitManager().getParkourKit(parkourKitName);
-        ParkourMode parkourMode = CourseInfo.getCourseMode(courseName);
-        List<Checkpoint> checkpoints = parkour.getCheckpointManager().getCheckpoints(courseName);
-        return new Course(courseName, checkpoints, parkourKit, parkourMode);
+    public void clearCache() {
+        courseCache.clear();
+    }
+
+    public int getCacheSize() {
+        return courseCache.size();
     }
 
     /**
@@ -1100,7 +1003,7 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
      * @param page desired page number
      */
     private void displayCourses(CommandSender sender, int page) {
-        if (CourseInfo.getAllCourseNames().isEmpty()) {
+        if (courseNames.isEmpty()) {
             TranslationUtils.sendMessage(sender, "There are no Parkour courses!");
             return;
         }
@@ -1113,12 +1016,10 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
         int results = 10;
         int fromIndex = (page - 1) * results;
 
-        List<String> courseList = CourseInfo.getAllCourseNames();
-        if (parkour.getConfig().getBoolean("Other.Display.OnlyReadyCourses")
+        List<String> courseList = courseNames;
+        if (parkour.getParkourConfig().getBoolean("Other.Display.OnlyReadyCourses")
                 && !PermissionUtils.hasPermission(sender, Permission.ADMIN_READY_BYPASS, false)) {
-            courseList = courseList.stream()
-                    .filter(CourseInfo::getReadyStatus)
-                    .collect(Collectors.toList());
+            courseList = new ArrayList<>(courseCache.keySet());
         }
 
         if (courseList.size() <= fromIndex) {
@@ -1131,7 +1032,8 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
 
         for (int i = 0; i < limited.size(); i++) {
             String courseName = limited.get(i);
-            boolean ready = CourseInfo.getReadyStatus(courseName);
+            CourseConfig courseConfig = CourseConfig.getConfig(courseName);
+            boolean ready = courseConfig.getReadyStatus();
 
             StringBuilder sb = new StringBuilder();
             sb.append(fromIndex + (i + 1))
@@ -1139,22 +1041,40 @@ public class CourseManager extends AbstractPluginReceiver implements Cacheable<C
                     .append(ready ? ChatColor.AQUA : ChatColor.RED)
                     .append(courseName);
 
-            if (CourseInfo.hasMinimumParkourLevel(courseName)) {
+            if (courseConfig.hasMinimumParkourLevel()) {
                 sb.append(ChatColor.RED).append(" (")
-                        .append(CourseInfo.getMinimumParkourLevel(courseName)).append(')');
+                        .append(courseConfig.getMinimumParkourLevel()).append(')');
             }
-            if (CourseInfo.hasRewardParkourLevel(courseName)) {
+            if (courseConfig.hasRewardParkourLevel()) {
                 sb.append(ChatColor.GREEN).append(" (")
-                        .append(CourseInfo.getRewardParkourLevel(courseName)).append(')');
+                        .append(courseConfig.getRewardParkourLevel()).append(')');
 
-            } else if (CourseInfo.hasRewardParkourLevelIncrease(courseName)) {
+            } else if (courseConfig.hasRewardParkourLevelIncrease()) {
                 sb.append(ChatColor.GREEN).append(" (+")
-                        .append(CourseInfo.getRewardParkourLevelIncrease(courseName)).append(')');
+                        .append(courseConfig.getRewardParkourLevelIncrease()).append(')');
             }
 
             sender.sendMessage(sb.toString());
         }
 
         sender.sendMessage("== " + page + " / " + ((courseList.size() + results - 1) / results) + " ==");
+    }
+
+    private void populateCourseCache() {
+        try (Stream<Path> paths = Files.walk(Paths.get(parkour.getConfigManager().getCoursesDir().toURI()), 1)) {
+            paths.filter(Files::isRegularFile)
+                    .map(p -> p.getFileName().toString().toLowerCase())
+                    .filter(path -> path.endsWith(".json"))
+                    .map(path -> path.split("\\.")[0])
+                    .forEach(courseName -> {
+                        courseNames.add(courseName);
+                        findByName(courseName);
+                    });
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            PluginUtils.log(courseNames.size() + " courses found.");
+            PluginUtils.log(courseCache.size() + " courses cached.");
+        }
     }
 }

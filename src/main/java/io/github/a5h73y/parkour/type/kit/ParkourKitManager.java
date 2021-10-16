@@ -1,14 +1,8 @@
 package io.github.a5h73y.parkour.type.kit;
 
-import static io.github.a5h73y.parkour.configuration.impl.ParkourKitConfig.PARKOUR_KIT_CONFIG_PREFIX;
-
 import com.cryptomorin.xseries.XMaterial;
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
-import io.github.a5h73y.parkour.enums.ActionType;
-import io.github.a5h73y.parkour.enums.ConfigType;
-import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.type.Cacheable;
+import io.github.a5h73y.parkour.type.CacheableParkourManager;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
@@ -30,12 +24,17 @@ import org.jetbrains.annotations.Nullable;
  * ParkourKit Manager.
  * Keeps a lazy Cache of {@link ParkourKit} which can be reused by other Courses.
  */
-public class ParkourKitManager extends AbstractPluginReceiver implements Cacheable<ParkourKit> {
+public class ParkourKitManager extends CacheableParkourManager {
 
 	private final Map<String, ParkourKit> parkourKitCache = new HashMap<>();
 
 	public ParkourKitManager(final Parkour parkour) {
 		super(parkour);
+	}
+
+	@Override
+	protected ParkourKitConfig getConfig() {
+		return parkour.getConfigManager().getParkourKitConfig();
 	}
 
 	/**
@@ -54,7 +53,7 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 			return parkourKitCache.get(name);
 		}
 
-		if (!ParkourKitInfo.doesParkourKitExist(name)) {
+		if (!getConfig().doesParkourKitExist(name)) {
 			return null;
 		}
 
@@ -72,7 +71,7 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 	 * @param kitName parkour kit name
 	 */
 	public void giveParkourKit(Player player, String kitName) {
-		if (parkour.getConfig().getBoolean("Other.ParkourKit.ReplaceInventory")) {
+		if (parkour.getParkourConfig().getBoolean("ParkourKit.ReplaceInventory")) {
 			player.getInventory().clear();
 		}
 
@@ -84,7 +83,7 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 		}
 
 		for (Material material : kit.getMaterials()) {
-			String actionName = ParkourKitInfo.getActionTypeForMaterial(kitName, material.name());
+			String actionName = getConfig().getActionTypeForMaterial(kitName, material.name());
 
 			if (actionName == null) {
 				continue;
@@ -97,7 +96,7 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 			player.getInventory().addItem(itemStack);
 		}
 
-		if (parkour.getConfig().getBoolean("Other.ParkourKit.GiveSign")) {
+		if (parkour.getParkourConfig().getBoolean("ParkourKit.GiveSign")) {
 			ItemStack itemStack = MaterialUtils.createItemStack(XMaterial.OAK_SIGN.parseMaterial(),
 					TranslationUtils.getTranslation("Kit.Sign", false));
 			player.getInventory().addItem(itemStack);
@@ -117,18 +116,18 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 	 * @param kitName parkour kit name
 	 */
 	public void validateParkourKit(CommandSender sender, String kitName) {
-		if (!ParkourKitInfo.doesParkourKitExist(kitName)) {
+		if (!getConfig().doesParkourKitExist(kitName)) {
 			TranslationUtils.sendTranslation("Error.UnknownParkourKit", sender);
 			return;
 		}
 
 		List<String> invalidTypes = new ArrayList<>();
-		Set<String> materialList = ParkourKitInfo.getParkourKitMaterials(kitName);
+		Set<String> materialList = getConfig().getParkourKitMaterials(kitName);
 
 		for (String material : materialList) {
 			// try to get the server lookup version first
 			if (Material.getMaterial(material) == null) {
-				invalidTypes.add("Unknown Material: " + material);
+				invalidTypes.add("Unknown Material: &b" + material);
 
 				// try to see if we have a matching legacy version
 				Material matching = MaterialUtils.lookupMaterial(material);
@@ -136,10 +135,10 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 					invalidTypes.add(" Could you have meant: " + matching.name() + "?");
 				}
 			} else {
-				String actionType = ParkourKitInfo.getActionTypeForMaterial(kitName, material);
+				String actionType = getConfig().getActionTypeForMaterial(kitName, material);
 
 				if (validateActionType(actionType) == null) {
-					invalidTypes.add("Material: " + material + ", Unknown Action: " + actionType);
+					invalidTypes.add("Material: &b" + material + "&f, Unknown Action: &b" + actionType);
 				}
 			}
 		}
@@ -147,7 +146,7 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 		TranslationUtils.sendMessage(sender, invalidTypes.size() + " problems with &b" + kitName + "&f found.");
 
 		for (String type : invalidTypes) {
-			TranslationUtils.sendMessage(sender, "&4" + type, false);
+			TranslationUtils.sendMessage(sender, type, false);
 		}
 	}
 
@@ -160,7 +159,7 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 	 * @param args command arguments
 	 */
 	public void displayParkourKits(CommandSender sender, String... args) {
-		Set<String> parkourKit = ParkourKitInfo.getAllParkourKitNames();
+		Set<String> parkourKit = getConfig().getAllParkourKitNames();
 
 		// specifying a kit
 		if (args.length == 2) {
@@ -171,17 +170,17 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 			}
 
 			TranslationUtils.sendHeading("ParkourKit: " + kitName, sender);
-			Set<String> materials = ParkourKitInfo.getParkourKitMaterials(kitName);
+			Set<String> materials = getConfig().getParkourKitMaterials(kitName);
 
 			for (String material : materials) {
-				String actionTypeName = ParkourKitInfo.getActionTypeForMaterial(kitName, material);
+				String actionTypeName = getConfig().getActionTypeForMaterial(kitName, material);
 				ActionType actionType = validateActionType(actionTypeName);
 				if (actionType == null) {
 					TranslationUtils.sendMessage(sender, "Invalid Action Type: " + actionTypeName);
 					return;
 				}
 				if (actionTypeName.equalsIgnoreCase("potion")) {
-					actionTypeName += " (" + ParkourKitInfo.getEffectTypeForMaterial(kitName, material) + ")";
+					actionTypeName += " (" + getConfig().getEffectTypeForMaterial(kitName, material) + ")";
 				}
 				TranslationUtils.sendValue(sender, material, actionTypeName);
 			}
@@ -202,12 +201,12 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 	 * @param kitName kit name
 	 */
 	public void deleteParkourKit(CommandSender sender, String kitName) {
-		if (!ParkourKitInfo.doesParkourKitExist(kitName)) {
+		if (!getConfig().doesParkourKitExist(kitName)) {
 			TranslationUtils.sendTranslation("Error.UnknownParkourKit", sender);
 			return;
 		}
 
-		ParkourKitInfo.deleteKit(kitName);
+		getConfig().deleteKit(kitName);
 		clearCache(kitName);
 		TranslationUtils.sendValueTranslation("Parkour.Delete", kitName + " ParkourKit", sender);
 		PluginUtils.logToFile(kitName + " parkourkit was deleted by " + sender.getName());
@@ -241,8 +240,7 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 	 * @return populated ParkourKit
 	 */
 	private ParkourKit populateParkourKit(String kitName) {
-		ParkourConfiguration config = Parkour.getConfig(ConfigType.PARKOURKIT);
-		Set<String> rawMaterials = ParkourKitInfo.getParkourKitMaterials(kitName);
+		Set<String> rawMaterials = getConfig().getParkourKitMaterials(kitName);
 		EnumMap<Material, ParkourKitAction> actionTypes = new EnumMap<>(Material.class);
 
 		for (String rawMaterial : rawMaterials) {
@@ -252,13 +250,13 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 				continue;
 			}
 
-			String configPath = PARKOUR_KIT_CONFIG_PREFIX + kitName + "." + material.name() + ".";
-			ActionType actionType = validateActionType(config.getString(configPath + "Action"));
+			String pathPrefix = kitName + "." + material.name() + ".";
+			ActionType actionType = validateActionType(getConfig().getString(pathPrefix + "Action"));
 
 			if (actionType != null) {
-				double strength = config.getDouble(configPath + "Strength", 1);
-				int duration = config.getInt(configPath + "Duration", 200);
-				String effect = config.getString(configPath + "Effect", "");
+				double strength = getConfig().getOrDefault(pathPrefix + "Strength", 1.0);
+				int duration = getConfig().getOrDefault(pathPrefix + "Duration", 200);
+				String effect = getConfig().getOrDefault(pathPrefix + "Effect", "");
 				actionTypes.put(material, new ParkourKitAction(actionType, strength, duration, effect));
 			}
 		}
@@ -310,22 +308,19 @@ public class ParkourKitManager extends AbstractPluginReceiver implements Cacheab
 	}
 
 	private void updateOutdatedMaterial(String kitName, String oldMaterial, String newMaterial) {
-		ParkourConfiguration parkourKitConfig = Parkour.getConfig(ConfigType.PARKOURKIT);
-		Set<String> oldAction = parkourKitConfig.getConfigurationSection(
-				PARKOUR_KIT_CONFIG_PREFIX + kitName + "." + oldMaterial).getKeys(false);
+		Set<String> oldAction = getConfig().getSection( kitName + "." + oldMaterial).singleLayerKeySet();
 
 		// we copy all of the attributes from the old action (strength, duration, etc)
 		for (String attribute : oldAction) {
-			String matchingValue = parkourKitConfig.getString(
-					PARKOUR_KIT_CONFIG_PREFIX + kitName + "." + oldMaterial + "." + attribute);
+			String matchingValue = getConfig().getString(
+					kitName + "." + oldMaterial + "." + attribute);
 
-			parkourKitConfig.set(PARKOUR_KIT_CONFIG_PREFIX + kitName + "." + newMaterial + "." + attribute,
+			getConfig().set(kitName + "." + newMaterial + "." + attribute,
 					ValidationUtils.isInteger(matchingValue) ? Integer.parseInt(matchingValue)
 							: matchingValue);
 		}
 
 		// remove the old material
-		parkourKitConfig.set(PARKOUR_KIT_CONFIG_PREFIX + kitName + "." + oldMaterial, null);
-		parkourKitConfig.save();
+		getConfig().set(kitName + "." + oldMaterial, null);
 	}
 }

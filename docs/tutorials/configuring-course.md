@@ -145,11 +145,21 @@ The Parkour events include:
 * PlayerCourseRecord _(player beats their best time)_
 * GlobalCourseRecord _(player beats the global best time)_
 
+You are able to use the following internal placeholders:
+* %PLAYER% _(player name)_
+* %PLAYER_DISPLAY% _(player display name)_
+* %COURSE% _(course name)_
+* %DEATHS% _(amount of deaths)_
+* %TIME% _(current total time)_
+* %CHECKPOINT% _(current checkpoint number)_
+
 ### Running Custom Event Commands
 
-This will allow you to link Parkour to trigger other plugins using a command. You are able to use a `%PLAYER%` placeholder to insert the Player name.
+This will allow you to link Parkour to trigger other plugins using a command. 
 
 ![Event Command Example](https://i.imgur.com/patqUxL.png "Event Command Example")
+
+You are able to specify the command should be executed by the Player, by prefixing the command with `player:`.
 
 _Command: `/pa setcourse (course) command (event) (command)`_
 

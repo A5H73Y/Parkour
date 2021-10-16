@@ -4,17 +4,17 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_UNKNOWN_PLAYER;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.enums.Permission;
+import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.other.ParkourValidation;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
-import io.github.a5h73y.parkour.type.player.PlayerInfo;
+import io.github.a5h73y.parkour.type.course.CourseConfig;
+import io.github.a5h73y.parkour.type.player.PlayerConfig;
+import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -82,7 +82,7 @@ public class PluginUtils {
      * @param message message to log
      */
     public static void debug(String message) {
-        if (Parkour.getDefaultConfig().getBoolean("Debug", false)) {
+        if (Parkour.getDefaultConfig().getOrDefault("Debug", false)) {
             log(message, 3);
         }
     }
@@ -168,7 +168,7 @@ public class PluginUtils {
         boolean valid = true;
 
         try {
-            GameMode.valueOf(gameMode.toUpperCase(Locale.ROOT));
+            GameMode.valueOf(gameMode.toUpperCase());
         } catch (IllegalArgumentException e) {
             valid = false;
         }
@@ -202,7 +202,7 @@ public class PluginUtils {
                     return;
                 }
 
-                int checkpoints = CourseInfo.getCheckpointAmount(argument);
+                int checkpoints = CourseConfig.getConfig(argument).getCheckpointAmount();
                 parkour.getQuestionManager().askDeleteCheckpointQuestion(sender, argument, checkpoints);
                 break;
 
@@ -270,7 +270,7 @@ public class PluginUtils {
             case "player":
                 OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(argument);
 
-                if (!PlayerInfo.hasPlayerInfo(targetPlayer)) {
+                if (!PlayerConfig.hasPlayerConfig(targetPlayer)) {
                     TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, sender);
                     return;
                 }
@@ -323,7 +323,7 @@ public class PluginUtils {
                     parkour.getCourseManager().clearCache();
                     break;
                 case "database":
-                    parkour.getDatabase().clearCache();
+                    parkour.getDatabaseManager().clearCache();
                     break;
                 case "lobby":
                 case "lobbies":
@@ -350,7 +350,7 @@ public class PluginUtils {
         } else {
             TranslationUtils.sendHeading("Parkour Cache", sender);
             TranslationUtils.sendValue(sender, "Courses Cached", parkour.getCourseManager().getCacheSize());
-            TranslationUtils.sendValue(sender, "Database Times Cached", parkour.getDatabase().getCacheSize());
+            TranslationUtils.sendValue(sender, "Database Times Cached", parkour.getDatabaseManager().getCacheSize());
             TranslationUtils.sendValue(sender, "Lobbies Cached", parkour.getLobbyManager().getCacheSize());
             TranslationUtils.sendValue(sender, "ParkourKits Cached", parkour.getParkourKitManager().getCacheSize());
             TranslationUtils.sendValue(sender, "Sounds Cached", parkour.getSoundsManager().getCacheSize());
@@ -363,7 +363,7 @@ public class PluginUtils {
     public static void clearAllCache() {
         Parkour parkour = Parkour.getInstance();
         parkour.getCourseManager().clearCache();
-        parkour.getDatabase().clearCache();
+        parkour.getDatabaseManager().clearCache();
         parkour.getLobbyManager().clearCache();
         parkour.getParkourKitManager().clearCache();
         parkour.getSoundsManager().clearCache();

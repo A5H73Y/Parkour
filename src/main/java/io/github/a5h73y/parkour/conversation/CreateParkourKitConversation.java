@@ -1,9 +1,8 @@
 package io.github.a5h73y.parkour.conversation;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.configuration.impl.ParkourKitConfig;
 import io.github.a5h73y.parkour.conversation.other.AddKitItemConversation;
-import io.github.a5h73y.parkour.enums.ConfigType;
+import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.BooleanPrompt;
 import org.bukkit.conversations.Conversable;
@@ -44,7 +43,7 @@ public class CreateParkourKitConversation extends ParkourConversation {
 
             name = name.toLowerCase();
 
-            if (Parkour.getConfig(ConfigType.PARKOURKIT).contains(ParkourKitConfig.PARKOUR_KIT_CONFIG_PREFIX + name)) {
+            if (Parkour.getParkourKitConfig().doesParkourKitExist(name)) {
                 ParkourConversation.sendErrorMessage(context, "This ParkourKit already exists");
                 return this;
             }
@@ -66,12 +65,10 @@ public class CreateParkourKitConversation extends ParkourConversation {
         @Override
         protected Prompt acceptValidatedInput(@NotNull ConversationContext context, boolean input) {
             String name = context.getSessionData("name").toString();
-            ParkourKitConfig parkourKitFile = (ParkourKitConfig) Parkour.getConfig(ConfigType.PARKOURKIT);
 
             if (input) {
-                context.getForWhom().sendRawMessage(Parkour.getPrefix() + name + " will use standard blocks...");
-                parkourKitFile.createStandardKit(name);
-                parkourKitFile.save();
+                context.getForWhom().sendRawMessage(TranslationUtils.getPluginPrefix() + name + " will use standard blocks...");
+                Parkour.getParkourKitConfig().createStandardKit(name);
             }
 
             return new AddKitItemConversation(Prompt.END_OF_CONVERSATION, name).startConversation();

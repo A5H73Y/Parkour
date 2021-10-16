@@ -1,12 +1,11 @@
 package io.github.a5h73y.parkour.upgrade.major;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.database.ParkourDatabase;
+import io.github.a5h73y.parkour.database.DatabaseManager;
 import io.github.a5h73y.parkour.database.SQLite;
 import io.github.a5h73y.parkour.database.TimeEntry;
 import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
 import io.github.a5h73y.parkour.upgrade.TimedUpgradeTask;
-import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -113,7 +112,7 @@ public class DatabaseUpgradeTask extends TimedUpgradeTask {
 		boolean success = true;
 		// create a proper Parkour connection
 		// which also setups up the new tables
-		Database database = Parkour.getInstance().getDatabase().getDatabase();
+		Database database = Parkour.getInstance().getDatabaseManager().getDatabase();
 
 		getParkourUpgrader().getLogger().info("Transferring data to new tables.");
 		getParkourUpgrader().getLogger().info("Re-inserting course data...");
@@ -128,7 +127,7 @@ public class DatabaseUpgradeTask extends TimedUpgradeTask {
 
 			for (Map.Entry<String, List<TimeEntry>> playerEntry : playerNameToTimes.entrySet()) {
 				OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(playerEntry.getKey());
-				String playerId = ParkourDatabase.getPlayerId(targetPlayer);
+				String playerId = DatabaseManager.getPlayerId(targetPlayer);
 
 				for (TimeEntry timeEntry : playerEntry.getValue()) {
 					database.update("INSERT INTO time (courseId, playerId, playerName, time, deaths) VALUES ("
@@ -162,7 +161,7 @@ public class DatabaseUpgradeTask extends TimedUpgradeTask {
 		} else {
 			String pathOverride = defaultConfig.getString("SQLite.PathOverride", "");
 			String path = !pathOverride.isEmpty() ? pathOverride
-					: Parkour.getInstance().getDataFolder() + File.separator + "sqlite-db" + File.separator;
+					: Parkour.getInstance().getDataFolder() + "/sqlite-db/";
 
 			database = new SQLite(path, "parkour.db");
 		}

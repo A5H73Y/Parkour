@@ -2,7 +2,6 @@ package io.github.a5h73y.parkour.plugin;
 
 import com.connorlinfoot.bountifulapi.BountifulAPI;
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.player.PlayerInfo;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
@@ -20,6 +19,10 @@ public class BountifulApi extends PluginWrapper {
 	private int inDuration;
 	private int stayDuration;
 	private int outDuration;
+
+	public BountifulApi(Parkour parkour) {
+		super(parkour);
+	}
 
 	@Override
 	public String getPluginName() {
@@ -74,7 +77,7 @@ public class BountifulApi extends PluginWrapper {
 	 * @param attemptTitle attempt to show the title
 	 */
 	public void sendFullTitle(Player player, String title, String subTitle, boolean attemptTitle) {
-		if (PlayerInfo.isQuietMode(player)) {
+		if (parkour.getQuietModeManager().isQuietMode(player)) {
 			return;
 		}
 
@@ -112,7 +115,7 @@ public class BountifulApi extends PluginWrapper {
 	 * @param attemptTitle attempt to show the title
 	 */
 	public void sendActionBar(Player player, String title, boolean attemptTitle) {
-		if (PlayerInfo.isQuietMode(player)) {
+		if (parkour.getQuietModeManager().isQuietMode(player)) {
 			return;
 		}
 

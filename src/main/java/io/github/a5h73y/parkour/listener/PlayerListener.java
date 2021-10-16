@@ -1,10 +1,10 @@
 package io.github.a5h73y.parkour.listener;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.enums.ParkourMode;
+import io.github.a5h73y.parkour.type.player.ParkourMode;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
-import io.github.a5h73y.parkour.type.player.PlayerInfo;
+import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Damageable;
@@ -41,12 +41,12 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player
                 && parkour.getPlayerManager().isPlaying((Player) event.getEntity())
-                && parkour.getConfig().isPreventEntitiesAttacking()) {
+                && parkour.getParkourConfig().isPreventEntitiesAttacking()) {
             event.setCancelled(true);
 
         } else if (event.getDamager() instanceof Player
                 && parkour.getPlayerManager().isPlaying((Player) event.getDamager())
-                && parkour.getConfig().isPreventAttackingEntities()) {
+                && parkour.getParkourConfig().isPreventAttackingEntities()) {
             event.setCancelled(true);
         }
     }
@@ -81,10 +81,10 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         boolean playing = parkour.getPlayerManager().isPlaying(player);
 
         if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
-            if (playing && parkour.getConfig().getBoolean("OnCourse.DieInVoid")) {
+            if (playing && parkour.getParkourConfig().getBoolean("OnCourse.DieInVoid")) {
                 parkour.getPlayerManager().playerDie(player);
                 return;
-            } else if (!playing && parkour.getConfig().isVoidDetection()) {
+            } else if (!playing && parkour.getParkourConfig().isVoidDetection()) {
                 parkour.getServer().getScheduler().runTaskLater(parkour, () ->
                         parkour.getLobbyManager().teleportToNearestLobby(player),1L);
                 return;
@@ -98,15 +98,15 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         // if the player takes fall damage
         // cancel damage if globally disabled or the ParkourMode is Dropper and fall damage is enabled
         if (event.getCause() == EntityDamageEvent.DamageCause.FALL
-                && (parkour.getConfig().getBoolean("OnCourse.DisableFallDamage")
+                && (parkour.getParkourConfig().getBoolean("OnCourse.DisableFallDamage")
                 || (ParkourMode.DROPPER == parkour.getPlayerManager().getParkourSession(player).getParkourMode()
-                && !parkour.getConfig().getBoolean("ParkourModes.Dropper.FallDamage")))) {
+                && !parkour.getParkourConfig().getBoolean("ParkourModes.Dropper.FallDamage")))) {
             event.setDamage(0);
             event.setCancelled(true);
             return;
         }
 
-        if (parkour.getConfig().isDisablePlayerDamage()) {
+        if (parkour.getParkourConfig().isDisablePlayerDamage()) {
             event.setDamage(0);
             event.setCancelled(true);
             return;
@@ -162,7 +162,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        if (parkour.getConfig().getBoolean("OnCourse.DisableItemDrop")) {
+        if (parkour.getParkourConfig().getBoolean("OnCourse.DisableItemDrop")) {
             event.setCancelled(true);
         }
     }
@@ -179,7 +179,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        if (parkour.getConfig().getBoolean("OnCourse.DisableItemPickup")) {
+        if (parkour.getParkourConfig().getBoolean("OnCourse.DisableItemPickup")) {
             event.setCancelled(true);
         }
     }
@@ -194,18 +194,24 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        if (parkour.getConfig().isDisplayWelcomeMessage()) {
+        if (parkour.getParkourConfig().isDisplayWelcomeMessage()) {
             TranslationUtils.sendValueTranslation("Event.Join",
                     parkour.getDescription().getVersion(), player);
         }
 
-        if (!PlayerInfo.hasExistingSessionCourseName(player)) {
+        if (!PlayerConfig.hasPlayerConfig(player)) {
+            return;
+        }
+
+        PlayerConfig playerConfig = PlayerConfig.getConfig(player);
+
+        if (!playerConfig.hasExistingSessionCourseName()) {
             return;
         }
 
         ParkourSession session = parkour.getPlayerManager().loadParkourSession(player,
-                PlayerInfo.getExistingSessionCourseName(player));
-        PlayerInfo.setExistingSessionCourseName(player, null);
+                playerConfig.getExistingSessionCourseName());
+        playerConfig.setExistingSessionCourseName(null);
 
         if (!parkour.getPlayerManager().isPlaying(player)) {
             return;
@@ -214,7 +220,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         parkour.getScoreboardManager().addScoreboard(player, session);
         parkour.getPlayerManager().setupParkourMode(player);
 
-        if (parkour.getConfig().isPlayerLeaveCourseOnLeaveServer()) {
+        if (parkour.getParkourConfig().isPlayerLeaveCourseOnLeaveServer()) {
             parkour.getPlayerManager().leaveCourse(player);
             return;
         }
@@ -222,7 +228,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         String currentCourse = session.getCourse().getName();
         TranslationUtils.sendValueTranslation("Parkour.Continue", currentCourse, player);
 
-        if (parkour.getConfig().getBoolean("OnLeaveServer.TeleportToLastCheckpoint")) {
+        if (parkour.getParkourConfig().getBoolean("OnLeaveServer.TeleportToLastCheckpoint")) {
             parkour.getPlayerManager().playerDie(player);
         }
     }
@@ -239,7 +245,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         parkour.getPlayerManager().teardownParkourPlayer(event.getPlayer());
 
         if (event.getPlayer().isBanned()
-                && parkour.getConfig().getBoolean("Other.OnPlayerBan.ResetParkourInfo")) {
+                && parkour.getParkourConfig().getBoolean("Other.OnPlayerBan.ResetParkourInfo")) {
             parkour.getPlayerManager().resetPlayer(event.getPlayer());
         }
     }
@@ -260,12 +266,12 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        if (!parkour.getConfig().isCourseEnforceWorld()) {
+        if (!parkour.getParkourConfig().isCourseEnforceWorld()) {
             return;
         }
 
         if (event.getFrom().getWorld() != event.getTo().getWorld()) {
-            if (parkour.getConfig().isCourseEnforceWorldLeaveCourse()) {
+            if (parkour.getParkourConfig().isCourseEnforceWorldLeaveCourse()) {
                 parkour.getPlayerManager().leaveCourse(event.getPlayer(), true);
 
             } else {
@@ -287,7 +293,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        if (!parkour.getConfig().getBoolean("OnCourse.DisableFly")) {
+        if (!parkour.getParkourConfig().getBoolean("OnCourse.DisableFly")) {
             return;
         }
 
@@ -314,7 +320,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        if (!parkour.getConfig().getBoolean("OnCourse.PreventOpeningOtherInventories")) {
+        if (!parkour.getParkourConfig().getBoolean("OnCourse.PreventOpeningOtherInventories")) {
             return;
         }
 

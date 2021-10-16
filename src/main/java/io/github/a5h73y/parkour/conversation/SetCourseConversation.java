@@ -1,8 +1,8 @@
 package io.github.a5h73y.parkour.conversation;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.enums.ParkourEventType;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
+import io.github.a5h73y.parkour.type.course.ParkourEventType;
+import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.util.Arrays;
@@ -144,7 +144,7 @@ public class SetCourseConversation extends ParkourConversation {
 
             String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);
             ParkourEventType type = ParkourEventType.valueOf(context.getSessionData("setCommandOption").toString().toUpperCase());
-            CourseInfo.addEventCommand(courseName, type, input);
+            CourseConfig.getConfig(courseName).addEventCommand(type, input);
             context.getForWhom().sendRawMessage(TranslationUtils.getPropertySet(
                     type.getConfigEntry() + " command", courseName, "/" + input));
             return Prompt.END_OF_CONVERSATION;
@@ -199,7 +199,7 @@ public class SetCourseConversation extends ParkourConversation {
 
             String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);
             String messageValue = (String) context.getSessionData("setMessageOption");
-            CourseInfo.setEventMessage(courseName, messageValue, input);
+            CourseConfig.getConfig(courseName).setEventMessage(messageValue, input);
             context.getForWhom().sendRawMessage(TranslationUtils.getPropertySet(messageValue + " message", courseName, input));
             return Prompt.END_OF_CONVERSATION;
         }

@@ -14,6 +14,10 @@ public class PlaceholderApi extends PluginWrapper {
 
 	private ParkourPlaceholders placeholders;
 
+	public PlaceholderApi(Parkour parkour) {
+		super(parkour);
+	}
+
 	@Override
 	public String getPluginName() {
 		return "PlaceholderAPI";

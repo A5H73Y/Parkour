@@ -1,7 +1,6 @@
 package io.github.a5h73y.parkour.commands;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.other.CommandUsage;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.Optional;
 import org.bukkit.command.CommandSender;

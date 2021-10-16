@@ -1,24 +1,19 @@
 package io.github.a5h73y.parkour.conversation.other;
 
-import static io.github.a5h73y.parkour.configuration.impl.ParkourKitConfig.PARKOUR_KIT_CONFIG_PREFIX;
 import static io.github.a5h73y.parkour.conversation.ParkourConversation.sendErrorMessage;
-import static io.github.a5h73y.parkour.enums.ActionType.BOUNCE;
-import static io.github.a5h73y.parkour.enums.ActionType.CLIMB;
-import static io.github.a5h73y.parkour.enums.ActionType.LAUNCH;
-import static io.github.a5h73y.parkour.enums.ActionType.POTION;
-import static io.github.a5h73y.parkour.enums.ActionType.REPULSE;
-import static io.github.a5h73y.parkour.enums.ActionType.SPEED;
+import static io.github.a5h73y.parkour.type.kit.ActionType.BOUNCE;
+import static io.github.a5h73y.parkour.type.kit.ActionType.CLIMB;
+import static io.github.a5h73y.parkour.type.kit.ActionType.LAUNCH;
+import static io.github.a5h73y.parkour.type.kit.ActionType.POTION;
+import static io.github.a5h73y.parkour.type.kit.ActionType.REPULSE;
+import static io.github.a5h73y.parkour.type.kit.ActionType.SPEED;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
-import io.github.a5h73y.parkour.enums.ActionType;
-import io.github.a5h73y.parkour.enums.ConfigType;
-import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
+import io.github.a5h73y.parkour.type.kit.ActionType;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -83,7 +78,7 @@ public class AddKitItemConversation {
                 return this;
             }
 
-            if (Parkour.getConfig(ConfigType.PARKOURKIT).contains(PARKOUR_KIT_CONFIG_PREFIX + kitName + "." + material.name())) {
+            if (Parkour.getParkourKitConfig().doesMaterialExistInParkourKit(kitName, material)) {
                 sendErrorMessage(context, material.name() + " already exists in this ParkourKit!");
                 return this;
             }
@@ -133,13 +128,13 @@ public class AddKitItemConversation {
         @Override
         @NotNull
         public String getPromptText(@NotNull ConversationContext context) {
-            return ChatColor.LIGHT_PURPLE + " What potion effect do you want to apply to "
+            return ChatColor.LIGHT_PURPLE + " What Potion Effect would you want to apply to "
                     + context.getSessionData(MATERIAL) + "?\n" + ChatColor.GREEN + formatFixedSet();
         }
 
         @Override
         protected boolean isInputValid(@NotNull ConversationContext context, @NotNull String input) {
-            return super.isInputValid(context, input.toUpperCase(Locale.ROOT));
+            return super.isInputValid(context, input.toUpperCase());
         }
 
         @Override
@@ -233,22 +228,8 @@ public class AddKitItemConversation {
             String material = context.getSessionData(MATERIAL).toString();
             String action = context.getSessionData(ACTION).toString();
 
-            ParkourConfiguration parkourKitConfig = Parkour.getConfig(ConfigType.PARKOURKIT);
-            String path = PARKOUR_KIT_CONFIG_PREFIX + kitName + "." + material;
-
-            parkourKitConfig.set(path + ".Action", action);
-
-            if (context.getSessionData(STRENGTH) != null) {
-                parkourKitConfig.set(path + ".Strength", context.getSessionData(STRENGTH));
-            }
-            if (context.getSessionData(DURATION) != null) {
-                parkourKitConfig.set(path + ".Duration", context.getSessionData(DURATION));
-            }
-            if (context.getSessionData(POTION) != null) {
-                parkourKitConfig.set(path + ".Effect", context.getSessionData(POTION).toString());
-            }
-
-            parkourKitConfig.save();
+            Parkour.getParkourKitConfig().addMaterialToParkourKit(kitName, material, action, context.getSessionData(STRENGTH),
+                    context.getSessionData(DURATION), context.getSessionData(POTION));
 
             if (addAnother) {
                 context.setSessionData(STRENGTH, null);
@@ -257,9 +238,9 @@ public class AddKitItemConversation {
                 return new ChooseMaterial();
             }
 
-            context.getForWhom().sendRawMessage(Parkour.getPrefix() + kitName + " ParkourKit has been successfully saved.");
+            context.getForWhom().sendRawMessage(TranslationUtils.getPluginPrefix() + kitName + " ParkourKit has been successfully saved.");
             Parkour.getInstance().getParkourKitManager().clearCache(kitName);
-            for (String courseName : ParkourKitInfo.getDependentCourses(kitName)) {
+            for (String courseName : Parkour.getParkourKitConfig().getDependentCourses(kitName)) {
                 Parkour.getInstance().getCourseManager().clearCache(courseName);
             }
             return endingConversation;

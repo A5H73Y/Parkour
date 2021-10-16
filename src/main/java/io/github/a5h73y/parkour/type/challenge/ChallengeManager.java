@@ -32,7 +32,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
     private final Map<Player, Challenge> challenges = new HashMap<>();
     private final Map<Player, ChallengeInvite> invites = new HashMap<>();
 
-    public ChallengeManager(final Parkour parkour) {
+    public ChallengeManager(Parkour parkour) {
         super(parkour);
         initialiseInviteTimeout();
     }
@@ -305,7 +305,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
      * @param participant participating Player
      */
     public void prepareParticipant(Challenge challenge, Player participant) {
-        if (parkour.getConfig().getBoolean("ParkourChallenge.HidePlayers")) {
+        if (parkour.getParkourConfig().getBoolean("ParkourChallenge.HidePlayers")) {
             parkour.getPlayerManager().forceInvisible(participant);
         }
 
@@ -323,7 +323,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
      */
     public void beginCountdown(Challenge challenge) {
         new BukkitRunnable() {
-            int count = parkour.getConfig().getInt("ParkourChallenge.CountdownFrom") + 1;
+            int count = parkour.getParkourConfig().getInt("ParkourChallenge.CountdownFrom") + 1;
             @Override
             public void run() {
                 if (count > 1) {
@@ -413,7 +413,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
     private void addParticipantToChallenge(Challenge challenge, Player player) {
         if (challenge != null) {
             challenge.addParticipant(player);
-            if (parkour.getConfig().getBoolean("ParkourChallenge.PrepareOnAccept")) {
+            if (parkour.getParkourConfig().getBoolean("ParkourChallenge.PrepareOnAccept")) {
                 prepareParticipant(challenge, player);
             }
         }

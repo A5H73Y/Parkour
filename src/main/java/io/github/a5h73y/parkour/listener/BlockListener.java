@@ -1,9 +1,9 @@
 package io.github.a5h73y.parkour.listener;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.enums.Permission;
+import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.utility.PermissionUtils;
+import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
@@ -54,12 +54,12 @@ public class BlockListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        if (parkour.getConfig().getBoolean("OnCourse.AnybodyPlaceBreakBlocks")) {
+        if (parkour.getParkourConfig().getBoolean("OnCourse.AnybodyPlaceBreakBlocks")) {
             return;
         }
 
         if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL, false)
-                || !parkour.getConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks")) {
+                || !parkour.getParkourConfig().getBoolean("OnCourse.AdminPlaceBreakBlocks")) {
             event.setCancelled(true);
         }
     }

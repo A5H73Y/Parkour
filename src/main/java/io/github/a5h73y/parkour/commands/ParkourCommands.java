@@ -8,13 +8,13 @@ import io.github.a5h73y.parkour.conversation.CoursePrizeConversation;
 import io.github.a5h73y.parkour.conversation.CreateParkourKitConversation;
 import io.github.a5h73y.parkour.conversation.EditParkourKitConversation;
 import io.github.a5h73y.parkour.conversation.ParkourModeConversation;
-import io.github.a5h73y.parkour.enums.GuiMenu;
-import io.github.a5h73y.parkour.enums.Permission;
+import io.github.a5h73y.parkour.gui.GuiMenu;
+import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
-import io.github.a5h73y.parkour.type.player.PlayerInfo;
+import io.github.a5h73y.parkour.type.course.CourseConfig;
+import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
-import io.github.a5h73y.parkour.utility.PermissionUtils;
+import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -49,7 +49,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
         Player player = (Player) sender;
 
-        if (Parkour.getDefaultConfig().isPermissionsForCommands()
+        if (parkour.getParkourConfig().isPermissionsForCommands()
                 && !PermissionUtils.hasPermission(player, Permission.BASIC_COMMANDS)) {
             return false;
         }
@@ -103,7 +103,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
 
                 } else if (!PermissionUtils.hasPermissionOrCourseOwnership(
-                        player, Permission.ADMIN_COURSE, PlayerInfo.getSelectedCourse(player))) {
+                        player, Permission.ADMIN_COURSE, PlayerConfig.getConfig(player).getSelectedCourse())) {
                     return false;
 
                 } else if (args.length == 2 && !ValidationUtils.isPositiveInteger(args[1])) {
@@ -206,7 +206,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 if (!ValidationUtils.validateArgs(player, args, 2)) {
                     return false;
 
-                } else if (!parkour.getConfig().getBoolean("OnJoin.AllowViaCommand")) {
+                } else if (!parkour.getParkourConfig().getBoolean("OnJoin.AllowViaCommand")) {
                     TranslationUtils.sendTranslation("Error.AllowViaCommand", player);
                     return false;
                 }
@@ -252,7 +252,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
 
                 } else if (!PermissionUtils.hasPermissionOrCourseOwnership(
-                        player, Permission.ADMIN_COURSE, PlayerInfo.getSelectedCourse(player))) {
+                        player, Permission.ADMIN_COURSE, PlayerConfig.getConfig(player).getSelectedCourse())) {
                     return false;
                 }
 
@@ -323,7 +323,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "quiet":
-                parkour.getPlayerManager().toggleQuietMode(player);
+                parkour.getQuietModeManager().toggleQuietMode(player);
                 break;
 
             case "ready":
@@ -342,7 +342,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 }
 
                 TranslationUtils.sendMessage(player, "Recreating courses...");
-                parkour.getDatabase().recreateAllCourses(true);
+                parkour.getDatabaseManager().recreateAllCourses(true);
                 break;
 
             case "reload":
@@ -453,7 +453,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getPlayerManager().setRewardParkourRank(player, args[1], args[2]);
+                parkour.getParkourRankManager().setRewardParkourRank(player, args[1], args[2]);
                 break;
 
             case "select":
@@ -475,7 +475,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getCourseManager().createAutoStart(player, getChosenCourseName(player, args, 1));
+                parkour.getAutoStartManager().createAutoStart(player, getChosenCourseName(player, args, 1));
                 break;
 
             case "setcourse":
@@ -586,7 +586,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getDatabase().displayInformation(player);
+                parkour.getDatabaseManager().displayInformation(player);
                 break;
 
             case "stats":
@@ -595,7 +595,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                CourseInfo.displayCourseInfo(player, args[1]);
+                CourseConfig.displayCourseInfo(player, args[1]);
                 break;
 
             case "test":
@@ -655,7 +655,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getConfig().addWhitelistedCommand(player, args[1]);
+                parkour.getParkourConfig().addWhitelistedCommand(player, args[1]);
                 break;
 
             //Other commands//
@@ -693,7 +693,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 }
 
                 if (!args[1].startsWith("MySQL")) {
-                    TranslationUtils.sendValue(sender, args[1], parkour.getConfig().getString(args[1]));
+                    TranslationUtils.sendValue(sender, args[1], parkour.getParkourConfig().getString(args[1]));
                 }
                 break;
 
@@ -716,6 +716,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
      * @return chosen course name
      */
     private String getChosenCourseName(Player player, String[] args, int courseArg) {
-        return args.length != courseArg + 1 ? PlayerInfo.getSelectedCourse(player) : args[courseArg];
+        return args.length != courseArg + 1 ? PlayerConfig.getConfig(player).getSelectedCourse() : args[courseArg];
     }
 }

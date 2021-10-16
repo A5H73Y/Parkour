@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.a5h73y</groupId>
 	<artifactId>Parkour</artifactId>
-	<version>6.7.1</version>
+	<version>7.0</version>
 	<packaging>jar</packaging>
 
 	<name>Parkour</name>
@@ -26,7 +26,7 @@
 	<licenses>
 		<license>
 			<name>MIT License</name>
-			<url>http://www.opensource.org/licenses/mit-license.php</url>
+			<url>https://opensource.org/licenses/mit-license.php</url>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
@@ -64,7 +64,7 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.16.3-R0.1-SNAPSHOT</version>
+			<version>1.17.1-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- Vault API -->
@@ -131,7 +131,7 @@
 		<dependency>
 			<groupId>com.github.cryptomorin</groupId>
 			<artifactId>XSeries</artifactId>
-			<version>8.3.0</version>
+			<version>8.4.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<!-- Version Compare -->
@@ -140,6 +140,12 @@
 			<artifactId>versioncompare</artifactId>
 			<version>1.4.1</version>
 			<scope>compile</scope>
+		</dependency>
+		<!-- Simplix Storage -->
+		<dependency>
+			<groupId>com.github.simplix-softworks</groupId>
+			<artifactId>simplixstorage</artifactId>
+			<version>3.2.3</version>
 		</dependency>
 	</dependencies>
 
@@ -199,6 +205,10 @@
 						<relocation>
 							<pattern>com.cryptomorin.xseries</pattern>
 							<shadedPattern>io.github.a5h73y.parkour.support</shadedPattern>
+						</relocation>
+						<relocation>
+							<pattern>com.github.simplix-softworks</pattern>
+							<shadedPattern>io.github.a5h73y.parkour.storage</shadedPattern>
 						</relocation>
 					</relocations>
 				</configuration>
@@ -260,6 +270,15 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
+				<configuration>
+					<outputDirectory>/Users/ashleyburns/Documents/Development/Minecraft/Server/plugins/</outputDirectory>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

@@ -1,11 +1,8 @@
 package io.github.a5h73y.parkour.conversation;
 
-import static io.github.a5h73y.parkour.configuration.impl.ParkourKitConfig.PARKOUR_KIT_CONFIG_PREFIX;
-
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.conversation.other.AddKitItemConversation;
-import io.github.a5h73y.parkour.enums.ConfigType;
-import io.github.a5h73y.parkour.type.kit.ParkourKitInfo;
+import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.ConversationContext;
@@ -27,7 +24,7 @@ public class EditParkourKitConversation extends ParkourConversation {
     private class ChooseParkourKit extends FixedSetPrompt {
 
         ChooseParkourKit() {
-            super(ParkourKitInfo.getAllParkourKitNames().toArray(new String[0]));
+            super(Parkour.getParkourKitConfig().getAllParkourKitNames().toArray(new String[0]));
         }
 
         @NotNull
@@ -76,7 +73,7 @@ public class EditParkourKitConversation extends ParkourConversation {
     private class RemoveMaterial extends FixedSetPrompt {
 
         RemoveMaterial(ConversationContext context) {
-            super(ParkourKitInfo.getParkourKitMaterials(context.getSessionData("kit").toString()).toArray(new String[0]));
+            super(Parkour.getParkourKitConfig().getParkourKitMaterials(context.getSessionData("kit").toString()).toArray(new String[0]));
         }
 
         @NotNull
@@ -90,14 +87,12 @@ public class EditParkourKitConversation extends ParkourConversation {
         protected Prompt acceptValidatedInput(@NotNull ConversationContext context,
                                               @NotNull String material) {
             String kitName = (String) context.getSessionData("kit");
-
-            Parkour.getConfig(ConfigType.PARKOURKIT).set(PARKOUR_KIT_CONFIG_PREFIX + kitName + "." + material, null);
-            Parkour.getConfig(ConfigType.PARKOURKIT).save();
+            Parkour.getParkourKitConfig().removeMaterial(kitName, material);
             Parkour.getInstance().getParkourKitManager().clearCache(kitName);
-            for (String courseName : ParkourKitInfo.getDependentCourses(kitName)) {
+            for (String courseName : Parkour.getParkourKitConfig().getDependentCourses(kitName)) {
                 Parkour.getInstance().getCourseManager().clearCache(courseName);
             }
-            context.getForWhom().sendRawMessage(Parkour.getPrefix() + material + " removed from " + kitName);
+            context.getForWhom().sendRawMessage(TranslationUtils.getPluginPrefix() + material + " removed from " + kitName);
             return new ChooseOption(true);
         }
     }

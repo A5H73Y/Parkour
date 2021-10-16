@@ -1,6 +1,5 @@
 package io.github.a5h73y.parkour.type.kit;
 
-import io.github.a5h73y.parkour.enums.ActionType;
 import java.io.Serializable;
 
 /**
