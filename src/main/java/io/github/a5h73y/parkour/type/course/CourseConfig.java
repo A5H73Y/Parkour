@@ -906,7 +906,7 @@ public class CourseConfig extends Json {
      */
     @NotNull
     public List<String> getEventCommands(@NotNull ParkourEventType eventType) {
-        return this.get(eventType.getConfigEntry() + "Command", null);
+        return this.get(eventType.getConfigEntry() + "Command", new ArrayList<>());
     }
 
     /**
