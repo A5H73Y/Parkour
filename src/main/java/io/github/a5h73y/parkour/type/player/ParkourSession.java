@@ -75,6 +75,7 @@ public class ParkourSession implements Serializable {
     public void resetTime() {
         this.timeStarted = System.currentTimeMillis();
         this.timeAccumulated = 0;
+        this.timeFinished = 0;
         this.secondsAccumulated = course.hasMaxTime() ? course.getMaxTime() : 0;
     }
 
@@ -121,7 +122,7 @@ public class ParkourSession implements Serializable {
     }
 
     public String getDisplayTime() {
-        return DateTimeUtils.displayCurrentTime(getCurrentTime());
+        return hasFinished() ? DateTimeUtils.displayCurrentTime(getTimeFinished()) : DateTimeUtils.displayCurrentTime(getCurrentTime());
     }
 
     public void recalculateTime() {
@@ -204,6 +205,10 @@ public class ParkourSession implements Serializable {
 
     public long getTimeFinished() {
         return timeFinished;
+    }
+
+    private boolean hasFinished() {
+        return timeFinished != 0;
     }
 
     public boolean isMarkedForDeletion() {
