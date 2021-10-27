@@ -571,11 +571,11 @@ public class ParkourValidation {
             return false;
         }
 
-        if (courseName.equals(Parkour.getAutoStartConfig().getAutoStartCourse(coordinates))) {
+        /*if (courseName.equals(Parkour.getAutoStartConfig().getAutoStartCourse(coordinates))) {
             TranslationUtils.sendMessage(player,
-                    "This AutoStart can not be deleted as it is not linked to course: " + courseName);
+                    "This AutoStart can not be deleted as it is linked to course: " + courseName);
             return false;
-        }
+        }*/
 
         return true;
     }

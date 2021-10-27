@@ -230,7 +230,7 @@ public class PluginUtils {
                 }
 
                 Location location = ((Player) sender).getLocation();
-                String coordinates = location.getBlockX() + "-" + location.getBlockY() + "-" + location.getBlockZ();
+                String coordinates = location.getBlockX() + "/" + location.getBlockY() + "/" + location.getBlockZ();
                 if (!ParkourValidation.canDeleteAutoStart((Player) sender, argument, coordinates)) {
                     return;
                 }
