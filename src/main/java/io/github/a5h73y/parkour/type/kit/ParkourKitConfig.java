@@ -98,12 +98,12 @@ public class ParkourKitConfig extends Yaml {
 	 * @param kitName parkour kit name
 	 */
 	public void deleteKit(String kitName) {
-		this.set(kitName.toLowerCase(), null);
+		this.remove(kitName.toLowerCase());
 		Parkour.getInstance().getParkourKitManager().clearCache(kitName);
 	}
 
 	public void removeMaterial(String kitName, String material) {
-		this.set(kitName.toLowerCase() + "." + material.toUpperCase(), null);
+		this.remove(kitName.toLowerCase() + "." + material.toUpperCase());
 	}
 
 	public void addMaterialToParkourKit(@NotNull String kitName,

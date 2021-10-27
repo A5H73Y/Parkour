@@ -26,6 +26,6 @@ public class AutoStartConfig extends Yaml {
     }
 
     public void deleteAutoStart(String coordinates) {
-        this.set(coordinates, null);
+        this.remove(coordinates);
     }
 }
