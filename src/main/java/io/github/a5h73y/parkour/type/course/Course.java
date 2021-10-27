@@ -1,5 +1,7 @@
 package io.github.a5h73y.parkour.type.course;
 
+import static io.github.a5h73y.parkour.configuration.serializable.ParkourSerializable.getMapValue;
+
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.serializable.ParkourSerializable;
 import io.github.a5h73y.parkour.other.ParkourConstants;
@@ -7,6 +9,7 @@ import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.kit.ParkourKit;
 import io.github.a5h73y.parkour.type.player.ParkourMode;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -162,8 +165,10 @@ public class Course implements ParkourSerializable {
         ParkourKit parkourKit = Parkour.getInstance().getParkourKitManager().getParkourKit(parkourKitName);
 
         if (input.containsKey("Checkpoint")) {
-            checkpoints = ((Map<String, Object>) input.get("Checkpoint")).values().stream()
-                    .map(checkpointData -> Checkpoint.deserialize((Map<String, Object>) checkpointData))
+            checkpoints = getMapValue(input.get("Checkpoint")).entrySet().stream()
+                    .sorted(Comparator.comparing(checkpointMap -> Integer.valueOf(checkpointMap.getKey())))
+                    .map(checkpointMap -> getMapValue(checkpointMap.getValue()))
+                    .map(Checkpoint::deserialize)
                     .collect(Collectors.toList());
         }
 

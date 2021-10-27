@@ -17,7 +17,7 @@ import java.util.zip.ZipOutputStream;
  */
 public class Backup {
 
-    private static final String SOURCE_FOLDER = Parkour.getInstance().getDataFolder().toString() + File.separator;
+    private static final String SOURCE_FOLDER = Parkour.getInstance().getDataFolder() + File.separator;
     private static final String BACKUPS_FOLDER = "backups" + File.separator;
     private static final String OUTPUT_ZIP_FILE = SOURCE_FOLDER + BACKUPS_FOLDER
             + "[" + DateTimeUtils.getDisplayDate() + "] Backup.zip";

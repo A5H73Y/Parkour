@@ -5,9 +5,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Set;
 import de.leonhard.storage.Yaml;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 
 /**
  * Lobby Information Utility class.

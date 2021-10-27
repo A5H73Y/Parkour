@@ -293,9 +293,8 @@ public class DatabaseManager extends CacheableParkourManager {
             return;
         }
 
-        String insertTimeUpdate = "INSERT INTO time (courseId, playerId, playerName, time, deaths) VALUES ("
-                + courseId + ", '" + getPlayerId(player) + "', '"
-                + player.getName() + "', " + time + ", " + deaths + ");";
+        String insertTimeUpdate = "INSERT INTO time (courseId, playerId, time, deaths) VALUES ("
+                + courseId + ", '" + getPlayerId(player) + "', " + time + ", " + deaths + ");";
         PluginUtils.debug("Inserting time: " + insertTimeUpdate);
 
         try {
@@ -575,9 +574,9 @@ public class DatabaseManager extends CacheableParkourManager {
                 + "timeId INTEGER PRIMARY KEY AUTO_INCREMENT, "
                 + "courseId INTEGER NOT NULL, "
                 + "playerId CHAR(36) CHARACTER SET ascii NOT NULL, "
-                + "playerName VARCHAR(16) NOT NULL, "
                 + "time DECIMAL(13,0) NOT NULL, "
                 + "deaths INT(5) NOT NULL, "
+                + "achieved TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,"
                 + "FOREIGN KEY (courseId) REFERENCES course(courseId) ON DELETE CASCADE ON UPDATE CASCADE);";
 
         // seems to be the only syntactic difference between them
@@ -627,7 +626,6 @@ public class DatabaseManager extends CacheableParkourManager {
         while (rs.next()) {
             TimeEntry time = new TimeEntry(
                     rs.getString("playerId"),
-                    rs.getString("playerName"),
                     rs.getLong("time"),
                     rs.getInt("deaths"));
             times.add(time);

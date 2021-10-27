@@ -1,5 +1,7 @@
 package io.github.a5h73y.parkour.configuration.serializable;
 
+import static io.github.a5h73y.parkour.configuration.serializable.ParkourSerializable.getMapValue;
+
 import io.github.a5h73y.parkour.type.course.Course;
 import java.util.Map;
 import de.leonhard.storage.internal.serialize.LightningSerializable;
@@ -16,7 +18,7 @@ public class CourseSerializable implements LightningSerializable<Course> {
 	public Course deserialize(@NotNull Object input) throws ClassCastException {
 		Course course = null;
 		if (input instanceof Map) {
-			course = Course.deserialize((Map<String, Object>) input);
+			course = Course.deserialize(getMapValue(input));
 		}
 		return course;
 	}

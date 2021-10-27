@@ -1,5 +1,7 @@
 package io.github.a5h73y.parkour.configuration.serializable;
 
+import static io.github.a5h73y.parkour.configuration.serializable.ParkourSerializable.getMapValue;
+
 import java.util.Map;
 import de.leonhard.storage.internal.serialize.LightningSerializable;
 import org.bukkit.Location;
@@ -11,8 +13,7 @@ public class LocationSerializable implements LightningSerializable<Location> {
 	public Location deserialize(@NotNull Object input) throws ClassCastException {
 		Location result = null;
 		if (input instanceof Map) {
-			Map<String, Object> testing = (Map<String, Object>) input;
-			result = Location.deserialize(testing);
+			result = Location.deserialize(getMapValue(input));
 		}
 		return result;
 	}

@@ -1,7 +1,6 @@
 package io.github.a5h73y.parkour.type.course;
 
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 

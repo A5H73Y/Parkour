@@ -3,8 +3,11 @@ package io.github.a5h73y.parkour.utility;
 import com.cryptomorin.xseries.XPotion;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.type.player.ParkourSession;
+import java.util.UUID;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
@@ -200,5 +203,23 @@ public class PlayerUtils {
 		if (player != null && PluginUtils.doesGameModeExist(gameMode)) {
 			player.setGameMode(PluginUtils.getGameMode(gameMode));
 		}
+	}
+
+	/**
+	 * The player's full UUID including hyphens.
+	 * @return player UUID including hyphens
+	 */
+	public static String padPlayerUuid(String playerId) {
+		StringBuilder uuid = new StringBuilder(playerId);
+		uuid.insert(20, "-");
+		uuid.insert(16, "-");
+		uuid.insert(12, "-");
+		uuid.insert(8, "-");
+		return uuid.toString();
+	}
+
+	public static String findPlayerName(String uuid) {
+		OfflinePlayer player = Bukkit.getPlayer(UUID.fromString(padPlayerUuid(uuid)));
+		return player != null ? player.getName() : "Unknown Player";
 	}
 }

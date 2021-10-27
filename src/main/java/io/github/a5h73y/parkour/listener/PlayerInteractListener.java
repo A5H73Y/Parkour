@@ -324,7 +324,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
 
             } else {
                 Location location = event.getBlock().getLocation();
-                String coordinates = location.getBlockX() + "/" + location.getBlockY() + "/" + location.getBlockZ();
+                String coordinates = parkour.getAutoStartManager().getAutoStartCoordinates(location.getBlock());
                 parkour.getAutoStartManager().deleteAutoStart(event.getPlayer(), coordinates);
             }
         }

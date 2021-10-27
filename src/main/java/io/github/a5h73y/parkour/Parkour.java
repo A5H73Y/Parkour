@@ -81,7 +81,7 @@ public class Parkour extends JavaPlugin {
     private SoundsManager soundsManager;
 
     private List<CommandUsage> commandUsages;
-    private List<AbstractPluginReceiver> managers = new ArrayList<>();
+    private final List<AbstractPluginReceiver> managers = new ArrayList<>();
 
     private BountifulApi bountifulApi;
     private EconomyApi economyApi;

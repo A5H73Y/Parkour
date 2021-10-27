@@ -2,7 +2,6 @@ package io.github.a5h73y.parkour.type.player.quiet;
 
 import java.io.File;
 import java.util.List;
-import java.util.Set;
 import de.leonhard.storage.Yaml;
 
 public class QuietModeConfig extends Yaml {

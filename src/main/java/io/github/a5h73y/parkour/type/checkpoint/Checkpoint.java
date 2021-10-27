@@ -1,5 +1,7 @@
 package io.github.a5h73y.parkour.type.checkpoint;
 
+import static io.github.a5h73y.parkour.configuration.serializable.ParkourSerializable.getMapValue;
+
 import io.github.a5h73y.parkour.configuration.serializable.ParkourSerializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -87,7 +89,7 @@ public class Checkpoint implements ParkourSerializable {
     }
 
     public static Checkpoint deserialize(Map<String, Object> input) {
-        Location checkpointLocation = Location.deserialize((Map<String, Object>) input.get("Location"));
+        Location checkpointLocation = Location.deserialize(getMapValue(input.get("Location")));
         double checkpointX = NumberConversions.toDouble(input.get("CheckpointX"));
         double checkpointY = NumberConversions.toDouble(input.get("CheckpointY"));
         double checkpointZ = NumberConversions.toDouble(input.get("CheckpointZ"));

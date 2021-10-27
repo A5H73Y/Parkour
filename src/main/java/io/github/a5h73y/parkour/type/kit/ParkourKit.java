@@ -1,7 +1,6 @@
 package io.github.a5h73y.parkour.type.kit;
 
 import java.io.Serializable;
-import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 import org.bukkit.Material;

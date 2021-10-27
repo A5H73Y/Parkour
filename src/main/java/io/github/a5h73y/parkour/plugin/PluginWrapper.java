@@ -43,7 +43,7 @@ public abstract class PluginWrapper extends AbstractPluginReceiver {
 		Plugin externalPlugin = getServer().getPluginManager().getPlugin(getPluginName());
 
 		// if the plugin is found and enabled, allow usage
-		// otherwise display error and disable plugin usage.
+		// otherwise display error
 		if (externalPlugin != null && externalPlugin.isEnabled()) {
 			enabled = true;
 			PluginUtils.log("[" + getPluginName() + "] Successfully linked. "

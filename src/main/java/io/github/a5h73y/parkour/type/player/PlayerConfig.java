@@ -172,16 +172,6 @@ public class PlayerConfig extends Json {
         this.set("LastRewarded-" + courseName.toLowerCase(), rewardTime);
     }
 
-    /**
-     * Set the ParkourRank reward for a ParkourLevel.
-     * @param parkourLevel parkour level
-     * @param parkourRank parkour rank value
-     */
-    public void setRewardParkourRank(int parkourLevel, String parkourRank) {
-//        getPlayersConfig().set("ServerInfo.Levels." + parkourLevel + ".Rank", parkourRank);
-//        persistChanges();
-    }
-
     public boolean hasInventoryData() {
         return this.contains("Inventory");
     }

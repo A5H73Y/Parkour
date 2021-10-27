@@ -122,7 +122,7 @@ public class ParkourSession implements Serializable {
     }
 
     public String getDisplayTime() {
-        return hasFinished() ? DateTimeUtils.displayCurrentTime(getTimeFinished()) : DateTimeUtils.displayCurrentTime(getCurrentTime());
+        return DateTimeUtils.displayCurrentTime(hasFinished() ? getTimeFinished() : getCurrentTime());
     }
 
     public void recalculateTime() {

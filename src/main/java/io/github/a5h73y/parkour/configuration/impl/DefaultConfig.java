@@ -160,8 +160,8 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("Scoreboard.RemainingDeaths.Enabled", false);
 		this.setDefault("Scoreboard.RemainingDeaths.Sequence", 8);
 
-		this.setDefault("Sounds.Enabled", true);
-		this.setDefault("Sounds.JoinCourse.Enabled", false);
+		this.setDefault("Sounds.Enabled", false);
+		this.setDefault("Sounds.JoinCourse.Enabled", true);
 		this.setDefault("Sounds.JoinCourse.Sound", "BLOCK_NOTE_BLOCK_PLING");
 		this.setDefault("Sounds.JoinCourse.Volume", 0.05f);
 		this.setDefault("Sounds.JoinCourse.Pitch", 1.75f);
@@ -189,7 +189,7 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("Sounds.CourseFailed.Sound", "BLOCK_CONDUIT_DEACTIVATE");
 		this.setDefault("Sounds.CourseFailed.Volume", 0.1f);
 		this.setDefault("Sounds.CourseFailed.Pitch", 1.75f);
-		this.setDefault("Sounds.ReloadRocket.Enabled", false);
+		this.setDefault("Sounds.ReloadRocket.Enabled", true);
 		this.setDefault("Sounds.ReloadRocket.Sound", "TODO"); // TODO nice reload sound
 		this.setDefault("Sounds.ReloadRocket.Volume", 0.1f);
 		this.setDefault("Sounds.ReloadRocket.Pitch", 1.75f);

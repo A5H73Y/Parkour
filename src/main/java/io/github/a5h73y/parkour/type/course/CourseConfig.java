@@ -1,10 +1,12 @@
 package io.github.a5h73y.parkour.type.course;
 
+import static io.github.a5h73y.parkour.configuration.serializable.ParkourSerializable.getMapValue;
 import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT;
 import static io.github.a5h73y.parkour.utility.TranslationUtils.sendConditionalValue;
 import static io.github.a5h73y.parkour.utility.TranslationUtils.sendValue;
 
 import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.configuration.serializable.ParkourSerializable;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.player.ParkourMode;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
@@ -84,7 +86,7 @@ public class CourseConfig extends Json {
     }
 
     public void saveCourse(Course course) {
-        ((Map<String, Object>) LightningSerializer.serialize(course)).forEach(this::set);
+        getMapValue(LightningSerializer.serialize(course)).forEach(this::set);
     }
 
     public String getCourseName() {

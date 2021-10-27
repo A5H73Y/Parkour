@@ -1,9 +1,8 @@
 package io.github.a5h73y.parkour.conversation;
 
-import com.cryptomorin.xseries.XPotion;
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.player.ParkourMode;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
+import io.github.a5h73y.parkour.type.player.ParkourMode;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.Arrays;
 import java.util.stream.Stream;
