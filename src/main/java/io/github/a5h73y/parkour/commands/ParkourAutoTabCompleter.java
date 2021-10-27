@@ -47,7 +47,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             "course", "player", "leaderboard", "prize");
 
     private static final List<String> DELETE_COMMANDS = Arrays.asList(
-            "autostart", "checkpoint", "course", "lobby", "kit");
+            "checkpoint", "course", "lobby", "kit");
 
     private static final List<String> LIST_COMMANDS = Arrays.asList(
             "courses", "players", "ranks", "lobbies");
@@ -285,7 +285,6 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             case "link":
             case "reset":
                 switch (arg1) {
-                    case "autostart":
                     case "checkpoint":
                     case "course":
                     case "leaderboard":

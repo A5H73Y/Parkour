@@ -556,27 +556,4 @@ public class ParkourValidation {
 
         return true;
     }
-
-    /**
-     * Validate Sender deleting an AutoStart.
-     *
-     * @param player player
-     * @param courseName course name
-     * @param coordinates coordinates
-     * @return player can delete autostart
-     */
-    public static boolean canDeleteAutoStart(Player player, String courseName, String coordinates) {
-        if (!Parkour.getAutoStartConfig().doesAutoStartExist(coordinates)) {
-            TranslationUtils.sendMessage(player, "There is no AutoStart at this Location.");
-            return false;
-        }
-
-        /*if (courseName.equals(Parkour.getAutoStartConfig().getAutoStartCourse(coordinates))) {
-            TranslationUtils.sendMessage(player,
-                    "This AutoStart can not be deleted as it is linked to course: " + courseName);
-            return false;
-        }*/
-
-        return true;
-    }
 }

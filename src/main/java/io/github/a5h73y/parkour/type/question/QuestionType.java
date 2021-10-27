@@ -25,10 +25,6 @@ public enum QuestionType {
             "&7Deleting a ParkourKit will remove all information about it from the server.",
             (sender, value) -> Parkour.getInstance().getParkourKitManager().deleteParkourKit(sender, value)),
 
-    DELETE_AUTOSTART("You are about to delete the AutoStart at this location...",
-            "&7Deleting an autostart will remove all information about it from the server.",
-            (sender, value) -> Parkour.getInstance().getAutoStartManager().deleteAutoStart(sender, value)),
-
     RESET_COURSE("You are about to reset Course &b%s&f...",
             "&7Resetting a Course will delete all the statistics stored, which includes leaderboards and "
                     + "various Parkour attributes. This will NOT affect the spawn or checkpoints.",
