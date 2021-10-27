@@ -1012,7 +1012,7 @@ public class CourseConfig extends Json {
         Json courseConfig = this;
         int checkpoint = courseConfig.getInt(CHECKPOINTS);
 
-        if (checkpoint > 1) {
+        if (checkpoint > 0) {
             courseConfig.set("Checkpoint." + checkpoint, null);
             courseConfig.set("Checkpoints", checkpoint - 1);
         }
