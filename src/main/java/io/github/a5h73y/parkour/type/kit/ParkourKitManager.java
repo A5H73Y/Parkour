@@ -321,6 +321,6 @@ public class ParkourKitManager extends CacheableParkourManager {
 		}
 
 		// remove the old material
-		getConfig().set(kitName + "." + oldMaterial, null);
+		getConfig().remove(kitName + "." + oldMaterial);
 	}
 }

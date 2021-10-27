@@ -86,10 +86,6 @@ public class QuestionManager extends AbstractPluginReceiver {
         askGenericQuestion(sender, QuestionType.DELETE_PARKOUR_KIT, kitName.toLowerCase());
     }
 
-    public void askDeleteAutoStartQuestion(CommandSender sender, String coordinates) {
-        askGenericQuestion(sender, QuestionType.DELETE_AUTOSTART, coordinates);
-    }
-
     public void askResetCourseQuestion(CommandSender sender, String courseName) {
         askGenericQuestion(sender, QuestionType.RESET_COURSE, courseName.toLowerCase());
     }

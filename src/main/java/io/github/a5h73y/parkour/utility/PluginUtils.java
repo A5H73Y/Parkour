@@ -178,7 +178,7 @@ public class PluginUtils {
 
     /**
      * Delete Command.
-     * Possible choices include Course, Checkpoint, Lobby, ParkourKit, AutoStart.
+     * Possible choices include Course, Checkpoint, Lobby, ParkourKit.
      * Each option will create a Question for the Sender to confirm.
      *
      * @param sender command sender
@@ -223,23 +223,8 @@ public class PluginUtils {
                 parkour.getQuestionManager().askDeleteKitQuestion(sender, argument);
                 break;
 
-            case "autostart":
-                if (!(sender instanceof Player)) {
-                    TranslationUtils.sendMessage(sender, "This command can only be performed by players!");
-                    return;
-                }
-
-                Location location = ((Player) sender).getLocation();
-                String coordinates = location.getBlockX() + "-" + location.getBlockY() + "-" + location.getBlockZ();
-                if (!ParkourValidation.canDeleteAutoStart((Player) sender, argument, coordinates)) {
-                    return;
-                }
-
-                parkour.getQuestionManager().askDeleteAutoStartQuestion(sender, coordinates);
-                break;
-
             default:
-                TranslationUtils.sendInvalidSyntax(sender, "delete", "(course / checkpoint / lobby / kit / autostart) (name)");
+                TranslationUtils.sendInvalidSyntax(sender, "delete", "(course / checkpoint / lobby / kit) (name)");
                 break;
         }
     }

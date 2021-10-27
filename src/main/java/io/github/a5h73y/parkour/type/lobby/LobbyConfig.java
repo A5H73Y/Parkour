@@ -78,7 +78,7 @@ public class LobbyConfig extends Yaml {
 	 * @param lobbyName lobby name
 	 */
 	public void deleteLobby(String lobbyName) {
-		this.set(lobbyName.toLowerCase(), null);
+		this.remove(lobbyName.toLowerCase());
 	}
 
 	/**
