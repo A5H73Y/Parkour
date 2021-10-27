@@ -1013,8 +1013,8 @@ public class CourseConfig extends Json {
         int checkpoint = courseConfig.getInt(CHECKPOINTS);
 
         if (checkpoint > 1) {
-            courseConfig.set(this.courseName + "." + checkpoint, null);
-            courseConfig.set(this.courseName + ".Checkpoints", checkpoint - 1);
+            courseConfig.set("Checkpoint." + checkpoint, null);
+            courseConfig.set("Checkpoints", checkpoint - 1);
         }
     }
 }
