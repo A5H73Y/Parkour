@@ -1,10 +1,21 @@
 package io.github.a5h73y.parkour.commands;
 
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 
 public class CommandUsage {
+
+	public static final String ARRAY_OPEN = "[";
+	public static final String ARRAY_CLOSE = "]";
+	public static final String SUBSTITUTION_OPEN = "(";
+	public static final String SUBSTITUTION_CLOSE = ")";
+	public static final String FORMULA_OPEN = "{";
+	public static final String FORMULA_CLOSE = "}";
+
+	private static final String COMMA = ",";
+	private static final String SPACE = " ";
 
 	private String command;
 	private String title;
@@ -14,6 +25,7 @@ public class CommandUsage {
 	private String permission;
 	private String commandGroup;
 	private String consoleSyntax;
+	private String autoTabSyntax;
 
 	/**
 	 * Display Help Information for the Command.
@@ -29,7 +41,7 @@ public class CommandUsage {
 			TranslationUtils.sendValueTranslation("Help.ConsoleCommandSyntax", consoleSyntax, false, sender);
 
 		} else {
-			String commandSyntax = arguments != null ? command + " " + arguments : command;
+			String commandSyntax = arguments != null ? command + SPACE + arguments : command;
 			TranslationUtils.sendValueTranslation("Help.CommandSyntax", commandSyntax, false, sender);
 		}
 		TranslationUtils.sendValueTranslation("Help.CommandExample", example, false, sender);
@@ -45,8 +57,16 @@ public class CommandUsage {
 	public void displayCommandUsage(CommandSender sender) {
 		sender.sendMessage(TranslationUtils.getTranslation("Help.CommandUsage", false)
 				.replace("%COMMAND%", command)
-				.replace("%ARGUMENTS%", arguments != null ? " " + arguments : "")
+				.replace("%ARGUMENTS%", arguments != null ? SPACE + arguments : "")
 				.replace("%TITLE%", title));
+	}
+
+	public String[] getAutoTabArraySelection(String input) {
+		return StringUtils.substringBetween(input, ARRAY_OPEN, ARRAY_CLOSE).split(COMMA);
+	}
+
+	public String[] getAutoTabSyntaxArgs() {
+		return autoTabSyntax.split(SPACE);
 	}
 
 	public String getCommand() {
@@ -79,5 +99,23 @@ public class CommandUsage {
 
 	public String getConsoleSyntax() {
 		return consoleSyntax;
+	}
+
+	public String getAutoTabSyntax() {
+		return autoTabSyntax;
+	}
+
+	public String resolveFormulaValue(String input, String[] args) {
+		String[] possibleReplacements = StringUtils.substringBetween(input, FORMULA_OPEN, FORMULA_CLOSE).split(COMMA);
+		for (String replacement : possibleReplacements) {
+			String[] assignmentSplit = replacement.split("=");
+			String[] indexValueSplit = assignmentSplit[0].split(":");
+			int index = Integer.parseInt(indexValueSplit[0]);
+
+			if (args[index].equals(indexValueSplit[1])) {
+				return assignmentSplit[1];
+			}
+		}
+		return "";
 	}
 }

@@ -2,7 +2,7 @@ package io.github.a5h73y.parkour;
 
 import com.google.gson.GsonBuilder;
 import io.github.a5h73y.parkour.commands.CommandUsage;
-import io.github.a5h73y.parkour.commands.ParkourAutoTabCompleter;
+import io.github.a5h73y.parkour.commands.ParkourAutoTabCompleterNew;
 import io.github.a5h73y.parkour.commands.ParkourCommands;
 import io.github.a5h73y.parkour.commands.ParkourConsoleCommands;
 import io.github.a5h73y.parkour.configuration.ConfigManager;
@@ -222,7 +222,7 @@ public class Parkour extends JavaPlugin {
         getCommand("paconsole").setExecutor(new ParkourConsoleCommands(this));
 
         if (this.getParkourConfig().getBoolean("Other.UseAutoTabCompletion")) {
-            getCommand(PLUGIN_NAME).setTabCompleter(new ParkourAutoTabCompleter(this));
+            getCommand(PLUGIN_NAME).setTabCompleter(new ParkourAutoTabCompleterNew(this));
         }
 
         String json = new BufferedReader(new InputStreamReader(getResource("parkourCommands.json"), StandardCharsets.UTF_8))

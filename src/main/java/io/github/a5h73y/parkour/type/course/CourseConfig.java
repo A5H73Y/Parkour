@@ -6,7 +6,6 @@ import static io.github.a5h73y.parkour.utility.TranslationUtils.sendConditionalV
 import static io.github.a5h73y.parkour.utility.TranslationUtils.sendValue;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.configuration.serializable.ParkourSerializable;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.player.ParkourMode;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
@@ -16,7 +15,6 @@ import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import de.leonhard.storage.Json;
 import de.leonhard.storage.internal.FileType;
@@ -677,7 +675,7 @@ public class CourseConfig extends Json {
         sendValue(sender, "Views", config.getViews());
         sendValue(sender, "Completions", config.getCompletions()
                 + " (" + config.getCompletionPercent() + "%)");
-        sendValue(sender, "Checkpoints", config.getCheckpointAmount());
+        sendValue(sender, CHECKPOINTS, config.getCheckpointAmount());
         sendValue(sender, "Creator", config.getCreator());
         sendValue(sender, "Ready Status", String.valueOf(config.getReadyStatus()));
         sendValue(sender, "Challenge Only", String.valueOf(config.getChallengeOnly()));
@@ -694,8 +692,8 @@ public class CourseConfig extends Json {
 
         sendConditionalValue(sender, "Linked Course", config.hasLinkedCourse(), config.getLinkedCourse());
         sendConditionalValue(sender, "Linked Lobby", config.hasLinkedLobby(), config.getLinkedLobby());
-        sendConditionalValue(sender, "ParkourKit", config.hasParkourKit(), config.getParkourKit());
-        sendConditionalValue(sender, "ParkourMode", config.hasParkourMode(), config.getParkourModeName());
+        sendConditionalValue(sender, PARKOUR_KIT, config.hasParkourKit(), config.getParkourKit());
+        sendConditionalValue(sender, PARKOUR_MODE, config.hasParkourMode(), config.getParkourModeName());
 
         sendConditionalValue(sender, "Material Prize",
                 config.hasMaterialPrize() && config.getMaterialPrizeAmount() > 0,

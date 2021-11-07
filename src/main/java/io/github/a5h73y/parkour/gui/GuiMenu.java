@@ -1,6 +1,5 @@
 package io.github.a5h73y.parkour.gui;
 
-import io.github.a5h73y.parkour.gui.AbstractMenu;
 import io.github.a5h73y.parkour.gui.impl.JoinCoursesGui;
 
 public enum GuiMenu {

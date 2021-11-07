@@ -21,6 +21,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class CoursePrizeConversation extends ParkourConversation {
 
+    private static final String MATERIAL = "material";
+    private static final String COMMAND = "command";
+    private static final String AMOUNT = "amount";
+
     public CoursePrizeConversation(Conversable conversable) {
         super(conversable);
     }
@@ -37,7 +41,7 @@ public class CoursePrizeConversation extends ParkourConversation {
     private class PrizeType extends FixedSetPrompt {
 
         public PrizeType() {
-            super("material", "command", "xp");
+            super(MATERIAL, COMMAND, "xp");
         }
 
         @NotNull
@@ -49,11 +53,11 @@ public class CoursePrizeConversation extends ParkourConversation {
 
         @Override
         protected Prompt acceptValidatedInput(@NotNull ConversationContext context, @NotNull String choice) {
-            if (choice.equalsIgnoreCase("material")) {
+            if (choice.equalsIgnoreCase(MATERIAL)) {
                 return new ChooseBlock();
             }
 
-            if (choice.equalsIgnoreCase("command")) {
+            if (choice.equalsIgnoreCase(COMMAND)) {
                 return new ChooseCommand();
             }
 
@@ -84,7 +88,7 @@ public class CoursePrizeConversation extends ParkourConversation {
                 return this;
             }
 
-            context.setSessionData("material", message.toUpperCase());
+            context.setSessionData(MATERIAL, message.toUpperCase());
             return new ChooseAmount();
         }
     }
@@ -110,7 +114,7 @@ public class CoursePrizeConversation extends ParkourConversation {
 
         @Override
         protected Prompt acceptValidatedInput(ConversationContext context, Number amount) {
-            context.setSessionData("amount", amount.intValue());
+            context.setSessionData(AMOUNT, amount.intValue());
             return new MaterialProcessComplete();
         }
     }
@@ -122,11 +126,11 @@ public class CoursePrizeConversation extends ParkourConversation {
         public String getPromptText(@NotNull ConversationContext context) {
             String courseName = context.getSessionData(SESSION_COURSE_NAME).toString();
             CourseConfig.getConfig(courseName).setMaterialPrize(
-                    context.getSessionData("material").toString(),
-                    Integer.parseInt(context.getSessionData("amount").toString()));
+                    context.getSessionData(MATERIAL).toString(),
+                    Integer.parseInt(context.getSessionData(AMOUNT).toString()));
 
             return TranslationUtils.getPropertySet("Material Prize", courseName,
-                    context.getSessionData("amount") + " " + context.getSessionData("material"));
+                    context.getSessionData(AMOUNT) + " " + context.getSessionData(MATERIAL));
         }
 
         @Override
@@ -149,7 +153,7 @@ public class CoursePrizeConversation extends ParkourConversation {
         @Override
         public Prompt acceptInput(@NotNull ConversationContext context, String message) {
             String command = message.replace("/", "");
-            context.setSessionData("command", command);
+            context.setSessionData(COMMAND, command);
 
             return new ChooseRunNow();
         }
@@ -169,7 +173,7 @@ public class CoursePrizeConversation extends ParkourConversation {
             if (runNow) {
                 Parkour.getInstance().getServer().dispatchCommand(
                         Parkour.getInstance().getServer().getConsoleSender(),
-                        context.getSessionData("command").toString()
+                        context.getSessionData(COMMAND).toString()
                                 .replace(PLAYER_PLACEHOLDER, context.getSessionData(SESSION_PLAYER_NAME).toString()));
             }
             return getCommandProcessCompletePrompt();
@@ -182,10 +186,10 @@ public class CoursePrizeConversation extends ParkourConversation {
         @Override
         public String getPromptText(@NotNull ConversationContext context) {
             String courseName = context.getSessionData(SESSION_COURSE_NAME).toString();
-            CourseConfig.getConfig(courseName).addEventCommand(ParkourEventType.PRIZE, context.getSessionData("command").toString());
+            CourseConfig.getConfig(courseName).addEventCommand(ParkourEventType.PRIZE, context.getSessionData(COMMAND).toString());
 
             return TranslationUtils.getPropertySet("Command Prize", courseName,
-                    "/" + context.getSessionData("command"));
+                    "/" + context.getSessionData(COMMAND));
         }
 
         @Override
@@ -216,7 +220,7 @@ public class CoursePrizeConversation extends ParkourConversation {
 
         @Override
         protected Prompt acceptValidatedInput(@NotNull ConversationContext context, Number amount) {
-            context.setSessionData("amount", amount.intValue());
+            context.setSessionData(AMOUNT, amount.intValue());
 
             return new XpProcessComplete();
         }
@@ -228,7 +232,7 @@ public class CoursePrizeConversation extends ParkourConversation {
         @Override
         public String getPromptText(@NotNull ConversationContext context) {
             String courseName = context.getSessionData(SESSION_COURSE_NAME).toString();
-            String amount = context.getSessionData("amount").toString();
+            String amount = context.getSessionData(AMOUNT).toString();
             CourseConfig.getConfig(courseName).setXpPrize(Integer.parseInt(amount));
 
             return TranslationUtils.getPropertySet("XP Prize", courseName, amount);
