@@ -241,7 +241,8 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         CourseConfig.deleteCourseData(courseName);
-        parkour.getDatabaseManager().deleteCourseTimes(courseName);
+        parkour.getDatabaseManager().deleteCourseAndReferences(courseName);
+        courseNames.remove(courseName);
         clearCache(courseName);
         parkour.getConfigManager().getCourseCompletionsConfig().removeCompletedCourse(courseName);
         TranslationUtils.sendValueTranslation("Parkour.Delete", courseName, sender);
