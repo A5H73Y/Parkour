@@ -201,6 +201,8 @@ public class StringsConfig extends ParkourConfiguration {
 		this.addDefault("PlaceholderAPI.CurrentCourseCompleted", "Yes");
 		this.addDefault("PlaceholderAPI.CurrentCourseNotCompleted", "No");
 		this.addDefault("PlaceholderAPI.TopTenResult", "&f%POSITION%) &b%PLAYER%&f in &a%TIME%");
+		this.addDefault("PlaceholderAPI.CourseActive", "Active");
+		this.addDefault("PlaceholderAPI.CourseInactive", "Inactive");
 
 		this.addDefault("GUI.JoinCourses.Heading", "Parkour Courses");
 		this.addDefault("GUI.JoinCourses.Setup.Line1", "         ");
