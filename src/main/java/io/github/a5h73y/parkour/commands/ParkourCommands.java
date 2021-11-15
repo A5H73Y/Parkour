@@ -533,6 +533,10 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
             case "setmode":
             case "setparkourmode":
+                if (!ValidationUtils.validateArgs(player, args, 2)) {
+                    return false;
+                }
+
                 if (!PermissionUtils.hasPermissionOrCourseOwnership(player,
                         Permission.ADMIN_COURSE, getChosenCourseName(player, args, 1))) {
                     return false;
