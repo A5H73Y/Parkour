@@ -425,6 +425,14 @@ public class DefaultConfig extends Yaml {
 		return getMaterialOrDefault("ParkourTool.Restart.Material", Material.AIR);
 	}
 
+	public Material getFreedomTool() {
+		return getMaterialOrDefault("ParkourTool.Freedom.Material", Material.AIR);
+	}
+
+	public Material getRocketTool() {
+		return getMaterialOrDefault("ParkourTool.Rockets.Material", Material.AIR);
+	}
+
 	public Material getAutoStartMaterial() {
 		return MaterialUtils.lookupMaterial(this.getString("AutoStart.Material"));
 	}

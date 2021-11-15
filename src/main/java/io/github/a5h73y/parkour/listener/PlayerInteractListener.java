@@ -1,7 +1,6 @@
 package io.github.a5h73y.parkour.listener;
 
 import com.cryptomorin.xseries.XBlock;
-import com.cryptomorin.xseries.XMaterial;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
@@ -150,9 +149,10 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         }
 
         event.setCancelled(true);
+        Material materialInHand = MaterialUtils.getMaterialInPlayersHand(player);
 
         if (mode == ParkourMode.FREEDOM
-                && MaterialUtils.getMaterialInPlayersHand(player) == XMaterial.REDSTONE_TORCH.parseMaterial()) {
+                && materialInHand == parkour.getParkourConfig().getFreedomTool()) {
             if ((event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
                     || event.getAction().equals(Action.RIGHT_CLICK_AIR))
                     && player.isOnGround()
@@ -164,13 +164,17 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
 
             } else if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)
                     || event.getAction().equals(Action.LEFT_CLICK_AIR)) {
-                PlayerUtils.teleportToLocation(player,
-                        parkour.getPlayerManager().getParkourSession(player).getFreedomLocation());
+                Location location = parkour.getPlayerManager().getParkourSession(player).getFreedomLocation();
+                if (location == null) {
+                    TranslationUtils.sendTranslation("Error.UnknownCheckpoint", player);
+                    return;
+                }
+                PlayerUtils.teleportToLocation(player, location);
                 TranslationUtils.sendTranslation("Mode.Freedom.Load", player);
             }
 
         } else if (mode == ParkourMode.ROCKETS
-                && MaterialUtils.getMaterialInPlayersHand(player) == XMaterial.FIREWORK_ROCKET.parseMaterial()) {
+                && materialInHand == parkour.getParkourConfig().getRocketTool()) {
 
             int secondDelay = parkour.getParkourConfig().getInt("ParkourModes.Rockets.SecondCooldown");
             if (parkour.getPlayerManager().delayPlayer(player, secondDelay, "Mode.Rockets.Reloading", false)) {
