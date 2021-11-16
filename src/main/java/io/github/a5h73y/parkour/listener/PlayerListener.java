@@ -82,6 +82,9 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
 
         if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
             if (playing && parkour.getConfig().getBoolean("OnCourse.DieInVoid")) {
+                if (parkour.getConfig().getBoolean("OnCourse.DisablePlayerDamage")) {
+                    event.setCancelled(true);
+                }
                 parkour.getPlayerManager().playerDie(player);
                 return;
             } else if (!playing && parkour.getConfig().isVoidDetection()) {
