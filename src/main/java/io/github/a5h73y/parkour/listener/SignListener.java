@@ -186,7 +186,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
 
         switch (lines[1].toLowerCase()) {
             case "join":
-                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
+                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExist(lines[2])) {
                     TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, lines[2], player);
                     return;
                 }
@@ -203,7 +203,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 break;
 
             case "checkpoint":
-                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
+                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExist(lines[2])) {
                     TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, lines[2], player);
                     return;
                 }
@@ -220,7 +220,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 break;
 
             case "stats":
-                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
+                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExist(lines[2])) {
                     TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, lines[2], player);
                     return;
                 }
@@ -233,7 +233,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 break;
 
             case "finish":
-                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
+                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExist(lines[2])) {
                     TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, lines[2], player);
 
                 } else if (!parkour.getPlayerManager().isPlaying(player)) {
@@ -253,7 +253,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 break;
 
             case "leaderboards":
-                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
+                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExist(lines[2])) {
                     TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, lines[2], player);
 
                 } else if (parkour.getPlayerManager().delayPlayerWithMessage(player, 4)) {
@@ -264,7 +264,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 break;
 
             case "challenge":
-                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
+                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExist(lines[2])) {
                     TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, lines[2], player);
                     return;
                 }

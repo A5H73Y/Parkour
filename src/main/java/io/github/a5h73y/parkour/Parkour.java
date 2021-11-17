@@ -16,7 +16,7 @@ import io.github.a5h73y.parkour.listener.PlayerListener;
 import io.github.a5h73y.parkour.listener.PlayerMoveListener;
 import io.github.a5h73y.parkour.listener.SignListener;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.other.Backup;
+import io.github.a5h73y.parkour.other.PluginBackupUtil;
 import io.github.a5h73y.parkour.other.ParkourUpdater;
 import io.github.a5h73y.parkour.plugin.BountifulApi;
 import io.github.a5h73y.parkour.plugin.EconomyApi;
@@ -125,7 +125,7 @@ public class Parkour extends JavaPlugin {
     @Override
     public void onDisable() {
         if (getParkourConfig().getBoolean("Other.OnServerShutdown.BackupFiles")) {
-            Backup.backupNow();
+            PluginBackupUtil.backupNow();
         }
 
         teardownManagers();
@@ -262,6 +262,8 @@ public class Parkour extends JavaPlugin {
     }
 
     private void upgradeParkour() {
+        // easier to create the new config system, then update them.
+        registerEssentialManagers();
         if (new ParkourUpgrader(this).beginUpgrade()) {
             onEnable();
         }

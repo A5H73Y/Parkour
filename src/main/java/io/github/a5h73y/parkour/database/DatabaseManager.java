@@ -577,6 +577,7 @@ public class DatabaseManager extends CacheableParkourManager {
                 + "time DECIMAL(13,0) NOT NULL, "
                 + "deaths INT(5) NOT NULL, "
                 + "achieved TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,"
+//                + "INDEX fk_time_course ON time (courseId ASC)"
                 + "FOREIGN KEY (courseId) REFERENCES course(courseId) ON DELETE CASCADE ON UPDATE CASCADE);";
 
         // seems to be the only syntactic difference between them

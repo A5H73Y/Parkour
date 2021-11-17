@@ -63,7 +63,7 @@ public class SignUtils {
             return false;
         }
 
-        if (!Parkour.getInstance().getCourseManager().doesCourseExists(signEvent.getLine(2))) {
+        if (!Parkour.getInstance().getCourseManager().doesCourseExist(signEvent.getLine(2))) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, signEvent.getLine(2), player);
             breakSignAndCancelEvent(signEvent);
             return false;

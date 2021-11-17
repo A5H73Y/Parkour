@@ -662,7 +662,7 @@ public class CourseConfig extends Json {
      * @param courseNameRaw course name
      */
     public static void displayCourseInfo(@NotNull CommandSender sender, String courseNameRaw) {
-        if (!Parkour.getInstance().getCourseManager().doesCourseExists(courseNameRaw)) {
+        if (!Parkour.getInstance().getCourseManager().doesCourseExist(courseNameRaw)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseNameRaw, sender);
             return;
         }

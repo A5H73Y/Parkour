@@ -8,6 +8,7 @@ import io.github.a5h73y.parkour.other.ParkourConstants;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.kit.ParkourKit;
 import io.github.a5h73y.parkour.type.player.ParkourMode;
+import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -166,6 +167,7 @@ public class Course implements ParkourSerializable {
 
         if (input.containsKey("Checkpoint")) {
             checkpoints = getMapValue(input.get("Checkpoint")).entrySet().stream()
+                    .filter(checkpointMap -> ValidationUtils.isPositiveInteger(checkpointMap.getKey()))
                     .sorted(Comparator.comparing(checkpointMap -> Integer.valueOf(checkpointMap.getKey())))
                     .map(checkpointMap -> getMapValue(checkpointMap.getValue()))
                     .map(Checkpoint::deserialize)

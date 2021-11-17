@@ -317,7 +317,7 @@ public class ParkourValidation {
             TranslationUtils.sendMessage(player, "Course name can not only be numeric!");
             return false;
 
-        } else if (Parkour.getInstance().getCourseManager().doesCourseExists(courseName)) {
+        } else if (Parkour.getInstance().getCourseManager().doesCourseExist(courseName)) {
             TranslationUtils.sendTranslation("Error.Exist", player);
             return false;
         }
@@ -335,7 +335,7 @@ public class ParkourValidation {
     public static boolean canCreateCheckpoint(Player player, @Nullable Integer checkpoint) {
         String selectedCourse = PlayerConfig.getConfig(player).getSelectedCourse().toLowerCase();
 
-        if (!Parkour.getInstance().getCourseManager().doesCourseExists(selectedCourse)) {
+        if (!Parkour.getInstance().getCourseManager().doesCourseExist(selectedCourse)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, selectedCourse, player);
             return false;
         }
@@ -378,7 +378,7 @@ public class ParkourValidation {
         String courseName = courseNameInput.toLowerCase();
         Parkour parkour = Parkour.getInstance();
 
-        if (!parkour.getCourseManager().doesCourseExists(courseName)) {
+        if (!parkour.getCourseManager().doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, player);
             return false;
         }
@@ -453,7 +453,7 @@ public class ParkourValidation {
      * @return command sender can delete course
      */
     public static boolean canDeleteCourse(CommandSender sender, String courseName) {
-        if (!Parkour.getInstance().getCourseManager().doesCourseExists(courseName)) {
+        if (!Parkour.getInstance().getCourseManager().doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return false;
         }
@@ -485,7 +485,7 @@ public class ParkourValidation {
      * @return command sender can delete checkpoint
      */
     public static boolean canDeleteCheckpoint(CommandSender sender, String courseName) {
-        if (!Parkour.getInstance().getCourseManager().doesCourseExists(courseName)) {
+        if (!Parkour.getInstance().getCourseManager().doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return false;
         }

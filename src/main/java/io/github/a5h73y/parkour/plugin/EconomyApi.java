@@ -201,7 +201,7 @@ public class EconomyApi extends PluginWrapper {
 			return;
 		}
 
-		if (!Parkour.getInstance().getCourseManager().doesCourseExists(args[2])) {
+		if (!Parkour.getInstance().getCourseManager().doesCourseExist(args[2])) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, args[2], sender);
 			return;
 		}
@@ -221,7 +221,7 @@ public class EconomyApi extends PluginWrapper {
 			return;
 		}
 
-		if (!Parkour.getInstance().getCourseManager().doesCourseExists(args[2])) {
+		if (!Parkour.getInstance().getCourseManager().doesCourseExist(args[2])) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, args[2], sender);
 			return;
 		}
