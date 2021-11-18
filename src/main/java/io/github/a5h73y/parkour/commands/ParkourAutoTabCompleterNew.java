@@ -84,6 +84,9 @@ public class ParkourAutoTabCompleterNew extends AbstractPluginReceiver implement
                     if (nextArgument.startsWith(ARRAY_OPEN)) {
                         allowedCommands = Arrays.asList(selectedCommand.getAutoTabArraySelection(nextArgument));
                     } else if (nextArgument.startsWith(SUBSTITUTION_OPEN) && substitutions.containsKey(nextArgument)) {
+                        if (nextArgument.equalsIgnoreCase("(player)")) {
+                            substitutions.put("(player)", getAllOnlinePlayerNames());
+                        }
                         allowedCommands = new ArrayList<>(substitutions.get(nextArgument));
                     } else {
                         allowedCommands = Collections.singletonList(nextArgument);
