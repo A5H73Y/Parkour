@@ -113,7 +113,6 @@ public class ParkourAutoTabCompleterNew extends AbstractPluginReceiver implement
         }
 
         return parkour.getCommandUsages().stream()
-                .filter(commandUsage -> commandUsage.getAutoTabSyntax() != null)
                 .filter(commandUsage -> commandUsage.getPermission() == null
                         || player.hasPermission(commandUsage.getPermission()))
                 .map(CommandUsage::getCommand)
