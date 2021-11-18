@@ -565,7 +565,7 @@
     "description": "By default, a Course does not have a minimum ParkourLevel requirement to join. However, if you want to enforce the progression of Parkour Courses, you can require the Player to have a ParkourLevel greater than or equal to the minimum ParkourLevel specified.",
     "permission": "Parkour.Admin.Course",
     "commandGroup": "2",
-    "autoTabSyntax": "(course) (level"
+    "autoTabSyntax": "(course) (level)"
   },
   {
     "command": "setmode",
