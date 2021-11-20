@@ -66,7 +66,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param courseName course name
      * @return course exists
      */
-    public boolean doesCourseExists(final String courseName) {
+    public boolean doesCourseExist(final String courseName) {
         if (!ValidationUtils.isStringValid(courseName)) {
             return false;
         }
@@ -109,7 +109,7 @@ public class CourseManager extends AbstractPluginReceiver {
             return courseCache.get(courseName);
         }
 
-        if (!doesCourseExists(courseName)) {
+        if (!doesCourseExist(courseName)) {
             return null;
         }
 
@@ -201,7 +201,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param courseName course name
      */
     public void selectCourse(final Player player, final String courseName) {
-        if (!doesCourseExists(courseName)) {
+        if (!doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, player);
             return;
         }
@@ -235,7 +235,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param courseName course name
      */
     public void deleteCourse(final CommandSender sender, final String courseName) {
-        if (!doesCourseExists(courseName)) {
+        if (!doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
@@ -257,7 +257,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param courseName course name
      */
     public void setStartLocation(final Player player, final String courseName) {
-        if (!doesCourseExists(courseName)) {
+        if (!doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, player);
             return;
         }
@@ -275,7 +275,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param value new creator name
      */
     public void setCreator(final CommandSender sender, final String courseName, final String value) {
-        if (!doesCourseExists(courseName)) {
+        if (!doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
@@ -293,7 +293,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param value new maximum deaths
      */
     public void setMaxDeaths(final CommandSender sender, final String courseName, final String value) {
-        if (!doesCourseExists(courseName)) {
+        if (!doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
@@ -324,7 +324,7 @@ public class CourseManager extends AbstractPluginReceiver {
             return;
         }
 
-        if (!doesCourseExists(courseName)) {
+        if (!doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
@@ -383,7 +383,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param courseName course name
      */
     public void toggleRewardOnceStatus(final CommandSender sender, final String courseName) {
-        if (!doesCourseExists(courseName)) {
+        if (!doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
@@ -403,7 +403,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param courseName course name
      */
     public void toggleChallengeOnlyStatus(CommandSender sender, String courseName) {
-        if (!doesCourseExists(courseName)) {
+        if (!doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
@@ -423,7 +423,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param courseName course name
      */
     public void toggleResumable(CommandSender sender, String courseName) {
-        if (!doesCourseExists(courseName)) {
+        if (!doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
@@ -449,7 +449,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param input course display name
      */
     public void setDisplayName(CommandSender sender, String courseName, String input) {
-        if (!doesCourseExists(courseName)) {
+        if (!doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
@@ -471,7 +471,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param value new minimum ParkourLevel
      */
     public void setMinimumParkourLevel(final CommandSender sender, final String courseName, final String value) {
-        if (!doesCourseExists(courseName)) {
+        if (!doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
@@ -495,7 +495,7 @@ public class CourseManager extends AbstractPluginReceiver {
         String selectedCourse = PlayerConfig.getConfig(player).getSelectedCourse();
 
         if (args.length >= 3 && args[1].equalsIgnoreCase("course")) {
-            if (!doesCourseExists(args[2])) {
+            if (!doesCourseExist(args[2])) {
                 TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, args[2], player);
                 return;
             }
@@ -542,7 +542,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param limit player limit
      */
     public void setPlayerLimit(final CommandSender sender, final String courseName, final String limit) {
-        if (!doesCourseExists(courseName)) {
+        if (!doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
@@ -565,7 +565,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param kitName parkour kit name
      */
     public void setParkourKit(final CommandSender sender, final String courseName, final String kitName) {
-        if (!doesCourseExists(courseName)) {
+        if (!doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
@@ -595,7 +595,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param parkourLevel parkour level
      */
     public void setRewardParkourLevel(final CommandSender sender, final String courseName, final String parkourLevel) {
-        if (!doesCourseExists(courseName)) {
+        if (!doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
@@ -619,7 +619,7 @@ public class CourseManager extends AbstractPluginReceiver {
      */
     public void setRewardParkourLevelIncrease(final CommandSender sender, final String courseName,
                                               final String parkourLevelIncrease) {
-        if (!doesCourseExists(courseName)) {
+        if (!doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
@@ -643,7 +643,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param delay prize delay
      */
     public void setRewardDelay(final CommandSender sender, final String courseName, final String delay) {
-        if (!doesCourseExists(courseName)) {
+        if (!doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
@@ -667,7 +667,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param reward amount to reward
      */
     public void setRewardParkoins(final CommandSender sender, final String courseName, final String reward) {
-        if (!doesCourseExists(courseName)) {
+        if (!doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
@@ -691,7 +691,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param args command arguments
      */
     public void addJoinItem(final CommandSender sender, final String... args) {
-        if (!doesCourseExists(args[1])) {
+        if (!doesCourseExist(args[1])) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, args[1], sender);
             return;
         }
@@ -724,7 +724,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param courseNameInput target course name
      */
     public void resetCourse(final CommandSender sender, final String courseNameInput) {
-        if (!doesCourseExists(courseNameInput)) {
+        if (!doesCourseExist(courseNameInput)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseNameInput, sender);
             return;
         }
@@ -746,7 +746,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param courseName course name
      */
     public void resetCourseLeaderboards(CommandSender sender, String courseName) {
-        if (!doesCourseExists(courseName)) {
+        if (!doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
@@ -765,7 +765,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param courseName course name
      */
     public void resetPlayerCourseLeaderboards(CommandSender sender, String targetPlayerName, String courseName) {
-        if (!doesCourseExists(courseName)) {
+        if (!doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
@@ -792,7 +792,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param courseName course name
      */
     public void resetPrize(CommandSender sender, String courseName) {
-        if (!doesCourseExists(courseName)) {
+        if (!doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
@@ -828,7 +828,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param args command arguments
      */
     public void processSetCommand(final CommandSender sender, final String... args) {
-        if (!doesCourseExists(args[1])) {
+        if (!doesCourseExist(args[1])) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, args[1], sender);
             return;
         }
@@ -929,7 +929,7 @@ public class CourseManager extends AbstractPluginReceiver {
             return;
         }
 
-        if (!doesCourseExists(args[1])) {
+        if (!doesCourseExist(args[1])) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, args[1], player);
             return;
         }
@@ -941,7 +941,7 @@ public class CourseManager extends AbstractPluginReceiver {
             String choice = args[3].toLowerCase();
             if (choice.equals("personal") || choice.equals("local") || choice.equals("mine")) {
                 personal = true;
-            } else {
+            } else if (!choice.equals("global")) {
                 TranslationUtils.sendMessage(player, "Unknown leaderboard scope, for your results use 'local'.");
             }
         }
@@ -970,7 +970,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param courseName course name
      */
     public void displaySettingsGui(Player player, String courseName) {
-        if (!parkour.getCourseManager().doesCourseExists(courseName)) {
+        if (!parkour.getCourseManager().doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, player);
             return;
         }

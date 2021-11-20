@@ -50,8 +50,9 @@ public class PlayerConfig extends Json {
      * Get the Player's selected Course name.
      * @return selected course name
      */
+    @Nullable
     public String getSelectedCourse() {
-        return this.getString("Selected");
+        return this.get("Selected", null);
     }
 
     /**
@@ -83,8 +84,9 @@ public class PlayerConfig extends Json {
      * The course they most recently joined, but may not have finished.
      * @return course name last played
      */
+    @Nullable
     public String getLastPlayedCourse() {
-        return this.getString("LastPlayed");
+        return this.get("LastPlayed", null);
     }
 
     /**
@@ -99,8 +101,9 @@ public class PlayerConfig extends Json {
      * Get the Player's last completed Course.
      * @return course name last completed
      */
+    @Nullable
     public String getLastCompletedCourse() {
-        return this.getString("LastCompleted");
+        return this.get("LastCompleted", null);
     }
 
     /**
@@ -343,7 +346,7 @@ public class PlayerConfig extends Json {
      */
     @Nullable
     public String getExistingSessionCourseName() {
-        return this.getString("ExistingSessionCourseName");
+        return this.get("ExistingSessionCourseName", null);
     }
 
     /**

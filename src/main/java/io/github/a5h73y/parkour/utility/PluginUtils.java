@@ -18,11 +18,9 @@ import java.util.HashSet;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -244,7 +242,7 @@ public class PluginUtils {
 
         switch (command.toLowerCase()) {
             case "course":
-                if (!parkour.getCourseManager().doesCourseExists(argument)) {
+                if (!parkour.getCourseManager().doesCourseExist(argument)) {
                     TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, argument, sender);
                     return;
                 }
@@ -264,7 +262,7 @@ public class PluginUtils {
                 break;
 
             case "leaderboard":
-                if (!parkour.getCourseManager().doesCourseExists(argument)) {
+                if (!parkour.getCourseManager().doesCourseExist(argument)) {
                     TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, argument, sender);
                     return;
                 }
@@ -277,7 +275,7 @@ public class PluginUtils {
                 break;
 
             case "prize":
-                if (!parkour.getCourseManager().doesCourseExists(argument)) {
+                if (!parkour.getCourseManager().doesCourseExist(argument)) {
                     TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, argument, sender);
                     return;
                 }

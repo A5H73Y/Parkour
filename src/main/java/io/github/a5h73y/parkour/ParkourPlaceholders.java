@@ -221,7 +221,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     }
 
     private String getCoursePlaceholderValue(String... arguments) {
-        if (!parkour.getCourseManager().doesCourseExists((arguments[2]))) {
+        if (!parkour.getCourseManager().doesCourseExist((arguments[2]))) {
             return UNKNOWN_COURSE;
         }
 

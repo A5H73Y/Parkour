@@ -78,7 +78,7 @@ public class AutoStartManager extends ParkourManager {
 	 * @param courseName course name
 	 */
 	public void createAutoStart(final Player player, final String courseName) {
-		if (!parkour.getCourseManager().doesCourseExists(courseName)) {
+		if (!parkour.getCourseManager().doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, player);
 			return;
 		}

@@ -1,8 +1,8 @@
 package io.github.a5h73y.parkour.other;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
+import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -15,11 +15,11 @@ import java.util.zip.ZipOutputStream;
 /**
  * Backup the Parkour Data.
  */
-public class Backup {
+public class PluginBackupUtil {
 
-    private static final String SOURCE_FOLDER = Parkour.getInstance().getDataFolder() + File.separator;
-    private static final String BACKUPS_FOLDER = "backups" + File.separator;
-    private static final String OUTPUT_ZIP_FILE = SOURCE_FOLDER + BACKUPS_FOLDER
+    private static final String SOURCE_FOLDER = Parkour.getInstance().getDataFolder().toString();
+    private static final String BACKUPS_FOLDER = "backups";
+    private static final String OUTPUT_ZIP_FILE = SOURCE_FOLDER + File.separator + BACKUPS_FOLDER + File.separator
             + "[" + DateTimeUtils.getDisplayDate() + "] Backup.zip";
     private static List<String> fileList;
 
@@ -49,7 +49,7 @@ public class Backup {
     private static void zipIt() {
         byte[] buffer = new byte[1024];
         try {
-            File outputFolder = new File(SOURCE_FOLDER + BACKUPS_FOLDER);
+            File outputFolder = new File(SOURCE_FOLDER + File.separator + BACKUPS_FOLDER);
             if (!outputFolder.exists()) {
                 outputFolder.mkdirs();
             }
@@ -61,7 +61,7 @@ public class Backup {
                 ZipEntry ze = new ZipEntry(file);
                 zos.putNextEntry(ze);
 
-                FileInputStream in = new FileInputStream(SOURCE_FOLDER + file);
+                FileInputStream in = new FileInputStream(SOURCE_FOLDER + File.separator + file);
 
                 int len;
                 while ((len = in.read(buffer)) > 0) {

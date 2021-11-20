@@ -1218,7 +1218,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 		ParkourSession session = readParkourSession(player, courseName);
 
 		if (session != null) {
-			if (parkour.getCourseManager().doesCourseExists(session.getCourseName())) {
+			if (parkour.getCourseManager().doesCourseExist(session.getCourseName())) {
 				session.setCourse(parkour.getCourseManager().findCourse(session.getCourseName()));
 				session.recalculateTime();
 				session.setStartTimer(true);
@@ -1328,7 +1328,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 	 */
 	public boolean hasSelectedValidCourse(Player player) {
 		String selected = PlayerConfig.getConfig(player).getSelectedCourse();
-		return parkour.getCourseManager().doesCourseExists(selected);
+		return parkour.getCourseManager().doesCourseExist(selected);
 	}
 
 	/**
