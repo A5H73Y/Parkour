@@ -29,6 +29,8 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     private static final String INVALID_SYNTAX = TranslationUtils.getTranslation("PlaceholderAPI.InvalidSyntax", false);
     private static final String NO_TIME_RECORDED = TranslationUtils.getTranslation("PlaceholderAPI.NoTimeRecorded", false);
     private static final String TOP_TEN_RESULT = TranslationUtils.getTranslation("PlaceholderAPI.TopTenResult", false);
+    private static final String COURSE_ACTIVE = TranslationUtils.getTranslation("PlaceholderAPI.CourseActive", false);
+    private static final String COURSE_INACTIVE = TranslationUtils.getTranslation("PlaceholderAPI.CourseInactive", false);
 
     private final Parkour parkour;
     private final GenericCache<String, String> cache;
@@ -279,6 +281,9 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
 
             case "playerlist":
                 return String.join(", ", parkour.getPlayerManager().getPlayerNamesOnCourse(arguments[2]));
+
+            case "status":
+                return courseConfig.getReadyStatus() ? COURSE_ACTIVE : COURSE_INACTIVE;
 
             default:
                 return INVALID_SYNTAX;
