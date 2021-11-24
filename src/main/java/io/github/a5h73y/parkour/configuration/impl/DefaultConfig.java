@@ -96,6 +96,8 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("OnLeaveServer.LeaveCourse", false);
 		this.setDefault("OnLeaveServer.TeleportToLastCheckpoint", false);
 
+		this.setDefault("OnServerRestart.KickPlayerFromCourse", false);
+
 		this.setDefault("ParkourTool.LastCheckpoint.Material", "ARROW");
 		this.setDefault("ParkourTool.LastCheckpoint.Slot", 0);
 		this.setDefault("ParkourTool.HideAll.Material", "BONE");

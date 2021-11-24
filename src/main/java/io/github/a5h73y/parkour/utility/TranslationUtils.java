@@ -117,7 +117,7 @@ public class TranslationUtils {
 			result = getTranslation(fallbackKey, false);
 		}
 
-		return VALUE_PLACEHOLDER.matcher(colour(result)).replaceAll(session.getCourse().getDisplayName());
+		return colour(VALUE_PLACEHOLDER.matcher(result).replaceAll(session.getCourse().getDisplayName()));
 	}
 
 	/**
@@ -346,7 +346,7 @@ public class TranslationUtils {
 				}
 				return;
 			case "PARKOUR":
-				for (Player players : Parkour.getInstance().getPlayerManager().getOnlineParkourPlayers()) {
+				for (Player players : Parkour.getInstance().getParkourSessionManager().getOnlineParkourPlayers()) {
 					players.sendMessage(message);
 				}
 				return;

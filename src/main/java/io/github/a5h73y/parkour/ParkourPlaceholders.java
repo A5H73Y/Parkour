@@ -133,7 +133,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return String.valueOf(parkour.getCourseManager().getCourseNames().size());
 
             case "global_player_count":
-                return String.valueOf(parkour.getPlayerManager().getNumberOfParkourPlayer());
+                return String.valueOf(parkour.getParkourSessionManager().getNumberOfParkourPlayers());
 
             default:
                 return INVALID_SYNTAX;
@@ -277,10 +277,10 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return String.valueOf(courseConfig.getEconomyFinishReward());
 
             case "players":
-                return String.valueOf(parkour.getPlayerManager().getNumberOfPlayersOnCourse(arguments[2]));
+                return String.valueOf(parkour.getParkourSessionManager().getNumberOfPlayersOnCourse(arguments[2]));
 
             case "playerlist":
-                return String.join(", ", parkour.getPlayerManager().getPlayerNamesOnCourse(arguments[2]));
+                return String.join(", ", parkour.getParkourSessionManager().getPlayerNamesOnCourse(arguments[2]));
 
             case "status":
                 return courseConfig.getReadyStatus() ? COURSE_ACTIVE : COURSE_INACTIVE;
@@ -295,7 +295,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
         if (player == null) {
             return "";
         }
-        ParkourSession session = parkour.getPlayerManager().getParkourSession(player.getPlayer());
+        ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player.getPlayer());
 
         if (session == null) {
             return "";

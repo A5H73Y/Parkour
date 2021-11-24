@@ -33,7 +33,7 @@ import io.github.a5h73y.parkour.event.PlayerParkourRankEvent;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.ParkourConstants;
 import io.github.a5h73y.parkour.other.ParkourValidation;
-import io.github.a5h73y.parkour.type.Teardownable;
+import io.github.a5h73y.parkour.type.Initializable;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.course.Course;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
@@ -48,25 +48,14 @@ import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.WeakHashMap;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
@@ -85,9 +74,8 @@ import org.jetbrains.annotations.Nullable;
  * Parkour Player Manager.
  * Does not use a public cache, as the player's ParkourSession state is managed here only.
  */
-public class PlayerManager extends AbstractPluginReceiver implements Teardownable {
-
-	private final Map<Player, ParkourSession> parkourPlayers = new WeakHashMap<>();
+public class PlayerManager extends AbstractPluginReceiver implements Initializable {
+	
 	private final Map<UUID, Long> playerDelay = new HashMap<>();
 	private final List<UUID> hiddenPlayers = new ArrayList<>();
 
@@ -97,87 +85,16 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 	 */
 	public PlayerManager(final Parkour parkour) {
 		super(parkour);
-		populateParkourPlayers();
+	}
+
+	@Override
+	public int getInitializeSequence() {
+		return 1;
+	}
+
+	@Override
+	public void initialize() {
 		startLiveTimerRunnable();
-	}
-
-	/**
-	 * Get the Player's {@link ParkourSession}.
-	 *
-	 * @param player requesting player
-	 * @return player's ParkourSession
-	 */
-	@Nullable
-	public ParkourSession getParkourSession(Player player) {
-		return parkourPlayers.get(player);
-	}
-
-	/**
-	 * Check whether a Player has a ParkourSession.
-	 *
-	 * @param player requesting player
-	 * @return player session exists
-	 */
-	public boolean isPlaying(Player player) {
-		return parkourPlayers.containsKey(player);
-	}
-
-	/**
-	 * Check whether the Player is in TestMode.
-	 * To be treated differently to a regular Course ParkourSession.
-	 *
-	 * @param player target player
-	 * @return player in TestMode
-	 */
-	public boolean isPlayerInTestMode(Player player) {
-		ParkourSession session = getParkourSession(player);
-		return session != null && ParkourConstants.TEST_MODE.equals(session.getCourse().getName());
-	}
-
-	/**
-	 * Get the number of online Parkour Players.
-	 *
-	 * @return number of parkour players
-	 */
-	public int getNumberOfParkourPlayer() {
-		return parkourPlayers.size();
-	}
-
-	/**
-	 * Get Online Parkour Players.
-	 * Find all the currently online players that are on a Parkour Course.
-	 *
-	 * @return parkour players
-	 */
-	public List<Player> getOnlineParkourPlayers() {
-		return Bukkit.getServer().getOnlinePlayers().stream()
-				.filter(this::isPlaying)
-				.collect(Collectors.toList());
-	}
-
-	/**
-	 * Get Number of Players on a Course.
-	 *
-	 * @param courseName course name
-	 * @return number of players
-	 */
-	public int getNumberOfPlayersOnCourse(@NotNull String courseName) {
-		return (int) parkourPlayers.values().stream()
-				.filter(parkourSession -> parkourSession.getCourseName().equalsIgnoreCase(courseName))
-				.count();
-	}
-
-	/**
-	 * Get the Player names currently on a Course.
-	 *
-	 * @param courseName course name
-	 * @return list of player names
-	 */
-	public List<String> getPlayerNamesOnCourse(@NotNull String courseName) {
-		return parkourPlayers.entrySet().stream()
-				.filter(session -> session.getValue().getCourseName().equals(courseName))
-				.map(session -> session.getKey().getName())
-				.collect(Collectors.toList());
 	}
 
 	/**
@@ -238,18 +155,19 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 		parkour.getSoundsManager().playSound(player, SoundType.JOIN_COURSE);
 
 		// already on a different course
-		if (isPlaying(player) && !getParkourSession(player).getCourseName().equals(course.getName())) {
-			removePlayer(player);
+		if (parkour.getParkourSessionManager().isPlaying(player)
+				&& !parkour.getParkourSessionManager().getParkourSession(player).getCourseName().equals(course.getName())) {
+			parkour.getParkourSessionManager().removePlayer(player);
 		}
 
 		// set up their session
 		ParkourSession session;
-		if (canLoadParkourSession(player, course)) {
-			session = loadParkourSession(player, course.getName());
+		if (parkour.getParkourSessionManager().canLoadParkourSession(player, course)) {
+			session = parkour.getParkourSessionManager().loadParkourSession(player, course.getName());
 			PlayerUtils.teleportToLocation(player, determineDestination(session));
 			TranslationUtils.sendValueTranslation("Parkour.Continue", session.getCourse().getDisplayName(), player);
 		} else {
-			session = addPlayer(player, new ParkourSession(course));
+			session = parkour.getParkourSessionManager().addPlayer(player, new ParkourSession(course));
 		}
 
 		displayJoinMessage(player, silent, session);
@@ -298,12 +216,12 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 	 * @param silent silently leave the course
 	 */
 	public void leaveCourse(Player player, boolean silent) {
-		if (!isPlaying(player)) {
+		if (!parkour.getParkourSessionManager().isPlaying(player)) {
 			TranslationUtils.sendTranslation("Error.NotOnAnyCourse", player);
 			return;
 		}
 
-		ParkourSession session = getParkourSession(player);
+		ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
 
 		if (parkour.getParkourConfig().isLeaveDestroyCourseProgress()
 				|| !CourseConfig.getConfig(session.getCourseName()).getResumable()) {
@@ -312,10 +230,10 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 
 		teardownParkourMode(player);
 		if (session.isMarkedForDeletion()) {
-			deleteParkourSession(player, session.getCourseName());
-			removePlayer(player);
+			parkour.getParkourSessionManager().deleteParkourSession(player, session.getCourseName());
+			parkour.getParkourSessionManager().removePlayer(player);
 		} else {
-			stashParkourSession(player, true);
+			parkour.getParkourSessionManager().stashParkourSession(player, true);
 		}
 		preparePlayer(player, parkour.getParkourConfig().getString("OnFinish.SetGameMode"));
 		restoreHealthHunger(player);
@@ -355,12 +273,12 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 	 * @param checkpoint checkpoint
 	 */
 	public void manuallyIncreaseCheckpoint(Player player, int checkpoint) {
-		if (!parkour.getPlayerManager().isPlaying(player)) {
+		if (!parkour.getParkourSessionManager().isPlaying(player)) {
 			TranslationUtils.sendTranslation("Error.NotOnCourse", player);
 			return;
 		}
 
-		ParkourSession session = parkour.getPlayerManager().getParkourSession(player);
+		ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
 
 		if (session.hasAchievedAllCheckpoints()
 				|| session.getCurrentCheckpoint() >= checkpoint
@@ -368,7 +286,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 			return;
 		}
 
-		parkour.getPlayerManager().increaseCheckpoint(player, null);
+		increaseCheckpoint(player, null);
 	}
 
 	/**
@@ -378,7 +296,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 	 * @param player requesting player.
 	 */
 	public void increaseCheckpoint(Player player, @Nullable Integer desiredCheckpoint) {
-		ParkourSession session = getParkourSession(player);
+		ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
 
 		if (session == null) {
 			TranslationUtils.sendTranslation("Error.NotOnAnyCourse", player);
@@ -434,12 +352,12 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 	 * @param player requesting player
 	 */
 	public void playerDie(Player player) {
-		if (!isPlaying(player)) {
+		if (!parkour.getParkourSessionManager().isPlaying(player)) {
 			TranslationUtils.sendTranslation("Error.NotOnAnyCourse", player);
 			return;
 		}
 
-		ParkourSession session = getParkourSession(player);
+		ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
 		parkour.getSoundsManager().playSound(player, SoundType.PLAYER_DEATH);
 		session.increaseDeath();
 
@@ -461,7 +379,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 		PlayerUtils.teleportToLocation(player, determineDestination(session));
 
 		// if the Player is in Test Mode, we don't need to run the rest
-		if (isPlayerInTestMode(player)) {
+		if (parkour.getParkourSessionManager().isPlayerInTestMode(player)) {
 			TranslationUtils.sendTranslation("Parkour.Die1", player);
 			return;
 		}
@@ -501,18 +419,6 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 	}
 
 	/**
-	 * Teardown all active Parkour Players.
-	 * Remove all in-memory references to each player, persisting any data to a file.
-	 */
-	@Override
-	public void teardown() {
-		for (Player player : parkourPlayers.keySet()) {
-			stashParkourSession(player, false);
-		}
-		parkourPlayers.clear();
-	}
-
-	/**
 	 * Teardown a Parkour Player.
 	 * Remove all in-memory references to the player, persisting any data to a file.
 	 *
@@ -523,7 +429,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 		parkour.getQuestionManager().removeQuestion(player);
 		hiddenPlayers.remove(player.getUniqueId());
 		playerDelay.remove(player.getUniqueId());
-		Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () -> stashParkourSession(player, true));
+		Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () ->
+				parkour.getParkourSessionManager().stashParkourSession(player, true));
 	}
 
 	/**
@@ -536,15 +443,11 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 	 * @param player requesting player
 	 */
 	public void finishCourse(final Player player) {
-		if (!isPlaying(player)) {
+		if (!parkour.getParkourSessionManager().isPlayingParkourCourse(player)) {
 			return;
 		}
 
-		if (isPlayerInTestMode(player)) {
-			return;
-		}
-
-		ParkourSession session = getParkourSession(player);
+		ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
 
 		if (parkour.getParkourConfig().getBoolean("OnFinish.EnforceCompletion")
 				&& !session.hasAchievedAllCheckpoints()) {
@@ -571,7 +474,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 		CourseConfig.getConfig(courseName).incrementCompletions();
 		teardownParkourMode(player);
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerFinishCourseEvent(player, courseName));
-		removePlayer(player);
+		parkour.getParkourSessionManager().removePlayer(player);
 
 		parkour.getChallengeManager().completeChallenge(player);
 
@@ -597,7 +500,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 		parkour.getConfigManager().getCourseCompletionsConfig().addCompletedCourse(player, courseName);
 
 		forceVisible(player);
-		deleteParkourSession(player, courseName);
+		parkour.getParkourSessionManager().deleteParkourSession(player, courseName);
 		parkour.getCourseManager().runEventCommands(player, session, FINISH);
 	}
 
@@ -608,16 +511,16 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 	 * @param player requesting player
 	 */
 	public void restartCourse(Player player) {
-		if (!isPlaying(player)) {
+		if (!parkour.getParkourSessionManager().isPlaying(player)) {
 			return;
 		}
 
-		ParkourSession session = getParkourSession(player);
+		ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
 		Course course = session.getCourse();
 
 		if (parkour.getParkourConfig().getBoolean("OnRestart.FullPlayerRestart")) {
 			leaveCourse(player, true);
-			deleteParkourSession(player, course.getName());
+			parkour.getParkourSessionManager().deleteParkourSession(player, course.getName());
 			joinCourse(player, course, true);
 
 			// if they are restarting the Course, we need to teleport them back
@@ -792,7 +695,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 		if (parkour.getParkourConfig().getBoolean("ParkourTool.HideAll.Global") || allPlayers) {
 			playerScope = (List<Player>) Bukkit.getOnlinePlayers();
 		} else {
-			playerScope = getOnlineParkourPlayers();
+			playerScope = parkour.getParkourSessionManager().getOnlineParkourPlayers();
 		}
 
 		for (Player eachPlayer : playerScope) {
@@ -949,14 +852,14 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 			PlayerUtils.removeAllPotionEffects(player);
 		}
 
-		ParkourSession session = getParkourSession(player);
+		ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
 
 		if (session != null && session.getParkourMode() == ParkourMode.POTION) {
 			XPotion.addPotionEffectsFromString(player,
 					CourseConfig.getConfig(session.getCourseName()).getPotionParkourModeEffects());
 		}
 
-		if (!isPlayerInTestMode(player)) {
+		if (!parkour.getParkourSessionManager().isPlayerInTestMode(player)) {
 			PlayerUtils.setGameMode(player, gameModeName);
 		}
 
@@ -1092,9 +995,9 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 	 * @param player player
 	 */
 	public void toggleTestMode(@NotNull Player player, @Nullable String kitName) {
-		if (isPlaying(player)) {
-			if (isPlayerInTestMode(player)) {
-				removePlayer(player);
+		if (parkour.getParkourSessionManager().isPlaying(player)) {
+			if (parkour.getParkourSessionManager().isPlayerInTestMode(player)) {
+				parkour.getParkourSessionManager().removePlayer(player);
 				parkour.getBountifulApi().sendActionBar(player,
 						TranslationUtils.getTranslation("Parkour.TestModeOff", false), true);
 			} else {
@@ -1111,7 +1014,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 						parkour.getCheckpointManager().createCheckpointFromPlayerLocation(player));
 				ParkourSession session = new ParkourSession(
 						new Course(TEST_MODE, TEST_MODE, checkpoints, kit, ParkourMode.NONE, 0, 0));
-				addPlayer(player, session);
+				parkour.getParkourSessionManager().addPlayer(player, session);
 				parkour.getBountifulApi().sendActionBar(player, TranslationUtils.getValueTranslation(
 						"Parkour.TestModeOn", kitName, false), true);
 			}
@@ -1132,7 +1035,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 		}
 
 		PlayerConfig playerConfig = PlayerConfig.getConfig(targetPlayer);
-		ParkourSession session = getParkourSession(targetPlayer.getPlayer());
+		ParkourSession session = parkour.getParkourSessionManager().getParkourSession(targetPlayer.getPlayer());
 		TranslationUtils.sendHeading(targetPlayer.getName() + "'s information", sender);
 
 		if (session != null) {
@@ -1208,90 +1111,24 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 	}
 
 	/**
-	 * Load the Player's ParkourSession.
-	 * Retrieve the ParkourSession for the Player, recalculate the details and continue the Course.
-	 *
-	 * @param player player
-	 * @return loaded ParkourSession
-	 */
-	public ParkourSession loadParkourSession(Player player, String courseName) {
-		ParkourSession session = readParkourSession(player, courseName);
-
-		if (session != null) {
-			if (parkour.getCourseManager().doesCourseExist(session.getCourseName())) {
-				session.setCourse(parkour.getCourseManager().findCourse(session.getCourseName()));
-				session.recalculateTime();
-				session.setStartTimer(true);
-				parkourPlayers.put(player, session);
-
-			} else {
-				TranslationUtils.sendTranslation("Error.InvalidSession", player);
-				deleteParkourSession(player, courseName);
-				parkour.getLobbyManager().justTeleportToDefaultLobby(player);
-			}
-		}
-
-		return session;
-	}
-
-	/**
-	 * Delete the Player's ParkourSession.
-	 *
-	 * @param player player
-	 */
-	public void deleteParkourSession(OfflinePlayer player, String courseName) {
-		File sessionFile = PlayerConfig.getPlayerSessionFile(player, courseName);
-
-		if (sessionFile.exists()) {
-			try {
-				sessionFile.delete();
-			} catch (SecurityException e) {
-				PluginUtils.log("Player's session couldn't be deleted: " + e.getMessage(), 2);
-				e.printStackTrace();
-			}
-		}
-	}
-
-	/**
-	 * Delete all Parkour Sessions for Player.
-	 * Individually removes all files from within the folder, then the folder itself.
-	 *
-	 * @param player player
-	 */
-	public void deleteParkourSessions(OfflinePlayer player) {
-		File playersFolder = new File(parkour.getConfigManager().getSessionsDir()  + File.separator + player.getUniqueId());
-		if (Files.notExists(playersFolder.toPath())) {
-			return;
-		}
-
-		try (Stream<Path> paths = Files.walk(playersFolder.toPath())) {
-			paths.sorted(Comparator.reverseOrder())
-					.map(Path::toFile)
-					.forEach(File::delete);
-		} catch (SecurityException | IOException e) {
-			PluginUtils.log("Player's session couldn't be deleted: " + e.getMessage(), 2);
-			e.printStackTrace();
-		}
-	}
-
-	/**
 	 * Display a summary of the Parkour Players.
 	 * Each of the online Parkour Players will have their session details displayed.
 	 *
 	 * @param sender command sender
 	 */
 	public void displayParkourPlayers(CommandSender sender) {
-		if (getNumberOfParkourPlayer() == 0) {
+		int parkourPlayers = parkour.getParkourSessionManager().getNumberOfParkourPlayers();
+		if (parkourPlayers == 0) {
 			TranslationUtils.sendMessage(sender, "Nobody is playing Parkour!");
 			return;
 		}
 
-		TranslationUtils.sendMessage(sender, getNumberOfParkourPlayer() + " players using Parkour: ");
+		TranslationUtils.sendMessage(sender, parkourPlayers + " players using Parkour: ");
 
 		String playingMessage = TranslationUtils.getTranslation("Parkour.Playing", false);
-		for (Map.Entry<Player, ParkourSession> entry : parkourPlayers.entrySet()) {
+		for (Map.Entry<UUID, ParkourSession> entry : parkour.getParkourSessionManager().getParkourPlayers().entrySet()) {
 			sender.sendMessage(TranslationUtils.replaceAllParkourPlaceholders(
-					playingMessage, entry.getKey(), entry.getValue()));
+					playingMessage, Bukkit.getPlayer(entry.getKey()), entry.getValue()));
 		}
 	}
 
@@ -1357,10 +1194,10 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 	 */
 	public void resetPlayer(OfflinePlayer targetPlayer) {
 		PlayerConfig.deletePlayerData(targetPlayer);
-		deleteParkourSessions(targetPlayer);
+		parkour.getParkourSessionManager().deleteParkourSessions(targetPlayer);
 		parkour.getDatabaseManager().deletePlayerTimes(targetPlayer);
 		parkour.getPlaceholderApi().clearCache();
-		removePlayer(targetPlayer.getPlayer());
+		parkour.getParkourSessionManager().removePlayer(targetPlayer.getPlayer());
 	}
 
 	/**
@@ -1369,7 +1206,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 	 * @param player target player
 	 */
 	public void setupParkourMode(Player player) {
-		ParkourSession session = getParkourSession(player);
+		ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
 		ParkourMode courseMode = session.getParkourMode();
 
 		if (courseMode == ParkourMode.NONE) {
@@ -1421,12 +1258,12 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 	 * @param player player
 	 */
 	public void setManualCheckpoint(Player player) {
-		if (!isPlaying(player)) {
+		if (!parkour.getParkourSessionManager().isPlaying(player)) {
 			TranslationUtils.sendTranslation("Error.NotOnAnyCourse", player);
 			return;
 		}
 
-		ParkourSession session = getParkourSession(player);
+		ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
 
 		if (ParkourMode.FREE_CHECKPOINT == session.getParkourMode()
 				&& parkour.getParkourConfig().getBoolean("ParkourModes.FreeCheckpoint.ManualCheckpointCommandEnabled")) {
@@ -1452,67 +1289,6 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 		return parkour.getCourseManager().getCourseNames().stream()
 				.filter(course -> !completedCourses.contains(course))
 				.collect(Collectors.toList());
-	}
-
-	/**
-	 * Stash the Player's ParkourSession.
-	 * Persist the ParkourSession to a file under the Player's UUID.
-	 * Mark the current time accumulated, for the time difference to be recalculated when the Player rejoins.
-	 *
-	 * @param player player
-	 */
-	private void stashParkourSession(Player player, boolean removePlaying) {
-		ParkourSession session = getParkourSession(player);
-		if (session != null && !session.getCourseName().equals(TEST_MODE)) {
-			session.markTimeAccumulated();
-			PlayerConfig.getConfig(player).setExistingSessionCourseName(session.getCourseName());
-		}
-		createParkourSessionFile(player);
-		if (removePlaying) {
-			parkourPlayers.remove(player);
-		}
-	}
-
-	/**
-	 * Read the ParkourSession from the Player's UUID.
-	 * Find the matching file and deserialize the data.
-	 *
-	 * @param player player
-	 * @return ParkourSession file
-	 */
-	private ParkourSession readParkourSession(Player player, String courseName) {
-		ParkourSession session = null;
-		File sessionFile = PlayerConfig.getPlayerSessionFile(player, courseName);
-
-		if (sessionFile.exists()) {
-			try (
-					FileInputStream fout = new FileInputStream(sessionFile);
-					ObjectInputStream oos = new ObjectInputStream(fout)
-			) {
-				session = (ParkourSession) oos.readObject();
-			} catch (IOException | ClassNotFoundException e) {
-				PluginUtils.log("Player's session couldn't be loaded: " + e.getMessage(), 2);
-				e.printStackTrace();
-			}
-		}
-		return session;
-	}
-
-	/**
-	 * Generate path for Player's Session file.
-	 *
-	 * @param player player
-	 * @return session path
-	 */
-	@Nullable
-	public File generatePlayerSessionPath(Player player, ParkourSession session) {
-		File playerPath = null;
-
-		if (session != null) {
-			playerPath = PlayerConfig.getPlayerSessionFile(player, session.getCourseName());
-		}
-
-		return playerPath;
 	}
 
 	/**
@@ -1649,59 +1425,6 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 	}
 
 	/**
-	 * Add the player and their session to parkour players.
-	 *
-	 * @param player target player
-	 * @param session ParkourSession
-	 */
-	private ParkourSession addPlayer(Player player, ParkourSession session) {
-		parkourPlayers.put(player, session);
-		return session;
-	}
-
-	/**
-	 * Remove the player and their session from the parkour players.
-	 *
-	 * @param player target player
-	 */
-	private void removePlayer(Player player) {
-		ParkourSession session = parkourPlayers.get(player);
-		if (session != null) {
-			parkourPlayers.remove(player);
-		}
-	}
-
-	/**
-	 * Populate Parkour Players.
-	 * As part of a server reload, there would be online players who need their Parkour session restored.
-	 */
-	private void populateParkourPlayers() {
-		for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-			if (!PlayerConfig.hasPlayerConfig(onlinePlayer)) {
-				continue;
-			}
-
-			PlayerConfig playerConfig = PlayerConfig.getConfig(onlinePlayer);
-			if (!playerConfig.hasExistingSessionCourseName()) {
-				continue;
-			}
-
-			ParkourSession session = loadParkourSession(onlinePlayer,
-					playerConfig.getExistingSessionCourseName());
-
-			if (!isPlaying(onlinePlayer)) {
-				continue;
-			}
-
-			setupParkourMode(onlinePlayer);
-			parkour.getScoreboardManager().addScoreboard(onlinePlayer, session);
-
-			String currentCourse = getParkourSession(onlinePlayer).getCourse().getName();
-			TranslationUtils.sendValueTranslation("Parkour.Continue", currentCourse, onlinePlayer);
-		}
-	}
-
-	/**
 	 * Start the Course Live Timer.
 	 * Will be enabled / displayed when the Scoreboard LiveTimer is enabled, or as a live Action Bar timer.
 	 * Course Timer may increase or decrease based on whether the Course has a maximum time.
@@ -1712,13 +1435,14 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 				&& parkour.getParkourConfig().getBoolean("Scoreboard.LiveTimer.Enabled"))) {
 			return;
 		}
+		final boolean displayLiveTimer = parkour.getParkourConfig().getBoolean("OnCourse.DisplayLiveTime");
 
 		Bukkit.getScheduler().runTaskTimer(parkour, () -> {
-			for (Map.Entry<Player, ParkourSession> parkourPlayer : parkourPlayers.entrySet()) {
-				Player player = parkourPlayer.getKey();
+			for (Map.Entry<UUID, ParkourSession> parkourPlayer : parkour.getParkourSessionManager().getParkourPlayers().entrySet()) {
+				Player player = Bukkit.getPlayer(parkourPlayer.getKey());
 				ParkourSession session = parkourPlayer.getValue();
 
-				if (!session.isStartTimer()) {
+				if (player == null || !session.isStartTimer()) {
 					continue;
 				}
 
@@ -1736,7 +1460,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 					parkour.getSoundsManager().playSound(player, SoundType.SECOND_INCREMENT);
 				}
 
-				if (parkour.getParkourConfig().getBoolean("OnCourse.DisplayLiveTime")) {
+				if (displayLiveTimer) {
 					parkour.getBountifulApi().sendActionBar(player, liveTimer, true);
 				}
 
@@ -1844,48 +1568,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Teardownabl
 		parkour.getLobbyManager().joinLobby(player, DEFAULT);
 	}
 
-	/**
-	 * Validate if their session is still valid.
-	 * Try to get their existing session and check the name matches.
-	 *
-	 * @param player player
-	 * @param course course
-	 * @return player can load ParkourSession
-	 */
-	private boolean canLoadParkourSession(Player player, Course course) {
-		ParkourSession session = readParkourSession(player, course.getName());
-		return session != null && session.getCourseName().equals(course.getName());
-	}
-
-	private void createParkourSessionFile(Player player) {
-		ParkourSession session = getParkourSession(player);
-		File sessionFile = generatePlayerSessionPath(player, session);
-
-		if (sessionFile != null) {
-			if (!sessionFile.exists()) {
-				try {
-					sessionFile.getParentFile().mkdirs();
-					sessionFile.createNewFile();
-				} catch (IOException e) {
-					PluginUtils.log("Player's session couldn't be created: " + e.getMessage(), 2);
-					e.printStackTrace();
-				}
-			}
-
-			try (
-					FileOutputStream fout = new FileOutputStream(sessionFile);
-					ObjectOutputStream oos = new ObjectOutputStream(fout)
-			) {
-				oos.writeObject(session);
-			} catch (IOException e) {
-				PluginUtils.log("Player's session couldn't be saved: " + e.getMessage(), 2);
-				e.printStackTrace();
-			}
-		}
-	}
-
 	private void teardownParkourMode(Player player) {
-		ParkourMode courseMode = getParkourSession(player).getParkourMode();
+		ParkourMode courseMode = parkour.getParkourSessionManager().getParkourSession(player).getParkourMode();
 
 		if (courseMode == ParkourMode.NONE) {
 			return;

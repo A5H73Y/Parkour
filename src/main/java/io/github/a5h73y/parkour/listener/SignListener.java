@@ -163,7 +163,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
         String[] lines = sign.getLines();
 
         if (!ChatColor.stripColor(lines[0]).equalsIgnoreCase(parkour.getParkourConfig().getStrippedSignHeader())) {
-            if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
+            if (!parkour.getParkourSessionManager().isPlaying(event.getPlayer())) {
                 return;
             }
 
@@ -236,10 +236,10 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExist(lines[2])) {
                     TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, lines[2], player);
 
-                } else if (!parkour.getPlayerManager().isPlaying(player)) {
+                } else if (!parkour.getParkourSessionManager().isPlaying(player)) {
                     TranslationUtils.sendTranslation("Error.NotOnAnyCourse", player);
 
-                } else if (!parkour.getPlayerManager().getParkourSession(player).getCourse().getName()
+                } else if (!parkour.getParkourSessionManager().getParkourSession(player).getCourse().getName()
                         .equalsIgnoreCase(lines[2])) {
                     TranslationUtils.sendTranslation("Error.NotOnCourse", player);
 

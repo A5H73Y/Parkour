@@ -53,7 +53,7 @@ public class JoinCoursesGui implements AbstractMenu {
 							TranslationUtils.getValueTranslation("GUI.JoinCourses.Description",
 									course, false),
 							TranslationUtils.getValueTranslation("GUI.JoinCourses.Players",
-									String.valueOf(playerManager.getNumberOfPlayersOnCourse(
+									String.valueOf(Parkour.getInstance().getParkourSessionManager().getNumberOfPlayersOnCourse(
 											course)), false),
 							TranslationUtils.getValueTranslation("GUI.JoinCourses.Checkpoints",
 									String.valueOf(CourseConfig.getConfig(course).getCheckpointAmount()), false)

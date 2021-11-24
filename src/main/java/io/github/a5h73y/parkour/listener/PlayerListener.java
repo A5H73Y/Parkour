@@ -40,12 +40,12 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player
-                && parkour.getPlayerManager().isPlaying((Player) event.getEntity())
+                && parkour.getParkourSessionManager().isPlaying((Player) event.getEntity())
                 && parkour.getParkourConfig().isPreventEntitiesAttacking()) {
             event.setCancelled(true);
 
         } else if (event.getDamager() instanceof Player
-                && parkour.getPlayerManager().isPlaying((Player) event.getDamager())
+                && parkour.getParkourSessionManager().isPlaying((Player) event.getDamager())
                 && parkour.getParkourConfig().isPreventAttackingEntities()) {
             event.setCancelled(true);
         }
@@ -60,7 +60,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
     @EventHandler
     public void onEntityCombust(EntityCombustEvent event) {
         if (event.getEntity() instanceof Player
-                && parkour.getPlayerManager().isPlaying((Player) event.getEntity())) {
+                && parkour.getParkourSessionManager().isPlaying((Player) event.getEntity())) {
             event.setCancelled(true);
         }
     }
@@ -78,7 +78,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         }
 
         Player player = (Player) event.getEntity();
-        boolean playing = parkour.getPlayerManager().isPlaying(player);
+        boolean playing = parkour.getParkourSessionManager().isPlaying(player);
 
         if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
             if (playing && parkour.getParkourConfig().getBoolean("OnCourse.DieInVoid")) {
@@ -102,7 +102,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         // cancel damage if globally disabled or the ParkourMode is Dropper and fall damage is enabled
         if (event.getCause() == EntityDamageEvent.DamageCause.FALL
                 && (parkour.getParkourConfig().getBoolean("OnCourse.DisableFallDamage")
-                || (ParkourMode.DROPPER == parkour.getPlayerManager().getParkourSession(player).getParkourMode()
+                || (ParkourMode.DROPPER == parkour.getParkourSessionManager().getParkourSession(player).getParkourMode()
                 && !parkour.getParkourConfig().getBoolean("ParkourModes.Dropper.FallDamage")))) {
             event.setDamage(0);
             event.setCancelled(true);
@@ -131,7 +131,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
      */
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
-        if (parkour.getPlayerManager().isPlaying(event.getPlayer())) {
+        if (parkour.getParkourSessionManager().isPlaying(event.getPlayer())) {
             parkour.getPlayerManager().playerDie(event.getPlayer());
         }
     }
@@ -148,7 +148,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        if (parkour.getPlayerManager().isPlaying((Player) event.getEntity())) {
+        if (parkour.getParkourSessionManager().isPlaying((Player) event.getEntity())) {
             event.setCancelled(true);
         }
     }
@@ -161,7 +161,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
      */
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
-        if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
+        if (!parkour.getParkourSessionManager().isPlaying(event.getPlayer())) {
             return;
         }
 
@@ -178,7 +178,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
      */
     @EventHandler
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
-        if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
+        if (!parkour.getParkourSessionManager().isPlaying(event.getPlayer())) {
             return;
         }
 
@@ -212,11 +212,11 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        ParkourSession session = parkour.getPlayerManager().loadParkourSession(player,
+        ParkourSession session = parkour.getParkourSessionManager().loadParkourSession(player,
                 playerConfig.getExistingSessionCourseName());
         playerConfig.setExistingSessionCourseName(null);
 
-        if (!parkour.getPlayerManager().isPlaying(player)) {
+        if (!parkour.getParkourSessionManager().isPlaying(player)) {
             return;
         }
 
@@ -261,11 +261,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
      */
     @EventHandler
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
-            return;
-        }
-
-        if (parkour.getPlayerManager().isPlayerInTestMode(event.getPlayer())) {
+        if (!parkour.getParkourSessionManager().isPlayingParkourCourse(event.getPlayer())) {
             return;
         }
 
@@ -292,7 +288,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
      */
     @EventHandler
     public void onPlayerToggleFlight(PlayerToggleFlightEvent event) {
-        if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
+        if (!parkour.getParkourSessionManager().isPlaying(event.getPlayer())) {
             return;
         }
 
@@ -319,7 +315,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        if (!parkour.getPlayerManager().isPlaying((Player) event.getPlayer())) {
+        if (!parkour.getParkourSessionManager().isPlaying((Player) event.getPlayer())) {
             return;
         }
 

@@ -45,7 +45,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
      */
     @EventHandler
     public void onInventoryInteract(PlayerInteractEvent event) {
-        if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
+        if (!parkour.getParkourSessionManager().isPlaying(event.getPlayer())) {
             return;
         }
 
@@ -62,7 +62,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             return;
         }
 
-        if (parkour.getPlayerManager().isPlayerInTestMode(player)) {
+        if (parkour.getParkourSessionManager().isPlayerInTestMode(player)) {
             return;
         }
 
@@ -106,7 +106,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
 
                 if (parkour.getParkourConfig().getBoolean("OnRestart.RequireConfirmation")) {
                     if (!parkour.getQuestionManager().hasBeenAskedQuestion(player, QuestionType.RESTART_COURSE)) {
-                        String courseName = parkour.getPlayerManager().getParkourSession(player).getCourseName();
+                        String courseName = parkour.getParkourSessionManager().getParkourSession(player).getCourseName();
                         parkour.getQuestionManager().askRestartProgressQuestion(player, courseName);
                     } else {
                         parkour.getQuestionManager().answerQuestion(player, QuestionManager.YES);
@@ -127,7 +127,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
      */
     @EventHandler
     public void onInventoryInteractParkourMode(PlayerInteractEvent event) {
-        if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
+        if (!parkour.getParkourSessionManager().isPlaying(event.getPlayer())) {
             return;
         }
 
@@ -136,7 +136,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             return;
         }
 
-        ParkourMode mode = parkour.getPlayerManager().getParkourSession(event.getPlayer()).getParkourMode();
+        ParkourMode mode = parkour.getParkourSessionManager().getParkourSession(event.getPlayer()).getParkourMode();
 
         if (mode != ParkourMode.FREEDOM && mode != ParkourMode.ROCKETS) {
             return;
@@ -144,7 +144,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
 
         Player player = event.getPlayer();
 
-        if (parkour.getPlayerManager().isPlayerInTestMode(player)) {
+        if (parkour.getParkourSessionManager().isPlayerInTestMode(player)) {
             return;
         }
 
@@ -158,13 +158,13 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
                     && player.isOnGround()
                     && parkour.getPlayerManager().delayPlayer(event.getPlayer(), parkour.getParkourConfig().getInt(
                     "ParkourTool.Freedom.SecondCooldown"))) {
-                parkour.getPlayerManager().getParkourSession(player).setFreedomLocation(
+                parkour.getParkourSessionManager().getParkourSession(player).setFreedomLocation(
                         parkour.getCheckpointManager().createCheckpointFromPlayerLocation(player).getLocation());
                 TranslationUtils.sendTranslation("Mode.Freedom.Save", player);
 
             } else if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)
                     || event.getAction().equals(Action.LEFT_CLICK_AIR)) {
-                Location location = parkour.getPlayerManager().getParkourSession(player).getFreedomLocation();
+                Location location = parkour.getParkourSessionManager().getParkourSession(player).getFreedomLocation();
                 if (location == null) {
                     TranslationUtils.sendTranslation("Error.UnknownCheckpoint", player);
                     return;
@@ -192,7 +192,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
     @EventHandler
     public void onCheckpointEvent(PlayerInteractEvent event) {
         if (event.getAction() != Action.PHYSICAL
-                || !parkour.getPlayerManager().isPlaying(event.getPlayer())) {
+                || !parkour.getParkourSessionManager().isPlaying(event.getPlayer())) {
             return;
         }
 
@@ -204,7 +204,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             event.setCancelled(true);
         }
 
-        ParkourSession session = parkour.getPlayerManager().getParkourSession(event.getPlayer());
+        ParkourSession session = parkour.getParkourSessionManager().getParkourSession(event.getPlayer());
 
         if (session.getParkourMode() == ParkourMode.FREE_CHECKPOINT
                 && parkour.getPlayerManager().delayPlayer(event.getPlayer(), 1)
@@ -296,7 +296,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         String courseName = parkour.getAutoStartManager().getAutoStartCourse(event.getClickedBlock().getLocation());
 
         if (courseName != null) {
-            ParkourSession session = parkour.getPlayerManager().getParkourSession(event.getPlayer());
+            ParkourSession session = parkour.getParkourSessionManager().getParkourSession(event.getPlayer());
             if (session != null) {
                 // we only want to do something if the names match
                 if (session.getCourseName().equals(courseName)) {

@@ -172,7 +172,7 @@ public class ParkourValidation {
         }
 
         /* Check if the player can leave the course for another */
-        if (parkour.getPlayerManager().isPlaying(player)) {
+        if (parkour.getParkourSessionManager().isPlaying(player)) {
             if (Parkour.getDefaultConfig().getBoolean("OnCourse.PreventJoiningDifferentCourse")) {
                 TranslationUtils.sendTranslation("Error.JoiningAnotherCourse", player);
                 return false;
@@ -186,7 +186,7 @@ public class ParkourValidation {
 
         /* Check if player limit exceeded */
         if (courseConfig.hasPlayerLimit()
-                && parkour.getPlayerManager().getNumberOfPlayersOnCourse(course.getName())
+                && parkour.getParkourSessionManager().getNumberOfPlayersOnCourse(course.getName())
                 >= courseConfig.getPlayerLimit()) {
             TranslationUtils.sendTranslation("Error.LimitExceeded", player);
             return false;
@@ -383,7 +383,7 @@ public class ParkourValidation {
             return false;
         }
 
-        if (parkour.getPlayerManager().isPlaying(player)) {
+        if (parkour.getParkourSessionManager().isPlaying(player)) {
             TranslationUtils.sendMessage(player, "You are already on a Course!");
             return false;
         }
@@ -432,7 +432,7 @@ public class ParkourValidation {
             return false;
         }
 
-        if (parkour.getPlayerManager().isPlaying(targetPlayer)) {
+        if (parkour.getParkourSessionManager().isPlaying(targetPlayer)) {
             TranslationUtils.sendMessage(player, "This player is already on a Course!");
             return false;
         }

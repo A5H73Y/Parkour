@@ -50,7 +50,7 @@ public class BlockListener extends AbstractPluginReceiver implements Listener {
     }
 
     private void handleBlockPlaceBreakEvent(Player player, Cancellable event) {
-        if (!parkour.getPlayerManager().isPlaying(player)) {
+        if (!parkour.getParkourSessionManager().isPlaying(player)) {
             return;
         }
 

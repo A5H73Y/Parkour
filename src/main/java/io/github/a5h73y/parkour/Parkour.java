@@ -2,7 +2,7 @@ package io.github.a5h73y.parkour;
 
 import com.google.gson.GsonBuilder;
 import io.github.a5h73y.parkour.commands.CommandUsage;
-import io.github.a5h73y.parkour.commands.ParkourAutoTabCompleterNew;
+import io.github.a5h73y.parkour.commands.ParkourAutoTabCompleter;
 import io.github.a5h73y.parkour.commands.ParkourCommands;
 import io.github.a5h73y.parkour.commands.ParkourConsoleCommands;
 import io.github.a5h73y.parkour.configuration.ConfigManager;
@@ -16,11 +16,12 @@ import io.github.a5h73y.parkour.listener.PlayerListener;
 import io.github.a5h73y.parkour.listener.PlayerMoveListener;
 import io.github.a5h73y.parkour.listener.SignListener;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.other.PluginBackupUtil;
 import io.github.a5h73y.parkour.other.ParkourUpdater;
+import io.github.a5h73y.parkour.other.PluginBackupUtil;
 import io.github.a5h73y.parkour.plugin.BountifulApi;
 import io.github.a5h73y.parkour.plugin.EconomyApi;
 import io.github.a5h73y.parkour.plugin.PlaceholderApi;
+import io.github.a5h73y.parkour.type.Initializable;
 import io.github.a5h73y.parkour.type.Teardownable;
 import io.github.a5h73y.parkour.type.challenge.ChallengeManager;
 import io.github.a5h73y.parkour.type.checkpoint.CheckpointManager;
@@ -31,6 +32,7 @@ import io.github.a5h73y.parkour.type.kit.ParkourKitConfig;
 import io.github.a5h73y.parkour.type.kit.ParkourKitManager;
 import io.github.a5h73y.parkour.type.lobby.LobbyConfig;
 import io.github.a5h73y.parkour.type.lobby.LobbyManager;
+import io.github.a5h73y.parkour.type.player.ParkourSessionManager;
 import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.type.player.PlayerManager;
 import io.github.a5h73y.parkour.type.player.quiet.QuietModeManager;
@@ -46,6 +48,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.bstats.bukkit.Metrics;
@@ -71,6 +74,7 @@ public class Parkour extends JavaPlugin {
     private CourseManager courseManager;
     private DatabaseManager databaseManager;
     private LobbyManager lobbyManager;
+    private ParkourSessionManager parkourSessionManager;
     private PlayerManager playerManager;
     private ParkourGuiManager guiManager;
     private ParkourKitManager parkourKitManager;
@@ -111,8 +115,6 @@ public class Parkour extends JavaPlugin {
         registerManagers();
         registerCommands();
         registerEvents();
-
-        setupPlugins();
 
         getLogger().info("Enabled Parkour v" + getDescription().getVersion());
         submitAnalytics();
@@ -190,6 +192,8 @@ public class Parkour extends JavaPlugin {
 
     private void registerManagers() {
         registerEssentialManagers();
+        setupPlugins();
+
         scoreboardManager = (ScoreboardManager) registerManager(new ScoreboardManager(this));
         challengeManager = (ChallengeManager) registerManager(new ChallengeManager(this));
         questionManager = (QuestionManager) registerManager(new QuestionManager(this));
@@ -198,12 +202,14 @@ public class Parkour extends JavaPlugin {
         checkpointManager = (CheckpointManager) registerManager(new CheckpointManager(this));
         lobbyManager = (LobbyManager) registerManager(new LobbyManager(this));
         parkourRankManager = (ParkourRankManager) registerManager(new ParkourRankManager(this));
+        soundsManager = (SoundsManager) registerManager(new SoundsManager(this));
+        parkourSessionManager = (ParkourSessionManager) registerManager(new ParkourSessionManager(this));
         playerManager = (PlayerManager) registerManager(new PlayerManager(this));
         guiManager = (ParkourGuiManager) registerManager(new ParkourGuiManager(this));
-        soundsManager = (SoundsManager) registerManager(new SoundsManager(this));
         autoStartManager = (AutoStartManager) registerManager(new AutoStartManager(this));
         quietModeManager = (QuietModeManager) registerManager(new QuietModeManager(this));
-        databaseManager.recreateAllCourses(false);
+
+        initializeManagers();
     }
 
     private AbstractPluginReceiver registerManager(AbstractPluginReceiver manager) {
@@ -222,7 +228,7 @@ public class Parkour extends JavaPlugin {
         getCommand("paconsole").setExecutor(new ParkourConsoleCommands(this));
 
         if (this.getParkourConfig().getBoolean("Other.UseAutoTabCompletion")) {
-            getCommand(PLUGIN_NAME).setTabCompleter(new ParkourAutoTabCompleterNew(this));
+            getCommand(PLUGIN_NAME).setTabCompleter(new ParkourAutoTabCompleter(this));
         }
 
         String json = new BufferedReader(new InputStreamReader(getResource("parkourCommands.json"), StandardCharsets.UTF_8))
@@ -269,6 +275,14 @@ public class Parkour extends JavaPlugin {
         }
     }
 
+    private void initializeManagers() {
+        managers.stream()
+                .filter(Initializable.class::isInstance)
+                .map(Initializable.class::cast)
+                .sorted(Comparator.comparing(Initializable::getInitializeSequence))
+                .forEach(Initializable::initialize);
+    }
+
     private void teardownManagers() {
         managers.stream()
                 .filter(Teardownable.class::isInstance)
@@ -285,7 +299,7 @@ public class Parkour extends JavaPlugin {
         metrics.addCustomChart(new SimplePie("number_of_courses", () ->
                 String.valueOf(courseManager.getCourseNames().size())));
         metrics.addCustomChart(new SingleLineChart("parkour_players", () ->
-                getPlayerManager().getNumberOfParkourPlayer()));
+                getParkourSessionManager().getNumberOfParkourPlayers()));
     }
 
     public AutoStartManager getAutoStartManager() {
@@ -314,6 +328,10 @@ public class Parkour extends JavaPlugin {
 
     public LobbyManager getLobbyManager() {
         return lobbyManager;
+    }
+
+    public ParkourSessionManager getParkourSessionManager() {
+        return parkourSessionManager;
     }
 
     public PlayerManager getPlayerManager() {

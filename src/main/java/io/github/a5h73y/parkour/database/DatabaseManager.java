@@ -4,6 +4,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
 import io.github.a5h73y.parkour.other.ParkourConstants;
 import io.github.a5h73y.parkour.type.CacheableParkourManager;
+import io.github.a5h73y.parkour.type.Initializable;
 import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -29,7 +30,7 @@ import pro.husk.mysql.MySQL;
  * Database Utility methods and the database implementation instance are managed here.
  * Caching is used on course-specific related information.
  */
-public class DatabaseManager extends CacheableParkourManager {
+public class DatabaseManager extends CacheableParkourManager implements Initializable {
 
     private Database database;
 
@@ -667,5 +668,15 @@ public class DatabaseManager extends CacheableParkourManager {
     @Override
     public void clearCache() {
         resultsCache.clear();
+    }
+
+    @Override
+    public int getInitializeSequence() {
+        return 2;
+    }
+
+    @Override
+    public void initialize() {
+        recreateAllCourses(false);
     }
 }

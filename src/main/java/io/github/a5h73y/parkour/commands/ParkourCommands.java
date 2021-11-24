@@ -181,7 +181,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "hideall":
-                if (!parkour.getPlayerManager().isPlaying(player)) {
+                if (!parkour.getParkourSessionManager().isPlaying(player)) {
                     TranslationUtils.sendTranslation("Error.NotOnCourse", player);
                     return false;
                 }

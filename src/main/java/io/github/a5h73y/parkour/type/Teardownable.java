@@ -2,7 +2,7 @@ package io.github.a5h73y.parkour.type;
 
 /**
  * Cacheable interface.
- * Allows Managers to declare they cache a certain type of Entity.
+ * Allows a manager to tear itself down, ready for server shut down.
  */
 @FunctionalInterface
 public interface Teardownable {

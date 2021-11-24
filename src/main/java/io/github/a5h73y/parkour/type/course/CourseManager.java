@@ -160,11 +160,11 @@ public class CourseManager extends AbstractPluginReceiver {
      */
     @Nullable
     public Course findByPlayer(final Player player) {
-        if (!parkour.getPlayerManager().isPlaying(player)) {
+        if (!parkour.getParkourSessionManager().isPlaying(player)) {
             return null;
         }
 
-        return parkour.getPlayerManager().getParkourSession(player).getCourse();
+        return parkour.getParkourSessionManager().getParkourSession(player).getCourse();
     }
 
     /**

@@ -209,7 +209,7 @@ public class StringsConfig extends Yaml {
 		this.setDefault("GUI.JoinCourses.Players", "Players: &b%VALUE%");
 		this.setDefault("GUI.JoinCourses.Checkpoints", "Checkpoints: &b%VALUE%");
 		this.setDefault("GUI.CourseSettings.Heading", "%VALUE% Settings");
-		this.setDefault("GUI.CourseSettings.Setup.Line1", "   zxc   ");
+		this.setDefault("GUI.CourseSettings.Setup.Line1", "  zxcv   ");
 		this.setDefault("GUI.CourseSettings.Setup.Line2", " qwertyu ");
 		this.setDefault("GUI.CourseSettings.Setup.Line3", " ioasdgh ");
 

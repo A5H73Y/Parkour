@@ -898,6 +898,10 @@ public class CourseConfig extends Json {
         this.set("Resumable", value);
     }
 
+    public void toggleResumable() {
+        setResumable(!getResumable());
+    }
+
     /**
      * Get the Event Type Commands for the Course.
      * The Commands found will be run during the matching Event.
