@@ -1,4 +1,4 @@
-package io.github.a5h73y.parkour.type.player;
+package io.github.a5h73y.parkour.type.player.session;
 
 import static io.github.a5h73y.parkour.other.ParkourConstants.TEST_MODE;
 
@@ -8,6 +8,7 @@ import io.github.a5h73y.parkour.other.ParkourConstants;
 import io.github.a5h73y.parkour.type.Initializable;
 import io.github.a5h73y.parkour.type.Teardownable;
 import io.github.a5h73y.parkour.type.course.Course;
+import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.io.File;
@@ -39,7 +40,6 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Tea
 
 	public ParkourSessionManager(final Parkour parkour) {
 		super(parkour);
-
 	}
 
 	@Override
@@ -185,7 +185,7 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Tea
 	 *
 	 * @param player player
 	 */
-	void stashParkourSession(Player player, boolean removePlaying) {
+	public void stashParkourSession(Player player, boolean removePlaying) {
 		ParkourSession session = getParkourSession(player);
 		if (session != null && !session.getCourseName().equals(TEST_MODE)) {
 			session.markTimeAccumulated();
@@ -247,7 +247,7 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Tea
 	 * @param course course
 	 * @return player can load ParkourSession
 	 */
-	boolean canLoadParkourSession(Player player, Course course) {
+	public boolean hasValidParkourSessionFile(Player player, Course course) {
 		ParkourSession session = readParkourSession(player, course.getName());
 		return session != null && session.getCourseName().equals(course.getName());
 	}

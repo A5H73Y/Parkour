@@ -6,7 +6,7 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.TIME_PLACEHOLDER;
 
 import io.github.a5h73y.parkour.database.TimeEntry;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
-import io.github.a5h73y.parkour.type.player.ParkourSession;
+import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;

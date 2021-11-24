@@ -39,6 +39,7 @@ import io.github.a5h73y.parkour.type.course.Course;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.type.course.ParkourEventType;
 import io.github.a5h73y.parkour.type.kit.ParkourKit;
+import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import io.github.a5h73y.parkour.type.sounds.SoundType;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
@@ -162,7 +163,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 		// set up their session
 		ParkourSession session;
-		if (parkour.getParkourSessionManager().canLoadParkourSession(player, course)) {
+		if (parkour.getParkourSessionManager().hasValidParkourSessionFile(player, course)) {
 			session = parkour.getParkourSessionManager().loadParkourSession(player, course.getName());
 			PlayerUtils.teleportToLocation(player, determineDestination(session));
 			TranslationUtils.sendValueTranslation("Parkour.Continue", session.getCourse().getDisplayName(), player);

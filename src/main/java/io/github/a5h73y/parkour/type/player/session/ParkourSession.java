@@ -1,7 +1,8 @@
-package io.github.a5h73y.parkour.type.player;
+package io.github.a5h73y.parkour.type.player.session;
 
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.course.Course;
+import io.github.a5h73y.parkour.type.player.ParkourMode;
 import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
 import java.io.Serializable;
 import org.bukkit.Location;

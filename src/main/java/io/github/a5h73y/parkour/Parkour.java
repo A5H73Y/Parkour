@@ -32,7 +32,7 @@ import io.github.a5h73y.parkour.type.kit.ParkourKitConfig;
 import io.github.a5h73y.parkour.type.kit.ParkourKitManager;
 import io.github.a5h73y.parkour.type.lobby.LobbyConfig;
 import io.github.a5h73y.parkour.type.lobby.LobbyManager;
-import io.github.a5h73y.parkour.type.player.ParkourSessionManager;
+import io.github.a5h73y.parkour.type.player.session.ParkourSessionManager;
 import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.type.player.PlayerManager;
 import io.github.a5h73y.parkour.type.player.quiet.QuietModeManager;

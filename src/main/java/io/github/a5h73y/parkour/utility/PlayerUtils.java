@@ -2,7 +2,7 @@ package io.github.a5h73y.parkour.utility;
 
 import com.cryptomorin.xseries.XPotion;
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.player.ParkourSession;
+import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;

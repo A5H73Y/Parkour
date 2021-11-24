@@ -6,7 +6,7 @@ import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.course.ParkourEventType;
 import io.github.a5h73y.parkour.type.player.ParkourMode;
-import io.github.a5h73y.parkour.type.player.ParkourSession;
+import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import io.github.a5h73y.parkour.type.question.QuestionManager;
 import io.github.a5h73y.parkour.type.question.QuestionType;
 import io.github.a5h73y.parkour.type.sounds.SoundType;
