@@ -12,17 +12,28 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
 import de.leonhard.storage.Yaml;
+import de.leonhard.storage.internal.settings.ConfigSettings;
+import de.leonhard.storage.internal.settings.DataType;
+import de.leonhard.storage.internal.settings.ReloadSettings;
+import de.leonhard.storage.util.FileUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 
+/**
+ * Default Parkour configuration.
+ * Stored in config.yml and covers a range of customisable functionality across the plugin.
+ * Sectioned by Parkour Events and functions.
+ * Yaml config that automatically reloads itself when a change detected, order retained.
+ */
 public class DefaultConfig extends Yaml {
 
 	private final DateFormat detailedTimeOutput;
 	private final DateFormat standardTimeOutput;
 
-	public DefaultConfig(File path) {
-		super(path);
+	public DefaultConfig(File file) {
+		super(file.getName(), FileUtils.getParentDirPath(file), null,
+				ReloadSettings.INTELLIGENT, ConfigSettings.SKIP_COMMENTS, DataType.SORTED);
 
 		this.setHeader("==== Parkour Config ==== #");
 

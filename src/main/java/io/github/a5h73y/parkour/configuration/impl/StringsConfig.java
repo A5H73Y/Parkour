@@ -2,11 +2,22 @@ package io.github.a5h73y.parkour.configuration.impl;
 
 import java.io.File;
 import de.leonhard.storage.Yaml;
+import de.leonhard.storage.internal.settings.ConfigSettings;
+import de.leonhard.storage.internal.settings.DataType;
+import de.leonhard.storage.internal.settings.ReloadSettings;
+import de.leonhard.storage.util.FileUtils;
 
+/**
+ * Parkour strings configuration.
+ * Stored in strings.yml and is used to offer customisable messages throughout the plugin.
+ * Messages are sent to Players through the {@code TranslationUtils}.
+ * Yaml config that automatically reloads itself when a change detected, order retained.
+ */
 public class StringsConfig extends Yaml {
 
-	public StringsConfig(File path) {
-		super(path);
+	public StringsConfig(File file) {
+		super(file.getName(), FileUtils.getParentDirPath(file), null,
+				ReloadSettings.INTELLIGENT, ConfigSettings.SKIP_COMMENTS, DataType.SORTED);
 
 		this.setDefault("Parkour.Prefix", "&0[&bParkour&0] &f");
 		this.setDefault("Parkour.SignHeader", "&0[&bParkour&0]");
