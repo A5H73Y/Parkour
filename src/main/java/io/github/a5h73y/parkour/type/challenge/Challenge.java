@@ -1,9 +1,10 @@
 package io.github.a5h73y.parkour.type.challenge;
 
 import io.github.a5h73y.parkour.utility.TranslationUtils;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
+import java.util.WeakHashMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -15,7 +16,7 @@ import org.bukkit.entity.Player;
 public class Challenge {
 
     private final Player challengeHost;
-    private final Map<Player, Boolean> participants = new HashMap<>();
+    private final Map<UUID, Boolean> participants = new WeakHashMap<>();
     private final String courseName;
     private final Double wager;
     private boolean started;
@@ -34,18 +35,18 @@ public class Challenge {
     }
 
     public void addParticipant(Player player) {
-        participants.put(player, false);
+        participants.put(player.getUniqueId(), false);
     }
 
-    public Set<Player> getParticipatingPlayers() {
+    public Set<UUID> getParticipatingPlayers() {
         return participants.keySet();
     }
 
     public boolean isPlayerParticipating(Player player) {
-        return participants.containsKey(player);
+        return participants.containsKey(player.getUniqueId());
     }
 
-    public Map<Player, Boolean> getParticipantsForfeit() {
+    public Map<UUID, Boolean> getParticipantsForfeit() {
         return participants;
     }
 
@@ -74,11 +75,11 @@ public class Challenge {
     }
 
     public boolean isForfeited(Player player) {
-        return participants.get(player);
+        return participants.get(player.getUniqueId());
     }
 
     public void setForfeited(Player player, boolean forfeited) {
-        this.participants.put(player, forfeited);
+        this.participants.put(player.getUniqueId(), forfeited);
     }
 
     public boolean allPlayersForfeited() {

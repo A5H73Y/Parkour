@@ -129,7 +129,7 @@ public class TranslationUtils {
 	 */
 	public static void sendTranslation(String translationKey, boolean prefix, CommandSender... players) {
 		String translation = getTranslation(translationKey, prefix);
-		if (!translation.isEmpty()) {
+		if (players != null && !translation.isEmpty()) {
 			for (CommandSender player : players) {
 				player.sendMessage(translation);
 			}
@@ -167,7 +167,7 @@ public class TranslationUtils {
 	 */
 	public static void sendValueTranslation(String translationKey, String value, boolean prefix, CommandSender... players) {
 		String translation = getValueTranslation(translationKey, value, prefix);
-		if (!translation.isEmpty()) {
+		if (players != null && !translation.isEmpty()) {
 			for (CommandSender player : players) {
 				if (player != null) {
 					player.sendMessage(translation);
@@ -235,7 +235,7 @@ public class TranslationUtils {
 	 * @param message message to send
 	 */
 	public static void sendMessage(CommandSender sender, String message) {
-		if (!message.isEmpty()) {
+		if (sender != null && !message.isEmpty()) {
 			sender.sendMessage(getPluginPrefix().concat(colour(message)));
 		}
 	}
@@ -251,7 +251,7 @@ public class TranslationUtils {
 	public static void sendMessage(CommandSender sender, String message, boolean prefix) {
 		if (prefix) {
 			sendMessage(sender, message);
-		} else {
+		} else if (sender != null) {
 			sender.sendMessage(colour(message));
 		}
 	}
@@ -264,7 +264,9 @@ public class TranslationUtils {
 	 * @param value value
 	 */
 	public static void sendValue(CommandSender sender, String title, String value) {
-		sender.sendMessage(title + ": " + ChatColor.AQUA + value);
+		if (sender != null) {
+			sender.sendMessage(title + ": " + ChatColor.AQUA + value);
+		}
 	}
 
 	/**

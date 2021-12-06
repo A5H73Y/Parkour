@@ -78,7 +78,6 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Tea
 		return parkourPlayers;
 	}
 
-
 	/**
 	 * Get the Player's {@link ParkourSession}.
 	 *
@@ -193,7 +192,7 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Tea
 		}
 		createParkourSessionFile(player);
 		if (removePlaying) {
-			parkourPlayers.remove(player);
+			removePlayer(player);
 		}
 	}
 
