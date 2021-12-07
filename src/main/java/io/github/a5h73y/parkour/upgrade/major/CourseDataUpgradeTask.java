@@ -69,7 +69,12 @@ public class CourseDataUpgradeTask extends TimedConfigUpgradeTask {
 					newKey = newKey.replace("Plate", "Checkpoint");
 				} else {
 					newKey = newKey.replaceAll("\\d+", "$0.Location");
-					// TODO still need to make last detail lowercase...
+				}
+
+				// it's the final detail
+				if (newKey.split("\\.").length == 3) {
+					int lastIndex = newKey.lastIndexOf(".");
+					newKey = newKey.substring(0, lastIndex) + newKey.substring(lastIndex).toLowerCase();
 				}
 
 				courseConfig.set("Checkpoint." + newKey, checkpointSection.get(key));

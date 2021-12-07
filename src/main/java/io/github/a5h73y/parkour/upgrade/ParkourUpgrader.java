@@ -5,6 +5,7 @@ import io.github.a5h73y.parkour.configuration.ConfigManager;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.PluginBackupUtil;
 import io.github.a5h73y.parkour.upgrade.major.CourseDataUpgradeTask;
+import io.github.a5h73y.parkour.upgrade.major.PlayerDataUpgradeTask;
 import io.github.g00fy2.versioncompare.Version;
 import java.io.File;
 import java.io.IOException;
@@ -94,9 +95,9 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 	}
 
 	private boolean performFullUpgrade() {
-//		if (!new PlayerInfoUpgradeTask(this).start()) {
-//			return false;
-//		}
+		if (!new PlayerDataUpgradeTask(this).start()) {
+			return false;
+		}
 
 		if (!new CourseDataUpgradeTask(this).start()) {
 			return false;
