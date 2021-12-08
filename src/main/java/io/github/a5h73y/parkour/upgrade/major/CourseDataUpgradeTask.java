@@ -29,6 +29,7 @@ public class CourseDataUpgradeTask extends TimedConfigUpgradeTask {
 		int count = 0;
 
 		for (String courseName : courseNames) {
+			courseName = courseName.toLowerCase();
 			if (count % interval == 0) {
 				double percent = Math.ceil((count * 100.0d) / courseNames.size());
 				getParkourUpgrader().getLogger().info(percent + "% complete...");
@@ -46,6 +47,7 @@ public class CourseDataUpgradeTask extends TimedConfigUpgradeTask {
 
 				newCourseConfig.set("Name", courseName);
 				updateCheckpointSection(newCourseConfig, courseName);
+				updateEconomySection(newCourseConfig, courseName);
 			}
 
 			count++;
@@ -89,6 +91,16 @@ public class CourseDataUpgradeTask extends TimedConfigUpgradeTask {
 			String courseWorld = courseConfig.getString("World");
 			Set<String> eachCheckpoint = courseConfig.getSection("Checkpoint").singleLayerKeySet();
 			eachCheckpoint.forEach(checkpointNumber -> courseConfig.set("Checkpoint." + checkpointNumber + ".Location.world", courseWorld));
+		}
+	}
+
+	private void updateEconomySection(CourseConfig courseConfig, String courseName) {
+		ConfigurationSection section = getParkourUpgrader().getEconomyConfig()
+				.getConfigurationSection("Price." + courseName);
+
+		if (section != null) {
+			courseConfig.set("EconomyJoiningFee", section.getDouble("JoinFee"));
+			courseConfig.set("EconomyFinishReward", section.getDouble("Finish"));
 		}
 	}
 

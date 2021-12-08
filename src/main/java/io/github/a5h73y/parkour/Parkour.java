@@ -192,7 +192,6 @@ public class Parkour extends JavaPlugin {
 
     private void registerManagers() {
         registerEssentialManagers();
-        setupPlugins();
 
         scoreboardManager = (ScoreboardManager) registerManager(new ScoreboardManager(this));
         challengeManager = (ChallengeManager) registerManager(new ChallengeManager(this));
@@ -209,6 +208,7 @@ public class Parkour extends JavaPlugin {
         autoStartManager = (AutoStartManager) registerManager(new AutoStartManager(this));
         quietModeManager = (QuietModeManager) registerManager(new QuietModeManager(this));
 
+        setupPlugins();
         initializeManagers();
     }
 

@@ -4,7 +4,9 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ConfigManager;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.PluginBackupUtil;
+import io.github.a5h73y.parkour.upgrade.major.CopyConfigUpgradeTask;
 import io.github.a5h73y.parkour.upgrade.major.CourseDataUpgradeTask;
+import io.github.a5h73y.parkour.upgrade.major.DatabaseUpgradeTask;
 import io.github.a5h73y.parkour.upgrade.major.PlayerDataUpgradeTask;
 import io.github.g00fy2.versioncompare.Version;
 import java.io.File;
@@ -20,14 +22,16 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 	private final File inventoryFile;
 	private final File coursesFile;
 	private final File checkpointsFile;
-	private final File stringsFile;
+	private final File economyFile;
+	private final File parkourKitFile;
 
 	private final FileConfiguration defaultConfig;
 	private final FileConfiguration playerConfig;
 	private final FileConfiguration inventoryConfig;
 	private final FileConfiguration coursesConfig;
 	private final FileConfiguration checkpointsConfig;
-	private final FileConfiguration stringsConfig;
+	private final FileConfiguration economyConfig;
+	private final FileConfiguration parkourKitConfig;
 
 	/**
 	 * Initialise the Parkour Upgrader.
@@ -42,14 +46,16 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 		inventoryFile = new File(parkour.getDataFolder(), "inventory.yml");
 		coursesFile = new File(parkour.getDataFolder(), "courses.yml");
 		checkpointsFile = new File(parkour.getDataFolder(), "checkpoints.yml");
-		stringsFile = new File(parkour.getDataFolder(), "strings.yml");
+		economyFile = new File(parkour.getDataFolder(), "economy.yml");
+		parkourKitFile = new File(parkour.getDataFolder(), "parkourkit.yml");
 
 		defaultConfig = YamlConfiguration.loadConfiguration(defaultFile);
 		playerConfig = YamlConfiguration.loadConfiguration(playerFile);
 		inventoryConfig = YamlConfiguration.loadConfiguration(inventoryFile);
 		coursesConfig = YamlConfiguration.loadConfiguration(coursesFile);
 		checkpointsConfig = YamlConfiguration.loadConfiguration(checkpointsFile);
-		stringsConfig = YamlConfiguration.loadConfiguration(stringsFile);
+		economyConfig = YamlConfiguration.loadConfiguration(economyFile);
+		parkourKitConfig = YamlConfiguration.loadConfiguration(parkourKitFile);
 	}
 
 	/**
@@ -103,9 +109,30 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 			return false;
 		}
 
-		// Players and Courses need converting into their own file
-		// Checkpoints get shoved into matching Course name file
-		// Database - drop playerName column, add new achieved column
+		if (!new DatabaseUpgradeTask(this).start()) {
+			return false;
+		}
+
+		if (!new CopyConfigUpgradeTask(this, "ParkourKit Config",
+				getParkourKitConfig(), getNewConfigManager().getParkourKitConfig(), "ParkourKit.").start()) {
+			return false;
+		}
+
+		if (!new CopyConfigUpgradeTask(this, "Lobby Config",
+				getDefaultConfig(), getNewConfigManager().getLobbyConfig(), "Lobby.").start()) {
+			return false;
+		}
+
+		getLogger().info("Configuration files updated - removing old files");
+
+		coursesFile.delete();
+		checkpointsFile.delete();
+		playerFile.delete();
+		inventoryFile.delete();
+		economyFile.delete();
+		parkourKitFile.delete();
+		getDefaultConfig().set("Lobby", null);
+
 		return true;
 	}
 
@@ -129,8 +156,12 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 		return checkpointsConfig;
 	}
 
-	public FileConfiguration getStringsConfig() {
-		return stringsConfig;
+	public FileConfiguration getEconomyConfig() {
+		return economyConfig;
+	}
+
+	public FileConfiguration getParkourKitConfig() {
+		return parkourKitConfig;
 	}
 
 	public void saveDefaultConfig() throws IOException {

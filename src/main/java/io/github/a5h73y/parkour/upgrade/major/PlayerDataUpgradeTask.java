@@ -60,12 +60,18 @@ public class PlayerDataUpgradeTask extends TimedConfigUpgradeTask {
 				}
 
 				updateInventorySection(newPlayerConfig, playerId);
+				updateCompletedCoursesSection(playerId);
 			}
 
 			count++;
 		}
 
 		return success;
+	}
+
+	private void updateCompletedCoursesSection(String playerId) {
+		// TODO transfer completed courses to new file
+
 	}
 
 	private void upgradeParkourRanks() {
