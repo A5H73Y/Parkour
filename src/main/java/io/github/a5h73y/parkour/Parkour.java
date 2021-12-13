@@ -271,7 +271,7 @@ public class Parkour extends JavaPlugin {
     	InventoryMigration inv = new InventoryMigration(this.getDataFolder());
     	if (inv.isApplicable()) inv.process(new File(this.getDataFolder(), "userdata"));
     	PlayersMigration pl = new PlayersMigration(this.getDataFolder());
-    	if (pl.isApplicable()) inv.process(new File(this.getDataFolder(), "userdata"));
+    	if (pl.isApplicable()) pl.process(new File(this.getDataFolder(), "userdata"));
     }
 
     private void setupPlugins() {
