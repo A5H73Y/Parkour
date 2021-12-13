@@ -5,6 +5,7 @@ import io.github.a5h73y.parkour.configuration.impl.CoursesConfig;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
 import io.github.a5h73y.parkour.configuration.impl.EconomyConfig;
 import io.github.a5h73y.parkour.configuration.impl.ParkourKitConfig;
+import io.github.a5h73y.parkour.configuration.impl.ServerInfoConfig;
 import io.github.a5h73y.parkour.configuration.impl.StringsConfig;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import java.io.File;
@@ -35,6 +36,7 @@ public class ConfigManager {
 		parkourConfigs.put(ConfigType.COURSES, new CoursesConfig());
 		parkourConfigs.put(ConfigType.CHECKPOINTS, new CheckpointsConfig());
 		parkourConfigs.put(ConfigType.PARKOURKIT, new ParkourKitConfig());
+		parkourConfigs.put(ConfigType.SERVER_INFO, new ServerInfoConfig());
 		parkourConfigs.put(ConfigType.ECONOMY, new EconomyConfig());
 
 		for (ParkourConfiguration parkourConfig: parkourConfigs.values()) {
