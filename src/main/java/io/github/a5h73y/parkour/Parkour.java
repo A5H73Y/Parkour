@@ -10,6 +10,7 @@ import io.github.a5h73y.parkour.configuration.UserDataManager;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
 import io.github.a5h73y.parkour.configuration.impl.UserDataConfig;
 import io.github.a5h73y.parkour.configuration.migration.InventoryMigration;
+import io.github.a5h73y.parkour.configuration.migration.PlayersMigration;
 import io.github.a5h73y.parkour.database.ParkourDatabase;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.gui.ParkourGuiManager;
@@ -269,6 +270,8 @@ public class Parkour extends JavaPlugin {
     private void setupMigration() {
     	InventoryMigration inv = new InventoryMigration(this.getDataFolder());
     	if (inv.isApplicable()) inv.process(new File(this.getDataFolder(), "userdata"));
+    	PlayersMigration pl = new PlayersMigration(this.getDataFolder());
+    	if (pl.isApplicable()) inv.process(new File(this.getDataFolder(), "userdata"));
     }
 
     private void setupPlugins() {
