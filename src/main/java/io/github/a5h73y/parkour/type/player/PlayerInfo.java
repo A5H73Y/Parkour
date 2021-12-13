@@ -2,6 +2,7 @@ package io.github.a5h73y.parkour.type.player;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
+import io.github.a5h73y.parkour.configuration.impl.UserDataConfig;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -286,9 +287,9 @@ public class PlayerInfo {
      * @param player player
      */
     public static void saveInventoryArmor(Player player) {
-        ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
-        inventoryConfig.set(player.getUniqueId() + ".Inventory", Arrays.asList(player.getInventory().getContents()));
-        inventoryConfig.set(player.getUniqueId() + ".Armor", Arrays.asList(player.getInventory().getArmorContents()));
+    	UserDataConfig inventoryConfig = Parkour.getUserdata(player.getUniqueId());
+        inventoryConfig.set("Inventory", Arrays.asList(player.getInventory().getContents()));
+        inventoryConfig.set("Armor", Arrays.asList(player.getInventory().getArmorContents()));
         inventoryConfig.save();
     }
 
@@ -298,7 +299,7 @@ public class PlayerInfo {
      * @return stored health
      */
     public static double getSavedHealth(Player player) {
-        return Parkour.getConfig(ConfigType.INVENTORY).getDouble(player.getUniqueId() + ".Health");
+        return Parkour.getUserdata(player.getUniqueId()).getDouble("Health");
     }
 
     /**
@@ -307,7 +308,7 @@ public class PlayerInfo {
      * @return stored health
      */
     public static int getSavedFoodLevel(Player player) {
-        return Parkour.getConfig(ConfigType.INVENTORY).getInt(player.getUniqueId() + ".Hunger");
+        return Parkour.getUserdata(player.getUniqueId()).getInt("Hunger");
     }
 
     /**
@@ -315,9 +316,9 @@ public class PlayerInfo {
      * @param player player
      */
     public static void saveHealthFoodLevel(Player player) {
-        ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
-        inventoryConfig.set(player.getUniqueId() + ".Health", player.getHealth());
-        inventoryConfig.set(player.getUniqueId() + ".Hunger", player.getFoodLevel());
+    	UserDataConfig inventoryConfig = Parkour.getUserdata(player.getUniqueId());
+        inventoryConfig.set("Health", player.getHealth());
+        inventoryConfig.set("Hunger", player.getFoodLevel());
         inventoryConfig.save();
     }
 
@@ -326,9 +327,9 @@ public class PlayerInfo {
      * @param player player
      */
     public static void resetSavedHealthFoodLevel(Player player) {
-        ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
-        inventoryConfig.set(player.getUniqueId() + ".Health", null);
-        inventoryConfig.set(player.getUniqueId() + ".Hunger", null);
+    	UserDataConfig inventoryConfig = Parkour.getUserdata(player.getUniqueId());
+        inventoryConfig.set("Health", null);
+        inventoryConfig.set("Hunger", null);
         inventoryConfig.save();
     }
 
@@ -338,7 +339,7 @@ public class PlayerInfo {
      * @return saved XP level
      */
     public static int getSavedXpLevel(Player player) {
-        return Parkour.getConfig(ConfigType.INVENTORY).getInt(player.getUniqueId() + ".XPLevel");
+        return Parkour.getUserdata(player.getUniqueId()).getInt(player.getUniqueId() + ".XPLevel");
     }
 
     /**
@@ -346,8 +347,8 @@ public class PlayerInfo {
      * @param player player
      */
     public static void saveXpLevel(Player player) {
-        ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
-        inventoryConfig.set(player.getUniqueId() + ".XPLevel", player.getLevel());
+    	UserDataConfig inventoryConfig = Parkour.getUserdata(player.getUniqueId());
+        inventoryConfig.set("XPLevel", player.getLevel());
         inventoryConfig.save();
     }
 
@@ -356,8 +357,8 @@ public class PlayerInfo {
      * @param player player
      */
     public static void resetSavedXpLevel(Player player) {
-        ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
-        inventoryConfig.set(player.getUniqueId() + ".XPLevel", null);
+    	UserDataConfig inventoryConfig = Parkour.getUserdata(player.getUniqueId());
+        inventoryConfig.set("XPLevel", null);
         inventoryConfig.save();
     }
 
@@ -367,8 +368,8 @@ public class PlayerInfo {
      * @return player's inventory contents
      */
     public static ItemStack[] getSavedInventoryContents(Player player) {
-        List<ItemStack> contents = (List<ItemStack>) Parkour.getConfig(ConfigType.INVENTORY)
-                .getList(player.getUniqueId() + ".Inventory");
+        List<ItemStack> contents = (List<ItemStack>) Parkour.getUserdata(player.getUniqueId())
+                .getList("Inventory");
         return contents != null ? contents.toArray(new ItemStack[0]) : null;
     }
 
@@ -378,8 +379,8 @@ public class PlayerInfo {
      * @return player's armor contents
      */
     public static ItemStack[] getSavedArmorContents(Player player) {
-        List<ItemStack> contents = (List<ItemStack>) Parkour.getConfig(ConfigType.INVENTORY)
-                .getList(player.getUniqueId() + ".Armor");
+        List<ItemStack> contents = (List<ItemStack>) Parkour.getUserdata(player.getUniqueId())
+                .getList("Armor");
         return contents != null ? contents.toArray(new ItemStack[0]) : null;
     }
 

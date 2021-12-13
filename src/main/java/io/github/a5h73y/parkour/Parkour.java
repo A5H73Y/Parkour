@@ -6,7 +6,9 @@ import io.github.a5h73y.parkour.commands.ParkourCommands;
 import io.github.a5h73y.parkour.commands.ParkourConsoleCommands;
 import io.github.a5h73y.parkour.configuration.ConfigManager;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
+import io.github.a5h73y.parkour.configuration.UserDataManager;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
+import io.github.a5h73y.parkour.configuration.impl.UserDataConfig;
 import io.github.a5h73y.parkour.database.ParkourDatabase;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.gui.ParkourGuiManager;
@@ -41,6 +43,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
@@ -65,6 +68,7 @@ public class Parkour extends JavaPlugin {
     private List<CommandUsage> commandUsages;
 
     private ConfigManager configManager;
+    private UserDataManager userDataManager;
     private ScoreboardManager scoreboardManager;
     private ChallengeManager challengeManager;
     private QuestionManager questionManager;
@@ -102,6 +106,9 @@ public class Parkour extends JavaPlugin {
         registerEvents();
 
         setupPlugins();
+        
+        // Clean userdata cache every 10 seconds
+        Bukkit.getScheduler().runTaskTimerAsynchronously(instance, userDataManager::cleanupCache, 20*20L, 10*20L); // Asynchronously, because why not?
 
         getLogger().info("Enabled Parkour v" + getDescription().getVersion());
         submitAnalytics();
@@ -144,6 +151,16 @@ public class Parkour extends JavaPlugin {
     public static ParkourConfiguration getConfig(ConfigType type) {
         return instance.configManager.get(type);
     }
+    
+    /**
+     * Get the matching {@link UserDataConfig} for the given user's {@link UUID}.
+     *
+     * @param uuid {@link UUID}
+     * @return matching {@link UserDataConfig}
+     */
+    public static UserDataConfig getUserdata(UUID uuid) {
+        return instance.userDataManager.get(uuid);
+    }
 
     /**
      * Save the Default config.
@@ -174,6 +191,10 @@ public class Parkour extends JavaPlugin {
 
     public ConfigManager getConfigManager() {
         return configManager;
+    }
+    
+    public UserDataManager getUserDataManager() {
+    	return userDataManager;
     }
 
     public ParkourDatabase getDatabase() {
@@ -238,6 +259,7 @@ public class Parkour extends JavaPlugin {
 
     public void registerEssentialManagers() {
         configManager = new ConfigManager(this.getDataFolder());
+        userDataManager = new UserDataManager(this.getDataFolder());
         database = new ParkourDatabase(this);
     }
 

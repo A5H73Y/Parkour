@@ -24,6 +24,7 @@ import static io.github.a5h73y.parkour.utility.TranslationUtils.sendValue;
 import com.cryptomorin.xseries.XPotion;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
+import io.github.a5h73y.parkour.configuration.impl.UserDataConfig;
 import io.github.a5h73y.parkour.conversation.SetPlayerConversation;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.enums.ParkourEventType;
@@ -996,8 +997,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 			return;
 		}
 
-		ParkourConfiguration inventoryConfig = Parkour.getConfig(ConfigType.INVENTORY);
-		if (inventoryConfig.contains(player.getUniqueId() + ".Inventory")) {
+		UserDataConfig inventoryConfig = Parkour.getUserdata(player.getUniqueId());
+		if (inventoryConfig.contains("Inventory")) {
 			return;
 		}
 
@@ -1038,8 +1039,9 @@ public class PlayerManager extends AbstractPluginReceiver {
 		player.getInventory().setArmorContents(armorContents);
 		player.updateInventory();
 
-		Parkour.getConfig(ConfigType.INVENTORY).set(player.getUniqueId().toString(), null);
-		Parkour.getConfig(ConfigType.INVENTORY).save();
+		UserDataConfig inventoryConfig = Parkour.getUserdata(player.getUniqueId());
+		inventoryConfig.set(player.getUniqueId().toString(), null);
+		inventoryConfig.save();
 	}
 
 	/**

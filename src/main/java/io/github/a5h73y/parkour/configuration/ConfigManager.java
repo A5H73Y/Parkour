@@ -4,7 +4,6 @@ import io.github.a5h73y.parkour.configuration.impl.CheckpointsConfig;
 import io.github.a5h73y.parkour.configuration.impl.CoursesConfig;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
 import io.github.a5h73y.parkour.configuration.impl.EconomyConfig;
-import io.github.a5h73y.parkour.configuration.impl.InventoryConfig;
 import io.github.a5h73y.parkour.configuration.impl.ParkourKitConfig;
 import io.github.a5h73y.parkour.configuration.impl.PlayersConfig;
 import io.github.a5h73y.parkour.configuration.impl.StringsConfig;
@@ -37,7 +36,6 @@ public class ConfigManager {
 		parkourConfigs.put(ConfigType.COURSES, new CoursesConfig());
 		parkourConfigs.put(ConfigType.CHECKPOINTS, new CheckpointsConfig());
 		parkourConfigs.put(ConfigType.PLAYERS, new PlayersConfig());
-		parkourConfigs.put(ConfigType.INVENTORY, new InventoryConfig());
 		parkourConfigs.put(ConfigType.PARKOURKIT, new ParkourKitConfig());
 		parkourConfigs.put(ConfigType.ECONOMY, new EconomyConfig());
 

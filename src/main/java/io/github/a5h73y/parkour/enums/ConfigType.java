@@ -6,7 +6,6 @@ public enum ConfigType {
 	COURSES,
 	CHECKPOINTS,
 	PLAYERS,
-	INVENTORY,
 	PARKOURKIT,
 	ECONOMY
 }
