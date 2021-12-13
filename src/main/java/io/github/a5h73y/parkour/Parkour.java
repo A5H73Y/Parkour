@@ -9,6 +9,7 @@ import io.github.a5h73y.parkour.configuration.ParkourConfiguration;
 import io.github.a5h73y.parkour.configuration.UserDataManager;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
 import io.github.a5h73y.parkour.configuration.impl.UserDataConfig;
+import io.github.a5h73y.parkour.configuration.migration.InventoryMigration;
 import io.github.a5h73y.parkour.database.ParkourDatabase;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.gui.ParkourGuiManager;
@@ -39,6 +40,7 @@ import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.g00fy2.versioncompare.Version;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -261,6 +263,12 @@ public class Parkour extends JavaPlugin {
         configManager = new ConfigManager(this.getDataFolder());
         userDataManager = new UserDataManager(this.getDataFolder());
         database = new ParkourDatabase(this);
+        setupMigration();
+    }
+    
+    private void setupMigration() {
+    	InventoryMigration inv = new InventoryMigration(this.getDataFolder());
+    	if (inv.isApplicable()) inv.process(new File(this.getDataFolder(), "userdata"));
     }
 
     private void setupPlugins() {
