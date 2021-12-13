@@ -34,6 +34,11 @@ public class InventoryMigration {
 	}
 	
 	
+	/**
+	 * Process inventory migration.
+	 * 
+	 * @param newFolder userdata directory
+	 */
 	public void process(File newFolder) {
 		
 		PluginUtils.log("Processing inventory migration...");

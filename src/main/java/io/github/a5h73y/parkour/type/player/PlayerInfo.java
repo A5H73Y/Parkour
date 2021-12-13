@@ -541,8 +541,8 @@ public class PlayerInfo {
     }
 
     /**
-     * Get the Players {@link ParkourConfiguration}.
-     * @return the players.yml configuration
+     * Get the Player's {@link ParkourConfiguration}.
+     * @return userdata configuration
      */
     private static UserDataConfig getPlayersConfig(UUID uuid) {
         return Parkour.getUserdata(uuid);

@@ -47,17 +47,32 @@ public class UserDataManager {
 	}
 	
 	
+	/**
+	 * Check whether given player exists in userdata folder.
+	 * 
+	 * @param uuid unique id of player
+	 * @return true if userdata exists, false otherwise
+	 */
 	public boolean exists(UUID uuid) {
 		if (userdata.containsKey(uuid)) return true;
 		return new File(this.dataFolder, uuid + ".yml").exists();
 	}
 	
 	
+	/**
+	 * Cleanup unused userdata from cache.
+	 * 
+	 */
 	public void cleanupCache() {
 		this.userdata.entrySet().removeIf(e -> Bukkit.getPlayer(e.getKey()) == null && e.getValue().getUpdateTime() > 10000); // 10 seconds of caching
 	}
 	
 	
+	/**
+	 * Get userdata directory.
+	 * 
+	 * @return userdata directory
+	 */
 	public File getFolder() {
 		return this.dataFolder;
 	}
