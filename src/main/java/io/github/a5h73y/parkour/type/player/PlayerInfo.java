@@ -6,10 +6,15 @@ import io.github.a5h73y.parkour.configuration.impl.UserDataConfig;
 import io.github.a5h73y.parkour.enums.ConfigType;
 import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
+import java.util.UUID;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -22,6 +27,10 @@ import org.jetbrains.annotations.Nullable;
  * Convenience methods for accessing the player configuration file.
  */
 public class PlayerInfo {
+	
+	
+	private static Pattern UUID_PATTERN = Pattern.compile("/[0-9A-Fa-f]{8}(?:-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}/i");
+	
 
     /**
      * Check if the Player is known to Parkour.
@@ -29,7 +38,7 @@ public class PlayerInfo {
      * @return player has Parkour information
      */
     public static boolean hasPlayerInfo(OfflinePlayer player) {
-        return player != null && getPlayersConfig().contains(player.getUniqueId().toString());
+        return player != null && Parkour.getInstance().getUserDataManager().exists(player.getUniqueId());
     }
 
     /**
@@ -38,7 +47,7 @@ public class PlayerInfo {
      * @return selected course name
      */
     public static String getSelectedCourse(OfflinePlayer player) {
-        return getPlayersConfig().getString(player.getUniqueId() + ".Selected");
+        return getPlayersConfig(player.getUniqueId()).getString("Selected");
     }
 
     /**
@@ -57,8 +66,9 @@ public class PlayerInfo {
      * @param courseName selected course name
      */
     public static void setSelectedCourse(OfflinePlayer player, @NotNull String courseName) {
-        getPlayersConfig().set(player.getUniqueId() + ".Selected", courseName.toLowerCase());
-        persistChanges();
+    	UserDataConfig data = getPlayersConfig(player.getUniqueId());
+    	data.set("Selected", courseName.toLowerCase());
+    	data.save();
     }
 
     /**
@@ -66,8 +76,9 @@ public class PlayerInfo {
      * @param player player
      */
     public static void resetSelected(OfflinePlayer player) {
-        getPlayersConfig().set(player.getUniqueId() + ".Selected", null);
-        persistChanges();
+    	UserDataConfig data = getPlayersConfig(player.getUniqueId());
+    	data.set("Selected", null);
+    	data.save();
     }
 
 
@@ -78,7 +89,7 @@ public class PlayerInfo {
      * @return course name last played
      */
     public static String getLastPlayedCourse(OfflinePlayer player) {
-        return getPlayersConfig().getString(player.getUniqueId() + ".LastPlayed");
+        return getPlayersConfig(player.getUniqueId()).getString("LastPlayed");
     }
 
     /**
@@ -87,8 +98,9 @@ public class PlayerInfo {
      * @param courseName course name last played
      */
     public static void setLastPlayedCourse(OfflinePlayer player, String courseName) {
-        getPlayersConfig().set(player.getUniqueId() + ".LastPlayed", courseName.toLowerCase());
-        persistChanges();
+    	UserDataConfig data = getPlayersConfig(player.getUniqueId());
+        data.set("LastPlayed", courseName.toLowerCase());
+    	data.save();
     }
 
     /**
@@ -97,7 +109,7 @@ public class PlayerInfo {
      * @return course name last completed
      */
     public static String getLastCompletedCourse(OfflinePlayer player) {
-        return getPlayersConfig().getString(player.getUniqueId() + ".LastCompleted");
+        return getPlayersConfig(player.getUniqueId()).getString("LastCompleted");
     }
 
     /**
@@ -106,8 +118,9 @@ public class PlayerInfo {
      * @param courseName course name last completed
      */
     public static void setLastCompletedCourse(OfflinePlayer player, String courseName) {
-        getPlayersConfig().set(player.getUniqueId() + ".LastCompleted", courseName.toLowerCase());
-        persistChanges();
+    	UserDataConfig data = getPlayersConfig(player.getUniqueId());
+    	data.set("LastCompleted", courseName.toLowerCase());
+        data.save();
     }
 
     /**
@@ -125,7 +138,7 @@ public class PlayerInfo {
      * @return completed course names
      */
     public static List<String> getCompletedCourses(OfflinePlayer player) {
-        return getPlayersConfig().getStringList(player.getUniqueId() + ".Completed");
+        return getPlayersConfig(player.getUniqueId()).getStringList("Completed");
     }
 
     public static boolean hasCompletedCourse(Player player, String name) {
@@ -163,8 +176,9 @@ public class PlayerInfo {
 
         if (!completedCourses.contains(courseName)) {
             completedCourses.add(courseName);
-            getPlayersConfig().set(player.getUniqueId() + ".Completed", completedCourses);
-            persistChanges();
+            UserDataConfig data = getPlayersConfig(player.getUniqueId());
+            data.set("Completed", completedCourses);
+            data.save();
         }
     }
 
@@ -178,18 +192,16 @@ public class PlayerInfo {
             return;
         }
 
-        Set<String> playersIds = getPlayersConfig().getConfigurationSection("").getKeys(false);
-
-        for (String uuid : playersIds) {
-            String completedPath = uuid + ".Completed";
-            List<String> completedCourses = getPlayersConfig().getStringList(completedPath);
-
-            if (completedCourses.contains(courseName)) {
-                completedCourses.remove(courseName);
-                getPlayersConfig().set(completedPath, completedCourses);
-            }
-        }
-        persistChanges();
+        File dir = Parkour.getInstance().getUserDataManager().getFolder();
+        Stream.of(Parkour.getInstance().getUserDataManager().getFolder().list((File d, String n) -> dir.equals(d) && UUID_PATTERN.matcher(n).matches())).parallel().map(n -> n.substring(0, 36)).map(UUID::fromString).forEach((uuid) -> {
+        	UserDataConfig cfg = Parkour.getUserdata(uuid);
+        	List<String> completedCourses = cfg.getStringList("Completed");
+        	if (completedCourses.contains(courseName)) {
+        		completedCourses.remove(courseName);
+        		cfg.set("Completed", completedCourses);
+        		cfg.save();
+        	}
+        });
     }
 
     /**
@@ -198,7 +210,7 @@ public class PlayerInfo {
      * @return parkour level value
      */
     public static int getParkourLevel(OfflinePlayer player) {
-        return getPlayersConfig().getInt(player.getUniqueId() + ".ParkourLevel");
+        return getPlayersConfig(player.getUniqueId()).getInt("ParkourLevel");
     }
 
     /**
@@ -216,8 +228,9 @@ public class PlayerInfo {
      * @param level new parkour level value
      */
     public static void setParkourLevel(OfflinePlayer player, int level) {
-        getPlayersConfig().set(player.getUniqueId() + ".ParkourLevel", level);
-        persistChanges();
+    	UserDataConfig data = getPlayersConfig(player.getUniqueId());
+    	data.set("ParkourLevel", level);
+    	data.save();
     }
 
     /**
@@ -227,7 +240,7 @@ public class PlayerInfo {
      * @return player's parkour rank
      */
     public static String getParkourRank(OfflinePlayer player) {
-        return getPlayersConfig().getString(player.getUniqueId() + ".ParkourRank",
+        return getPlayersConfig(player.getUniqueId()).getString("ParkourRank",
                 TranslationUtils.getTranslation("Event.DefaultRank", false));
     }
 
@@ -237,8 +250,9 @@ public class PlayerInfo {
      * @param parkourRank parkour rank value
      */
     public static void setParkourRank(OfflinePlayer player, String parkourRank) {
-        getPlayersConfig().set(player.getUniqueId() + ".ParkourRank", parkourRank);
-        persistChanges();
+    	UserDataConfig data = getPlayersConfig(player.getUniqueId());
+    	data.set("ParkourRank", parkourRank);
+    	data.save();
     }
 
     /**
@@ -249,7 +263,7 @@ public class PlayerInfo {
      * @return last rewarded time
      */
     public static long getLastRewardedTime(OfflinePlayer player, String courseName) {
-        return getPlayersConfig().getLong(player.getUniqueId() + ".LastRewarded." + courseName.toLowerCase(), 0);
+        return getPlayersConfig(player.getUniqueId()).getLong("LastRewarded." + courseName.toLowerCase(), 0);
     }
 
     /**
@@ -259,8 +273,9 @@ public class PlayerInfo {
      * @param rewardTime time of reward given
      */
     public static void setLastRewardedTime(OfflinePlayer player, String courseName, long rewardTime) {
-        getPlayersConfig().set(player.getUniqueId() + ".LastRewarded." + courseName.toLowerCase(), rewardTime);
-        persistChanges();
+    	UserDataConfig data = getPlayersConfig(player.getUniqueId());
+    	data.set("LastRewarded." + courseName.toLowerCase(), rewardTime);
+    	data.save();
     }
 
     /**
@@ -268,8 +283,19 @@ public class PlayerInfo {
      * @param player target player
      */
     public static void resetPlayerData(OfflinePlayer player) {
-        getPlayersConfig().set(player.getUniqueId().toString(), null);
-        persistChanges();
+        UserDataConfig data = getPlayersConfig(player.getUniqueId());
+        data.set("LastPlayed", null);
+        data.set("LastCompleted", null);
+        data.set("LastRewarded", null);
+        data.set("Completed", null);
+        data.set("ParkourLevel", null);
+        data.set("ParkourRank", null);
+        data.set("JoinLocation", null);
+        data.set("Selected", null);
+        data.set("QuietMode", null);
+        data.set("Parkoins", null);
+        data.set("ExistingSessionCourseName", null);
+        data.save();
     }
 
     /**
@@ -278,8 +304,9 @@ public class PlayerInfo {
      * @param parkourRank parkour rank value
      */
     public static void setRewardParkourRank(int parkourLevel, String parkourRank) {
-        getPlayersConfig().set("ServerInfo.Levels." + parkourLevel + ".Rank", parkourRank);
-        persistChanges();
+    	ParkourConfiguration serverInfo = Parkour.getConfig(ConfigType.SERVER_INFO);
+    	serverInfo.set("Levels." + parkourLevel + ".Rank", parkourRank);
+    	serverInfo.save();
     }
 
     /**
@@ -391,7 +418,7 @@ public class PlayerInfo {
      * @return saved join location
      */
     public static Location getJoinLocation(Player player) {
-        return (Location) getPlayersConfig().get(player.getUniqueId() + ".JoinLocation");
+        return (Location) getPlayersConfig(player.getUniqueId()).get("JoinLocation");
     }
 
     /**
@@ -400,7 +427,7 @@ public class PlayerInfo {
      * @return join location set
      */
     public static boolean hasJoinLocation(Player player) {
-        return getPlayersConfig().contains(player.getUniqueId() + ".JoinLocation");
+        return getPlayersConfig(player.getUniqueId()).contains("JoinLocation");
     }
 
     /**
@@ -409,8 +436,9 @@ public class PlayerInfo {
      * @param player player
      */
     public static void setJoinLocation(Player player) {
-        getPlayersConfig().set(player.getUniqueId() + ".JoinLocation", player.getLocation());
-        persistChanges();
+    	UserDataConfig data = getPlayersConfig(player.getUniqueId());
+    	data.set("JoinLocation", player.getLocation());
+    	data.save();
     }
 
     /**
@@ -418,8 +446,9 @@ public class PlayerInfo {
      * @param player player
      */
     public static void resetJoinLocation(Player player) {
-        getPlayersConfig().set(player.getUniqueId() + ".JoinLocation", null);
-        persistChanges();
+    	UserDataConfig data = getPlayersConfig(player.getUniqueId());
+    	data.set("JoinLocation", null);
+    	data.save();
     }
 
     /**
@@ -429,7 +458,7 @@ public class PlayerInfo {
      * @return is quiet mode enabled
      */
     public static boolean isQuietMode(Player player) {
-        return getPlayersConfig().getBoolean(player.getUniqueId() + ".QuietMode");
+        return getPlayersConfig(player.getUniqueId()).getBoolean("QuietMode");
     }
 
     /**
@@ -446,8 +475,9 @@ public class PlayerInfo {
      * @param quietMode value to set
      */
     public static void setQuietMode(Player player, boolean quietMode) {
-        getPlayersConfig().set(player.getUniqueId() + ".QuietMode", quietMode);
-        persistChanges();
+    	UserDataConfig data = getPlayersConfig(player.getUniqueId());
+    	data.set("QuietMode", quietMode);
+    	data.save();
     }
 
     /**
@@ -456,7 +486,7 @@ public class PlayerInfo {
      * @return number of Parkoins
      */
     public static double getParkoins(OfflinePlayer player) {
-        return getPlayersConfig().getDouble(player.getUniqueId() + ".Parkoins", 0);
+        return getPlayersConfig(player.getUniqueId()).getDouble("Parkoins", 0);
     }
 
     /**
@@ -474,8 +504,9 @@ public class PlayerInfo {
      * @param amount amount to set
      */
     public static void setParkoins(OfflinePlayer player, double amount) {
-        getPlayersConfig().set(player.getUniqueId() + ".Parkoins", amount);
-        persistChanges();
+    	UserDataConfig data = getPlayersConfig(player.getUniqueId());
+    	data.set("Parkoins", amount);
+        data.save();
     }
 
     /**
@@ -486,7 +517,7 @@ public class PlayerInfo {
      */
     @Nullable
     public static String getExistingSessionCourseName(Player player) {
-        return getPlayersConfig().getString(player.getUniqueId() + ".ExistingSessionCourseName");
+        return getPlayersConfig(player.getUniqueId()).getString("ExistingSessionCourseName");
     }
 
     /**
@@ -495,7 +526,7 @@ public class PlayerInfo {
      * @return player has existing session course name
      */
     public static boolean hasExistingSessionCourseName(Player player) {
-        return getPlayersConfig().contains(player.getUniqueId() + ".ExistingSessionCourseName");
+        return getPlayersConfig(player.getUniqueId()).contains("ExistingSessionCourseName");
     }
 
     /**
@@ -504,23 +535,17 @@ public class PlayerInfo {
      * @param courseName course name
      */
     public static void setExistingSessionCourseName(Player player, String courseName) {
-        getPlayersConfig().set(player.getUniqueId() + ".ExistingSessionCourseName", courseName);
-        persistChanges();
+    	UserDataConfig data = getPlayersConfig(player.getUniqueId());
+    	data.set("ExistingSessionCourseName", courseName);
+    	data.save();
     }
 
     /**
      * Get the Players {@link ParkourConfiguration}.
      * @return the players.yml configuration
      */
-    private static ParkourConfiguration getPlayersConfig() {
-        return Parkour.getConfig(ConfigType.PLAYERS);
-    }
-
-    /**
-     * Persist any changes made to the players.yml file.
-     */
-    private static void persistChanges() {
-        getPlayersConfig().save();
+    private static UserDataConfig getPlayersConfig(UUID uuid) {
+        return Parkour.getUserdata(uuid);
     }
 
     private PlayerInfo() {

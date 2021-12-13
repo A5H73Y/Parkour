@@ -5,7 +5,7 @@ public enum ConfigType {
 	STRINGS,
 	COURSES,
 	CHECKPOINTS,
-	PLAYERS,
+	SERVER_INFO,
 	PARKOURKIT,
 	ECONOMY
 }

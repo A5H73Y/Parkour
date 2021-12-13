@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.Bukkit;
 
 import io.github.a5h73y.parkour.configuration.impl.UserDataConfig;
-import io.github.a5h73y.parkour.utility.PluginUtils;
 
 /**
  * Parkour Userdata Manager.
@@ -42,10 +41,15 @@ public class UserDataManager {
 		return userdata.computeIfAbsent(uuid, (u) -> {
 			// uuid not already cached, load new userdata
 			UserDataConfig cfg = new UserDataConfig(uuid);
-			PluginUtils.log(String.format("Data folder: %s", this.dataFolder));
 			cfg.setupFile(this.dataFolder);
 			return cfg;
 		});
+	}
+	
+	
+	public boolean exists(UUID uuid) {
+		if (userdata.containsKey(uuid)) return true;
+		return new File(this.dataFolder, uuid + ".yml").exists();
 	}
 	
 	

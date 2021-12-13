@@ -1775,8 +1775,8 @@ public class PlayerManager extends AbstractPluginReceiver {
 
 	private void populateParkourRanks() {
 		parkourRanks.clear();
-		ParkourConfiguration playerConfig = Parkour.getConfig(ConfigType.PLAYERS);
-		ConfigurationSection section = playerConfig.getConfigurationSection("ServerInfo.Levels");
+		ParkourConfiguration playerConfig = Parkour.getConfig(ConfigType.SERVER_INFO);
+		ConfigurationSection section = playerConfig.getConfigurationSection("Levels");
 
 		if (section != null) {
 			Set<String> levels = section.getKeys(false);
@@ -1785,7 +1785,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 					.collect(Collectors.toList());
 
 			for (Integer level : orderedLevels) {
-				String rank = playerConfig.getString("ServerInfo.Levels." + level + ".Rank");
+				String rank = playerConfig.getString("Levels." + level + ".Rank");
 				if (rank != null) {
 					parkourRanks.put(level, StringUtils.colour(rank));
 				}
