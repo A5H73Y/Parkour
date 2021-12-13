@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.Bukkit;
 
 import io.github.a5h73y.parkour.configuration.impl.UserDataConfig;
+import io.github.a5h73y.parkour.utility.PluginUtils;
 
 /**
  * Parkour Userdata Manager.
@@ -25,7 +26,7 @@ public class UserDataManager {
 	 * @param dataFolder where to store the configs
 	 */
 	public UserDataManager(File dataFolder) {
-		this.dataFolder = dataFolder;
+		this.dataFolder = new File(dataFolder, "userdata");
 		createDataFolder();
 	}
 	
@@ -41,6 +42,7 @@ public class UserDataManager {
 		return userdata.computeIfAbsent(uuid, (u) -> {
 			// uuid not already cached, load new userdata
 			UserDataConfig cfg = new UserDataConfig(uuid);
+			PluginUtils.log(String.format("Data folder: %s", this.dataFolder));
 			cfg.setupFile(this.dataFolder);
 			return cfg;
 		});
@@ -49,6 +51,11 @@ public class UserDataManager {
 	
 	public void cleanupCache() {
 		this.userdata.entrySet().removeIf(e -> Bukkit.getPlayer(e.getKey()) == null && e.getValue().getUpdateTime() > 10000); // 10 seconds of caching
+	}
+	
+	
+	public File getFolder() {
+		return this.dataFolder;
 	}
 	
 	
