@@ -2,6 +2,7 @@ package io.github.a5h73y.parkour.type.player;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import static io.github.a5h73y.parkour.configuration.serializable.ParkourSerializable.getMapValue;
 import java.io.File;
 import de.leonhard.storage.Json;
 import de.leonhard.storage.internal.FileType;
@@ -271,7 +272,7 @@ public class PlayerConfig extends Json {
      * @return saved join location
      */
     public Location getJoinLocation() {
-        return (Location) this.get("JoinLocation");
+        return Location.deserialize(getMapValue((this.get("JoinLocation"))));
     }
 
     /**
@@ -287,7 +288,7 @@ public class PlayerConfig extends Json {
      * The player's current position will be saved as their join location.
      */
     public void setJoinLocation(Location location) {
-        this.set("JoinLocation",location);
+        this.set("JoinLocation", location.serialize());
     }
 
     /**
