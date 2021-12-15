@@ -1,5 +1,19 @@
 package io.github.a5h73y.parkour.database;
 
+import java.io.File;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
+
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.ParkourConstants;
@@ -8,19 +22,6 @@ import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.utility.DateTimeUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
-import java.io.File;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
 import pro.husk.Database;
 import pro.husk.mysql.MySQL;
 
@@ -290,7 +291,7 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
         try {
             database.updateAsync(insertTimeUpdate).get();
             resultsCache.remove(courseName.toLowerCase());
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -332,7 +333,7 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
         try {
             database.updateAsync("DELETE FROM time WHERE playerId='" + getPlayerId(player) + "'").get();
             clearCache();
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -352,7 +353,7 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
         try {
             database.updateAsync("DELETE FROM time WHERE courseId=" + courseId).get();
             resultsCache.remove(courseName.toLowerCase());
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -374,7 +375,7 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
             database.updateAsync("DELETE FROM time WHERE playerId='" + getPlayerId(player)
                     + "' AND courseId=" + courseId).get();
             resultsCache.remove(courseName.toLowerCase());
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -391,7 +392,7 @@ public class ParkourDatabase extends AbstractPluginReceiver implements Cacheable
         try {
             database.updateAsync("DELETE FROM course WHERE name='" + courseName + "'").get();
             resultsCache.remove(courseName.toLowerCase());
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         // reset the cache

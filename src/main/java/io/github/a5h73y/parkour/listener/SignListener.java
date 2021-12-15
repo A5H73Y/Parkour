@@ -2,17 +2,6 @@ package io.github.a5h73y.parkour.listener;
 
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 
-import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.enums.GuiMenu;
-import io.github.a5h73y.parkour.enums.Permission;
-import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
-import io.github.a5h73y.parkour.type.player.ParkourSession;
-import io.github.a5h73y.parkour.utility.PermissionUtils;
-import io.github.a5h73y.parkour.utility.PlayerUtils;
-import io.github.a5h73y.parkour.utility.SignUtils;
-import io.github.a5h73y.parkour.utility.TranslationUtils;
-import io.github.a5h73y.parkour.utility.ValidationUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -22,6 +11,17 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+
+import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.enums.GuiMenu;
+import io.github.a5h73y.parkour.enums.Permission;
+import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
+import io.github.a5h73y.parkour.type.course.CourseInfo;
+import io.github.a5h73y.parkour.utility.PermissionUtils;
+import io.github.a5h73y.parkour.utility.PlayerUtils;
+import io.github.a5h73y.parkour.utility.SignUtils;
+import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.utility.ValidationUtils;
 
 public class SignListener extends AbstractPluginReceiver implements Listener {
 
