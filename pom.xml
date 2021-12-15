@@ -111,7 +111,7 @@
 		<dependency>
 			<groupId>pro.husk</groupId>
 			<artifactId>mysql</artifactId>
-			<version>1.4.2</version>
+			<version>1.4.1</version>
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
@@ -124,7 +124,7 @@
 		<dependency>
 			<groupId>de.themoep</groupId>
 			<artifactId>inventorygui</artifactId>
-			<version>1.4.2-SNAPSHOT</version>
+			<version>1.5-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<!-- XSeries -->
@@ -193,12 +193,12 @@
 						</filters>
 						<relocations>
 							<relocation>
-								<pattern>org.bstats</pattern>
-								<shadedPattern>io.github.a5h73y.parkour.bstats</shadedPattern>
+								<pattern>org.bstats.</pattern>
+								<shadedPattern>io.github.a5h73y.parkour.bstats.</shadedPattern>
 							</relocation>
 							<relocation>
-								<pattern>com.cryptomorin.xseries</pattern>
-								<shadedPattern>io.github.a5h73y.parkour.support</shadedPattern>
+								<pattern>com.cryptomorin.xseries.</pattern>
+								<shadedPattern>io.github.a5h73y.parkour.support.</shadedPattern>
 							</relocation>
 						</relocations>
 					</configuration>
