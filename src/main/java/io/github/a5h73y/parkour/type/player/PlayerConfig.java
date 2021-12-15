@@ -271,7 +271,7 @@ public class PlayerConfig extends Json {
      * @return saved join location
      */
     public Location getJoinLocation() {
-        return (Location) this.get("JoinLocation");
+        return this.getSerializable("JoinLocation", Location.class);
     }
 
     /**
@@ -287,7 +287,7 @@ public class PlayerConfig extends Json {
      * The player's current position will be saved as their join location.
      */
     public void setJoinLocation(Location location) {
-        this.set("JoinLocation",location);
+        this.setSerializable("JoinLocation", location);
     }
 
     /**
