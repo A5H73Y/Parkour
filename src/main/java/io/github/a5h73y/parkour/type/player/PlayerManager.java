@@ -1040,7 +1040,7 @@ public class PlayerManager extends AbstractPluginReceiver {
 		player.updateInventory();
 
 		UserDataConfig inventoryConfig = Parkour.getUserdata(player.getUniqueId());
-		inventoryConfig.set(player.getUniqueId().toString(), null);
+		inventoryConfig.set("Inventory", null);
 		inventoryConfig.save();
 	}
 
