@@ -345,6 +345,31 @@ public class CourseManager extends AbstractPluginReceiver {
     }
 
     /**
+     * Set Maximum Fall Tick for Course.
+     * Set the maximum amount of ticks the Player can fall before dying.
+     *
+     * @param sender requesting player
+     * @param courseName course name
+     * @param fallTicksValue maximum fall ticks value
+     */
+    public void setMaxFallTicks(final CommandSender sender, final String courseName, final String fallTicksValue) {
+        if (!doesCourseExist(courseName)) {
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
+            return;
+        }
+
+        if (!ValidationUtils.isPositiveInteger(fallTicksValue)) {
+            TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
+            return;
+        }
+
+        int maxFallTicks = Integer.parseInt(fallTicksValue);
+        CourseConfig.getConfig(courseName).setMaximumFallTicks(maxFallTicks);
+        clearCache(courseName);
+        TranslationUtils.sendPropertySet(sender, "Maximum Fall Ticks", courseName, fallTicksValue);
+    }
+
+    /**
      * Toggle the Course's Ready status.
      * When configured a Course may not be joinable by others until it has been flagged as 'ready'.
      * A Course's data will only be cached when it has been marked as Ready.

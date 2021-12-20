@@ -11,7 +11,10 @@ public class CourseSerializable implements LightningSerializable<Course> {
 
 	@Override
 	public Map<String, Object> serialize(@NotNull Course course) throws ClassCastException {
-		return course.serialize();
+		// we don't create a whole Course then serialize it
+		// we create it in stages and only really care about deserializing it
+		// we could change the way a Course is created, setting the first checkpoint then serialize it
+		return null;
 	}
 
 	@Override

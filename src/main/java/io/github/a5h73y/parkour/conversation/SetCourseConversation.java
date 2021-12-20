@@ -1,8 +1,8 @@
 package io.github.a5h73y.parkour.conversation;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.course.ParkourEventType;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
+import io.github.a5h73y.parkour.type.course.ParkourEventType;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.util.Arrays;
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 public class SetCourseConversation extends ParkourConversation {
 
     public static final List<String> SET_COURSE_OPTIONS = Collections.unmodifiableList(
-            Arrays.asList("displayname", "creator", "minlevel", "maxdeath", "maxtime", "command", "message"));
+            Arrays.asList("displayname", "creator", "minlevel", "maxdeath", "maxtime", "maxfallticks", "command", "message"));
 
     public static final List<String> PARKOUR_EVENT_TYPE_NAMES =
             Stream.of(ParkourEventType.values()).map(ParkourEventType::getDisplayName).collect(Collectors.toList());
@@ -231,6 +231,10 @@ public class SetCourseConversation extends ParkourConversation {
 
                 case "maxtime":
                     parkour.getCourseManager().setMaxTime(sender, courseName, input);
+                    break;
+
+                case "maxfallticks":
+                    parkour.getCourseManager().setMaxFallTicks(sender, courseName, input);
                     break;
 
                 case "displayname":

@@ -12,11 +12,6 @@ public class CourseCompletionConfig extends Yaml {
         super(file);
     }
 
-    private String getPlayerKey(OfflinePlayer player) {
-        return (Parkour.getDefaultConfig().getBoolean("Other.PlayerConfigUsePlayerUUID")
-                ? player.getUniqueId().toString() : player.getName());
-    }
-
     /**
      * Get the number of Courses completed by Player.
      * @return number of courses completed
@@ -30,7 +25,7 @@ public class CourseCompletionConfig extends Yaml {
      * @return completed course names
      */
     public List<String> getCompletedCourses(OfflinePlayer player) {
-        return this.getStringList(getPlayerKey(player));
+        return this.getStringList(Parkour.getDefaultConfig().getPlayerConfigName(player));
     }
 
     public boolean hasCompletedCourse(OfflinePlayer player, String name) {
@@ -46,7 +41,7 @@ public class CourseCompletionConfig extends Yaml {
 
         if (!completedCourses.contains(courseName)) {
             completedCourses.add(courseName);
-            this.set(getPlayerKey(player), completedCourses);
+            this.set(Parkour.getDefaultConfig().getPlayerConfigName(player), completedCourses);
         }
     }
 

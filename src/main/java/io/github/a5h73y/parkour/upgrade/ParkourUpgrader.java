@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import pro.husk.Database;
 
 public class ParkourUpgrader extends AbstractPluginReceiver {
 
@@ -178,5 +179,9 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 
 	public Logger getLogger() {
 		return parkour.getLogger();
+	}
+
+	public Database getDatabase() {
+		return parkour.getDatabaseManager().getDatabase();
 	}
 }

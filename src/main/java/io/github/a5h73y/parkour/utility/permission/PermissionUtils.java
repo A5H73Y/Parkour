@@ -14,7 +14,7 @@ import org.bukkit.event.block.SignChangeEvent;
  */
 public class PermissionUtils {
 
-	private static final String WILDCARD = "*";
+	public static final String WILDCARD = "*";
 
 	/**
 	 * Check if the player has the specified permission.

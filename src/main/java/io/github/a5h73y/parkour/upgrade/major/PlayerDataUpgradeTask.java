@@ -60,7 +60,7 @@ public class PlayerDataUpgradeTask extends TimedConfigUpgradeTask {
 				}
 
 				updateInventorySection(newPlayerConfig, playerId);
-				updateCompletedCoursesSection(playerId);
+				updateCompletedCoursesSection(newPlayerConfig, player);
 			}
 
 			count++;
@@ -69,9 +69,15 @@ public class PlayerDataUpgradeTask extends TimedConfigUpgradeTask {
 		return success;
 	}
 
-	private void updateCompletedCoursesSection(String playerId) {
-		// TODO transfer completed courses to new file
+	private void updateCompletedCoursesSection(PlayerConfig newPlayerConfig, OfflinePlayer player) {
+		if (newPlayerConfig.contains("Completed")) {
+			List<String> completedCourses = newPlayerConfig.getStringList("Completed");
 
+			getParkourUpgrader().getNewConfigManager().getCourseCompletionsConfig().set(
+					getParkourUpgrader().getNewConfigManager().getDefaultConfig().getPlayerConfigName(player), completedCourses);
+
+			newPlayerConfig.remove("Completed");
+		}
 	}
 
 	private void upgradeParkourRanks() {

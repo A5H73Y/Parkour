@@ -1,19 +1,6 @@
 package io.github.a5h73y.parkour.database;
 
-import java.io.File;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import static io.github.a5h73y.parkour.utility.PluginUtils.readContentsOfResource;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
@@ -23,6 +10,20 @@ import io.github.a5h73y.parkour.type.Initializable;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
+import java.io.File;
+import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pro.husk.Database;
 import pro.husk.mysql.MySQL;
 
@@ -567,33 +568,17 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
     }
 
     private void setupTables() throws SQLException {
-        String createCourseTable = "CREATE TABLE IF NOT EXISTS course ("
-                + "courseId INTEGER PRIMARY KEY AUTO_INCREMENT, "
-                + "name VARCHAR(15) NOT NULL UNIQUE, "
-                + "created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL);";
-
-        String createTimesTable = "CREATE TABLE IF NOT EXISTS time ("
-                + "timeId INTEGER PRIMARY KEY AUTO_INCREMENT, "
-                + "courseId INTEGER NOT NULL, "
-                + "playerId CHAR(36) CHARACTER SET ascii NOT NULL, "
-                + "time DECIMAL(13,0) NOT NULL, "
-                + "deaths INT(5) NOT NULL, "
-                + "achieved TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,"
-//                + "INDEX fk_time_course ON time (courseId ASC)"
-                + "FOREIGN KEY (courseId) REFERENCES course(courseId) ON DELETE CASCADE ON UPDATE CASCADE);";
-
-        // seems to be the only syntactic difference between them
-        if (database instanceof SQLite) {
-            createCourseTable = createCourseTable.replace("AUTO_INCREMENT", "AUTOINCREMENT");
-            createTimesTable = createTimesTable.replace("AUTO_INCREMENT", "AUTOINCREMENT")
-                    .replace("CHARACTER SET ascii", "");
-        }
-
+        String sqlResourcePrefix = "sql/" + (database instanceof MySQL ? "mysql" : "sqlite") + "/";
         PluginUtils.debug("Attempting to create necessary tables.");
-        database.update(createCourseTable);
-        database.update(createTimesTable);
-        database.closeConnection();
-        PluginUtils.debug("Successfully created necessary tables.");
+        try {
+            database.update(readContentsOfResource(sqlResourcePrefix + "course.sql"));
+            database.update(readContentsOfResource(sqlResourcePrefix + "time.sql"));
+            PluginUtils.debug("Successfully created necessary tables.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            database.closeConnection();
+        }
     }
 
     private void handleSqlConnectionException(SQLException e) {

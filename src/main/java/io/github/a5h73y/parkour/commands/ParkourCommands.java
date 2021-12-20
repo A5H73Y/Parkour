@@ -493,6 +493,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
             case "setmaxdeath":
             case "setmaxtime":
             case "setminlevel":
+            case "maxfallticks":
                 if (!ValidationUtils.validateArgs(player, args, 3)) {
                     return false;
                 }

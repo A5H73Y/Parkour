@@ -1,5 +1,7 @@
 package io.github.a5h73y.parkour.commands;
 
+import static io.github.a5h73y.parkour.utility.permission.PermissionUtils.WILDCARD;
+
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
@@ -110,10 +112,16 @@ public class CommandUsage {
 		for (String replacement : possibleReplacements) {
 			String[] assignmentSplit = replacement.split("=");
 			String[] indexValueSplit = assignmentSplit[0].split(":");
-			int index = Integer.parseInt(indexValueSplit[0]);
 
-			if (args[index].equals(indexValueSplit[1])) {
+			// wildcard - match any
+			if (indexValueSplit[0].equals(WILDCARD)) {
 				return assignmentSplit[1];
+			} else {
+				int index = Integer.parseInt(indexValueSplit[0]);
+
+				if (args[index].equals(indexValueSplit[1])) {
+					return assignmentSplit[1];
+				}
 			}
 		}
 		return "";

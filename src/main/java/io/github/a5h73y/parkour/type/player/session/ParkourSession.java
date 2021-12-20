@@ -77,7 +77,7 @@ public class ParkourSession implements Serializable {
         this.timeStarted = System.currentTimeMillis();
         this.timeAccumulated = 0;
         this.timeFinished = 0;
-        this.secondsAccumulated = course.hasMaxTime() ? course.getMaxTime() : 0;
+        this.secondsAccumulated = course.getSettings().hasMaxTime() ? course.getSettings().getMaxTime() : 0;
     }
 
     /**
@@ -132,11 +132,11 @@ public class ParkourSession implements Serializable {
     }
 
     public int calculateSeconds() {
-        return course.hasMaxTime() ? secondsAccumulated-- : secondsAccumulated++;
+        return course.getSettings().hasMaxTime() ? secondsAccumulated-- : secondsAccumulated++;
     }
 
     public int getRemainingDeaths() {
-        int remainingDeaths = getCourse().getMaxDeaths() - getDeaths();
+        int remainingDeaths = getCourse().getSettings().getMaxDeaths() - getDeaths();
         return Math.max(remainingDeaths, 0);
     }
 

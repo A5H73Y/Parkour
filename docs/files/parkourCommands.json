@@ -489,13 +489,13 @@
   {
     "command": "setcourse",
     "title": "Set Course Attributes",
-    "arguments": "(course) (creator / minlevel / maxdeath / maxtime / message) (value)",
+    "arguments": "(course) (creator / minlevel / maxdeath / maxtime / maxfallticks / message) (value)",
     "example": "/pa setcourse tutorial creator A5H73Y",
     "description": "Quickly set Course attributes using a simple command. If a message is provided, an additional argument must match a message type and the following arguments will be combined to make the final event message; colour codes are supported.",
     "permission": "parkour.admin.course",
     "commandGroup": "3",
-    "consoleSyntax": "pac setcourse (course) (creator / minlevel / maxdeath / maxtime / message) (value)",
-    "autoTabSyntax": "(course) [creator,minlevel,maxdeath,maxtime,message] {2:message=(parkourevent)} (value)"
+    "consoleSyntax": "pac setcourse (course) (creator / minlevel / maxdeath / maxtime / maxfallticks / message) (value)",
+    "autoTabSyntax": "(course) [creator,minlevel,maxdeath,maxtime,maxfallticks,message] {2:message=(parkourevent),*=(value)} (value)"
   },
   {
     "command": "setcreator",

@@ -16,8 +16,15 @@ public class DatabaseUpgradeTask extends TimedUpgradeTask {
 
 	@Override
 	protected boolean doWork() {
+//		try {
+//			getParkourUpgrader().getDatabase().update("ALTER TABLE time DROP COLUMN playerName;");
+//			getParkourUpgrader().getDatabase().update("ALTER TABLE time ADD COLUMN achieved TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL;");
 
-		// Database - drop playerName column, add new achieved column
+			// sqlite doesn't let you add a new column containing a timestamp default
+			// only alternative is to drop the table and recreate it - bloody nightmare.
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
 
 		return true;
 	}

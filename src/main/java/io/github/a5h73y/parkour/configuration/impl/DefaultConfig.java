@@ -18,6 +18,7 @@ import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.FileUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -63,7 +64,6 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("OnCourse.EnforceParkourSigns", true);
 		this.setDefault("OnCourse.EnforceWorld.Enabled", true);
 		this.setDefault("OnCourse.EnforceWorld.LeaveCourse", false);
-		this.setDefault("OnCourse.MaxFallTicks", 80);
 		this.setDefault("OnCourse.PreventPlateStick", false);
 		this.setDefault("OnCourse.PreventOpeningOtherInventories", false);
 		this.setDefault("OnCourse.PreventAttackingEntities", false);
@@ -264,6 +264,17 @@ public class DefaultConfig extends Yaml {
 		detailedTimeOutput.setTimeZone(timeZone);
 		standardTimeOutput = new SimpleDateFormat(this.getStandardTimeFormat());
 		standardTimeOutput.setTimeZone(timeZone);
+	}
+
+	/**
+	 * Generates the file name for the Player config file.
+	 * Can either be the Player's UUID or the Player's name as the file name.
+	 * @param player player
+	 * @return player file name
+	 */
+	public String getPlayerConfigName(OfflinePlayer player) {
+		return this.getBoolean("Other.PlayerConfigUsePlayerUUID")
+				? player.getUniqueId().toString() : player.getName();
 	}
 
 	/**
@@ -474,10 +485,6 @@ public class DefaultConfig extends Yaml {
 	}
 
 	/* ints */
-
-	public int getMaxFallTicks() {
-		return this.getInt("OnCourse.MaxFallTicks");
-	}
 
 	public int getTitleIn() {
 		return this.getInt("DisplayTitle.FadeIn");

@@ -71,8 +71,6 @@ OnCourse:
     Enabled: true
     # If they are allowed to be teleported away, should they leave the Course as a result
     LeaveCourse: false
-  # If they are allowed to be teleported away, should they leave the Course as a result
-  MaxFallTicks: 80
   # Prevent the Pressure Plate from being 'stuck' in a pressed position when a Player is stood on it
   # This will allow people to still achieve the Checkpoint while others are on a Plate. This will mean that Redstone no longer being fired from it
   PreventPlateStick: false

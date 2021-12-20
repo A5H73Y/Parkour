@@ -46,7 +46,7 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
 
         // Only do fall checks if mode is not 'dropper' course
         if (session.getParkourMode() != ParkourMode.DROPPER
-                && player.getFallDistance() > parkour.getParkourConfig().getMaxFallTicks()) {
+                && player.getFallDistance() > session.getCourse().getSettings().getMaxFallTicks()) {
             parkour.getPlayerManager().playerDie(player);
             return;
         }

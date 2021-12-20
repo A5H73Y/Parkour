@@ -46,6 +46,7 @@ public class CourseConfig extends Json {
     private static final String PARKOUR_KIT = "ParkourKit";
     private static final String MAX_DEATHS = "MaxDeaths";
     private static final String MAX_TIME = "MaxTime";
+    private static final String MAX_FALL_TICKS = "MaxFallTicks";
     private static final String READY = "Ready";
 
     private String courseName;
@@ -330,6 +331,23 @@ public class CourseConfig extends Json {
      */
     public void setMaximumTime(int seconds) {
         this.set(MAX_TIME, seconds);
+    }
+
+    /**
+     * Get the Maximum Fall Ticks for Course.
+     * Maximum number of fall ticks a player can accumulate before a death.
+     * @return maximum time in seconds
+     */
+    public int getMaximumFallTicks() {
+        return this.getInt(MAX_FALL_TICKS);
+    }
+
+    /**
+     * Set the Maximum Fall Ticks.
+     * @param ticks number of server ticks
+     */
+    public void setMaximumFallTicks(int ticks) {
+        this.set(MAX_FALL_TICKS, ticks);
     }
 
     /**

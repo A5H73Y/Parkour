@@ -24,7 +24,7 @@ public class PlayerConfig extends Json {
 
     public static File getPlayerSessionFile(OfflinePlayer player, String courseName) {
         return new File(Parkour.getInstance().getConfigManager().getSessionsDir()
-                + File.separator + getPlayerConfigName(player), courseName);
+                + File.separator + Parkour.getDefaultConfig().getPlayerConfigName(player), courseName);
     }
 
     public static boolean hasPlayerConfig(OfflinePlayer player) {
@@ -365,19 +365,8 @@ public class PlayerConfig extends Json {
         this.set("ExistingSessionCourseName", courseName);
     }
 
-    /**
-     * Generates the file name for the Player config file.
-     * Can either be the Player's UUID or the Player's name as the file name.
-     * @param player player
-     * @return player file name
-     */
-    private static String getPlayerConfigName(OfflinePlayer player) {
-        return Parkour.getDefaultConfig().getBoolean("Other.PlayerConfigUsePlayerUUID")
-                ? player.getUniqueId().toString() : player.getName();
-    }
-
     private static String getPlayerJsonPath(OfflinePlayer player) {
-        return getPlayerConfigName(player) + "." + FileType.JSON.getExtension();
+        return Parkour.getDefaultConfig().getPlayerConfigName(player) + "." + FileType.JSON.getExtension();
     }
 
     private static File getPlayerJsonFile(OfflinePlayer player) {

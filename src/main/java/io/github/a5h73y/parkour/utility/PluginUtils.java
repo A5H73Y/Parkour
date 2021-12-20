@@ -13,9 +13,12 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import org.apache.commons.io.IOUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -108,11 +111,16 @@ public class PluginUtils {
 
         try (FileWriter writer = new FileWriter(saveTo, true);
              BufferedWriter bw = new BufferedWriter(writer)) {
-            bw.write(DateTimeUtils.getDisplayDateTime() + " " + message + System.lineSeparator());
+            bw.write(DateTimeUtils.getDisplayDateTime() + " - " + message + System.lineSeparator());
         } catch (IOException e) {
             log(e.getMessage(), 2);
             log(e.toString(), 2);
         }
+    }
+
+    public static String readContentsOfResource(String resourcePath) throws IOException {
+        InputStream inputStream = Parkour.getInstance().getResource(resourcePath);
+        return IOUtils.toString(inputStream, StandardCharsets.UTF_8.toString());
     }
 
     /**

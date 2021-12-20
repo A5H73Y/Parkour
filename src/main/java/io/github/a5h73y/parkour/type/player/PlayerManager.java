@@ -37,6 +37,7 @@ import io.github.a5h73y.parkour.type.Initializable;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.course.Course;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
+import io.github.a5h73y.parkour.type.course.CourseSettings;
 import io.github.a5h73y.parkour.type.course.ParkourEventType;
 import io.github.a5h73y.parkour.type.kit.ParkourKit;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
@@ -362,8 +363,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		parkour.getSoundsManager().playSound(player, SoundType.PLAYER_DEATH);
 		session.increaseDeath();
 
-		if (session.getCourse().hasMaxDeaths()) {
-			if (session.getCourse().getMaxDeaths() > session.getDeaths()) {
+		if (session.getCourse().getSettings().hasMaxDeaths()) {
+			if (session.getCourse().getSettings().getMaxDeaths() > session.getDeaths()) {
 				parkour.getBountifulApi().sendSubTitle(player,
 						TranslationUtils.getValueTranslation("Parkour.LifeCount",
 								String.valueOf(session.getRemainingDeaths()), false),
@@ -371,7 +372,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 			} else {
 				TranslationUtils.sendValueTranslation("Parkour.MaxDeaths",
-						String.valueOf(session.getCourse().getMaxDeaths()), player);
+						String.valueOf(session.getCourse().getSettings().getMaxDeaths()), player);
 				leaveCourse(player);
 				return;
 			}
@@ -1014,7 +1015,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 				List<Checkpoint> checkpoints = Collections.singletonList(
 						parkour.getCheckpointManager().createCheckpointFromPlayerLocation(player));
 				ParkourSession session = new ParkourSession(
-						new Course(TEST_MODE, TEST_MODE, checkpoints, kit, ParkourMode.NONE, 0, 0));
+						new Course(TEST_MODE, TEST_MODE, checkpoints, kit, ParkourMode.NONE));
 				parkour.getParkourSessionManager().addPlayer(player, session);
 				parkour.getBountifulApi().sendActionBar(player, TranslationUtils.getValueTranslation(
 						"Parkour.TestModeOn", kitName, false), true);
@@ -1452,7 +1453,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 				int seconds = session.calculateSeconds();
 				String liveTimer = DateTimeUtils.convertSecondsToTime(seconds);
 
-				if (course.hasMaxTime()) {
+				if (course.getSettings().hasMaxTime()) {
 					parkour.getSoundsManager().playSound(player, SoundType.SECOND_DECREMENT);
 					if (seconds <= 5 || seconds == 10) {
 						liveTimer = ChatColor.RED + liveTimer;
@@ -1467,9 +1468,9 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 				parkour.getScoreboardManager().updateScoreboardTimer(player, liveTimer);
 
-				if (course.hasMaxTime() && seconds <= 0) {
+				if (course.getSettings().hasMaxTime() && seconds <= 0) {
 					session.setMarkedForDeletion(true);
-					String maxTime = DateTimeUtils.convertSecondsToTime(course.getMaxTime());
+					String maxTime = DateTimeUtils.convertSecondsToTime(course.getSettings().getMaxTime());
 					TranslationUtils.sendValueTranslation("Parkour.MaxTime", maxTime, player);
 					leaveCourse(player);
 				}
@@ -1590,18 +1591,18 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			boolean displayTitle = parkour.getParkourConfig().getBoolean("DisplayTitle.JoinCourse");
 
 			String subTitle = "";
-			if (course.hasMaxDeaths() && course.hasMaxTime()) {
+			if (course.getSettings().hasMaxDeaths() && course.getSettings().hasMaxTime()) {
 				subTitle = TranslationUtils.getTranslation("Parkour.JoinLivesAndTime", false)
-						.replace("%LIVES%", String.valueOf(course.getMaxDeaths()))
-						.replace("%MAXTIME%", DateTimeUtils.convertSecondsToTime(course.getMaxTime()));
+						.replace("%LIVES%", String.valueOf(course.getSettings().getMaxDeaths()))
+						.replace("%MAXTIME%", DateTimeUtils.convertSecondsToTime(course.getSettings().getMaxTime()));
 
-			} else if (course.hasMaxDeaths()) {
+			} else if (course.getSettings().hasMaxDeaths()) {
 				subTitle = TranslationUtils.getValueTranslation(
-						"Parkour.JoinLives", String.valueOf(course.getMaxDeaths()), false);
+						"Parkour.JoinLives", String.valueOf(course.getSettings().getMaxDeaths()), false);
 
-			} else if (course.hasMaxTime()) {
+			} else if (course.getSettings().hasMaxTime()) {
 				subTitle = TranslationUtils.getValueTranslation("Parkour.JoinTime",
-						DateTimeUtils.convertSecondsToTime(course.getMaxTime()), false);
+						DateTimeUtils.convertSecondsToTime(course.getSettings().getMaxTime()), false);
 			}
 
 			parkour.getBountifulApi().sendFullTitle(player,
