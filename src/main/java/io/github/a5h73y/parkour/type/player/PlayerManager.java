@@ -1054,7 +1054,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 		int completedCourses = parkour.getConfigManager().getCourseCompletionsConfig().getNumberOfCompletedCourses(targetPlayer);
 
-		sendConditionalValue(sender, "Courses Completed", parkour.getParkourConfig().isCompletedCoursesEnabled(),
+		sendValue(sender, "Courses Completed",
 				completedCourses + " / " + parkour.getCourseManager().getCourseNames().size());
 	}
 
@@ -1609,8 +1609,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 					TranslationUtils.getCourseEventMessage(session, JOIN, "Parkour.Join"),
 					subTitle, displayTitle);
 
-			if (parkour.getParkourConfig().isCompletedCoursesEnabled()
-					&& parkour.getConfigManager().getCourseCompletionsConfig().hasCompletedCourse(player, course.getName())
+			if (parkour.getConfigManager().getCourseCompletionsConfig().hasCompletedCourse(player, course.getName())
 					&& parkour.getParkourConfig().getBoolean("OnFinish.CompletedCourses.JoinMessage")) {
 				TranslationUtils.sendValueTranslation("Parkour.AlreadyCompleted",
 						course.getDisplayName(), player);

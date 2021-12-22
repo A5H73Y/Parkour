@@ -86,7 +86,6 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("OnFinish.DisplayStats", true);
 		this.setDefault("OnFinish.EnablePrizes", true);
 		this.setDefault("OnFinish.EnforceCompletion", true);
-		this.setDefault("OnFinish.CompletedCourses.Enabled", true);
 		this.setDefault("OnFinish.CompletedCourses.JoinMessage", false);
 		this.setDefault("OnFinish.SetGameMode", "SURVIVAL");
 		this.setDefault("OnFinish.TeleportAway", true);
@@ -410,10 +409,6 @@ public class DefaultConfig extends Yaml {
 
 	public boolean isSoundEnabled(SoundType soundType) {
 		return this.getBoolean("Sounds." + soundType.getConfigEntry() + ".Enabled");
-	}
-
-	public boolean isCompletedCoursesEnabled() {
-		return this.getBoolean("OnFinish.CompletedCourses.Enabled");
 	}
 
 	public boolean isLegacyGroundDetection() {

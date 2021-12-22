@@ -1,7 +1,14 @@
 package io.github.a5h73y.parkour.upgrade.major;
 
+import static io.github.a5h73y.parkour.utility.PluginUtils.readContentsOfResource;
+
 import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
 import io.github.a5h73y.parkour.upgrade.TimedUpgradeTask;
+import io.github.a5h73y.parkour.utility.PluginUtils;
+import java.io.IOException;
+import java.sql.SQLException;
+import pro.husk.Database;
+import pro.husk.mysql.MySQL;
 
 public class DatabaseUpgradeTask extends TimedUpgradeTask {
 
@@ -16,15 +23,23 @@ public class DatabaseUpgradeTask extends TimedUpgradeTask {
 
 	@Override
 	protected boolean doWork() {
-//		try {
-//			getParkourUpgrader().getDatabase().update("ALTER TABLE time DROP COLUMN playerName;");
-//			getParkourUpgrader().getDatabase().update("ALTER TABLE time ADD COLUMN achieved TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL;");
+		Database database = getParkourUpgrader().getDatabase();
+		String sqlResourcePrefix = "sql/" + (database instanceof MySQL ? "mysql" : "sqlite") + "/";
+		PluginUtils.debug("Upgrading the 'time' table.");
+		try {
+			getParkourUpgrader().getLogger().info("Creating backup table...");
+			database.update("CREATE TABLE time_backup AS SELECT * FROM time;");
+			database.update("DROP TABLE time;");
 
-			// sqlite doesn't let you add a new column containing a timestamp default
-			// only alternative is to drop the table and recreate it - bloody nightmare.
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
+			getParkourUpgrader().getLogger().info("Creating new table...");
+			database.update(readContentsOfResource(sqlResourcePrefix + "time.sql"));
+
+			getParkourUpgrader().getLogger().info("Transferring times back...");
+			database.update("INSERT INTO time (courseId, playerId, time, deaths) SELECT courseId, playerId, time, deaths FROM time_backup;");
+			database.update("DROP TABLE time_backup;");
+		} catch (SQLException | IOException e) {
+			e.printStackTrace();
+		}
 
 		return true;
 	}

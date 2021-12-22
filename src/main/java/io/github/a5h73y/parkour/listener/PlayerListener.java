@@ -7,6 +7,7 @@ import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.GameMode;
+import org.bukkit.World;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -269,7 +270,12 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        if (event.getFrom().getWorld() != event.getTo().getWorld()) {
+        ParkourSession session = parkour.getParkourSessionManager().getParkourSession(event.getPlayer());
+        World nextCheckpointWorld = session.getNextCheckpoint() != null ?
+                session.getNextCheckpoint().getLocation().getWorld() : null;
+
+        if (event.getFrom().getWorld() != event.getPlayer().getWorld()
+                && (nextCheckpointWorld == null || nextCheckpointWorld != event.getTo().getWorld())) {
             if (parkour.getParkourConfig().isCourseEnforceWorldLeaveCourse()) {
                 parkour.getPlayerManager().leaveCourse(event.getPlayer(), true);
 
