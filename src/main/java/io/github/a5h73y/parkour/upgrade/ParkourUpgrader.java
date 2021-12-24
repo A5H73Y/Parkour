@@ -7,6 +7,7 @@ import io.github.a5h73y.parkour.other.PluginBackupUtil;
 import io.github.a5h73y.parkour.upgrade.major.CopyConfigUpgradeTask;
 import io.github.a5h73y.parkour.upgrade.major.CourseDataUpgradeTask;
 import io.github.a5h73y.parkour.upgrade.major.DatabaseUpgradeTask;
+import io.github.a5h73y.parkour.upgrade.major.LobbyConfigUpgradeTask;
 import io.github.a5h73y.parkour.upgrade.major.PlayerDataUpgradeTask;
 import io.github.g00fy2.versioncompare.Version;
 import java.io.File;
@@ -119,8 +120,7 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 			return false;
 		}
 
-		if (!new CopyConfigUpgradeTask(this, "Lobby Config",
-				getDefaultConfig(), getNewConfigManager().getLobbyConfig(), "Lobby.").start()) {
+		if (!new LobbyConfigUpgradeTask(this).start()) {
 			return false;
 		}
 

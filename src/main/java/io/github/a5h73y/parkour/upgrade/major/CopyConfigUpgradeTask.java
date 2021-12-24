@@ -8,10 +8,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public class CopyConfigUpgradeTask extends TimedUpgradeTask {
 
-	private final String title;
-	private final FileConfiguration oldConfig;
-	private final Yaml newConfig;
-	private final String startsWith;
+	protected final String title;
+	protected final FileConfiguration oldConfig;
+	protected final Yaml newConfig;
+	protected final String startsWith;
 
 	public CopyConfigUpgradeTask(ParkourUpgrader parkourUpgrader, String title, FileConfiguration oldConfig, Yaml newConfig, String startsWith) {
 		super(parkourUpgrader);

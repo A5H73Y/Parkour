@@ -45,9 +45,11 @@ public class CourseDataUpgradeTask extends TimedConfigUpgradeTask {
 					newCourseConfig.set(key, courseSection.get(key));
 				}
 
-				newCourseConfig.set("Name", courseName);
 				updateCheckpointSection(newCourseConfig, courseName);
 				updateEconomySection(newCourseConfig, courseName);
+
+				newCourseConfig.set("Name", courseName);
+				newCourseConfig.remove("World");
 			}
 
 			count++;

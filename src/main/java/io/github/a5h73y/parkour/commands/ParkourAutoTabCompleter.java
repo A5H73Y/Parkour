@@ -7,6 +7,7 @@ import static io.github.a5h73y.parkour.commands.CommandUsage.SUBSTITUTION_OPEN;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.conversation.SetCourseConversation;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
+import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -77,7 +78,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
                 if (syntaxArgs.length > args.length - 2) {
                     String nextArgument = syntaxArgs[args.length - 2];
 
-                    if (nextArgument.startsWith(FORMULA_OPEN)) {
+                    if (nextArgument.startsWith(FORMULA_OPEN) && ValidationUtils.isStringValid(nextArgument)) {
                         nextArgument = selectedCommand.resolveFormulaValue(nextArgument, args);
                     }
 

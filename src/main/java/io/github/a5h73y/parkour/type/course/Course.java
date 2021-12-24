@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 /**
  * Parkour Course.
- * Stores references to the Checkpoints that consist of the Course.
+ * Stores reference to the Checkpoints that consist of the Course.
  * The ParkourKit will be used to apply the appropriate actions while on the course.
  */
 public class Course implements Serializable {

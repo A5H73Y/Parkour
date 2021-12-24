@@ -224,7 +224,7 @@ public class LobbyManager extends CacheableParkourManager {
      * @param lobbyName lobby name
      */
     private void setLobby(Player player, String lobbyName) {
-        getConfig().setLobby(lobbyName, player.getLocation());
+        getConfig().setLobbyLocation(lobbyName, player.getLocation());
         PluginUtils.logToFile(lobbyName + " lobby was set by " + player.getName());
     }
 

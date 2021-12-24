@@ -48,7 +48,7 @@ public class LobbyConfig extends Yaml {
 	 * @return lobby Location
 	 */
 	public Location getLobbyLocation(String lobbyName) {
-		return getSerializable(lobbyName, Location.class);
+		return getSerializable(lobbyName + ".Location", Location.class);
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class LobbyConfig extends Yaml {
 	 * @return world name
 	 */
 	public String getLobbyWorld(String lobbyName) {
-		return this.getString(lobbyName.toLowerCase() + ".world");
+		return this.getString(lobbyName.toLowerCase() + ".Location.world");
 	}
 
 	/**
@@ -66,8 +66,8 @@ public class LobbyConfig extends Yaml {
 	 * @param lobbyName lobby name
 	 * @param location location
 	 */
-	public void setLobby(String lobbyName, Location location) {
-		this.setSerializable(lobbyName.toLowerCase(), location);
+	public void setLobbyLocation(String lobbyName, Location location) {
+		this.setSerializable(lobbyName.toLowerCase() + ".Location", location);
 	}
 
 	/**

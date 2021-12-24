@@ -223,7 +223,7 @@ public class ParkourValidation {
 
         /* Player in wrong world */
         if (Parkour.getDefaultConfig().isJoinEnforceWorld()
-                && !player.getLocation().getWorld().getName().equals(courseConfig.getWorld())) {
+                && !player.getLocation().getWorld().getName().equals(courseConfig.getStartingWorldName())) {
             return false;
         }
 

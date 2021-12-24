@@ -107,19 +107,25 @@ public class ParkourKitConfig extends Yaml {
 	}
 
 	public void addMaterialToParkourKit(@NotNull String kitName,
-	                                           @NotNull String materialName,
-	                                           @NotNull String action,
-	                                           Object strength,
-	                                           Object duration,
-	                                           Object potion) {
+	                                    @NotNull String materialName,
+	                                    @NotNull String action,
+	                                    Object strength,
+	                                    Object duration,
+	                                    Object potion) {
 
 		String pathPrefix = kitName + "." + materialName + ".";
 		this.set(pathPrefix + "Action", action);
-		this.set(pathPrefix + "Strength", strength);
-		this.set(pathPrefix + "Duration", duration);
-		this.set(pathPrefix + "Effect", potion);
+		if (strength != null) {
+			this.set(pathPrefix + "Strength", strength);
+		}
+		if (duration != null) {
+			this.set(pathPrefix + "Duration", duration);
+		}
+		if (potion != null) {
+			this.set(pathPrefix + "Effect", potion);
+		}
 	}
-	
+
 
 	/**
 	 * Create standard ParkourKit.

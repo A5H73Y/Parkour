@@ -127,7 +127,7 @@ public class EconomyApi extends PluginWrapper {
 
 		if (isEnabled()) {
 			TranslationUtils.sendValue(sender, "Economy", economy.getName());
-			TranslationUtils.sendValue(sender, "Currency", getCurrencyName());
+			TranslationUtils.sendValue(sender, "Currency Name", getCurrencyName());
 		}
 	}
 

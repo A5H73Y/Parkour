@@ -653,15 +653,15 @@ public class CourseConfig extends Json {
      * @return world name
      */
     @Nullable
-    public String getWorld() {
-        return this.get("Checkpoint.0.World", null);
+    public String getStartingWorldName() {
+        return this.get("Checkpoint.0.Location.World", null);
     }
 
     /**
      * Reset Prizes for Course completion.
      */
     public void resetPrizes() {
-        this.set("Prize", null);
+        this.remove("Prize");
     }
 
     /**
@@ -669,8 +669,8 @@ public class CourseConfig extends Json {
      * Removes any linked Lobby or Course.
      */
     public void resetLinks() {
-        this.set("LinkedLobby", null);
-        this.set("LinkedCourse", null);
+        this.remove("LinkedLobby");
+        this.remove("LinkedCourse");
     }
 
     /**
@@ -964,7 +964,7 @@ public class CourseConfig extends Json {
                 continue;
             }
 
-            courseConfig.set(property, null);
+            courseConfig.remove(property);
         }
     }
 
@@ -1035,7 +1035,7 @@ public class CourseConfig extends Json {
         int checkpoint = courseConfig.getInt(CHECKPOINTS);
 
         if (checkpoint > 0) {
-            courseConfig.set("Checkpoint." + checkpoint, null);
+            courseConfig.remove("Checkpoint." + checkpoint);
             courseConfig.set("Checkpoints", checkpoint - 1);
         }
     }

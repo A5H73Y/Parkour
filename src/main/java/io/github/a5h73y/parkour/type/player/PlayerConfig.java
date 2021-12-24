@@ -76,7 +76,7 @@ public class PlayerConfig extends Json {
      * Reset the Player's selected Course Name.
      */
     public void resetSelected() {
-        this.set("Selected", null);
+        this.remove("Selected");
     }
 
     /**
@@ -191,8 +191,8 @@ public class PlayerConfig extends Json {
      * Reset the Player's Inventory and Armor contents.
      */
     public void resetInventoryArmorData() {
-        this.set("Inventory", null);
-        this.set("Armor", null);
+        this.remove("Inventory");
+        this.remove("Armor");
     }
 
     /**
@@ -239,8 +239,8 @@ public class PlayerConfig extends Json {
      * Reset the saved Health and Food Level.
      */
     public void resetSavedHealthFoodLevel() {
-        this.set("Health", null);
-        this.set("Hunger", null);
+        this.remove("Health");
+        this.remove("Hunger");
     }
 
     /**
@@ -262,7 +262,7 @@ public class PlayerConfig extends Json {
      * Reset the Player's saved XP Level.
      */
     public void resetSavedXpLevel() {
-        this.set("XPLevel", null);
+        this.remove("XPLevel");
     }
 
     /**

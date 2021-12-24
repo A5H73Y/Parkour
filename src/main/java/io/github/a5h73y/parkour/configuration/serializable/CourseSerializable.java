@@ -3,6 +3,7 @@ package io.github.a5h73y.parkour.configuration.serializable;
 import static io.github.a5h73y.parkour.configuration.serializable.ParkourSerializable.getMapValue;
 
 import io.github.a5h73y.parkour.type.course.Course;
+import java.util.Collections;
 import java.util.Map;
 import de.leonhard.storage.internal.serialize.LightningSerializable;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +15,7 @@ public class CourseSerializable implements LightningSerializable<Course> {
 		// we don't create a whole Course then serialize it
 		// we create it in stages and only really care about deserializing it
 		// we could change the way a Course is created, setting the first checkpoint then serialize it
-		return null;
+		return Collections.emptyMap();
 	}
 
 	@Override
