@@ -1,13 +1,13 @@
 Plugin Configuration
 ======
 
-Parkour will create and maintain various YAML files in the plugin's config folder, the only files which you are able to edit freely are `config.yml` and `strings.yml`.
+Parkour is incredibly customisable, allowing you to modify the plugin exactly to what your server requires. Parkour will create and maintain various YAML files in the plugin's config folder.
 
-To make changes, edit to the value you want, save the file, then enter `/pa reload` into game or the console. Reloading the server can sometimes not apply the changes.
+To make changes, edit to the value you want, and save the file. _It is no longer required to use /pa reload_.
 
 Some properties require the server to restart to apply the changes, these include changes to scoreboard, adding 3rd party plugin support, etc.
 
-It's important to know that YAML has very strict formatting rules and will fail if you accidentally break any of these, if you are having any issues please use a [YAML Validator](https://codebeautify.org/yaml-validator).
+It's important to know that YAML has very strict formatting rules and will fail if any of those are broken. If you are having any issues please use a [YAML Validator](https://codebeautify.org/yaml-validator).
 
 ## config.yml
 
@@ -449,7 +449,7 @@ You are able to modify the contents of this file, then enter `/pa reload` for th
 
 If you are having problems, it may be because the yml is considered invalid if it requires `'` either side of the string, when using certain characters such as %.
 
-_When in doubt, run your `strings.yml` contents through a validator such as: [https://codebeautify.org/yaml-validator](https://codebeautify.org/yaml-validator) which should identify any problems._
+_When in doubt, copy and paste your `strings.yml` contents through a validator such as: [https://codebeautify.org/yaml-validator](https://codebeautify.org/yaml-validator) which should identify any problems._
 
 ### Remove Messages
 

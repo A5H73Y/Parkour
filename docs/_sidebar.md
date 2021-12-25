@@ -8,20 +8,23 @@
   - [Placeholders](essential/placeholders.md)
   - [FAQ](essential/faq.md)
 
-- Tutorials
-  - [Course Options](tutorials/configuring-course.md)
-  - [ParkourKits](tutorials/parkour-kits.md)
-  - [Sign Commands](tutorials/sign-commands.md)
-  - [Rewarding the Player](tutorials/rewarding-player.md)
-  - [Challenge Mode](tutorials/challenge-mode.md)
-  - [ParkourModes](tutorials/parkour-modes.md)
-  - [Administration](tutorials/administration.md)
-  - [Plugin Configuration](tutorials/plugin-config.md)
-
 - Guides
-  - [Fresh Install](tutorials/fresh-install.md)
-  - [Creating a Course](tutorials/creating-course.md)
-  - [Compatible Plugins](tutorials/compatible-plugins.md)
+  - [Fresh Install](guides/fresh-install.md)
+  - [Creating a Course](guides/creating-course.md)
+  - [Compatible Plugins](guides/compatible-plugins.md)
+  - [Rewarding the Player](guides/rewarding-player.md)
+
+- Tutorials
+  - [Courses](tutorials/parkour-courses.md)
+  - [ParkourKits](tutorials/parkour-kits.md)
+  - [Lobbies](tutorials/parkour-lobby.md)
+  - [Players](tutorials/parkour-players.md)
+  - [AutoStarts](tutorials/parkour-autostart.md)
+  - [ParkourModes](tutorials/parkour-modes.md)
+  - [Challenge Mode](tutorials/challenge-mode.md)
+  - [Sign Commands](tutorials/sign-commands.md)
+  - [Leaderboard Database](tutorials/parkour-database.md)
+  - [Plugin Configuration](tutorials/parkour-config.md)
 
 - [Developer Tutorials](developer.md)
 - [Changelogs](changelogs.md)

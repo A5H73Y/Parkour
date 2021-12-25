@@ -49,7 +49,7 @@ For the Player to be able to finish the Course they can interact with a "Finish 
 
 A "Finish Block" is part of a ParkourKit and will trigger the Course being finished when walked upon. For now, we can set it to the default Finish Block, you can change it later. Simply enter `/pa kit` to populate your inventory with each item of the default ParkourKit, then find the Material named "Finish Block", and simply place these materials where you want the finish area to be.
 
-For more information on ParkourKits, [click here](parkour-kits.md).
+For more information on ParkourKits, [click here](../tutorials/parkour-kits.md).
 
 If you prefer the final checkpoint to trigger the Course finish, set `OnCourse.TreatLastCheckpointAsFinish` to `true` in the `config.yml`.
 

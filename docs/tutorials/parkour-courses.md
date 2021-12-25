@@ -1,12 +1,14 @@
-Configuring a Course
+Courses
 ======
+
+A Parkour Course is a physical path that you've created for the Player to use while using the plugin. A Player can join a Course (a.k.a. level, arena, track), and the plugin will track the Player's progress and apply any effects they interact with.
 
 ## Course Settings GUI
 
 You are able to quickly access the Course settings using a GUI, this will act as a shortcut of using traditional commands. Each Item in the GUI will act as either a setting toggle, or start a new conversation to take user input for a new value.
 
-![Course Settings Conversation](https://i.imgur.com/y03TTJd.png "Course Settings Conversation") 
-![Course Settings Toggle](https://i.imgur.com/3rg09P6.png "Course Settings Toggle")
+![Course Settings Toggle](https://i.imgur.com/s0CANvK.png "Course Settings Toggle")
+![Course Settings Conversation](https://i.imgur.com/5YahlJI.png "Course Settings Conversation") 
 
 _Command: `/pa settings (course)`_
 
@@ -72,15 +74,6 @@ Set a limit on the number of Players that can play the Course concurrently.
 
 _Command: `/pa setplayerlimit (course) (amount)`_
 
-## Creating an AutoStart
-
-An AutoStart pressure plate will trigger an automatic joining of a Course, instead of using the traditional Join signs or command.
-
-![Create AutoStart](https://i.imgur.com/jIEpcFy.png "Create AutoStart")
-
-_Command: `/pa setautostart (course)`_  
-Stand where you would like the AutoStart location to be, and a configurable block will be placed below you with a pressure plate on top.
-
 ## Adding a Join Item
 
 When a Player joins a Course you are able to give them items which they can use throughout the Course. An example could be an Elytra to help navigate the Course, instead of relying on a chest / another plugin.
@@ -93,21 +86,6 @@ The items can be given a label to display in the inventory. The items can be mad
 
 _Command: `/pa addjoinitem (course) (material) (amount) [label] [unbreakable]`_  
 _Example: `/pa addjoinitem tutorial ELYTRA 64`_
-
-## Creating a Parkour Lobby
-
-Parkour can allow Courses to be grouped into different Lobbies, which could be used to add different stages to the server. For example "easy", "medium" and "hard" Courses. The command `/pa setlobby (name)` is used to create a Lobby in your current position.
-
-![Parkour Lobby Created](https://i.imgur.com/AGl0p1A.jpg "Parkour Lobby Created")
-
-A restriction can be placed on Lobbies to only be joinable by Players with a required ParkourLevel. This will enforce the Player to achieve a certain ParkourLevel in the Courses to be able to join the Lobby, for example completing all the Courses in the easy Lobby to be able to join the hard Lobby. This is achieved by providing a minimum Parkour level required to join.
-
-_Command: `/pa setlobby (name) [parkour-level]`_  
-The Lobby will only be joinable by Players with the required Parkour level (when provided).
-
-![Parkour Level Lobby Created](https://i.imgur.com/py34xti.jpg "Parkour Level Lobby Created")
-
-To teleport to the Lobby, simply enter `/pa lobby [name]`.
 
 ## Linking a Course after completion
 
@@ -123,7 +101,7 @@ If we want to link a Course to another Course, the command becomes `/pa link cou
 
 If you want to remove the link, simply enter `/pa link reset` which will result in the Player being teleported to the default Lobby.
 
-## Overwriting the Start of a Course
+## Changing the Start of a Course
 
 If you want to change the starting position of a Course, you can enter `/pa setstart`.
 
@@ -172,3 +150,33 @@ You can override the default Parkour messages to a custom per-course message for
 ![Event Message Set](https://i.imgur.com/5pacqjk.png "Event Message Set")
 
 _Command: `/pa setcourse (course) message (event) (event)`_
+
+## Resetting Course Data
+
+### Reset a Course
+
+This will delete all the statistics stored, which includes leaderboards and various Parkour attributes. This will NOT affect the spawn / checkpoints.  
+_Command: `/pa reset course (course)`_
+
+### Reset a Prize
+
+This will reset all the prizes for a Course, causing it to use the default prize specified in the `config.yml`.  
+_Command: `/pa reset prize (course)`_
+
+## Deleting Course Data
+
+### Delete a Course
+
+If you delete a Course it will remove all information stored on the server about it, including all references from the database so only use as a last resort. If preferred, you can reset a Course which will keep its structure (start location & checkpoints), but reset all of its stats and leaderboards.
+
+![Deleting Course](https://i.imgur.com/apa5azA.png "Deleting Course")
+
+![Delete Confirm](https://i.imgur.com/8ucihM7.png "Delete Confirm")  
+_Command: `/pa delete course (course)`_
+
+### Delete a Checkpoint
+
+If you want to delete a checkpoint, it will start with the highest number and decrease to the lowest, for safety reasons. For example if your Course has 5 checkpoints, and you enter `/pa delete checkpoint (course)` it will ask if you want to delete checkpoint 5, if you execute the command again it will ask if you want to delete checkpoint 4, etc.
+
+Note that you may want to overwrite a checkpoint if it needs moving, instead of deleting many. For example if you had 5 checkpoints and wanted to move the location of checkpoint 2, you can enter `/pa checkpoint 2` in the desired location.  
+_Command: `/pa delete checkpoint (course)`_

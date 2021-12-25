@@ -87,7 +87,7 @@ public class ChatListener extends AbstractPluginReceiver implements Listener {
 
         if (!isParkourCommand && parkour.getParkourSessionManager().isPlaying(player)) {
             if (!parkour.getParkourConfig().isDisableCommandsOnCourse()
-                    || PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                    || PermissionUtils.hasPermission(player, Permission.ADMIN_ALL, false)) {
                 return;
             }
 

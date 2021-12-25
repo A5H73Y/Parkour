@@ -11,6 +11,7 @@ public class TimeEntry {
     private final String playerId;
     private final long time;
     private final int deaths;
+    // TODO private final Datetime achieved;
 
     private String playerName;
 
