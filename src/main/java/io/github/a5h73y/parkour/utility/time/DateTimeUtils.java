@@ -5,6 +5,7 @@ import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,7 +28,7 @@ public class DateTimeUtils {
 	 * @return detailed formatted time
 	 */
 	public static String displayCurrentTime(long milliseconds) {
-		return StringUtils.colour(Parkour.getDefaultConfig().getDetailedTimeOutput().format(new Date(milliseconds)));
+		return StringUtils.colour(Parkour.getDefaultConfig().getDetailedTimeFormat().format(new Date(milliseconds)));
 	}
 
 	/**
@@ -37,7 +38,7 @@ public class DateTimeUtils {
 	 * @return standard formatted time
 	 */
 	public static String convertSecondsToTime(int totalSeconds) {
-		return StringUtils.colour(Parkour.getDefaultConfig().getStandardTimeOutput()
+		return StringUtils.colour(Parkour.getDefaultConfig().getStandardTimeFormat()
 				.format(new Date(totalSeconds * 1000L)));
 	}
 
@@ -46,7 +47,7 @@ public class DateTimeUtils {
 	 *
 	 * @return formatted date DD-MM-YYYY
 	 */
-	public static String getDisplayDate() {
+	public static String displayCurrentDate() {
 		LocalDate localDate = LocalDate.now();
 		return localDate.format(DateTimeFormatter.ofPattern(DD_MM_YYYY));
 	}
@@ -56,7 +57,7 @@ public class DateTimeUtils {
 	 *
 	 * @return formatted datetime DD/MM/YYYY | HH:MM:SS
 	 */
-	public static String getDisplayDateTime() {
+	public static String displayCurrentDateTime() {
 		LocalDateTime localDateTime = LocalDateTime.now();
 		return localDateTime.format(DateTimeFormatter.ofPattern(DD_MM_YYYY_HH_MM_SS));
 	}

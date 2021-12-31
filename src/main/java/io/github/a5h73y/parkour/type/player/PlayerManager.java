@@ -37,7 +37,6 @@ import io.github.a5h73y.parkour.type.Initializable;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.course.Course;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
-import io.github.a5h73y.parkour.type.course.CourseSettings;
 import io.github.a5h73y.parkour.type.course.ParkourEventType;
 import io.github.a5h73y.parkour.type.kit.ParkourKit;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
@@ -77,7 +76,7 @@ import org.jetbrains.annotations.Nullable;
  * Does not use a public cache, as the player's ParkourSession state is managed here only.
  */
 public class PlayerManager extends AbstractPluginReceiver implements Initializable {
-	
+
 	private final Map<UUID, Long> playerDelay = new HashMap<>();
 	private final List<UUID> hiddenPlayers = new ArrayList<>();
 
@@ -1001,7 +1000,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			if (parkour.getParkourSessionManager().isPlayerInTestMode(player)) {
 				parkour.getParkourSessionManager().removePlayer(player);
 				parkour.getBountifulApi().sendActionBar(player,
-						TranslationUtils.getTranslation("Parkour.TestModeOff", false), true);
+						TranslationUtils.getTranslation("Parkour.TestModeOff", false));
 			} else {
 				TranslationUtils.sendMessage(player, "You are not in Test Mode.");
 			}
@@ -1018,7 +1017,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 						new Course(TEST_MODE, TEST_MODE, checkpoints, kit, ParkourMode.NONE));
 				parkour.getParkourSessionManager().addPlayer(player, session);
 				parkour.getBountifulApi().sendActionBar(player, TranslationUtils.getValueTranslation(
-						"Parkour.TestModeOn", kitName, false), true);
+						"Parkour.TestModeOn", kitName, false));
 			}
 		}
 	}
@@ -1432,12 +1431,13 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	 * Course Timer may increase or decrease based on whether the Course has a maximum time.
 	 */
 	private void startLiveTimerRunnable() {
-		if (!parkour.getParkourConfig().getBoolean("OnCourse.DisplayLiveTime")
+		final boolean displayLiveTimer = parkour.getParkourConfig().getBoolean("OnCourse.DisplayLiveTime");
+
+		if (!displayLiveTimer
 				&& !(parkour.getParkourConfig().getBoolean("Scoreboard.Enabled")
 				&& parkour.getParkourConfig().getBoolean("Scoreboard.LiveTimer.Enabled"))) {
 			return;
 		}
-		final boolean displayLiveTimer = parkour.getParkourConfig().getBoolean("OnCourse.DisplayLiveTime");
 
 		Bukkit.getScheduler().runTaskTimer(parkour, () -> {
 			for (Map.Entry<UUID, ParkourSession> parkourPlayer : parkour.getParkourSessionManager().getParkourPlayers().entrySet()) {
@@ -1462,8 +1462,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 					parkour.getSoundsManager().playSound(player, SoundType.SECOND_INCREMENT);
 				}
 
-				if (displayLiveTimer) {
-					parkour.getBountifulApi().sendActionBar(player, liveTimer, true);
+				if (displayLiveTimer && parkour.getBountifulApi().hasTitleSupport()) {
+					parkour.getBountifulApi().sendActionBar(player, liveTimer);
 				}
 
 				parkour.getScoreboardManager().updateScoreboardTimer(player, liveTimer);

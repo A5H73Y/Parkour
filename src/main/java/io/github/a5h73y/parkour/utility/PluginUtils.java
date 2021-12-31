@@ -111,7 +111,7 @@ public class PluginUtils {
 
         try (FileWriter writer = new FileWriter(saveTo, true);
              BufferedWriter bw = new BufferedWriter(writer)) {
-            bw.write(DateTimeUtils.getDisplayDateTime() + " - " + message + System.lineSeparator());
+            bw.write(DateTimeUtils.displayCurrentDateTime() + " - " + message + System.lineSeparator());
         } catch (IOException e) {
             log(e.getMessage(), 2);
             log(e.toString(), 2);

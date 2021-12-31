@@ -216,7 +216,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
                 session.resetTime();
                 session.setStartTimer(true);
                 parkour.getBountifulApi().sendActionBar(event.getPlayer(),
-                        TranslationUtils.getTranslation("Parkour.TimerStarted", false), true);
+                        TranslationUtils.getTranslation("Parkour.TimerStarted", false));
             }
             parkour.getSoundsManager().playSound(event.getPlayer(), SoundType.CHECKPOINT_ACHIEVED);
             boolean showTitle = parkour.getParkourConfig().getBoolean("DisplayTitle.Checkpoint");
@@ -245,7 +245,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
                     session.resetTime();
                     session.setStartTimer(true);
                     parkour.getBountifulApi().sendActionBar(event.getPlayer(),
-                            TranslationUtils.getTranslation("Parkour.TimerStarted", false), true);
+                            TranslationUtils.getTranslation("Parkour.TimerStarted", false));
                 }
                 parkour.getPlayerManager().increaseCheckpoint(event.getPlayer(), null);
             }

@@ -34,6 +34,8 @@ import pro.husk.mysql.MySQL;
  */
 public class DatabaseManager extends CacheableParkourManager implements Initializable {
 
+    private static final String SELECT_TIME_DATA_QUERY = "SELECT courseId, playerId, time, deaths, achieved FROM time";
+
     private Database database;
 
     private final Map<String, Integer> courseIdCache = new HashMap<>();
@@ -121,11 +123,11 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
             return times;
         }
 
-        String courseResultsQuery = "SELECT * FROM time WHERE courseId=" + courseId
+        String courseResultsQuery = SELECT_TIME_DATA_QUERY + " WHERE courseId=" + courseId
                 + " ORDER BY time LIMIT " + maxEntries;
 
         try (ResultSet rs = database.query(courseResultsQuery)) {
-            times = processTimes(rs);
+            times = extractTimeEntries(rs);
             rs.getStatement().close();
         } catch (SQLException e) {
             logSqlException(e);
@@ -153,11 +155,11 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
             return times;
         }
 
-        String playerResultsQuery = "SELECT * FROM time WHERE courseId=" + courseId
+        String playerResultsQuery = SELECT_TIME_DATA_QUERY + " WHERE courseId=" + courseId
                 + " AND playerId='" + getPlayerId(player) + "' ORDER BY time LIMIT " + maxEntries;
 
         try (ResultSet rs = database.query(playerResultsQuery)) {
-            times = processTimes(rs);
+            times = extractTimeEntries(rs);
             rs.getStatement().close();
         } catch (SQLException e) {
             logSqlException(e);
@@ -608,14 +610,16 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
      * @param rs ResultSet
      * @return time object results
      */
-    private List<TimeEntry> processTimes(ResultSet rs) throws SQLException {
+    private List<TimeEntry> extractTimeEntries(ResultSet rs) throws SQLException {
         List<TimeEntry> times = new ArrayList<>();
 
         while (rs.next()) {
             TimeEntry time = new TimeEntry(
-                    rs.getString("playerId"),
-                    rs.getLong("time"),
-                    rs.getInt("deaths"));
+                    rs.getString(1),
+                    rs.getString(2),
+                    rs.getLong(3),
+                    rs.getInt(4),
+                    rs.getDate(5));
             times.add(time);
         }
         return times;

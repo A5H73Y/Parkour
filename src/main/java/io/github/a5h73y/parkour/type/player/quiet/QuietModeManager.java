@@ -58,7 +58,7 @@ public class QuietModeManager extends CacheableParkourManager {
         String messageKey = currentlyQuiet ? "Parkour.QuietOff" : "Parkour.QuietOn";
 
         parkour.getBountifulApi().sendActionBar(player,
-                TranslationUtils.getTranslation(messageKey, false), true);
+                TranslationUtils.getTranslation(messageKey, false));
 
         if (!currentlyQuiet) {
             addPlayer(player);

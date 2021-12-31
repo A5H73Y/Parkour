@@ -29,14 +29,15 @@ import org.bukkit.command.CommandSender;
  */
 public class DefaultConfig extends Yaml {
 
-	private final DateFormat detailedTimeOutput;
-	private final DateFormat standardTimeOutput;
+	private final DateFormat detailedTimeFormat;
+	private final DateFormat standardTimeFormat;
+	private final DateFormat achievedFormat;
 
 	public DefaultConfig(File file) {
 		super(file.getName(), FileUtils.getParentDirPath(file), null,
 				ReloadSettings.INTELLIGENT, ConfigSettings.SKIP_COMMENTS, DataType.SORTED);
 
-		this.setHeader("==== Parkour Config ==== #");
+		this.setHeader(" ==== Parkour Config ==== #");
 
 		this.setDefault("OnJoin.AllowViaCommand", true);
 		this.setDefault("OnJoin.EnforceWorld", false);
@@ -234,6 +235,7 @@ public class DefaultConfig extends Yaml {
 
 		this.setDefault("Other.Time.StandardFormat", "HH:mm:ss");
 		this.setDefault("Other.Time.DetailedFormat", "HH:mm:ss:SSS");
+		this.setDefault("Other.Time.AchievedFormat", "dd/MM/yyyy HH:mm:ss");
 		this.setDefault("Other.Time.TimeZone", "GMT");
 
 		this.setDefault("Other.OnServerShutdown.BackupFiles", false);
@@ -259,10 +261,15 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("LobbySettings.EnforceWorld", false);
 
 		TimeZone timeZone = TimeZone.getTimeZone(this.getTimeZone());
-		detailedTimeOutput = new SimpleDateFormat(this.getDetailedTimeFormat());
-		detailedTimeOutput.setTimeZone(timeZone);
-		standardTimeOutput = new SimpleDateFormat(this.getStandardTimeFormat());
-		standardTimeOutput.setTimeZone(timeZone);
+		detailedTimeFormat = setupDateFormat(this.getTimeDetailedFormatValue(), timeZone);
+		standardTimeFormat = setupDateFormat(this.getTimeStandardFormatValue(), timeZone);
+		achievedFormat = setupDateFormat(this.getTimeAchievedFormatValue(), timeZone);
+	}
+
+	private DateFormat setupDateFormat(String format, TimeZone timeZone) {
+		DateFormat result = new SimpleDateFormat(format);
+		result.setTimeZone(timeZone);
+		return result;
 	}
 
 	/**
@@ -307,12 +314,16 @@ public class DefaultConfig extends Yaml {
 		return this.getString("OnFinish.DefaultPrize.Command");
 	}
 
-	public String getStandardTimeFormat() {
+	public String getTimeStandardFormatValue() {
 		return this.getString("Other.Time.StandardFormat");
 	}
 
-	public String getDetailedTimeFormat() {
+	public String getTimeDetailedFormatValue() {
 		return this.getString("Other.Time.DetailedFormat");
+	}
+
+	public String getTimeAchievedFormatValue() {
+		return this.getString("Other.Time.AchievedFormat");
 	}
 
 	public String getTimeZone() {
@@ -503,11 +514,15 @@ public class DefaultConfig extends Yaml {
 
 	/* Time formats */
 
-	public DateFormat getDetailedTimeOutput() {
-		return detailedTimeOutput;
+	public DateFormat getDetailedTimeFormat() {
+		return detailedTimeFormat;
 	}
 
-	public DateFormat getStandardTimeOutput() {
-		return standardTimeOutput;
+	public DateFormat getStandardTimeFormat() {
+		return standardTimeFormat;
+	}
+
+	public DateFormat getAchievedDateTimeFormat() {
+		return achievedFormat;
 	}
 }

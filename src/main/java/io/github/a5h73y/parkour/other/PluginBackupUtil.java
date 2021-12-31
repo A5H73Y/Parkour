@@ -20,7 +20,7 @@ public class PluginBackupUtil {
     private static final String SOURCE_FOLDER = Parkour.getInstance().getDataFolder().toString();
     private static final String BACKUPS_FOLDER = "backups";
     private static final String OUTPUT_ZIP_FILE = SOURCE_FOLDER + File.separator + BACKUPS_FOLDER + File.separator
-            + "[" + DateTimeUtils.getDisplayDate() + "] Backup.zip";
+            + "[" + DateTimeUtils.displayCurrentDate() + "] Backup.zip";
     private static List<String> fileList;
 
     public static void backupNow() {

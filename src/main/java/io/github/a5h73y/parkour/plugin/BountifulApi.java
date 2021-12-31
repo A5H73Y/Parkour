@@ -39,6 +39,10 @@ public class BountifulApi extends PluginWrapper {
 		outDuration = Parkour.getDefaultConfig().getTitleOut();
 	}
 
+	public boolean hasTitleSupport() {
+		return useSpigotMethods || isEnabled();
+	}
+
 	/**
 	 * Send the Player the title.
 	 * Quiet Mode will be respected and not message the Player when enabled.
@@ -132,5 +136,9 @@ public class BountifulApi extends PluginWrapper {
 		} else {
 			TranslationUtils.sendMessage(player, title);
 		}
+	}
+
+	public void sendActionBar(Player player, String title) {
+		sendActionBar(player, title, true);
 	}
 }

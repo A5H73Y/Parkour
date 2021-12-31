@@ -2,6 +2,10 @@
     font-size: 3rem;
 }
 
+.markdown-section h3 {
+    margin: 20px 0 .6rem;
+}
+
 .markdown-section h5 {
     font-size: 1.1rem;
 }

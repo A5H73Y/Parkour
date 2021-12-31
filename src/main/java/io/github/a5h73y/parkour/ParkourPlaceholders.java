@@ -419,6 +419,9 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 case "player":
                     return result.getPlayerName();
 
+                case "achieved":
+                    return parkour.getParkourConfig().getAchievedDateTimeFormat().format(result.getAchievedDate());
+
                 default:
                     return INVALID_SYNTAX;
             }
