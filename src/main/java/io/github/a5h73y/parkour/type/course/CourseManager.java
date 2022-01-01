@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Stream;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -791,15 +792,22 @@ public class CourseManager extends AbstractPluginReceiver {
      * Each of the time entries for the Course will be deleted.
      *
      * @param sender sender
+     * @param targetPlayerId target player identifier
      * @param courseName course name
      */
-    public void resetPlayerCourseLeaderboards(CommandSender sender, String targetPlayerName, String courseName) {
+    public void resetPlayerCourseLeaderboards(CommandSender sender, String targetPlayerId, String courseName) {
         if (!doesCourseExist(courseName)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
             return;
         }
 
-        OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(targetPlayerName);
+        OfflinePlayer targetPlayer;
+
+        if (ValidationUtils.isUuidFormat(targetPlayerId)) {
+            targetPlayer = Bukkit.getOfflinePlayer(UUID.fromString(targetPlayerId));
+        } else {
+            targetPlayer = Bukkit.getOfflinePlayer(targetPlayerId);
+        }
 
         if (!PlayerConfig.hasPlayerConfig(targetPlayer)) {
             TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, sender);
@@ -808,9 +816,9 @@ public class CourseManager extends AbstractPluginReceiver {
 
         parkour.getDatabaseManager().deletePlayerCourseTimes(targetPlayer, courseName);
         parkour.getPlaceholderApi().clearCache();
-        TranslationUtils.sendValueTranslation("Parkour.Reset", targetPlayerName + "'s "
+        TranslationUtils.sendValueTranslation("Parkour.Reset", targetPlayerId + "'s "
                 + courseName + " Leaderboards", sender);
-        PluginUtils.logToFile(targetPlayerName + "'s " + courseName + " leaderboards were reset by " + sender.getName());
+        PluginUtils.logToFile(targetPlayerId + "'s " + courseName + " leaderboards were reset by " + sender.getName());
     }
 
     /**

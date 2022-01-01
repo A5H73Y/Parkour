@@ -234,7 +234,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			parkour.getParkourSessionManager().deleteParkourSession(player, session.getCourseName());
 			parkour.getParkourSessionManager().removePlayer(player);
 		} else {
-			parkour.getParkourSessionManager().stashParkourSession(player, true);
+			parkour.getParkourSessionManager().saveParkourSession(player, true);
 		}
 		preparePlayer(player, parkour.getParkourConfig().getString("OnFinish.SetGameMode"));
 		restoreHealthHunger(player);
@@ -431,7 +431,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		hiddenPlayers.remove(player.getUniqueId());
 		playerDelay.remove(player.getUniqueId());
 		Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () ->
-				parkour.getParkourSessionManager().stashParkourSession(player, true));
+				parkour.getParkourSessionManager().saveParkourSession(player, true));
 	}
 
 	/**
@@ -1055,6 +1055,10 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 		sendValue(sender, "Courses Completed",
 				completedCourses + " / " + parkour.getCourseManager().getCourseNames().size());
+
+		if (PermissionUtils.hasPermission(sender, Permission.ADMIN_ALL, false)) {
+			sendValue(sender, "Config Path", parkour.getParkourConfig().getPlayerConfigName(targetPlayer));
+		}
 	}
 
 	/**
@@ -1173,10 +1177,16 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	 * Reset the Player's Parkour Information.
 	 *
 	 * @param sender command sender
-	 * @param targetPlayerName target player name
+	 * @param targetPlayerId target player identifier
 	 */
-	public void resetPlayer(CommandSender sender, String targetPlayerName) {
-		OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(targetPlayerName);
+	public void resetPlayer(CommandSender sender, String targetPlayerId) {
+		OfflinePlayer targetPlayer;
+
+		if (ValidationUtils.isUuidFormat(targetPlayerId)) {
+			targetPlayer = Bukkit.getOfflinePlayer(UUID.fromString(targetPlayerId));
+		} else {
+			targetPlayer = Bukkit.getOfflinePlayer(targetPlayerId);
+		}
 
 		if (!PlayerConfig.hasPlayerConfig(targetPlayer)) {
 			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, sender);
@@ -1184,8 +1194,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}
 
 		resetPlayer(targetPlayer);
-		TranslationUtils.sendValueTranslation("Parkour.Reset", targetPlayerName, sender);
-		PluginUtils.logToFile(targetPlayerName + " player was reset by " + sender.getName());
+		TranslationUtils.sendValueTranslation("Parkour.Reset", targetPlayerId, sender);
+		PluginUtils.logToFile(targetPlayerId + " player was reset by " + sender.getName());
 	}
 
 	/**

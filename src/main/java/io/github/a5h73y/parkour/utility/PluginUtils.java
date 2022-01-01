@@ -4,10 +4,10 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_UNKNOWN_PLAYER;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.other.ParkourValidation;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.type.player.PlayerConfig;
+import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import org.apache.commons.io.IOUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -259,7 +260,13 @@ public class PluginUtils {
                 break;
 
             case "player":
-                OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(argument);
+                OfflinePlayer targetPlayer;
+
+                if (ValidationUtils.isUuidFormat(argument)) {
+                    targetPlayer = Bukkit.getOfflinePlayer(UUID.fromString(argument));
+                } else {
+                    targetPlayer = Bukkit.getOfflinePlayer(argument);
+                }
 
                 if (!PlayerConfig.hasPlayerConfig(targetPlayer)) {
                     TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, sender);

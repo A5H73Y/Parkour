@@ -53,6 +53,10 @@ public class EconomyApi extends PluginWrapper {
 		}
 	}
 
+	public boolean isEconomyLinked() {
+		return this.economy != null;
+	}
+
 	/**
 	 * Reward the Player with an amount.
 	 *
@@ -61,7 +65,7 @@ public class EconomyApi extends PluginWrapper {
 	 * @return transaction success
 	 */
 	public boolean rewardPlayer(Player player, double amount) {
-		return this.economy.depositPlayer(player, amount).transactionSuccess();
+		return isEconomyLinked() && this.economy.depositPlayer(player, amount).transactionSuccess();
 	}
 
 	/**
@@ -72,7 +76,7 @@ public class EconomyApi extends PluginWrapper {
 	 * @return transaction success
 	 */
 	public boolean chargePlayer(Player player, double amount) {
-		return this.economy.withdrawPlayer(player, amount).transactionSuccess();
+		return isEconomyLinked() && this.economy.withdrawPlayer(player, amount).transactionSuccess();
 	}
 
 	/**
@@ -83,7 +87,7 @@ public class EconomyApi extends PluginWrapper {
 	 * @return player has sufficient amount
 	 */
 	public boolean hasAmount(Player player, double amount) {
-		return this.economy.has(player, amount);
+		return isEconomyLinked() && this.economy.has(player, amount);
 	}
 
 	/**
@@ -92,7 +96,7 @@ public class EconomyApi extends PluginWrapper {
 	 * @return currency name
 	 */
 	public String getCurrencyName() {
-		return economy.currencyNamePlural() == null ? "" : " " + economy.currencyNamePlural();
+		return !isEconomyLinked() || economy.currencyNamePlural() == null ? "" : " " + economy.currencyNamePlural();
 	}
 
 	/**
@@ -103,7 +107,7 @@ public class EconomyApi extends PluginWrapper {
 	 * @param courseName course name
 	 */
 	public void giveEconomyPrize(Player player, String courseName) {
-		if (isEnabled()) {
+		if (isEconomyLinked()) {
 			double reward = CourseConfig.getConfig(courseName).getEconomyFinishReward();
 
 			if (reward > 0) {
@@ -142,7 +146,7 @@ public class EconomyApi extends PluginWrapper {
 	 */
 	public boolean validateAndChargeCourseJoin(Player player, String courseName) {
 		boolean allowed = true;
-		if (isEnabled()) {
+		if (isEconomyLinked()) {
 			double joinFee = CourseConfig.getConfig(courseName).getEconomyJoiningFee();
 
 			if (joinFee > 0) {
@@ -172,7 +176,7 @@ public class EconomyApi extends PluginWrapper {
 	 * @param args command arguments
 	 */
 	public void processCommand(CommandSender sender, String... args) {
-		if (!isEnabled()) {
+		if (!isEconomyLinked()) {
 			TranslationUtils.sendValueTranslation("Error.PluginNotLinked", getPluginName(), sender);
 			return;
 		}

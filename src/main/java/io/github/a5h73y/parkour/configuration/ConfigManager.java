@@ -5,6 +5,7 @@ import io.github.a5h73y.parkour.configuration.impl.StringsConfig;
 import io.github.a5h73y.parkour.configuration.serializable.CourseSerializable;
 import io.github.a5h73y.parkour.configuration.serializable.ItemStackSerializable;
 import io.github.a5h73y.parkour.configuration.serializable.LocationSerializable;
+import io.github.a5h73y.parkour.configuration.serializable.ParkourSessionSerializable;
 import io.github.a5h73y.parkour.type.course.autostart.AutoStartConfig;
 import io.github.a5h73y.parkour.type.kit.ParkourKitConfig;
 import io.github.a5h73y.parkour.type.lobby.LobbyConfig;
@@ -38,7 +39,7 @@ public class ConfigManager {
 
 	// directories
 	private final File playersDir;
-	private final File sessionsDir;
+	private final File parkourSessionsDir;
 	private final File coursesDir;
 	private final File otherDir;
 
@@ -51,7 +52,7 @@ public class ConfigManager {
 	public ConfigManager(File dataFolder) {
 		this.dataFolder = dataFolder;
 		playersDir = new File(dataFolder, "players");
-		sessionsDir = new File(dataFolder, "sessions");
+		parkourSessionsDir = new File(dataFolder, "sessions");
 		coursesDir = new File(dataFolder, "courses");
 		otherDir = new File(dataFolder, "other");
 		createParkourFolders();
@@ -70,6 +71,7 @@ public class ConfigManager {
 		LightningSerializer.registerSerializable(new ItemStackSerializable());
 		LightningSerializer.registerSerializable(new LocationSerializable());
 		LightningSerializer.registerSerializable(new CourseSerializable());
+		LightningSerializer.registerSerializable(new ParkourSessionSerializable());
 	}
 
 	/**
@@ -117,8 +119,8 @@ public class ConfigManager {
 		return playersDir;
 	}
 
-	public File getSessionsDir() {
-		return sessionsDir;
+	public File getParkourSessionsDir() {
+		return parkourSessionsDir;
 	}
 
 	public File getCoursesDir() {
@@ -130,7 +132,7 @@ public class ConfigManager {
 	}
 
 	private void createParkourFolders() {
-		File[] parkourFolders = {dataFolder, playersDir, sessionsDir, coursesDir, otherDir};
+		File[] parkourFolders = {dataFolder, playersDir, parkourSessionsDir, coursesDir, otherDir};
 
 		for (File folder : parkourFolders) {
 			if (!folder.exists() && folder.mkdirs()) {

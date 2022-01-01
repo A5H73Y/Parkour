@@ -9,24 +9,13 @@ import io.github.a5h73y.parkour.type.Initializable;
 import io.github.a5h73y.parkour.type.Teardownable;
 import io.github.a5h73y.parkour.type.course.Course;
 import io.github.a5h73y.parkour.type.player.PlayerConfig;
-import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.WeakHashMap;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.HumanEntity;
@@ -172,7 +161,7 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Tea
 	public void teardown() {
 		for (UUID uuid : parkourPlayers.keySet()) {
 			Player player = Bukkit.getPlayer(uuid);
-			stashParkourSession(player, false);
+			saveParkourSession(player, false);
 		}
 		parkourPlayers.clear();
 	}
@@ -184,97 +173,17 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Tea
 	 *
 	 * @param player player
 	 */
-	public void stashParkourSession(Player player, boolean removePlaying) {
+	public void saveParkourSession(Player player, boolean removePlaying) {
 		ParkourSession session = getParkourSession(player);
+
 		if (session != null && !session.getCourseName().equals(TEST_MODE)) {
 			session.markTimeAccumulated();
 			PlayerConfig.getConfig(player).setExistingSessionCourseName(session.getCourseName());
+			ParkourSessionConfig.getConfig(player, session.getCourseName()).saveParkourSession(session);
 		}
-		createParkourSessionFile(player);
+
 		if (removePlaying) {
 			removePlayer(player);
-		}
-	}
-
-	/**
-	 * Read the ParkourSession from the Player's UUID.
-	 * Find the matching file and deserialize the data.
-	 *
-	 * @param player player
-	 * @return ParkourSession file
-	 */
-	private ParkourSession readParkourSession(Player player, String courseName) {
-		ParkourSession session = null;
-		File sessionFile = PlayerConfig.getPlayerSessionFile(player, courseName);
-
-		if (sessionFile.exists()) {
-			try (
-					FileInputStream fout = new FileInputStream(sessionFile);
-					ObjectInputStream oos = new ObjectInputStream(fout)
-			) {
-				session = (ParkourSession) oos.readObject();
-			} catch (IOException | ClassNotFoundException e) {
-				PluginUtils.log("Player's session couldn't be loaded: " + e.getMessage(), 2);
-				e.printStackTrace();
-			}
-		}
-		return session;
-	}
-
-	/**
-	 * Generate path for Player's Session file.
-	 *
-	 * @param player player
-	 * @return session path
-	 */
-	@Nullable
-	public File generatePlayerSessionPath(Player player, ParkourSession session) {
-		File playerPath = null;
-
-		if (session != null) {
-			playerPath = PlayerConfig.getPlayerSessionFile(player, session.getCourseName());
-		}
-
-		return playerPath;
-	}
-
-	/**
-	 * Validate if their session is still valid.
-	 * Try to get their existing session and check the name matches.
-	 *
-	 * @param player player
-	 * @param course course
-	 * @return player can load ParkourSession
-	 */
-	public boolean hasValidParkourSessionFile(Player player, Course course) {
-		ParkourSession session = readParkourSession(player, course.getName());
-		return session != null && session.getCourseName().equals(course.getName());
-	}
-
-	private void createParkourSessionFile(Player player) {
-		ParkourSession session = getParkourSession(player);
-		File sessionFile = generatePlayerSessionPath(player, session);
-
-		if (sessionFile != null) {
-			if (!sessionFile.exists()) {
-				try {
-					sessionFile.getParentFile().mkdirs();
-					sessionFile.createNewFile();
-				} catch (IOException e) {
-					PluginUtils.log("Player's session couldn't be created: " + e.getMessage(), 2);
-					e.printStackTrace();
-				}
-			}
-
-			try (
-					FileOutputStream fout = new FileOutputStream(sessionFile);
-					ObjectOutputStream oos = new ObjectOutputStream(fout)
-			) {
-				oos.writeObject(session);
-			} catch (IOException e) {
-				PluginUtils.log("Player's session couldn't be saved: " + e.getMessage(), 2);
-				e.printStackTrace();
-			}
 		}
 	}
 
@@ -286,14 +195,18 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Tea
 	 * @return loaded ParkourSession
 	 */
 	public ParkourSession loadParkourSession(Player player, String courseName) {
-		ParkourSession session = readParkourSession(player, courseName);
+		ParkourSession result = null;
 
-		if (session != null) {
-			if (parkour.getCourseManager().doesCourseExist(session.getCourseName())) {
-				session.setCourse(parkour.getCourseManager().findCourse(session.getCourseName()));
+		if (ParkourSessionConfig.hasParkourSessionConfig(player, courseName)) {
+			ParkourSessionConfig config = ParkourSessionConfig.getConfig(player, courseName);
+			ParkourSession session = config.getParkourSession();
+
+			// course is populated by deserializing
+			if (session != null && session.getCourse() != null) {
 				session.recalculateTime();
 				session.setStartTimer(true);
 				addPlayer(player, session);
+				result = session;
 
 			} else {
 				TranslationUtils.sendTranslation("Error.InvalidSession", player);
@@ -302,7 +215,7 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Tea
 			}
 		}
 
-		return session;
+		return result;
 	}
 
 	/**
@@ -311,38 +224,7 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Tea
 	 * @param player player
 	 */
 	public void deleteParkourSession(OfflinePlayer player, String courseName) {
-		File sessionFile = PlayerConfig.getPlayerSessionFile(player, courseName);
-
-		if (sessionFile.exists()) {
-			try {
-				sessionFile.delete();
-			} catch (SecurityException e) {
-				PluginUtils.log("Player's session couldn't be deleted: " + e.getMessage(), 2);
-				e.printStackTrace();
-			}
-		}
-	}
-
-	/**
-	 * Delete all Parkour Sessions for Player.
-	 * Individually removes all files from within the folder, then the folder itself.
-	 *
-	 * @param player player
-	 */
-	public void deleteParkourSessions(OfflinePlayer player) {
-		File playersFolder = new File(parkour.getConfigManager().getSessionsDir()  + File.separator + player.getUniqueId());
-		if (Files.notExists(playersFolder.toPath())) {
-			return;
-		}
-
-		try (Stream<Path> paths = Files.walk(playersFolder.toPath())) {
-			paths.sorted(Comparator.reverseOrder())
-					.map(Path::toFile)
-					.forEach(File::delete);
-		} catch (SecurityException | IOException e) {
-			PluginUtils.log("Player's session couldn't be deleted: " + e.getMessage(), 2);
-			e.printStackTrace();
-		}
+		ParkourSessionConfig.deleteParkourSessionFile(player, courseName);
 	}
 
 	private boolean isTestModeSession(@NotNull ParkourSession session) {
@@ -384,5 +266,13 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Tea
 			String currentCourse = getParkourSession(onlinePlayer).getCourse().getName();
 			TranslationUtils.sendValueTranslation("Parkour.Continue", currentCourse, onlinePlayer);
 		}
+	}
+
+	public void deleteParkourSessions(OfflinePlayer targetPlayer) {
+		ParkourSessionConfig.deleteParkourSessions(targetPlayer);
+	}
+
+	public boolean hasValidParkourSessionFile(Player player, Course course) {
+		return ParkourSessionConfig.hasParkourSessionConfig(player, course.getName());
 	}
 }

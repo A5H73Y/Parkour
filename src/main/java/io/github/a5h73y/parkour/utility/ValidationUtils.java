@@ -71,6 +71,10 @@ public class ValidationUtils {
 		return isDouble(input) && Double.parseDouble(input) >= 0;
 	}
 
+	public static boolean isUuidFormat(String input) {
+		return input != null && input.split("-").length == 5;
+	}
+
 	/**
 	 * Validate the length of the arguments before allowing it to be processed further.
 	 *

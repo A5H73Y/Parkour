@@ -465,7 +465,8 @@ public class ChallengeManager extends AbstractPluginReceiver {
             return;
         }
 
-        Double wagerValue = ValidationUtils.isPositiveDouble(wager) ? Double.parseDouble(wager) : null;
+        Double wagerValue = parkour.getEconomyApi().isEconomyLinked()
+                && ValidationUtils.isPositiveDouble(wager) ? Double.parseDouble(wager) : null;
         createChallenge(player, courseName, wagerValue);
 
         String translation = TranslationUtils.getValueTranslation("Parkour.Challenge.Created", courseName);

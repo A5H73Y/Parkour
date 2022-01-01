@@ -22,11 +22,6 @@ public class PlayerConfig extends Json {
         super(playerFile);
     }
 
-    public static File getPlayerSessionFile(OfflinePlayer player, String courseName) {
-        return new File(Parkour.getInstance().getConfigManager().getSessionsDir()
-                + File.separator + Parkour.getDefaultConfig().getPlayerConfigName(player), courseName);
-    }
-
     public static boolean hasPlayerConfig(OfflinePlayer player) {
         return getPlayerJsonFile(player).exists();
     }
