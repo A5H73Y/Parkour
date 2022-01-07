@@ -4,6 +4,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
@@ -47,6 +48,25 @@ public class BlockListener extends AbstractPluginReceiver implements Listener {
         }
 
         handleBlockPlaceBreakEvent((Player) event.getRemover(), event);
+    }
+
+    /**
+     * On pressure plate break event.
+     * @param event block break event
+     */
+    @EventHandler
+    public void onPlateBreak(BlockBreakEvent event) {
+        if (event.getBlock().getType().name().endsWith("PRESSURE_PLATE")
+                && parkour.getAutoStartManager().doesAutoStartExist(event.getBlock().getLocation())) {
+            if (!PermissionUtils.hasPermission(event.getPlayer(), Permission.ADMIN_DELETE)) {
+                event.setCancelled(true);
+
+            } else {
+                Location location = event.getBlock().getLocation();
+                String coordinates = parkour.getAutoStartManager().getAutoStartCoordinates(location.getBlock());
+                parkour.getAutoStartManager().deleteAutoStart(event.getPlayer(), coordinates);
+            }
+        }
     }
 
     private void handleBlockPlaceBreakEvent(Player player, Cancellable event) {

@@ -15,6 +15,7 @@ import io.github.a5h73y.parkour.listener.PlayerInteractListener;
 import io.github.a5h73y.parkour.listener.PlayerListener;
 import io.github.a5h73y.parkour.listener.PlayerMoveListener;
 import io.github.a5h73y.parkour.listener.SignListener;
+import io.github.a5h73y.parkour.listener.interact.AutoStartListener;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.ParkourUpdater;
 import io.github.a5h73y.parkour.other.PluginBackupUtil;
@@ -57,6 +58,7 @@ import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Parkour extends JavaPlugin {
@@ -238,12 +240,17 @@ public class Parkour extends JavaPlugin {
     }
 
     private void registerEvents() {
-        getServer().getPluginManager().registerEvents(new BlockListener(this), this);
-        getServer().getPluginManager().registerEvents(new ChatListener(this), this);
-        getServer().getPluginManager().registerEvents(new PlayerInteractListener(this), this);
-        getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
-        getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
-        getServer().getPluginManager().registerEvents(new SignListener(this), this);
+        PluginManager pluginManager = getServer().getPluginManager();
+        pluginManager.registerEvents(new BlockListener(this), this);
+        pluginManager.registerEvents(new ChatListener(this), this);
+        pluginManager.registerEvents(new PlayerInteractListener(this), this);
+        pluginManager.registerEvents(new PlayerListener(this), this);
+        pluginManager.registerEvents(new PlayerMoveListener(this), this);
+        pluginManager.registerEvents(new SignListener(this), this);
+
+        if (getDefaultConfig().getBoolean("AutoStart.Enabled")) {
+            pluginManager.registerEvents(new AutoStartListener(this), this);
+        }
     }
 
     /**
@@ -270,8 +277,10 @@ public class Parkour extends JavaPlugin {
     private void upgradeParkour() {
         // easier to create the new config system, then update them.
         registerEssentialManagers();
-        if (new ParkourUpgrader(this).beginUpgrade()) {
+        ParkourUpgrader upgrader = new ParkourUpgrader(this);
+        if (upgrader.beginUpgrade()) {
             onEnable();
+            upgrader.upgradeParkourSessions();
         }
     }
 

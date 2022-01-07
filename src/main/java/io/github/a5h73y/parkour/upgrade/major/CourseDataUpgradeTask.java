@@ -56,7 +56,6 @@ public class CourseDataUpgradeTask extends TimedConfigUpgradeTask {
 		}
 
 		updateAutoStartSection();
-
 		return success;
 	}
 

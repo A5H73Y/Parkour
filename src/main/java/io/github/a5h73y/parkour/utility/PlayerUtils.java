@@ -219,7 +219,7 @@ public class PlayerUtils {
 	}
 
 	public static String findPlayerName(String uuid) {
-		OfflinePlayer player = Bukkit.getPlayer(UUID.fromString(padPlayerUuid(uuid)));
-		return player != null ? player.getName() : "Unknown Player";
+		OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(padPlayerUuid(uuid)));
+		return player.getName() != null ? player.getName() : "Unknown Player";
 	}
 }

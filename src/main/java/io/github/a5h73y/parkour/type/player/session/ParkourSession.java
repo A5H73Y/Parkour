@@ -29,6 +29,7 @@ public class ParkourSession implements ParkourSerializable {
 
     private transient Course course;
 
+    private String courseName;
     private int deaths;
     private int currentCheckpoint;
     private int secondsAccumulated;
@@ -46,7 +47,7 @@ public class ParkourSession implements ParkourSerializable {
      * @param course {@link Course}
      */
     public ParkourSession(Course course) {
-        this.course = course;
+        setCourse(course);
         resetTime();
     }
 
@@ -57,7 +58,7 @@ public class ParkourSession implements ParkourSerializable {
                           long timeStarted,
                           long timeAccumulated,
                           Location freedomLocation) {
-        this.course = course;
+        setCourse(course);
         this.deaths = deaths;
         this.currentCheckpoint = currentCheckpoint;
         this.secondsAccumulated = secondsAccumulated;
@@ -207,14 +208,17 @@ public class ParkourSession implements ParkourSerializable {
      */
     public void setCourse(Course course) {
         this.course = course;
+        this.courseName = course.getName();
     }
 
     /**
      * Get name of the Course.
      * @return course name
+     * @deprecated a fallback for deserializing old objects during conversion.
      */
+    @Deprecated
     public String getCourseName() {
-        return course.getName();
+        return courseName;
     }
 
     public Location getFreedomLocation() {

@@ -19,6 +19,8 @@ import pro.husk.Database;
 
 public class ParkourUpgrader extends AbstractPluginReceiver {
 
+	private PlayerDataUpgradeTask playerDataUpgradeTask;
+
 	private final File defaultFile;
 	private final File playerFile;
 	private final File inventoryFile;
@@ -103,7 +105,9 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 	}
 
 	private boolean performFullUpgrade() {
-		if (!new PlayerDataUpgradeTask(this).start()) {
+		playerDataUpgradeTask = new PlayerDataUpgradeTask(this);
+
+		if (!playerDataUpgradeTask.start()) {
 			return false;
 		}
 
@@ -135,6 +139,16 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 		getDefaultConfig().set("Lobby", null);
 
 		return true;
+	}
+
+	/**
+	 * Upgrade Player ParkourSessions.
+	 * Reason it has to be done after plugin start up so all managers are registered.
+	 */
+	public void upgradeParkourSessions() {
+		if (playerDataUpgradeTask != null) {
+			playerDataUpgradeTask.updateParkourSessions();
+		}
 	}
 
 	public FileConfiguration getDefaultConfig() {

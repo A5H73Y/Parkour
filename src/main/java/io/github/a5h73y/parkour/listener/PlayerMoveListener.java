@@ -2,16 +2,18 @@ package io.github.a5h73y.parkour.listener;
 
 import com.cryptomorin.xseries.XBlock;
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.player.ParkourMode;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.kit.ParkourKit;
 import io.github.a5h73y.parkour.type.kit.ParkourKitAction;
+import io.github.a5h73y.parkour.type.player.ParkourMode;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -60,6 +62,12 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
             return;
         }
 
+        ParkourKit kit = session.getCourse().getParkourKit();
+
+        if (kit == null) {
+            return;
+        }
+
         if (parkour.getParkourConfig().isAttemptLessChecks()
                 && MaterialUtils.sameBlockLocations(event.getFrom(), event.getTo())) {
             return;
@@ -73,9 +81,9 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
             belowMaterial = player.getLocation().getBlock().getType();
         }
 
-        ParkourKit kit = session.getCourse().getParkourKit();
-        if (kit == null) {
-            return;
+        // they are clearly hovering and another block is holding them up
+        if (player.isOnGround() && XBlock.isAir(belowMaterial)) {
+            belowMaterial = calculateClosestBlock(player);
         }
 
         if (belowMaterial.equals(Material.SPONGE)) {
@@ -160,5 +168,16 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
                 }
             }
         }
+    }
+
+    private Material calculateClosestBlock(Player player) {
+        Block blockBelow = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
+        BlockFace result = BLOCK_FACES.stream()
+                .filter(blockFace -> !XBlock.isAir(blockBelow.getRelative(blockFace).getType()))
+                .min(Comparator.comparing(blockFace ->
+                        blockBelow.getRelative(blockFace).getLocation().distance(player.getLocation())))
+                .orElse(BlockFace.NORTH);
+
+        return blockBelow.getRelative(result).getType();
     }
 }

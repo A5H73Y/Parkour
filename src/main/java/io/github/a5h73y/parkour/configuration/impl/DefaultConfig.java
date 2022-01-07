@@ -406,10 +406,6 @@ public class DefaultConfig extends Yaml {
 		return this.getBoolean("OnJoin.TreatFirstCheckpointAsStart");
 	}
 
-	public boolean isAutoStartEnabled() {
-		return this.getBoolean("AutoStart.Enabled");
-	}
-
 	public boolean isTeleportToJoinLocation() {
 		return this.getBoolean("OnFinish.TeleportToJoinLocation");
 	}

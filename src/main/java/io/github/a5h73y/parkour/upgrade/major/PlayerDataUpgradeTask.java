@@ -1,12 +1,27 @@
 package io.github.a5h73y.parkour.upgrade.major;
 
 import io.github.a5h73y.parkour.configuration.serializable.ItemStackSerializable;
+import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.type.player.PlayerConfig;
+import io.github.a5h73y.parkour.type.player.session.ParkourSession;
+import io.github.a5h73y.parkour.type.player.session.ParkourSessionConfig;
 import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
 import io.github.a5h73y.parkour.upgrade.TimedConfigUpgradeTask;
+import io.github.a5h73y.parkour.utility.PluginUtils;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Stream;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,6 +30,8 @@ import org.bukkit.inventory.ItemStack;
 public class PlayerDataUpgradeTask extends TimedConfigUpgradeTask {
 
 	ItemStackSerializable itemStackSerializable = new ItemStackSerializable();
+
+	private final Set<OfflinePlayer> upgradedPlayers = new HashSet<>();
 
 	public PlayerDataUpgradeTask(ParkourUpgrader parkourUpgrader) {
 		super(parkourUpgrader, parkourUpgrader.getPlayerConfig());
@@ -31,6 +48,7 @@ public class PlayerDataUpgradeTask extends TimedConfigUpgradeTask {
 		// every player uuid
 		Set<String> playerIds = getConfig().getKeys(false);
 
+		// upgrade and remove ranks from the config
 		upgradeParkourRanks();
 
 		getParkourUpgrader().getLogger().info("Converting " + playerIds.size() + " players.");
@@ -61,12 +79,58 @@ public class PlayerDataUpgradeTask extends TimedConfigUpgradeTask {
 
 				updateInventorySection(newPlayerConfig, playerId);
 				updateCompletedCoursesSection(newPlayerConfig, player);
+				// valid and upgraded players - will be used to update their parkour session later
+				upgradedPlayers.add(player);
 			}
 
 			count++;
 		}
 
 		return success;
+	}
+
+	public void updateParkourSessions() {
+		for (OfflinePlayer player : upgradedPlayers) {
+			File playerSessionsPath = new File(getParkourUpgrader().getNewConfigManager().getParkourSessionsDir(),
+					player.getUniqueId().toString());
+
+			try (Stream<Path> paths = Files.walk(Paths.get(playerSessionsPath.toURI()), 1)) {
+				paths.filter(Files::isRegularFile)
+						.filter(path -> !path.getFileName().toString().toLowerCase().contains("."))
+						.forEach(path -> {
+							ParkourSession session = loadParkourSession(path.toFile());
+
+							// it's a valid session, which hasn't got an upgraded file
+							// also the Course exists
+							if (session != null && session.getCourseName() != null
+									&& !ParkourSessionConfig.hasParkourSessionConfig(player, session.getCourseName())
+									&& CourseConfig.hasCourseConfig(session.getCourseName())) {
+								// deserialize Course from config
+								CourseConfig config = CourseConfig.getConfig(session.getCourseName());
+								session.setCourse(config.getCourse());
+								ParkourSessionConfig.getConfig(player, session.getCourseName()).saveParkourSession(session);
+							}
+							path.toFile().delete();
+						});
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private ParkourSession loadParkourSession(File sessionFile) {
+		ParkourSession session = null;
+		try (
+				FileInputStream fout = new FileInputStream(sessionFile);
+				RelocateSessionObjectInputStream oos = new RelocateSessionObjectInputStream(fout)
+		) {
+			session = (ParkourSession) oos.readObject();
+		} catch (IOException | ClassNotFoundException e) {
+			PluginUtils.log("Player's Session couldn't be loaded: " + e.getMessage(), 2);
+			e.printStackTrace();
+		}
+
+		return session;
 	}
 
 	private void updateCompletedCoursesSection(PlayerConfig newPlayerConfig, OfflinePlayer player) {
@@ -121,5 +185,26 @@ public class PlayerDataUpgradeTask extends TimedConfigUpgradeTask {
 	private ItemStack[] getItemStackContents(ConfigurationSection configSection, String configEntry) {
 		List<ItemStack> contents = (List<ItemStack>) configSection.getList(configEntry);
 		return contents != null ? contents.toArray(new ItemStack[0]) : null;
+	}
+
+	/**
+	 * Package for ParkourSession has changed, need to fix it first.
+	 */
+	private class RelocateSessionObjectInputStream extends ObjectInputStream {
+
+		public RelocateSessionObjectInputStream(InputStream in) throws IOException {
+			super(in);
+		}
+
+		@Override
+		protected ObjectStreamClass readClassDescriptor() throws IOException, ClassNotFoundException {
+			ObjectStreamClass resultClassDescriptor = super.readClassDescriptor();
+
+			if (resultClassDescriptor.getName().equals("io.github.a5h73y.parkour.type.player.ParkourSession")) {
+				resultClassDescriptor = ObjectStreamClass.lookup(ParkourSession.class);
+			}
+
+			return resultClassDescriptor;
+		}
 	}
 }
