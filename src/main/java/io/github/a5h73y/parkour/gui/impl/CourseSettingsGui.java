@@ -11,10 +11,10 @@ import io.github.a5h73y.parkour.conversation.SetCourseConversation;
 import io.github.a5h73y.parkour.conversation.other.SingleQuestionConversation;
 import io.github.a5h73y.parkour.gui.AbstractMenu;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
-import io.github.a5h73y.parkour.type.course.CourseManager;
-import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
+import io.github.a5h73y.parkour.type.course.CourseSettingsManager;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
 import java.util.function.Consumer;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -46,7 +46,7 @@ public class CourseSettingsGui implements AbstractMenu {
 
 	@Override
 	public void addContent(InventoryGui parent, Player player) {
-		CourseManager courseManager = Parkour.getInstance().getCourseManager();
+		CourseSettingsManager courseSettingsManager = Parkour.getInstance().getCourseSettingsManager();
 		CourseConfig courseConfig = CourseConfig.getConfig(courseName);
 
 		// toggleable
@@ -62,34 +62,34 @@ public class CourseSettingsGui implements AbstractMenu {
 		// input required
 		parent.addElement(createTextInput('q', player, "Creator",
 				courseConfig.getCreator(),
-				input -> SetCourseConversation.performAction(player, courseName, "creator", input)));
+				input -> courseSettingsManager.setCreator(player, courseName, input)));
 		parent.addElement(createTextInput('w', player, "Minimum Parkour Level",
 				courseConfig.getMinimumParkourLevel(),
-				input -> SetCourseConversation.performAction(player, courseName, "minlevel", input)));
+				input -> courseSettingsManager.setMinimumParkourLevel(player, courseName, input)));
 		parent.addElement(createTextInput('e', player, "Maximum Deaths",
 				courseConfig.getMaximumDeaths(),
-				input -> SetCourseConversation.performAction(player, courseName, "maxdeath", input)));
+				input -> courseSettingsManager.setMaxDeaths(player, courseName, input)));
 		parent.addElement(createTextInput('r', player, "Maximum Time",
 				DateTimeUtils.convertSecondsToTime(courseConfig.getMaximumTime()),
-				input -> SetCourseConversation.performAction(player, courseName, "maxtime", input)));
+				input -> courseSettingsManager.setMaxTime(player, courseName, input)));
 		parent.addElement(createTextInput('t', player, "Player Limit",
 				courseConfig.getPlayerLimit(),
-				input -> courseManager.setPlayerLimit(player, courseName, input)));
+				input -> courseSettingsManager.setPlayerLimit(player, courseName, input)));
 		parent.addElement(createTextInput('y', player, "ParkourKit",
 				courseConfig.getParkourKit(),
-				input -> courseManager.setParkourKit(player, courseName, input)));
+				input -> courseSettingsManager.setParkourKit(player, courseName, input)));
 		parent.addElement(createTextInput('u', player, "Reward Parkour Level",
 				courseConfig.getRewardParkourLevel(),
-				input -> courseManager.setRewardParkourLevel(player, courseName, input)));
+				input -> courseSettingsManager.setRewardParkourLevel(player, courseName, input)));
 		parent.addElement(createTextInput('i', player, "Reward Parkour Level Increase",
 				courseConfig.getRewardParkourLevelIncrease(),
-				input -> courseManager.setRewardParkourLevelIncrease(player, courseName, input)));
+				input -> courseSettingsManager.setRewardParkourLevelIncrease(player, courseName, input)));
 		parent.addElement(createTextInput('o', player, "Reward Delay", DateTimeUtils.convertMillisecondsToDateTime(
 						DateTimeUtils.convertHoursToMilliseconds(courseConfig.getRewardDelay())),
-				input -> courseManager.setRewardDelay(player, courseName, input)));
+				input -> courseSettingsManager.setRewardDelay(player, courseName, input)));
 		parent.addElement(createTextInput('a', player, "Display Name",
 				StringUtils.colour(courseConfig.getCourseDisplayName()),
-				input -> courseManager.setDisplayName(player, courseName, input)));
+				input -> courseSettingsManager.setDisplayName(player, courseName, input)));
 
 		// start conversation
 		parent.addElement(createConversationStarter('s', "Prize", courseName,

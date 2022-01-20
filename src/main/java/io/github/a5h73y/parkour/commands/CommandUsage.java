@@ -2,6 +2,7 @@ package io.github.a5h73y.parkour.commands;
 
 import static io.github.a5h73y.parkour.utility.permission.PermissionUtils.WILDCARD;
 
+import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
@@ -54,13 +55,24 @@ public class CommandUsage {
 	/**
 	 * Display Command Usage.
 	 * Formats the information to display command syntax and brief command title.
-	 * @param sender requesting sender
+	 * @param commandSender requesting sender
 	 */
-	public void displayCommandUsage(CommandSender sender) {
-		sender.sendMessage(TranslationUtils.getTranslation("Help.CommandUsage", false)
+	public void displayCommandUsage(CommandSender commandSender) {
+		commandSender.sendMessage(TranslationUtils.getTranslation("Help.CommandUsage", false)
 				.replace("%COMMAND%", command)
 				.replace("%ARGUMENTS%", arguments != null ? SPACE + arguments : "")
 				.replace("%TITLE%", title));
+	}
+
+	/**
+	 * Display invalid syntax error.
+	 *
+	 * @param sender target command sender
+	 */
+	public void sendInvalidSyntax(CommandSender sender) {
+		sender.sendMessage(TranslationUtils.getTranslation("Error.Syntax")
+				.replace("%COMMAND%", getCommand())
+				.replace("%ARGUMENTS%", getArguments()));
 	}
 
 	public String[] getAutoTabArraySelection(String input) {

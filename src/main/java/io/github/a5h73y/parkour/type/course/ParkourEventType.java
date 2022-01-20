@@ -28,7 +28,7 @@ public enum ParkourEventType {
 
 	@NotNull
 	public String getDisplayName() {
-		return this.name().toLowerCase();
+		return this.name().toLowerCase().replace("_", " ");
 	}
 
 	/**

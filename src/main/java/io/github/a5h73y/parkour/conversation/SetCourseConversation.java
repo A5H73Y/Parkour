@@ -24,14 +24,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class SetCourseConversation extends ParkourConversation {
 
-    public static final List<String> SET_COURSE_OPTIONS = Collections.unmodifiableList(
-            Arrays.asList("displayname", "creator", "minlevel", "maxdeath", "maxtime", "maxfallticks", "command", "message"));
-
     public static final List<String> PARKOUR_EVENT_TYPE_NAMES =
             Stream.of(ParkourEventType.values()).map(ParkourEventType::getDisplayName).collect(Collectors.toList());
 
-    public SetCourseConversation(Player player) {
-        super(player);
+    public SetCourseConversation(Conversable conversable) {
+        super(conversable);
     }
 
     @NotNull
@@ -43,7 +40,7 @@ public class SetCourseConversation extends ParkourConversation {
     private static class ChooseSetCourseOption extends FixedSetPrompt {
 
         ChooseSetCourseOption() {
-            super(SET_COURSE_OPTIONS.toArray(new String[0]));
+            super(Parkour.getInstance().getCourseSettingsManager().getCourseSettingActions().toArray(new String[0]));
         }
 
         @NotNull
@@ -84,12 +81,14 @@ public class SetCourseConversation extends ParkourConversation {
                 return null;
             }
 
-            String playerName = (String) context.getSessionData(SESSION_PLAYER_NAME);
             String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);
             String setOption = (String) context.getSessionData("setOption");
-            Player player = Bukkit.getPlayer(playerName);
 
-            performAction(player, courseName, setOption, input);
+            Parkour parkour = Parkour.getInstance();
+            Bukkit.getScheduler().runTaskAsynchronously(parkour, () -> {
+                // for messages to be sent - do it async
+                parkour.getCourseSettingsManager().performAction((CommandSender) context.getForWhom(), courseName, setOption, input);
+            });
 
             return Prompt.END_OF_CONVERSATION;
         }
@@ -146,7 +145,7 @@ public class SetCourseConversation extends ParkourConversation {
             ParkourEventType type = ParkourEventType.valueOf(context.getSessionData("setCommandOption").toString().toUpperCase());
             CourseConfig.getConfig(courseName).addEventCommand(type, input);
             context.getForWhom().sendRawMessage(TranslationUtils.getPropertySet(
-                    type.getConfigEntry() + " command", courseName, "/" + input));
+                    type.getDisplayName() + " command", courseName, "/" + input));
             return Prompt.END_OF_CONVERSATION;
         }
     }
@@ -198,53 +197,10 @@ public class SetCourseConversation extends ParkourConversation {
                                   @Nullable String input) {
 
             String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);
-            String messageValue = (String) context.getSessionData("setMessageOption");
-            CourseConfig.getConfig(courseName).setEventMessage(messageValue, input);
-            context.getForWhom().sendRawMessage(TranslationUtils.getPropertySet(messageValue + " message", courseName, input));
+            ParkourEventType type = ParkourEventType.valueOf(context.getSessionData("setMessageOption").toString().toUpperCase());
+            CourseConfig.getConfig(courseName).setEventMessage(type, input);
+            context.getForWhom().sendRawMessage(TranslationUtils.getPropertySet(type.getDisplayName() + " message", courseName, input));
             return Prompt.END_OF_CONVERSATION;
         }
-    }
-
-    /**
-     * Perform Set Course Command.
-     *
-     * @param sender command sender
-     * @param courseName course name
-     * @param setOption option to set
-     * @param input input value
-     */
-    public static void performAction(CommandSender sender, String courseName, String setOption, String input) {
-        Parkour parkour = Parkour.getInstance();
-        Bukkit.getScheduler().runTaskAsynchronously(parkour, () -> {
-            switch (setOption) {
-                case "creator":
-                    parkour.getCourseManager().setCreator(sender, courseName, input);
-                    break;
-
-                case "minlevel":
-                    parkour.getCourseManager().setMinimumParkourLevel(sender, courseName, input);
-                    break;
-
-                case "maxdeath":
-                    parkour.getCourseManager().setMaxDeaths(sender, courseName, input);
-                    break;
-
-                case "maxtime":
-                    parkour.getCourseManager().setMaxTime(sender, courseName, input);
-                    break;
-
-                case "maxfallticks":
-                    parkour.getCourseManager().setMaxFallTicks(sender, courseName, input);
-                    break;
-
-                case "displayname":
-                    parkour.getCourseManager().setDisplayName(sender, courseName, input);
-                    break;
-
-                default:
-                    TranslationUtils.sendInvalidSyntax(sender, "setcourse",
-                            "(courseName) [displayname, creator, minlevel, maxdeath, maxtime] [value]");
-            }
-        });
     }
 }

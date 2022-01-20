@@ -7,6 +7,7 @@ import io.github.a5h73y.parkour.other.ParkourConstants;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.kit.ParkourKit;
 import io.github.a5h73y.parkour.type.player.ParkourMode;
+import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -70,7 +71,7 @@ public class Course implements Serializable {
      * @return course display name
      */
     public String getDisplayName() {
-        return displayName;
+        return StringUtils.colour(displayName);
     }
 
     /**

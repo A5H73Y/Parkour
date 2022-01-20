@@ -48,6 +48,7 @@ public class CourseConfig extends Json {
     private static final String MAX_TIME = "MaxTime";
     private static final String MAX_FALL_TICKS = "MaxFallTicks";
     private static final String READY = "Ready";
+    private static final String MANUAL_CHECKPOINTS = "ManualCheckpoints";
 
     private String courseName;
 
@@ -56,7 +57,7 @@ public class CourseConfig extends Json {
         this.courseName = courseName;
     }
 
-    private static File getCourseConfigFile(String courseName) {
+    public static File getCourseConfigFile(String courseName) {
         return new File(Parkour.getInstance().getConfigManager().getCoursesDir(),
                 courseName.toLowerCase() + "." + FileType.JSON.getExtension());
     }
@@ -841,29 +842,19 @@ public class CourseConfig extends Json {
         this.set("EconomyJoiningFee", joinFee);
     }
 
-    public boolean hasEventMessage(@NotNull String typeName) {
-        return this.contains(StringUtils.standardizeText(typeName) + "Message");
+    public boolean hasEventMessage(@NotNull ParkourEventType type) {
+        return this.contains(type.getConfigEntry() + "Message");
     }
 
     /**
      * Get the Event Message for this Course.
      * Possible events found within {@link ParkourEventType}.
-     * @param typeName event type name
-     * @return matching event message
-     */
-    @Nullable
-    public String getEventMessage(@NotNull String typeName) {
-        return this.get(StringUtils.standardizeText(typeName) + "Message", null);
-    }
-
-    /**
-     * Get the Event Message for this Course.
-     * @param type event type
+     * @param type event type name
      * @return matching event message
      */
     @Nullable
     public String getEventMessage(@NotNull ParkourEventType type) {
-        return getEventMessage(type.name());
+        return this.get(type.getConfigEntry() + "Message", null);
     }
 
     /**
@@ -872,8 +863,8 @@ public class CourseConfig extends Json {
      * @param type event type name
      * @param value message value
      */
-    public void setEventMessage(@NotNull String type, @Nullable String value) {
-        this.set(StringUtils.standardizeText(type) + "Message", value);
+    public void setEventMessage(@NotNull ParkourEventType type, @Nullable String value) {
+        this.set(type.getConfigEntry() + "Message", value);
     }
 
     /**
@@ -921,6 +912,26 @@ public class CourseConfig extends Json {
     }
 
     /**
+     * Get Resumable flag for Course.
+     * @return course resumable
+     */
+    public boolean getManualCheckpoints() {
+        return this.getOrDefault(MANUAL_CHECKPOINTS, true);
+    }
+
+    /**
+     * Set the Resumable flag for Course.
+     * @param value flag value
+     */
+    public void setManualCheckpoints(boolean value) {
+        this.set(MANUAL_CHECKPOINTS, value);
+    }
+
+    public void toggleManualCheckpoints() {
+        setManualCheckpoints(!getManualCheckpoints());
+    }
+
+    /**
      * Get the Event Type Commands for the Course.
      * The Commands found will be run during the matching Event.
      * @param eventType selected {@link ParkourEventType}
@@ -949,7 +960,6 @@ public class CourseConfig extends Json {
                                 @NotNull String value) {
         List<String> commands = getEventCommands(eventType);
         commands.add(value);
-
         this.set(eventType.getConfigEntry() + "Command", commands);
     }
 

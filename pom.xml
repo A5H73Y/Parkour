@@ -84,7 +84,7 @@
 		<dependency>
 			<groupId>me.clip</groupId>
 			<artifactId>placeholderapi</artifactId>
-			<version>2.11.0</version>
+			<version>2.11.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- Bountiful API -->
@@ -119,7 +119,7 @@
 		<dependency>
 			<groupId>com.zaxxer</groupId>
 			<artifactId>HikariCP</artifactId>
-			<version>5.0.0</version>
+			<version>5.0.1</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
@@ -138,14 +138,14 @@
 		<dependency>
 			<groupId>com.github.cryptomorin</groupId>
 			<artifactId>XSeries</artifactId>
-			<version>8.5.0.1</version>
+			<version>8.6.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<!-- Version Compare -->
 		<dependency>
 			<groupId>io.github.g00fy2</groupId>
 			<artifactId>versioncompare</artifactId>
-			<version>1.4.1</version>
+			<version>1.5.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<!-- Simplix Storage -->
@@ -153,6 +153,18 @@
 			<groupId>com.github.simplix-softworks</groupId>
 			<artifactId>simplixstorage</artifactId>
 			<version>3.2.4</version>
+		</dependency>
+		<!-- Reflections -->
+		<dependency>
+			<groupId>org.reflections</groupId>
+			<artifactId>reflections</artifactId>
+			<version>0.10.2</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 

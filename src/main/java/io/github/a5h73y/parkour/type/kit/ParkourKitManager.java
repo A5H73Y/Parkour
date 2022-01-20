@@ -1,13 +1,19 @@
 package io.github.a5h73y.parkour.type.kit;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT;
+
 import com.cryptomorin.xseries.XMaterial;
 import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.conversation.CreateParkourKitConversation;
+import io.github.a5h73y.parkour.conversation.EditParkourKitConversation;
 import io.github.a5h73y.parkour.type.CacheableParkourManager;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
+import io.github.a5h73y.parkour.utility.permission.Permission;
+import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -16,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.conversations.Conversable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -112,12 +119,16 @@ public class ParkourKitManager extends CacheableParkourManager {
 	 * Used to identify if there are any problems with the ParkourKit config.
 	 * Examples include an unknown Material, or an unknown Action type.
 	 *
-	 * @param sender requesting sender
+	 * @param commandSender requesting sender
 	 * @param kitName parkour kit name
 	 */
-	public void validateParkourKit(CommandSender sender, String kitName) {
+	public void validateParkourKit(CommandSender commandSender, String kitName) {
+		if (!PermissionUtils.hasPermission(commandSender, Permission.ADMIN_COURSE)) {
+			return;
+		}
+
 		if (!getConfig().doesParkourKitExist(kitName)) {
-			TranslationUtils.sendTranslation("Error.UnknownParkourKit", sender);
+			TranslationUtils.sendTranslation("Error.UnknownParkourKit", commandSender);
 			return;
 		}
 
@@ -143,10 +154,10 @@ public class ParkourKitManager extends CacheableParkourManager {
 			}
 		}
 
-		TranslationUtils.sendMessage(sender, invalidTypes.size() + " problems with &b" + kitName + "&f found.");
+		TranslationUtils.sendMessage(commandSender, invalidTypes.size() + " problems with &b" + kitName + "&f found.");
 
 		for (String type : invalidTypes) {
-			TranslationUtils.sendMessage(sender, type, false);
+			TranslationUtils.sendMessage(commandSender, type, false);
 		}
 	}
 
@@ -155,41 +166,46 @@ public class ParkourKitManager extends CacheableParkourManager {
 	 * Can be used to display available ParkourKits.
 	 * Alternatively can display the contents of a specified ParkourKit, including the Materials and corresponding Actions.
 	 *
-	 * @param sender requesting sender
-	 * @param args command arguments
+	 * @param commandSender requesting sender
+	 * @param kitName parkour kit name
 	 */
-	public void displayParkourKits(CommandSender sender, String... args) {
+	public void displayParkourKits(CommandSender commandSender, @Nullable String kitName) {
+		if (!PermissionUtils.hasPermission(commandSender, Permission.ADMIN_COURSE)) {
+			return;
+		}
+
 		Set<String> parkourKit = getConfig().getAllParkourKitNames();
 
 		// specifying a kit
-		if (args.length == 2) {
-			String kitName = args[1].toLowerCase();
+		if (kitName != null) {
+			kitName = kitName.toLowerCase();
+
 			if (!parkourKit.contains(kitName)) {
-				TranslationUtils.sendMessage(sender, "This ParkourKit set does not exist!");
+				TranslationUtils.sendMessage(commandSender, "This ParkourKit set does not exist!");
 				return;
 			}
 
-			TranslationUtils.sendHeading("ParkourKit: " + kitName, sender);
+			TranslationUtils.sendHeading("ParkourKit: " + kitName, commandSender);
 			Set<String> materials = getConfig().getParkourKitMaterials(kitName);
 
 			for (String material : materials) {
 				String actionTypeName = getConfig().getActionTypeForMaterial(kitName, material);
 				ActionType actionType = validateActionType(actionTypeName);
 				if (actionType == null) {
-					TranslationUtils.sendMessage(sender, "Invalid Action Type: " + actionTypeName);
+					TranslationUtils.sendMessage(commandSender, "Invalid Action Type: " + actionTypeName);
 					return;
 				}
 				if (actionTypeName.equalsIgnoreCase("potion")) {
 					actionTypeName += " (" + getConfig().getEffectTypeForMaterial(kitName, material) + ")";
 				}
-				TranslationUtils.sendValue(sender, material, actionTypeName);
+				TranslationUtils.sendValue(commandSender, material, actionTypeName);
 			}
 
 		} else {
-			//displaying all available kits
-			TranslationUtils.sendHeading(parkourKit.size() + " ParkourKits found", sender);
+			// displaying all available kits
+			TranslationUtils.sendHeading(parkourKit.size() + " ParkourKits found", commandSender);
 			for (String kit : parkourKit) {
-				sender.sendMessage("* " + kit);
+				commandSender.sendMessage("* " + kit);
 			}
 		}
 	}
@@ -210,6 +226,73 @@ public class ParkourKitManager extends CacheableParkourManager {
 		clearCache(kitName);
 		TranslationUtils.sendValueTranslation("Parkour.Delete", kitName + " ParkourKit", sender);
 		PluginUtils.logToFile(kitName + " parkourkit was deleted by " + sender.getName());
+	}
+
+	public void processParkourKitCommand(final CommandSender commandSender, final String... args) {
+		if (!PermissionUtils.hasPermission(commandSender, Permission.ADMIN_ALL)) {
+			return;
+
+		} else if (!ValidationUtils.validateArgs(commandSender, args, 2, 100)) {
+			return;
+		}
+
+		// TODO - turn into actions
+
+		switch (args[1].toLowerCase()) {
+			case "create":
+				startCreateKitConversation(commandSender);
+				break;
+
+			case "edit":
+				startEditKitConversation(commandSender);
+				break;
+
+			case "validate":
+				validateParkourKit(commandSender, args.length >= 3 ? args[2] : DEFAULT);
+				break;
+
+			case "list":
+				displayParkourKits(commandSender, args.length >= 3 ? args[2] : null);
+				break;
+
+			case "link":
+				setLinkedParkourKit(commandSender, args.length >= 3 ? args[2] : null,
+						args.length >= 4 ? args[3] : null);
+				break;
+
+			case "give":
+				giveParkourKit((Player) commandSender, args.length >= 3 ? args[2] : DEFAULT);
+				break;
+
+			default:
+				TranslationUtils.sendMessage(commandSender, "Unknown argument");
+		}
+	}
+
+	public void startCreateKitConversation(CommandSender commandSender) {
+		if (!PermissionUtils.hasPermission(commandSender, Permission.ADMIN_COURSE)) {
+			return;
+		}
+
+		new CreateParkourKitConversation((Conversable) commandSender).begin();
+	}
+
+	public void startEditKitConversation(CommandSender commandSender) {
+		if (!PermissionUtils.hasPermission(commandSender, Permission.ADMIN_COURSE)) {
+			return;
+		}
+
+		new EditParkourKitConversation((Conversable) commandSender).begin();
+	}
+
+	public void setLinkedParkourKit(CommandSender commandSender, String kitName, String courseName) {
+		if (commandSender instanceof Player
+				&& !PermissionUtils.hasPermissionOrCourseOwnership(
+				(Player) commandSender, Permission.ADMIN_COURSE, courseName)) {
+			return;
+		}
+
+		parkour.getCourseSettingsManager().setParkourKit(commandSender, courseName, kitName);
 	}
 
 	@Override

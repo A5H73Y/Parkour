@@ -669,4 +669,16 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
     public void initialize() {
         recreateAllCourses(false);
     }
+
+    public void renameCourse(String courseName, String targetCourseName) {
+        PluginUtils.debug("Renaming course " + courseName + " to " + targetCourseName);
+        try {
+            database.updateAsync("UPDATE course SET name='" + targetCourseName + "' WHERE name='" + courseName + "'").get();
+            resultsCache.remove(courseName.toLowerCase());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // reset the cache
+        courseIdCache.clear();
+    }
 }

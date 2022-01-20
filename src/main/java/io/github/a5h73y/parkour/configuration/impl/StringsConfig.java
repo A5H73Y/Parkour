@@ -112,7 +112,7 @@ public class StringsConfig extends Yaml {
 		this.setDefault("Error.NotReady", "This course is not ready for you to play yet!");
 		this.setDefault("Error.NotReadyWarning", "This course is not ready yet.");
 		this.setDefault("Error.SignProtected", "This sign is protected!");
-		this.setDefault("Error.Syntax", "&cInvalid Syntax: &f/pa &8%COMMAND% &7%ARGUMENTS%");
+		this.setDefault("Error.Syntax", "&cInvalid Syntax: &f/pa &9%COMMAND% &7%ARGUMENTS%");
 		this.setDefault("Error.UnknownSignCommand", "Unknown sign command!");
 		this.setDefault("Error.UnknownCommand", "Unknown command!");
 		this.setDefault("Error.UnknownPlayer", "Unknown Parkour player!");
@@ -128,7 +128,6 @@ public class StringsConfig extends Yaml {
 		this.setDefault("Error.PrizeCooldown", "You have to wait &b%VALUE% &fbefore you can receive this prize again!");
 		this.setDefault("Error.NoQuestion", "You have not been asked a question!");
 		this.setDefault("Error.JoiningAnotherCourse", "You can not join another course while on a course.");
-		this.setDefault("Error.AllowViaCommand", "Joining a course via the command has been disabled.");
 		this.setDefault("Error.PluginNotLinked", "&b%VALUE% &fhas not been linked.");
 		this.setDefault("Error.NoPermission", "You do not have Permission: &b%VALUE%");
 		this.setDefault("Error.InvalidAmount", "Amount needs to be numeric.");

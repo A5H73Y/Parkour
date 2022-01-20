@@ -14,18 +14,14 @@ import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
-import io.github.a5h73y.parkour.utility.permission.Permission;
-import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
@@ -206,7 +202,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
 
         ParkourSession session = parkour.getParkourSessionManager().getParkourSession(event.getPlayer());
 
-        if (session.getParkourMode() == ParkourMode.FREE_CHECKPOINT
+        if (session.getCourse().getSettings().isManualCheckpoints()
                 && parkour.getPlayerManager().delayPlayer(event.getPlayer(), 1)
                 && (session.getFreedomLocation() == null
                 || !MaterialUtils.sameBlockLocations(event.getPlayer().getLocation(), session.getFreedomLocation()))) {

@@ -1,10 +1,8 @@
 package io.github.a5h73y.parkour;
 
-import com.google.gson.GsonBuilder;
-import io.github.a5h73y.parkour.commands.CommandUsage;
+import io.github.a5h73y.parkour.commands.type.BasicParkourCommand;
 import io.github.a5h73y.parkour.commands.ParkourAutoTabCompleter;
 import io.github.a5h73y.parkour.commands.ParkourCommands;
-import io.github.a5h73y.parkour.commands.ParkourConsoleCommands;
 import io.github.a5h73y.parkour.configuration.ConfigManager;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
 import io.github.a5h73y.parkour.database.DatabaseManager;
@@ -27,31 +25,27 @@ import io.github.a5h73y.parkour.type.Teardownable;
 import io.github.a5h73y.parkour.type.challenge.ChallengeManager;
 import io.github.a5h73y.parkour.type.checkpoint.CheckpointManager;
 import io.github.a5h73y.parkour.type.course.CourseManager;
+import io.github.a5h73y.parkour.type.course.CourseSettingsManager;
 import io.github.a5h73y.parkour.type.course.autostart.AutoStartConfig;
 import io.github.a5h73y.parkour.type.course.autostart.AutoStartManager;
 import io.github.a5h73y.parkour.type.kit.ParkourKitConfig;
 import io.github.a5h73y.parkour.type.kit.ParkourKitManager;
 import io.github.a5h73y.parkour.type.lobby.LobbyConfig;
 import io.github.a5h73y.parkour.type.lobby.LobbyManager;
-import io.github.a5h73y.parkour.type.player.session.ParkourSessionManager;
 import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.type.player.PlayerManager;
 import io.github.a5h73y.parkour.type.player.quiet.QuietModeManager;
 import io.github.a5h73y.parkour.type.player.rank.ParkourRankManager;
 import io.github.a5h73y.parkour.type.player.scoreboard.ScoreboardManager;
+import io.github.a5h73y.parkour.type.player.session.ParkourSessionManager;
 import io.github.a5h73y.parkour.type.question.QuestionManager;
 import io.github.a5h73y.parkour.type.sounds.SoundsManager;
 import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.g00fy2.versioncompare.Version;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bstats.charts.SingleLineChart;
@@ -74,6 +68,7 @@ public class Parkour extends JavaPlugin {
     private CheckpointManager checkpointManager;
     private ConfigManager configManager;
     private CourseManager courseManager;
+    private CourseSettingsManager courseSettingsManager;
     private DatabaseManager databaseManager;
     private LobbyManager lobbyManager;
     private ParkourSessionManager parkourSessionManager;
@@ -86,7 +81,7 @@ public class Parkour extends JavaPlugin {
     private ScoreboardManager scoreboardManager;
     private SoundsManager soundsManager;
 
-    private List<CommandUsage> commandUsages;
+    private ParkourCommands parkourCommands;
     private final List<AbstractPluginReceiver> managers = new ArrayList<>();
 
     private BountifulApi bountifulApi;
@@ -121,6 +116,27 @@ public class Parkour extends JavaPlugin {
         getLogger().info("Enabled Parkour v" + getDescription().getVersion());
         submitAnalytics();
         checkForUpdates();
+
+//        getLogger().info("Missing From ParkourCommands");
+//        parkourCommands.getParkourActionCommands().forEach((actionCommand, a) -> {
+//            parkourCommands.getCommandUsages().values().stream()
+//                    .filter(commandUsage -> commandUsage.getCommand().equals(actionCommand))
+//                    .forEach(command -> getLogger().info("* " + command.getCommand()));
+//        });
+//
+//        getLogger().info("Missing From CommandUsages");
+//        parkourCommands.getCommandUsages().values().stream()
+//                .filter(commandUsage -> !parkourCommands.getParkourActionCommands().containsKey(commandUsage.getCommand()))
+//                .forEach(commandUsage -> getLogger().info("* " + commandUsage.getCommand()));
+//
+//        getLogger().info("Order ParkourCommands");
+//        Comparator<BasicParkourCommand> parkourCommandsComparator = Comparator
+//                .comparing(BasicParkourCommand::getAllowedSender)
+//                .thenComparing(parkourActionCommand -> parkourActionCommand.getCommandLabels()[0]);
+//
+//        parkourCommands.getParkourActionCommands().values().stream()
+//                .sorted(parkourCommandsComparator)
+//                .forEach(commandUsage -> getLogger().info("* " + commandUsage.getCommandLabels()[0]));
     }
 
     /**
@@ -200,6 +216,7 @@ public class Parkour extends JavaPlugin {
         questionManager = (QuestionManager) registerManager(new QuestionManager(this));
         parkourKitManager = (ParkourKitManager) registerManager(new ParkourKitManager(this));
         courseManager = (CourseManager) registerManager(new CourseManager(this));
+        courseSettingsManager = (CourseSettingsManager) registerManager(new CourseSettingsManager(this));
         checkpointManager = (CheckpointManager) registerManager(new CheckpointManager(this));
         lobbyManager = (LobbyManager) registerManager(new LobbyManager(this));
         parkourRankManager = (ParkourRankManager) registerManager(new ParkourRankManager(this));
@@ -226,17 +243,9 @@ public class Parkour extends JavaPlugin {
     }
 
     private void registerCommands() {
-        getCommand(PLUGIN_NAME).setExecutor(new ParkourCommands(this));
-        getCommand("paconsole").setExecutor(new ParkourConsoleCommands(this));
-
-        if (this.getParkourConfig().getBoolean("Other.UseAutoTabCompletion")) {
-            getCommand(PLUGIN_NAME).setTabCompleter(new ParkourAutoTabCompleter(this));
-        }
-
-        String json = new BufferedReader(new InputStreamReader(getResource("parkourCommands.json"), StandardCharsets.UTF_8))
-                .lines().collect(Collectors.joining("\n"));
-
-        commandUsages = Arrays.asList(new GsonBuilder().create().fromJson(json, CommandUsage[].class));
+        parkourCommands = new ParkourCommands(this);
+        getCommand(PLUGIN_NAME).setExecutor(parkourCommands);
+        getCommand(PLUGIN_NAME).setTabCompleter(new ParkourAutoTabCompleter(this));
     }
 
     private void registerEvents() {
@@ -331,6 +340,10 @@ public class Parkour extends JavaPlugin {
         return courseManager;
     }
 
+    public CourseSettingsManager getCourseSettingsManager() {
+        return courseSettingsManager;
+    }
+
     public DatabaseManager getDatabaseManager() {
         return databaseManager;
     }
@@ -375,8 +388,8 @@ public class Parkour extends JavaPlugin {
         return soundsManager;
     }
 
-    public List<CommandUsage> getCommandUsages() {
-        return commandUsages;
+    public ParkourCommands getParkourCommands() {
+        return parkourCommands;
     }
 
     public BountifulApi getBountifulApi() {

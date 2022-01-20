@@ -9,7 +9,6 @@ public enum ParkourMode {
     DROPPER,
     ROCKETS,
     NORUN,
-    FREE_CHECKPOINT,
     POTION;
 
     @NotNull

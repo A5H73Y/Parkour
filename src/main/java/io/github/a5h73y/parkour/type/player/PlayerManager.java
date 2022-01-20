@@ -33,6 +33,7 @@ import io.github.a5h73y.parkour.event.PlayerParkourRankEvent;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.ParkourConstants;
 import io.github.a5h73y.parkour.other.ParkourValidation;
+import io.github.a5h73y.parkour.other.TriConsumer;
 import io.github.a5h73y.parkour.type.Initializable;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.course.Course;
@@ -44,6 +45,7 @@ import io.github.a5h73y.parkour.type.sounds.SoundType;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
+import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.permission.Permission;
@@ -55,6 +57,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
@@ -79,6 +82,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 	private final Map<UUID, Long> playerDelay = new HashMap<>();
 	private final List<UUID> hiddenPlayers = new ArrayList<>();
+	// player actions to set data
+	private final Map<String, TriConsumer<CommandSender, OfflinePlayer, String>> playerActions = new HashMap<>();
 
 	/**
 	 * Initialise the Parkour Player Manager.
@@ -86,6 +91,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	 */
 	public PlayerManager(final Parkour parkour) {
 		super(parkour);
+		populateSetPlayerActions();
 	}
 
 	@Override
@@ -96,6 +102,10 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	@Override
 	public void initialize() {
 		startLiveTimerRunnable();
+	}
+
+	public Set<String> getSetPlayerActions() {
+		return playerActions.keySet();
 	}
 
 	/**
@@ -856,7 +866,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
 
 		if (session != null && session.getParkourMode() == ParkourMode.POTION) {
-			XPotion.addPotionEffectsFromString(player,
+			XPotion.addEffects(player,
 					CourseConfig.getConfig(session.getCourseName()).getPotionParkourModeEffects());
 		}
 
@@ -1047,7 +1057,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}
 
 		sendConditionalValue(sender, "ParkourLevel", playerConfig.getParkourLevel());
-		sendConditionalValue(sender, "ParkourRank", playerConfig.getParkourRank());
+		sendConditionalValue(sender, "ParkourRank", StringUtils.colour(playerConfig.getParkourRank()));
 		sendConditionalValue(sender, "Parkoins", playerConfig.getParkoins());
 		sendConditionalValue(sender, "Editing", playerConfig.getSelectedCourse());
 
@@ -1155,10 +1165,11 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			new SetPlayerConversation((Player) sender).withTargetPlayerName(args[1].toLowerCase()).begin();
 
 		} else if (args.length >= 4) {
-			SetPlayerConversation.performAction(sender, targetPlayer, args[2], args[3]);
+			performAction(sender, targetPlayer, args[2], args[3]);
 
 		} else {
-			TranslationUtils.sendInvalidSyntax(sender, "setplayer", "(player) [level / leveladd / rank] [value]");
+			TranslationUtils.sendInvalidSyntax(sender, "setplayer",
+					"(player) [" + String.join(", ", getSetPlayerActions()) + "] [value]");
 		}
 	}
 
@@ -1239,7 +1250,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		} else if (courseMode == ParkourMode.POTION) {
 			CourseConfig courseConfig = CourseConfig.getConfig(session.getCourseName());
 
-			XPotion.addPotionEffectsFromString(player, courseConfig.getPotionParkourModeEffects());
+			XPotion.addEffects(player, courseConfig.getPotionParkourModeEffects());
 			if (courseConfig.hasPotionJoinMessage()) {
 				TranslationUtils.sendMessage(player, courseConfig.getPotionJoinMessage());
 			}
@@ -1276,13 +1287,12 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 		ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
 
-		if (ParkourMode.FREE_CHECKPOINT == session.getParkourMode()
-				&& parkour.getParkourConfig().getBoolean("ParkourModes.FreeCheckpoint.ManualCheckpointCommandEnabled")) {
+		if (session.getCourse().getSettings().isManualCheckpoints()) {
 			session.setFreedomLocation(player.getLocation());
 			TranslationUtils.sendTranslation("Event.FreeCheckpoints", player);
 
 		} else {
-			TranslationUtils.sendMessage(player, "You are currently unable to set a Checkpoint.");
+			TranslationUtils.sendMessage(player, "You are currently unable to set a manual Checkpoint.");
 		}
 	}
 
@@ -1300,6 +1310,62 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		return parkour.getCourseManager().getCourseNames().stream()
 				.filter(course -> !completedCourses.contains(course))
 				.collect(Collectors.toList());
+	}
+
+
+	/**
+	 * Select the Course for editing.
+	 * This is used for commands that do not require a course parameter, such as "/pa checkpoint".
+	 *
+	 * @param player requesting player
+	 * @param courseName course name
+	 */
+	public void selectCourse(final Player player, final String courseName) {
+		if (!parkour.getCourseManager().doesCourseExist(courseName)) {
+			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, player);
+			return;
+		}
+
+		PlayerConfig.getConfig(player).setSelectedCourse(courseName);
+		TranslationUtils.sendValueTranslation("Parkour.Selected", courseName, player);
+	}
+
+	/**
+	 * Deselect the Course for editing.
+	 *
+	 * @param player requesting player
+	 */
+	public void deselectCourse(final Player player) {
+		PlayerConfig playerConfig = PlayerConfig.getConfig(player);
+
+		if (playerConfig.hasSelectedCourse()) {
+			playerConfig.resetSelected();
+			TranslationUtils.sendTranslation("Parkour.Deselected", player);
+
+		} else {
+			TranslationUtils.sendTranslation("Error.Selected", player);
+		}
+	}
+
+
+	public void performAction(CommandSender sender, OfflinePlayer targetPlayer, String action, String value) {
+		if (!PlayerConfig.hasPlayerConfig(targetPlayer)) {
+			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, sender);
+			return;
+		}
+
+		if (!playerActions.containsKey(action.toLowerCase())) {
+			TranslationUtils.sendMessage(sender, "Unknown Player action command");
+			return;
+		}
+
+		playerActions.get(action.toLowerCase()).accept(sender, targetPlayer, value);
+	}
+
+	private void populateSetPlayerActions() {
+		playerActions.put("rank", (this::setParkourRank));
+		playerActions.put("level", (sender, targetPlayer, value) -> setParkourLevel(sender, targetPlayer, value, false));
+		playerActions.put("leveladd", (sender, targetPlayer, value) -> setParkourLevel(sender, targetPlayer, value, true));
 	}
 
 	/**
@@ -1340,7 +1406,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	private void restoreHealthHunger(Player player) {
 		PlayerConfig playerConfig = PlayerConfig.getConfig(player);
 		double health = playerConfig.getSavedHealth();
-		health = Math.min(Math.max(0, health), player.getMaxHealth());
+		health = Math.min(Math.max(1, health), player.getMaxHealth());
 		player.setHealth(health);
 		player.setFoodLevel(playerConfig.getSavedFoodLevel());
 		playerConfig.resetSavedHealthFoodLevel();
@@ -1489,8 +1555,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	}
 
 	private Location determineDestination(ParkourSession session) {
-		if ((session.getParkourMode() == ParkourMode.FREEDOM || session.getParkourMode() == ParkourMode.FREE_CHECKPOINT)
-				&& session.getFreedomLocation() != null) {
+		if (session.getFreedomLocation() != null) {
 			return session.getFreedomLocation();
 		} else {
 			return session.getCheckpoint().getLocation();

@@ -8,19 +8,22 @@ public class CourseSettings implements Serializable {
 	private final int maxDeaths;
 	private final int maxTime;
 	private final int maxFallTicks;
+	private final boolean manualCheckpoints;
 
-	public CourseSettings(int maxDeaths, int maxTime, int maxFallTicks) {
+	public CourseSettings(int maxDeaths, int maxTime, int maxFallTicks, boolean manualCheckpoints) {
 		this.maxDeaths = maxDeaths;
 		this.maxTime = maxTime;
 		this.maxFallTicks = maxFallTicks;
+		this.manualCheckpoints = manualCheckpoints;
 	}
 
 	public static CourseSettings deserialize(Map<String, Object> input) {
 		int maxDeaths = (int) input.getOrDefault("MaxDeaths", 0);
 		int maxTime = (int) input.getOrDefault("MaxTime", 0);
 		int maxFallTicks = (int) input.getOrDefault("MaxFallTicks", 80);
+		boolean manualCheckpoints = (boolean) input.getOrDefault("ManualCheckpoints", false);
 
-		return new CourseSettings(maxDeaths, maxTime, maxFallTicks);
+		return new CourseSettings(maxDeaths, maxTime, maxFallTicks, manualCheckpoints);
 	}
 
 	/**
@@ -59,5 +62,9 @@ public class CourseSettings implements Serializable {
 
 	public int getMaxFallTicks() {
 		return maxFallTicks;
+	}
+
+	public boolean isManualCheckpoints() {
+		return manualCheckpoints;
 	}
 }

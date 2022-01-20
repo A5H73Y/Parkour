@@ -10,8 +10,5 @@ api-version: "1.13"
 website: "https://a5h73y.github.io/Parkour/"
 commands:
   parkour:
-    aliases: [pa, pkr]
+    aliases: [pa, pkr, paconsole, pac]
     description: Parkour commands
-  paconsole:
-    aliases: [pac, parkourc, consolepa]
-    description: Parkour console commands

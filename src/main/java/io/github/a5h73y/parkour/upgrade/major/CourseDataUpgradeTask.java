@@ -6,6 +6,7 @@ import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
 import io.github.a5h73y.parkour.upgrade.TimedConfigUpgradeTask;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class CourseDataUpgradeTask extends TimedConfigUpgradeTask {
@@ -24,7 +25,7 @@ public class CourseDataUpgradeTask extends TimedConfigUpgradeTask {
 		boolean success = true;
 		List<String> courseNames = getConfig().getStringList("Courses");
 
-		getParkourUpgrader().getLogger().info("Converting " + courseNames.size() + " courses.");
+		getParkourUpgrader().getLogger().log(Level.INFO, "Converting {0} courses.", courseNames.size());
 		int interval = Math.max(courseNames.size() / 10, 1);
 		int count = 0;
 
@@ -32,7 +33,7 @@ public class CourseDataUpgradeTask extends TimedConfigUpgradeTask {
 			courseName = courseName.toLowerCase();
 			if (count % interval == 0) {
 				double percent = Math.ceil((count * 100.0d) / courseNames.size());
-				getParkourUpgrader().getLogger().info(percent + "% complete...");
+				getParkourUpgrader().getLogger().log(Level.INFO, "{0}% complete...", percent);
 			}
 
 			ConfigurationSection courseSection = getConfig().getConfigurationSection(courseName);
@@ -110,12 +111,18 @@ public class CourseDataUpgradeTask extends TimedConfigUpgradeTask {
 
 		if (autoStartSection != null) {
 			Set<String> autoStarts = autoStartSection.getKeys(false);
-			getParkourUpgrader().getLogger().info("Converting " + autoStarts.size() + " AutoStarts.");
+			getParkourUpgrader().getLogger().log(Level.INFO, "Converting {0} AutoStarts.", autoStarts.size());
 
 			AutoStartConfig autoStartConfig = getParkourUpgrader().getNewConfigManager().getAutoStartConfig();
 
 			for (String coordinates : autoStarts) {
+				String courseName = autoStartSection.getString(coordinates);
 				String newCoordinates = coordinates;
+
+				if (courseName == null) {
+					continue;
+				}
+
 				if (coordinates.startsWith("-")) {
 					newCoordinates = newCoordinates.replaceFirst("-", "|");
 				}
@@ -126,7 +133,7 @@ public class CourseDataUpgradeTask extends TimedConfigUpgradeTask {
 					newCoordinates = newCoordinates.replace("-", "/");
 				}
 
-				autoStartConfig.setAutoStartCourse(newCoordinates.replace("|", "-"), autoStartSection.getString(coordinates));
+				autoStartConfig.setAutoStartCourse(newCoordinates.replace("|", "-"), courseName);
 			}
 		}
 	}

@@ -95,7 +95,7 @@ public class PermissionUtils {
 		}
 
 		String creator = CourseConfig.getConfig(courseName).getCreator();
-		return player.getName().equals(creator) || hasPermission(player, permission);
+		return player.getName().equals(creator) || hasPermission(player, permission, false);
 	}
 
 	/**

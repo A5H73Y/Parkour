@@ -37,7 +37,7 @@ public class ParkourKitConfig extends Yaml {
 	 * @return parkour kit exists
 	 */
 	public boolean doesParkourKitExist(String kitName) {
-		return getAllParkourKitNames().contains(kitName.toLowerCase());
+		return kitName != null && getAllParkourKitNames().contains(kitName.toLowerCase());
 	}
 
 	public boolean doesMaterialExistInParkourKit(String kitName, Material material) {

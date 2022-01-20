@@ -39,7 +39,6 @@ public class DefaultConfig extends Yaml {
 
 		this.setHeader(" ==== Parkour Config ==== #");
 
-		this.setDefault("OnJoin.AllowViaCommand", true);
 		this.setDefault("OnJoin.EnforceWorld", false);
 		this.setDefault("OnJoin.EnforceReady", true);
 		this.setDefault("OnJoin.FillHealth.Enabled", true);
@@ -138,7 +137,6 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("ParkourModes.Rockets.Invert", false);
 		this.setDefault("ParkourModes.Rockets.SecondCooldown", 1);
 		this.setDefault("ParkourModes.Rockets.LaunchForce", 1.5);
-		this.setDefault("ParkourModes.FreeCheckpoint.ManualCheckpointCommandEnabled", false);
 
 		this.setDefault("DisplayTitle.FadeIn", 5);
 		this.setDefault("DisplayTitle.Stay", 20);
@@ -220,7 +218,6 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("Other.CheckForUpdates", true);
 		this.setDefault("Other.LogAdminTasksToFile", true);
 		this.setDefault("Other.EnforceSafeCheckpoints", true);
-		this.setDefault("Other.UseAutoTabCompletion", true);
 		this.setDefault("Other.PlayerConfigUsePlayerUUID", true);
 		this.setDefault("Other.Parkour.SignProtection", true);
 		this.setDefault("Other.Parkour.InventoryManagement", true);

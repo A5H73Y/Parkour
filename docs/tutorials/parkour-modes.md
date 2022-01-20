@@ -57,4 +57,4 @@ This ParkourMode allows you to treat any Pressure Plate as a checkpoint. Upon wa
 
 ![Free Checkpoints](https://i.imgur.com/zYyvTD9.png "Free Checkpoints")
 
-You are also able to set manual checkpoints using "/pa manualcheckpoint" when "ParkourModes.FreeCheckpoint.ManualCheckpointCommandEnabled" is enabled.
+[//]: # (You are also able to set manual checkpoints using "/pa manualcheckpoint" when "ParkourModes.FreeCheckpoint.ManualCheckpointCommandEnabled" is enabled.) TODO UPDATE ME

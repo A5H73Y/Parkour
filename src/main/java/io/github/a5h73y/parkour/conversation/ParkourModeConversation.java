@@ -1,12 +1,11 @@
 package io.github.a5h73y.parkour.conversation;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.type.player.ParkourMode;
-import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.Arrays;
 import java.util.stream.Stream;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.BooleanPrompt;
 import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.ConversationContext;
@@ -52,12 +51,8 @@ public class ParkourModeConversation extends ParkourConversation {
             }
 
             ParkourMode parkourMode = ParkourMode.valueOf(choice.toUpperCase());
-
             String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);
-            CourseConfig.getConfig(courseName).setParkourMode(parkourMode);
-            Parkour.getInstance().getCourseManager().clearCache(courseName);
-
-            context.getForWhom().sendRawMessage(TranslationUtils.getPropertySet("ParkourMode", courseName, choice));
+            Parkour.getInstance().getCourseSettingsManager().setParkourMode((CommandSender) context.getForWhom(), courseName, parkourMode);
             return Prompt.END_OF_CONVERSATION;
         }
     }
@@ -183,16 +178,8 @@ public class ParkourModeConversation extends ParkourConversation {
             String potionEffect = (String) context.getSessionData("potion");
             String durationAmplifier = (String) context.getSessionData("durationAmplifier");
             String joinMessage = (String) context.getSessionData("joinMessage");
-
-            CourseConfig courseConfig = CourseConfig.getConfig(courseName);
-            courseConfig.setParkourMode(ParkourMode.POTION);
-            courseConfig.addPotionParkourModeEffect(potionEffect, durationAmplifier);
-            courseConfig.setPotionJoinMessage(joinMessage);
-
-            Parkour.getInstance().getCourseManager().clearCache(courseName);
-
-            return TranslationUtils.getPropertySet("ParkourMode", courseName,
-                    ParkourMode.POTION.getDisplayName() + " (" + potionEffect + ")");
+            Parkour.getInstance().getCourseSettingsManager().setPotionParkourMode((CommandSender) context.getForWhom(), courseName, potionEffect, durationAmplifier, joinMessage);
+            return "";
         }
     }
 }

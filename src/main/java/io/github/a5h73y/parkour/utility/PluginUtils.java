@@ -97,7 +97,7 @@ public class PluginUtils {
      * @param message message to log
      */
     public static void logToFile(String message) {
-        if (!Parkour.getDefaultConfig().getBoolean("Other.LogToFile")) {
+        if (!Parkour.getDefaultConfig().getBoolean("Other.LogAdminTasksToFile")) {
             return;
         }
 

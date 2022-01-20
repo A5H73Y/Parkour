@@ -40,6 +40,8 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
         substitutions.put("(lobby)", parkour.getConfigManager().getLobbyConfig().getAllLobbyNames());
         substitutions.put("(player)", getAllOnlinePlayerNames());
         substitutions.put("(parkourevent)", SetCourseConversation.PARKOUR_EVENT_TYPE_NAMES);
+        substitutions.put("(nothing)", Collections.singleton(""));
+        substitutions.put("(truefalse)", Arrays.asList("true", "false"));
     }
 
     /**
@@ -64,7 +66,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             allowedCommands = populateMainCommands(player);
 
         } else {
-            Optional<CommandUsage> parentCommand = parkour.getCommandUsages().stream()
+            Optional<CommandUsage> parentCommand = parkour.getParkourCommands().getCommandUsages().stream()
                     .filter(commandUsage -> args[0].toLowerCase().equals(commandUsage.getCommand()))
                     .filter(commandUsage -> commandUsage.getAutoTabSyntax() != null)
                     .filter(commandUsage -> commandUsage.getPermission() == null
@@ -116,7 +118,8 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
             return QUESTION_ANSWER_COMMANDS;
         }
 
-        return parkour.getCommandUsages().stream()
+        return parkour.getParkourCommands().getCommandUsages().stream()
+                .filter(commandUsage -> commandUsage.getExample() != null)
                 .filter(commandUsage -> commandUsage.getPermission() == null
                         || player.hasPermission(commandUsage.getPermission()))
                 .map(CommandUsage::getCommand)

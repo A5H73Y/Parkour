@@ -190,7 +190,7 @@ public class PlayerDataUpgradeTask extends TimedConfigUpgradeTask {
 	/**
 	 * Package for ParkourSession has changed, need to fix it first.
 	 */
-	private class RelocateSessionObjectInputStream extends ObjectInputStream {
+	private static class RelocateSessionObjectInputStream extends ObjectInputStream {
 
 		public RelocateSessionObjectInputStream(InputStream in) throws IOException {
 			super(in);
