@@ -326,7 +326,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
      */
     public void prepareParticipant(Challenge challenge, Player participant) {
         if (parkour.getParkourConfig().getBoolean("ParkourChallenge.HidePlayers")) {
-            parkour.getPlayerManager().forceInvisible(participant);
+            parkour.getParkourSessionManager().forceInvisible(participant);
         }
 
         parkour.getPlayerManager().joinCourse(participant, challenge.getCourseName());

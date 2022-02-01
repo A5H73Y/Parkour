@@ -35,9 +35,6 @@ public class CourseSettingsManager extends AbstractPluginReceiver {
 	public CourseSettingsManager(Parkour parkour) {
 		super(parkour);
 		populateCourseSettingActions();
-
-		System.out.println("Course Setting Actions");
-		courseSettingActions.keySet().stream().sorted().forEach(System.out::println);
 	}
 
 	public Set<String> getCourseSettingActions() {
@@ -116,14 +113,6 @@ public class CourseSettingsManager extends AbstractPluginReceiver {
 		PluginUtils.logToFile("The " + property + " for " + courseName + " was set to " + newValue + " by " + commandSender.getName());
 	}
 
-
-
-
-
-
-
-
-
 	/**
 	 * Set the ChallengeOnly status of the Course.
 	 * Set whether the Player can only join the Course if they are part of a Challenge.
@@ -186,7 +175,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver {
 	 * Set the Course's linked Course.
 	 * Target Course will be joined on completion of Course.
 	 *
-	 * @param commandSender commandSender
+	 * @param commandSender command sender
 	 * @param courseName course name
 	 * @param targetCourse target course name
 	 */
@@ -215,7 +204,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver {
 	 * Set the Course's linked Lobby.
 	 * Target Lobby will be joined on completion of Course.
 	 *
-	 * @param commandSender commandSender
+	 * @param commandSender command sender
 	 * @param courseName course name
 	 * @param targetLobby target lobby name
 	 */
@@ -633,8 +622,6 @@ public class CourseSettingsManager extends AbstractPluginReceiver {
 		CourseConfig.getConfig(courseName).setRewardParkoins(Double.parseDouble(reward));
 		notifyActionChange(commandSender, "Parkoins reward", courseName, reward);
 	}
-
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * Set Course Start Location.

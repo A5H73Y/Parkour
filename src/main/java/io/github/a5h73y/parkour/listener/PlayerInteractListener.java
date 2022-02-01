@@ -83,9 +83,9 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
                 || materialInHand == parkour.getParkourConfig().getHideAllEnabledTool()) {
             if (parkour.getPlayerManager().delayPlayer(player, 1)) {
                 event.setCancelled(true);
-                parkour.getPlayerManager().toggleVisibility(player);
+                parkour.getParkourSessionManager().toggleVisibility(player);
                 player.getInventory().remove(materialInHand);
-                String configPath = parkour.getPlayerManager().hasHiddenPlayers(player)
+                String configPath = parkour.getParkourSessionManager().hasHiddenPlayers(player)
                         ? "ParkourTool.HideAllEnabled" : "ParkourTool.HideAll";
                 parkour.getPlayerManager().giveParkourTool(player, configPath, configPath);
             }

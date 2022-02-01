@@ -1,8 +1,8 @@
 package io.github.a5h73y.parkour.commands;
 
 import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT;
-import static org.reflections.scanners.Scanners.SubTypes;
 
+import com.google.common.reflect.ClassPath;
 import com.google.gson.GsonBuilder;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.commands.type.AbstractParkourCommand;
@@ -26,7 +26,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -36,7 +35,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.reflections.Reflections;
 
 /**
  * Player related Parkour commands handling.
@@ -103,18 +101,16 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
             commandUsages.put(commandUsage.getCommand(), commandUsage);
         });
 
+        // TODO remove me
         commandUsageContents.stream().sorted(Comparator.comparing(CommandUsage::getCommand)).forEach(commandUsage -> System.out.println(commandUsage.getCommand()));
     }
 
     private void populateParkourActionCommands() {
-        Reflections reflections = new Reflections(this.getClass().getPackage().getName() + ".command");
-
-        Set<Class<?>> subTypes =
-                reflections.get(SubTypes.of(BasicParkourCommand.class).asClass());
-
         try {
-            for (Class<?> subType : subTypes) {
-                Constructor<?> constructor = subType.getConstructor(Parkour.class);
+            final ClassPath path = ClassPath.from(parkour.getClass().getClassLoader());
+            for (final ClassPath.ClassInfo info : path.getTopLevelClasses(this.getClass().getPackage().getName() + ".command")) {
+                final Class<?> clazz = info.load();
+                Constructor<?> constructor = clazz.getConstructor(Parkour.class);
                 BasicParkourCommand instance = (BasicParkourCommand) constructor.newInstance(parkour);
                 Arrays.stream(instance.getCommandLabels()).forEach(commandLabel ->
                         parkourActionCommands.put(commandLabel, instance));
@@ -137,7 +133,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
         createActionCommand(AllowedSender.ANY,
                 Permission.ADMIN_ALL,
-                (commandSender, args) -> PluginUtils.cacheCommand(commandSender, args.length == 2 ? args[1] : null),
+                (commandSender, args) -> PluginUtils.processCacheCommand(commandSender, args.length == 2 ? args[1] : null),
                 "cache");
 
         createActionCommand(AllowedSender.ANY,
@@ -276,23 +272,23 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
     /**
      * Lookup helpful information for Command.
      *
-     * @param sender command sender
+     * @param commandSender command sender
      * @param args arguments
      */
-    public void displayCommandHelp(CommandSender sender, String... args) {
+    public void displayCommandHelp(CommandSender commandSender, String... args) {
         if (args.length == 1) {
-            TranslationUtils.sendValueTranslation("Help.Command", "(command)", sender);
+            TranslationUtils.sendValueTranslation("Help.Command", "(command)", commandSender);
             return;
         }
 
         CommandUsage commandUsage = getCommandUsage(args[1].toLowerCase());
 
         if (commandUsage != null) {
-            commandUsage.displayHelpInformation(sender);
+            commandUsage.displayHelpInformation(commandSender);
 
         } else {
-            TranslationUtils.sendMessage(sender, "Unrecognised Parkour command.");
-            TranslationUtils.sendTranslation("Help.Commands", sender);
+            TranslationUtils.sendMessage(commandSender, "Unrecognised Parkour command.");
+            TranslationUtils.sendTranslation("Help.Commands", commandSender);
         }
     }
 

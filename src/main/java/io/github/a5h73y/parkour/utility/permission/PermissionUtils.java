@@ -20,33 +20,33 @@ public class PermissionUtils {
 	 * Check if the player has the specified permission.
 	 * The player will be sent a message if they don't have the permission.
 	 *
-	 * @param sender target command sender
+	 * @param commandSender command sender
 	 * @param permission required {@link Permission}
 	 * @return player has permission
 	 */
-	public static boolean hasPermission(CommandSender sender, Permission permission) {
-		return hasPermission(sender, permission, true);
+	public static boolean hasPermission(CommandSender commandSender, Permission permission) {
+		return hasPermission(commandSender, permission, true);
 	}
 
 	/**
 	 * Check if the player has the specified permission.
 	 *
-	 * @param sender target command sender
+	 * @param commandSender command sender
 	 * @param permission the required {@link Permission}
 	 * @param displayMessage display failure message
 	 * @return player has permission
 	 */
-	public static boolean hasPermission(CommandSender sender, Permission permission, boolean displayMessage) {
-		if (sender.isOp()
-				|| sender.hasPermission(Permission.PARKOUR_ALL.getPermission())
-				|| sender.hasPermission(permission.getPermissionRoot() + "." + WILDCARD)
-				|| sender.hasPermission(permission.getPermission())) {
+	public static boolean hasPermission(CommandSender commandSender, Permission permission, boolean displayMessage) {
+		if (commandSender.isOp()
+				|| commandSender.hasPermission(Permission.PARKOUR_ALL.getPermission())
+				|| commandSender.hasPermission(permission.getPermissionRoot() + "." + WILDCARD)
+				|| commandSender.hasPermission(permission.getPermission())) {
 			return true;
 		}
 
 		if (displayMessage) {
 			TranslationUtils.sendValueTranslation("Error.NoPermission",
-					permission.getPermission(), sender);
+					permission.getPermission(), commandSender);
 		}
 		return false;
 	}
@@ -54,22 +54,22 @@ public class PermissionUtils {
 	/**
 	 * Check if the player has a specific permission.
 	 *
-	 * @param sender target command sender
+	 * @param commandSender command sender
 	 * @param permission specified permission
 	 * @param displayMessage display failure message
 	 * @return player has permission
 	 */
-	public static boolean hasSpecificPermission(CommandSender sender, Permission permission, String permissionNode,
+	public static boolean hasSpecificPermission(CommandSender commandSender, Permission permission, String permissionNode,
 	                                            boolean displayMessage) {
-		if (sender.isOp()
-				|| sender.hasPermission(Permission.PARKOUR_ALL.getPermission())
-				|| sender.hasPermission(permission.getPermissionRoot() + "." + permissionNode)) {
+		if (commandSender.isOp()
+				|| commandSender.hasPermission(Permission.PARKOUR_ALL.getPermission())
+				|| commandSender.hasPermission(permission.getPermissionRoot() + "." + permissionNode)) {
 			return true;
 		}
 
 		if (displayMessage) {
 			TranslationUtils.sendValueTranslation("Error.NoPermission",
-					permission.getPermissionRoot() + "." + permissionNode, sender);
+					permission.getPermissionRoot() + "." + permissionNode, commandSender);
 		}
 		return false;
 	}

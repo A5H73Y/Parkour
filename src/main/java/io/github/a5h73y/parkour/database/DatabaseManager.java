@@ -416,19 +416,19 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
     /**
      * Display Database Connection summary details.
      *
-     * @param sender requesting sender
+     * @param commandSender command sender
      */
-    public void displayInformation(CommandSender sender) {
+    public void displayInformation(CommandSender commandSender) {
         try {
-            TranslationUtils.sendHeading("Parkour Database", sender);
+            TranslationUtils.sendHeading("Parkour Database", commandSender);
             String databaseType = database instanceof MySQL ? "MySQL" : "SQLite";
-            TranslationUtils.sendValue(sender, "Database Type", databaseType);
+            TranslationUtils.sendValue(commandSender, "Database Type", databaseType);
 
             ResultSet count = database.query("SELECT COUNT(*) FROM course;");
-            TranslationUtils.sendValue(sender, "Courses", count.getInt(1));
+            TranslationUtils.sendValue(commandSender, "Courses", count.getInt(1));
 
             count = database.query("SELECT COUNT(*) FROM time;");
-            TranslationUtils.sendValue(sender, "Times", count.getInt(1));
+            TranslationUtils.sendValue(commandSender, "Times", count.getInt(1));
 
             count.close();
         } catch (SQLException throwables) {
@@ -492,13 +492,13 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
     /**
      * Display Leaderboards Entries to player.
      *
-     * @param sender target player
+     * @param commandSender command sender
      * @param courseName name of the course
      * @param times {@link TimeEntry} results
      */
-    public void displayTimeEntries(CommandSender sender, String courseName, List<TimeEntry> times) {
+    public void displayTimeEntries(CommandSender commandSender, String courseName, List<TimeEntry> times) {
         if (times.isEmpty()) {
-            TranslationUtils.sendMessage(sender, "No results were found!");
+            TranslationUtils.sendMessage(commandSender, "No results were found!");
             return;
         }
 
@@ -506,7 +506,7 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
                 .replace(ParkourConstants.COURSE_PLACEHOLDER, courseName)
                 .replace(ParkourConstants.AMOUNT_PLACEHOLDER, String.valueOf(times.size()));
 
-        TranslationUtils.sendHeading(heading, sender);
+        TranslationUtils.sendHeading(heading, commandSender);
 
         for (int i = 0; i < times.size(); i++) {
             TimeEntry entry = times.get(i);
@@ -516,7 +516,7 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
                     .replace(ParkourConstants.TIME_PLACEHOLDER, DateTimeUtils.displayCurrentTime(entry.getTime()))
                     .replace(ParkourConstants.DEATHS_PLACEHOLDER, String.valueOf(entry.getDeaths()));
 
-            sender.sendMessage(translation);
+            commandSender.sendMessage(translation);
         }
     }
 

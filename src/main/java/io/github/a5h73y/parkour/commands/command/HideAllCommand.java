@@ -25,7 +25,7 @@ public class HideAllCommand extends BasicParkourCommand {
 	@Override
 	public void performAction(CommandSender commandSender, String[] args) {
 		if (commandSender instanceof Player) {
-			parkour.getPlayerManager().toggleVisibility((Player) commandSender);
+			parkour.getParkourSessionManager().toggleVisibility((Player) commandSender);
 		}
 	}
 }

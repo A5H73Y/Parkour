@@ -78,33 +78,33 @@ public class ValidationUtils {
 	/**
 	 * Validate the length of the arguments before allowing it to be processed further.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param args command arguments
 	 * @param required required args length
 	 * @return whether the arguments match the criteria
 	 */
-	public static boolean validateArgs(CommandSender sender, String[] args, int required) {
-		return validateArgs(sender, args, required, required);
+	public static boolean validateArgs(CommandSender commandSender, String[] args, int required) {
+		return validateArgs(commandSender, args, required, required);
 	}
 
 	/**
 	 * Validate the range of the arguments before allowing it to be processed further.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param args command arguments
 	 * @param minimum minimum args length
 	 * @param maximum maximum args length
 	 * @return whether the arguments match the criteria
 	 */
-	public static boolean validateArgs(CommandSender sender, String[] args, int minimum, int maximum) {
+	public static boolean validateArgs(CommandSender commandSender, String[] args, int minimum, int maximum) {
 		if (args.length > maximum) {
-			TranslationUtils.sendValueTranslation("Error.TooMany", String.valueOf(maximum), sender);
-			TranslationUtils.sendValueTranslation("Help.Command", args[0].toLowerCase(), sender);
+			TranslationUtils.sendValueTranslation("Error.TooMany", String.valueOf(maximum), commandSender);
+			TranslationUtils.sendValueTranslation("Help.Command", args[0].toLowerCase(), commandSender);
 			return false;
 
 		} else if (args.length < minimum) {
-			TranslationUtils.sendValueTranslation("Error.TooLittle", String.valueOf(minimum), sender);
-			TranslationUtils.sendValueTranslation("Help.Command", args[0].toLowerCase(), sender);
+			TranslationUtils.sendValueTranslation("Error.TooLittle", String.valueOf(minimum), commandSender);
+			TranslationUtils.sendValueTranslation("Help.Command", args[0].toLowerCase(), commandSender);
 			return false;
 		}
 		return true;

@@ -35,27 +35,27 @@ public class CommandUsage {
 	 * Includes usage information and a description of the command.
 	 * Will display appropriate information based on the type of sender.
 	 *
-	 * @param sender requesting sender
+	 * @param commandSender command sender
 	 */
-	public void displayHelpInformation(CommandSender sender) {
-		TranslationUtils.sendHeading(title, sender);
+	public void displayHelpInformation(CommandSender commandSender) {
+		TranslationUtils.sendHeading(title, commandSender);
 
-		if (sender instanceof ConsoleCommandSender) {
-			TranslationUtils.sendValueTranslation("Help.ConsoleCommandSyntax", consoleSyntax, false, sender);
+		if (commandSender instanceof ConsoleCommandSender) {
+			TranslationUtils.sendValueTranslation("Help.ConsoleCommandSyntax", consoleSyntax, false, commandSender);
 
 		} else {
 			String commandSyntax = arguments != null ? command + SPACE + arguments : command;
-			TranslationUtils.sendValueTranslation("Help.CommandSyntax", commandSyntax, false, sender);
+			TranslationUtils.sendValueTranslation("Help.CommandSyntax", commandSyntax, false, commandSender);
 		}
-		TranslationUtils.sendValueTranslation("Help.CommandExample", example, false, sender);
-		TranslationUtils.sendHeading("Description", sender);
-		sender.sendMessage(description);
+		TranslationUtils.sendValueTranslation("Help.CommandExample", example, false, commandSender);
+		TranslationUtils.sendHeading("Description", commandSender);
+		commandSender.sendMessage(description);
 	}
 
 	/**
 	 * Display Command Usage.
 	 * Formats the information to display command syntax and brief command title.
-	 * @param commandSender requesting sender
+	 * @param commandSender command sender
 	 */
 	public void displayCommandUsage(CommandSender commandSender) {
 		commandSender.sendMessage(TranslationUtils.getTranslation("Help.CommandUsage", false)
@@ -67,10 +67,10 @@ public class CommandUsage {
 	/**
 	 * Display invalid syntax error.
 	 *
-	 * @param sender target command sender
+	 * @param commandSender command sender
 	 */
-	public void sendInvalidSyntax(CommandSender sender) {
-		sender.sendMessage(TranslationUtils.getTranslation("Error.Syntax")
+	public void sendInvalidSyntax(CommandSender commandSender) {
+		commandSender.sendMessage(TranslationUtils.getTranslation("Error.Syntax")
 				.replace("%COMMAND%", getCommand())
 				.replace("%ARGUMENTS%", getArguments()));
 	}

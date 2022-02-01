@@ -81,7 +81,6 @@ import org.jetbrains.annotations.Nullable;
 public class PlayerManager extends AbstractPluginReceiver implements Initializable {
 
 	private final Map<UUID, Long> playerDelay = new HashMap<>();
-	private final List<UUID> hiddenPlayers = new ArrayList<>();
 	// player actions to set data
 	private final Map<String, TriConsumer<CommandSender, OfflinePlayer, String>> playerActions = new HashMap<>();
 
@@ -270,7 +269,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			parkour.getCourseManager().runEventCommands(player, session, LEAVE);
 		}
 
-		forceVisible(player);
+		parkour.getParkourSessionManager().forceVisible(player);
 		parkour.getScoreboardManager().removeScoreboard(player);
 		playerConfig.setExistingSessionCourseName(null);
 		Bukkit.getServer().getPluginManager().callEvent(
@@ -438,7 +437,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	public void teardownParkourPlayer(Player player) {
 		parkour.getChallengeManager().forfeitChallenge(player);
 		parkour.getQuestionManager().removeQuestion(player);
-		hiddenPlayers.remove(player.getUniqueId());
+		parkour.getParkourSessionManager().removeHiddenPlayer(player);
 		playerDelay.remove(player.getUniqueId());
 		Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () ->
 				parkour.getParkourSessionManager().saveParkourSession(player, true));
@@ -476,11 +475,6 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		parkour.getSoundsManager().playSound(player, SoundType.COURSE_FINISHED);
 		preparePlayer(player, parkour.getParkourConfig().getString("OnFinish.SetGameMode"));
 
-		if (hasHiddenPlayers(player)) {
-			hideOrShowPlayers(player, true, true);
-			removeHidden(player);
-		}
-
 		announceCourseFinishMessage(player, session);
 		CourseConfig.getConfig(courseName).incrementCompletions();
 		teardownParkourMode(player);
@@ -510,7 +504,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		playerConfig.setExistingSessionCourseName(null);
 		parkour.getConfigManager().getCourseCompletionsConfig().addCompletedCourse(player, courseName);
 
-		forceVisible(player);
+		parkour.getParkourSessionManager().forceVisible(player);
 		parkour.getParkourSessionManager().deleteParkourSession(player, courseName);
 		parkour.getCourseManager().runEventCommands(player, session, FINISH);
 	}
@@ -645,37 +639,6 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		parkour.getSoundsManager().playSound(player, SoundType.RELOAD_ROCKET);
 	}
 
-	/**
-	 * Toggle the Visibility of the Player.
-	 *
-	 * @param player player
-	 */
-	public void toggleVisibility(Player player) {
-		toggleVisibility(player, false);
-	}
-
-	/**
-	 * Toggle Player's Visibility.
-	 * Either hide or show all online players. Override can be applied to
-	 * Used when on a Course and want to remove distraction of other Players.
-	 *
-	 * @param player requesting player
-	 * @param forceVisible override to force visibility
-	 */
-	public void toggleVisibility(Player player, boolean forceVisible) {
-		boolean showPlayers = forceVisible || hasHiddenPlayers(player);
-		hideOrShowPlayers(player, showPlayers, forceVisible);
-
-		if (showPlayers) {
-			removeHidden(player);
-			TranslationUtils.sendTranslation("Event.HideAll1", player);
-
-		} else {
-			addHidden(player);
-			TranslationUtils.sendTranslation("Event.HideAll2", player);
-		}
-	}
-
 	private void submitPlayerLeaderboard(Player player, ParkourSession session) {
 		TimeResult timeResult = calculateTimeResult(player, session);
 
@@ -698,62 +661,6 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 						displayTime, false);
 			}
 		}
-	}
-
-	private void hideOrShowPlayers(Player player, boolean showPlayers, boolean allPlayers) {
-		Collection<Player> playerScope;
-
-		if (parkour.getParkourConfig().getBoolean("ParkourTool.HideAll.Global") || allPlayers) {
-			playerScope = (List<Player>) Bukkit.getOnlinePlayers();
-		} else {
-			playerScope = parkour.getParkourSessionManager().getOnlineParkourPlayers();
-		}
-
-		for (Player eachPlayer : playerScope) {
-			if (showPlayers) {
-				PlayerUtils.showPlayer(player, eachPlayer);
-			} else {
-				PlayerUtils.hidePlayer(player, eachPlayer);
-			}
-		}
-	}
-
-	/**
-	 * Force the Player to be visible to all (unless chosen to hide all).
-	 *
-	 * @param player target player
-	 */
-	public void forceVisible(Player player) {
-		for (Player eachPlayer : Bukkit.getOnlinePlayers()) {
-			if (!hasHiddenPlayers(eachPlayer)) {
-				eachPlayer.showPlayer(player);
-			}
-		}
-		if (hasHiddenPlayers(player)) {
-			hideOrShowPlayers(player, true, true);
-			removeHidden(player);
-		}
-	}
-
-	/**
-	 * Force the Player to be invisible to all.
-	 *
-	 * @param player target player
-	 */
-	public void forceInvisible(Player player) {
-		for (Player players : Bukkit.getOnlinePlayers()) {
-			PlayerUtils.hidePlayer(players, player);
-		}
-		addHidden(player);
-	}
-
-	/**
-	 * Has requested to Hide Players.
-	 * @param player requesting player
-	 * @return player has hidden others
-	 */
-	public boolean hasHiddenPlayers(Player player) {
-		return hiddenPlayers.contains(player.getUniqueId());
 	}
 
 	/**
@@ -1036,38 +943,38 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	 * Display Parkour Player's Information.
 	 * Finds and displays the target player's stored statistics and any current Course information.
 	 *
-	 * @param sender requesting sender
+	 * @param commandSender command sender
 	 * @param targetPlayer target layer
 	 */
-	public void displayParkourInfo(CommandSender sender, OfflinePlayer targetPlayer) {
+	public void displayParkourInfo(CommandSender commandSender, OfflinePlayer targetPlayer) {
 		if (!PlayerConfig.hasPlayerConfig(targetPlayer)) {
-			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, sender);
+			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, commandSender);
 			return;
 		}
 
 		PlayerConfig playerConfig = PlayerConfig.getConfig(targetPlayer);
 		ParkourSession session = parkour.getParkourSessionManager().getParkourSession(targetPlayer.getPlayer());
-		TranslationUtils.sendHeading(targetPlayer.getName() + "'s information", sender);
+		TranslationUtils.sendHeading(targetPlayer.getName() + "'s information", commandSender);
 
 		if (session != null) {
-			sendValue(sender, "Course", session.getCourse().getName());
-			sendValue(sender, "Deaths", session.getDeaths());
-			sendValue(sender, "Time", session.getDisplayTime());
-			sendValue(sender, "Checkpoint", session.getCurrentCheckpoint());
+			sendValue(commandSender, "Course", session.getCourse().getName());
+			sendValue(commandSender, "Deaths", session.getDeaths());
+			sendValue(commandSender, "Time", session.getDisplayTime());
+			sendValue(commandSender, "Checkpoint", session.getCurrentCheckpoint());
 		}
 
-		sendConditionalValue(sender, "ParkourLevel", playerConfig.getParkourLevel());
-		sendConditionalValue(sender, "ParkourRank", StringUtils.colour(playerConfig.getParkourRank()));
-		sendConditionalValue(sender, "Parkoins", playerConfig.getParkoins());
-		sendConditionalValue(sender, "Editing", playerConfig.getSelectedCourse());
+		sendConditionalValue(commandSender, "ParkourLevel", playerConfig.getParkourLevel());
+		sendConditionalValue(commandSender, "ParkourRank", StringUtils.colour(playerConfig.getParkourRank()));
+		sendConditionalValue(commandSender, "Parkoins", playerConfig.getParkoins());
+		sendConditionalValue(commandSender, "Editing", playerConfig.getSelectedCourse());
 
 		int completedCourses = parkour.getConfigManager().getCourseCompletionsConfig().getNumberOfCompletedCourses(targetPlayer);
 
-		sendValue(sender, "Courses Completed",
+		sendValue(commandSender, "Courses Completed",
 				completedCourses + " / " + parkour.getCourseManager().getCourseNames().size());
 
-		if (PermissionUtils.hasPermission(sender, Permission.ADMIN_ALL, false)) {
-			sendValue(sender, "Config Path", parkour.getParkourConfig().getPlayerConfigName(targetPlayer));
+		if (PermissionUtils.hasPermission(commandSender, Permission.ADMIN_ALL, false)) {
+			sendValue(commandSender, "Config Path", parkour.getParkourConfig().getPlayerConfigName(targetPlayer));
 		}
 	}
 
@@ -1075,18 +982,18 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	 * Set the Player's ParkourLevel.
 	 * Used by administrators to manually set the ParkourLevel of a Player.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param targetPlayer target player
 	 * @param value desired parkour level
 	 */
-	public void setParkourLevel(CommandSender sender, OfflinePlayer targetPlayer, String value, boolean addition) {
+	public void setParkourLevel(CommandSender commandSender, OfflinePlayer targetPlayer, String value, boolean addition) {
 		if (!ValidationUtils.isPositiveInteger(value)) {
-			TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
+			TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, commandSender);
 			return;
 		}
 
 		if (!PlayerConfig.hasPlayerConfig(targetPlayer)) {
-			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, sender);
+			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, commandSender);
 			return;
 		}
 
@@ -1097,12 +1004,12 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}
 		newLevel = Math.min(newLevel, parkour.getParkourConfig().getInt("Other.Parkour.MaximumParkourLevel"));
 		playerConfig.setParkourLevel(newLevel);
-		TranslationUtils.sendMessage(sender, targetPlayer.getName() + "'s ParkourLevel was set to &b" + newLevel);
+		TranslationUtils.sendMessage(commandSender, targetPlayer.getName() + "'s ParkourLevel was set to &b" + newLevel);
 
 		if (parkour.getParkourConfig().getBoolean("Other.OnSetPlayerParkourLevel.UpdateParkourRank")) {
 			String parkourRank = parkour.getParkourRankManager().getUnlockedParkourRank(targetPlayer, newLevel);
 			if (parkourRank != null) {
-				setParkourRank(sender, targetPlayer, parkourRank);
+				setParkourRank(commandSender, targetPlayer, parkourRank);
 			}
 		}
 	}
@@ -1111,38 +1018,38 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	 * Set the Player's ParkourRank.
 	 * Used by administrators to manually set the ParkourRank of a Player.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param targetPlayer target player
 	 * @param value desired parkour rank
 	 */
-	public void setParkourRank(CommandSender sender, OfflinePlayer targetPlayer, String value) {
+	public void setParkourRank(CommandSender commandSender, OfflinePlayer targetPlayer, String value) {
 		if (!PlayerConfig.hasPlayerConfig(targetPlayer)) {
-			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, sender);
+			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, commandSender);
 			return;
 		}
 
 		PlayerConfig.getConfig(targetPlayer).setParkourRank(value);
-		TranslationUtils.sendMessage(sender, targetPlayer.getName() + "'s Parkour was set to " + value);
+		TranslationUtils.sendMessage(commandSender, targetPlayer.getName() + "'s Parkour was set to " + value);
 	}
 
 	/**
 	 * Display a summary of the Parkour Players.
 	 * Each of the online Parkour Players will have their session details displayed.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 */
-	public void displayParkourPlayers(CommandSender sender) {
+	public void displayParkourPlayers(CommandSender commandSender) {
 		int parkourPlayers = parkour.getParkourSessionManager().getNumberOfParkourPlayers();
 		if (parkourPlayers == 0) {
-			TranslationUtils.sendMessage(sender, "Nobody is playing Parkour!");
+			TranslationUtils.sendMessage(commandSender, "Nobody is playing Parkour!");
 			return;
 		}
 
-		TranslationUtils.sendMessage(sender, parkourPlayers + " players using Parkour: ");
+		TranslationUtils.sendMessage(commandSender, parkourPlayers + " players using Parkour: ");
 
 		String playingMessage = TranslationUtils.getTranslation("Parkour.Playing", false);
 		for (Map.Entry<UUID, ParkourSession> entry : parkour.getParkourSessionManager().getParkourPlayers().entrySet()) {
-			sender.sendMessage(TranslationUtils.replaceAllParkourPlaceholders(
+			commandSender.sendMessage(TranslationUtils.replaceAllParkourPlaceholders(
 					playingMessage, Bukkit.getPlayer(entry.getKey()), entry.getValue()));
 		}
 	}
@@ -1150,26 +1057,25 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	/**
 	 * Process the "setplayer" Command.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param args command arguments
 	 */
-	public void processSetCommand(CommandSender sender, String... args) {
+	public void processSetCommand(CommandSender commandSender, String... args) {
 		OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(args[1]);
 
 		if (!PlayerConfig.hasPlayerConfig(targetPlayer)) {
-			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, sender);
+			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, commandSender);
 			return;
 		}
 
-		if (args.length == 2 && sender instanceof Player) {
-			new SetPlayerConversation((Player) sender).withTargetPlayerName(args[1].toLowerCase()).begin();
+		if (args.length == 2 && commandSender instanceof Player) {
+			new SetPlayerConversation((Player) commandSender).withTargetPlayerName(args[1].toLowerCase()).begin();
 
 		} else if (args.length >= 4) {
-			performAction(sender, targetPlayer, args[2], args[3]);
+			performAction(commandSender, targetPlayer, args[2], args[3]);
 
 		} else {
-			TranslationUtils.sendInvalidSyntax(sender, "setplayer",
-					"(player) [" + String.join(", ", getSetPlayerActions()) + "] [value]");
+			parkour.getParkourCommands().sendInvalidSyntax(commandSender, "setplayer");
 		}
 	}
 
@@ -1187,10 +1093,10 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	/**
 	 * Reset the Player's Parkour Information.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param targetPlayerId target player identifier
 	 */
-	public void resetPlayer(CommandSender sender, String targetPlayerId) {
+	public void resetPlayer(CommandSender commandSender, String targetPlayerId) {
 		OfflinePlayer targetPlayer;
 
 		if (ValidationUtils.isUuidFormat(targetPlayerId)) {
@@ -1200,13 +1106,13 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}
 
 		if (!PlayerConfig.hasPlayerConfig(targetPlayer)) {
-			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, sender);
+			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, commandSender);
 			return;
 		}
 
 		resetPlayer(targetPlayer);
-		TranslationUtils.sendValueTranslation("Parkour.Reset", targetPlayerId, sender);
-		PluginUtils.logToFile(targetPlayerId + " player was reset by " + sender.getName());
+		TranslationUtils.sendValueTranslation("Parkour.Reset", targetPlayerId, commandSender);
+		PluginUtils.logToFile(targetPlayerId + " player was reset by " + commandSender.getName());
 	}
 
 	/**
@@ -1348,18 +1254,18 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	}
 
 
-	public void performAction(CommandSender sender, OfflinePlayer targetPlayer, String action, String value) {
+	public void performAction(CommandSender commandSender, OfflinePlayer targetPlayer, String action, String value) {
 		if (!PlayerConfig.hasPlayerConfig(targetPlayer)) {
-			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, sender);
+			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, commandSender);
 			return;
 		}
 
 		if (!playerActions.containsKey(action.toLowerCase())) {
-			TranslationUtils.sendMessage(sender, "Unknown Player action command");
+			TranslationUtils.sendMessage(commandSender, "Unknown Player action command");
 			return;
 		}
 
-		playerActions.get(action.toLowerCase()).accept(sender, targetPlayer, value);
+		playerActions.get(action.toLowerCase()).accept(commandSender, targetPlayer, value);
 	}
 
 	private void populateSetPlayerActions() {
@@ -1461,8 +1367,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}
 
 		if (parkour.getParkourConfig().getBoolean("ParkourTool.HideAll.ActivateOnJoin")) {
-			hideOrShowPlayers(player, false, false);
-			addHidden(player);
+			parkour.getParkourSessionManager().toggleVisibility(player, true);
 		}
 
 		giveParkourTool(player, "ParkourTool.LastCheckpoint", "ParkourTool.LastCheckpoint");
@@ -1696,21 +1601,5 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			String scope = parkour.getParkourConfig().getString("OnJoin.BroadcastLevel");
 			TranslationUtils.announceParkourMessage(player, scope, joinBroadcast);
 		}
-	}
-
-	/**
-	 * Add Player to Hidden Players.
-	 * @param player requesting player
-	 */
-	private void addHidden(Player player) {
-		hiddenPlayers.add(player.getUniqueId());
-	}
-
-	/**
-	 * Remove Player from Hidden Players.
-	 * @param player requesting player
-	 */
-	private void removeHidden(Player player) {
-		hiddenPlayers.remove(player.getUniqueId());
 	}
 }

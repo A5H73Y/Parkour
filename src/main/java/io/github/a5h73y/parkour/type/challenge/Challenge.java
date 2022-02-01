@@ -90,15 +90,15 @@ public class Challenge {
      * Display Challenge Information.
      * Print the Challenge summary details to the sender.
      *
-     * @param sender sender
+     * @param commandSender command sender
      */
-    public void displayInformation(CommandSender sender) {
-        TranslationUtils.sendHeading("Challenge Details", sender);
-        TranslationUtils.sendValue(sender, "Host", challengeHost.getName());
-        TranslationUtils.sendValue(sender, "Participants", participants.size());
-        TranslationUtils.sendValue(sender, "Course", courseName);
-        TranslationUtils.sendConditionalValue(sender, "Wager", wager);
-        TranslationUtils.sendValue(sender, "Started", String.valueOf(started));
+    public void displayInformation(CommandSender commandSender) {
+        TranslationUtils.sendHeading("Challenge Details", commandSender);
+        TranslationUtils.sendValue(commandSender, "Host", challengeHost.getName());
+        TranslationUtils.sendValue(commandSender, "Participants", participants.size());
+        TranslationUtils.sendValue(commandSender, "Course", courseName);
+        TranslationUtils.sendConditionalValue(commandSender, "Wager", wager);
+        TranslationUtils.sendValue(commandSender, "Started", String.valueOf(started));
     }
 
     @Override

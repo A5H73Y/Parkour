@@ -1,15 +1,21 @@
 package io.github.a5h73y.parkour.type.player.session;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_UNKNOWN_PLAYER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.TEST_MODE;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.ParkourConstants;
+import io.github.a5h73y.parkour.other.TriConsumer;
 import io.github.a5h73y.parkour.type.Initializable;
 import io.github.a5h73y.parkour.type.Teardownable;
 import io.github.a5h73y.parkour.type.course.Course;
 import io.github.a5h73y.parkour.type.player.PlayerConfig;
+import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -18,14 +24,23 @@ import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Parkour Session Manager.
+ * Holds reference to Players currently on a Course.
+ * Adds actions to perform to the Player whilst on a Course.
+ */
 public class ParkourSessionManager extends AbstractPluginReceiver implements Teardownable, Initializable {
 
 	private final Map<UUID, ParkourSession> parkourPlayers = new WeakHashMap<>();
+	private final List<UUID> hiddenPlayers = new ArrayList<>();
+
+	private final Map<String, TriConsumer<CommandSender, OfflinePlayer, String>> sessionActions = new HashMap<>();
 
 	public ParkourSessionManager(final Parkour parkour) {
 		super(parkour);
@@ -274,5 +289,134 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Tea
 
 	public boolean hasValidParkourSessionFile(Player player, Course course) {
 		return ParkourSessionConfig.hasParkourSessionConfig(player, course.getName());
+	}
+
+	public void toggleVisibility(Player player) {
+		toggleVisibility(player, false);
+	}
+
+	/**
+	 * Toggle Player's Visibility.
+	 * Either hide or show all online players. Override can be applied to
+	 * Used when on a Course and want to remove distraction of other Players.
+	 *
+	 * @param player requesting player
+	 */
+	public void toggleVisibility(Player player, boolean silent) {
+		boolean showPlayers = hasHiddenPlayers(player);
+		hideOrShowPlayers(player, showPlayers);
+
+		if (showPlayers) {
+			removeHidden(player);
+			if (!silent) {
+				TranslationUtils.sendTranslation("Event.HideAll1", player);
+			}
+
+		} else {
+			addHidden(player);
+			if (!silent) {
+				TranslationUtils.sendTranslation("Event.HideAll2", player);
+			}
+		}
+	}
+
+	private void hideOrShowPlayers(Player player, boolean showPlayers) {
+		Collection<Player> playerScope = getHideAllTargetPlayers();
+
+		for (Player eachPlayer : playerScope) {
+			if (showPlayers) {
+				PlayerUtils.showPlayer(player, eachPlayer);
+			} else {
+				PlayerUtils.hidePlayer(player, eachPlayer);
+			}
+		}
+	}
+
+	private Collection<Player> getHideAllTargetPlayers() {
+		if (parkour.getParkourConfig().getBoolean("ParkourTool.HideAll.Global")) {
+			return (Collection<Player>) Bukkit.getOnlinePlayers();
+		} else {
+			return parkour.getParkourSessionManager().getOnlineParkourPlayers();
+		}
+	}
+
+	/**
+	 * Force the Player to be visible to all (unless chosen to hide all).
+	 *
+	 * @param player target player
+	 */
+	public void forceVisible(Player player) {
+		for (Player eachPlayer : Bukkit.getOnlinePlayers()) {
+			if (!hasHiddenPlayers(eachPlayer)) {
+				PlayerUtils.showPlayer(eachPlayer, player);
+			}
+		}
+		if (hasHiddenPlayers(player)) {
+			hideOrShowPlayers(player, true);
+			removeHidden(player);
+		}
+	}
+
+	/**
+	 * Force the Player to be invisible to all.
+	 *
+	 * @param player target player
+	 */
+	public void forceInvisible(Player player) {
+		for (Player players : Bukkit.getOnlinePlayers()) {
+			PlayerUtils.hidePlayer(players, player);
+		}
+		addHidden(player);
+	}
+
+	/**
+	 * Has requested to Hide Players.
+	 * @param player requesting player
+	 * @return player has hidden others
+	 */
+	public boolean hasHiddenPlayers(Player player) {
+		return hiddenPlayers.contains(player.getUniqueId());
+	}
+
+	/**
+	 * Add Player to Hidden Players.
+	 * @param player requesting player
+	 */
+	private void addHidden(Player player) {
+		hiddenPlayers.add(player.getUniqueId());
+	}
+
+	/**
+	 * Remove Player from Hidden Players.
+	 * @param player requesting player
+	 */
+	private void removeHidden(Player player) {
+		hiddenPlayers.remove(player.getUniqueId());
+	}
+
+	public void performAction(CommandSender commandSender, OfflinePlayer targetPlayer, String action, String value) {
+		if (!(commandSender instanceof Player) || !isPlaying((Player) commandSender)) {
+			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, commandSender);
+			return;
+		}
+
+		if (!sessionActions.containsKey(action.toLowerCase())) {
+			TranslationUtils.sendMessage(commandSender, "Unknown Player action command");
+			return;
+		}
+
+		sessionActions.get(action.toLowerCase()).accept(commandSender, targetPlayer, value);
+	}
+
+	private void populateSetsessionActions() {
+//		sessionActions.put("hideall", (this::setParkourRank));
+//		sessionActions.put("restart", (sender, targetPlayer, value) -> setParkourLevel(sender, targetPlayer, value, false));
+//		sessionActions.put("back", (sender, targetPlayer, value) -> setParkourLevel(sender, targetPlayer, value, true));
+//		sessionActions.put("leave", (sender, targetPlayer, value) -> setParkourLevel(sender, targetPlayer, value, true));
+//		sessionActions.put("setcheckpoint", (sender, targetPlayer, value) -> setParkourLevel(sender, targetPlayer, value, true));
+	}
+
+	public void removeHiddenPlayer(@NotNull Player player) {
+		hiddenPlayers.remove(player.getUniqueId());
 	}
 }

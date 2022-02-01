@@ -121,17 +121,17 @@ public class TranslationUtils {
 	}
 
 	/**
-	 * Send the translated message to the player(s).
+	 * Send the translated message to the recipient(s).
 	 *
 	 * @param translationKey to translate
 	 * @param prefix display prefix
-	 * @param players targets to receive the message
+	 * @param recipients targets to receive the message
 	 */
-	public static void sendTranslation(String translationKey, boolean prefix, CommandSender... players) {
+	public static void sendTranslation(String translationKey, boolean prefix, CommandSender... recipients) {
 		String translation = getTranslation(translationKey, prefix);
-		if (players != null && !translation.isEmpty()) {
-			for (CommandSender player : players) {
-				player.sendMessage(translation);
+		if (recipients != null && !translation.isEmpty()) {
+			for (CommandSender recipient : recipients) {
+				recipient.sendMessage(translation);
 			}
 		}
 	}
@@ -158,19 +158,18 @@ public class TranslationUtils {
 	}
 
 	/**
-	 * Send the translated message to the player(s), replacing a value placeholder.
-	 *
+	 * Send the translated message to the recipient(s), replacing a value placeholder.
 	 *
 	 * @param translationKey to translate
 	 * @param value to replace
-	 * @param players targets to receive the message
+	 * @param recipients targets to receive the message
 	 */
-	public static void sendValueTranslation(String translationKey, String value, boolean prefix, CommandSender... players) {
+	public static void sendValueTranslation(String translationKey, String value, boolean prefix, CommandSender... recipients) {
 		String translation = getValueTranslation(translationKey, value, prefix);
-		if (players != null && !translation.isEmpty()) {
-			for (CommandSender player : players) {
-				if (player != null) {
-					player.sendMessage(translation);
+		if (recipients != null && !translation.isEmpty()) {
+			for (CommandSender recipient : recipients) {
+				if (recipient != null) {
+					recipient.sendMessage(translation);
 				}
 			}
 		}
@@ -190,12 +189,12 @@ public class TranslationUtils {
 	 * Display invalid syntax error.
 	 * Using parameters to populate the translation message
 	 *
-	 * @param sender target command sender
+	 * @param commandSender command sender
 	 * @param command requested command
 	 * @param arguments command arguments
 	 */
-	public static void sendInvalidSyntax(CommandSender sender, String command, String arguments) {
-		sender.sendMessage(getTranslation("Error.Syntax")
+	public static void sendInvalidSyntax(CommandSender commandSender, String command, String arguments) {
+		commandSender.sendMessage(getTranslation("Error.Syntax")
 				.replace("%COMMAND%", command)
 				.replace("%ARGUMENTS%", arguments));
 	}
@@ -203,13 +202,13 @@ public class TranslationUtils {
 	/**
 	 * Send the Property Set translation, replacing placeholders.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param property property name
 	 * @param courseName course name
 	 * @param value value set
 	 */
-	public static void sendPropertySet(CommandSender sender, String property, String courseName, String value) {
-		sender.sendMessage(getPropertySet(property, courseName, value));
+	public static void sendPropertySet(CommandSender commandSender, String property, String courseName, String value) {
+		commandSender.sendMessage(getPropertySet(property, courseName, value));
 	}
 
 	/**
@@ -231,12 +230,12 @@ public class TranslationUtils {
 	 * Send the Player a Parkour prefixed Message.
 	 * For messages that don't require a Translation entry.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param message message to send
 	 */
-	public static void sendMessage(CommandSender sender, String message) {
-		if (sender != null && !message.isEmpty()) {
-			sender.sendMessage(getPluginPrefix().concat(colour(message)));
+	public static void sendMessage(CommandSender commandSender, String message) {
+		if (commandSender != null && !message.isEmpty()) {
+			commandSender.sendMessage(getPluginPrefix().concat(colour(message)));
 		}
 	}
 
@@ -244,54 +243,54 @@ public class TranslationUtils {
 	 * Send the Player a Message.
 	 * For messages that don't require a Translation entry.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param message message to send
 	 * @param prefix display prefix
 	 */
-	public static void sendMessage(CommandSender sender, String message, boolean prefix) {
+	public static void sendMessage(CommandSender commandSender, String message, boolean prefix) {
 		if (prefix) {
-			sendMessage(sender, message);
-		} else if (sender != null) {
-			sender.sendMessage(colour(message));
+			sendMessage(commandSender, message);
+		} else if (commandSender != null) {
+			commandSender.sendMessage(colour(message));
 		}
 	}
 
 	/**
 	 * Send a Title Value Summary.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param title value title
 	 * @param value value
 	 */
-	public static void sendValue(CommandSender sender, String title, String value) {
-		if (sender != null) {
-			sender.sendMessage(title + ": " + ChatColor.AQUA + value);
+	public static void sendValue(CommandSender commandSender, String title, String value) {
+		if (commandSender != null) {
+			commandSender.sendMessage(title + ": " + ChatColor.AQUA + value);
 		}
 	}
 
 	/**
 	 * Send a Title Value Summary.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param title value title
 	 * @param value value
 	 */
-	public static void sendValue(CommandSender sender, String title, Number value) {
-		sendValue(sender, title, String.valueOf(value));
+	public static void sendValue(CommandSender commandSender, String title, Number value) {
+		sendValue(commandSender, title, String.valueOf(value));
 	}
 
 	/**
 	 * Send conditional Value Summary.
 	 * Message is sent if the condition is met.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param title value title
 	 * @param conditionMet condition is met
 	 * @param value value
 	 */
-	public static void sendConditionalValue(CommandSender sender, String title, Boolean conditionMet, String value) {
+	public static void sendConditionalValue(CommandSender commandSender, String title, Boolean conditionMet, String value) {
 		if (Boolean.TRUE.equals(conditionMet)) {
-			sendValue(sender, title, value);
+			sendValue(commandSender, title, value);
 		}
 	}
 
@@ -299,13 +298,13 @@ public class TranslationUtils {
 	 * Send conditional Value Summary.
 	 * Message is sent if the numeric value is positive.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param title value title
 	 * @param value value
 	 */
-	public static void sendConditionalValue(CommandSender sender, String title, Number value) {
+	public static void sendConditionalValue(CommandSender commandSender, String title, Number value) {
 		if (value != null && value.doubleValue() > 0) {
-			sendValue(sender, title, String.valueOf(value));
+			sendValue(commandSender, title, String.valueOf(value));
 		}
 	}
 
@@ -313,13 +312,13 @@ public class TranslationUtils {
 	 * Send conditional Value Summary.
 	 * Message is sent if the value is valid.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param title value title
 	 * @param value value
 	 */
-	public static void sendConditionalValue(CommandSender sender, String title, String value) {
+	public static void sendConditionalValue(CommandSender commandSender, String title, String value) {
 		if (ValidationUtils.isStringValid(value)) {
-			sendValue(sender, title, value);
+			sendValue(commandSender, title, value);
 		}
 	}
 

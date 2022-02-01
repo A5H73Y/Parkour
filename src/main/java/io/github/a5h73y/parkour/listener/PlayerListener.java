@@ -1,10 +1,10 @@
 package io.github.a5h73y.parkour.listener;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.player.ParkourMode;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.type.player.session.ParkourSession;
+import io.github.a5h73y.parkour.type.player.ParkourMode;
 import io.github.a5h73y.parkour.type.player.PlayerConfig;
+import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.GameMode;
 import org.bukkit.World;
@@ -61,7 +61,8 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
     @EventHandler
     public void onEntityCombust(EntityCombustEvent event) {
         if (event.getEntity() instanceof Player
-                && parkour.getParkourSessionManager().isPlaying((Player) event.getEntity())) {
+                && parkour.getParkourSessionManager().isPlaying((Player) event.getEntity())
+                && parkour.getParkourConfig().getBoolean("OnCourse.PreventFireDamage")) {
             event.setCancelled(true);
         }
     }
@@ -81,18 +82,11 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         Player player = (Player) event.getEntity();
         boolean playing = parkour.getParkourSessionManager().isPlaying(player);
 
-        if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
-            if (playing && parkour.getParkourConfig().getBoolean("OnCourse.DieInVoid")) {
-                if (parkour.getParkourConfig().getBoolean("OnCourse.DisablePlayerDamage")) {
-                    event.setCancelled(true);
-                }
-                parkour.getPlayerManager().playerDie(player);
-                return;
-            } else if (!playing && parkour.getParkourConfig().isVoidDetection()) {
-                parkour.getServer().getScheduler().runTaskLater(parkour, () ->
-                        parkour.getLobbyManager().teleportToNearestLobby(player),1L);
-                return;
-            }
+        // they aren't on a Course and took void damage
+        if (event.getCause() == EntityDamageEvent.DamageCause.VOID
+                && !playing && parkour.getParkourConfig().isVoidTeleportToLobby()) {
+            parkour.getServer().getScheduler().runTaskLater(parkour, () ->
+                    parkour.getLobbyManager().teleportToNearestLobby(player),1L);
         }
 
         if (!playing) {
@@ -107,6 +101,14 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
                 && !parkour.getParkourConfig().getBoolean("ParkourModes.Dropper.FallDamage")))) {
             event.setDamage(0);
             event.setCancelled(true);
+            return;
+        }
+
+        if (event.getCause() == EntityDamageEvent.DamageCause.VOID
+                && parkour.getParkourConfig().getBoolean("OnCourse.DieInVoid")) {
+            event.setDamage(0);
+            event.setCancelled(true);
+            parkour.getPlayerManager().playerDie(player);
             return;
         }
 

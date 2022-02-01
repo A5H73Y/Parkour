@@ -127,28 +127,28 @@ public class CheckpointManager extends AbstractPluginReceiver {
      * Delete a Checkpoint from the Course.
      * This will only delete the highest Checkpoint, decreasing the amount of Checkpoints.
      *
-     * @param sender requesting sender
+     * @param commandSender command sender
      * @param courseName the desired course
      */
-    public void deleteCheckpoint(CommandSender sender, String courseName) {
+    public void deleteCheckpoint(CommandSender commandSender, String courseName) {
         if (!parkour.getCourseManager().doesCourseExist(courseName)) {
             return;
         }
 
         Integer checkpoint = CourseConfig.getConfig(courseName).getCheckpointAmount();
 
-        if (checkpoint != null && checkpoint <= 0) {
-            TranslationUtils.sendMessage(sender, courseName + " has no Checkpoints!");
+        if (checkpoint <= 0) {
+            TranslationUtils.sendMessage(commandSender, courseName + " has no Checkpoints!");
             return;
         }
 
         CourseConfig.getConfig(courseName).deleteCheckpoint();
         parkour.getCourseManager().clearCache(courseName);
 
-        sender.sendMessage(TranslationUtils.getTranslation("Parkour.DeleteCheckpoint")
+        commandSender.sendMessage(TranslationUtils.getTranslation("Parkour.DeleteCheckpoint")
                 .replace(CHECKPOINT_PLACEHOLDER, String.valueOf(checkpoint))
                 .replace(COURSE_PLACEHOLDER, courseName));
 
-        PluginUtils.logToFile("Checkpoint " + checkpoint + " was deleted on " + courseName + " by " + sender.getName());
+        PluginUtils.logToFile("Checkpoint " + checkpoint + " was deleted on " + courseName + " by " + commandSender.getName());
     }
 }

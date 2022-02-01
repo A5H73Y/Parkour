@@ -448,13 +448,13 @@ public class ParkourValidation {
     /**
      * Validate Sender deleting a Course.
      *
-     * @param sender command sender
+     * @param commandSender command sender
      * @param courseName course name
      * @return command sender can delete course
      */
-    public static boolean canDeleteCourse(CommandSender sender, String courseName) {
+    public static boolean canDeleteCourse(CommandSender commandSender, String courseName) {
         if (!Parkour.getInstance().getCourseManager().doesCourseExist(courseName)) {
-            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
             return false;
         }
 
@@ -470,7 +470,7 @@ public class ParkourValidation {
         }
 
         if (!dependentCourses.isEmpty()) {
-            TranslationUtils.sendMessage(sender,
+            TranslationUtils.sendMessage(commandSender,
                     "This Course can not be deleted as there are other dependent Courses: " + dependentCourses);
             return false;
         }
@@ -480,20 +480,20 @@ public class ParkourValidation {
 
     /**
      * Validate Sender deleting a Checkpoint.
-     * @param sender command sender
+     * @param commandSender command sender
      * @param courseName course name
      * @return command sender can delete checkpoint
      */
-    public static boolean canDeleteCheckpoint(CommandSender sender, String courseName) {
+    public static boolean canDeleteCheckpoint(CommandSender commandSender, String courseName) {
         if (!Parkour.getInstance().getCourseManager().doesCourseExist(courseName)) {
-            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
             return false;
         }
 
         int checkpoints = CourseConfig.getConfig(courseName).getCheckpointAmount();
         // if it has no checkpoints
         if (checkpoints <= 0) {
-            TranslationUtils.sendMessage(sender, courseName + " has no Checkpoints!");
+            TranslationUtils.sendMessage(commandSender, courseName + " has no Checkpoints!");
             return false;
         }
         return true;
@@ -502,13 +502,13 @@ public class ParkourValidation {
     /**
      * Validate Sender deleting a Lobby.
      *
-     * @param sender command sender
+     * @param commandSender command sender
      * @param lobbyName lobby name
      * @return command sender can delete lobby
      */
-    public static boolean canDeleteLobby(CommandSender sender, String lobbyName) {
+    public static boolean canDeleteLobby(CommandSender commandSender, String lobbyName) {
         if (!Parkour.getLobbyConfig().doesLobbyExist(lobbyName)) {
-            TranslationUtils.sendValueTranslation("Error.UnknownLobby", lobbyName, sender);
+            TranslationUtils.sendValueTranslation("Error.UnknownLobby", lobbyName, commandSender);
             return false;
         }
 
@@ -524,7 +524,7 @@ public class ParkourValidation {
         }
 
         if (!dependentCourses.isEmpty()) {
-            TranslationUtils.sendMessage(sender,
+            TranslationUtils.sendMessage(commandSender,
                     "This Lobby can not be deleted as there are dependent Courses: " + dependentCourses);
             return false;
         }
@@ -535,13 +535,13 @@ public class ParkourValidation {
     /**
      * Validate Sender deleting a ParkourKit.
      *
-     * @param sender command sender
+     * @param commandSender command sender
      * @param parkourKit kit name
      * @return command sender can delete parkour kit
      */
-    public static boolean canDeleteParkourKit(CommandSender sender, String parkourKit) {
+    public static boolean canDeleteParkourKit(CommandSender commandSender, String parkourKit) {
         if (!Parkour.getParkourKitConfig().doesParkourKitExist(parkourKit)) {
-            TranslationUtils.sendTranslation("Error.UnknownParkourKit", sender);
+            TranslationUtils.sendTranslation("Error.UnknownParkourKit", commandSender);
             return false;
         }
 
@@ -549,7 +549,7 @@ public class ParkourValidation {
         List<String> dependentCourses = Parkour.getParkourKitConfig().getDependentCourses(parkourKit);
 
         if (!dependentCourses.isEmpty()) {
-            TranslationUtils.sendMessage(sender,
+            TranslationUtils.sendMessage(commandSender,
                     "This ParkourKit can not be deleted as there are dependent Courses: " + dependentCourses);
             return false;
         }

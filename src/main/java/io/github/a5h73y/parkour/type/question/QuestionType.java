@@ -68,8 +68,8 @@ public enum QuestionType {
         this.outcome = outcome;
     }
 
-    public void confirm(CommandSender sender, String value) {
-        this.outcome.accept(sender, value);
+    public void confirm(CommandSender commandSender, String value) {
+        this.outcome.accept(commandSender, value);
     }
 
     public String getActionSummary() {

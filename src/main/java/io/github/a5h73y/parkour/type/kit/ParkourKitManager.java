@@ -119,7 +119,7 @@ public class ParkourKitManager extends CacheableParkourManager {
 	 * Used to identify if there are any problems with the ParkourKit config.
 	 * Examples include an unknown Material, or an unknown Action type.
 	 *
-	 * @param commandSender requesting sender
+	 * @param commandSender command sender
 	 * @param kitName parkour kit name
 	 */
 	public void validateParkourKit(CommandSender commandSender, String kitName) {
@@ -166,7 +166,7 @@ public class ParkourKitManager extends CacheableParkourManager {
 	 * Can be used to display available ParkourKits.
 	 * Alternatively can display the contents of a specified ParkourKit, including the Materials and corresponding Actions.
 	 *
-	 * @param commandSender requesting sender
+	 * @param commandSender command sender
 	 * @param kitName parkour kit name
 	 */
 	public void displayParkourKits(CommandSender commandSender, @Nullable String kitName) {
@@ -213,19 +213,19 @@ public class ParkourKitManager extends CacheableParkourManager {
 	/**
 	 * Delete the requested ParkourKit.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param kitName kit name
 	 */
-	public void deleteParkourKit(CommandSender sender, String kitName) {
+	public void deleteParkourKit(CommandSender commandSender, String kitName) {
 		if (!getConfig().doesParkourKitExist(kitName)) {
-			TranslationUtils.sendTranslation("Error.UnknownParkourKit", sender);
+			TranslationUtils.sendTranslation("Error.UnknownParkourKit", commandSender);
 			return;
 		}
 
 		getConfig().deleteKit(kitName);
 		clearCache(kitName);
-		TranslationUtils.sendValueTranslation("Parkour.Delete", kitName + " ParkourKit", sender);
-		PluginUtils.logToFile(kitName + " parkourkit was deleted by " + sender.getName());
+		TranslationUtils.sendValueTranslation("Parkour.Delete", kitName + " ParkourKit", commandSender);
+		PluginUtils.logToFile(kitName + " parkourkit was deleted by " + commandSender.getName());
 	}
 
 	public void processParkourKitCommand(final CommandSender commandSender, final String... args) {

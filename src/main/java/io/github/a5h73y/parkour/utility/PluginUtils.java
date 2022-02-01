@@ -188,50 +188,50 @@ public class PluginUtils {
      * Possible choices include Course, Checkpoint, Lobby, ParkourKit.
      * Each option will create a Question for the Sender to confirm.
      *
-     * @param sender command sender
+     * @param commandSender command sender
      * @param command command choice
      * @param argument argument value
      */
-    public static void deleteCommand(CommandSender sender, String command, String argument) {
+    public static void deleteCommand(CommandSender commandSender, String command, String argument) {
         Parkour parkour = Parkour.getInstance();
 
         switch (command.toLowerCase()) {
             case "course":
-                if (!ParkourValidation.canDeleteCourse(sender, argument)) {
+                if (!ParkourValidation.canDeleteCourse(commandSender, argument)) {
                     return;
                 }
 
-                parkour.getQuestionManager().askDeleteCourseQuestion(sender, argument);
+                parkour.getQuestionManager().askDeleteCourseQuestion(commandSender, argument);
                 break;
 
             case "checkpoint":
-                if (!ParkourValidation.canDeleteCheckpoint(sender, argument)) {
+                if (!ParkourValidation.canDeleteCheckpoint(commandSender, argument)) {
                     return;
                 }
 
                 int checkpoints = CourseConfig.getConfig(argument).getCheckpointAmount();
-                parkour.getQuestionManager().askDeleteCheckpointQuestion(sender, argument, checkpoints);
+                parkour.getQuestionManager().askDeleteCheckpointQuestion(commandSender, argument, checkpoints);
                 break;
 
             case "lobby":
-                if (!ParkourValidation.canDeleteLobby(sender, argument)) {
+                if (!ParkourValidation.canDeleteLobby(commandSender, argument)) {
                     return;
                 }
 
-                parkour.getQuestionManager().askDeleteLobbyQuestion(sender, argument);
+                parkour.getQuestionManager().askDeleteLobbyQuestion(commandSender, argument);
                 break;
 
             case "kit":
             case "parkourkit":
-                if (!ParkourValidation.canDeleteParkourKit(sender, argument)) {
+                if (!ParkourValidation.canDeleteParkourKit(commandSender, argument)) {
                     return;
                 }
 
-                parkour.getQuestionManager().askDeleteKitQuestion(sender, argument);
+                parkour.getQuestionManager().askDeleteKitQuestion(commandSender, argument);
                 break;
 
             default:
-                TranslationUtils.sendInvalidSyntax(sender, "delete", "(course / checkpoint / lobby / kit) (name)");
+                TranslationUtils.sendInvalidSyntax(commandSender, "delete", "(course / checkpoint / lobby / kit) (name)");
                 break;
         }
     }
@@ -241,22 +241,22 @@ public class PluginUtils {
      * Possible choices include Course, Player, Leaderboard, Prize.
      * Each option will create a Question for the Sender to confirm.
      *
-     * @param sender command sender
+     * @param commandSender command sender
      * @param command command choice
      * @param argument argument value
      * @param extraArgument extra argument value
      */
-    public static void resetCommand(CommandSender sender, String command, String argument, @Nullable String extraArgument) {
+    public static void resetCommand(CommandSender commandSender, String command, String argument, @Nullable String extraArgument) {
         Parkour parkour = Parkour.getInstance();
 
         switch (command.toLowerCase()) {
             case "course":
                 if (!parkour.getCourseManager().doesCourseExist(argument)) {
-                    TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, argument, sender);
+                    TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, argument, commandSender);
                     return;
                 }
 
-                parkour.getQuestionManager().askResetCourseQuestion(sender, argument);
+                parkour.getQuestionManager().askResetCourseQuestion(commandSender, argument);
                 break;
 
             case "player":
@@ -269,37 +269,37 @@ public class PluginUtils {
                 }
 
                 if (!PlayerConfig.hasPlayerConfig(targetPlayer)) {
-                    TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, sender);
+                    TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, commandSender);
                     return;
                 }
 
-                parkour.getQuestionManager().askResetPlayerQuestion(sender, argument);
+                parkour.getQuestionManager().askResetPlayerQuestion(commandSender, argument);
                 break;
 
             case "leaderboard":
                 if (!parkour.getCourseManager().doesCourseExist(argument)) {
-                    TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, argument, sender);
+                    TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, argument, commandSender);
                     return;
                 }
 
                 if (extraArgument != null) {
-                    parkour.getQuestionManager().askResetPlayerLeaderboardQuestion(sender, argument, extraArgument);
+                    parkour.getQuestionManager().askResetPlayerLeaderboardQuestion(commandSender, argument, extraArgument);
                 } else {
-                    parkour.getQuestionManager().askResetLeaderboardQuestion(sender, argument);
+                    parkour.getQuestionManager().askResetLeaderboardQuestion(commandSender, argument);
                 }
                 break;
 
             case "prize":
                 if (!parkour.getCourseManager().doesCourseExist(argument)) {
-                    TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, argument, sender);
+                    TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, argument, commandSender);
                     return;
                 }
 
-                parkour.getQuestionManager().askResetPrizeQuestion(sender, argument);
+                parkour.getQuestionManager().askResetPrizeQuestion(commandSender, argument);
                 break;
 
             default:
-                TranslationUtils.sendInvalidSyntax(sender, "reset", "(course / player / leaderboard / prize) (argument)");
+                TranslationUtils.sendInvalidSyntax(commandSender, "reset", "(course / player / leaderboard / prize) (argument)");
                 break;
         }
     }
@@ -309,10 +309,10 @@ public class PluginUtils {
      * View the number of results in each cache.
      * Provide an argument to clear the selected cache.
      *
-     * @param sender command sender
+     * @param commandSender command sender
      * @param argument argument value
      */
-    public static void cacheCommand(CommandSender sender, @Nullable String argument) {
+    public static void processCacheCommand(CommandSender commandSender, @Nullable String argument) {
         Parkour parkour = Parkour.getInstance();
         if (argument != null) {
             switch (argument.toLowerCase()) {
@@ -340,18 +340,18 @@ public class PluginUtils {
                     clearAllCache();
                     break;
                 default:
-                    TranslationUtils.sendInvalidSyntax(sender, "cache", "[course / database / lobby / parkourkit / sound]");
+                    TranslationUtils.sendInvalidSyntax(commandSender, "cache", "[course / database / lobby / parkourkit / sound]");
                     return;
             }
-            TranslationUtils.sendPropertySet(sender, "Cache", StringUtils.standardizeText(argument), "empty");
+            TranslationUtils.sendPropertySet(commandSender, "Cache", StringUtils.standardizeText(argument), "empty");
 
         } else {
-            TranslationUtils.sendHeading("Parkour Cache", sender);
-            TranslationUtils.sendValue(sender, "Courses Cached", parkour.getCourseManager().getCacheSize());
-            TranslationUtils.sendValue(sender, "Database Times Cached", parkour.getDatabaseManager().getCacheSize());
-            TranslationUtils.sendValue(sender, "Lobbies Cached", parkour.getLobbyManager().getCacheSize());
-            TranslationUtils.sendValue(sender, "ParkourKits Cached", parkour.getParkourKitManager().getCacheSize());
-            TranslationUtils.sendValue(sender, "Sounds Cached", parkour.getSoundsManager().getCacheSize());
+            TranslationUtils.sendHeading("Parkour Cache", commandSender);
+            TranslationUtils.sendValue(commandSender, "Courses Cached", parkour.getCourseManager().getCacheSize());
+            TranslationUtils.sendValue(commandSender, "Database Times Cached", parkour.getDatabaseManager().getCacheSize());
+            TranslationUtils.sendValue(commandSender, "Lobbies Cached", parkour.getLobbyManager().getCacheSize());
+            TranslationUtils.sendValue(commandSender, "ParkourKits Cached", parkour.getParkourKitManager().getCacheSize());
+            TranslationUtils.sendValue(commandSender, "Sounds Cached", parkour.getSoundsManager().getCacheSize());
         }
     }
 

@@ -197,12 +197,12 @@ public class CourseManager extends AbstractPluginReceiver {
      * Delete a Course from the Server.
      * Remove all information stored about the course, including all references from the database.
      *
-     * @param sender requesting sender
+     * @param commandSender command sender
      * @param courseName course name
      */
-    public void deleteCourse(final CommandSender sender, final String courseName) {
+    public void deleteCourse(final CommandSender commandSender, final String courseName) {
         if (!doesCourseExist(courseName)) {
-            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
             return;
         }
 
@@ -211,8 +211,8 @@ public class CourseManager extends AbstractPluginReceiver {
         courseNames.remove(courseName);
         clearCache(courseName);
         parkour.getConfigManager().getCourseCompletionsConfig().removeCompletedCourse(courseName);
-        TranslationUtils.sendValueTranslation("Parkour.Delete", courseName, sender);
-        PluginUtils.logToFile(courseName + " course was deleted by " + sender.getName());
+        TranslationUtils.sendValueTranslation("Parkour.Delete", courseName, commandSender);
+        PluginUtils.logToFile(courseName + " course was deleted by " + commandSender.getName());
     }
 
     /**
@@ -221,11 +221,12 @@ public class CourseManager extends AbstractPluginReceiver {
      * All course times will be deleted from the database.
      * The Checkpoints will be unaffected.
      *
+     * @param commandSender command sender
      * @param courseNameInput target course name
      */
-    public void resetCourse(final CommandSender sender, final String courseNameInput) {
+    public void resetCourse(final CommandSender commandSender, final String courseNameInput) {
         if (!doesCourseExist(courseNameInput)) {
-            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseNameInput, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseNameInput, commandSender);
             return;
         }
 
@@ -234,40 +235,40 @@ public class CourseManager extends AbstractPluginReceiver {
         CourseConfig.getConfig(courseName).resetCourseData();
         parkour.getDatabaseManager().deleteCourseTimes(courseName);
         parkour.getConfigManager().getCourseCompletionsConfig().removeCompletedCourse(courseName);
-        TranslationUtils.sendValueTranslation("Parkour.Reset", courseName, sender);
-        PluginUtils.logToFile(courseName + " course was reset by " + sender.getName());
+        TranslationUtils.sendValueTranslation("Parkour.Reset", courseName, commandSender);
+        PluginUtils.logToFile(courseName + " course was reset by " + commandSender.getName());
     }
 
     /**
      * Reset the Course Leaderboards.
      * Each of the time entries for the Course will be deleted.
      *
-     * @param sender sender
+     * @param commandSender command sender
      * @param courseName course name
      */
-    public void resetCourseLeaderboards(CommandSender sender, String courseName) {
+    public void resetCourseLeaderboards(CommandSender commandSender, String courseName) {
         if (!doesCourseExist(courseName)) {
-            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
             return;
         }
 
         parkour.getDatabaseManager().deleteCourseTimes(courseName);
         parkour.getPlaceholderApi().clearCache();
-        TranslationUtils.sendValueTranslation("Parkour.Reset", courseName + " Leaderboards", sender);
-        PluginUtils.logToFile(courseName + " leaderboards were reset by " + sender.getName());
+        TranslationUtils.sendValueTranslation("Parkour.Reset", courseName + " Leaderboards", commandSender);
+        PluginUtils.logToFile(courseName + " leaderboards were reset by " + commandSender.getName());
     }
 
     /**
      * Reset the Course Leaderboards.
      * Each of the time entries for the Course will be deleted.
      *
-     * @param sender sender
+     * @param commandSender command sender
      * @param targetPlayerId target player identifier
      * @param courseName course name
      */
-    public void resetPlayerCourseLeaderboards(CommandSender sender, String targetPlayerId, String courseName) {
+    public void resetPlayerCourseLeaderboards(CommandSender commandSender, String targetPlayerId, String courseName) {
         if (!doesCourseExist(courseName)) {
-            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
             return;
         }
 
@@ -280,33 +281,33 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         if (!PlayerConfig.hasPlayerConfig(targetPlayer)) {
-            TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, sender);
+            TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, commandSender);
             return;
         }
 
         parkour.getDatabaseManager().deletePlayerCourseTimes(targetPlayer, courseName);
         parkour.getPlaceholderApi().clearCache();
         TranslationUtils.sendValueTranslation("Parkour.Reset", targetPlayerId + "'s "
-                + courseName + " Leaderboards", sender);
-        PluginUtils.logToFile(targetPlayerId + "'s " + courseName + " leaderboards were reset by " + sender.getName());
+                + courseName + " Leaderboards", commandSender);
+        PluginUtils.logToFile(targetPlayerId + "'s " + courseName + " leaderboards were reset by " + commandSender.getName());
     }
 
     /**
      * Reset the Course Prize.
      * Will result in the Course using the Default prize.
      *
-     * @param sender command sender
+     * @param commandSender command sender
      * @param courseName course name
      */
-    public void resetPrize(CommandSender sender, String courseName) {
+    public void resetPrize(CommandSender commandSender, String courseName) {
         if (!doesCourseExist(courseName)) {
-            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, sender);
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
             return;
         }
 
         CourseConfig.getConfig(courseName).resetPrizes();
-        TranslationUtils.sendValueTranslation("Parkour.Reset", courseName + " Prizes", sender);
-        PluginUtils.logToFile(courseName + " prizes were reset by " + sender.getName());
+        TranslationUtils.sendValueTranslation("Parkour.Reset", courseName + " Prizes", commandSender);
+        PluginUtils.logToFile(courseName + " prizes were reset by " + commandSender.getName());
     }
 
     /**
@@ -332,34 +333,34 @@ public class CourseManager extends AbstractPluginReceiver {
      * Display the Contents of a Reference Data List.
      * Possible selections include: players, courses, ranks, lobbies
      *
-     * @param sender requesting sender
+     * @param commandSender command sender
      * @param args command arguments
      */
-    public void displayList(final CommandSender sender, final String... args) {
+    public void displayList(final CommandSender commandSender, final String... args) {
         if (args.length < 2) {
-            parkour.getParkourCommands().sendInvalidSyntax(sender, "list");
+            parkour.getParkourCommands().sendInvalidSyntax(commandSender, "list");
             return;
         }
 
         if (args[1].equalsIgnoreCase("players")) {
-            parkour.getPlayerManager().displayParkourPlayers(sender);
+            parkour.getPlayerManager().displayParkourPlayers(commandSender);
 
         } else if (args[1].equalsIgnoreCase("courses")) {
             int page = args.length == 3 && args[2] != null
                     && ValidationUtils.isPositiveInteger(args[2]) ? Integer.parseInt(args[2]) : 1;
-            displayCourses(sender, page);
+            displayCourses(commandSender, page);
 
         } else if (args[1].equalsIgnoreCase("ranks")) {
-            parkour.getParkourRankManager().displayParkourRanks(sender);
+            parkour.getParkourRankManager().displayParkourRanks(commandSender);
 
         } else if (args[1].equalsIgnoreCase("lobbies")) {
-            if (!PermissionUtils.hasPermission(sender, Permission.ADMIN_ALL)) {
+            if (!PermissionUtils.hasPermission(commandSender, Permission.ADMIN_ALL)) {
                 return;
             }
-            parkour.getLobbyManager().displayLobbies(sender);
+            parkour.getLobbyManager().displayLobbies(commandSender);
 
         } else {
-            TranslationUtils.sendInvalidSyntax(sender, "list", "(players / courses / ranks / lobbies)");
+            TranslationUtils.sendInvalidSyntax(commandSender, "list", "(players / courses / ranks / lobbies)");
         }
     }
 
@@ -452,17 +453,17 @@ public class CourseManager extends AbstractPluginReceiver {
      * Courses are presented in Menus, in groups of 10.
      * Information including their name, index number, ready status and level rewards.
      *
-     * @param sender requesting sender
+     * @param commandSender command sender
      * @param page desired page number
      */
-    private void displayCourses(CommandSender sender, int page) {
+    private void displayCourses(CommandSender commandSender, int page) {
         if (courseNames.isEmpty()) {
-            TranslationUtils.sendMessage(sender, "There are no Parkour courses!");
+            TranslationUtils.sendMessage(commandSender, "There are no Parkour courses!");
             return;
         }
 
         if (page <= 0) {
-            TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
+            TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, commandSender);
             return;
         }
 
@@ -471,16 +472,16 @@ public class CourseManager extends AbstractPluginReceiver {
 
         List<String> courseList = courseNames;
         if (parkour.getParkourConfig().getBoolean("Other.Display.OnlyReadyCourses")
-                && !PermissionUtils.hasPermission(sender, Permission.ADMIN_READY_BYPASS, false)) {
+                && !PermissionUtils.hasPermission(commandSender, Permission.ADMIN_READY_BYPASS, false)) {
             courseList = new ArrayList<>(courseCache.keySet());
         }
 
         if (courseList.size() <= fromIndex) {
-            TranslationUtils.sendMessage(sender, "This page doesn't exist.");
+            TranslationUtils.sendMessage(commandSender, "This page doesn't exist.");
             return;
         }
 
-        TranslationUtils.sendMessage(sender, courseList.size() + " courses available:");
+        TranslationUtils.sendMessage(commandSender, courseList.size() + " courses available:");
         List<String> limited = courseList.subList(fromIndex, Math.min(fromIndex + results, courseList.size()));
 
         for (int i = 0; i < limited.size(); i++) {
@@ -507,10 +508,10 @@ public class CourseManager extends AbstractPluginReceiver {
                         .append(courseConfig.getRewardParkourLevelIncrease()).append(')');
             }
 
-            sender.sendMessage(sb.toString());
+            commandSender.sendMessage(sb.toString());
         }
 
-        sender.sendMessage("== " + page + " / " + ((courseList.size() + results - 1) / results) + " ==");
+        commandSender.sendMessage("== " + page + " / " + ((courseList.size() + results - 1) / results) + " ==");
     }
 
     private void populateCourseCache() {

@@ -103,12 +103,12 @@ public class AutoStartManager extends ParkourManager {
 	/**
 	 * Delete the AutoStart at the given coordinates.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param coordinates coordinates
 	 */
-	public void deleteAutoStart(CommandSender sender, String coordinates) {
+	public void deleteAutoStart(CommandSender commandSender, String coordinates) {
 		getConfig().deleteAutoStart(coordinates);
-		TranslationUtils.sendValueTranslation("Parkour.Delete", "AutoStart", sender);
-		PluginUtils.logToFile("AutoStart at " + coordinates + " was deleted by " + sender.getName());
+		TranslationUtils.sendValueTranslation("Parkour.Delete", "AutoStart", commandSender);
+		PluginUtils.logToFile("AutoStart at " + coordinates + " was deleted by " + commandSender.getName());
 	}
 }

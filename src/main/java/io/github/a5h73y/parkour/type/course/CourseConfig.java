@@ -677,66 +677,66 @@ public class CourseConfig extends Json {
     /**
      * Displays all information stored about Course.
      * Dynamically displays data based on what has been set.
-     * @param sender requesting player
+     * @param commandSender command sender
      * @param courseNameRaw course name
      */
-    public static void displayCourseInfo(@NotNull CommandSender sender, String courseNameRaw) {
+    public static void displayCourseInfo(@NotNull CommandSender commandSender, String courseNameRaw) {
         if (!Parkour.getInstance().getCourseManager().doesCourseExist(courseNameRaw)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseNameRaw, sender);
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseNameRaw, commandSender);
             return;
         }
         String courseName = courseNameRaw.toLowerCase();
-        TranslationUtils.sendHeading(StringUtils.standardizeText(courseName) + " statistics", sender);
+        TranslationUtils.sendHeading(StringUtils.standardizeText(courseName) + " statistics", commandSender);
         CourseConfig config = getConfig(courseName);
 
-        sendConditionalValue(sender, "Display Name", config.hasCourseDisplayName(), config.getCourseDisplayName());
+        sendConditionalValue(commandSender, "Display Name", config.hasCourseDisplayName(), config.getCourseDisplayName());
 
-        sendValue(sender, "Views", config.getViews());
-        sendValue(sender, "Completions", config.getCompletions()
+        sendValue(commandSender, "Views", config.getViews());
+        sendValue(commandSender, "Completions", config.getCompletions()
                 + " (" + config.getCompletionPercent() + "%)");
-        sendValue(sender, CHECKPOINTS, config.getCheckpointAmount());
-        sendValue(sender, "Creator", config.getCreator());
-        sendValue(sender, "Ready Status", String.valueOf(config.getReadyStatus()));
-        sendValue(sender, "Challenge Only", String.valueOf(config.getChallengeOnly()));
+        sendValue(commandSender, CHECKPOINTS, config.getCheckpointAmount());
+        sendValue(commandSender, "Creator", config.getCreator());
+        sendValue(commandSender, "Ready Status", String.valueOf(config.getReadyStatus()));
+        sendValue(commandSender, "Challenge Only", String.valueOf(config.getChallengeOnly()));
 
-        sendConditionalValue(sender, "Resumable", !Parkour.getDefaultConfig().isLeaveDestroyCourseProgress(),
+        sendConditionalValue(commandSender, "Resumable", !Parkour.getDefaultConfig().isLeaveDestroyCourseProgress(),
                 String.valueOf(config.getResumable()));
-        sendConditionalValue(sender, "Minimum ParkourLevel", config.getMinimumParkourLevel());
-        sendConditionalValue(sender, "ParkourLevel Reward", config.getRewardParkourLevel());
-        sendConditionalValue(sender, "ParkourLevel Reward Increase", config.getRewardParkourLevelIncrease());
-        sendConditionalValue(sender, "Parkoins Reward", config.getRewardParkoins());
-        sendConditionalValue(sender, "Max Deaths", config.getMaximumDeaths());
-        sendConditionalValue(sender, "Max Time", config.hasMaximumTime(),
+        sendConditionalValue(commandSender, "Minimum ParkourLevel", config.getMinimumParkourLevel());
+        sendConditionalValue(commandSender, "ParkourLevel Reward", config.getRewardParkourLevel());
+        sendConditionalValue(commandSender, "ParkourLevel Reward Increase", config.getRewardParkourLevelIncrease());
+        sendConditionalValue(commandSender, "Parkoins Reward", config.getRewardParkoins());
+        sendConditionalValue(commandSender, "Max Deaths", config.getMaximumDeaths());
+        sendConditionalValue(commandSender, "Max Time", config.hasMaximumTime(),
                 DateTimeUtils.convertSecondsToTime(config.getMaximumTime()));
 
-        sendConditionalValue(sender, "Linked Course", config.hasLinkedCourse(), config.getLinkedCourse());
-        sendConditionalValue(sender, "Linked Lobby", config.hasLinkedLobby(), config.getLinkedLobby());
-        sendConditionalValue(sender, PARKOUR_KIT, config.hasParkourKit(), config.getParkourKit());
-        sendConditionalValue(sender, PARKOUR_MODE, config.hasParkourMode(), config.getParkourModeName());
+        sendConditionalValue(commandSender, "Linked Course", config.hasLinkedCourse(), config.getLinkedCourse());
+        sendConditionalValue(commandSender, "Linked Lobby", config.hasLinkedLobby(), config.getLinkedLobby());
+        sendConditionalValue(commandSender, PARKOUR_KIT, config.hasParkourKit(), config.getParkourKit());
+        sendConditionalValue(commandSender, PARKOUR_MODE, config.hasParkourMode(), config.getParkourModeName());
 
-        sendConditionalValue(sender, "Material Prize",
+        sendConditionalValue(commandSender, "Material Prize",
                 config.hasMaterialPrize() && config.getMaterialPrizeAmount() > 0,
                 config.getMaterialPrize() + " x " + config.getMaterialPrizeAmount());
-        sendConditionalValue(sender, "XP Prize", config.getXpPrize());
+        sendConditionalValue(commandSender, "XP Prize", config.getXpPrize());
 
         if (Parkour.getInstance().getEconomyApi().isEnabled()) {
-            sendConditionalValue(sender, "Join Fee", config.getEconomyJoiningFee());
-            sendConditionalValue(sender, "Economy Reward", config.getEconomyFinishReward());
+            sendConditionalValue(commandSender, "Join Fee", config.getEconomyJoiningFee());
+            sendConditionalValue(commandSender, "Economy Reward", config.getEconomyFinishReward());
         }
 
         if (config.hasRewardDelay()) {
-            sendValue(sender, "Reward Cooldown", DateTimeUtils.convertMillisecondsToDateTime(
+            sendValue(commandSender, "Reward Cooldown", DateTimeUtils.convertMillisecondsToDateTime(
                     DateTimeUtils.convertHoursToMilliseconds(config.getRewardDelay())));
 
-            if (sender instanceof Player && !Parkour.getInstance().getPlayerManager().hasPrizeCooldownDurationPassed(
-                    (Player) sender, courseName, false)) {
-                sendValue(sender, "Cool down Remaining", DateTimeUtils.getDelayTimeRemaining((Player) sender, courseName));
+            if (commandSender instanceof Player && !Parkour.getInstance().getPlayerManager().hasPrizeCooldownDurationPassed(
+                    (Player) commandSender, courseName, false)) {
+                sendValue(commandSender, "Cool down Remaining", DateTimeUtils.getDelayTimeRemaining((Player) commandSender, courseName));
             }
         }
         for (ParkourEventType value : ParkourEventType.values()) {
             if (config.hasEventCommands(value)) {
-                TranslationUtils.sendMessage(sender, "&3" + value.getConfigEntry() + " Commands", false);
-                config.getEventCommands(value).forEach(sender::sendMessage);
+                TranslationUtils.sendMessage(commandSender, "&3" + value.getConfigEntry() + " Commands", false);
+                config.getEventCommands(value).forEach(commandSender::sendMessage);
             }
         }
     }

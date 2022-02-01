@@ -50,15 +50,15 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
      */
     @NotNull
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender,
+    public List<String> onTabComplete(@NotNull CommandSender commandSender,
                                       @NotNull Command cmd,
                                       @NotNull String alias,
                                       @NotNull String... args) {
-        if (!(sender instanceof Player)) {
+        if (!(commandSender instanceof Player)) {
             return Collections.emptyList();
         }
 
-        final Player player = (Player) sender;
+        final Player player = (Player) commandSender;
         List<String> allowedCommands = new ArrayList<>();
         List<String> filteredCommands = new ArrayList<>();
 

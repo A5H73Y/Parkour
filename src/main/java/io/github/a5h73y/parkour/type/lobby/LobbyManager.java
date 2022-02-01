@@ -101,18 +101,18 @@ public class LobbyManager extends CacheableParkourManager {
     /**
      * Add a Command to be executed when the Player visits a Lobby.
      *
-     * @param sender player
+     * @param commandSender command sender
      * @param lobbyName lobby name
      * @param command command to run
      */
-    public void addLobbyCommand(CommandSender sender, String lobbyName, String command) {
+    public void addLobbyCommand(CommandSender commandSender, String lobbyName, String command) {
         if (!getConfig().doesLobbyExist(lobbyName)) {
-            TranslationUtils.sendValueTranslation("Error.UnknownLobby", lobbyName, sender);
+            TranslationUtils.sendValueTranslation("Error.UnknownLobby", lobbyName, commandSender);
             return;
         }
 
         getConfig().addLobbyCommand(lobbyName, command);
-        TranslationUtils.sendPropertySet(sender, "Lobby Command", lobbyName, "/" + command);
+        TranslationUtils.sendPropertySet(commandSender, "Lobby Command", lobbyName, "/" + command);
     }
 
     /**
@@ -146,18 +146,18 @@ public class LobbyManager extends CacheableParkourManager {
      * Delete a Parkour Lobby.
      * All references to the Lobby will be deleted.
      *
-     * @param sender requesting sender
+     * @param commandSender command sender
      * @param lobbyName lobby name
      */
-    public void deleteLobby(CommandSender sender, String lobbyName) {
-        if (!ParkourValidation.canDeleteLobby(sender, lobbyName)) {
+    public void deleteLobby(CommandSender commandSender, String lobbyName) {
+        if (!ParkourValidation.canDeleteLobby(commandSender, lobbyName)) {
             return;
         }
 
         getConfig().deleteLobby(lobbyName);
         clearCache(lobbyName);
-        TranslationUtils.sendValueTranslation("Parkour.Delete", lobbyName + " Lobby", sender);
-        PluginUtils.logToFile(lobbyName + " lobby was deleted by " + sender.getName());
+        TranslationUtils.sendValueTranslation("Parkour.Delete", lobbyName + " Lobby", commandSender);
+        PluginUtils.logToFile(lobbyName + " lobby was deleted by " + commandSender.getName());
     }
 
     /**
@@ -179,11 +179,11 @@ public class LobbyManager extends CacheableParkourManager {
 
     /**
      * Display all Parkour Lobbies to sender.
-     * @param sender requesting sender
+     * @param commandSender command sender
      */
-    public void displayLobbies(CommandSender sender) {
-        TranslationUtils.sendHeading("Available Lobbies", sender);
-        getConfig().getAllLobbyNames().forEach(s -> sender.sendMessage("* " + s));
+    public void displayLobbies(CommandSender commandSender) {
+        TranslationUtils.sendHeading("Available Lobbies", commandSender);
+        getConfig().getAllLobbyNames().forEach(s -> commandSender.sendMessage("* " + s));
     }
 
     @Override

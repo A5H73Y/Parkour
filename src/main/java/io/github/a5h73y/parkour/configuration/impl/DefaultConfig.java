@@ -70,6 +70,7 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("OnCourse.PreventEntitiesAttacking", true);
 		this.setDefault("OnCourse.PreventJoiningDifferentCourse", false);
 		this.setDefault("OnCourse.PreventPlayerCollisions", false);
+		this.setDefault("OnCourse.PreventFireDamage", true);
 		this.setDefault("OnCourse.SequentialCheckpoints", true);
 		this.setDefault("OnCourse.SneakToInteractItems", true);
 		this.setDefault("OnCourse.TreatLastCheckpointAsFinish", false);
@@ -283,20 +284,20 @@ public class DefaultConfig extends Yaml {
 	/**
 	 * Add a command to the whitelist.
 	 *
-	 * @param sender requesting player
+	 * @param commandSender command sender
 	 * @param command command to whitelist
 	 */
-	public void addWhitelistedCommand(CommandSender sender, String command) {
+	public void addWhitelistedCommand(CommandSender commandSender, String command) {
 		List<String> whitelistedCommands = getWhitelistedCommands();
 		if (whitelistedCommands.contains(command.toLowerCase())) {
-			TranslationUtils.sendMessage(sender, "This command is already whitelisted!");
+			TranslationUtils.sendMessage(commandSender, "This command is already whitelisted!");
 			return;
 		}
 
 		whitelistedCommands.add(command.toLowerCase());
 		set("OnCourse.EnforceParkourCommands.Whitelist", whitelistedCommands);
 
-		TranslationUtils.sendMessage(sender, "Command &b" + command + "&f added to the whitelisted commands!");
+		TranslationUtils.sendMessage(commandSender, "Command &b" + command + "&f added to the whitelisted commands!");
 	}
 
 	public String getSignHeader() {
@@ -333,10 +334,6 @@ public class DefaultConfig extends Yaml {
 
 	public boolean isPermissionForSignInteraction() {
 		return this.getBoolean("Other.Parkour.SignUsePermissions");
-	}
-
-	public boolean isUseParkourKit() {
-		return this.getBoolean("OnCourse.UseParkourKit");
 	}
 
 	public boolean isChatPrefix() {
@@ -419,7 +416,7 @@ public class DefaultConfig extends Yaml {
 		return this.getBoolean("ParkourKit.LegacyGroundDetection");
 	}
 
-	public boolean isVoidDetection() {
+	public boolean isVoidTeleportToLobby() {
 		return this.getBoolean("Other.OnVoid.TeleportToLobby");
 	}
 

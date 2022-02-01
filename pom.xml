@@ -4,7 +4,7 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.a5h73y</groupId>
-	<artifactId>Parkour</artifactId>
+	<artifactId>parkour</artifactId>
 	<version>7.0</version>
 	<packaging>jar</packaging>
 
@@ -13,9 +13,9 @@
 	<url>https://a5h73y.github.io/Parkour/</url>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>8</maven.compiler.source>
 		<maven.compiler.target>8</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<issueManagement>
@@ -50,7 +50,7 @@
 		<!-- MySQL database Repo -->
 		<repository>
 			<id>husk</id>
-    		<url>https://maven.husk.pro/repository/maven-releases/</url>
+			<url>https://maven.husk.pro/repository/maven-releases/</url>
 		</repository>
 		<!-- InventoryGui -->
 		<repository>
@@ -64,8 +64,18 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.18-R0.1-SNAPSHOT</version>
+			<version>1.18.1-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>com.google.code.findbugs</groupId>
+					<artifactId>jsr305</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.google.j2objc</groupId>
+					<artifactId>j2objc-annotations</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- Vault API -->
 		<dependency>
@@ -154,18 +164,6 @@
 			<artifactId>simplixstorage</artifactId>
 			<version>3.2.4</version>
 		</dependency>
-		<!-- Reflections -->
-		<dependency>
-			<groupId>org.reflections</groupId>
-			<artifactId>reflections</artifactId>
-			<version>0.10.2</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 	</dependencies>
 
 	<build>
@@ -216,6 +214,12 @@
 							</excludes>
 						</filter>
 					</filters>
+					<artifactSet>
+						<excludes>
+							<exclude>org.jetbrains:annotations</exclude>
+							<exclude>org.slf4j:*</exclude>
+						</excludes>
+					</artifactSet>
 					<relocations>
 						<relocation>
 							<pattern>org.bstats</pattern>
@@ -268,7 +272,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>

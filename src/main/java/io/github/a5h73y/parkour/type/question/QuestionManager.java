@@ -27,122 +27,122 @@ public class QuestionManager extends AbstractPluginReceiver {
     /**
      * Has the Sender been asked a Question.
      *
-     * @param sender command sender
+     * @param commandSender command sender
      * @return sender has a outstanding question
      */
-    public boolean hasBeenAskedQuestion(CommandSender sender) {
-        return questionMap.containsKey(sender);
+    public boolean hasBeenAskedQuestion(CommandSender commandSender) {
+        return questionMap.containsKey(commandSender);
     }
 
-    public boolean hasBeenAskedQuestion(CommandSender sender, QuestionType questionType) {
-        return hasBeenAskedQuestion(sender)
-                && questionMap.get(sender).getType().equals(questionType);
+    public boolean hasBeenAskedQuestion(CommandSender commandSender, QuestionType questionType) {
+        return hasBeenAskedQuestion(commandSender)
+                && questionMap.get(commandSender).getType().equals(questionType);
     }
 
     /**
      * Submit an answer to the Question.
      *
-     * @param sender command sender
+     * @param commandSender command sender
      * @param answer question answer
      */
-    public void answerQuestion(@NotNull CommandSender sender, @NotNull String answer) {
+    public void answerQuestion(@NotNull CommandSender commandSender, @NotNull String answer) {
         if (YES.equalsIgnoreCase(answer)) {
-            questionMap.get(sender).doIt(sender);
-            removeQuestion(sender);
+            questionMap.get(commandSender).performAction(commandSender);
+            removeQuestion(commandSender);
 
         } else if (NO.equalsIgnoreCase(answer)) {
-            TranslationUtils.sendMessage(sender, "Question cancelled!");
-            removeQuestion(sender);
+            TranslationUtils.sendMessage(commandSender, "Question cancelled!");
+            removeQuestion(commandSender);
 
         } else {
-            TranslationUtils.sendTranslation("Error.InvalidQuestionAnswer", sender);
-            TranslationUtils.sendTranslation("Error.QuestionAnswerChoices", false, sender);
+            TranslationUtils.sendTranslation("Error.InvalidQuestionAnswer", commandSender);
+            TranslationUtils.sendTranslation("Error.QuestionAnswerChoices", false, commandSender);
         }
     }
 
-    public void askDeleteCourseQuestion(CommandSender sender, String courseName) {
-        askGenericQuestion(sender, QuestionType.DELETE_COURSE, courseName.toLowerCase());
+    public void askDeleteCourseQuestion(CommandSender commandSender, String courseName) {
+        askGenericQuestion(commandSender, QuestionType.DELETE_COURSE, courseName.toLowerCase());
     }
 
     /**
      * Ask the Delete Checkpoint Question.
      *
-     * @param sender command sender
+     * @param commandSender command sender
      * @param courseName course name
      * @param checkpoint checkpoint to delete
      */
-    public void askDeleteCheckpointQuestion(CommandSender sender, String courseName, int checkpoint) {
+    public void askDeleteCheckpointQuestion(CommandSender commandSender, String courseName, int checkpoint) {
         QuestionType type = QuestionType.DELETE_CHECKPOINT;
-        TranslationUtils.sendMessage(sender, String.format(type.getActionSummary(), checkpoint, courseName));
-        TranslationUtils.sendMessage(sender, type.getDescription(), false);
-        submitQuestion(sender, courseName.toLowerCase(), type);
+        TranslationUtils.sendMessage(commandSender, String.format(type.getActionSummary(), checkpoint, courseName));
+        TranslationUtils.sendMessage(commandSender, type.getDescription(), false);
+        submitQuestion(commandSender, courseName.toLowerCase(), type);
     }
 
-    public void askDeleteLobbyQuestion(CommandSender sender, String lobbyName) {
-        askGenericQuestion(sender, QuestionType.DELETE_LOBBY, lobbyName.toLowerCase());
+    public void askDeleteLobbyQuestion(CommandSender commandSender, String lobbyName) {
+        askGenericQuestion(commandSender, QuestionType.DELETE_LOBBY, lobbyName.toLowerCase());
     }
 
-    public void askDeleteKitQuestion(CommandSender sender, String kitName) {
-        askGenericQuestion(sender, QuestionType.DELETE_PARKOUR_KIT, kitName.toLowerCase());
+    public void askDeleteKitQuestion(CommandSender commandSender, String kitName) {
+        askGenericQuestion(commandSender, QuestionType.DELETE_PARKOUR_KIT, kitName.toLowerCase());
     }
 
-    public void askResetCourseQuestion(CommandSender sender, String courseName) {
-        askGenericQuestion(sender, QuestionType.RESET_COURSE, courseName.toLowerCase());
+    public void askResetCourseQuestion(CommandSender commandSender, String courseName) {
+        askGenericQuestion(commandSender, QuestionType.RESET_COURSE, courseName.toLowerCase());
     }
 
-    public void askResetPlayerQuestion(CommandSender sender, String targetName) {
-        askGenericQuestion(sender, QuestionType.RESET_PLAYER, targetName);
+    public void askResetPlayerQuestion(CommandSender commandSender, String targetName) {
+        askGenericQuestion(commandSender, QuestionType.RESET_PLAYER, targetName);
     }
 
-    public void askResetLeaderboardQuestion(CommandSender sender, String courseName) {
-        askGenericQuestion(sender, QuestionType.RESET_LEADERBOARD, courseName.toLowerCase());
+    public void askResetLeaderboardQuestion(CommandSender commandSender, String courseName) {
+        askGenericQuestion(commandSender, QuestionType.RESET_LEADERBOARD, courseName.toLowerCase());
     }
 
     /**
      * Ask the Reset Player Leaderboards Question.
      *
-     * @param sender sender
+     * @param commandSender command sender
      * @param courseName course name
      * @param targetPlayerName target player name
      */
-    public void askResetPlayerLeaderboardQuestion(CommandSender sender, String courseName, String targetPlayerName) {
+    public void askResetPlayerLeaderboardQuestion(CommandSender commandSender, String courseName, String targetPlayerName) {
         QuestionType type = QuestionType.RESET_PLAYER_LEADERBOARD;
-        TranslationUtils.sendMessage(sender, String.format(type.getActionSummary(), targetPlayerName, courseName));
-        TranslationUtils.sendMessage(sender, type.getDescription(), false);
-        submitQuestion(sender, targetPlayerName + ";" + courseName.toLowerCase(), type);
+        TranslationUtils.sendMessage(commandSender, String.format(type.getActionSummary(), targetPlayerName, courseName));
+        TranslationUtils.sendMessage(commandSender, type.getDescription(), false);
+        submitQuestion(commandSender, targetPlayerName + ";" + courseName.toLowerCase(), type);
     }
 
-    public void askResetPrizeQuestion(CommandSender sender, String courseName) {
-        askGenericQuestion(sender, QuestionType.RESET_PRIZES, courseName.toLowerCase());
+    public void askResetPrizeQuestion(CommandSender commandSender, String courseName) {
+        askGenericQuestion(commandSender, QuestionType.RESET_PRIZES, courseName.toLowerCase());
     }
 
     /**
      * Ask the Restart Progress Question..
      *
-     * @param sender sender
+     * @param commandSender command sender
      * @param courseName course name
      */
-    public void askRestartProgressQuestion(CommandSender sender, String courseName) {
+    public void askRestartProgressQuestion(CommandSender commandSender, String courseName) {
         QuestionType restart = QuestionType.RESTART_COURSE;
-        TranslationUtils.sendMessage(sender, String.format(restart.getActionSummary(), courseName.toLowerCase()));
-        TranslationUtils.sendMessage(sender, restart.getDescription(), false);
-        TranslationUtils.sendTranslation("ParkourTool.RestartConfirmation", false, sender);
-        questionMap.put(sender, new Question(restart, courseName.toLowerCase()));
+        TranslationUtils.sendMessage(commandSender, String.format(restart.getActionSummary(), courseName.toLowerCase()));
+        TranslationUtils.sendMessage(commandSender, restart.getDescription(), false);
+        TranslationUtils.sendTranslation("ParkourTool.RestartConfirmation", false, commandSender);
+        questionMap.put(commandSender, new Question(restart, courseName.toLowerCase()));
     }
 
-    public void removeQuestion(CommandSender sender) {
-        questionMap.remove(sender);
+    public void removeQuestion(CommandSender commandSender) {
+        questionMap.remove(commandSender);
     }
 
-    private void askGenericQuestion(CommandSender sender, QuestionType questionType, String value) {
-        TranslationUtils.sendMessage(sender, String.format(questionType.getActionSummary(), value));
-        TranslationUtils.sendMessage(sender, questionType.getDescription(), false);
-        submitQuestion(sender, value, questionType);
+    private void askGenericQuestion(CommandSender commandSender, QuestionType questionType, String value) {
+        TranslationUtils.sendMessage(commandSender, String.format(questionType.getActionSummary(), value));
+        TranslationUtils.sendMessage(commandSender, questionType.getDescription(), false);
+        submitQuestion(commandSender, value, questionType);
     }
 
-    private void submitQuestion(CommandSender sender, String argument, QuestionType type) {
-        TranslationUtils.sendTranslation("Parkour.Question", false, sender);
-        questionMap.put(sender, new Question(type, argument));
+    private void submitQuestion(CommandSender commandSender, String argument, QuestionType type) {
+        TranslationUtils.sendTranslation("Parkour.Question", false, commandSender);
+        questionMap.put(commandSender, new Question(type, argument));
     }
 
     /**
@@ -158,8 +158,8 @@ public class QuestionManager extends AbstractPluginReceiver {
             this.argument = argument;
         }
 
-        protected void doIt(CommandSender sender) {
-            this.type.confirm(sender, this.argument);
+        protected void performAction(CommandSender commandSender) {
+            this.type.confirm(commandSender, this.argument);
         }
 
         public QuestionType getType() {

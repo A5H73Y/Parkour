@@ -123,15 +123,15 @@ public class EconomyApi extends PluginWrapper {
 	/**
 	 * Display the Economy information.
 	 *
-	 * @param sender requesting sender
+	 * @param commandSender command sender
 	 */
-	public void displayEconomyInformation(CommandSender sender) {
-		TranslationUtils.sendHeading("Economy Details", sender);
-		TranslationUtils.sendValue(sender, "Enabled", String.valueOf(isEnabled()));
+	public void displayEconomyInformation(CommandSender commandSender) {
+		TranslationUtils.sendHeading("Economy Details", commandSender);
+		TranslationUtils.sendValue(commandSender, "Enabled", String.valueOf(isEnabled()));
 
 		if (isEnabled()) {
-			TranslationUtils.sendValue(sender, "Economy", economy.getName());
-			TranslationUtils.sendValue(sender, "Currency Name", getCurrencyName());
+			TranslationUtils.sendValue(commandSender, "Economy", economy.getName());
+			TranslationUtils.sendValue(commandSender, "Currency Name", getCurrencyName());
 		}
 	}
 
@@ -172,70 +172,70 @@ public class EconomyApi extends PluginWrapper {
 	 * Process Economy Command input.
 	 * Each of the valid commands will be processed based on input.
 	 *
-	 * @param sender requesting sender
+	 * @param commandSender command sender
 	 * @param args command arguments
 	 */
-	public void processCommand(CommandSender sender, String... args) {
+	public void processCommand(CommandSender commandSender, String... args) {
 		if (!isEconomyLinked()) {
-			TranslationUtils.sendValueTranslation("Error.PluginNotLinked", getPluginName(), sender);
+			TranslationUtils.sendValueTranslation("Error.PluginNotLinked", getPluginName(), commandSender);
 			return;
 		}
 
 		switch (args[1].toLowerCase()) {
 			case "setprize":
-				processSetPrizeCommand(sender, args);
+				processSetPrizeCommand(commandSender, args);
 				break;
 
 			case "setfee":
-				processSetFeeCommand(sender, args);
+				processSetFeeCommand(commandSender, args);
 				break;
 
 			case "info":
-				displayEconomyInformation(sender);
+				displayEconomyInformation(commandSender);
 				break;
 
 			default:
-				TranslationUtils.sendInvalidSyntax(sender, "econ", "(info / setprize / setfee)");
+				TranslationUtils.sendInvalidSyntax(commandSender, "econ", "(info / setprize / setfee)");
 		}
 	}
 
-	private void processSetPrizeCommand(CommandSender sender, String... args) {
+	private void processSetPrizeCommand(CommandSender commandSender, String... args) {
 		if (args.length != 4) {
-			TranslationUtils.sendInvalidSyntax(sender, "econ", "setprize (course) (amount)");
+			TranslationUtils.sendInvalidSyntax(commandSender, "econ", "setprize (course) (amount)");
 			return;
 		}
 
-		if (!Parkour.getInstance().getCourseManager().doesCourseExist(args[2])) {
-			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, args[2], sender);
+		if (!parkour.getCourseManager().doesCourseExist(args[2])) {
+			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, args[2], commandSender);
 			return;
 		}
 
 		if (!ValidationUtils.isPositiveDouble(args[3])) {
-			TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
+			TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, commandSender);
 			return;
 		}
 
 		CourseConfig.getConfig(args[2]).setEconomyFinishReward(Double.parseDouble(args[3]));
-		TranslationUtils.sendPropertySet(sender, "Economy Prize", args[2], args[3]);
+		TranslationUtils.sendPropertySet(commandSender, "Economy Prize", args[2], args[3]);
 	}
 
-	private void processSetFeeCommand(CommandSender sender, String... args) {
+	private void processSetFeeCommand(CommandSender commandSender, String... args) {
 		if (args.length != 4) {
-			TranslationUtils.sendInvalidSyntax(sender, "econ", "setfee (course) (amount)");
+			TranslationUtils.sendInvalidSyntax(commandSender, "econ", "setfee (course) (amount)");
 			return;
 		}
 
-		if (!Parkour.getInstance().getCourseManager().doesCourseExist(args[2])) {
-			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, args[2], sender);
+		if (!parkour.getCourseManager().doesCourseExist(args[2])) {
+			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, args[2], commandSender);
 			return;
 		}
 
 		if (!ValidationUtils.isPositiveDouble(args[3])) {
-			TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
+			TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, commandSender);
 			return;
 		}
 
 		CourseConfig.getConfig(args[2]).setEconomyJoiningFee(Double.parseDouble(args[3]));
-		TranslationUtils.sendPropertySet(sender, "Join Fee", args[2], args[3]);
+		TranslationUtils.sendPropertySet(commandSender, "Join Fee", args[2], args[3]);
 	}
 }

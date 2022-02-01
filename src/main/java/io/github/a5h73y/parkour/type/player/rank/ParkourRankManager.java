@@ -55,12 +55,12 @@ public class ParkourRankManager extends CacheableParkourManager {
 	/**
 	 * Display all ParkourRanks available.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 */
-	public void displayParkourRanks(CommandSender sender) {
-		TranslationUtils.sendHeading("Parkour Ranks", sender);
+	public void displayParkourRanks(CommandSender commandSender) {
+		TranslationUtils.sendHeading("Parkour Ranks", commandSender);
 		parkourRanks.forEach((parkourLevel, parkourRank) ->
-				sender.sendMessage(TranslationUtils.getTranslation("Parkour.RankInfo", false)
+				commandSender.sendMessage(TranslationUtils.getTranslation("Parkour.RankInfo", false)
 						.replace(PARKOUR_LEVEL_PLACEHOLDER, parkourLevel.toString())
 						.replace(PARKOUR_RANK_PLACEHOLDER, parkourRank)));
 	}
@@ -69,24 +69,24 @@ public class ParkourRankManager extends CacheableParkourManager {
 	 * Set a ParkourRank reward for a ParkourLevel.
 	 * A ParkourRank will be awarded to the Player when the pass the threshold of the ParkourLevel required.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param parkourLevel associated parkour level
 	 * @param parkourRank parkour rank rewarded
 	 */
-	public void setRewardParkourRank(CommandSender sender, String parkourLevel, String parkourRank) {
+	public void setRewardParkourRank(CommandSender commandSender, String parkourLevel, String parkourRank) {
 		if (!ValidationUtils.isPositiveInteger(parkourLevel)) {
-			TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
+			TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, commandSender);
 			return;
 		}
 
 		if (!ValidationUtils.isStringValid(parkourRank)) {
-			TranslationUtils.sendMessage(sender, "ParkourRank is not valid.");
+			TranslationUtils.sendMessage(commandSender, "ParkourRank is not valid.");
 			return;
 		}
 
 		parkour.getConfigManager().getParkourRankConfig().set(parkourLevel, parkourRank);
 		populateParkourRanks();
-		TranslationUtils.sendPropertySet(sender, "ParkourRank", "ParkourLevel " + parkourLevel,
+		TranslationUtils.sendPropertySet(commandSender, "ParkourRank", "ParkourLevel " + parkourLevel,
 				StringUtils.colour(parkourRank));
 	}
 

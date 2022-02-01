@@ -30,7 +30,7 @@ public class PlaceholderApi extends PluginWrapper {
 		super.initialise();
 
 		if (isEnabled()) {
-			placeholders = new ParkourPlaceholders(Parkour.getInstance());
+			placeholders = new ParkourPlaceholders(parkour);
 			placeholders.register();
 		}
 	}
@@ -40,7 +40,7 @@ public class PlaceholderApi extends PluginWrapper {
 	 * Allows for the target player to have their value evaluated.
 	 * Serves as a shorthand to "/papi parse me (placeholder)" but with a precursor to check integration.
 	 *
-	 * @param commandSender player
+	 * @param commandSender command sender
 	 * @param targetPlayer target player
 	 * @param placeholder placeholder to evaluate
 	 */

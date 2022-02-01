@@ -33,7 +33,7 @@
 //    }
 //
 //    @Override
-//    public boolean onCommand(@NotNull CommandSender sender,
+//    public boolean onCommand(@NotNull CommandSender commandSender,
 //                             @NotNull Command command,
 //                             @NotNull String label,
 //                             @NotNull String... args) {
@@ -364,12 +364,12 @@
 //    /**
 //     * Attempt to find matching Player by name.
 //     *
-//     * @param sender requesting sender
+//     * @param sender command sender
 //     * @param playerName target player name
 //     * @return {@link Player}
 //     */
 //    @Nullable
-//    private Player findPlayer(CommandSender sender, String playerName) {
+//    private Player findPlayer(CommandSender commandSender, String playerName) {
 //        Player targetPlayer = Bukkit.getPlayer(playerName);
 //
 //        if (targetPlayer == null) {
