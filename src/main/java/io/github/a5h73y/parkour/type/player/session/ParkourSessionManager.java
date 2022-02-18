@@ -1,12 +1,11 @@
 package io.github.a5h73y.parkour.type.player.session;
 
-import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_UNKNOWN_PLAYER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.TEST_MODE;
 
 import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.commands.CommandProcessor;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.ParkourConstants;
-import io.github.a5h73y.parkour.other.TriConsumer;
 import io.github.a5h73y.parkour.type.Initializable;
 import io.github.a5h73y.parkour.type.Teardownable;
 import io.github.a5h73y.parkour.type.course.Course;
@@ -21,6 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.WeakHashMap;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -35,15 +35,16 @@ import org.jetbrains.annotations.Nullable;
  * Holds reference to Players currently on a Course.
  * Adds actions to perform to the Player whilst on a Course.
  */
-public class ParkourSessionManager extends AbstractPluginReceiver implements Teardownable, Initializable {
+public class ParkourSessionManager extends AbstractPluginReceiver implements CommandProcessor, Teardownable, Initializable {
 
 	private final Map<UUID, ParkourSession> parkourPlayers = new WeakHashMap<>();
 	private final List<UUID> hiddenPlayers = new ArrayList<>();
 
-	private final Map<String, TriConsumer<CommandSender, OfflinePlayer, String>> sessionActions = new HashMap<>();
+	private final Map<String, Consumer<Player>> sessionActions = new HashMap<>();
 
 	public ParkourSessionManager(final Parkour parkour) {
 		super(parkour);
+		populateSessionActions();
 	}
 
 	@Override
@@ -214,10 +215,10 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Tea
 
 		if (ParkourSessionConfig.hasParkourSessionConfig(player, courseName)) {
 			ParkourSessionConfig config = ParkourSessionConfig.getConfig(player, courseName);
-			ParkourSession session = config.getParkourSession();
 
 			// course is populated by deserializing
-			if (session != null && session.getCourse() != null) {
+			if (parkour.getCourseManager().doesCourseExist(config.getCourseName())) {
+				ParkourSession session = config.getParkourSession();
 				session.recalculateTime();
 				session.setStartTimer(true);
 				addPlayer(player, session);
@@ -394,29 +395,33 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Tea
 		hiddenPlayers.remove(player.getUniqueId());
 	}
 
-	public void performAction(CommandSender commandSender, OfflinePlayer targetPlayer, String action, String value) {
-		if (!(commandSender instanceof Player) || !isPlaying((Player) commandSender)) {
-			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, commandSender);
-			return;
-		}
-
-		if (!sessionActions.containsKey(action.toLowerCase())) {
-			TranslationUtils.sendMessage(commandSender, "Unknown Player action command");
-			return;
-		}
-
-		sessionActions.get(action.toLowerCase()).accept(commandSender, targetPlayer, value);
-	}
-
-	private void populateSetsessionActions() {
-//		sessionActions.put("hideall", (this::setParkourRank));
-//		sessionActions.put("restart", (sender, targetPlayer, value) -> setParkourLevel(sender, targetPlayer, value, false));
-//		sessionActions.put("back", (sender, targetPlayer, value) -> setParkourLevel(sender, targetPlayer, value, true));
-//		sessionActions.put("leave", (sender, targetPlayer, value) -> setParkourLevel(sender, targetPlayer, value, true));
-//		sessionActions.put("setcheckpoint", (sender, targetPlayer, value) -> setParkourLevel(sender, targetPlayer, value, true));
-	}
-
 	public void removeHiddenPlayer(@NotNull Player player) {
 		hiddenPlayers.remove(player.getUniqueId());
+	}
+
+	@Override
+	public void processCommand(CommandSender commandSender, String... args) {
+		if (!(commandSender instanceof Player) || !isPlaying((Player) commandSender)) {
+			TranslationUtils.sendTranslation("Error.NotOnAnyCourse", commandSender);
+			return;
+		}
+
+		if (args.length >= 1) {
+			String action = args[0].toLowerCase();
+			if (!sessionActions.containsKey(action)) {
+				TranslationUtils.sendMessage(commandSender, "Unknown Session action command!");
+			} else {
+				sessionActions.get(action).accept((Player) commandSender);
+			}
+		}
+	}
+
+	private void populateSessionActions() {
+		sessionActions.put("hideall", this::toggleVisibility);
+		sessionActions.put("restart", player -> parkour.getPlayerManager().restartCourse(player));
+		sessionActions.put("back", player -> parkour.getPlayerManager().playerDie(player));
+		sessionActions.put("leave", player -> parkour.getPlayerManager().leaveCourse(player));
+		sessionActions.put("setcheckpoint", player -> parkour.getPlayerManager().setManualCheckpoint(player));
+		sessionActions.put("quiet", player -> parkour.getQuietModeManager().toggleQuietMode(player));
 	}
 }

@@ -7,14 +7,14 @@
     "description": "By default, joining a Course will give you a set of tools. You can provide the Player with additional items when they join a Course, such as Elytra or Ender pearls for a certain types of Courses etc. You must provide the Material and the amount, a label is optional. The item can be made unbreakable by specifying 'true'.",
     "permission": "parkour.admin.course",
     "commandGroup": "2",
-    "consoleSyntax": "pa addjoinitem (course) (material) (amount) [label] [unbreakable]",
+    "consoleSyntax": "pac addjoinitem (course) (material) (amount) [label] [unbreakable]",
     "autoTabSyntax": "(course) (material) (amount) (label) [true,false]"
   },
   {
     "command": "backup",
     "title": "Full Parkour Configuration Backup",
     "description": "CONSOLE ONLY - Creates a timestamped zip backup of the current Parkour configuration folder, including any subfolders.",
-    "consoleSyntax": "pa backup"
+    "consoleSyntax": "pac backup"
   },
   {
     "command": "cache",
@@ -24,7 +24,7 @@
     "description": "The amount of results in each Cache can be listed when no argument is provided. Specifying which type of cache will clear it, specifying 'all' will clear all the caches.",
     "permission": "parkour.admin.*",
     "commandGroup": "4",
-    "consoleSyntax": "pa cache [course / database / lobby / parkourkit / sound / all]",
+    "consoleSyntax": "pac cache [course / database / lobby / parkourkit / sound / all]",
     "autoTabSyntax": "[course,database,lobby,parkourkit,sound,all]"
   },
   {
@@ -38,13 +38,34 @@
     "autoTabSyntax": "[create,start,terminate,info] {1:create=(course)} {1:create=(wager)}"
   },
   {
+    "command": "challengeonly",
+    "title": "Toggle Challenge Only status of Course",
+    "arguments": "[course]",
+    "example": "/pa challengeonly tutorial",
+    "description": "Ability to prevent a Player from joining a Course unless they are currently in a Challenge.",
+    "permission": "Parkour.Admin.Course",
+    "commandGroup": "2",
+    "consoleSyntax": "pac challengeonly (course)",
+    "autoTabSyntax": "(course) (yesno)"
+  },
+  {
+    "command": "checkpoint",
+    "title": "Create (or overwrite) a Checkpoint",
+    "arguments": "[number]",
+    "example": "/pa checkpoint 1",
+    "description": "Creating a Checkpoint on a Course only requires a single command. You must first select the Course you want to edit '/pa select (course)' then enter '/pa checkpoint' to register a new Checkpoint. Your exact location will be captured as the Checkpoint and a pressure plate will be placed for you. A checkpoint can be overwritten by providing the number you wish to overwrite, for example '/pa checkpoint 2' will replace the existing Checkpoint with your current location.",
+    "permission": "Parkour.Admin.Course",
+    "commandGroup": "2",
+    "autoTabSyntax": "(checkpoint)"
+  },
+  {
     "command": "cmds",
     "title": "Display Parkour Commands",
     "arguments": "[menu]",
     "example": "/pa cmds",
     "description": "Display the Parkour commands menu or the corresponding command group list. Each command group is grouped by their permission / functionality for example Create commands and Administration commands.",
     "commandGroup": "1",
-    "consoleSyntax": "pa cmds",
+    "consoleSyntax": "pac cmds",
     "autoTabSyntax": "[1,2,3,4,signs]"
   },
   {
@@ -55,7 +76,7 @@
     "description": "Used as a debug tool to identify the value of a field in the config.yml. Will be used by support to identify any problems on the server. MySQL details are not visible.",
     "permission": "Server Operator",
     "commandGroup": "4",
-    "consoleSyntax": "pa config Scoreboard.Enabled"
+    "consoleSyntax": "pac config Scoreboard.Enabled"
   },
   {
     "command": "course",
@@ -64,7 +85,7 @@
     "example": "/pa course tutorial",
     "description": "Display all the Course information and statistics, including the requirements to join and any rewards given on completion.",
     "commandGroup": "1",
-    "consoleSyntax": "pa course (course)",
+    "consoleSyntax": "pac course (course)",
     "autoTabSyntax": "(course)"
   },
   {
@@ -78,6 +99,15 @@
     "autoTabSyntax": "(course-name)"
   },
   {
+    "command": "createkit",
+    "title": "Create ParkourKit",
+    "example": "/pa createkit",
+    "description": "A conversation will be started to allow you to create a new ParkourKit. This ParkourKit can be linked to a Course to override the default blocks. Each Material chosen must be unique, but many Materials can share the same action.",
+    "permission": "Parkour.Admin.Course",
+    "commandGroup": "3",
+    "consoleSyntax": "pac createkit"
+  },
+  {
     "command": "delete",
     "title": "Request Deletion Command",
     "arguments": "(course / checkpoint / lobby / kit) (argument)",
@@ -85,7 +115,7 @@
     "description": "The Delete command allows you to request to remove an entry from the Parkour plugin. A summary of the request, with any consequences, will be displayed to the user before they are asked to confirm the action. Each request will be validated and require confirmation before it is actioned.",
     "permission": "parkour.admin.delete",
     "commandGroup": "4",
-    "consoleSyntax": "pa delete (course / checkpoint / lobby / kit) (argument)",
+    "consoleSyntax": "pac delete (course / checkpoint / lobby / kit) (argument)",
     "autoTabSyntax": "[course,checkpoint,lobby,kit] {1:course=(course),1:checkpoint=(course),1:lobby=(lobby),1:kit=(parkourkit)}"
   },
   {
@@ -103,8 +133,17 @@
     "description": "If you have linked Parkour to a compatible Economy plugin, you are able to set the fee to join a Course and set the prize for completing a Course.",
     "permission": "parkour.admin.*",
     "commandGroup": "4",
-    "consoleSyntax": "pa economy (info / setprize / setfee)",
+    "consoleSyntax": "pac economy (info / setprize / setfee)",
     "autoTabSyntax": "[info,setprize,setfee] {1:setprize=(course),1:setfee=(course)} {1:setprize=(amount),1:setfee=(amount)}"
+  },
+  {
+    "command": "editkit",
+    "title": "Edit ParkourKit",
+    "example": "/pa editkit",
+    "description": "A conversation will be started to allow you to edit an existing ParkourKit. You have the option to remove a Material or add a new Material with the corresponding action and related attributes.",
+    "permission": "Parkour.Admin.Course",
+    "commandGroup": "3",
+    "consoleSyntax": "pac editkit"
   },
   {
     "command": "help",
@@ -122,7 +161,7 @@
     "example": "/pa info A5H73Y",
     "description": "Display all the Player's Parkour statistics, which can include their current progress through a Course. When no Player is provided, it will display the current User's details.",
     "commandGroup": "1",
-    "consoleSyntax": "pa info (player)",
+    "consoleSyntax": "pac info (player)",
     "autoTabSyntax": "(player)"
   },
   {
@@ -142,7 +181,7 @@
     "example": "/pa join tutorial",
     "description": "You are able to join a Course using its unique name; each Course also has a unique numeric identifier (courseID) which can be used to join the Course instead of its name. Once you have joined a Course, you are in \u0027Parkour Mode\u0027, which allows you to interact with the ParkourKit and track your statistics.",
     "commandGroup": "1",
-    "consoleSyntax": "pa join (course) (player)",
+    "consoleSyntax": "pac join (course) (player)",
     "autoTabSyntax": "(course)"
   },
   {
@@ -171,7 +210,7 @@
     "description": "A conversation will be started to display the leaderboards you want, whether it\u0027s the best global or personal times. You can provide the required arguments for immediate results.",
     "permission": "parkour.basic.leaderboard",
     "commandGroup": "1",
-    "consoleSyntax": "pa leaderboard (course) (amount)",
+    "consoleSyntax": "pac leaderboard (course) (amount)",
     "autoTabSyntax": "(course) (amount) [global,personal]"
   },
   {
@@ -180,7 +219,7 @@
     "example": "/pa leave",
     "description": "Leaving the Course you are currently playing will terminate all information tracking your current progress, and you will be teleported back to the Parkour Lobby by default.",
     "commandGroup": "1",
-    "consoleSyntax": "pa leave (player)"
+    "consoleSyntax": "pac leave (player)"
   },
   {
     "command": "link",
@@ -193,14 +232,36 @@
     "autoTabSyntax": "[course,lobby,reset] {1:course=(course),1:lobby=(lobby)}"
   },
   {
+    "command": "linkkit",
+    "title": "Link a Course to ParkourKit",
+    "arguments": "(course) (kit)",
+    "example": "/pa linkKit tutorial firekit",
+    "description": "Each Course can be linked to a different ParkourKit, which are created using the \u0027/pa createKit\u0027 command. Once linked, each type of Material in the ParkourKit on that Course will be configured to the action set.",
+    "permission": "Parkour.Admin.Course",
+    "commandGroup": "3",
+    "consoleSyntax": "pac linkkit (course) (kit)",
+    "autoTabSyntax": "(course) (parkourkit)"
+  },
+  {
     "command": "list",
     "title": "Display List Information",
     "arguments": "(courses / players / ranks / lobbies)",
     "example": "/pa list courses",
     "description": "This command can display all the Courses saved on the server in a page format, ordered by date of creation, each having their own unique numerical ID which can be used to join the Course. Display all the Players that are currently using the plugin, this includes which Course, and how many times they\u0027ve died. Display the available ParkourRanks to be unlocked, with the required ParkourLevel to achieve each. Display all custom lobbies available.",
     "commandGroup": "1",
-    "consoleSyntax": "pa list (courses / players / ranks / lobbies)",
+    "consoleSyntax": "pac list (courses / players / ranks / lobbies)",
     "autoTabSyntax": "[courses,players,ranks,lobbies]"
+  },
+  {
+    "command": "listkit",
+    "title": "List ParkourKit information",
+    "arguments": "[kit]",
+    "example": "/pa listKit firekit",
+    "description": "Display all the ParkourKits available by using the command without the argument. You can specify a ParkourKit name if you want to display each Material in the kit with the corresponding actions.",
+    "permission": "Parkour.Basic.Kit",
+    "commandGroup": "3",
+    "consoleSyntax": "pac listkit [kit]",
+    "autoTabSyntax": "(parkourkit)"
   },
   {
     "command": "lobby",
@@ -234,7 +295,7 @@
     "description": "TODO.",
     "permission": "parkour.admin.course",
     "commandGroup": "4",
-    "consoleSyntax": "pa parkourkit (action) [parkourkit] [value]",
+    "consoleSyntax": "pac parkourkit (action) [parkourkit] [value]",
     "autoTabSyntax": "[create,edit,validate,list,link,give] {1:validate=(parkourkit),1:list=(parkourkit),1:link=(parkourkit),1:give=(parkourkit)} {1:link=(course)}"
   },
   {
@@ -243,6 +304,17 @@
     "example": "/pa perms",
     "description": "Each of the Parkour permissions you have been granted will be displayed in a list format. If you have the wildcard '*' for that group, all child commands will be included.",
     "commandGroup": "1"
+  },
+  {
+    "command": "prize",
+    "title": "Configure Course Prize",
+    "arguments": "(course)",
+    "example": "/pa prize tutorial",
+    "description": "A conversation will be started which allows you to configure the Course's prize exactly how you want. If a command is chosen you will have a chance to test the command, proving it will work.",
+    "permission": "Parkour.Admin.Prize",
+    "commandGroup": "3",
+    "consoleSyntax": "pac prize (course)",
+    "autoTabSyntax": "(course)"
   },
   {
     "command": "placeholder",
@@ -278,7 +350,7 @@
     "description": "This command can be used to fix the database if there are missing Courses that haven\u0027t been synchronised with the server. This is executed on server startup.",
     "permission": "parkour.admin.*",
     "commandGroup": "4",
-    "consoleSyntax": "pa recreate"
+    "consoleSyntax": "pac recreate"
   },
   {
     "command": "reload",
@@ -287,7 +359,7 @@
     "description": "Reload the Parkour Configuration files. This is the recommended way to load any changes made to any config files as some hosts restart the server without allowing Parkour to reload the config files. Some configuration changes, like the Scoreboard, require a server restart after the change has been made.",
     "permission": "parkour.admin.*",
     "commandGroup": "4",
-    "consoleSyntax": "pa reload"
+    "consoleSyntax": "pac reload"
   },
   {
     "command": "request",
@@ -304,7 +376,7 @@
     "description": "The Reset command allows you to request to reset an entry from the Parkour plugin. A summary of the request, with any consequences, will be displayed to the user before they are asked to confirm the action. Each request will be validated and require confirmation before it is actioned.",
     "permission": "parkour.admin.reset",
     "commandGroup": "4",
-    "consoleSyntax": "pa reset (course / player / leaderboard / prize) (argument)",
+    "consoleSyntax": "pac reset (course / player / leaderboard / prize) (argument)",
     "autoTabSyntax": "[course,player,leaderboard,prize] {1:course=(course),1:leaderboard=(course),1:prize=(course),1:player=(player)}"
   },
   {
@@ -313,7 +385,7 @@
     "example": "/pa respawn",
     "description": "While on a Course, you can respawn to the last Checkpoint achieved.",
     "commandGroup": "1",
-    "consoleSyntax": "pa respawn (player)"
+    "consoleSyntax": "pac respawn (player)"
   },
   {
     "command": "restart",
@@ -321,7 +393,73 @@
     "example": "/pa restart",
     "description": "While on a Course, you can restart your progress which will reset all current progress and start the Course again.",
     "commandGroup": "1",
-    "consoleSyntax": "pa restart (player)"
+    "consoleSyntax": "pac restart (player)"
+  },
+  {
+    "command": "resumable",
+    "title": "Toggle Resumable status of Course",
+    "arguments": "[course]",
+    "example": "/pa resumable tutorial",
+    "description": "Toggle the ability for the Player's progress on the Course to be resumed on the next time they join the Course.",
+    "permission": "Parkour.Admin.Course",
+    "commandGroup": "2",
+    "consoleSyntax": "pac resumable (course)",
+    "autoTabSyntax": "(course)"
+  },
+  {
+    "command": "rewarddelay",
+    "title": "Reward Delay for Course",
+    "arguments": "(course) (delay)",
+    "example": "/pa rewarddelay tutorial 1",
+    "description": "Delay a Course Reward before it can be rewarded again. The delay is calculated based on hours, for example '0.5' would be 30 minutes and '48' will be two full days before the player can be rewarded again for the same Course.",
+    "permission": "Parkour.Admin.Course",
+    "commandGroup": "3",
+    "consoleSyntax": "pac rewarddelay (course) (delay)",
+    "autoTabSyntax": "(course) (delay)"
+  },
+  {
+    "command": "rewardlevel",
+    "title": "Reward a ParkourLevel",
+    "arguments": "(course) (level)",
+    "example": "/pa rewardlevel tutorial 5",
+    "description": "You can reward a Player with a ParkourLevel on the completion of a Course, which will allow them to unlock new Courses which have a minimum level requirement to join. Their level is not overwritten if their current level is higher than the reward level.",
+    "permission": "Parkour.Admin.Course",
+    "commandGroup": "3",
+    "consoleSyntax": "pac rewardlevel (course) (level)",
+    "autoTabSyntax": "(course) (level)"
+  },
+  {
+    "command": "rewardleveladd",
+    "title": "Reward Increase to ParkourLevel",
+    "arguments": "(course) (amount)",
+    "example": "/pa rewardleveladd tutorial 2",
+    "description": "You can reward a Player with an addition to their ParkourLevel on the completion of a Course, which will allow them to unlock new Courses which have a minimum level requirement to join. The amount is added to their current level.",
+    "permission": "Parkour.Admin.Course",
+    "commandGroup": "3",
+    "consoleSyntax": "pac rewardleveladd (course) (level)",
+    "autoTabSyntax": "(course) (level)"
+  },
+  {
+    "command": "rewardonce",
+    "title": "Toggle Reward Once status of Course",
+    "arguments": "[course]",
+    "example": "/pa rewardonce tutorial",
+    "description": "Prevent a Player from receiving a reward multiple times for completing a Course, by only allowing them to receive the reward the first time they complete the Course.",
+    "permission": "Parkour.Admin.Course",
+    "commandGroup": "2",
+    "consoleSyntax": "pac rewardonce (course)",
+    "autoTabSyntax": "(course)"
+  },
+  {
+    "command": "rewardparkoins",
+    "title": "Reward Parkoins",
+    "arguments": "(course) (amount)",
+    "example": "/pa rewardparkoins tutorial 10",
+    "description": "You can reward a Player with Parkoins for completing a Course. These can be spent using external plugins to unlock additional content which would be unobtainable without the minimum amount of Parkoins required.",
+    "permission": "Parkour.Admin.Course",
+    "commandGroup": "3",
+    "consoleSyntax": "pac rewardparkoins (course) (amount)",
+    "autoTabSyntax": "(course) (amount)"
   },
   {
     "command": "rewardrank",
@@ -331,7 +469,7 @@
     "description": "You can link a ParkourLevel to a ParkourRank, which would display beside their name if you enable the Parkour Chat Prefix setting. This would allow you to differentiate each ParkourLevel a Player is, based on their ParkourRank.",
     "permission": "parkour.admin.course",
     "commandGroup": "3",
-    "consoleSyntax": "pa rewardrank (level) (rank)",
+    "consoleSyntax": "pac rewardrank (level) (rank)",
     "autoTabSyntax": "(level) (rank)"
   },
   {
@@ -356,13 +494,9 @@
   },
   {
     "command": "setcheckpoint",
-    "title": "Create (or overwrite) a Checkpoint",
-    "arguments": "[number]",
-    "example": "/pa setcheckpoint 1",
-    "description": "Creating a Checkpoint on a Course only requires a single command. You must first select the Course you want to edit '/pa select (course)' then enter '/pa setcheckpoint' to register a new Checkpoint. Your exact location will be captured as the Checkpoint and a pressure plate will be placed for you. A checkpoint can be overwritten by providing the number you wish to overwrite, for example '/pa checkpoint 2' will replace the existing Checkpoint with your current location.",
-    "permission": "parkour.admin.course",
-    "commandGroup": "2",
-    "autoTabSyntax": "(checkpoint)"
+    "title": "Set Player Manual Checkpoint",
+    "description": "CONSOLE ONLY - Allows the Player's checkpoint to be manually set using a console command. This will allow multiple external actions to increase the player's current checkpoint. Checkpoint provided must match the Player's next checkpoint to achieve.",
+    "consoleSyntax": "pac setcheckpoint (player) (checkpoint)"
   },
   {
     "command": "setcourse",
@@ -372,8 +506,28 @@
     "description": "Quickly set Course attributes using a simple command. If a message is provided, an additional argument must match a message type and the following arguments will be combined to make the final event message; colour codes are supported.",
     "permission": "parkour.admin.course",
     "commandGroup": "3",
-    "consoleSyntax": "pa setcourse (course) (displayname / creator / minlevel / maxdeath / maxtime / maxfallticks / parkourkit / linkedcourse / linkedlobby / rewarddelay / playerlimit / rewardlevel / rewardleveladd / rewardparkoins / resetlink / resumable / challengeonly / ready / rewardonce / manualcheckpoints / prize / parkourmode / rename / start / message / command) [value]",
+    "consoleSyntax": "pac setcourse (course) (displayname / creator / minlevel / maxdeath / maxtime / maxfallticks / parkourkit / linkedcourse / linkedlobby / rewarddelay / playerlimit / rewardlevel / rewardleveladd / rewardparkoins / resetlink / resumable / challengeonly / ready / rewardonce / manualcheckpoints / prize / parkourmode / rename / start / message / command) [value]",
     "autoTabSyntax": "(course) [displayname,creator,minlevel,maxdeath,maxtime,maxfallticks,parkourkit,linkedcourse,linkedlobby,rewarddelay,playerlimit,rewardlevel,rewardleveladd,rewardparkoins,resetlink,resumable,challengeonly,ready,rewardonce,manualcheckpoints,prize,parkourmode,rename,start,message,command] {2:message=(parkourevent),2:command=(parkourevent),2:parkourkit=(parkourkit),2:linkedcourse=(course),2:linkedlobby=(lobby),2:resetlink=(truefalse),2:resumable=(truefalse),2:challengeonly=(truefalse),2:ready=(truefalse),2:rewardonce=(truefalse),2:prize=(truefalse),2:parkourmode=(truefalse),2:manualcheckpoints=(truefalse),2:start=(nothing),*=(value)} {2:message=(value...),2:command=(value...)}"
+  },
+  {
+    "command": "setcreator",
+    "title": "Set Creator of a Course",
+    "arguments": "(course) (player)",
+    "example": "/pa setcreator tutorial A5H73Y",
+    "description": "The creator of the Course will be overwritten to what you\u0027ve specified. Helpful if an Admin has to setup the Course which a non-admin Player created. The creator of a Course will have certain permissions for that Course, regardless of if they are an Admin.",
+    "permission": "Parkour.Admin.Course",
+    "commandGroup": "3",
+    "autoTabSyntax": "(course) (player)"
+  },
+  {
+    "command": "setlevel",
+    "title": "Set Player\u0027s ParkourLevel",
+    "arguments": "(player) (level)",
+    "example": "/pa setlevel A5H73Y 10",
+    "description": "You are able to manually set a Player\u0027s ParkourLevel. Used to quickly test you\u0027ve set up the ParkourLevel requirements correctly, or to reward a Player manually.",
+    "permission": "Parkour.Admin.*",
+    "commandGroup": "4",
+    "autoTabSyntax": "(player) (level)"
   },
   {
     "command": "setlobby",
@@ -396,10 +550,45 @@
     "autoTabSyntax": "(lobby) (command...)"
   },
   {
-    "command": "setmanualcheckpoint",
-    "title": "Set Player Manual Checkpoint",
-    "description": "CONSOLE ONLY - Allows the Player's checkpoint to be manually set using a console command. This will allow multiple external actions to increase the player's current checkpoint. Checkpoint provided must match the Player's next checkpoint to achieve.",
-    "consoleSyntax": "pa setmanualcheckpoint (player) (checkpoint)"
+    "command": "setmaxdeath",
+    "title": "Set Maximum Deaths for Course",
+    "arguments": "(course) (amount)",
+    "example": "/pa setmaxdeath tutorial 5",
+    "description": "By default, a Course does not have a maximum amount of deaths. However, you can enforce a limit on the amount of deaths the Player can accumulate before being forced to leave the Course.",
+    "permission": "Parkour.Admin.Course",
+    "commandGroup": "2",
+    "autoTabSyntax": "(course) (amount)"
+  },
+  {
+    "command": "setmaxtime",
+    "title": "Set Time Limit for Course",
+    "arguments": "(course) (seconds)",
+    "example": "/pa setmaxtime tutorial 30",
+    "description": "By default, a Course does not have a maximum time limit. However, you can enforce a time limit the Course must be completed by before being forced to leave the Course.",
+    "permission": "Parkour.Admin.Course",
+    "commandGroup": "2",
+    "autoTabSyntax": "(course) (seconds)"
+  },
+  {
+    "command": "setminlevel",
+    "title": "Set Minimum ParkourLevel for Course",
+    "arguments": "(course) (level)",
+    "example": "/pa setminlevel tutorial 5",
+    "description": "By default, a Course does not have a minimum ParkourLevel requirement to join. However, if you want to enforce the progression of Parkour Courses, you can require the Player to have a ParkourLevel greater than or equal to the minimum ParkourLevel specified.",
+    "permission": "Parkour.Admin.Course",
+    "commandGroup": "2",
+    "autoTabSyntax": "(course) (level)"
+  },
+  {
+    "command": "setmode",
+    "title": "Set ParkourMode for Course",
+    "arguments": "(course)",
+    "example": "/pa setmode tutorial",
+    "description": "By default, a Course does not have a ParkourMode attached. Each ParkourMode can affect the interaction with the Course, an example being the \u0027Freedom\u0027 mode allows you to create and load your own checkpoints. Starts a conversation that lets you configure the ParkourMode for the Course, some options require additional details.",
+    "permission": "Parkour.Admin.Course",
+    "commandGroup": "3",
+    "consoleSyntax": "pac setmode (course)",
+    "autoTabSyntax": "(course)"
   },
   {
     "command": "setplayer",
@@ -409,8 +598,39 @@
     "description": "Quickly set Player attributes using a simple command. Manually set the ParkourLevel or ParkourRank of a Player.",
     "permission": "parkour.admin.course",
     "commandGroup": "3",
-    "consoleSyntax": "pa setplayer (player) (level / leveladd / rank) (value)",
+    "consoleSyntax": "pac setplayer (player) (level / leveladd / rank) (value)",
     "autoTabSyntax": "(player) [level,leveladd,rank] (value)"
+  },
+  {
+    "command": "setplayerlimit",
+    "title": "Set a Player limit for the Course",
+    "arguments": "(course) (amount)",
+    "example": "/pa setplayerlimit tutorial 1",
+    "description": "You are able to limit the number of concurrent Players on a Course.",
+    "permission": "Parkour.Admin.*",
+    "commandGroup": "4",
+    "consoleSyntax": "pac setplayerlimit (course) (amount)",
+    "autoTabSyntax": "(course) (amount)"
+  },
+  {
+    "command": "setrank",
+    "title": "Set Player\u0027s ParkourRank",
+    "arguments": "(player) (rank)",
+    "example": "/pa setrank A5H73Y \u00266Expert",
+    "description": "You are able to manually set a Player\u0027s ParkourRank. This will instantly update their chat prefix.",
+    "permission": "Parkour.Admin.*",
+    "commandGroup": "4",
+    "autoTabSyntax": "(player) (rank)"
+  },
+  {
+    "command": "setstart",
+    "title": "Overwrite Start of a Course",
+    "arguments": "[course]",
+    "example": "/pa setstart",
+    "description": "The start of the selected Course will be overwritten to your current position, rather than having to recreate the Course.",
+    "permission": "Parkour.Admin.Course",
+    "commandGroup": "3",
+    "autoTabSyntax": "(course)"
   },
   {
     "command": "settings",
@@ -429,7 +649,7 @@
     "description": "Display the SQL information of the server connected to the database.",
     "permission": "parkour.admin.*",
     "commandGroup": "4",
-    "consoleSyntax": "pa sql"
+    "consoleSyntax": "pac sql"
   },
   {
     "command": "test",
@@ -469,6 +689,17 @@
     "commandGroup": "1"
   },
   {
+    "command": "validatekit",
+    "title": "Validate ParkourKit",
+    "arguments": "[kitName]",
+    "example": "/pa validateKit firekit",
+    "description": "You can validate a ParkourKit to find out if any problems has originated from manually editing a ParkourKit, or something has gone wrong.",
+    "permission": "Parkour.Admin.Course",
+    "commandGroup": "3",
+    "consoleSyntax": "pac validatekit [kitName]",
+    "autoTabSyntax": "(parkourkit)"
+  },
+  {
     "command": "whitelist",
     "title": "Whitelist a Non-Parkour Command",
     "arguments": "(command)",
@@ -476,7 +707,7 @@
     "description": "By default, non-Parkour commands are disabled during the Course unless you whitelist a command that the Players are allowed to use.",
     "permission": "parkour.admin.*",
     "commandGroup": "4",
-    "consoleSyntax": "pa whitelist (command)",
+    "consoleSyntax": "pac whitelist (command)",
     "autoTabSyntax": "(command)"
   }
 ]

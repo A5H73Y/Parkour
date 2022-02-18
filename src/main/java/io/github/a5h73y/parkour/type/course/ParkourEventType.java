@@ -37,8 +37,14 @@ public enum ParkourEventType {
 	 */
 	public static String getAllParkourEventTypes() {
 		return Arrays.stream(values())
-				.map(Enum::name)
+				.map(ParkourEventType::getConfigEntry)
 				.sorted().collect(Collectors.joining(", "))
 				.toLowerCase();
+	}
+
+	public static ParkourEventType findByConfigEntry(@NotNull String eventName) {
+		return Arrays.stream(values())
+				.filter(parkourEventType -> parkourEventType.getConfigEntry().equalsIgnoreCase(eventName))
+				.findFirst().orElse(null);
 	}
 }

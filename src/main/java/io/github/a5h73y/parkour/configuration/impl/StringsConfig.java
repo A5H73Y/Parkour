@@ -138,6 +138,7 @@ public class StringsConfig extends Yaml {
 		this.setDefault("Error.ChallengeOnly", "This Course is limited to Challenges only.");
 		this.setDefault("Error.OnChallenge", "You are already in a Challenge.");
 		this.setDefault("Error.InvalidValue", "Please enter a valid value.");
+		this.setDefault("Error.DisabledCommand", "This command has been disabled.");
 
 		this.setDefault("Help.Command", "&7/pa help &9%VALUE% &0: &7To learn more about the command.");
 		this.setDefault("Help.Commands", "To display the commands menu, enter &b/pa cmds");

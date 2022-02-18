@@ -78,7 +78,7 @@ public class SetPlayerConversation extends ParkourConversation {
             Parkour parkour = Parkour.getInstance();
             Bukkit.getScheduler().runTaskAsynchronously(parkour, () -> {
                 // for messages to be sent - do it async
-                parkour.getPlayerManager().performAction(player, targetPlayer, setOption, input);
+                parkour.getPlayerManager().processCommand(player, targetPlayer, setOption, input);
             });
 
             return Prompt.END_OF_CONVERSATION;

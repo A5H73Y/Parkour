@@ -1,10 +1,15 @@
 package io.github.a5h73y.parkour.database;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.AMOUNT_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.COURSE_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.DEATHS_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.PLAYER_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.POSITION_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.TIME_PLACEHOLDER;
 import static io.github.a5h73y.parkour.utility.PluginUtils.readContentsOfResource;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
-import io.github.a5h73y.parkour.other.ParkourConstants;
 import io.github.a5h73y.parkour.type.CacheableParkourManager;
 import io.github.a5h73y.parkour.type.Initializable;
 import io.github.a5h73y.parkour.utility.PluginUtils;
@@ -12,12 +17,16 @@ import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -46,14 +55,13 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
         initiateConnection();
     }
 
-    @Override
-    protected DefaultConfig getConfig() {
-        return parkour.getParkourConfig();
-    }
-
-    @Override
-    public void teardown() {
-        closeConnection();
+    /**
+     * Get the Player ID which is used in the Database.
+     * @param player player
+     * @return player ID
+     */
+    public static String getPlayerId(@NotNull OfflinePlayer player) {
+        return player.getUniqueId().toString().replace("-", "");
     }
 
     /**
@@ -63,7 +71,7 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
      * @param courseName name of the course
      * @return course ID
      */
-    public int getCourseId(String courseName) {
+    public int getCourseId(@NotNull String courseName) {
         return getCourseId(courseName, true);
     }
 
@@ -83,16 +91,17 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
 
         PluginUtils.debug("Finding course ID for " + courseName);
         int courseId = -1;
+        String courseIdQuery = "SELECT courseId FROM course WHERE name = ?;";
 
-        String courseIdQuery = "SELECT courseId FROM course WHERE name = '" + courseName + "';";
-        try (ResultSet rs = database.query(courseIdQuery)) {
-            if (rs.next()) {
-                courseId = rs.getInt("courseId");
-            }
-            rs.getStatement().close();
-            if (courseId != -1) {
+        try (PreparedStatement statement = getDatabaseConnection().prepareStatement(courseIdQuery)) {
+            statement.setString(1, courseName);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                courseId = resultSet.getInt("courseId");
                 courseIdCache.put(courseName, courseId);
             }
+            resultSet.getStatement().close();
         } catch (SQLException e) {
             logSqlException(e);
         }
@@ -110,30 +119,30 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
      * Limit the results based on the parameter.
      *
      * @param courseName name of the course
-     * @param limit amount of results
+     * @param resultsLimit amount of results
      * @return {@link TimeEntry} results
      */
-    public List<TimeEntry> getTopCourseResults(String courseName, int limit) {
-        List<TimeEntry> times = new ArrayList<>();
-        int maxEntries = calculateResultsLimit(limit);
+    public List<TimeEntry> getTopCourseResults(@NotNull String courseName, int resultsLimit) {
+        List<TimeEntry> results = new ArrayList<>();
         int courseId = getCourseId(courseName.toLowerCase());
-        PluginUtils.debug("Getting top " + maxEntries + " results for " + courseName);
 
-        if (courseId == -1) {
-            return times;
+        if (courseId > 0) {
+            int maxEntries = calculateResultsLimit(resultsLimit);
+            PluginUtils.debug("Getting top " + maxEntries + " results for " + courseName);
+            String courseResultsQuery = SELECT_TIME_DATA_QUERY + " WHERE courseId=? ORDER BY time LIMIT ?";
+
+            try (PreparedStatement statement = getDatabaseConnection().prepareStatement(courseResultsQuery)) {
+                statement.setInt(1, courseId);
+                statement.setInt(2, resultsLimit);
+                ResultSet resultSet = statement.executeQuery();
+                results = extractTimeEntries(resultSet);
+                resultSet.getStatement().close();
+            } catch (SQLException e) {
+                logSqlException(e);
+            }
         }
 
-        String courseResultsQuery = SELECT_TIME_DATA_QUERY + " WHERE courseId=" + courseId
-                + " ORDER BY time LIMIT " + maxEntries;
-
-        try (ResultSet rs = database.query(courseResultsQuery)) {
-            times = extractTimeEntries(rs);
-            rs.getStatement().close();
-        } catch (SQLException e) {
-            logSqlException(e);
-        }
-
-        return times;
+        return results;
     }
 
     /**
@@ -146,53 +155,27 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
      * @return {@link TimeEntry} results
      */
     public List<TimeEntry> getTopPlayerCourseResults(OfflinePlayer player, String courseName, int limit) {
-        List<TimeEntry> times = new ArrayList<>();
-        int maxEntries = calculateResultsLimit(limit);
-        int courseId = getCourseId(courseName.toLowerCase());
-        PluginUtils.debug("Getting top " + maxEntries + " results for " + player.getName() + " on " + courseName);
-
-        if (courseId == -1) {
-            return times;
-        }
-
-        String playerResultsQuery = SELECT_TIME_DATA_QUERY + " WHERE courseId=" + courseId
-                + " AND playerId='" + getPlayerId(player) + "' ORDER BY time LIMIT " + maxEntries;
-
-        try (ResultSet rs = database.query(playerResultsQuery)) {
-            times = extractTimeEntries(rs);
-            rs.getStatement().close();
-        } catch (SQLException e) {
-            logSqlException(e);
-        }
-
-        return times;
-    }
-
-    /**
-     * Determine if the player has achieved a time on the course.
-     *
-     * @param player target offline player
-     * @param courseName name of the course
-     * @return a time exists
-     */
-    public boolean hasPlayerAchievedTime(OfflinePlayer player, String courseName) {
-        boolean timeExists = false;
+        List<TimeEntry> results = new ArrayList<>();
         int courseId = getCourseId(courseName.toLowerCase());
 
-        if (courseId == -1) {
-            return timeExists;
+        if (courseId > 0) {
+            int maxEntries = calculateResultsLimit(limit);
+            PluginUtils.debug("Getting top " + maxEntries + " results for " + player.getName() + " on " + courseName);
+            String playerResultsQuery = SELECT_TIME_DATA_QUERY + " WHERE courseId=? AND playerId=? ORDER BY time LIMIT ?";
+
+            try (PreparedStatement statement = getDatabaseConnection().prepareStatement(playerResultsQuery)) {
+                statement.setInt(1, courseId);
+                statement.setString(2, getPlayerId(player));
+                statement.setInt(3, maxEntries);
+                ResultSet resultSet = statement.executeQuery();
+                results = extractTimeEntries(resultSet);
+                resultSet.getStatement().close();
+            } catch (SQLException e) {
+                logSqlException(e);
+            }
         }
 
-        String timeExistsQuery = "SELECT 1 FROM time WHERE courseId=" + courseId
-                + " AND playerId='" + getPlayerId(player) + "' LIMIT 1;";
-
-        try (ResultSet rs = database.query(timeExistsQuery)) {
-            timeExists = rs.next();
-            rs.getStatement().close();
-        } catch (SQLException e) {
-            logSqlException(e);
-        }
-        return timeExists;
+        return results;
     }
 
     /**
@@ -206,30 +189,37 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
      * @return leaderboard position
      */
     public int getPositionOnLeaderboard(@Nullable OfflinePlayer player, String courseName, long time) {
+        int result = -1;
         int courseId = getCourseId(courseName);
-        if (courseId == -1) {
-            return -1;
-        }
 
-        String leaderboardPositionQuery = "SELECT 1 FROM time WHERE courseId=" + courseId + " AND time < " + time;
+        if (courseId > 0) {
+            result = 1;
+            String leaderboardPositionQuery = "SELECT 1 FROM time WHERE courseId=? AND time < ?";
 
-        if (player != null) {
-            leaderboardPositionQuery += " AND playerId='" + getPlayerId(player) + "';";
-        }
-
-        PluginUtils.debug("Checking leaderboard position for: " + leaderboardPositionQuery);
-        int position = 1;
-
-        try (ResultSet rs = database.query(leaderboardPositionQuery)) {
-            while (rs.next()) {
-                position++;
+            if (player != null) {
+                leaderboardPositionQuery += " AND playerId=?";
             }
-            rs.getStatement().close();
-        } catch (SQLException e) {
-            logSqlException(e);
+
+            PluginUtils.debug("Checking leaderboard position for: " + leaderboardPositionQuery);
+
+            try (PreparedStatement statement = getDatabaseConnection().prepareStatement(leaderboardPositionQuery)) {
+                statement.setInt(1, courseId);
+                statement.setLong(2, time);
+
+                if (player != null) {
+                    statement.setString(3, getPlayerId(player));
+                }
+                ResultSet resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    result++;
+                }
+                resultSet.getStatement().close();
+            } catch (SQLException e) {
+                logSqlException(e);
+            }
+            PluginUtils.debug("Leaderboard position is: " + result);
         }
-        PluginUtils.debug("Leaderboard position is: " + position);
-        return position;
+        return result;
     }
 
     /**
@@ -242,6 +232,61 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
      */
     public int getPositionOnLeaderboard(String courseName, long time) {
         return getPositionOnLeaderboard(null, courseName, time);
+    }
+
+    /**
+     * Find the nth best time for the course.
+     * Uses cache to quickly find the result based on position in the list.
+     *
+     * @param courseName course
+     * @param results results
+     * @return matching {@link TimeEntry}
+     */
+    public List<TimeEntry> getTopBestTimes(String courseName, int results) {
+        List<TimeEntry> cachedResults = getCourseCache(courseName);
+        int maxResults = Math.min(results, cachedResults.size());
+        return cachedResults.subList(0, maxResults);
+    }
+
+    /**
+     * Find the nth best time for the course.
+     * Uses cache to quickly find the result based on position in the list.
+     *
+     * @param courseName course
+     * @param position position
+     * @return matching {@link TimeEntry}
+     */
+    public TimeEntry getNthBestTime(String courseName, int position) {
+        List<TimeEntry> cachedResults = getCourseCache(courseName);
+        return position > cachedResults.size() ? null : cachedResults.get(position - 1);
+    }
+
+    /**
+     * Determine if the player has achieved a time on the course.
+     *
+     * @param player target offline player
+     * @param courseName name of the course
+     * @return a time exists
+     */
+    public boolean hasPlayerAchievedTime(OfflinePlayer player, String courseName) {
+        boolean result = false;
+        int courseId = getCourseId(courseName.toLowerCase());
+
+        if (courseId > 0) {
+            String timeExistsQuery = "SELECT 1 FROM time WHERE courseId=? AND playerId=? LIMIT 1;";
+
+            try (PreparedStatement statement = getDatabaseConnection().prepareStatement(timeExistsQuery)) {
+                statement.setInt(1, courseId);
+                statement.setString(2, getPlayerId(player));
+                ResultSet resultSet = statement.executeQuery();
+
+                result = resultSet.next();
+                resultSet.getStatement().close();
+            } catch (SQLException e) {
+                logSqlException(e);
+            }
+        }
+        return result;
     }
 
     /**
@@ -274,11 +319,12 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
      * @param courseName name of the course
      */
     public void insertCourse(String courseName) {
-        String insertCourseUpdate = "INSERT INTO course (name) VALUES ('" + courseName + "');";
+        String insertCourseUpdate = "INSERT INTO course (name) VALUES (?);";
         PluginUtils.debug("Inserted course: " + insertCourseUpdate);
 
-        try {
-            database.update(insertCourseUpdate);
+        try (PreparedStatement statement = getDatabaseConnection().prepareStatement(insertCourseUpdate)) {
+            statement.setString(1, courseName);
+            statement.executeUpdate();
         } catch (SQLException e) {
             logSqlException(e);
         }
@@ -294,19 +340,29 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
      */
     public void insertTime(String courseName, Player player, long time, int deaths) {
         int courseId = getCourseId(courseName);
-        if (courseId == -1) {
-            return;
-        }
 
-        String insertTimeUpdate = "INSERT INTO time (courseId, playerId, time, deaths) VALUES ("
-                + courseId + ", '" + getPlayerId(player) + "', " + time + ", " + deaths + ");";
-        PluginUtils.debug("Inserting time: " + insertTimeUpdate);
+        if (courseId > 0) {
+            String insertTimeUpdate = "INSERT INTO time (courseId, playerId, time, deaths) VALUES (?, ?, ?, ?);";
+            PluginUtils.debug("Inserting time for: " + player.getName());
 
-        try {
-            database.updateAsync(insertTimeUpdate).get();
-            resultsCache.remove(courseName.toLowerCase());
-        } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                CompletableFuture.supplyAsync(() -> {
+                    int results = 0;
+                    try (PreparedStatement statement = getDatabaseConnection().prepareStatement(insertTimeUpdate)) {
+                        statement.setInt(1, courseId);
+                        statement.setString(2, getPlayerId(player));
+                        statement.setLong(3, time);
+                        statement.setInt(4, deaths);
+                        results = statement.executeUpdate();
+                    } catch (SQLException e) {
+                        logSqlException(e);
+                    }
+                    return results;
+                }).get();
+                resultsCache.remove(courseName.toLowerCase());
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -320,7 +376,7 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
      * @param time time in milliseconds
      * @param deaths deaths accumulated
      */
-    public void insertOrUpdateTime(String courseName, Player player, long time, int deaths, boolean isNewRecord) {
+    public void insertOrUpdateTime(@NotNull String courseName, @NotNull Player player, long time, int deaths, boolean isNewRecord) {
         boolean updatePlayerTime = getConfig().getBoolean("OnFinish.UpdatePlayerDatabaseTime");
         PluginUtils.debug("Potentially Inserting or Updating Time for player: " + player.getName()
                 + ", isNewRecord: " + isNewRecord + ", updatePlayerTime: " + updatePlayerTime);
@@ -336,18 +392,52 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
         }
     }
 
+    public void renameCourse(String courseName, String targetCourseName) {
+        PluginUtils.debug("Renaming course " + courseName + " to " + targetCourseName);
+        String renameCourseQuery = "UPDATE course SET name=? WHERE name=?";
+
+        try {
+            CompletableFuture.supplyAsync(() -> {
+                int results = 0;
+                try (PreparedStatement statement = getDatabaseConnection().prepareStatement(renameCourseQuery)) {
+                    statement.setString(1, courseName);
+                    statement.setString(2, targetCourseName);
+                    results = statement.executeUpdate();
+                } catch (SQLException e) {
+                    logSqlException(e);
+                }
+                return results;
+            }).get();
+            resultsCache.remove(courseName);
+            courseIdCache.remove(courseName);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Delete all of the Player's leaderboard entries.
      * For usage if a player has been banned for cheating etc.
      *
      * @param player target offline player
      */
-    public void deletePlayerTimes(OfflinePlayer player) {
+    public void deletePlayerTimes(@NotNull OfflinePlayer player) {
+        String deletePlayerTimesUpdate = "DELETE FROM time WHERE playerId=?";
         PluginUtils.debug("Deleting all Player times for " + player.getName());
+
         try {
-            database.updateAsync("DELETE FROM time WHERE playerId='" + getPlayerId(player) + "'").get();
+            CompletableFuture.supplyAsync(() -> {
+                int results = 0;
+                try (PreparedStatement statement = getDatabaseConnection().prepareStatement(deletePlayerTimesUpdate)) {
+                    statement.setString(1, getPlayerId(player));
+                    results = statement.executeUpdate();
+                } catch (SQLException e) {
+                    logSqlException(e);
+                }
+                return results;
+            }).get();
             clearCache();
-        } catch (Exception e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
     }
@@ -357,18 +447,27 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
      *
      * @param courseName name of the course
      */
-    public void deleteCourseTimes(String courseName) {
+    public void deleteCourseTimes(@NotNull String courseName) {
         int courseId = getCourseId(courseName);
-        if (courseId == -1) {
-            return;
-        }
+        if (courseId > 0) {
+            String deleteCourseTimesUpdate = "DELETE FROM time WHERE courseId=?";
+            PluginUtils.debug("Deleting all Course times for " + courseName);
 
-        PluginUtils.debug("Deleting all Course times for " + courseName);
-        try {
-            database.updateAsync("DELETE FROM time WHERE courseId=" + courseId).get();
-            resultsCache.remove(courseName.toLowerCase());
-        } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                CompletableFuture.supplyAsync(() -> {
+                    int results = 0;
+                    try (PreparedStatement statement = getDatabaseConnection().prepareStatement(deleteCourseTimesUpdate)) {
+                        statement.setInt(1, courseId);
+                        results = statement.executeUpdate();
+                    } catch (SQLException e) {
+                        logSqlException(e);
+                    }
+                    return results;
+                }).get();
+                resultsCache.remove(courseName.toLowerCase());
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -378,19 +477,29 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
      * @param player target offline player
      * @param courseName name of the course
      */
-    public void deletePlayerCourseTimes(OfflinePlayer player, String courseName) {
+    public void deletePlayerCourseTimes(@NotNull OfflinePlayer player, @NotNull String courseName) {
         int courseId = getCourseId(courseName);
-        if (courseId == -1) {
-            return;
-        }
 
-        PluginUtils.debug("Deleting all times for player " + player.getName() + " for course " + courseName);
-        try {
-            database.updateAsync("DELETE FROM time WHERE playerId='" + getPlayerId(player)
-                    + "' AND courseId=" + courseId).get();
-            resultsCache.remove(courseName.toLowerCase());
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (courseId > 0) {
+            String deletePlayerCourseTimes = "DELETE FROM time WHERE playerId=? AND courseId=?";
+            PluginUtils.debug("Deleting all times for player " + player.getName() + " for course " + courseName);
+
+            try {
+                CompletableFuture.supplyAsync(() -> {
+                    int results = 0;
+                    try (PreparedStatement statement = getDatabaseConnection().prepareStatement(deletePlayerCourseTimes)) {
+                        statement.setString(1, getPlayerId(player));
+                        statement.setInt(2, courseId);
+                        results = statement.executeUpdate();
+                    } catch (SQLException e) {
+                        logSqlException(e);
+                    }
+                    return results;
+                }).get();
+                resultsCache.remove(courseName.toLowerCase());
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -399,18 +508,29 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
      * For usage if a course has been deleted.
      * Will remove the times and the course entry from the database.
      *
-     * @param courseName name of the course
+     * @param courseNameRaw name of the course
      */
-    public void deleteCourseAndReferences(String courseName) {
-        PluginUtils.debug("Completely deleting course " + courseName);
+    public void deleteCourseAndReferences(@NotNull String courseNameRaw) {
+        PluginUtils.debug("Completely deleting course " + courseNameRaw);
+        String courseName = courseNameRaw.toLowerCase();
+        String deleteCourseUpdate = "DELETE FROM course WHERE name=?";
+
         try {
-            database.updateAsync("DELETE FROM course WHERE name='" + courseName + "'").get();
-            resultsCache.remove(courseName.toLowerCase());
+            CompletableFuture.supplyAsync(() -> {
+                int results = 0;
+                try (PreparedStatement statement = getDatabaseConnection().prepareStatement(deleteCourseUpdate)) {
+                    statement.setString(1, courseName);
+                    results = statement.executeUpdate();
+                } catch (SQLException e) {
+                    logSqlException(e);
+                }
+                return results;
+            }).get();
+            resultsCache.remove(courseName);
+            courseIdCache.remove(courseName);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // reset the cache
-        courseIdCache.clear();
     }
 
     /**
@@ -477,65 +597,68 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
     }
 
     /**
-     * Find the nth best time for the course.
-     * Uses cache to quickly find the result based on position in the list.
-     *
-     * @param courseName course
-     * @param position position
-     * @return matching {@link TimeEntry}
-     */
-    public TimeEntry getNthBestTime(String courseName, int position) {
-        List<TimeEntry> cachedResults = getCourseCache(courseName);
-        return position > cachedResults.size() ? null : cachedResults.get(position - 1);
-    }
-
-    /**
      * Display Leaderboards Entries to player.
      *
      * @param commandSender command sender
      * @param courseName name of the course
      * @param times {@link TimeEntry} results
      */
-    public void displayTimeEntries(CommandSender commandSender, String courseName, List<TimeEntry> times) {
-        if (times.isEmpty()) {
+    public void displayTimeEntries(@NotNull CommandSender commandSender, @NotNull String courseName, @Nullable List<TimeEntry> times) {
+        if (times == null || times.isEmpty()) {
             TranslationUtils.sendMessage(commandSender, "No results were found!");
             return;
         }
 
         String heading = TranslationUtils.getTranslation("Parkour.LeaderboardHeading", false)
-                .replace(ParkourConstants.COURSE_PLACEHOLDER, courseName)
-                .replace(ParkourConstants.AMOUNT_PLACEHOLDER, String.valueOf(times.size()));
+                .replace(COURSE_PLACEHOLDER, courseName)
+                .replace(AMOUNT_PLACEHOLDER, String.valueOf(times.size()));
 
         TranslationUtils.sendHeading(heading, commandSender);
 
         for (int i = 0; i < times.size(); i++) {
             TimeEntry entry = times.get(i);
             String translation = TranslationUtils.getTranslation("Parkour.LeaderboardEntry", false)
-                    .replace("%POSITION%", String.valueOf(i + 1))
-                    .replace(ParkourConstants.PLAYER_PLACEHOLDER, entry.getPlayerName())
-                    .replace(ParkourConstants.TIME_PLACEHOLDER, DateTimeUtils.displayCurrentTime(entry.getTime()))
-                    .replace(ParkourConstants.DEATHS_PLACEHOLDER, String.valueOf(entry.getDeaths()));
+                    .replace(POSITION_PLACEHOLDER, String.valueOf(i + 1))
+                    .replace(PLAYER_PLACEHOLDER, entry.getPlayerName())
+                    .replace(TIME_PLACEHOLDER, DateTimeUtils.displayCurrentTime(entry.getTime()))
+                    .replace(DEATHS_PLACEHOLDER, String.valueOf(entry.getDeaths()));
 
             commandSender.sendMessage(translation);
         }
     }
 
-    /**
-     * Find the nth best time for the course.
-     * Uses cache to quickly find the result based on position in the list.
-     *
-     * @param courseName course
-     * @param results results
-     * @return matching {@link TimeEntry}
-     */
-    public List<TimeEntry> getTopBestTimes(String courseName, int results) {
-        List<TimeEntry> cachedResults = getCourseCache(courseName);
-        int maxResults = Math.min(results, cachedResults.size());
-        return cachedResults.subList(0, maxResults);
-    }
-
     public Database getDatabase() {
         return database;
+    }
+
+    @Override
+    public int getCacheSize() {
+        return resultsCache.size();
+    }
+
+    @Override
+    public void clearCache() {
+        resultsCache.clear();
+    }
+
+    @Override
+    public int getInitializeSequence() {
+        return 2;
+    }
+
+    @Override
+    public void initialize() {
+        recreateAllCourses(false);
+    }
+
+    @Override
+    protected DefaultConfig getConfig() {
+        return parkour.getParkourConfig();
+    }
+
+    @Override
+    public void teardown() {
+        closeConnection();
     }
 
     /**
@@ -607,19 +730,19 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
     /**
      * Processes a ResultSet and returns TimeEntry results.
      *
-     * @param rs ResultSet
+     * @param resultSet ResultSet
      * @return time object results
      */
-    private List<TimeEntry> extractTimeEntries(ResultSet rs) throws SQLException {
+    private List<TimeEntry> extractTimeEntries(ResultSet resultSet) throws SQLException {
         List<TimeEntry> times = new ArrayList<>();
 
-        while (rs.next()) {
+        while (resultSet.next()) {
             TimeEntry time = new TimeEntry(
-                    rs.getString(1),
-                    rs.getString(2),
-                    rs.getLong(3),
-                    rs.getInt(4),
-                    rs.getDate(5));
+                    resultSet.getString(1),
+                    resultSet.getString(2),
+                    resultSet.getLong(3),
+                    resultSet.getInt(4),
+                    resultSet.getDate(5));
             times.add(time);
         }
         return times;
@@ -646,39 +769,13 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
         return resultsCache.get(courseName.toLowerCase());
     }
 
-    public static String getPlayerId(OfflinePlayer player) {
-        return player.getUniqueId().toString().replace("-", "");
-    }
-
-    @Override
-    public int getCacheSize() {
-        return resultsCache.size();
-    }
-
-    @Override
-    public void clearCache() {
-        resultsCache.clear();
-    }
-
-    @Override
-    public int getInitializeSequence() {
-        return 2;
-    }
-
-    @Override
-    public void initialize() {
-        recreateAllCourses(false);
-    }
-
-    public void renameCourse(String courseName, String targetCourseName) {
-        PluginUtils.debug("Renaming course " + courseName + " to " + targetCourseName);
-        try {
-            database.updateAsync("UPDATE course SET name='" + targetCourseName + "' WHERE name='" + courseName + "'").get();
-            resultsCache.remove(courseName.toLowerCase());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        // reset the cache
-        courseIdCache.clear();
+    /**
+     * Checks if a connection is open with the database.
+     *
+     * @return true if the connection is open
+     * @throws SQLException if the connection cannot be checked
+     */
+    private Connection getDatabaseConnection() throws SQLException {
+        return database.getConnection();
     }
 }

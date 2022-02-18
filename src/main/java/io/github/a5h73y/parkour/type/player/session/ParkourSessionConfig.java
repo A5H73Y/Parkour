@@ -14,6 +14,7 @@ import de.leonhard.storage.Json;
 import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.serialize.LightningSerializer;
 import org.bukkit.OfflinePlayer;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * ParkourSession Config class.
@@ -78,6 +79,11 @@ public class ParkourSessionConfig extends Json {
 
     public ParkourSession getParkourSession() {
         return LightningSerializer.deserialize(this.getData(), ParkourSession.class);
+    }
+
+    @Nullable
+    public String getCourseName() {
+        return this.get("CourseName", null);
     }
 
     public void saveParkourSession(ParkourSession parkourSession) {

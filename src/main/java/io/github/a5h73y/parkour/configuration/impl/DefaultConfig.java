@@ -2,12 +2,15 @@ package io.github.a5h73y.parkour.configuration.impl;
 
 import com.cryptomorin.xseries.XMaterial;
 import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.type.course.ParkourEventType;
 import io.github.a5h73y.parkour.type.sounds.SoundType;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
@@ -20,6 +23,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Default Parkour configuration.
@@ -79,10 +83,6 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("OnCourse.EnforceParkourCommands.Whitelist", Collections.singletonList("login"));
 
 		this.setDefault("OnFinish.BroadcastLevel", "GLOBAL");
-		this.setDefault("OnFinish.DefaultPrize.Material", "DIAMOND");
-		this.setDefault("OnFinish.DefaultPrize.Amount", 1);
-		this.setDefault("OnFinish.DefaultPrize.XP", 0);
-		this.setDefault("OnFinish.DefaultPrize.Command", "");
 		this.setDefault("OnFinish.DisplayNewRecords", false);
 		this.setDefault("OnFinish.DisplayStats", true);
 		this.setDefault("OnFinish.EnablePrizes", true);
@@ -246,6 +246,13 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("Plugin.PlaceholderAPI.Enabled", true);
 		this.setDefault("Plugin.PlaceholderAPI.CacheTime", 15);
 
+		this.setDefault("CourseDefault.Prize.Material", "DIAMOND");
+		this.setDefault("CourseDefault.Prize.Amount", 1);
+		this.setDefault("CourseDefault.Prize.XP", 0);
+		this.setDefault("CourseDefault.Commands.PerCourseOverride", true);
+		Arrays.stream(ParkourEventType.values()).forEach(eventType ->
+				this.setDefault("CourseDefault.Command." + eventType.getConfigEntry(), Collections.singletonList("")));
+
 		this.setDefault("Database.MaximumCoursesCached", 10);
 		this.setDefault("SQLite.PathOverride", "");
 		this.setDefault("MySQL.Use", false);
@@ -308,8 +315,9 @@ public class DefaultConfig extends Yaml {
 		return ChatColor.stripColor(getSignHeader());
 	}
 
-	public String getDefaultPrizeCommand() {
-		return this.getString("OnFinish.DefaultPrize.Command");
+	@NotNull
+	public List<String> getDefaultEventCommands(@NotNull ParkourEventType eventType) {
+		return this.get("CourseDefault.Command." + eventType.getConfigEntry(), new ArrayList<>());
 	}
 
 	public String getTimeStandardFormatValue() {
@@ -422,6 +430,10 @@ public class DefaultConfig extends Yaml {
 
 	public boolean isLeaveDestroyCourseProgress() {
 		return this.getBoolean("OnLeave.DestroyCourseProgress");
+	}
+
+	public boolean isPerCourseCommandsOverride() {
+		return this.getBoolean("CourseDefault.Commands.PerCourseOverride");
 	}
 
 	/* Materials */

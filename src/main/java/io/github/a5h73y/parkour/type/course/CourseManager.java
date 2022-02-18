@@ -322,10 +322,14 @@ public class CourseManager extends AbstractPluginReceiver {
      */
     public void runEventCommands(final Player player, final ParkourSession session, final ParkourEventType eventType) {
         CourseConfig courseConfig = CourseConfig.getConfig(session.getCourseName());
-        if (courseConfig.hasEventCommands(eventType)) {
-            for (String command : courseConfig.getEventCommands(eventType)) {
-                PlayerUtils.dispatchServerPlayerCommand(command, player, session);
-            }
+
+        List<String> eventCommands = courseConfig.getEventCommands(eventType);
+        if (eventCommands.isEmpty() || !parkour.getParkourConfig().isPerCourseCommandsOverride()) {
+            eventCommands.addAll(parkour.getParkourConfig().getDefaultEventCommands(eventType));
+        }
+
+        for (String command : eventCommands) {
+            PlayerUtils.dispatchServerPlayerCommand(command, player, session);
         }
     }
 
@@ -336,6 +340,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param commandSender command sender
      * @param args command arguments
      */
+    // TODO this shouldn't really live here?
     public void displayList(final CommandSender commandSender, final String... args) {
         if (args.length < 2) {
             parkour.getParkourCommands().sendInvalidSyntax(commandSender, "list");

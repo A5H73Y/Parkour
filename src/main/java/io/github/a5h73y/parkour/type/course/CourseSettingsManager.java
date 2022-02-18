@@ -5,6 +5,7 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 
 import com.google.common.io.Files;
 import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.commands.CommandProcessor;
 import io.github.a5h73y.parkour.conversation.CoursePrizeConversation;
 import io.github.a5h73y.parkour.conversation.ParkourModeConversation;
 import io.github.a5h73y.parkour.conversation.SetCourseConversation;
@@ -16,6 +17,8 @@ import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
+import io.github.a5h73y.parkour.utility.permission.Permission;
+import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
 import java.io.IOException;
 import java.util.HashMap;
@@ -25,9 +28,10 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.Conversable;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CourseSettingsManager extends AbstractPluginReceiver {
+public class CourseSettingsManager extends AbstractPluginReceiver implements CommandProcessor {
 
 	// course actions to set data
 	private final Map<String, TriConsumer<CommandSender, String, String>> courseSettingActions = new HashMap<>();
@@ -66,9 +70,14 @@ public class CourseSettingsManager extends AbstractPluginReceiver {
 	 * @param commandSender command sender
 	 * @param args command arguments
 	 */
-	public void processSetCommand(final CommandSender commandSender, final String... args) {
+	@Override
+	public void processCommand(@NotNull final CommandSender commandSender, final String... args) {
 		if (!doesCourseExist(args[1])) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, args[1], commandSender);
+			return;
+		}
+
+		if (!PermissionUtils.hasPermission(commandSender, Permission.ADMIN_COURSE)) {
 			return;
 		}
 
@@ -120,13 +129,17 @@ public class CourseSettingsManager extends AbstractPluginReceiver {
 	 * @param commandSender command sender
 	 * @param courseName course name
 	 */
-	public void setChallengeOnlyStatus(CommandSender commandSender, String courseName, boolean value) {
+	public void setChallengeOnlyStatus(@NotNull CommandSender commandSender, @Nullable String courseName, @Nullable Boolean value) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;
 		}
 
-		CourseConfig.getConfig(courseName).setChallengeOnly(value);
+		CourseConfig config = CourseConfig.getConfig(courseName);
+		if (value == null) {
+			value = !config.getChallengeOnly();
+		}
+		config.setChallengeOnly(value);
 		notifyActionChange(commandSender, "Challenge Only Status", courseName, String.valueOf(value));
 	}
 
@@ -140,6 +153,11 @@ public class CourseSettingsManager extends AbstractPluginReceiver {
 	public void setCreator(final CommandSender commandSender, final String courseName, final String value) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
+			return;
+		}
+
+		if (!ValidationUtils.isStringValid(value)) {
+			TranslationUtils.sendTranslation("Error.InvalidValue", commandSender);
 			return;
 		}
 
@@ -433,14 +451,21 @@ public class CourseSettingsManager extends AbstractPluginReceiver {
 	 *
 	 * @param commandSender command sender
 	 * @param courseName course name
+	 * @param value value to set
 	 */
-	public void setReadyStatus(final CommandSender commandSender, final String courseName, boolean value) {
+	public void setReadyStatus(@NotNull final CommandSender commandSender,
+	                           @Nullable final String courseName,
+	                           @Nullable Boolean value) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;
 		}
 
-		CourseConfig.getConfig(courseName).setReadyStatus(value);
+		CourseConfig config = CourseConfig.getConfig(courseName);
+		if (value == null) {
+			value = !config.getReadyStatus();
+		}
+		config.setReadyStatus(value);
 		notifyActionChange(commandSender, "Ready Status", courseName, String.valueOf(value));
 	}
 
@@ -495,7 +520,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver {
 	 * @param commandSender command sender
 	 * @param courseName course name
 	 */
-	public void setResumable(CommandSender commandSender, String courseName, boolean value) {
+	public void setResumable(@NotNull CommandSender commandSender, @NotNull String courseName, @Nullable Boolean value) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;
@@ -503,11 +528,15 @@ public class CourseSettingsManager extends AbstractPluginReceiver {
 
 		if (parkour.getParkourConfig().isLeaveDestroyCourseProgress()) {
 			TranslationUtils.sendMessage(commandSender,
-					"Disable 'OnLeave.DestroyCourseProgress' in the plugin configuration to allow for Courses to be resumable.");
+					"Set &bOnLeave.DestroyCourseProgress&f to &bfalse &fin the plugin configuration to allow for Courses to be resumable.");
 			return;
 		}
 
-		CourseConfig.getConfig(courseName).setResumable(value);
+		CourseConfig config = CourseConfig.getConfig(courseName);
+		if (value == null) {
+			value = !config.getResumable();
+		}
+		config.setResumable(value);
 		notifyActionChange(commandSender, "Resumable", courseName, String.valueOf(value));
 	}
 
@@ -591,13 +620,19 @@ public class CourseSettingsManager extends AbstractPluginReceiver {
 	 * @param commandSender command sender
 	 * @param courseName course name
 	 */
-	public void setRewardOnceStatus(final CommandSender commandSender, final String courseName, boolean value) {
+	public void setRewardOnceStatus(@NotNull final CommandSender commandSender,
+	                                @Nullable final String courseName,
+	                                @Nullable Boolean value) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;
 		}
 
-		CourseConfig.getConfig(courseName).setRewardOnce(value);
+		CourseConfig config = CourseConfig.getConfig(courseName);
+		if (value == null) {
+			value = !config.getRewardOnce();
+		}
+		config.setRewardOnce(value);
 		notifyActionChange(commandSender, "Reward Once Status", courseName, String.valueOf(value));
 	}
 
@@ -650,15 +685,16 @@ public class CourseSettingsManager extends AbstractPluginReceiver {
 			return;
 		}
 
-		if (!SetCourseConversation.PARKOUR_EVENT_TYPE_NAMES.contains(eventTypeName.toLowerCase())) {
+		ParkourEventType eventType = ParkourEventType.findByConfigEntry(eventTypeName);
+
+		if (eventType == null) {
 			TranslationUtils.sendInvalidSyntax(commandSender, "setcourse",
 					"(courseName) message (" + ParkourEventType.getAllParkourEventTypes() + ") (value)");
+			return;
 		}
 
-		ParkourEventType eventType = ParkourEventType.valueOf(eventTypeName.toUpperCase());
 		CourseConfig.getConfig(courseName).setEventMessage(eventType, message);
-		notifyActionChange(commandSender,
-				StringUtils.standardizeText(eventTypeName) + " Message", courseName, StringUtils.colour(message));
+		notifyActionChange(commandSender, eventType.getConfigEntry() + " Message", courseName, StringUtils.colour(message));
 	}
 
 	public void setCourseCommand(CommandSender commandSender, String courseName, String eventTypeName, String message) {
@@ -667,15 +703,16 @@ public class CourseSettingsManager extends AbstractPluginReceiver {
 			return;
 		}
 
-		if (!SetCourseConversation.PARKOUR_EVENT_TYPE_NAMES.contains(eventTypeName.toLowerCase())) {
+		ParkourEventType eventType = ParkourEventType.findByConfigEntry(eventTypeName);
+
+		if (eventType == null) {
 			TranslationUtils.sendInvalidSyntax(commandSender, "setcourse",
 					"(courseName) command (" + ParkourEventType.getAllParkourEventTypes() + ") (value)");
+			return;
 		}
 
-		ParkourEventType eventType = ParkourEventType.valueOf(eventTypeName.toUpperCase());
 		CourseConfig.getConfig(courseName).addEventCommand(eventType, message);
-		notifyActionChange(commandSender,
-				StringUtils.standardizeText(eventTypeName) + " Command", courseName, "/" + message);
+		notifyActionChange(commandSender, eventType.getConfigEntry() + " Command", courseName, "/" + message);
 	}
 
 	/**
@@ -731,6 +768,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver {
 	}
 
 	private void populateCourseSettingActions() {
+		courseSettingActions.put("autostart", (commandSender, courseName, value) -> parkour.getAutoStartManager().createAutoStart((Player) commandSender, courseName));
 		courseSettingActions.put("challengeonly", (commandSender, courseName, value) -> setChallengeOnlyStatus(commandSender, courseName, Boolean.parseBoolean(value)));
 		courseSettingActions.put("creator", this::setCreator);
 		courseSettingActions.put("displayname", this::setDisplayName);
@@ -745,7 +783,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver {
 		courseSettingActions.put("parkourmode", (commandSender, courseName, value) -> startParkourModeConversation(commandSender, courseName));
 		courseSettingActions.put("playerlimit", this::setPlayerLimit);
 		courseSettingActions.put("prize", (commandSender, courseName, value) -> startCoursePrizeConversation(commandSender, courseName));
-		courseSettingActions.put("ready", (commandSender, courseName, value) -> setReadyStatus(commandSender, courseName, Boolean.parseBoolean(value)));
+		courseSettingActions.put("ready", (commandSender, courseName, value) -> setReadyStatus(commandSender, courseName, value != null ? Boolean.parseBoolean(value) : null));
 		courseSettingActions.put("rename", this::setRenameCourse);
 		courseSettingActions.put("resetlink", (commandSender, courseName, value) -> resetCourseLinks(commandSender, courseName));
 		courseSettingActions.put("resumable", (commandSender, courseName, value) -> setResumable(commandSender, courseName, Boolean.parseBoolean(value)));

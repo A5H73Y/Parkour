@@ -2,16 +2,17 @@ package io.github.a5h73y.parkour;
 
 import static io.github.a5h73y.parkour.other.ParkourConstants.DEATHS_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.PLAYER_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.POSITION_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.TIME_PLACEHOLDER;
 
 import io.github.a5h73y.parkour.database.TimeEntry;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
-import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import io.github.a5h73y.parkour.type.player.PlayerConfig;
-import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
+import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.cache.GenericCache;
+import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
 import java.util.List;
 import java.util.function.Supplier;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -370,7 +371,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
 
         } else {
             return TOP_TEN_RESULT.replace(PLAYER_PLACEHOLDER, result.getPlayerName())
-                    .replace("%POSITION%", String.valueOf(position))
+                    .replace(POSITION_PLACEHOLDER, String.valueOf(position))
                     .replace(TIME_PLACEHOLDER, DateTimeUtils.displayCurrentTime(result.getTime()))
                     .replace(DEATHS_PLACEHOLDER, String.valueOf(result.getDeaths()));
         }

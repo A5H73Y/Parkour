@@ -1,6 +1,5 @@
 package io.github.a5h73y.parkour;
 
-import io.github.a5h73y.parkour.commands.type.BasicParkourCommand;
 import io.github.a5h73y.parkour.commands.ParkourAutoTabCompleter;
 import io.github.a5h73y.parkour.commands.ParkourCommands;
 import io.github.a5h73y.parkour.configuration.ConfigManager;
@@ -55,6 +54,28 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+/*
+
+Tidy up before release:
+
+Types include:
+
+ * challenge
+ * course? info etc.
+ * setcourse
+ * parkourkit
+ * setplayer
+ * session
+
+Each 'type' must have the following:
+
+ * set of actions
+ * a method to invoke the action
+ * either a permission check on every single method, or a check in the invoke method (setcourse)
+ * each alias must feed down the correct path
+
+ */
 
 public class Parkour extends JavaPlugin {
 

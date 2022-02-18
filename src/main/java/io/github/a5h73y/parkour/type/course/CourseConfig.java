@@ -367,8 +367,9 @@ public class CourseConfig extends Json {
         this.set(READY, ready);
     }
 
-    public void toggleReadyStatus() {
+    public boolean toggleReadyStatus() {
         setReadyStatus(!getReadyStatus());
+        return getReadyStatus();
     }
 
     /**
@@ -529,8 +530,9 @@ public class CourseConfig extends Json {
     /**
      * Toggle the Reward Once status of the Course.
      */
-    public void toggleRewardOnce() {
+    public boolean toggleRewardOnce() {
         setRewardOnce(!getRewardOnce());
+        return getRewardOnce();
     }
 
     /**
@@ -552,8 +554,9 @@ public class CourseConfig extends Json {
     /**
      * Toggle the Challenge Only status of the Course.
      */
-    public void toggleChallengeOnly() {
+    public boolean toggleChallengeOnly() {
         setChallengeOnly(!getChallengeOnly());
+        return getChallengeOnly();
     }
 
     /**
@@ -655,7 +658,7 @@ public class CourseConfig extends Json {
      */
     @Nullable
     public String getStartingWorldName() {
-        return this.get("Checkpoint.0.Location.World", null);
+        return this.get("Checkpoint.0.Location.world", null);
     }
 
     /**
@@ -672,73 +675,6 @@ public class CourseConfig extends Json {
     public void resetLinks() {
         this.remove("LinkedLobby");
         this.remove("LinkedCourse");
-    }
-
-    /**
-     * Displays all information stored about Course.
-     * Dynamically displays data based on what has been set.
-     * @param commandSender command sender
-     * @param courseNameRaw course name
-     */
-    public static void displayCourseInfo(@NotNull CommandSender commandSender, String courseNameRaw) {
-        if (!Parkour.getInstance().getCourseManager().doesCourseExist(courseNameRaw)) {
-            TranslationUtils.sendValueTranslation("Error.NoExist", courseNameRaw, commandSender);
-            return;
-        }
-        String courseName = courseNameRaw.toLowerCase();
-        TranslationUtils.sendHeading(StringUtils.standardizeText(courseName) + " statistics", commandSender);
-        CourseConfig config = getConfig(courseName);
-
-        sendConditionalValue(commandSender, "Display Name", config.hasCourseDisplayName(), config.getCourseDisplayName());
-
-        sendValue(commandSender, "Views", config.getViews());
-        sendValue(commandSender, "Completions", config.getCompletions()
-                + " (" + config.getCompletionPercent() + "%)");
-        sendValue(commandSender, CHECKPOINTS, config.getCheckpointAmount());
-        sendValue(commandSender, "Creator", config.getCreator());
-        sendValue(commandSender, "Ready Status", String.valueOf(config.getReadyStatus()));
-        sendValue(commandSender, "Challenge Only", String.valueOf(config.getChallengeOnly()));
-
-        sendConditionalValue(commandSender, "Resumable", !Parkour.getDefaultConfig().isLeaveDestroyCourseProgress(),
-                String.valueOf(config.getResumable()));
-        sendConditionalValue(commandSender, "Minimum ParkourLevel", config.getMinimumParkourLevel());
-        sendConditionalValue(commandSender, "ParkourLevel Reward", config.getRewardParkourLevel());
-        sendConditionalValue(commandSender, "ParkourLevel Reward Increase", config.getRewardParkourLevelIncrease());
-        sendConditionalValue(commandSender, "Parkoins Reward", config.getRewardParkoins());
-        sendConditionalValue(commandSender, "Max Deaths", config.getMaximumDeaths());
-        sendConditionalValue(commandSender, "Max Time", config.hasMaximumTime(),
-                DateTimeUtils.convertSecondsToTime(config.getMaximumTime()));
-
-        sendConditionalValue(commandSender, "Linked Course", config.hasLinkedCourse(), config.getLinkedCourse());
-        sendConditionalValue(commandSender, "Linked Lobby", config.hasLinkedLobby(), config.getLinkedLobby());
-        sendConditionalValue(commandSender, PARKOUR_KIT, config.hasParkourKit(), config.getParkourKit());
-        sendConditionalValue(commandSender, PARKOUR_MODE, config.hasParkourMode(), config.getParkourModeName());
-
-        sendConditionalValue(commandSender, "Material Prize",
-                config.hasMaterialPrize() && config.getMaterialPrizeAmount() > 0,
-                config.getMaterialPrize() + " x " + config.getMaterialPrizeAmount());
-        sendConditionalValue(commandSender, "XP Prize", config.getXpPrize());
-
-        if (Parkour.getInstance().getEconomyApi().isEnabled()) {
-            sendConditionalValue(commandSender, "Join Fee", config.getEconomyJoiningFee());
-            sendConditionalValue(commandSender, "Economy Reward", config.getEconomyFinishReward());
-        }
-
-        if (config.hasRewardDelay()) {
-            sendValue(commandSender, "Reward Cooldown", DateTimeUtils.convertMillisecondsToDateTime(
-                    DateTimeUtils.convertHoursToMilliseconds(config.getRewardDelay())));
-
-            if (commandSender instanceof Player && !Parkour.getInstance().getPlayerManager().hasPrizeCooldownDurationPassed(
-                    (Player) commandSender, courseName, false)) {
-                sendValue(commandSender, "Cool down Remaining", DateTimeUtils.getDelayTimeRemaining((Player) commandSender, courseName));
-            }
-        }
-        for (ParkourEventType value : ParkourEventType.values()) {
-            if (config.hasEventCommands(value)) {
-                TranslationUtils.sendMessage(commandSender, "&3" + value.getConfigEntry() + " Commands", false);
-                config.getEventCommands(value).forEach(commandSender::sendMessage);
-            }
-        }
     }
 
     /**
@@ -842,31 +778,6 @@ public class CourseConfig extends Json {
         this.set("EconomyJoiningFee", joinFee);
     }
 
-    public boolean hasEventMessage(@NotNull ParkourEventType type) {
-        return this.contains(type.getConfigEntry() + "Message");
-    }
-
-    /**
-     * Get the Event Message for this Course.
-     * Possible events found within {@link ParkourEventType}.
-     * @param type event type name
-     * @return matching event message
-     */
-    @Nullable
-    public String getEventMessage(@NotNull ParkourEventType type) {
-        return this.get(type.getConfigEntry() + "Message", null);
-    }
-
-    /**
-     * Set Event Message for Course.
-     * Possible events found within {@link ParkourEventType}.
-     * @param type event type name
-     * @param value message value
-     */
-    public void setEventMessage(@NotNull ParkourEventType type, @Nullable String value) {
-        this.set(type.getConfigEntry() + "Message", value);
-    }
-
     /**
      * Get number of Player limit for Course.
      * @return player limit
@@ -907,8 +818,9 @@ public class CourseConfig extends Json {
         this.set("Resumable", value);
     }
 
-    public void toggleResumable() {
+    public boolean toggleResumable() {
         setResumable(!getResumable());
+        return getResumable();
     }
 
     /**
@@ -927,8 +839,39 @@ public class CourseConfig extends Json {
         this.set(MANUAL_CHECKPOINTS, value);
     }
 
-    public void toggleManualCheckpoints() {
+    public boolean toggleManualCheckpoints() {
         setManualCheckpoints(!getManualCheckpoints());
+        return getManualCheckpoints();
+    }
+
+    /**
+     * Get the Event Message for this Course.
+     * Possible events found within {@link ParkourEventType}.
+     * @param eventType event type name
+     * @return matching event message
+     */
+    @Nullable
+    public String getEventMessage(@NotNull ParkourEventType eventType) {
+        return this.get("Message." + eventType.getConfigEntry(), null);
+    }
+
+    /**
+     * Check if the Course has Event Type Message for the Course.
+     * @param eventType selected {@link ParkourEventType}
+     * @return course has the event type commands
+     */
+    public boolean hasEventMessage(@NotNull ParkourEventType eventType) {
+        return this.contains(eventType.getConfigEntry() + "Message");
+    }
+
+    /**
+     * Set Event Message for Course.
+     * Possible events found within {@link ParkourEventType}.
+     * @param eventType event type name
+     * @param value message value
+     */
+    public void setEventMessage(@NotNull ParkourEventType eventType, @Nullable String value) {
+        this.set("Message." + eventType.getConfigEntry(), value);
     }
 
     /**
@@ -939,7 +882,7 @@ public class CourseConfig extends Json {
      */
     @NotNull
     public List<String> getEventCommands(@NotNull ParkourEventType eventType) {
-        return this.get(eventType.getConfigEntry() + "Command", new ArrayList<>());
+        return this.get( "Command." + eventType.getConfigEntry(), new ArrayList<>());
     }
 
     /**
@@ -948,7 +891,7 @@ public class CourseConfig extends Json {
      * @return course has the event type commands
      */
     public boolean hasEventCommands(@NotNull ParkourEventType eventType) {
-        return this.contains(eventType.getConfigEntry() + "Command");
+        return this.contains("Command." + eventType.getConfigEntry());
     }
 
     /**
@@ -960,7 +903,7 @@ public class CourseConfig extends Json {
                                 @NotNull String value) {
         List<String> commands = getEventCommands(eventType);
         commands.add(value);
-        this.set(eventType.getConfigEntry() + "Command", commands);
+        this.set("Command." + eventType.getConfigEntry(), commands);
     }
 
     public void resetCourseData() {
@@ -1047,6 +990,73 @@ public class CourseConfig extends Json {
         if (checkpoint > 0) {
             courseConfig.remove("Checkpoint." + checkpoint);
             courseConfig.set("Checkpoints", checkpoint - 1);
+        }
+    }
+
+    /**
+     * Displays all information stored about Course.
+     * Dynamically displays data based on what has been set.
+     * @param commandSender command sender
+     * @param courseNameRaw course name
+     */
+    public static void displayCourseInfo(@NotNull CommandSender commandSender, String courseNameRaw) {
+        if (!Parkour.getInstance().getCourseManager().doesCourseExist(courseNameRaw)) {
+            TranslationUtils.sendValueTranslation("Error.NoExist", courseNameRaw, commandSender);
+            return;
+        }
+        String courseName = courseNameRaw.toLowerCase();
+        TranslationUtils.sendHeading(StringUtils.standardizeText(courseName) + " statistics", commandSender);
+        CourseConfig config = getConfig(courseName);
+
+        sendConditionalValue(commandSender, "Display Name", config.hasCourseDisplayName(), config.getCourseDisplayName());
+
+        sendValue(commandSender, "Views", config.getViews());
+        sendValue(commandSender, "Completions", config.getCompletions()
+                + " (" + config.getCompletionPercent() + "%)");
+        sendValue(commandSender, CHECKPOINTS, config.getCheckpointAmount());
+        sendValue(commandSender, "Creator", config.getCreator());
+        sendValue(commandSender, "Ready Status", String.valueOf(config.getReadyStatus()));
+        sendValue(commandSender, "Challenge Only", String.valueOf(config.getChallengeOnly()));
+
+        sendConditionalValue(commandSender, "Resumable", !Parkour.getDefaultConfig().isLeaveDestroyCourseProgress(),
+                String.valueOf(config.getResumable()));
+        sendConditionalValue(commandSender, "Minimum ParkourLevel", config.getMinimumParkourLevel());
+        sendConditionalValue(commandSender, "ParkourLevel Reward", config.getRewardParkourLevel());
+        sendConditionalValue(commandSender, "ParkourLevel Reward Increase", config.getRewardParkourLevelIncrease());
+        sendConditionalValue(commandSender, "Parkoins Reward", config.getRewardParkoins());
+        sendConditionalValue(commandSender, "Max Deaths", config.getMaximumDeaths());
+        sendConditionalValue(commandSender, "Max Time", config.hasMaximumTime(),
+                DateTimeUtils.convertSecondsToTime(config.getMaximumTime()));
+
+        sendConditionalValue(commandSender, "Linked Course", config.hasLinkedCourse(), config.getLinkedCourse());
+        sendConditionalValue(commandSender, "Linked Lobby", config.hasLinkedLobby(), config.getLinkedLobby());
+        sendConditionalValue(commandSender, PARKOUR_KIT, config.hasParkourKit(), config.getParkourKit());
+        sendConditionalValue(commandSender, PARKOUR_MODE, config.hasParkourMode(), config.getParkourModeName());
+
+        sendConditionalValue(commandSender, "Material Prize",
+                config.hasMaterialPrize() && config.getMaterialPrizeAmount() > 0,
+                config.getMaterialPrize() + " x " + config.getMaterialPrizeAmount());
+        sendConditionalValue(commandSender, "XP Prize", config.getXpPrize());
+
+        if (Parkour.getInstance().getEconomyApi().isEnabled()) {
+            sendConditionalValue(commandSender, "Join Fee", config.getEconomyJoiningFee());
+            sendConditionalValue(commandSender, "Economy Reward", config.getEconomyFinishReward());
+        }
+
+        if (config.hasRewardDelay()) {
+            sendValue(commandSender, "Reward Cooldown", DateTimeUtils.convertMillisecondsToDateTime(
+                    DateTimeUtils.convertHoursToMilliseconds(config.getRewardDelay())));
+
+            if (commandSender instanceof Player && !Parkour.getInstance().getPlayerManager().hasPrizeCooldownDurationPassed(
+                    (Player) commandSender, courseName, false)) {
+                sendValue(commandSender, "Cool down Remaining", DateTimeUtils.getDelayTimeRemaining((Player) commandSender, courseName));
+            }
+        }
+        for (ParkourEventType value : ParkourEventType.values()) {
+            if (config.hasEventCommands(value)) {
+                TranslationUtils.sendMessage(commandSender, "&3" + value.getConfigEntry() + " Commands", false);
+                config.getEventCommands(value).forEach(commandSender::sendMessage);
+            }
         }
     }
 }

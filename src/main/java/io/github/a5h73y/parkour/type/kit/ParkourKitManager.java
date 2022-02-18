@@ -240,6 +240,7 @@ public class ParkourKitManager extends CacheableParkourManager {
 
 		switch (args[1].toLowerCase()) {
 			case "create":
+			case "createkit":
 				startCreateKitConversation(commandSender);
 				break;
 
@@ -255,7 +256,7 @@ public class ParkourKitManager extends CacheableParkourManager {
 				displayParkourKits(commandSender, args.length >= 3 ? args[2] : null);
 				break;
 
-			case "link":
+			case "link": //TODO check this
 				setLinkedParkourKit(commandSender, args.length >= 3 ? args[2] : null,
 						args.length >= 4 ? args[3] : null);
 				break;

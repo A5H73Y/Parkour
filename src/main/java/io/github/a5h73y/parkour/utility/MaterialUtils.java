@@ -32,6 +32,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Stairs;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Material Utility methods.
@@ -139,14 +140,14 @@ public class MaterialUtils {
 	 * Otherwise it will display the Material information of the item in the Player's main hand.
 	 *
 	 * @param player player
-	 * @param args command arguments
+	 * @param materialName optional material name
 	 */
-	public static void lookupMaterialInformation(Player player, String... args) {
+	public static void lookupMaterialInformation(Player player, @Nullable String materialName) {
 		Material material;
 		ItemStack data = null;
 
-		if (args.length > 1) {
-			material = Material.getMaterial(args[1].toUpperCase());
+		if (materialName != null) {
+			material = Material.getMaterial(materialName.toUpperCase());
 
 		} else {
 			data = getItemStackInPlayersHand(player);

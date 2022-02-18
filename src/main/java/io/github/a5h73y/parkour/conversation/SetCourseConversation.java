@@ -5,8 +5,6 @@ import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.type.course.ParkourEventType;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -18,14 +16,14 @@ import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.FixedSetPrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SetCourseConversation extends ParkourConversation {
 
     public static final List<String> PARKOUR_EVENT_TYPE_NAMES =
-            Stream.of(ParkourEventType.values()).map(ParkourEventType::getDisplayName).collect(Collectors.toList());
+            Stream.of(ParkourEventType.values())
+                    .map(parkourEventType -> parkourEventType.getConfigEntry().toLowerCase()).collect(Collectors.toList());
 
     public SetCourseConversation(Conversable conversable) {
         super(conversable);

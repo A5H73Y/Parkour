@@ -4,7 +4,7 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.a5h73y</groupId>
-	<artifactId>parkour</artifactId>
+	<artifactId>Parkour</artifactId>
 	<version>7.0</version>
 	<packaging>jar</packaging>
 
@@ -13,8 +13,9 @@
 	<url>https://a5h73y.github.io/Parkour/</url>
 
 	<properties>
-		<maven.compiler.source>8</maven.compiler.source>
-		<maven.compiler.target>8</maven.compiler.target>
+		<java.version>11</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -114,22 +115,15 @@
 		<dependency>
 			<groupId>org.bstats</groupId>
 			<artifactId>bstats-bukkit</artifactId>
-			<version>2.2.1</version>
+			<version>3.0.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<!-- MySQL Database -->
 		<dependency>
 			<groupId>pro.husk</groupId>
 			<artifactId>mysql</artifactId>
-			<version>1.4.1</version>
+			<version>1.4.2</version>
 			<scope>compile</scope>
-		</dependency>
-		<!-- Hikari dependency -->
-		<!-- Can be removed with mysql 1.4.2 when Java bumped to 11+ -->
-		<dependency>
-			<groupId>com.zaxxer</groupId>
-			<artifactId>HikariCP</artifactId>
-			<version>5.0.1</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
@@ -148,7 +142,7 @@
 		<dependency>
 			<groupId>com.github.cryptomorin</groupId>
 			<artifactId>XSeries</artifactId>
-			<version>8.6.0</version>
+			<version>8.6.1</version>
 			<scope>compile</scope>
 		</dependency>
 		<!-- Version Compare -->
@@ -183,8 +177,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
 				</configuration>
 			</plugin>
 
@@ -279,7 +273,7 @@
 				<version>3.1.1</version>
 				<configuration>
 					<configLocation>src/main/resources/parkourCheckstyles.xml</configLocation>
-					<encoding>UTF-8</encoding>
+					<encoding>${project.build.sourceEncoding}</encoding>
 					<consoleOutput>true</consoleOutput>
 					<failsOnError>true</failsOnError>
 					<linkXRef>false</linkXRef>
