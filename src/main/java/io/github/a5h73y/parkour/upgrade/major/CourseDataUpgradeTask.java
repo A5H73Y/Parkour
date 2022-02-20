@@ -1,9 +1,11 @@
 package io.github.a5h73y.parkour.upgrade.major;
 
 import io.github.a5h73y.parkour.type.course.CourseConfig;
+import io.github.a5h73y.parkour.type.course.ParkourEventType;
 import io.github.a5h73y.parkour.type.course.autostart.AutoStartConfig;
 import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
 import io.github.a5h73y.parkour.upgrade.TimedConfigUpgradeTask;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -46,6 +48,7 @@ public class CourseDataUpgradeTask extends TimedConfigUpgradeTask {
 					newCourseConfig.set(key, courseSection.get(key));
 				}
 
+				updateEventsSection(newCourseConfig);
 				updateCheckpointSection(newCourseConfig, courseName);
 				updateEconomySection(newCourseConfig, courseName);
 
@@ -58,6 +61,20 @@ public class CourseDataUpgradeTask extends TimedConfigUpgradeTask {
 
 		updateAutoStartSection();
 		return success;
+	}
+
+	private void updateEventsSection(CourseConfig newCourseConfig) {
+		Arrays.stream(ParkourEventType.values()).forEach(parkourEventType -> {
+			if (newCourseConfig.contains(parkourEventType.getConfigEntry() + "Command")) {
+				newCourseConfig.set("Command." + parkourEventType.getConfigEntry(), newCourseConfig.getStringList(parkourEventType.getConfigEntry() + "Command"));
+				newCourseConfig.remove(parkourEventType.getConfigEntry() + "Command");
+			}
+
+			if (newCourseConfig.contains(parkourEventType.getConfigEntry() + "Message")) {
+				newCourseConfig.set("Message." + parkourEventType.getConfigEntry(), newCourseConfig.getString(parkourEventType.getConfigEntry() + "Message"));
+				newCourseConfig.remove(parkourEventType.getConfigEntry() + "Message");
+			}
+		});
 	}
 
 	private void updateCheckpointSection(CourseConfig courseConfig, String courseName) {

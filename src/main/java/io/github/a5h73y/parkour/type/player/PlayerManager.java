@@ -6,7 +6,6 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_INVALID_AMOU
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_UNKNOWN_PLAYER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.PARKOUR_LEVEL_PLACEHOLDER;
-import static io.github.a5h73y.parkour.other.ParkourConstants.POSITION_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.TEST_MODE;
 import static io.github.a5h73y.parkour.type.course.ParkourEventType.CHECKPOINT;
 import static io.github.a5h73y.parkour.type.course.ParkourEventType.CHECKPOINT_ALL;
@@ -439,8 +438,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		parkour.getQuestionManager().removeQuestion(player);
 		parkour.getParkourSessionManager().removeHiddenPlayer(player);
 		playerDelay.remove(player.getUniqueId());
-		Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () ->
-				parkour.getParkourSessionManager().saveParkourSession(player, true));
+		parkour.getParkourSessionManager().saveParkourSession(player, true);
 	}
 
 	/**
@@ -476,7 +474,6 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		preparePlayer(player, parkour.getParkourConfig().getString("OnFinish.SetGameMode"));
 
 		announceCourseFinishMessage(player, session);
-		CourseConfig.getConfig(courseName).incrementCompletions();
 		teardownParkourMode(player);
 		Bukkit.getServer().getPluginManager().callEvent(new PlayerFinishCourseEvent(player, courseName));
 		parkour.getParkourSessionManager().removePlayer(player);
@@ -499,14 +496,15 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}, parkour.getParkourConfig().getLong("OnFinish.TeleportDelay"));
 
 		PlayerConfig playerConfig = PlayerConfig.getConfig(player);
-
 		playerConfig.setLastCompletedCourse(courseName);
 		playerConfig.setExistingSessionCourseName(null);
-		parkour.getConfigManager().getCourseCompletionsConfig().addCompletedCourse(player, courseName);
 
 		parkour.getParkourSessionManager().forceVisible(player);
 		parkour.getParkourSessionManager().deleteParkourSession(player, courseName);
 		parkour.getCourseManager().runEventCommands(player, session, FINISH);
+
+		parkour.getConfigManager().getCourseCompletionsConfig().addCompletedCourse(player, courseName);
+		CourseConfig.getConfig(courseName).incrementCompletions();
 	}
 
 	/**

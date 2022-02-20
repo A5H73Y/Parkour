@@ -861,7 +861,7 @@ public class CourseConfig extends Json {
      * @return course has the event type commands
      */
     public boolean hasEventMessage(@NotNull ParkourEventType eventType) {
-        return this.contains(eventType.getConfigEntry() + "Message");
+        return this.contains("Message." + eventType.getConfigEntry());
     }
 
     /**
@@ -907,8 +907,7 @@ public class CourseConfig extends Json {
     }
 
     public void resetCourseData() {
-        Json courseConfig = this;
-        Set<String> properties = courseConfig.singleLayerKeySet();
+        Set<String> properties = this.singleLayerKeySet();
 
         for (String property : properties) {
             if ("Creator".equals(property)
@@ -917,7 +916,7 @@ public class CourseConfig extends Json {
                 continue;
             }
 
-            courseConfig.remove(property);
+            this.remove(property);
         }
     }
 
