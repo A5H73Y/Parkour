@@ -135,7 +135,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig config = CourseConfig.getConfig(courseName);
+		CourseConfig config = parkour.getConfigManager().getCourseConfig(courseName);
 		if (value == null) {
 			value = !config.getChallengeOnly();
 		}
@@ -161,7 +161,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig.getConfig(courseName).setCreator(value);
+		parkour.getConfigManager().getCourseConfig(courseName).setCreator(value);
 		notifyActionChange(commandSender, "Creator", courseName, value);
 	}
 
@@ -184,7 +184,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig.getConfig(courseName).setCourseDisplayName(input);
+		parkour.getConfigManager().getCourseConfig(courseName).setCourseDisplayName(input);
 		clearCourseCache(courseName);
 		notifyActionChange(commandSender, "Course Display Name", courseName, StringUtils.colour(input));
 	}
@@ -208,7 +208,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig courseConfig = CourseConfig.getConfig(courseName);
+		CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(courseName);
 		if (courseConfig.hasLinkedLobby()) {
 			TranslationUtils.sendMessage(commandSender, "This Course is linked to a Lobby!");
 			return;
@@ -237,7 +237,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig courseConfig = CourseConfig.getConfig(courseName);
+		CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(courseName);
 		if (courseConfig.hasLinkedCourse()) {
 			TranslationUtils.sendMessage(commandSender, "This Course is linked to a Course!");
 			return;
@@ -261,7 +261,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig.getConfig(courseName).setManualCheckpoints(value);
+		parkour.getConfigManager().getCourseConfig(courseName).setManualCheckpoints(value);
 		notifyActionChange(commandSender, "Manual Checkpoints", courseName, String.valueOf(value));
 	}
 
@@ -284,7 +284,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig.getConfig(courseName).setMaximumDeaths(Integer.parseInt(value));
+		parkour.getConfigManager().getCourseConfig(courseName).setMaximumDeaths(Integer.parseInt(value));
 		clearCourseCache(courseName);
 		notifyActionChange(commandSender, "Maximum Deaths", courseName, value);
 	}
@@ -308,7 +308,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig.getConfig(courseName).setMaximumFallTicks(Integer.parseInt(fallTicksValue));
+		parkour.getConfigManager().getCourseConfig(courseName).setMaximumFallTicks(Integer.parseInt(fallTicksValue));
 		clearCourseCache(courseName);
 		notifyActionChange(commandSender, "Maximum Fall Ticks", courseName, fallTicksValue);
 	}
@@ -340,7 +340,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 		}
 
 		int seconds = Integer.parseInt(secondsValue);
-		CourseConfig.getConfig(courseName).setMaximumTime(seconds);
+		parkour.getConfigManager().getCourseConfig(courseName).setMaximumTime(seconds);
 		clearCourseCache(courseName);
 		notifyActionChange(commandSender, "Maximum Time Limit", courseName, DateTimeUtils.convertSecondsToTime(seconds));
 	}
@@ -363,7 +363,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig.getConfig(courseName).setMinimumParkourLevel(Integer.parseInt(value));
+		parkour.getConfigManager().getCourseConfig(courseName).setMinimumParkourLevel(Integer.parseInt(value));
 		notifyActionChange(commandSender, "Minimum ParkourLevel", courseName, value);
 	}
 
@@ -386,7 +386,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig courseConfig = CourseConfig.getConfig(courseName);
+		CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(courseName);
 
 		if (courseConfig.hasParkourKit()) {
 			TranslationUtils.sendMessage(commandSender, "This Course is already linked to a ParkourKit, continuing anyway...");
@@ -403,7 +403,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig.getConfig(courseName).setParkourMode(value);
+		parkour.getConfigManager().getCourseConfig(courseName).setParkourMode(value);
 		notifyActionChange(commandSender, "ParkourMode", courseName, value.getDisplayName());
 	}
 
@@ -414,7 +414,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig courseConfig = CourseConfig.getConfig(courseName);
+		CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(courseName);
 		courseConfig.setParkourMode(ParkourMode.POTION);
 		courseConfig.addPotionParkourModeEffect(potionEffectType, durationAmplifier);
 		courseConfig.setPotionJoinMessage(joinMessage);
@@ -440,7 +440,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig.getConfig(courseName).setPlayerLimit(Integer.parseInt(limit));
+		parkour.getConfigManager().getCourseConfig(courseName).setPlayerLimit(Integer.parseInt(limit));
 		notifyActionChange(commandSender, "Player Limit", courseName, limit);
 	}
 
@@ -461,7 +461,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig config = CourseConfig.getConfig(courseName);
+		CourseConfig config = parkour.getConfigManager().getCourseConfig(courseName);
 		if (value == null) {
 			value = !config.getReadyStatus();
 		}
@@ -491,7 +491,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 
 		try {
 			Files.copy(CourseConfig.getCourseConfigFile(courseName), CourseConfig.getCourseConfigFile(targetCourseName));
-			CourseConfig.getConfig(targetCourseName).set("Name", targetCourseName.toLowerCase());
+			parkour.getConfigManager().getCourseConfig(targetCourseName).set("Name", targetCourseName.toLowerCase());
 			CourseConfig.deleteCourseData(courseName);
 			parkour.getDatabaseManager().renameCourse(courseName, targetCourseName);
 			clearCourseCache(courseName);
@@ -509,7 +509,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig.getConfig(courseName).resetLinks();
+		parkour.getConfigManager().getCourseConfig(courseName).resetLinks();
 		notifyActionChange(commandSender, "Linked Status", courseName, "none");
 	}
 
@@ -532,7 +532,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig config = CourseConfig.getConfig(courseName);
+		CourseConfig config = parkour.getConfigManager().getCourseConfig(courseName);
 		if (value == null) {
 			value = !config.getResumable();
 		}
@@ -560,7 +560,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig.getConfig(courseName).setRewardDelay(Double.parseDouble(delay));
+		parkour.getConfigManager().getCourseConfig(courseName).setRewardDelay(Double.parseDouble(delay));
 		long milliseconds = DateTimeUtils.convertHoursToMilliseconds(Double.parseDouble(delay));
 		notifyActionChange(commandSender, "Reward Delay", courseName,
 				DateTimeUtils.convertMillisecondsToDateTime(milliseconds));
@@ -585,7 +585,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig.getConfig(courseName).setRewardParkourLevel(Integer.parseInt(parkourLevel));
+		parkour.getConfigManager().getCourseConfig(courseName).setRewardParkourLevel(Integer.parseInt(parkourLevel));
 		notifyActionChange(commandSender, "ParkourLevel reward", courseName, parkourLevel);
 	}
 
@@ -609,7 +609,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig.getConfig(courseName).setRewardParkourLevelIncrease(parkourLevelIncrease);
+		parkour.getConfigManager().getCourseConfig(courseName).setRewardParkourLevelIncrease(parkourLevelIncrease);
 		notifyActionChange(commandSender, "ParkourLevel increase reward", courseName, parkourLevelIncrease);
 	}
 
@@ -628,7 +628,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig config = CourseConfig.getConfig(courseName);
+		CourseConfig config = parkour.getConfigManager().getCourseConfig(courseName);
 		if (value == null) {
 			value = !config.getRewardOnce();
 		}
@@ -654,7 +654,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig.getConfig(courseName).setRewardParkoins(Double.parseDouble(reward));
+		parkour.getConfigManager().getCourseConfig(courseName).setRewardParkoins(Double.parseDouble(reward));
 		notifyActionChange(commandSender, "Parkoins reward", courseName, reward);
 	}
 
@@ -672,7 +672,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 		}
 
 		if (commandSender instanceof Player) {
-			CourseConfig.getConfig(courseName).createCheckpointData(((Player) commandSender).getLocation(), 0);
+			parkour.getConfigManager().getCourseConfig(courseName).createCheckpointData(((Player) commandSender).getLocation(), 0);
 			notifyActionChange(commandSender, "Start Location", courseName, "your position");
 		} else {
 			TranslationUtils.sendMessage(commandSender, "This command is limited to Players.");
@@ -693,7 +693,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig.getConfig(courseName).setEventMessage(eventType, message);
+		parkour.getConfigManager().getCourseConfig(courseName).setEventMessage(eventType, message);
 		notifyActionChange(commandSender, eventType.getConfigEntry() + " Message", courseName, StringUtils.colour(message));
 	}
 
@@ -711,7 +711,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		CourseConfig.getConfig(courseName).addEventCommand(eventType, message);
+		parkour.getConfigManager().getCourseConfig(courseName).addEventCommand(eventType, message);
 		notifyActionChange(commandSender, eventType.getConfigEntry() + " Command", courseName, "/" + message);
 	}
 
@@ -745,7 +745,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 		String label = args.length >= 5 ? args[4] : StringUtils.standardizeText(material.name());
 		boolean unbreakable = args.length == 6 && Boolean.parseBoolean(args[5]);
 
-		CourseConfig.getConfig(args[1]).addJoinItem(material, amount, label, unbreakable);
+		parkour.getConfigManager().getCourseConfig(args[1]).addJoinItem(material, amount, label, unbreakable);
 		notifyActionChange(commandSender, "Add Join Item", args[1], material.name() + " x" + amount);
 	}
 

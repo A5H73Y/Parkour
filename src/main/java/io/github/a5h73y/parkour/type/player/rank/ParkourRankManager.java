@@ -39,7 +39,7 @@ public class ParkourRankManager extends CacheableParkourManager {
 	 */
 	@Nullable
 	public String getUnlockedParkourRank(OfflinePlayer player, int rewardLevel) {
-		int currentLevel = PlayerConfig.getConfig(player).getParkourLevel();
+		int currentLevel = parkour.getConfigManager().getPlayerConfig(player).getParkourLevel();
 		String result = null;
 
 		while (currentLevel < rewardLevel) {

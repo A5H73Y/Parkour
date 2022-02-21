@@ -200,7 +200,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                     return INVALID_SYNTAX;
                 }
                 if ("delay".equals(arguments[2])) {
-                    if (CourseConfig.getConfig(arguments[3]).hasRewardDelay()) {
+                    if (parkour.getConfigManager().getCourseConfig(arguments[3]).hasRewardDelay()) {
                         return DateTimeUtils.getDelayTimeRemaining(offlinePlayer, arguments[3]);
                     } else {
                         return "0";
@@ -228,7 +228,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             return UNKNOWN_COURSE;
         }
 
-        CourseConfig courseConfig = CourseConfig.getConfig(arguments[2]);
+        CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(arguments[2]);
 
         switch (arguments[1]) {
             case "displayname":

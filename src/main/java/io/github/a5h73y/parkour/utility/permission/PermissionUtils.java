@@ -94,7 +94,7 @@ public class PermissionUtils {
 			return false;
 		}
 
-		String creator = CourseConfig.getConfig(courseName).getCreator();
+		String creator = Parkour.getInstance().getConfigManager().getCourseConfig(courseName).getCreator();
 		return player.getName().equals(creator) || hasPermission(player, permission, false);
 	}
 

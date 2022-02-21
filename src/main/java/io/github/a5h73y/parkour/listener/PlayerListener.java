@@ -209,7 +209,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        PlayerConfig playerConfig = PlayerConfig.getConfig(player);
+        PlayerConfig playerConfig = parkour.getConfigManager().getPlayerConfig(player);
 
         if (!playerConfig.hasExistingSessionCourseName()) {
             return;

@@ -40,7 +40,7 @@ public class SoundsManager extends CacheableParkourManager {
 	 * @param soundType sound type
 	 */
 	public void playSound(Player player, SoundType soundType) {
-		if (!PlayerConfig.getConfig(player).isQuietMode()) {
+		if (!parkour.getConfigManager().getPlayerConfig(player).isQuietMode()) {
 			SoundDetails details = soundTypes.get(soundType);
 			if (details != null) {
 				player.playSound(player.getLocation(), details.getSound(),

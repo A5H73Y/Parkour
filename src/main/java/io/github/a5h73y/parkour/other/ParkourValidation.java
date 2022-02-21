@@ -75,7 +75,7 @@ public class ParkourValidation {
 
         int level = Parkour.getLobbyConfig().getRequiredLevel(lobbyName);
 
-        if (level > 0 && PlayerConfig.getConfig(player).getParkourLevel() < level
+        if (level > 0 && Parkour.getInstance().getConfigManager().getPlayerConfig(player).getParkourLevel() < level
                 && !PermissionUtils.hasPermission(player, Permission.ADMIN_LEVEL_BYPASS, false)) {
             TranslationUtils.sendValueTranslation("Error.RequiredLvl", String.valueOf(level), player);
             return false;
@@ -107,7 +107,7 @@ public class ParkourValidation {
 
         int level = Parkour.getLobbyConfig().getRequiredLevel(lobbyName);
 
-        if (level > 0 && PlayerConfig.getConfig(player).getParkourLevel() < level
+        if (level > 0 && Parkour.getInstance().getConfigManager().getPlayerConfig(player).getParkourLevel() < level
                 && !PermissionUtils.hasPermission(player, Permission.ADMIN_LEVEL_BYPASS, false)) {
             return false;
         }
@@ -138,14 +138,14 @@ public class ParkourValidation {
             return false;
         }
 
-        CourseConfig courseConfig = CourseConfig.getConfig(course.getName());
+        CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(course.getName());
         /* Players level isn't high enough */
         int minimumLevel = courseConfig.getMinimumParkourLevel();
 
         if (minimumLevel > 0 && !PermissionUtils.hasPermission(player, Permission.ADMIN_LEVEL_BYPASS, false)
                 && !PermissionUtils.hasSpecificPermission(
                 player, Permission.PARKOUR_LEVEL, String.valueOf(minimumLevel), false)) {
-            int currentLevel = PlayerConfig.getConfig(player).getParkourLevel();
+            int currentLevel = parkour.getConfigManager().getPlayerConfig(player).getParkourLevel();
 
             if (currentLevel < minimumLevel) {
                 TranslationUtils.sendValueTranslation("Error.RequiredLvl", String.valueOf(minimumLevel), player);
@@ -219,7 +219,7 @@ public class ParkourValidation {
      * @return player could join course
      */
     public static boolean canJoinCourseSilent(Player player, String courseName) {
-        CourseConfig courseConfig = CourseConfig.getConfig(courseName);
+        CourseConfig courseConfig = Parkour.getInstance().getConfigManager().getCourseConfig(courseName);
 
         /* Player in wrong world */
         if (Parkour.getDefaultConfig().isJoinEnforceWorld()
@@ -234,7 +234,7 @@ public class ParkourValidation {
                 && !PermissionUtils.hasPermission(player, Permission.ADMIN_LEVEL_BYPASS, false)
                 && !PermissionUtils.hasSpecificPermission(
                 player, Permission.PARKOUR_LEVEL, String.valueOf(minimumLevel), false)) {
-            int currentLevel = PlayerConfig.getConfig(player).getParkourLevel();
+            int currentLevel = Parkour.getInstance().getConfigManager().getPlayerConfig(player).getParkourLevel();
 
             if (currentLevel < minimumLevel) {
                 return false;
@@ -333,14 +333,14 @@ public class ParkourValidation {
      * @return player is able to create checkpoint
      */
     public static boolean canCreateCheckpoint(Player player, @Nullable Integer checkpoint) {
-        String selectedCourse = PlayerConfig.getConfig(player).getSelectedCourse().toLowerCase();
+        String selectedCourse = Parkour.getInstance().getConfigManager().getPlayerConfig(player).getSelectedCourse().toLowerCase();
 
         if (!Parkour.getInstance().getCourseManager().doesCourseExist(selectedCourse)) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, selectedCourse, player);
             return false;
         }
 
-        int checkpoints = CourseConfig.getConfig(selectedCourse).getCheckpointAmount() + 1;
+        int checkpoints = Parkour.getInstance().getConfigManager().getCourseConfig(selectedCourse).getCheckpointAmount() + 1;
 
         if (checkpoint != null) {
             if (checkpoint < 1) {
@@ -462,7 +462,7 @@ public class ParkourValidation {
         List<String> dependentCourses = new ArrayList<>();
 
         for (String course : Parkour.getInstance().getCourseManager().getCourseNames()) {
-            String linkedCourse = CourseConfig.getConfig(courseName).getLinkedCourse();
+            String linkedCourse = Parkour.getInstance().getConfigManager().getCourseConfig(courseName).getLinkedCourse();
 
             if (courseName.equals(linkedCourse)) {
                 dependentCourses.add(course);
@@ -490,7 +490,7 @@ public class ParkourValidation {
             return false;
         }
 
-        int checkpoints = CourseConfig.getConfig(courseName).getCheckpointAmount();
+        int checkpoints = Parkour.getInstance().getConfigManager().getCourseConfig(courseName).getCheckpointAmount();
         // if it has no checkpoints
         if (checkpoints <= 0) {
             TranslationUtils.sendMessage(commandSender, courseName + " has no Checkpoints!");
@@ -516,7 +516,7 @@ public class ParkourValidation {
         List<String> dependentCourses = new ArrayList<>();
 
         for (String course : Parkour.getInstance().getCourseManager().getCourseNames()) {
-            String linkedLobby = CourseConfig.getConfig(course).getLinkedLobby();
+            String linkedLobby = Parkour.getInstance().getConfigManager().getCourseConfig(course).getLinkedLobby();
 
             if (lobbyName.equals(linkedLobby)) {
                 dependentCourses.add(course);

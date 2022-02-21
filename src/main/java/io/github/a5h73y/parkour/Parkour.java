@@ -212,10 +212,6 @@ public class Parkour extends JavaPlugin {
         return instance.getConfigManager().getAutoStartConfig();
     }
 
-    public static PlayerConfig getPlayerConfig(OfflinePlayer player) {
-        return PlayerConfig.getConfig(player);
-    }
-
     /**
      * Save the Default config.
      * Overrides the default saveConfig() method.

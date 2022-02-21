@@ -112,7 +112,7 @@ public class CourseManager extends AbstractPluginReceiver {
         Course course = null;
 
         try {
-            CourseConfig config = CourseConfig.getConfig(courseName);
+            CourseConfig config = parkour.getConfigManager().getCourseConfig(courseName);
             // deserialize Course from config
             course = config.getCourse();
 
@@ -184,9 +184,9 @@ public class CourseManager extends AbstractPluginReceiver {
 
         String courseName = courseNameInput.toLowerCase();
 
-        CourseConfig.getConfig(courseName).createCourseData(player);
+        parkour.getConfigManager().getCourseConfig(courseName).createCourseData(player);
         courseNames.add(courseName);
-        PlayerConfig.getConfig(player).setSelectedCourse(courseName);
+        parkour.getConfigManager().getPlayerConfig(player).setSelectedCourse(courseName);
 
         TranslationUtils.sendValueTranslation("Parkour.Created", courseName, player);
         TranslationUtils.sendValueTranslation("Parkour.WhenReady", courseName, false, player);
@@ -232,7 +232,7 @@ public class CourseManager extends AbstractPluginReceiver {
 
         String courseName = courseNameInput.toLowerCase();
 
-        CourseConfig.getConfig(courseName).resetCourseData();
+        parkour.getConfigManager().getCourseConfig(courseName).resetCourseData();
         parkour.getDatabaseManager().deleteCourseTimes(courseName);
         parkour.getConfigManager().getCourseCompletionsConfig().removeCompletedCourse(courseName);
         TranslationUtils.sendValueTranslation("Parkour.Reset", courseName, commandSender);
@@ -305,7 +305,7 @@ public class CourseManager extends AbstractPluginReceiver {
             return;
         }
 
-        CourseConfig.getConfig(courseName).resetPrizes();
+        parkour.getConfigManager().getCourseConfig(courseName).resetPrizes();
         TranslationUtils.sendValueTranslation("Parkour.Reset", courseName + " Prizes", commandSender);
         PluginUtils.logToFile(courseName + " prizes were reset by " + commandSender.getName());
     }
@@ -321,7 +321,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param eventType event type
      */
     public void runEventCommands(final Player player, final ParkourSession session, final ParkourEventType eventType) {
-        CourseConfig courseConfig = CourseConfig.getConfig(session.getCourseName());
+        CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(session.getCourseName());
 
         List<String> eventCommands = courseConfig.getEventCommands(eventType);
         if (eventCommands.isEmpty() || !parkour.getParkourConfig().isPerCourseCommandsOverride()) {
@@ -491,7 +491,7 @@ public class CourseManager extends AbstractPluginReceiver {
 
         for (int i = 0; i < limited.size(); i++) {
             String courseName = limited.get(i);
-            CourseConfig courseConfig = CourseConfig.getConfig(courseName);
+            CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(courseName);
             boolean ready = courseConfig.getReadyStatus();
 
             StringBuilder sb = new StringBuilder();

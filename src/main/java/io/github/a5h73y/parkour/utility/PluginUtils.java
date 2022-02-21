@@ -209,7 +209,7 @@ public class PluginUtils {
                     return;
                 }
 
-                int checkpoints = CourseConfig.getConfig(argument).getCheckpointAmount();
+                int checkpoints = parkour.getConfigManager().getCourseConfig(argument).getCheckpointAmount();
                 parkour.getQuestionManager().askDeleteCheckpointQuestion(commandSender, argument, checkpoints);
                 break;
 

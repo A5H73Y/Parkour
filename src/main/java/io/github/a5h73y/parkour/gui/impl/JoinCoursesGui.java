@@ -56,7 +56,7 @@ public class JoinCoursesGui implements AbstractMenu {
 									String.valueOf(Parkour.getInstance().getParkourSessionManager().getNumberOfPlayersOnCourse(
 											course)), false),
 							TranslationUtils.getValueTranslation("GUI.JoinCourses.Checkpoints",
-									String.valueOf(CourseConfig.getConfig(course).getCheckpointAmount()), false)
+									String.valueOf(Parkour.getInstance().getConfigManager().getCourseConfig(course).getCheckpointAmount()), false)
 					));
 		}
 		parent.addElement(group);

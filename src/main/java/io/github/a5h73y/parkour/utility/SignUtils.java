@@ -89,7 +89,7 @@ public class SignUtils {
             return;
         }
 
-        int minimumLevel = CourseConfig.getConfig(signEvent.getLine(2)).getMinimumParkourLevel();
+        int minimumLevel = Parkour.getInstance().getConfigManager().getCourseConfig(signEvent.getLine(2)).getMinimumParkourLevel();
 
         if (minimumLevel > 0) {
             signEvent.setLine(3, ChatColor.RED + String.valueOf(minimumLevel));

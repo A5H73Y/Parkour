@@ -108,7 +108,7 @@ public class EconomyApi extends PluginWrapper {
 	 */
 	public void giveEconomyPrize(Player player, String courseName) {
 		if (isEconomyLinked()) {
-			double reward = CourseConfig.getConfig(courseName).getEconomyFinishReward();
+			double reward = parkour.getConfigManager().getCourseConfig(courseName).getEconomyFinishReward();
 
 			if (reward > 0) {
 				rewardPlayer(player, reward);
@@ -147,7 +147,7 @@ public class EconomyApi extends PluginWrapper {
 	public boolean validateAndChargeCourseJoin(Player player, String courseName) {
 		boolean allowed = true;
 		if (isEconomyLinked()) {
-			double joinFee = CourseConfig.getConfig(courseName).getEconomyJoiningFee();
+			double joinFee = parkour.getConfigManager().getCourseConfig(courseName).getEconomyJoiningFee();
 
 			if (joinFee > 0) {
 				if (!hasAmount(player, joinFee)) {
@@ -215,7 +215,7 @@ public class EconomyApi extends PluginWrapper {
 			return;
 		}
 
-		CourseConfig.getConfig(args[2]).setEconomyFinishReward(Double.parseDouble(args[3]));
+		parkour.getConfigManager().getCourseConfig(args[2]).setEconomyFinishReward(Double.parseDouble(args[3]));
 		TranslationUtils.sendPropertySet(commandSender, "Economy Prize", args[2], args[3]);
 	}
 
@@ -235,7 +235,7 @@ public class EconomyApi extends PluginWrapper {
 			return;
 		}
 
-		CourseConfig.getConfig(args[2]).setEconomyJoiningFee(Double.parseDouble(args[3]));
+		parkour.getConfigManager().getCourseConfig(args[2]).setEconomyJoiningFee(Double.parseDouble(args[3]));
 		TranslationUtils.sendPropertySet(commandSender, "Join Fee", args[2], args[3]);
 	}
 }

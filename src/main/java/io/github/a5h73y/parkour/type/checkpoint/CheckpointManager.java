@@ -48,9 +48,9 @@ public class CheckpointManager extends AbstractPluginReceiver {
             return;
         }
 
-        String selectedCourse = PlayerConfig.getConfig(player).getSelectedCourse();
+        String selectedCourse = parkour.getConfigManager().getPlayerConfig(player).getSelectedCourse();
         // the checkpoint number to overwrite / create
-        checkpoint = checkpoint != null ? checkpoint : CourseConfig.getConfig(selectedCourse).getCheckpointAmount() + 1;
+        checkpoint = checkpoint != null ? checkpoint : parkour.getConfigManager().getCourseConfig(selectedCourse).getCheckpointAmount() + 1;
         Location location = player.getLocation();
         Block block = location.getBlock();
 
@@ -77,7 +77,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
 
         block.setType(parkour.getParkourConfig().getCheckpointMaterial());
 
-        CourseConfig.getConfig(selectedCourse).createCheckpointData(location, checkpoint);
+        parkour.getConfigManager().getCourseConfig(selectedCourse).createCheckpointData(location, checkpoint);
         parkour.getCourseManager().clearCache(selectedCourse);
         player.sendMessage(TranslationUtils.getTranslation("Parkour.CheckpointCreated")
                 .replace(CHECKPOINT_PLACEHOLDER, String.valueOf(checkpoint))
@@ -135,14 +135,14 @@ public class CheckpointManager extends AbstractPluginReceiver {
             return;
         }
 
-        Integer checkpoint = CourseConfig.getConfig(courseName).getCheckpointAmount();
+        Integer checkpoint = parkour.getConfigManager().getCourseConfig(courseName).getCheckpointAmount();
 
         if (checkpoint <= 0) {
             TranslationUtils.sendMessage(commandSender, courseName + " has no Checkpoints!");
             return;
         }
 
-        CourseConfig.getConfig(courseName).deleteCheckpoint();
+        parkour.getConfigManager().getCourseConfig(courseName).deleteCheckpoint();
         parkour.getCourseManager().clearCache(courseName);
 
         commandSender.sendMessage(TranslationUtils.getTranslation("Parkour.DeleteCheckpoint")

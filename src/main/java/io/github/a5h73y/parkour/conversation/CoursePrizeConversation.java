@@ -125,7 +125,7 @@ public class CoursePrizeConversation extends ParkourConversation {
         @Override
         public String getPromptText(@NotNull ConversationContext context) {
             String courseName = context.getSessionData(SESSION_COURSE_NAME).toString();
-            CourseConfig.getConfig(courseName).setMaterialPrize(
+            Parkour.getInstance().getConfigManager().getCourseConfig(courseName).setMaterialPrize(
                     context.getSessionData(MATERIAL).toString(),
                     Integer.parseInt(context.getSessionData(AMOUNT).toString()));
 
@@ -186,7 +186,7 @@ public class CoursePrizeConversation extends ParkourConversation {
         @Override
         public String getPromptText(@NotNull ConversationContext context) {
             String courseName = context.getSessionData(SESSION_COURSE_NAME).toString();
-            CourseConfig.getConfig(courseName).addEventCommand(ParkourEventType.PRIZE, context.getSessionData(COMMAND).toString());
+            Parkour.getInstance().getConfigManager().getCourseConfig(courseName).addEventCommand(ParkourEventType.PRIZE, context.getSessionData(COMMAND).toString());
 
             return TranslationUtils.getPropertySet("Command Prize", courseName,
                     "/" + context.getSessionData(COMMAND));
@@ -233,7 +233,7 @@ public class CoursePrizeConversation extends ParkourConversation {
         public String getPromptText(@NotNull ConversationContext context) {
             String courseName = context.getSessionData(SESSION_COURSE_NAME).toString();
             String amount = context.getSessionData(AMOUNT).toString();
-            CourseConfig.getConfig(courseName).setXpPrize(Integer.parseInt(amount));
+            Parkour.getInstance().getConfigManager().getCourseConfig(courseName).setXpPrize(Integer.parseInt(amount));
 
             return TranslationUtils.getPropertySet("XP Prize", courseName, amount);
         }

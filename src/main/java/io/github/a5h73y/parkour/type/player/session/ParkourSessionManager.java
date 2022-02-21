@@ -194,7 +194,7 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Com
 
 		if (session != null && !session.getCourseName().equals(TEST_MODE)) {
 			session.markTimeAccumulated();
-			PlayerConfig.getConfig(player).setExistingSessionCourseName(session.getCourseName());
+			parkour.getConfigManager().getPlayerConfig(player).setExistingSessionCourseName(session.getCourseName());
 			ParkourSessionConfig.getConfig(player, session.getCourseName()).saveParkourSession(session);
 		}
 

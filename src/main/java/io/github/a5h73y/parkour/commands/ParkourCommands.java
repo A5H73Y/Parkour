@@ -117,7 +117,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
 
                 } else if (!PermissionUtils.hasPermissionOrCourseOwnership(
-                        player, Permission.ADMIN_COURSE, PlayerConfig.getConfig(player).getSelectedCourse())) {
+                        player, Permission.ADMIN_COURSE, parkour.getConfigManager().getPlayerConfig(player).getSelectedCourse())) {
                     return false;
 
                 } else if (args.length == 2 && !ValidationUtils.isPositiveInteger(args[1])) {
@@ -571,7 +571,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
      * @return chosen course name
      */
     private String getChosenCourseName(Player player, String[] args, int courseArg) {
-        return args.length != courseArg + 1 ? PlayerConfig.getConfig(player).getSelectedCourse() : args[courseArg];
+        return args.length != courseArg + 1 ? parkour.getConfigManager().getPlayerConfig(player).getSelectedCourse() : args[courseArg];
     }
 
     private void populateCommandUsages() {

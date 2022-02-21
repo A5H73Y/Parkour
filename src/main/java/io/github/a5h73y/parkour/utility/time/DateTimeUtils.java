@@ -69,8 +69,8 @@ public class DateTimeUtils {
 	 * @return formatted time left
 	 */
 	public static String getDelayTimeRemaining(OfflinePlayer player, String courseName) {
-		long hoursDelay = convertHoursToMilliseconds(CourseConfig.getConfig(courseName).getRewardDelay());
-		long timeDifference = System.currentTimeMillis() - PlayerConfig.getConfig(player).getLastRewardedTime(courseName);
+		long hoursDelay = convertHoursToMilliseconds(Parkour.getInstance().getConfigManager().getCourseConfig(courseName).getRewardDelay());
+		long timeDifference = System.currentTimeMillis() - Parkour.getInstance().getConfigManager().getPlayerConfig(player).getLastRewardedTime(courseName);
 		return convertMillisecondsToDateTime(hoursDelay - timeDifference);
 	}
 

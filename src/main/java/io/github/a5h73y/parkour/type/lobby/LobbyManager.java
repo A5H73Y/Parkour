@@ -73,7 +73,7 @@ public class LobbyManager extends CacheableParkourManager {
 
         // if they are on a course, force them to leave, which will ultimately run this method again.
         if (parkour.getParkourSessionManager().isPlaying(player)) {
-            PlayerConfig.getConfig(player).setJoinLocation(null);
+            parkour.getConfigManager().getPlayerConfig(player).setJoinLocation(null);
             parkour.getPlayerManager().leaveCourse(player);
             return;
         }
@@ -171,7 +171,7 @@ public class LobbyManager extends CacheableParkourManager {
         String lobbyName = null;
 
         if (parkour.getParkourConfig().getBoolean("OnLeave.TeleportToLinkedLobby")) {
-            lobbyName = CourseConfig.getConfig(session.getCourse().getName()).getLinkedLobby();
+            lobbyName = parkour.getConfigManager().getCourseConfig(session.getCourse().getName()).getLinkedLobby();
         }
 
         joinLobby(player, lobbyName);

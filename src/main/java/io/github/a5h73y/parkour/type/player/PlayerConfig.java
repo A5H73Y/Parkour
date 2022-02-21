@@ -26,6 +26,13 @@ public class PlayerConfig extends Json {
         return getPlayerJsonFile(player).exists();
     }
 
+    /**
+     * Will create a new instance of the Player's json config.
+     * Note that this may introduce dataloss of different instances exist,
+     * So the cached value from {@link io.github.a5h73y.parkour.configuration.ConfigManager} is recommended.
+     * @param player player
+     * @return PlayerConfig instance
+     */
     public static PlayerConfig getConfig(OfflinePlayer player) {
         return new PlayerConfig(getPlayerJsonFile(player));
     }

@@ -85,7 +85,7 @@ public class ParkourKitConfig extends Yaml {
 	public List<String> getDependentCourses(String kitName) {
 		List<String> dependentCourses = new ArrayList<>();
 		for (String courseName : Parkour.getInstance().getCourseManager().getCourseNames()) {
-			String linkedKitName = CourseConfig.getConfig(courseName).getParkourKit();
+			String linkedKitName = Parkour.getInstance().getConfigManager().getCourseConfig(courseName).getParkourKit();
 			if (kitName.equals(linkedKitName)) {
 				dependentCourses.add(courseName);
 			}

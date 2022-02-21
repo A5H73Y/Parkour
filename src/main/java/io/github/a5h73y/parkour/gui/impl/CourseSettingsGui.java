@@ -47,7 +47,7 @@ public class CourseSettingsGui implements AbstractMenu {
 	@Override
 	public void addContent(InventoryGui parent, Player player) {
 		CourseSettingsManager courseSettingsManager = Parkour.getInstance().getCourseSettingsManager();
-		CourseConfig courseConfig = CourseConfig.getConfig(courseName);
+		CourseConfig courseConfig = Parkour.getInstance().getConfigManager().getCourseConfig(courseName);
 
 		// toggleable
 		parent.addElement(createSettingToggle('z', "Ready Status", courseConfig.getReadyStatus(),

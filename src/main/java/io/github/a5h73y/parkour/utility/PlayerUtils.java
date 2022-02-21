@@ -226,4 +226,14 @@ public class PlayerUtils {
 	public static OfflinePlayer findPlayer(String uuid) {
 		return Bukkit.getOfflinePlayer(UUID.fromString(padPlayerUuid(uuid)));
 	}
+
+	public static void clearInventoryArmor(Player player) {
+		player.getInventory().clear();
+		player.getInventory().setHelmet(null);
+		player.getInventory().setChestplate(null);
+		player.getInventory().setLeggings(null);
+		player.getInventory().setBoots(null);
+
+		player.updateInventory();
+	}
 }

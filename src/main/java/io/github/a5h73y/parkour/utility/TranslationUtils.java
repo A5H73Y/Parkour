@@ -110,7 +110,7 @@ public class TranslationUtils {
 	 * @return course event message
 	 */
 	public static String getCourseEventMessage(ParkourSession session, ParkourEventType eventType, String fallbackKey) {
-		String result = CourseConfig.getConfig(session.getCourseName()).getEventMessage(eventType);
+		String result = Parkour.getInstance().getConfigManager().getCourseConfig(session.getCourseName()).getEventMessage(eventType);
 
 		// if there is no custom message, fallback to default
 		if (result == null) {

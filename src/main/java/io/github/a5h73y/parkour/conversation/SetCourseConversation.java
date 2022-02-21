@@ -141,7 +141,7 @@ public class SetCourseConversation extends ParkourConversation {
 
             String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);
             ParkourEventType type = ParkourEventType.valueOf(context.getSessionData("setCommandOption").toString().toUpperCase());
-            CourseConfig.getConfig(courseName).addEventCommand(type, input);
+            Parkour.getInstance().getConfigManager().getCourseConfig(courseName).addEventCommand(type, input);
             context.getForWhom().sendRawMessage(TranslationUtils.getPropertySet(
                     type.getDisplayName() + " command", courseName, "/" + input));
             return Prompt.END_OF_CONVERSATION;
@@ -196,7 +196,7 @@ public class SetCourseConversation extends ParkourConversation {
 
             String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);
             ParkourEventType type = ParkourEventType.valueOf(context.getSessionData("setMessageOption").toString().toUpperCase());
-            CourseConfig.getConfig(courseName).setEventMessage(type, input);
+            Parkour.getInstance().getConfigManager().getCourseConfig(courseName).setEventMessage(type, input);
             context.getForWhom().sendRawMessage(TranslationUtils.getPropertySet(type.getDisplayName() + " message", courseName, input));
             return Prompt.END_OF_CONVERSATION;
         }
