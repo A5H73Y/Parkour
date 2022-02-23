@@ -5,9 +5,7 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.ParkourValidation;
 import io.github.a5h73y.parkour.type.CacheableParkourManager;
-import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
-import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -73,7 +71,7 @@ public class LobbyManager extends CacheableParkourManager {
 
         // if they are on a course, force them to leave, which will ultimately run this method again.
         if (parkour.getParkourSessionManager().isPlaying(player)) {
-            parkour.getConfigManager().getPlayerConfig(player).setJoinLocation(null);
+            parkour.getConfigManager().getPlayerConfig(player).resetSessionJoinLocation();
             parkour.getPlayerManager().leaveCourse(player);
             return;
         }

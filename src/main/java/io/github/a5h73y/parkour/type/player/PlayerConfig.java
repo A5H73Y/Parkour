@@ -18,6 +18,24 @@ import org.jetbrains.annotations.Nullable;
  */
 public class PlayerConfig extends Json {
 
+    public static final String SELECTED = "Selected";
+    public static final String LAST_PLAYED = "LastPlayed";
+    public static final String LAST_COMPLETED = "LastCompleted";
+    public static final String PARKOUR_LEVEL = "ParkourLevel";
+    public static final String PARKOUR_RANK = "ParkourRank";
+    public static final String LAST_REWARDED = "LastRewarded.";
+    public static final String SNAPSHOT = "Snapshot.";
+    public static final String INVENTORY = "Inventory";
+    public static final String ARMOR = "Armor";
+    public static final String HEALTH = "Health";
+    public static final String HUNGER = "Hunger";
+    public static final String XP_LEVEL = "XPLevel";
+    public static final String JOIN_LOCATION = "JoinLocation";
+    public static final String GAMEMODE = "GameMode";
+    public static final String PARKOINS = "Parkoins";
+    public static final String EXISTING_SESSION_COURSE_NAME = "ExistingSessionCourseName";
+
+
     public PlayerConfig(File playerFile) {
         super(playerFile);
     }
@@ -29,7 +47,8 @@ public class PlayerConfig extends Json {
     /**
      * Will create a new instance of the Player's json config.
      * Note that this may introduce dataloss of different instances exist,
-     * So the cached value from {@link io.github.a5h73y.parkour.configuration.ConfigManager} is recommended.
+     * Cached values from {@link io.github.a5h73y.parkour.configuration.ConfigManager} is recommended.
+     *
      * @param player player
      * @return PlayerConfig instance
      */
@@ -50,16 +69,18 @@ public class PlayerConfig extends Json {
 
     /**
      * Get the Player's selected Course name.
+     *
      * @return selected course name
      */
     @Nullable
     public String getSelectedCourse() {
-        return this.get("Selected", null);
+        return this.get(SELECTED, null);
     }
 
     /**
      * Check if Player has selected a Course.
      * This does not guarantee they've selected a valid course.
+     *
      * @return player has selected course
      */
     public boolean hasSelectedCourse() {
@@ -68,64 +89,71 @@ public class PlayerConfig extends Json {
 
     /**
      * Set the Player's selected Course name.
+     *
      * @param courseName selected course name
      */
     public void setSelectedCourse(@NotNull String courseName) {
-        this.set("Selected", courseName.toLowerCase());
+        this.set(SELECTED, courseName.toLowerCase());
     }
 
     /**
      * Reset the Player's selected Course Name.
      */
     public void resetSelected() {
-        this.remove("Selected");
+        this.remove(SELECTED);
     }
 
     /**
      * Get the Player's last played Course.
      * The course they most recently joined, but may not have finished.
+     *
      * @return course name last played
      */
     @Nullable
     public String getLastPlayedCourse() {
-        return this.get("LastPlayed", null);
+        return this.get(LAST_PLAYED, null);
     }
 
     /**
      * Set the Player's last played Course.
+     *
      * @param courseName course name last played
      */
     public void setLastPlayedCourse(String courseName) {
-        this.set("LastPlayed", courseName.toLowerCase());
+        this.set(LAST_PLAYED, courseName.toLowerCase());
     }
 
     /**
      * Get the Player's last completed Course.
+     *
      * @return course name last completed
      */
     @Nullable
     public String getLastCompletedCourse() {
-        return this.get("LastCompleted", null);
+        return this.get(LAST_COMPLETED, null);
     }
 
     /**
      * Set the Player's last completed Course.
+     *
      * @param courseName course name last completed
      */
     public void setLastCompletedCourse(String courseName) {
-        this.set("LastCompleted", courseName.toLowerCase());
+        this.set(LAST_COMPLETED, courseName.toLowerCase());
     }
 
     /**
      * Get the Player's ParkourLevel.
+     *
      * @return parkour level value
      */
     public int getParkourLevel() {
-        return this.getInt("ParkourLevel");
+        return this.getInt(PARKOUR_LEVEL);
     }
 
     /**
      * Increase the Player's ParkourLevel by the amount.
+     *
      * @param amount amount to increase
      */
     public void increaseParkourLevel(int amount) {
@@ -134,187 +162,145 @@ public class PlayerConfig extends Json {
 
     /**
      * Set the Player's ParkourLevel.
+     *
      * @param level new parkour level value
      */
     public void setParkourLevel(int level) {
-        this.set("ParkourLevel", level);
+        this.set(PARKOUR_LEVEL, level);
     }
 
     /**
      * Get the Player's ParkourRank.
      * The default rank value will be used if not set.
+     *
      * @return player's parkour rank
      */
     public String getParkourRank() {
-        return this.getOrDefault("ParkourRank",
+        return this.getOrDefault(PARKOUR_RANK,
                 TranslationUtils.getTranslation("Event.DefaultRank", false));
     }
 
     /**
      * Set the Player's ParkourRank.
+     *
      * @param parkourRank parkour rank value
      */
     public void setParkourRank(String parkourRank) {
-        this.set("ParkourRank", parkourRank);
+        this.set(PARKOUR_RANK, parkourRank);
     }
 
     /**
      * Get last rewarded time for Course.
      * Get the timestamp the Player last received a reward for the completing Course.
+     *
      * @param courseName course name
      * @return last rewarded time
      */
     public long getLastRewardedTime(String courseName) {
-        return this.getLong("LastRewarded-" + courseName.toLowerCase());
+        return this.getLong(LAST_REWARDED + courseName.toLowerCase());
     }
 
     /**
      * Set the last rewarded time for Course.
+     *
      * @param courseName course name
      * @param rewardTime time of reward given
      */
     public void setLastRewardedTime(String courseName, long rewardTime) {
-        this.set("LastRewarded-" + courseName.toLowerCase(), rewardTime);
-    }
-
-    public boolean hasInventoryData() {
-        return this.contains("Inventory");
+        this.set(LAST_REWARDED + courseName.toLowerCase(), rewardTime);
     }
 
     /**
-     * Save the Player's Inventory and Armor contents.
+     * Save a Snapshot of the Player's data prior to joining a Course.
+     * This data can be optionally restored before being deleted.
+     * Data will never be overridden, instead deleted / saved.
+     *
+     * @param player player
      */
-    public void saveInventoryArmorData(Player player) {
-        this.setSerializable("Inventory", player.getInventory().getContents());
-        this.setSerializable("Armor", player.getInventory().getArmorContents());
+    public void setPlayerDataSnapshot(Player player) {
+        if (!hasPlayerDataSnapshot()) {
+            this.setSerializable(SNAPSHOT + INVENTORY, player.getInventory().getContents());
+            this.setSerializable(SNAPSHOT + ARMOR, player.getInventory().getArmorContents());
+            this.setSerializable(SNAPSHOT + JOIN_LOCATION, player.getLocation());
+
+            this.set(SNAPSHOT + HEALTH, player.getHealth());
+            this.set(SNAPSHOT + HUNGER, player.getFoodLevel());
+            this.set(SNAPSHOT + XP_LEVEL, player.getLevel());
+            this.set(SNAPSHOT + GAMEMODE, player.getGameMode().name());
+        }
+    }
+
+    public boolean hasPlayerDataSnapshot() {
+        return this.contains(SNAPSHOT);
     }
 
     /**
-     * Reset the Player's Inventory and Armor contents.
+     * Reset the Player's Snapshot data.
      */
-    public void resetInventoryArmorData() {
-        this.remove("Inventory");
-        this.remove("Armor");
+    public void resetPlayerDataSnapshot() {
+        this.remove(SNAPSHOT);
     }
 
     /**
-     * Retrieve the Player's saved Inventory contents.
-     * @return player's inventory contents
+     * Get the Player's Inventory Snapshot.
+     * @return ItemStacks representing inventory
      */
-    public ItemStack[] getSavedInventoryContents() {
-        return this.getSerializable("Inventory", ItemStack[].class);
+    public ItemStack[] getSnapshotInventory() {
+        return this.getSerializable(SNAPSHOT + INVENTORY, ItemStack[].class);
     }
 
     /**
-     * Retrieve the Player's saved Armor contents.
-     * @return player's armor contents
+     * Get the Player's Armor Snapshot.
+     * @return ItemStacks representing armor
      */
-    public ItemStack[] getSavedArmorContents() {
-        return this.getSerializable("Armor", ItemStack[].class);
+    public ItemStack[] getSnapshotArmor() {
+        return this.getSerializable(SNAPSHOT + ARMOR, ItemStack[].class);
     }
 
     /**
-     * Get the Player's saved Health.
-     * @return stored health
-     */
-    public double getSavedHealth() {
-        return this.getDouble("Health");
-    }
-
-    /**
-     * Get the Player's saved Health.
-     * @return stored health
-     */
-    public int getSavedFoodLevel() {
-        return this.getInt("Hunger");
-    }
-
-    /**
-     * Save the Player's Health and Food Level.
-     */
-    public void saveHealthFoodLevel(Player player) {
-        this.set("Health", player.getHealth());
-        this.set("Hunger", player.getFoodLevel());
-    }
-
-    /**
-     * Reset the saved Health and Food Level.
-     */
-    public void resetSavedHealthFoodLevel() {
-        this.remove("Health");
-        this.remove("Hunger");
-    }
-
-    /**
-     * Get the Player's Saved XP Level.
-     * @return saved XP level
-     */
-    public int getSavedXpLevel() {
-        return this.getInt("XPLevel");
-    }
-
-    /**
-     * Save the Player's XP Level.
-     */
-    public void saveXpLevel(Player player) {
-        this.set("XPLevel", player.getLevel());
-    }
-
-    /**
-     * Reset the Player's saved XP Level.
-     */
-    public void resetSavedXpLevel() {
-        this.remove("XPLevel");
-    }
-
-    /**
-     * Get the Player's Join Location.
+     * Get the Player's Join Location Snapshot.
      * The {@link Location} from which the player joined the course.
-     * @return saved join location
+     *
+     * @return join location
      */
-    public Location getJoinLocation() {
-        return this.getSerializable("JoinLocation", Location.class);
+    public Location getSnapshotJoinLocation() {
+        return this.getSerializable(SNAPSHOT + JOIN_LOCATION, Location.class);
+    }
+
+    public void resetSessionJoinLocation() {
+        this.remove(SNAPSHOT + JOIN_LOCATION);
     }
 
     /**
-     * Check whether the Player has a Join Location set.
-     * @return join location set
+     * Get the Player's Health Snapshot.
+     * @return stored health
      */
-    public boolean hasJoinLocation() {
-        return this.contains("JoinLocation");
+    public double getSnapshotHealth() {
+        return this.getDouble(SNAPSHOT + HEALTH);
     }
 
     /**
-     * Set the Player's Join Location.
-     * The player's current position will be saved as their join location.
+     * Get the Player's Hunger Snapshot.
+     * @return stored hunger
      */
-    public void setJoinLocation(Location location) {
-        this.setSerializable("JoinLocation", location);
+    public int getSnapshotHunger() {
+        return this.getInt(SNAPSHOT + HUNGER);
     }
 
     /**
-     * Check if the Player is in Quiet Mode.
-     * Quite Mode will not message the player as often with non-important messages.
-     * @return is quiet mode enabled
+     * Get the Player's XP Level Snapshot.
+     * @return stored xp level
      */
-    public boolean isQuietMode() {
-        return this.getBoolean("QuietMode");
+    public int getSnapshotXpLevel() {
+        return this.getInt(SNAPSHOT + XP_LEVEL);
     }
 
     /**
-     * Toggle the Player's Quiet Mode status.
+     * Get the Player's GameMode Snapshot.
+     * @return saved gamemode name
      */
-    public void toggleQuietMode() {
-        setQuietMode(!isQuietMode());
-    }
-
-    /**
-     * Set the Player's Quiet Mode status.
-
-     * @param quietMode value to set
-     */
-    public void setQuietMode(boolean quietMode) {
-        this.set("QuietMode", quietMode);
+    public String getSnapshotGameMode() {
+        return this.getString(SNAPSHOT + GAMEMODE).toUpperCase();
     }
 
     /**
@@ -322,7 +308,7 @@ public class PlayerConfig extends Json {
      * @return number of Parkoins
      */
     public double getParkoins() {
-        return this.getDouble("Parkoins");
+        return this.getDouble(PARKOINS);
     }
 
     /**
@@ -338,7 +324,7 @@ public class PlayerConfig extends Json {
      * @param amount amount to set
      */
     public void setParkoins(double amount) {
-        this.set("Parkoins", amount);
+        this.set(PARKOINS, amount);
     }
 
     /**
@@ -348,7 +334,7 @@ public class PlayerConfig extends Json {
      */
     @Nullable
     public String getExistingSessionCourseName() {
-        return this.get("ExistingSessionCourseName", null);
+        return this.get(EXISTING_SESSION_COURSE_NAME, null);
     }
 
     /**
@@ -356,7 +342,7 @@ public class PlayerConfig extends Json {
      * @return player has existing session course name
      */
     public boolean hasExistingSessionCourseName() {
-        return this.contains("ExistingSessionCourseName");
+        return this.contains(EXISTING_SESSION_COURSE_NAME);
     }
 
     /**
@@ -364,7 +350,11 @@ public class PlayerConfig extends Json {
      * @param courseName course name
      */
     public void setExistingSessionCourseName(String courseName) {
-        this.set("ExistingSessionCourseName", courseName);
+        this.set(EXISTING_SESSION_COURSE_NAME, courseName);
+    }
+
+    public void removeExistingSessionCourseName() {
+        this.remove(EXISTING_SESSION_COURSE_NAME);
     }
 
     private static String getPlayerJsonPath(OfflinePlayer player) {
