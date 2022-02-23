@@ -2,6 +2,7 @@ package io.github.a5h73y.parkour;
 
 import io.github.a5h73y.parkour.commands.ParkourAutoTabCompleter;
 import io.github.a5h73y.parkour.commands.ParkourCommands;
+import io.github.a5h73y.parkour.commands.ParkourConsoleCommands;
 import io.github.a5h73y.parkour.configuration.ConfigManager;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
 import io.github.a5h73y.parkour.database.DatabaseManager;
@@ -262,8 +263,10 @@ public class Parkour extends JavaPlugin {
 
     private void registerCommands() {
         parkourCommands = new ParkourCommands(this);
+
         getCommand(PLUGIN_NAME).setExecutor(parkourCommands);
         getCommand(PLUGIN_NAME).setTabCompleter(new ParkourAutoTabCompleter(this));
+        getCommand("paconsole").setExecutor(new ParkourConsoleCommands(this));
     }
 
     private void registerEvents() {

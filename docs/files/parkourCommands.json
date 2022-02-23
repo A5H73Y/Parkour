@@ -222,6 +222,12 @@
     "consoleSyntax": "pac leave (player)"
   },
   {
+    "command": "leaveall",
+    "title": "All Players leave Course",
+    "description": "CONSOLE ONLY - Force all online Parkour Players to leave the Course they are on.",
+    "consoleSyntax": "pac leaveall"
+  },
+  {
     "command": "link",
     "title": "Link the Course after completion",
     "arguments": "(course / lobby / reset) (argument)",

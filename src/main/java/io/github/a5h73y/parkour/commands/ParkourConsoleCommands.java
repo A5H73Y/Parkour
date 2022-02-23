@@ -144,6 +144,13 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 parkour.getPlayerManager().leaveCourse(findPlayer(commandSender, args[1]));
                 break;
 
+            case "leaveall":
+                TranslationUtils.sendMessage(commandSender,
+                        parkour.getParkourSessionManager().getNumberOfParkourPlayers() + " Players leaving Courses.");
+                parkour.getParkourSessionManager().getOnlineParkourPlayers()
+                        .forEach(player -> parkour.getPlayerManager().leaveCourse(player));
+                break;
+
             case "linkkit":
                 if (!ValidationUtils.validateArgs(commandSender, args, 3)) {
                     return false;

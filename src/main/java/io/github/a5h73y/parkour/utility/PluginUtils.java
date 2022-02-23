@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import org.apache.commons.io.IOUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -121,7 +120,7 @@ public class PluginUtils {
 
     public static String readContentsOfResource(String resourcePath) throws IOException {
         InputStream inputStream = Parkour.getInstance().getResource(resourcePath);
-        return IOUtils.toString(inputStream, StandardCharsets.UTF_8.toString());
+        return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
     }
 
     /**

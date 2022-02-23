@@ -2,9 +2,8 @@ package io.github.a5h73y.parkour.commands;
 
 import static io.github.a5h73y.parkour.utility.permission.PermissionUtils.WILDCARD;
 
-import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 

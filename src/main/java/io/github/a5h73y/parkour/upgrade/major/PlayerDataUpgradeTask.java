@@ -94,6 +94,10 @@ public class PlayerDataUpgradeTask extends TimedConfigUpgradeTask {
 			File playerSessionsPath = new File(getParkourUpgrader().getNewConfigManager().getParkourSessionsDir(),
 					player.getUniqueId().toString());
 
+			if (!playerSessionsPath.exists()) {
+				continue;
+			}
+
 			try (Stream<Path> paths = Files.walk(Paths.get(playerSessionsPath.toURI()), 1)) {
 				paths.filter(Files::isRegularFile)
 						.filter(path -> !path.getFileName().toString().toLowerCase().contains("."))
@@ -106,8 +110,7 @@ public class PlayerDataUpgradeTask extends TimedConfigUpgradeTask {
 									&& !ParkourSessionConfig.hasParkourSessionConfig(player, session.getCourseName())
 									&& CourseConfig.hasCourseConfig(session.getCourseName())) {
 								// deserialize Course from config
-								CourseConfig config = CourseConfig.getConfig(session.getCourseName());
-								session.setCourse(config.getCourse());
+								session.setCourseName(session.getCourseName());
 								ParkourSessionConfig.getConfig(player, session.getCourseName()).saveParkourSession(session);
 							}
 							path.toFile().delete();

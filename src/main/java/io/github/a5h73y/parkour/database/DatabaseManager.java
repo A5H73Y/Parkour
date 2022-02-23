@@ -701,8 +701,6 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
             PluginUtils.debug("Successfully created necessary tables.");
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            database.closeConnection();
         }
     }
 

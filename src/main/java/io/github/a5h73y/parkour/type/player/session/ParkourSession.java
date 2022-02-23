@@ -214,11 +214,20 @@ public class ParkourSession implements ParkourSerializable {
     /**
      * Get name of the Course.
      * @return course name
-     * @deprecated a fallback for deserializing old objects during conversion.
+     * @deprecated a fallback for deserializing old objects during upgrade.
      */
     @Deprecated
     public String getCourseName() {
         return courseName;
+    }
+
+    /**
+     * Set the name of the session Course.
+     * @deprecated a fallback for deserializing old objects during upgrade.
+     */
+    @Deprecated
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
     }
 
     public Location getFreedomLocation() {
@@ -257,7 +266,7 @@ public class ParkourSession implements ParkourSerializable {
     @NotNull
     public Map<String, Object> serialize() {
         HashMap<String, Object> data = new HashMap<>();
-        data.put("CourseName", course.getName());
+        data.put("CourseName", courseName);
         data.put("Deaths", deaths);
         data.put("CurrentCheckpoint", currentCheckpoint);
         data.put("SecondsAccumulated", secondsAccumulated);

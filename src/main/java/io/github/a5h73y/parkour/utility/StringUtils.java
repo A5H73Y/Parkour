@@ -40,4 +40,18 @@ public class StringUtils {
 	public static String extractMessageFromArgs(List<String> args, int startIndex) {
 		return String.join(" ", args.subList(startIndex, args.size()));
 	}
+
+	public static String substringBetween(String input, String start, String end) {
+		String result = null;
+		if (input != null && start != null && end != null) {
+			int startIndex = input.indexOf(start);
+			if (startIndex != -1) {
+				int endIndex = input.indexOf(end, startIndex + start.length());
+				if (endIndex != -1) {
+					result = input.substring(startIndex + start.length(), endIndex);
+				}
+			}
+		}
+		return result;
+	}
 }

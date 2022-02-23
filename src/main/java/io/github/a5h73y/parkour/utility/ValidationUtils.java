@@ -1,6 +1,5 @@
 package io.github.a5h73y.parkour.utility;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -15,7 +14,7 @@ public class ValidationUtils {
 	 * @return input is a valid String
 	 */
 	public static boolean isStringValid(String input) {
-		return !StringUtils.isBlank(input);
+		return input != null && input.trim().length() != 0;
 	}
 
 	/**
