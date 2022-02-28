@@ -266,6 +266,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		parkour.getParkourSessionManager().forceVisible(player);
 		parkour.getScoreboardManager().removeScoreboard(player);
 		parkour.getChallengeManager().forfeitChallenge(player);
+		playerConfig.resetPlayerDataSnapshot();
 		playerConfig.removeExistingSessionCourseName();
 
 		Bukkit.getServer().getPluginManager().callEvent(
@@ -506,6 +507,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			if (parkour.getParkourConfig().getBoolean("OnFinish.TeleportAway")) {
 				teleportCourseCompletion(player, courseName);
 			}
+			playerConfig.resetPlayerDataSnapshot();
 		}, parkour.getParkourConfig().getLong("OnFinish.TeleportDelay"));
 
 		playerConfig.setLastCompletedCourse(courseName);
@@ -1287,8 +1289,6 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		player.setLevel(playerConfig.getSnapshotXpLevel());
 		restoreInventoryArmor(player, playerConfig);
 		restoreGameMode(player);
-
-		playerConfig.resetPlayerDataSnapshot();
 	}
 
 	/**
