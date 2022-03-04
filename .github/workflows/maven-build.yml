@@ -3,8 +3,8 @@ name: Build
 on:
   push:
     branches: [ '7.0' ]
-  pull_request:
-    branches: [ '7.0' ]
+      #  pull_request:
+      #    branches: [ '7.0' ]
 
 jobs:
   build:
