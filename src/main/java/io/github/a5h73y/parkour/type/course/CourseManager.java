@@ -328,9 +328,9 @@ public class CourseManager extends AbstractPluginReceiver {
             eventCommands.addAll(parkour.getParkourConfig().getDefaultEventCommands(eventType));
         }
 
-        for (String command : eventCommands) {
-            PlayerUtils.dispatchServerPlayerCommand(command, player, session);
-        }
+        eventCommands.stream()
+                .filter(ValidationUtils::isStringValid)
+                .forEach(command -> PlayerUtils.dispatchServerPlayerCommand(command, player, session));
     }
 
     /**

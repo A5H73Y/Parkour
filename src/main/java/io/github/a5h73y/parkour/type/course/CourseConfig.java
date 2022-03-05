@@ -36,19 +36,19 @@ import org.jetbrains.annotations.Nullable;
  */
 public class CourseConfig extends Json {
 
-    private static final String MINIMUM_LEVEL = "MinimumLevel";
-    private static final String DISPLAY_NAME = "DisplayName";
-    private static final String LINKED_COURSE = "LinkedCourse";
-    private static final String LINKED_LOBBY = "LinkedLobby";
-    private static final String PARKOUR_MODE = "ParkourMode";
-    private static final String CHECKPOINTS = "Checkpoints";
-    private static final String CREATOR = "Creator";
-    private static final String PARKOUR_KIT = "ParkourKit";
-    private static final String MAX_DEATHS = "MaxDeaths";
-    private static final String MAX_TIME = "MaxTime";
-    private static final String MAX_FALL_TICKS = "MaxFallTicks";
-    private static final String READY = "Ready";
-    private static final String MANUAL_CHECKPOINTS = "ManualCheckpoints";
+    public static final String MINIMUM_LEVEL = "MinimumLevel";
+    public static final String DISPLAY_NAME = "DisplayName";
+    public static final String LINKED_COURSE = "LinkedCourse";
+    public static final String LINKED_LOBBY = "LinkedLobby";
+    public static final String PARKOUR_MODE = "ParkourMode";
+    public static final String CHECKPOINTS = "Checkpoints";
+    public static final String CREATOR = "Creator";
+    public static final String PARKOUR_KIT = "ParkourKit";
+    public static final String MAX_DEATHS = "MaxDeaths";
+    public static final String MAX_TIME = "MaxTime";
+    public static final String MAX_FALL_TICKS = "MaxFallTicks";
+    public static final String READY = "Ready";
+    public static final String MANUAL_CHECKPOINTS = "ManualCheckpoints";
 
     private String courseName;
 
@@ -907,17 +907,11 @@ public class CourseConfig extends Json {
     }
 
     public void resetCourseData() {
-        Set<String> properties = this.singleLayerKeySet();
-
-        for (String property : properties) {
-            if ("Creator".equals(property)
-                    || "Checkpoint".equals(property)
-                    || "Name".equals(property)) {
-                continue;
-            }
-
-            this.remove(property);
-        }
+        this.removeAll(this.singleLayerKeySet().stream().filter(property ->
+                        !"Creator".equals(property)
+                                && !"Checkpoint".equals(property)
+                                && !"Name".equals(property))
+                .toArray(String[]::new));
     }
 
     public void createCourseData(Player player) {
@@ -949,37 +943,6 @@ public class CourseConfig extends Json {
         this.getFileData().insert(prefix + "CheckpointZ", location.getBlockZ());
 
         this.set("Checkpoints", maximumCheckpoints);
-    }
-
-    public List<Checkpoint> extractCheckpoints() {
-        List<Checkpoint> checkpoints = new ArrayList<>();
-        int points = getCheckpointAmount() + 1;
-        Json courseConfig = this;
-
-        for (int i = 0; i < points; i++) {
-            courseConfig.setPathPrefix("Checkpoint." + i);
-
-            // the 'current' checkpoint location, i.e. where to teleport back to
-            double x = courseConfig.getDouble("BlockX");
-            double y = courseConfig.getDouble("BlockY");
-            double z = courseConfig.getDouble("BlockZ");
-            float yaw = courseConfig.getFloat("Yaw");
-            float pitch = courseConfig.getFloat( "Pitch");
-            String worldName = courseConfig.getString("World");
-
-            Location location = new Location(Bukkit.getWorld(worldName), x, y, z, yaw, pitch);
-
-            // get the next checkpoint pressure plate location
-            courseConfig.setPathPrefix("Checkpoint." + (i + 1));
-
-            double plateX = courseConfig.getDouble("PlateX");
-            double plateY = courseConfig.getDouble("PlateY");
-            double plateZ = courseConfig.getDouble("PlateZ");
-
-            checkpoints.add(new Checkpoint(location, plateX, plateY, plateZ));
-        }
-
-        return checkpoints;
     }
 
     public void deleteCheckpoint() {
