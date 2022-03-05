@@ -1,10 +1,12 @@
 name: Build
 
+env:
+  VERSION: '7.0'
 on:
   push:
     branches: [ '7.0' ]
-  pull_request:
-    branches: [ '7.0' ]
+      #  pull_request:
+      #    branches: [ '7.0' ]
 
 jobs:
   build:
@@ -23,10 +25,27 @@ jobs:
         cache: maven
 
     - name: Build with Maven
-      run: mvn install
+      run: mvn -B package
 
-    - uses: actions/upload-artifact@v2
-      name: Upload Artifact
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: Parkour.jar
-        path: target/Parkour-*.jar
+        tag_name: v${{ env.VERSION  }}.${{ github.run_number }}
+        release_name: Parkour-${{ env.VERSION }}.${{ github.run_number }}
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: target/Parkour-${{ env.VERSION }}.jar
+        asset_name: Parkour-${{ env.VERSION }}.jar
+        asset_content_type: application/java-archive
+
