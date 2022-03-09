@@ -1,7 +1,7 @@
 name: Build
 
 env:
-  VERSION: '7.0'
+  VERSION: '7.0-SNAPSHOT'
 on:
   push:
     branches: [ '7.0' ]
