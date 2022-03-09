@@ -22,7 +22,50 @@ _Please note that Parkour Expansion is no longer needed as it has been implement
 
 [All of the Parkour Placeholders are available here](essential/placeholders.md).
 
-## Holographic Displays
+
+## Holographic Displays (v3.0.0+)
+
+Allows you to create dynamic and nice looking Parkour holograms.
+
+Holographic Displays now natively supports placeholders, so no other plugins are needed:
+* [Holographic Displays](https://dev.bukkit.org/projects/holographic-displays?gameCategorySlug=bukkit-plugins&projectID=75097)
+
+
+Note that Holographic Displays v3.0.0 is still in beta and has some known issues including:
+_PlaceholderAPI's placeholders are refreshed every tick (configurable in the future) and they are not optimized yet._
+
+Parkour will cache database results, but until Holographic Displays includes a refresh rate
+_performance may be affected especially if there are slow placeholders._
+
+
+Once the plugin has installed successfully, we can create a few examples of what is possible. For demonstration purposes, I will be using a Course named "tutorial".
+
+
+### Parkour Leaderboards
+First we create a new Parkour leaderboard Hologram using the command and giving it a title.  
+`/hd create Leaderboard_tutorial Parkour Leaderboard - Tutorial`
+
+Add a line for each position you want on the leaderboard (up to 10):
+
+`/hd addline Leaderboard_tutorial {papi: parkour_topten_tutorial_1}`  
+`/hd addline Leaderboard_tutorial {papi: parkour_topten_tutorial_2}`  
+`/hd addline Leaderboard_tutorial {papi: parkour_topten_tutorial_3}`
+
+Above we are using the Parkour placeholder `%parkour_topten_(course)_(position)%`.
+There is an entry in the `strings.yml` named `PlaceholderAPI.TopTenResult` which will allow you to customise the appearance and colours used.
+
+### Parkour Course Best Player
+First we create a new Parkour leader Hologram using the command and giving it a title.  
+`/hd create Leader_tutorial Parkour Leader - Tutorial`
+
+Add a line for each detail you want to display:
+
+`/hd addline Leader_tutorial Best Player: {papi: parkour_leaderboard_tutorial_1_player}`  
+`/hd addline Leader_tutorial Time: {papi: parkour_leaderboard_tutorial_1_time}`  
+`/hd addline Leader_tutorial Deaths: {papi: parkour_leaderboard_tutorial_1_deaths}`
+
+
+## Holographic Displays (v2.x.x)
 
 Allows you to create dynamic and nice looking Parkour holograms.
 
@@ -50,7 +93,7 @@ Add a line for each position you want on the leaderboard (up to 10):
 `/hd addline Leaderboard_tutorial {slow}%parkour_topten_tutorial_2%`  
 `/hd addline Leaderboard_tutorial {slow}%parkour_topten_tutorial_3%`
 
-Above we are using the Parkour placeholder `%parkour_topten_(course)_(position)`.
+Above we are using the Parkour placeholder `%parkour_topten_(course)_(position)%`.
 There is an entry in the `strings.yml` named `PlaceholderAPI.TopTenResult` which will allow you to customise the appearance and colours used.
 
 ### Parkour Course Best Player
@@ -62,6 +105,7 @@ Add a line for each detail you want to display:
 `/hd addline Leader_tutorial {slow}Best Player: %parkour_leaderboard_tutorial_1_player%`  
 `/hd addline Leader_tutorial {slow}Time: %parkour_leaderboard_tutorial_1_time%`  
 `/hd addline Leader_tutorial {slow}Deaths: %parkour_leaderboard_tutorial_1_deaths%`
+
 
 ## Parkour Top Ten
 
