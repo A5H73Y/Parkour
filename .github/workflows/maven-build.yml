@@ -1,13 +1,9 @@
 name: Build
 
 env:
-  BRANCH: '7.0'
-  VERSION: '7.0-SNAPSHOT'
-on:
-  push:
-    branches: [ '7.0' ]
-      #  pull_request:
-      #    branches: [ '7.0' ]
+  release_type: '-SNAPSHOT'
+
+on: push
 
 jobs:
   build:
@@ -15,38 +11,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-      name: Checkout repo
+      - name: Checkout repo
+        uses: actions/checkout@v2
 
-    - name: Set up JDK 11 (LTS)
-      uses: actions/setup-java@v2
-      with:
-        java-version: '11'
-        distribution: 'adopt'
-        cache: maven
+      - name: Set up JDK 11 (LTS)
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          cache: maven
 
-    - name: Build with Maven
-      run: mvn -B package
+      - name: Build with Maven
+        run: mvn -B clean package
 
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: v${{ env.VERSION  }}.${{ github.run_number }}
-        release_name: Parkour-${{ env.VERSION }}.${{ github.run_number }}
-        draft: false
-        prerelease: false
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.ref_name }}${{ env.release_type }}.${{ github.run_number }}
+          release_name: Parkour-${{ github.ref_name }}${{ env.release_type }}.${{ github.run_number }}
+          draft: false
+          prerelease: false
 
-    - name: Upload Release Asset
-      id: upload-release-asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: target/Parkour-${{ env.BRANCH }}.jar
-        asset_name: Parkour-${{ env.VERSION }}.jar
-        asset_content_type: application/java-archive
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: target/*.jar
+          asset_name: Parkour-${{ github.ref_name }}${{ env.release_type }}.jar
+          asset_content_type: application/java-archive
 

@@ -5,11 +5,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.a5h73y</groupId>
 	<artifactId>Parkour</artifactId>
-	<version>7.0</version>
+	<version>7.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>Parkour</name>
 	<description>The ultimate Parkour plugin.</description>
+	<inceptionYear>2012</inceptionYear>
 	<url>https://a5h73y.github.io/Parkour/</url>
 
 	<properties>
@@ -20,8 +21,8 @@
 	</properties>
 
 	<issueManagement>
-		<url>https://github.com/A5H73Y/Parkour/issues</url>
 		<system>GitHub Issues</system>
+		<url>https://github.com/A5H73Y/Parkour/issues</url>
 	</issueManagement>
 
 	<licenses>
@@ -142,7 +143,7 @@
 		<dependency>
 			<groupId>com.github.cryptomorin</groupId>
 			<artifactId>XSeries</artifactId>
-			<version>8.6.1</version>
+			<version>8.7.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<!-- Version Compare -->
@@ -184,12 +185,10 @@
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>3.3.0</version>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
 				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
+					<outputDirectory>${export_dir}</outputDirectory>
 				</configuration>
 			</plugin>
 
@@ -287,15 +286,6 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.2.0</version>
-				<configuration>
-					<outputDirectory>${export_dir}</outputDirectory>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
