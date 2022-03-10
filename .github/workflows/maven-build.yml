@@ -1,6 +1,7 @@
 name: Build
 
 env:
+  artifact_name: 'Parkour-7.0.0'
   release_type: '-SNAPSHOT'
 
 on: push
@@ -31,7 +32,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ github.ref_name }}${{ env.release_type }}.${{ github.run_number }}
-          release_name: Parkour-${{ github.ref_name }}${{ env.release_type }}.${{ github.run_number }}
+          release_name: ${{ env.artifact_name }}${{ env.release_type }}.${{ github.run_number }}
           draft: false
           prerelease: false
 
@@ -42,7 +43,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/*.jar
-          asset_name: Parkour-${{ github.ref_name }}${{ env.release_type }}.jar
+          asset_path: target/${{ env.artifact_name }}.jar
+          asset_name: ${{ env.artifact_name }}${{ env.release_type }}.jar
           asset_content_type: application/java-archive
 
