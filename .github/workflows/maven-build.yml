@@ -1,6 +1,7 @@
 name: Build
 
 env:
+  BRANCH: '7.0'
   VERSION: '7.0-SNAPSHOT'
 on:
   push:
@@ -45,7 +46,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: target/Parkour-${{ env.VERSION }}.jar
+        asset_path: target/Parkour-${{ env.BRANCH }}.jar
         asset_name: Parkour-${{ env.VERSION }}.jar
         asset_content_type: application/java-archive
 
