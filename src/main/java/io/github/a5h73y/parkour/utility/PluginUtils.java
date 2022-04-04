@@ -230,7 +230,7 @@ public class PluginUtils {
                 break;
 
             default:
-                TranslationUtils.sendInvalidSyntax(commandSender, "delete", "(course / checkpoint / lobby / kit) (name)");
+                parkour.getParkourCommands().sendInvalidSyntax(commandSender, "delete");
                 break;
         }
     }
@@ -298,7 +298,7 @@ public class PluginUtils {
                 break;
 
             default:
-                TranslationUtils.sendInvalidSyntax(commandSender, "reset", "(course / player / leaderboard / prize) (argument)");
+                parkour.getParkourCommands().sendInvalidSyntax(commandSender, "reset");
                 break;
         }
     }
@@ -339,7 +339,7 @@ public class PluginUtils {
                     clearAllCache();
                     break;
                 default:
-                    TranslationUtils.sendInvalidSyntax(commandSender, "cache", "[course / database / lobby / parkourkit / sound]");
+                    parkour.getParkourCommands().sendInvalidSyntax(commandSender, "cache");
                     return;
             }
             TranslationUtils.sendPropertySet(commandSender, "Cache", StringUtils.standardizeText(argument), "empty");

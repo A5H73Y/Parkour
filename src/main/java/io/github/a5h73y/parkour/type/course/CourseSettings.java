@@ -5,26 +5,12 @@ import java.util.Map;
 
 public class CourseSettings implements Serializable {
 
-	private final int maxDeaths;
-	private final int maxTime;
-	private final int maxFallTicks;
-	private final boolean manualCheckpoints;
-
-	public CourseSettings(int maxDeaths, int maxTime, int maxFallTicks, boolean manualCheckpoints) {
-		this.maxDeaths = maxDeaths;
-		this.maxTime = maxTime;
-		this.maxFallTicks = maxFallTicks;
-		this.manualCheckpoints = manualCheckpoints;
-	}
-
-	public static CourseSettings deserialize(Map<String, Object> input) {
-		int maxDeaths = (int) input.getOrDefault("MaxDeaths", 0);
-		int maxTime = (int) input.getOrDefault("MaxTime", 0);
-		int maxFallTicks = (int) input.getOrDefault("MaxFallTicks", 80);
-		boolean manualCheckpoints = (boolean) input.getOrDefault("ManualCheckpoints", false);
-
-		return new CourseSettings(maxDeaths, maxTime, maxFallTicks, manualCheckpoints);
-	}
+	private int maxDeaths;
+	private int maxTime;
+	private int maxFallTicks;
+	private boolean manualCheckpoints;
+	private boolean dieInLiquid;
+	private boolean dieInVoid;
 
 	/**
 	 * Determine if the Course has a configured maximum deaths.
@@ -41,6 +27,10 @@ public class CourseSettings implements Serializable {
 	 */
 	public int getMaxDeaths() {
 		return maxDeaths;
+	}
+
+	public void setMaxDeaths(int maxDeaths) {
+		this.maxDeaths = maxDeaths;
 	}
 
 	/**
@@ -60,11 +50,43 @@ public class CourseSettings implements Serializable {
 		return maxTime;
 	}
 
+	public void setMaxTime(int maxTime) {
+		this.maxTime = maxTime;
+	}
+
+	public boolean hasMaxFallTicks() {
+		return this.maxFallTicks > 0;
+	}
+
 	public int getMaxFallTicks() {
 		return maxFallTicks;
 	}
 
+	public void setMaxFallTicks(int maxFallTicks) {
+		this.maxFallTicks = maxFallTicks;
+	}
+
 	public boolean isManualCheckpoints() {
 		return manualCheckpoints;
+	}
+
+	public void setManualCheckpoints(boolean manualCheckpoints) {
+		this.manualCheckpoints = manualCheckpoints;
+	}
+
+	public boolean isDieInLiquid() {
+		return dieInLiquid;
+	}
+
+	public void setDieInLiquid(boolean dieInLiquid) {
+		this.dieInLiquid = dieInLiquid;
+	}
+
+	public boolean isDieInVoid() {
+		return dieInVoid;
+	}
+
+	public void setDieInVoid(boolean dieInVoid) {
+		this.dieInVoid = dieInVoid;
 	}
 }

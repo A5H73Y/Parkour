@@ -1,6 +1,6 @@
 package io.github.a5h73y.parkour.upgrade.major;
 
-import io.github.a5h73y.parkour.configuration.serializable.ItemStackSerializable;
+import io.github.a5h73y.parkour.configuration.serializable.ItemStackArraySerializable;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
@@ -29,7 +29,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class PlayerDataUpgradeTask extends TimedConfigUpgradeTask {
 
-	ItemStackSerializable itemStackSerializable = new ItemStackSerializable();
+	private final ItemStackArraySerializable itemStackArraySerializable = new ItemStackArraySerializable();
 
 	private final Set<OfflinePlayer> upgradedPlayers = new HashSet<>();
 
@@ -168,12 +168,12 @@ public class PlayerDataUpgradeTask extends TimedConfigUpgradeTask {
 		if (inventorySection != null) {
 			ItemStack[] inventoryStack = getItemStackContents(inventorySection, "Inventory");
 			if (inventoryStack != null) {
-				playerConfig.set("Inventory", itemStackSerializable.serialize(inventoryStack));
+				playerConfig.set("Inventory", itemStackArraySerializable.serialize(inventoryStack));
 			}
 
 			ItemStack[] armorStack = getItemStackContents(inventorySection, "Armor");
 			if (armorStack != null) {
-				playerConfig.set("Armor", itemStackSerializable.serialize(armorStack));
+				playerConfig.set("Armor", itemStackArraySerializable.serialize(armorStack));
 			}
 
 			if (inventorySection.contains("Health")) {

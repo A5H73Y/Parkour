@@ -1,5 +1,7 @@
 package io.github.a5h73y.parkour.commands;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.ARGUMENTS_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.COMMAND_PLACEHOLDER;
 import static io.github.a5h73y.parkour.utility.permission.PermissionUtils.WILDCARD;
 
 import io.github.a5h73y.parkour.utility.StringUtils;
@@ -58,8 +60,8 @@ public class CommandUsage {
 	 */
 	public void displayCommandUsage(CommandSender commandSender) {
 		commandSender.sendMessage(TranslationUtils.getTranslation("Help.CommandUsage", false)
-				.replace("%COMMAND%", command)
-				.replace("%ARGUMENTS%", arguments != null ? SPACE + arguments : "")
+				.replace(COMMAND_PLACEHOLDER, command)
+				.replace(ARGUMENTS_PLACEHOLDER, arguments != null ? SPACE + arguments : "")
 				.replace("%TITLE%", title));
 	}
 
@@ -70,8 +72,8 @@ public class CommandUsage {
 	 */
 	public void sendInvalidSyntax(CommandSender commandSender) {
 		commandSender.sendMessage(TranslationUtils.getTranslation("Error.Syntax")
-				.replace("%COMMAND%", getCommand())
-				.replace("%ARGUMENTS%", getArguments()));
+				.replace(COMMAND_PLACEHOLDER, getCommand())
+				.replace(ARGUMENTS_PLACEHOLDER, getArguments()));
 	}
 
 	public String[] getAutoTabArraySelection(String input) {

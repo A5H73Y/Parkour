@@ -1,6 +1,8 @@
 package io.github.a5h73y.parkour.utility;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.ARGUMENTS_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.CHECKPOINT_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.COMMAND_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.COURSE_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.DEATHS_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.PLAYER_DISPLAY_PLACEHOLDER;
@@ -10,7 +12,6 @@ import static io.github.a5h73y.parkour.utility.StringUtils.colour;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.type.course.ParkourEventType;
-import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
@@ -195,8 +196,8 @@ public class TranslationUtils {
 	 */
 	public static void sendInvalidSyntax(CommandSender commandSender, String command, String arguments) {
 		commandSender.sendMessage(getTranslation("Error.Syntax")
-				.replace("%COMMAND%", command)
-				.replace("%ARGUMENTS%", arguments));
+				.replace(COMMAND_PLACEHOLDER, command)
+				.replace(ARGUMENTS_PLACEHOLDER, arguments));
 	}
 
 	/**
@@ -234,7 +235,7 @@ public class TranslationUtils {
 	 * @param message message to send
 	 */
 	public static void sendMessage(CommandSender commandSender, String message) {
-		if (commandSender != null && !message.isEmpty()) {
+		if (commandSender != null && ValidationUtils.isStringValid(message)) {
 			commandSender.sendMessage(getPluginPrefix().concat(colour(message)));
 		}
 	}
@@ -368,12 +369,13 @@ public class TranslationUtils {
 	 * @return updated input message
 	 */
 	public static String replaceAllParkourPlaceholders(String input, Player player, ParkourSession session) {
-		return input.replace(PLAYER_PLACEHOLDER, player.getName())
+		String result = input.replace(PLAYER_PLACEHOLDER, player.getName())
 				.replace(PLAYER_DISPLAY_PLACEHOLDER, player.getDisplayName())
 				.replace(COURSE_PLACEHOLDER, session.getCourse().getDisplayName())
 				.replace(DEATHS_PLACEHOLDER, String.valueOf(session.getDeaths()))
 				.replace(TIME_PLACEHOLDER, session.getDisplayTime())
 				.replace(CHECKPOINT_PLACEHOLDER, String.valueOf(session.getCurrentCheckpoint()));
+		return Parkour.getInstance().getPlaceholderApi().parsePlaceholders(player, result);
 	}
 
 	/**

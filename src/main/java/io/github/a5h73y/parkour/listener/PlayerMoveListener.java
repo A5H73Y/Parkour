@@ -51,7 +51,7 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
         }
 
         if (player.getLocation().getBlock().isLiquid()
-                && parkour.getParkourConfig().getBoolean("OnCourse.DieInLiquid")) {
+                && session.getCourse().getSettings().isDieInLiquid()) {
             parkour.getPlayerManager().playerDie(player);
         }
     }

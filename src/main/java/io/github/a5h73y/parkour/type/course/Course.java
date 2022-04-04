@@ -12,7 +12,6 @@ import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,7 +30,6 @@ public class Course implements Serializable {
     private final List<Checkpoint> checkpoints;
     private final ParkourKit parkourKit;
     private final ParkourMode parkourMode;
-
     private final CourseSettings settings;
 
     /**
@@ -51,11 +49,6 @@ public class Course implements Serializable {
         this.parkourKit = parkourKit;
         this.parkourMode = parkourMode;
         this.settings = settings;
-    }
-
-    public Course(String name, String displayName, List<Checkpoint> checkpoints,
-                  ParkourKit parkourKit, ParkourMode parkourMode) {
-        this(name, displayName, checkpoints, parkourKit, parkourMode, CourseSettings.deserialize(new HashMap<>()));
     }
 
     /**
@@ -121,7 +114,8 @@ public class Course implements Serializable {
         String parkourKitName = String.valueOf(input.getOrDefault("ParkourKit", ParkourConstants.DEFAULT));
 
         List<Checkpoint> checkpoints = new ArrayList<>();
-        ParkourKit parkourKit = Parkour.getInstance().getParkourKitManager().getParkourKit(parkourKitName);
+        Parkour parkour = Parkour.getInstance();
+        ParkourKit parkourKit = parkour.getParkourKitManager().getParkourKit(parkourKitName);
 
         if (input.containsKey("Checkpoint")) {
             checkpoints = getMapValue(input.get("Checkpoint")).entrySet().stream()
@@ -132,7 +126,7 @@ public class Course implements Serializable {
                     .collect(Collectors.toList());
         }
 
-        CourseSettings settings = CourseSettings.deserialize(input);
+        CourseSettings settings = parkour.getCourseSettingsManager().getCourseSettings(name);
 
         return new Course(name, displayName, checkpoints, parkourKit,
                 ParkourMode.valueOf(parkourModeName), settings);

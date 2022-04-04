@@ -2,6 +2,12 @@ package io.github.a5h73y.parkour.type.course;
 
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_INVALID_AMOUNT;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.DIE_IN_LIQUID;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.DIE_IN_VOID;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.MANUAL_CHECKPOINTS;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.MAX_DEATHS;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.MAX_FALL_TICKS;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.MAX_TIME;
 
 import com.google.common.io.Files;
 import io.github.a5h73y.parkour.Parkour;
@@ -24,10 +30,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import de.leonhard.storage.sections.FlatFileSection;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.Conversable;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,6 +43,27 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 
 	// course actions to set data
 	private final Map<String, TriConsumer<CommandSender, String, String>> courseSettingActions = new HashMap<>();
+
+	public CourseSettings getCourseSettings(String courseName) {
+		FlatFileSection defaultSection = parkour.getParkourConfig().getSection("CourseDefault.Settings");
+		CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(courseName);
+
+		CourseSettings courseSettings = new CourseSettings();
+		courseSettings.setDieInLiquid(
+				courseConfig.get(DIE_IN_LIQUID, defaultSection.getBoolean(DIE_IN_LIQUID)));
+		courseSettings.setDieInVoid(
+				courseConfig.get(DIE_IN_VOID, defaultSection.getBoolean(DIE_IN_VOID)));
+		courseSettings.setManualCheckpoints(
+				courseConfig.get(MANUAL_CHECKPOINTS, defaultSection.getBoolean(MANUAL_CHECKPOINTS)));
+		courseSettings.setMaxFallTicks(
+				courseConfig.get(MAX_FALL_TICKS, defaultSection.getInt(MAX_FALL_TICKS)));
+		courseSettings.setMaxDeaths(
+				courseConfig.get(MAX_DEATHS, defaultSection.getInt(MAX_DEATHS)));
+		courseSettings.setMaxTime(
+				courseConfig.get(MAX_TIME, defaultSection.getInt(MAX_TIME)));
+
+		return courseSettings;
+	}
 
 	public CourseSettingsManager(Parkour parkour) {
 		super(parkour);
@@ -728,25 +757,37 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 		if (!doesCourseExist(args[1])) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, args[1], commandSender);
 			return;
-		}
-
-		Material material = MaterialUtils.lookupMaterial(args[2].toUpperCase());
-		if (material == null) {
-			TranslationUtils.sendValueTranslation("Error.UnknownMaterial", args[2].toUpperCase(), commandSender);
+		} else if (args.length != 2 && args.length < 4) {
+			parkour.getParkourCommands().sendInvalidSyntax(commandSender, "addjoinitem");
 			return;
 		}
 
-		if (!ValidationUtils.isPositiveInteger(args[3])) {
-			TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, commandSender);
-			return;
+		ItemStack itemStack;
+
+		if (args.length == 2 && commandSender instanceof Player) {
+			itemStack = MaterialUtils.getItemStackInPlayersHand((Player) commandSender);
+
+		} else {
+			Material material = MaterialUtils.lookupMaterial(args[2].toUpperCase());
+			if (material == null) {
+				TranslationUtils.sendValueTranslation("Error.UnknownMaterial", args[2].toUpperCase(), commandSender);
+				return;
+			}
+
+			if (!ValidationUtils.isPositiveInteger(args[3])) {
+				TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, commandSender);
+				return;
+			}
+
+			int amount = MaterialUtils.parseItemStackAmount(args[3]);
+			String label = args.length >= 5 ? args[4] : StringUtils.standardizeText(material.name());
+			boolean unbreakable = args.length == 6 && Boolean.parseBoolean(args[5]);
+
+			itemStack = MaterialUtils.createItemStack(material, amount, label, unbreakable);
 		}
 
-		int amount = MaterialUtils.parseItemStackAmount(args[3]);
-		String label = args.length >= 5 ? args[4] : StringUtils.standardizeText(material.name());
-		boolean unbreakable = args.length == 6 && Boolean.parseBoolean(args[5]);
-
-		parkour.getConfigManager().getCourseConfig(args[1]).addJoinItem(material, amount, label, unbreakable);
-		notifyActionChange(commandSender, "Add Join Item", args[1], material.name() + " x" + amount);
+		parkour.getConfigManager().getCourseConfig(args[1]).addJoinItem(itemStack);
+		notifyActionChange(commandSender, "Add Join Item", args[1], itemStack.getType().name() + " x" + itemStack.getAmount());
 	}
 
 	public void startCoursePrizeConversation(CommandSender commandSender, String courseName) {

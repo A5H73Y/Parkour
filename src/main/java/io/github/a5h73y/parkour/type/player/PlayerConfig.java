@@ -109,9 +109,9 @@ public class PlayerConfig extends Json {
      *
      * @return course name last played
      */
-    @Nullable
+    @NotNull
     public String getLastPlayedCourse() {
-        return this.get(LAST_PLAYED, null);
+        return this.getString(LAST_PLAYED);
     }
 
     /**
@@ -128,9 +128,9 @@ public class PlayerConfig extends Json {
      *
      * @return course name last completed
      */
-    @Nullable
+    @NotNull
     public String getLastCompletedCourse() {
-        return this.get(LAST_COMPLETED, null);
+        return this.getString(LAST_COMPLETED);
     }
 
     /**

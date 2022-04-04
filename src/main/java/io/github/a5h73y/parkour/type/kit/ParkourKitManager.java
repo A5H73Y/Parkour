@@ -6,6 +6,7 @@ import com.cryptomorin.xseries.XMaterial;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.conversation.CreateParkourKitConversation;
 import io.github.a5h73y.parkour.conversation.EditParkourKitConversation;
+import io.github.a5h73y.parkour.other.TriConsumer;
 import io.github.a5h73y.parkour.type.CacheableParkourManager;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
@@ -33,10 +34,15 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ParkourKitManager extends CacheableParkourManager {
 
+	private final Map<String, TriConsumer<CommandSender, String, String>> parkourKitActions = new HashMap<>();
 	private final Map<String, ParkourKit> parkourKitCache = new HashMap<>();
 
 	public ParkourKitManager(final Parkour parkour) {
 		super(parkour);
+	}
+
+	public Set<String> getParkourKitActions() {
+		return parkourKitActions.keySet();
 	}
 
 	@Override

@@ -16,6 +16,7 @@ import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -104,8 +105,10 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
+        ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
+
         if (event.getCause() == EntityDamageEvent.DamageCause.VOID
-                && parkour.getParkourConfig().getBoolean("OnCourse.DieInVoid")) {
+                && session.getCourse().getSettings().isDieInVoid()) {
             event.setDamage(0);
             event.setCancelled(true);
             parkour.getPlayerManager().playerDie(player);
@@ -119,7 +122,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         }
 
         Damageable playerDamage = player;
-        if (playerDamage.getHealth() <= event.getDamage()) {
+        if (playerDamage.getHealth() <= event.getFinalDamage()) {
             event.setDamage(0);
             event.setCancelled(true);
             parkour.getPlayerManager().playerDie(player);

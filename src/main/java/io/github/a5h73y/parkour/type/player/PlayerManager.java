@@ -916,7 +916,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 				List<Checkpoint> checkpoints = Collections.singletonList(
 						parkour.getCheckpointManager().createCheckpointFromPlayerLocation(player));
 				ParkourSession session = new ParkourSession(
-						new Course(TEST_MODE, TEST_MODE, checkpoints, kit, ParkourMode.NONE));
+						new Course(TEST_MODE, TEST_MODE, checkpoints, kit, ParkourMode.NONE, null)); //TODO
 				parkour.getParkourSessionManager().addPlayer(player, session);
 				parkour.getBountifulApi().sendActionBar(player, TranslationUtils.getValueTranslation(
 						"Parkour.TestModeOn", kitName, false));
@@ -1140,11 +1140,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 		} else if (courseMode == ParkourMode.POTION) {
 			CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(session.getCourseName());
-
 			XPotion.addEffects(player, courseConfig.getPotionParkourModeEffects());
-			if (courseConfig.hasPotionJoinMessage()) {
-				TranslationUtils.sendMessage(player, courseConfig.getPotionJoinMessage());
-			}
+			TranslationUtils.sendMessage(player, courseConfig.getPotionJoinMessage());
 		}
 	}
 

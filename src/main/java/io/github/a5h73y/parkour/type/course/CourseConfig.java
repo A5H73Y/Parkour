@@ -6,7 +6,6 @@ import static io.github.a5h73y.parkour.utility.TranslationUtils.sendConditionalV
 import static io.github.a5h73y.parkour.utility.TranslationUtils.sendValue;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.player.ParkourMode;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
@@ -15,18 +14,15 @@ import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 import de.leonhard.storage.Json;
 import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.serialize.LightningSerializer;
-import de.leonhard.storage.sections.FlatFileSection;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,19 +32,36 @@ import org.jetbrains.annotations.Nullable;
  */
 public class CourseConfig extends Json {
 
-    public static final String MINIMUM_LEVEL = "MinimumLevel";
+    public static final String CHALLENGE_ONLY = "ChallengeOnly";
+    public static final String CHECKPOINTS = "Checkpoints";
+    public static final String COMMAND_PREFIX = "Command.";
+    public static final String CREATOR = "Creator";
+    public static final String DIE_IN_LIQUID = "DieInLiquid";
+    public static final String DIE_IN_VOID = "DieInVoid";
     public static final String DISPLAY_NAME = "DisplayName";
+    public static final String ECONOMY_FINISH_REWARD = "EconomyFinishReward";
+    public static final String ECONOMY_JOINING_FEE = "EconomyJoiningFee";
+    public static final String JOIN_ITEMS = "JoinItems";
     public static final String LINKED_COURSE = "LinkedCourse";
     public static final String LINKED_LOBBY = "LinkedLobby";
-    public static final String PARKOUR_MODE = "ParkourMode";
-    public static final String CHECKPOINTS = "Checkpoints";
-    public static final String CREATOR = "Creator";
-    public static final String PARKOUR_KIT = "ParkourKit";
-    public static final String MAX_DEATHS = "MaxDeaths";
-    public static final String MAX_TIME = "MaxTime";
-    public static final String MAX_FALL_TICKS = "MaxFallTicks";
-    public static final String READY = "Ready";
     public static final String MANUAL_CHECKPOINTS = "ManualCheckpoints";
+    public static final String MAX_DEATHS = "MaxDeaths";
+    public static final String MAX_FALL_TICKS = "MaxFallTicks";
+    public static final String MAX_TIME = "MaxTime";
+    public static final String MESSAGE_PREFIX = "Message.";
+    public static final String MINIMUM_LEVEL = "MinimumLevel";
+    public static final String PARKOINS = "Parkoins";
+    public static final String PARKOUR_KIT = "ParkourKit";
+    public static final String PARKOUR_MODE = "ParkourMode";
+    public static final String PLAYER_LIMIT = "PlayerLimit";
+    public static final String READY = "Ready";
+    public static final String RESUMABLE = "Resumable";
+    public static final String REWARD_DELAY = "RewardDelay";
+    public static final String REWARD_ONCE = "RewardOnce";
+    public static final String REWARD_LEVEL = "RewardLevel";
+    public static final String REWARD_LEVEL_ADD = "RewardLevelAdd";
+    public static final String POTION_PARKOUR_MODE_JOIN_MESSAGE = "PotionParkourMode.JoinMessage";
+    public static final String POTION_PARKOUR_MODE_EFFECTS = "PotionParkourMode.Effects";
 
     private String courseName;
 
@@ -175,7 +188,7 @@ public class CourseConfig extends Json {
      * @return the parkour mode name set
      */
     public String getParkourModeName() {
-        return this.getOrDefault(PARKOUR_MODE, ParkourMode.NONE.name());
+        return this.getOrDefault(PARKOUR_MODE, ParkourMode.NONE.name()).toUpperCase();
     }
 
     /**
@@ -185,7 +198,7 @@ public class CourseConfig extends Json {
     public ParkourMode getCourseMode() {
         ParkourMode result;
         try {
-            result = ParkourMode.valueOf(getParkourModeName().toUpperCase());
+            result = ParkourMode.valueOf(getParkourModeName());
         } catch (IllegalArgumentException exception) {
             setParkourMode(ParkourMode.NONE);
             result = ParkourMode.NONE;
@@ -467,7 +480,7 @@ public class CourseConfig extends Json {
      * @return ParkourLevel reward
      */
     public int getRewardParkourLevel() {
-        return this.getInt("RewardLevel");
+        return this.getInt(REWARD_LEVEL);
     }
 
     /**
@@ -483,7 +496,7 @@ public class CourseConfig extends Json {
      * @param level ParkourLevel reward
      */
     public void setRewardParkourLevel(int level) {
-        this.set("RewardLevel", level);
+        this.set(REWARD_LEVEL, level);
     }
 
     /**
@@ -492,7 +505,7 @@ public class CourseConfig extends Json {
      * @return ParkourLevel increase reward
      */
     public int getRewardParkourLevelIncrease() {
-        return this.getInt("RewardLevelAdd");
+        return this.getInt(REWARD_LEVEL_ADD);
     }
 
     /**
@@ -508,7 +521,7 @@ public class CourseConfig extends Json {
      * @param amount ParkourLevel increase reward
      */
     public void setRewardParkourLevelIncrease(@NotNull String amount) {
-        this.set("RewardLevelAdd", Integer.parseInt(amount));
+        this.set(REWARD_LEVEL_ADD, Integer.parseInt(amount));
     }
 
     /**
@@ -516,7 +529,7 @@ public class CourseConfig extends Json {
      * @return reward once status
      */
     public boolean getRewardOnce() {
-        return this.getBoolean("RewardOnce");
+        return this.getBoolean(REWARD_ONCE);
     }
 
     /**
@@ -524,7 +537,7 @@ public class CourseConfig extends Json {
      * @param enabled reward once enabled
      */
     public void setRewardOnce(boolean enabled) {
-        this.set("RewardOnce", enabled);
+        this.set(REWARD_ONCE, enabled);
     }
 
     /**
@@ -540,7 +553,7 @@ public class CourseConfig extends Json {
      * @return challenge only status
      */
     public boolean getChallengeOnly() {
-        return this.getBoolean("ChallengeOnly");
+        return this.getBoolean(CHALLENGE_ONLY);
     }
 
     /**
@@ -548,7 +561,7 @@ public class CourseConfig extends Json {
      * @param enabled challenge only enabled
      */
     public void setChallengeOnly(boolean enabled) {
-        this.set("ChallengeOnly", enabled);
+        this.set(CHALLENGE_ONLY, enabled);
     }
 
     /**
@@ -564,7 +577,7 @@ public class CourseConfig extends Json {
      * @return number of hours delay for Course
      */
     public double getRewardDelay() {
-        return this.getDouble("RewardDelay");
+        return this.getDouble(REWARD_DELAY);
     }
 
     /**
@@ -580,7 +593,7 @@ public class CourseConfig extends Json {
      * @param rewardDelay number of hours delay
      */
     public void setRewardDelay(double rewardDelay) {
-        this.set("RewardDelay", rewardDelay);
+        this.set(REWARD_DELAY, rewardDelay);
     }
 
     /**
@@ -588,7 +601,7 @@ public class CourseConfig extends Json {
      * @return Parkoins to reward
      */
     public double getRewardParkoins() {
-        return this.getDouble("Parkoins");
+        return this.getDouble(PARKOINS);
     }
 
     /**
@@ -596,7 +609,7 @@ public class CourseConfig extends Json {
      * @param parkoins Parkoins to reward
      */
     public void setRewardParkoins(double parkoins) {
-        this.set("Parkoins", parkoins);
+        this.set(PARKOINS, parkoins);
     }
 
     /**
@@ -605,51 +618,26 @@ public class CourseConfig extends Json {
      * Build the list of each Material in an ItemStack based on options.
      * @return populated Join Items
      */
-    @NotNull
+    @Nullable
     public List<ItemStack> getJoinItems() {
-        List<ItemStack> joinItems = new ArrayList<>();
-        FlatFileSection joinItemStack = this.getSection(courseName.toLowerCase() + ".JoinItems");
+        List<ItemStack> results = new ArrayList<>();
+        List<ItemStack[]> data = this.getSerializableList(JOIN_ITEMS, ItemStack[].class);
 
-        Set<String> materials = joinItemStack.singleLayerKeySet();
-
-        for (String materialName : materials) {
-            Material material = MaterialUtils.lookupMaterial(materialName);
-            if (material == null) {
-                continue;
-            }
-
-            int amount = joinItemStack.getInt(materialName + ".Amount");
-            String displayName = joinItemStack.getString(materialName + ".Label");
-            boolean unbreakable = joinItemStack.getBoolean(materialName + ".Unbreakable");
-
-            ItemStack itemStack = new ItemStack(material, amount);
-            ItemMeta itemMeta = itemStack.getItemMeta();
-            if (displayName != null) {
-                itemMeta.setDisplayName(displayName);
-            }
-            if (unbreakable) {
-                itemMeta.setUnbreakable(true);
-            }
-            itemStack.setItemMeta(itemMeta);
-            joinItems.add(itemStack);
+        if (data != null) {
+            results = data.stream().map(itemStacks -> itemStacks[0]).collect(Collectors.toList());
         }
 
-        return joinItems;
+        return results;
     }
 
     /**
      * Add a Join Item to the Course.
-     * @param material material to add
-     * @param amount amount of material
-     * @param label item label
-     * @param unbreakable unbreakable flag
      */
-    public void addJoinItem(@NotNull Material material, int amount,
-                            @Nullable String label, boolean unbreakable) {
+    public void addJoinItem(@NotNull ItemStack itemStack) {
         courseName = courseName.toLowerCase();
-        this.set("JoinItems." + material.name() + ".Amount", amount);
-        this.set("JoinItems." + material.name() + ".Label", label);
-        this.set("JoinItems." + material.name() + ".Unbreakable", unbreakable);
+        List<String> results = this.getStringList(JOIN_ITEMS);
+        results.add(Parkour.getInstance().getConfigManager().getItemStackSerializable().serialize(itemStack));
+        this.set("JoinItems", results);
     }
 
     /**
@@ -673,8 +661,8 @@ public class CourseConfig extends Json {
      * Removes any linked Lobby or Course.
      */
     public void resetLinks() {
-        this.remove("LinkedLobby");
-        this.remove("LinkedCourse");
+        this.remove(LINKED_LOBBY);
+        this.remove(LINKED_COURSE);
     }
 
     /**
@@ -684,7 +672,7 @@ public class CourseConfig extends Json {
      */
     @NotNull
     public List<String> getPotionParkourModeEffects() {
-        return this.get("PotionParkourMode.Effects", null);
+        return this.getStringList(POTION_PARKOUR_MODE_EFFECTS);
     }
 
     /**
@@ -702,7 +690,7 @@ public class CourseConfig extends Json {
         }
 
         potionEffects.add(potionEffect);
-        this.set("PotionParkourMode.Effects", potionEffects);
+        this.set(POTION_PARKOUR_MODE_EFFECTS, potionEffects);
     }
 
     /**
@@ -711,7 +699,7 @@ public class CourseConfig extends Json {
      */
     @Nullable
     public String getPotionJoinMessage() {
-        return this.get("PotionParkourMode.JoinMessage", null);
+        return this.get(POTION_PARKOUR_MODE_JOIN_MESSAGE, null);
     }
 
     /**
@@ -719,7 +707,7 @@ public class CourseConfig extends Json {
      * @return course has potion join message
      */
     public boolean hasPotionJoinMessage() {
-        return this.contains("PotionParkourMode.JoinMessage");
+        return this.contains(POTION_PARKOUR_MODE_JOIN_MESSAGE);
     }
 
     /**
@@ -727,7 +715,7 @@ public class CourseConfig extends Json {
      * @param joinMessage join message
      */
     public void setPotionJoinMessage(@Nullable String joinMessage) {
-        this.set("PotionParkourMode.JoinMessage", joinMessage);
+        this.set(POTION_PARKOUR_MODE_JOIN_MESSAGE, joinMessage);
     }
 
     /**
@@ -735,7 +723,7 @@ public class CourseConfig extends Json {
      * @return finish reward
      */
     public double getEconomyFinishReward() {
-        return this.getDouble("EconomyFinishReward");
+        return this.getDouble(ECONOMY_FINISH_REWARD);
     }
 
     /**
@@ -743,7 +731,7 @@ public class CourseConfig extends Json {
      * @return has finish reward
      */
     public boolean hasEconomyFinishReward() {
-        return this.contains("EconomyFinishReward");
+        return this.contains(ECONOMY_FINISH_REWARD);
     }
 
     /**
@@ -751,7 +739,7 @@ public class CourseConfig extends Json {
      * @param finishReward finish reward
      */
     public void setEconomyFinishReward(@Nullable Double finishReward) {
-        this.set("EconomyFinishReward", finishReward);
+        this.set(ECONOMY_FINISH_REWARD, finishReward);
     }
 
     /**
@@ -759,7 +747,7 @@ public class CourseConfig extends Json {
      * @return joining fee
      */
     public double getEconomyJoiningFee() {
-        return this.getDouble("EconomyJoiningFee");
+        return this.getDouble(ECONOMY_JOINING_FEE);
     }
 
     /**
@@ -767,7 +755,7 @@ public class CourseConfig extends Json {
      * @return has joining fee
      */
     public boolean hasEconomyJoiningFee() {
-        return this.contains("EconomyJoiningFee");
+        return this.contains(ECONOMY_JOINING_FEE);
     }
 
     /**
@@ -775,7 +763,7 @@ public class CourseConfig extends Json {
      * @param joinFee join fee
      */
     public void setEconomyJoiningFee(@Nullable Double joinFee) {
-        this.set("EconomyJoiningFee", joinFee);
+        this.set(ECONOMY_JOINING_FEE, joinFee);
     }
 
     /**
@@ -783,7 +771,7 @@ public class CourseConfig extends Json {
      * @return player limit
      */
     public int getPlayerLimit() {
-        return this.getInt("PlayerLimit");
+        return this.getInt(PLAYER_LIMIT);
     }
 
     /**
@@ -799,7 +787,7 @@ public class CourseConfig extends Json {
      * @param limit player limit
      */
     public void setPlayerLimit(int limit) {
-        this.set("PlayerLimit", limit);
+        this.set(PLAYER_LIMIT, limit);
     }
 
     /**
@@ -807,7 +795,7 @@ public class CourseConfig extends Json {
      * @return course resumable
      */
     public boolean getResumable() {
-        return this.getOrDefault("Resumable", true);
+        return this.getOrDefault(RESUMABLE, true);
     }
 
     /**
@@ -815,7 +803,7 @@ public class CourseConfig extends Json {
      * @param value flag value
      */
     public void setResumable(boolean value) {
-        this.set("Resumable", value);
+        this.set(RESUMABLE, value);
     }
 
     public boolean toggleResumable() {
@@ -852,7 +840,7 @@ public class CourseConfig extends Json {
      */
     @Nullable
     public String getEventMessage(@NotNull ParkourEventType eventType) {
-        return this.get("Message." + eventType.getConfigEntry(), null);
+        return this.get(MESSAGE_PREFIX + eventType.getConfigEntry(), null);
     }
 
     /**
@@ -861,7 +849,7 @@ public class CourseConfig extends Json {
      * @return course has the event type commands
      */
     public boolean hasEventMessage(@NotNull ParkourEventType eventType) {
-        return this.contains("Message." + eventType.getConfigEntry());
+        return this.contains(MESSAGE_PREFIX + eventType.getConfigEntry());
     }
 
     /**
@@ -871,7 +859,7 @@ public class CourseConfig extends Json {
      * @param value message value
      */
     public void setEventMessage(@NotNull ParkourEventType eventType, @Nullable String value) {
-        this.set("Message." + eventType.getConfigEntry(), value);
+        this.set(MESSAGE_PREFIX + eventType.getConfigEntry(), value);
     }
 
     /**
@@ -882,7 +870,7 @@ public class CourseConfig extends Json {
      */
     @NotNull
     public List<String> getEventCommands(@NotNull ParkourEventType eventType) {
-        return this.get( "Command." + eventType.getConfigEntry(), new ArrayList<>());
+        return this.get(COMMAND_PREFIX + eventType.getConfigEntry(), new ArrayList<>());
     }
 
     /**
@@ -891,7 +879,7 @@ public class CourseConfig extends Json {
      * @return course has the event type commands
      */
     public boolean hasEventCommands(@NotNull ParkourEventType eventType) {
-        return this.contains("Command." + eventType.getConfigEntry());
+        return this.contains(COMMAND_PREFIX + eventType.getConfigEntry());
     }
 
     /**
@@ -903,12 +891,12 @@ public class CourseConfig extends Json {
                                 @NotNull String value) {
         List<String> commands = getEventCommands(eventType);
         commands.add(value);
-        this.set("Command." + eventType.getConfigEntry(), commands);
+        this.set(COMMAND_PREFIX + eventType.getConfigEntry(), commands);
     }
 
     public void resetCourseData() {
         this.removeAll(this.singleLayerKeySet().stream().filter(property ->
-                        !"Creator".equals(property)
+                        !CREATOR.equals(property)
                                 && !"Checkpoint".equals(property)
                                 && !"Name".equals(property))
                 .toArray(String[]::new));
@@ -916,7 +904,7 @@ public class CourseConfig extends Json {
 
     public void createCourseData(Player player) {
         this.set("Name", this.courseName);
-        this.set("Creator", player.getName());
+        this.set(CREATOR, player.getName());
         createCheckpointData(player.getLocation(), 0);
     }
 
@@ -976,11 +964,11 @@ public class CourseConfig extends Json {
         sendValue(commandSender, "Completions", config.getCompletions()
                 + " (" + config.getCompletionPercent() + "%)");
         sendValue(commandSender, CHECKPOINTS, config.getCheckpointAmount());
-        sendValue(commandSender, "Creator", config.getCreator());
+        sendValue(commandSender, CREATOR, config.getCreator());
         sendValue(commandSender, "Ready Status", String.valueOf(config.getReadyStatus()));
         sendValue(commandSender, "Challenge Only", String.valueOf(config.getChallengeOnly()));
 
-        sendConditionalValue(commandSender, "Resumable", !Parkour.getDefaultConfig().isLeaveDestroyCourseProgress(),
+        sendConditionalValue(commandSender, RESUMABLE, !Parkour.getDefaultConfig().isLeaveDestroyCourseProgress(),
                 String.valueOf(config.getResumable()));
         sendConditionalValue(commandSender, "Minimum ParkourLevel", config.getMinimumParkourLevel());
         sendConditionalValue(commandSender, "ParkourLevel Reward", config.getRewardParkourLevel());

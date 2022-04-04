@@ -4,6 +4,7 @@ import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
 import io.github.a5h73y.parkour.configuration.impl.StringsConfig;
 import io.github.a5h73y.parkour.configuration.serializable.CourseSerializable;
 import io.github.a5h73y.parkour.configuration.serializable.ItemStackSerializable;
+import io.github.a5h73y.parkour.configuration.serializable.ItemStackArraySerializable;
 import io.github.a5h73y.parkour.configuration.serializable.LocationSerializable;
 import io.github.a5h73y.parkour.configuration.serializable.ParkourSessionSerializable;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
@@ -54,6 +55,9 @@ public class ConfigManager {
 	private final File coursesDir;
 	private final File otherDir;
 
+	// serializers
+	private final ItemStackSerializable itemStackSerializable = new ItemStackSerializable();
+
 	/**
 	 * Initialise the Config Manager.
 	 * Will invoke setup for each available config type.
@@ -82,7 +86,8 @@ public class ConfigManager {
 		this.playerConfigCache = new GenericCache<>(30L);
 		this.courseConfigCache = new GenericCache<>(30L);
 
-		LightningSerializer.registerSerializable(new ItemStackSerializable());
+		LightningSerializer.registerSerializable(itemStackSerializable);
+		LightningSerializer.registerSerializable(new ItemStackArraySerializable());
 		LightningSerializer.registerSerializable(new LocationSerializable());
 		LightningSerializer.registerSerializable(new CourseSerializable());
 		LightningSerializer.registerSerializable(new ParkourSessionSerializable());
@@ -98,14 +103,14 @@ public class ConfigManager {
 		return playerConfigCache.get(key).orElse(null);
 	}
 
-	@Nullable
+	@NotNull
 	public CourseConfig getCourseConfig(@NotNull String courseName) {
 		String key = courseName.toLowerCase();
 		if (!courseConfigCache.containsKey(key) || courseConfigCache.get(key).isEmpty()) {
 			courseConfigCache.put(key, CourseConfig.getConfig(courseName));
 		}
 
-		return courseConfigCache.get(key).orElse(null);
+		return courseConfigCache.get(key).orElseThrow();
 	}
 
 	/**
@@ -163,6 +168,10 @@ public class ConfigManager {
 
 	public File getOtherDir() {
 		return otherDir;
+	}
+
+	public ItemStackSerializable getItemStackSerializable() {
+		return itemStackSerializable;
 	}
 
 	private void createParkourFolders() {

@@ -1,5 +1,6 @@
 package io.github.a5h73y.parkour.commands;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.COMMAND_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_INVALID_AMOUNT;
 
@@ -88,7 +89,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
                     return false;
 
-                } else if (!ValidationUtils.validateArgs(player, args, 4, 6)) {
+                } else if (!ValidationUtils.validateArgs(player, args, 2, 6)) {
                     return false;
                 }
 
@@ -129,7 +130,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "cmds":
-                displayCommandHelp(player, args);
+                processListCommands(player, args);
                 break;
 
             case "create":
@@ -721,7 +722,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
      */
     private void displaySignCommandUsage(Player player, String command, String shortcut, String description) {
         player.sendMessage(TranslationUtils.getTranslation("Help.SignUsage", false)
-                .replace("%COMMAND%", command)
+                .replace(COMMAND_PLACEHOLDER, command)
                 .replace("%SHORTCUT%", shortcut)
                 .replace("%DESCRIPTION%", description));
     }
@@ -755,7 +756,8 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
         CommandUsage commandUsage = getCommandUsage(command);
 
         if (commandUsage != null) {
-            TranslationUtils.sendInvalidSyntax(commandSender, command, commandUsage.getArguments());
+            String arguments = commandUsage.getArguments() != null ? " " + commandUsage.getArguments() : "";
+            TranslationUtils.sendInvalidSyntax(commandSender, command, arguments);
         }
     }
 

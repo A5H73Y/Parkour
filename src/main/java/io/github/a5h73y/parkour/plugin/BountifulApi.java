@@ -99,7 +99,7 @@ public class BountifulApi extends PluginWrapper {
 		StringBuilder message = new StringBuilder();
 
 		if (ValidationUtils.isStringValid(title)) {
-			message.append(title);
+			message.append(title).append(" ");
 		}
 
 		if (ValidationUtils.isStringValid(subTitle)) {

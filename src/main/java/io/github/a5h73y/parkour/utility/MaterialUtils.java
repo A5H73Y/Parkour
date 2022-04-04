@@ -32,6 +32,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Stairs;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -91,7 +92,7 @@ public class MaterialUtils {
 	 * @return created {@link ItemStack}
 	 */
 	public static ItemStack createItemStack(Material material, String itemLabel) {
-		return createItemStack(material, 1, itemLabel);
+		return createItemStack(material, 1, itemLabel, false);
 	}
 
 	/**
@@ -102,14 +103,20 @@ public class MaterialUtils {
 	 * @param itemLabel display name
 	 * @return created {@link ItemStack}
 	 */
-	public static ItemStack createItemStack(Material material, Integer amount, String itemLabel) {
-		ItemStack item = new ItemStack(material, amount);
+	public static ItemStack createItemStack(@NotNull Material material, int amount,
+	                                        @Nullable String itemLabel,
+	                                        @Nullable Boolean unbreakable) {
+		ItemStack itemStack = new ItemStack(material, amount);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+
 		if (itemLabel != null) {
-			ItemMeta meta = item.getItemMeta();
-			meta.setDisplayName(itemLabel);
-			item.setItemMeta(meta);
+			itemMeta.setDisplayName(itemLabel);
 		}
-		return item;
+		if (Boolean.TRUE.equals(unbreakable)) {
+			itemMeta.setUnbreakable(true);
+		}
+		itemStack.setItemMeta(itemMeta);
+		return itemStack;
 	}
 
 	/**
@@ -157,6 +164,8 @@ public class MaterialUtils {
 			TranslationUtils.sendValue(player, "Material", material.name());
 			if (data != null) {
 				TranslationUtils.sendValue(player, "Data", data.toString());
+				TranslationUtils.sendValue(player, "Base 64",
+						Parkour.getInstance().getConfigManager().getItemStackSerializable().serialize(data));
 			}
 		} else {
 			TranslationUtils.sendMessage(player, "Invalid Material!");
@@ -179,7 +188,7 @@ public class MaterialUtils {
 		//check if player is standing in a half-block
 		if (!block.getType().equals(Material.AIR) && !block.getType().equals(CAVE_AIR.parseMaterial())
 				&& !block.getType().equals(lookupMaterial(
-						Parkour.getDefaultConfig().getString("OnCourse.CheckpointMaterial")))) {
+				Parkour.getDefaultConfig().getString("OnCourse.CheckpointMaterial")))) {
 			TranslationUtils.sendMessage(player, "Invalid Material for Checkpoint: &b" + block.getType());
 			return false;
 		}
@@ -205,9 +214,9 @@ public class MaterialUtils {
 					return false;
 				}
 			} else if (!validMaterials.contains(blockUnder.getType())) {
-					TranslationUtils.sendMessage(player,
-							"Invalid Material for Checkpoint: &b" + blockUnder.getType());
-					return false;
+				TranslationUtils.sendMessage(player,
+						"Invalid Material for Checkpoint: &b" + blockUnder.getType());
+				return false;
 			}
 		}
 		return true;

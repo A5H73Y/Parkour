@@ -206,8 +206,13 @@ public class ParkourValidation {
             }
         }
 
-        /* Check if player has enough currency to join */
-        return parkour.getEconomyApi().validateAndChargeCourseJoin(player, course.getName());
+        // check if the Course has a reward delay, and they have a prize cooldown outstanding
+        if (courseConfig.hasRewardDelay()
+                && !Parkour.getInstance().getPlayerManager().hasPrizeCooldownDurationPassed(player, course.getName(), false)) {
+            return true;
+        } else {
+            return parkour.getEconomyApi().validateAndChargeCourseJoin(player, course.getName());
+        }
     }
 
     /**

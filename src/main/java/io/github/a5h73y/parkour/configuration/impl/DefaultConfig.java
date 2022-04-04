@@ -1,5 +1,13 @@
 package io.github.a5h73y.parkour.configuration.impl;
 
+import static io.github.a5h73y.parkour.type.course.CourseConfig.DIE_IN_LIQUID;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.DIE_IN_VOID;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.JOIN_ITEMS;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.MAX_FALL_TICKS;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_DELAY;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_LEVEL_ADD;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_ONCE;
+
 import com.cryptomorin.xseries.XMaterial;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.type.course.ParkourEventType;
@@ -41,8 +49,6 @@ public class DefaultConfig extends Yaml {
 		super(file.getName(), FileUtils.getParentDirPath(file), null,
 				ReloadSettings.INTELLIGENT, ConfigSettings.SKIP_COMMENTS, DataType.SORTED);
 
-		this.setHeader(" ==== Parkour Config ==== #");
-
 		this.setDefault("OnJoin.EnforceWorld", false);
 		this.setDefault("OnJoin.EnforceReady", true);
 		this.setDefault("OnJoin.FillHealth.Enabled", true);
@@ -57,8 +63,6 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("OnCourse.AdminPlaceBreakBlocks", true);
 		this.setDefault("OnCourse.AttemptLessChecks", false);
 		this.setDefault("OnCourse.CheckpointMaterial", "STONE_PLATE");
-		this.setDefault("OnCourse.DieInLiquid", false);
-		this.setDefault("OnCourse.DieInVoid", false);
 		this.setDefault("OnCourse.DisableItemDrop", false);
 		this.setDefault("OnCourse.DisableItemPickup", false);
 		this.setDefault("OnCourse.DisablePlayerDamage", false);
@@ -245,6 +249,14 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("Plugin.Vault.Enabled", true);
 		this.setDefault("Plugin.PlaceholderAPI.Enabled", true);
 		this.setDefault("Plugin.PlaceholderAPI.CacheTime", 15);
+
+		this.setDefault("CourseDefault.Settings." + MAX_FALL_TICKS, 80);
+		this.setDefault("CourseDefault.Settings." + DIE_IN_LIQUID, false);
+		this.setDefault("CourseDefault.Settings." + DIE_IN_VOID, false);
+		this.setDefault("CourseDefault.Settings." + REWARD_ONCE, false);
+		this.setDefault("CourseDefault.Settings." + REWARD_DELAY, 0);
+		this.setDefault("CourseDefault.Settings." + REWARD_LEVEL_ADD, 0);
+		this.setDefault("CourseDefault.Settings." + JOIN_ITEMS, new ArrayList<String>());
 
 		this.setDefault("CourseDefault.Prize.Material", "DIAMOND");
 		this.setDefault("CourseDefault.Prize.Amount", 1);

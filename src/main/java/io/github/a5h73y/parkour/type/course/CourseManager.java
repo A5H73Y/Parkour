@@ -365,7 +365,7 @@ public class CourseManager extends AbstractPluginReceiver {
             parkour.getLobbyManager().displayLobbies(commandSender);
 
         } else {
-            TranslationUtils.sendInvalidSyntax(commandSender, "list", "(players / courses / ranks / lobbies)");
+            parkour.getParkourCommands().sendInvalidSyntax(commandSender, "list");
         }
     }
 

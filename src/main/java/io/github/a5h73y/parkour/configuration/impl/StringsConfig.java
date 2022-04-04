@@ -112,7 +112,8 @@ public class StringsConfig extends Yaml {
 		this.setDefault("Error.NotReady", "This course is not ready for you to play yet!");
 		this.setDefault("Error.NotReadyWarning", "This course is not ready yet.");
 		this.setDefault("Error.SignProtected", "This sign is protected!");
-		this.setDefault("Error.Syntax", "&cInvalid Syntax: &f/pa &9%COMMAND% &7%ARGUMENTS%");
+		this.setDefault("Error.Syntax", "&cInvalid Syntax: &3/pa &b%COMMAND% &e%ARGUMENTS%");
+
 		this.setDefault("Error.UnknownSignCommand", "Unknown sign command!");
 		this.setDefault("Error.UnknownCommand", "Unknown command!");
 		this.setDefault("Error.UnknownPlayer", "Unknown Parkour player!");
