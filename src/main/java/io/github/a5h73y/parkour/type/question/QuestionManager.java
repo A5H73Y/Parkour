@@ -86,6 +86,10 @@ public class QuestionManager extends AbstractPluginReceiver {
         askGenericQuestion(commandSender, QuestionType.DELETE_PARKOUR_KIT, kitName.toLowerCase());
     }
 
+    public void askDeleteParkourRank(CommandSender commandSender, String parkourLevel) {
+        askGenericQuestion(commandSender, QuestionType.DELETE_PARKOUR_RANK, parkourLevel);
+    }
+
     public void askResetCourseQuestion(CommandSender commandSender, String courseName) {
         askGenericQuestion(commandSender, QuestionType.RESET_COURSE, courseName.toLowerCase());
     }

@@ -156,7 +156,7 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("AutoStart.Enabled", true);
 		this.setDefault("AutoStart.Material", "BEDROCK");
 		this.setDefault("AutoStart.TickDelay", 0);
-		this.setDefault("AutoStart.IncludeWorldName", false);
+		this.setDefault("AutoStart.IncludeWorldName", true);
 
 		this.setDefault("Scoreboard.Enabled", false);
 		this.setDefault("Scoreboard.CourseName.Enabled", true);

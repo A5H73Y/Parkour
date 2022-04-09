@@ -139,27 +139,6 @@ public class Parkour extends JavaPlugin {
         getLogger().info("Enabled Parkour v" + getDescription().getVersion());
         submitAnalytics();
         checkForUpdates();
-
-//        getLogger().info("Missing From ParkourCommands");
-//        parkourCommands.getParkourActionCommands().forEach((actionCommand, a) -> {
-//            parkourCommands.getCommandUsages().values().stream()
-//                    .filter(commandUsage -> commandUsage.getCommand().equals(actionCommand))
-//                    .forEach(command -> getLogger().info("* " + command.getCommand()));
-//        });
-//
-//        getLogger().info("Missing From CommandUsages");
-//        parkourCommands.getCommandUsages().values().stream()
-//                .filter(commandUsage -> !parkourCommands.getParkourActionCommands().containsKey(commandUsage.getCommand()))
-//                .forEach(commandUsage -> getLogger().info("* " + commandUsage.getCommand()));
-//
-//        getLogger().info("Order ParkourCommands");
-//        Comparator<BasicParkourCommand> parkourCommandsComparator = Comparator
-//                .comparing(BasicParkourCommand::getAllowedSender)
-//                .thenComparing(parkourActionCommand -> parkourActionCommand.getCommandLabels()[0]);
-//
-//        parkourCommands.getParkourActionCommands().values().stream()
-//                .sorted(parkourCommandsComparator)
-//                .forEach(commandUsage -> getLogger().info("* " + commandUsage.getCommandLabels()[0]));
     }
 
     /**

@@ -6,7 +6,6 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.PARKOUR_RANK_PLACE
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.type.CacheableParkourManager;
-import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
@@ -88,6 +87,25 @@ public class ParkourRankManager extends CacheableParkourManager {
 		populateParkourRanks();
 		TranslationUtils.sendPropertySet(commandSender, "ParkourRank", "ParkourLevel " + parkourLevel,
 				StringUtils.colour(parkourRank));
+	}
+
+	public void deleteParkourRank(CommandSender commandSender, String input) {
+		if (input == null || !ValidationUtils.isPositiveInteger(input)) {
+			TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, commandSender);
+			return;
+		}
+
+		Integer parkourLevel = Integer.parseInt(input);
+		if (parkourRankExists(parkourLevel)) {
+			parkour.getConfigManager().getParkourKitConfig().remove(input);
+			parkourRanks.remove(parkourLevel);
+		} else {
+			TranslationUtils.sendMessage(commandSender, "ParkourRank not found for provided ParkourLevel.");
+		}
+	}
+
+	public boolean parkourRankExists(Integer parkourRank) {
+		return parkourRank != null && parkourRanks.containsKey(parkourRank);
 	}
 
 	@Override

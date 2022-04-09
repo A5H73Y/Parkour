@@ -25,16 +25,18 @@ public enum QuestionType {
             "&7Deleting a ParkourKit will remove all information about it from the server.",
             (sender, value) -> Parkour.getInstance().getParkourKitManager().deleteParkourKit(sender, value)),
 
+    DELETE_PARKOUR_RANK("You are about to delete ParkourRank &b%s&f...",
+            "&7Deleting a ParkourRank will remove the ability for players to unlock it. Players that have already unlocked it will not be affected.",
+            (sender, value) -> Parkour.getInstance().getParkourRankManager().deleteParkourRank(sender, value)),
+
     RESET_COURSE("You are about to reset Course &b%s&f...",
             "&7Resetting a Course will delete all the statistics stored, which includes leaderboards and "
                     + "various Parkour attributes. This will NOT affect the spawn or checkpoints.",
             (sender, value) -> Parkour.getInstance().getCourseManager().resetCourse(sender, value)),
 
-
     RESET_PLAYER("You are about to reset Player &b%s&f...",
             "&7Resetting a Player will delete all their times across all Courses and delete all various Parkour attributes.",
             (sender, value) -> Parkour.getInstance().getPlayerManager().resetPlayer(sender, value)),
-
 
     RESET_LEADERBOARD("You are about to reset Leaderboards for &b%s&f...",
             "&7Resetting the leaderboards will remove all times from the database for this course. "

@@ -110,13 +110,13 @@
   {
     "command": "delete",
     "title": "Request Deletion Command",
-    "arguments": "(course / checkpoint / lobby / kit) (argument)",
+    "arguments": "(course / checkpoint / lobby / kit / rank) (argument)",
     "example": "/pa delete course tutorial",
     "description": "The Delete command allows you to request to remove an entry from the Parkour plugin. A summary of the request, with any consequences, will be displayed to the user before they are asked to confirm the action. Each request will be validated and require confirmation before it is actioned.",
     "permission": "parkour.admin.delete",
     "commandGroup": "4",
-    "consoleSyntax": "pac delete (course / checkpoint / lobby / kit) (argument)",
-    "autoTabSyntax": "[course,checkpoint,lobby,kit] {1:course=(course),1:checkpoint=(course),1:lobby=(lobby),1:kit=(parkourkit)}"
+    "consoleSyntax": "pac delete (course / checkpoint / lobby / kit / rank) (argument)",
+    "autoTabSyntax": "[course,checkpoint,lobby,kit,rank] {1:course=(course),1:checkpoint=(course),1:lobby=(lobby),1:kit=(parkourkit),1:rank=(parkourlevel)}"
   },
   {
     "command": "done",

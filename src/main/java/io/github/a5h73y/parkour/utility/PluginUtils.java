@@ -229,6 +229,15 @@ public class PluginUtils {
                 parkour.getQuestionManager().askDeleteKitQuestion(commandSender, argument);
                 break;
 
+            case "rank":
+            case "parkourrank":
+                if (!ParkourValidation.canDeleteParkourRank(commandSender, argument)) {
+                    return;
+                }
+
+                parkour.getQuestionManager().askDeleteParkourRank(commandSender, argument);
+                break;
+
             default:
                 parkour.getParkourCommands().sendInvalidSyntax(commandSender, "delete");
                 break;

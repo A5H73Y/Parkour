@@ -4,15 +4,14 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.plugin.EconomyApi;
 import io.github.a5h73y.parkour.type.challenge.Challenge;
 import io.github.a5h73y.parkour.type.course.Course;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
-import io.github.a5h73y.parkour.type.player.PlayerConfig;
-import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
+import io.github.a5h73y.parkour.utility.permission.Permission;
+import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Bukkit;
@@ -561,4 +560,24 @@ public class ParkourValidation {
 
         return true;
     }
+
+    /**
+     * Validate Sender deleting a ParkourRank from ParkourLevel.
+     * @param commandSender command sender
+     * @param parkourLevel parkour level value
+     * @return command sender can delete parkour rank
+     */
+	public static boolean canDeleteParkourRank(CommandSender commandSender, String parkourLevel) {
+        if (parkourLevel == null || !ValidationUtils.isPositiveInteger(parkourLevel)) {
+            TranslationUtils.sendMessage(commandSender, "Invalid ParkourLevel provided.");
+            return false;
+        }
+
+        if (!Parkour.getInstance().getParkourRankManager().parkourRankExists(Integer.parseInt(parkourLevel))) {
+            TranslationUtils.sendMessage(commandSender, "ParkourRank not found for provided ParkourLevel.");
+            return false;
+        }
+
+        return true;
+	}
 }
