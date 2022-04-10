@@ -501,10 +501,14 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		PlayerConfig playerConfig = parkour.getConfigManager().getPlayerConfig(player);
 
 		Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () -> {
-			restorePlayerData(player, playerConfig);
-			rewardPrize(player, session);
 			parkour.getScoreboardManager().removeScoreboard(player);
-			if (parkour.getParkourConfig().getBoolean("OnFinish.TeleportAway")) {
+			if (parkour.getParkourConfig().getBoolean("OnFinish.TeleportBeforePrize")) {
+				teleportCourseCompletion(player, courseName);
+				restorePlayerData(player, playerConfig);
+				rewardPrize(player, session);
+			} else {
+				restorePlayerData(player, playerConfig);
+				rewardPrize(player, session);
 				teleportCourseCompletion(player, courseName);
 			}
 			playerConfig.resetPlayerDataSnapshot();
@@ -549,8 +553,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		} else {
 			session.resetProgress();
 			session.setFreedomLocation(null);
-			prepareParkourPlayer(player);
-			setGameMode(player, parkour.getParkourConfig().getString("OnJoin.SetGameMode"));
+			preparePlayerForCourse(player, course.getName());
 			PlayerUtils.teleportToLocation(player, session.getCheckpoint().getLocation());
 			parkour.getScoreboardManager().addScoreboard(player, session);
 
@@ -1309,9 +1312,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			player.setFoodLevel(parkour.getParkourConfig().getInt("OnJoin.FillHealth.Amount"));
 		}
 
-		if (parkour.getParkourConfig().getBoolean("OnDie.SetXPBarToDeathCount")) {
-			player.setLevel(0);
-		}
+		resetDeathCounter(player);
 
 		if (parkour.getParkourConfig().getBoolean("OnCourse.DisableFly")) {
 			player.setAllowFlight(false);
@@ -1319,7 +1320,13 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}
 
 		if (parkour.getParkourConfig().getBoolean("ParkourTool.HideAll.ActivateOnJoin")) {
-			parkour.getParkourSessionManager().toggleVisibility(player, true);
+			parkour.getParkourSessionManager().hideVisibility(player, true);
+		}
+	}
+
+	private void resetDeathCounter(Player player) {
+		if (parkour.getParkourConfig().getBoolean("OnDie.SetXPBarToDeathCount")) {
+			player.setLevel(0);
 		}
 	}
 
@@ -1495,6 +1502,10 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	 * @param courseName course name
 	 */
 	private void teleportCourseCompletion(Player player, String courseName) {
+		if (!parkour.getParkourConfig().getBoolean("OnFinish.TeleportAway")) {
+			return;
+		}
+
 		CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(courseName);
 		if (courseConfig.hasLinkedCourse()) {
 			String linkedCourseName = courseConfig.getLinkedCourse();

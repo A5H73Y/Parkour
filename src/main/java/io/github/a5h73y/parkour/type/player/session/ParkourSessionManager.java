@@ -12,12 +12,13 @@ import io.github.a5h73y.parkour.type.course.Course;
 import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.WeakHashMap;
 import java.util.function.Consumer;
@@ -38,7 +39,7 @@ import org.jetbrains.annotations.Nullable;
 public class ParkourSessionManager extends AbstractPluginReceiver implements CommandProcessor, Teardownable, Initializable {
 
 	private final Map<UUID, ParkourSession> parkourPlayers = new WeakHashMap<>();
-	private final List<UUID> hiddenPlayers = new ArrayList<>();
+	private final Set<UUID> hiddenPlayers = new HashSet<>();
 
 	private final Map<String, Consumer<Player>> sessionActions = new HashMap<>();
 
@@ -304,7 +305,10 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Com
 	 * @param player requesting player
 	 */
 	public void toggleVisibility(Player player, boolean silent) {
-		boolean showPlayers = hasHiddenPlayers(player);
+		toggleVisibility(player, hasHiddenPlayers(player), silent);
+	}
+
+	private void toggleVisibility(Player player, boolean showPlayers, boolean silent) {
 		hideOrShowPlayers(player, showPlayers);
 
 		if (showPlayers) {
@@ -319,6 +323,14 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Com
 				TranslationUtils.sendTranslation("Event.HideAll2", player);
 			}
 		}
+	}
+
+	public void showVisibility(Player player, boolean silent) {
+		toggleVisibility(player, true, silent);
+	}
+
+	public void hideVisibility(Player player, boolean silent) {
+		toggleVisibility(player, false, silent);
 	}
 
 	private void hideOrShowPlayers(Player player, boolean showPlayers) {

@@ -264,9 +264,8 @@ public class TranslationUtils {
 	 * @param value value
 	 */
 	public static void sendValue(CommandSender commandSender, String title, String value) {
-		if (commandSender != null) {
-			commandSender.sendMessage(title + ": " + ChatColor.AQUA + value);
-		}
+		String displayValue = getValueTranslation("Help.DisplayValue", value, false);
+		sendMessage(commandSender, displayValue.replace("%TITLE%", title), false);
 	}
 
 	/**

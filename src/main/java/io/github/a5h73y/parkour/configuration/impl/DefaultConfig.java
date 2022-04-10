@@ -94,6 +94,7 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("OnFinish.CompletedCourses.JoinMessage", false);
 		this.setDefault("OnFinish.SetGameMode", "SURVIVAL");
 		this.setDefault("OnFinish.TeleportAway", true);
+		this.setDefault("OnFinish.TeleportBeforePrize", false);
 		this.setDefault("OnFinish.TeleportDelay", 0);
 		this.setDefault("OnFinish.TeleportToJoinLocation", false);
 		this.setDefault("OnFinish.UpdatePlayerDatabaseTime", true);

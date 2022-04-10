@@ -150,6 +150,7 @@ public class StringsConfig extends Yaml {
 		this.setDefault("Help.CommandExample", "&7Example: &f%VALUE%");
 		this.setDefault("Help.CommandUsage", "&3/pa &b%COMMAND%&e%ARGUMENTS% &0: &f%TITLE%");
 		this.setDefault("Help.SignUsage", "&b%COMMAND% &e%SHORTCUT% &0: &f%DESCRIPTION%");
+		this.setDefault("Help.DisplayValue", "%TITLE%: &b%VALUE%");
 
 		this.setDefault("ParkourTool.LastCheckpoint", "&7SHIFT + &6Right click to go back to last checkpoint");
 		this.setDefault("ParkourTool.HideAll", "&7SHIFT + &6Right click to toggle visibility");
