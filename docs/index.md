@@ -3,7 +3,7 @@
 Welcome! This website documents the various features of the Parkour plugin. If you want to learn everything there is to know, then go through each part step by step. Otherwise, just skip to the part(s) you are interested in.  
 Use the Search bar in the top left to quickly find anything you're looking for.
 
-*Note that this website is accurate for Parkour v6.0 onwards.*
+*Note that this website is accurate for Parkour v7.0 onwards.*
 
 ## Helpful Parkour Links
 

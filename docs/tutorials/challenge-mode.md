@@ -1,13 +1,17 @@
 Challenge Mode
 ======
 
-You are able to challenge other Players to a Course to see who can complete the Course the fastest and prove who is the best. This can become competitive when a monetary wager is introduced (If Economy is enabled), the winner will have the amount `(wager * (participants - 1))` added to their account, and the loser(s) will have the amount deducted. _Forfeiting (leaving the Course or server) will be treated as a loss, and the wager will be deducted in the event of a Player completing the Course._
+You are able to challenge other Players to a Course to see who can complete the Course the fastest and prove who is the best.
 
-A new Challenge can be created manually by using a command and which can then invite other players. Alternatively you can interact with a Challenge sign to join with other Players interested in a Challenge.
+A monetary wager can be introduced to make the Challenge more competitive _(If Economy is enabled)_. The winner will receive the wager from each participant added to their bank, and the loser(s) will have the wager deducted. A wager can only be set when **creating** the Challenge and can not be changed.  
+_Forfeiting (leaving the Course or server) will be treated as a loss, and the wager will only be deducted in the event of a Player completing the Course._
 
 ## Creating a Challenge
 
-Each challenge must have a host, they have elevated permissions to invite and start the Challenge when they decide to. If the create command is used then that player becomes the host; if a Challenge Sign is used it will be the first player to interact with the sign.
+Each challenge must have a host, they have elevated permissions to invite and start the Challenge when they decide to. 
+
+A new Challenge can be created manually by using a command, which the host can then invite other players.  
+Alternatively players can interact with a Challenge sign to join with other Players interested in a Challenge, in this case the Player who first used the sign will be appointed host.
 
 ### Command
 

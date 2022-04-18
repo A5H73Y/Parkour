@@ -46,16 +46,6 @@ If you want to overwrite the creator of a Course to a different Player, this wil
 
 _Command: `/pa setcreator (course) (player)`_
 
-## ParkourLevel Restrictions
-
-ParkourLevels can be used to apply restrictions to Courses and lobbies. The validation will be based on the minimum level requirement. For example, if a Course has a minimum level requirement of 10, and the Player has a ParkourLevel of 12, then the teleportation will be allowed otherwise the Player will be notified.
-
-_Command: `/pa setminlevel (course) (level)`_  
-Set the minimum level of the specified Course to the specified ParkourLevel. Any Player that now attempts to join this Course will be prevented from doing so unless they have a high enough ParkourLevel.
-
-_Command: `/pa setlobby (name) (level)`_  
-Create a Lobby and set the minimum level requirement for teleportation to the ParkourLevel specified. This is used if you organize your Courses into separate lobbies and wish to prevent the Player to teleport unless they have a high enough ParkourLevel.
-
 ## Set Maximum Deaths
 
 You are able to limit the amount of deaths a Player can accumilate before they are kicked off the Course for extra challenge. An example could be a quick challenging Course that allows the Player just 1 life to complete.

@@ -1,7 +1,47 @@
 Changelogs
 ======
 
-Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon start up. There will be no manual intervention unless stated in breaking changes.
+Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon server start up. There will be no manual intervention, unless stated in breaking changes.
+## Parkour 7.0.0
+### Configuration Changes
+Parkour 6.7.1 used a config system which hadn't changed since the Plugin's inception in 2012, by combining all the Courses and Players data into their single config file. This resulted in insanely slow performance when changing and saving data regularly.
+
+Parkour 7.0 introduced a new system of configuration, where each Player and each Course has its own JSON config file with its own data and nothing else. 
+The performance improvements are outstanding: ![7.0 Performance](https://i.imgur.com/t3t4gbD.png "7.0 Performance")
+
+Many new smaller config files have been introduced to store appropriate data.
+### Default Course Settings
+There is a new section in the config.yml that specifies default Course settings. A few examples include the "RewardOnce" flag, "MaxFallTicks" and "RewardDelay".
+
+These can now be overridden on a per-course basis.
+### Changes
+* New AutoTabCompleter system to allow for more dynamic prompts
+* New Config files (parkour-ranks.yml, auto-starts.yml, course-completions.yml, quiet-players.yml, parkour-lobbies.yml)
+* Added 'achieved' column to 'time' table, includes Placeholders to access.
+* Added "/pa session" and "/pa parkourkit" commands
+* Added "/pa delete rank (parkour-level)"
+* Added "pac leaveall" console command to kick ALL Players from Courses
+* Added "OnFinish.TeleportBeforePrize" to change finish order
+* Added Course status Placeholders, with translations
+* Added "Restore" option to "OnFinish.SetGameMode" to restore the Player's GameMode
+* Fixed the inconsistent Course finish time
+* External Plugin is no longer disabled when not found on first startup. 
+* Cancel void damage if DisablePlayerDamage is enabled
+* More messages are processed through PlaceholderAPI
+* Added 'OnServerRestart.KickPlayerFromCourse' config option
+* ParkourSessions are now stored as JSON, instead of serialized objects as they were problematic
+* Fix to Player floating on death blocks (still not perfect)
+* Allow Player look-up to use UUIDs
+* Commands can now be manually deleted from the config.yml
+* Improved SQL to use PreparedStatements for improved security
+* Added a default entry for each event command in the config.yml
+* Allowed for Per-Course event commands to be combined with default commands
+* Allowed JoinItems to be ItemStacks
+* Tons of fixes and performance improvements
+
+_Thank you to steve4744, and the various contributors for helping with this major update._  
+_Additional thanks to the kind users who helped test early development builds!_
+
 ## Parkour 6.7.1
 ### Changes
 * Clear PlaceholderAPI cache on database updates

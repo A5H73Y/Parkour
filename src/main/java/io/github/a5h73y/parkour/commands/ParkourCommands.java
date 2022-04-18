@@ -9,7 +9,6 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.gui.GuiMenu;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
-import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
@@ -493,7 +492,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 }
                 break;
 
-//                player aliases
+            // player aliases
             case "setlevel":
             case "setleveladd":
             case "setrank":
@@ -504,7 +503,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getPlayerManager().processCommand(player, commandLabel.replace("set", ""), args[1], args[2]);
                 break;
 
-//                session aliases
+            // session aliases
             case "manualcheckpoint":
             case "hideall":
             case "leave":
@@ -513,7 +512,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getParkourSessionManager().processCommand(player, commandLabel);
                 break;
 
-//                parkourkit aliases
+            // parkourkit aliases
             case "listkit":
             case "linkkit":
             case "createkit":
@@ -522,7 +521,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getParkourKitManager().processParkourKitCommand(player, commandLabel.replace("kit", ""), args.length > 1 ? args[1] : DEFAULT);
                 break;
 
-//              setcourse aliases
+            // setcourse aliases
             case "rewarddelay":
             case "rewardlevel":
             case "rewardleveladd":

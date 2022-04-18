@@ -3,45 +3,40 @@ Compatible Plugins
 
 ## Economy / Vault
 
-Parkour supports the ability to use Economy through the Vault plugin, created by Sleaker.
+Parkour natively supports Economy plugins using [Vault](https://dev.bukkit.org/projects/vault/files).
 
-The configuration option in the `config.yml` is `Other.Economy.Enabled` and must be set to `true`. When Parkour starts up, it will print a message whether it has connected to the Vault plugin successfully.
+To enable, set `Plugin.Vault.Enabled` to `true` in the `config.yml` and use an Economy plugin that support Vault to successfully link the plugins.
 
-Once successfully linked, you are able to reward players with an amount of currency, as well as charge them for joining a Course.
+You are able to reward players with an amount of currency, as well as charge them for joining a Course.
 
-If there are Courses that exist before the plugin was linked with Vault, these need adding to the economy.yml, which is made easy by entering `/pa econ recreate`.
-
-Once the process is complete it will notify you how many Courses were updated. At this stage the economy.yml file should contain all the courses on your server, and a prize and fee set to 0.
-
-The joining fee and reward amount can be set in game, using `/pa econ setprize (course) (amount)` and `/pa econ setfee (course) (amount)`. The amount is the amount of currency to add / charge.
+To set a Joining Fee: `/pa econ setfee (course) (amount)`.  
+To set a Prize Amount: `/pa econ setprize (course) (amount)`.
 
 ## PlaceholderAPI
 
-PlaceholderAPI allows you to use Parkour values within other plugins.  
-_Please note that Parkour Expansion is no longer needed as it has been implemented within the Parkour plugin._
+Parkour natively supports [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) which allows you to use Parkour values within other plugins.
+
+To enable, set `Plugin.PlaceholderAPI.Enabled` to `true` in the `config.yml`.
+
+The `Plugin.PlaceholderAPI.CacheTime` value can be set to an interval in minutes for when to clear the cache. This is a performance improvement which caches Leaderboard results until a Player changes them, or the time interval is reached.
+
+**Please note that Parkour Expansion is no longer needed, as it has been implemented within the Parkour plugin.**
 
 [All of the Parkour Placeholders are available here](essential/placeholders.md).
 
-
 ## Holographic Displays (v3.0.0+)
 
-Allows you to create dynamic and nice looking Parkour holograms.
+**At the time of writing, Holographic Displays v3.0.0 is still in beta and has some known issues and could change in the future.**
 
-Holographic Displays now natively supports placeholders, so no other plugins are needed:
-* [Holographic Displays](https://dev.bukkit.org/projects/holographic-displays?gameCategorySlug=bukkit-plugins&projectID=75097)
+Parkour doesn't directly support [Holographic Displays](https://dev.bukkit.org/projects/holographic-displays/files), however you can use PlaceholderAPI which allows you to create dynamic and nice looking Parkour holograms.  
+_Holographic Displays now natively supports PlaceholderAPI, so no other plugins are required._
 
+### Example Usages
 
-Note that Holographic Displays v3.0.0 is still in beta and has some known issues including:
-_PlaceholderAPI's placeholders are refreshed every tick (configurable in the future) and they are not optimized yet._
+We can create a few examples of what is now possible. For demonstration purposes, I will be using a Course named "tutorial".
 
-Parkour will cache database results, but until Holographic Displays includes a refresh rate
-_performance may be affected especially if there are slow placeholders._
+<details><summary>Parkour Leaderboards (Click to expand)</summary>
 
-
-Once the plugin has installed successfully, we can create a few examples of what is possible. For demonstration purposes, I will be using a Course named "tutorial".
-
-
-### Parkour Leaderboards
 First we create a new Parkour leaderboard Hologram using the command and giving it a title.  
 `/hd create Leaderboard_tutorial Parkour Leaderboard - Tutorial`
 
@@ -54,7 +49,10 @@ Add a line for each position you want on the leaderboard (up to 10):
 Above we are using the Parkour placeholder `%parkour_topten_(course)_(position)%`.
 There is an entry in the `strings.yml` named `PlaceholderAPI.TopTenResult` which will allow you to customise the appearance and colours used.
 
-### Parkour Course Best Player
+</details>
+
+<details><summary>Parkour Course Best Player (Click to expand)</summary>
+
 First we create a new Parkour leader Hologram using the command and giving it a title.  
 `/hd create Leader_tutorial Parkour Leader - Tutorial`
 
@@ -64,26 +62,32 @@ Add a line for each detail you want to display:
 `/hd addline Leader_tutorial Time: {papi: parkour_leaderboard_tutorial_1_time}`  
 `/hd addline Leader_tutorial Deaths: {papi: parkour_leaderboard_tutorial_1_deaths}`
 
+</details>
 
 ## Holographic Displays (v2.x.x)
 
-Allows you to create dynamic and nice looking Parkour holograms.
+Parkour doesn't directly support [Holographic Displays](https://dev.bukkit.org/projects/holographic-displays/files), however you can use PlaceholderAPI which allows you to create dynamic and nice looking Parkour holograms.
 
 You will need to install a few plugins to achieve this:
 * [Holographic Displays](https://dev.bukkit.org/projects/holographic-displays?gameCategorySlug=bukkit-plugins&projectID=75097)
 * [Holographic Extension](https://www.spigotmc.org/resources/holographic-extension.18461/)
 * [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/)
 
-Once the plugins have all installed successfully, we can create a few examples of what is possible. For demonstration purposes, I will be using a Course named "tutorial".
+### Refresh Rate
 
-Parkour will cache database results, so we still suggest to using the `slow` refresh rate. The supported refresh rates are:
+Parkour will already cache database results, so we suggest to using the `slow` refresh rate. The supported refresh rates for Holographic Extension are:
 * `{slowest}` - 10 seconds
 * `{slow}` - 5 seconds
 * `{medium}` - 1 second
 * `{fast}` - 0.5 seconds
 * `{fastest}` - 0.1 seconds
 
-### Parkour Leaderboards
+### Example Usages
+
+Once all the plugins have all installed successfully, we can create a few examples of what is now possible. For demonstration purposes, I will be using a Course named "tutorial".
+
+<details><summary>Parkour Leaderboards (Click to expand)</summary>
+
 First we create a new Parkour leaderboard Hologram using the command and giving it a title.  
 `/hd create Leaderboard_tutorial Parkour Leaderboard - Tutorial`
 
@@ -96,7 +100,10 @@ Add a line for each position you want on the leaderboard (up to 10):
 Above we are using the Parkour placeholder `%parkour_topten_(course)_(position)%`.
 There is an entry in the `strings.yml` named `PlaceholderAPI.TopTenResult` which will allow you to customise the appearance and colours used.
 
-### Parkour Course Best Player
+</details>
+
+<details><summary>Parkour Course Best Player (Click to expand)</summary>
+
 First we create a new Parkour leader Hologram using the command and giving it a title.  
 `/hd create Leader_tutorial Parkour Leader - Tutorial`
 
@@ -106,40 +113,48 @@ Add a line for each detail you want to display:
 `/hd addline Leader_tutorial {slow}Time: %parkour_leaderboard_tutorial_1_time%`  
 `/hd addline Leader_tutorial {slow}Deaths: %parkour_leaderboard_tutorial_1_deaths%`
 
-
-## Parkour Top Ten
-
-Allows for the player's Head to be proudly displayed next to their best times, great for a competitive Parkour server.
-
-![Parkour Top Ten](https://i.imgur.com/c2n6QUM.png "Parkour Top Ten")
-
-Plugin and image created by steve4744, available here: [https://www.spigotmc.org/resources/parkour-top-ten.46268/](https://www.spigotmc.org/resources/parkour-top-ten.46268/)
+</details>
 
 ## PlateCommands
 
-PlateCommands was created as an extension to Parkour with more powerful functionality. A pressure plate can perform command(s) that can be executed by the server or player.
+[PlateCommands](https://www.spigotmc.org/resources/platecommands.90578/) was originally created as an extension to Parkour to allow for more powerful functionality. A pressure plate can perform command(s) that can be executed by the server or player.
 
-### Multiple acting Checkpoints
+### Example Usages
+
+<details><summary>Multiple action Checkpoints (Click to expand)</summary>
+
 Multiple pressure plates can achieve the same Checkpoint, instead of the limitation of a single pressure plate in Parkour:
 
-`/pc create pac setcheckpoint %player% 1`
+`/pc create pac setcheckpoint %player% (checkpoint)`
 
-### Teleport the Player
+</details>
+
+<details><summary>Teleport the Player (Click to expand)</summary>
+
 Whilst on a Course you may want the Player to be teleported to a different location, this can be done using:
 
-`/pc create tp %player% x y z`
+`/pc create tp %player% (x) (y) (z)`
 
-### Other Player actions
+</details>
+
+<details><summary>Player actions (Click to expand)</summary>
+
 You can let the Player enter pre-determined commands using the "player:" prefix in the command which will execute the command as if the Player entered it.
 An example could be walking on a pressure plate to leave the Course:
 
 `/pc create player:pac leave %player%`
 
-Plugin created by A5H73Y, available here: [https://www.spigotmc.org/resources/platecommands.90578/](https://www.spigotmc.org/resources/platecommands.90578/).
+</details>
+
+## Parkour Top Ten
+
+[Parkour Top Ten](https://www.spigotmc.org/resources/parkour-top-ten.46268/) was created by steve4744 to allow for the Player's Head to be proudly displayed next to their best times, great for a competitive Parkour server.
+
+![Parkour Top Ten](https://i.imgur.com/c2n6QUM.png "Parkour Top Ten")
 
 ## LeaderHeads
 
-Leaderheads is a plugin that allows you to create all-time, daily, weekly, and monthly leaderboards from placeholders that return a numeric value.
+[LeaderHeads](https://www.spigotmc.org/resources/leaderheads.2079/) is a plugin that allows you to create all-time, daily, weekly, and monthly leaderboards from placeholders that return a numeric value.
 
 When used with Parkour, course leaderboards can be created using placeholder `%parkour_player_personal_best_(course)_milliseconds%`
 
@@ -170,5 +185,3 @@ The time format can be changed in LeaderHeads's `config.yml`, for example:
 ![LeaderHeads Example 3](https://i.imgur.com/XzwLLSL.png "LeaderHeads Example 3")
 
 Currently, LeaderHeads does not appear to support displaying milliseconds as part of the formatted time on the sign.
-
-Plugin created by RobiRami, available here: [https://www.spigotmc.org/resources/leaderheads.2079/](https://www.spigotmc.org/resources/leaderheads.2079/).

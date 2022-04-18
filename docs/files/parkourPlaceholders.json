@@ -64,12 +64,12 @@
       {
         "placeholder": "%parkour_player_course_completed_(course)%",
         "output": "Yes",
-        "description": "Completion status for whether the Player completed the specified Course. Output configurable in strings.yml (PlaceholderAPI.CurrentCourseCompleted & PlaceholderAPI.CurrentCourseNotCompleted)."
+        "description": "Completion status for whether the Player completed the specified Course. The output can be customised in the strings.yml (PlaceholderAPI.CurrentCourseCompleted & PlaceholderAPI.CurrentCourseNotCompleted)."
       },
       {
         "placeholder": "%parkour_player_prize_delay_(course)%",
         "output": "1 day, 2 hours",
-        "description": "The time delay before the Player can receive the specified Course prize again. Output configurable in strings.yml (Display.X)."
+        "description": "The time delay before the Player can receive the specified Course prize again. The output can be customised in the strings.yml (Display.X)."
       },
       {
         "placeholder": "%parkour_player_personal_best_(course)_time%",
@@ -139,26 +139,6 @@
         "description": "The number of times the specified Course has been viewed."
       },
       {
-        "placeholder": "%parkour_course_joinfee_(course)%",
-        "output": "10",
-        "description": "The economic joining fee when joining the Course."
-      },
-      {
-        "placeholder": "%parkour_course_ecoreward_(course)%",
-        "output": "100",
-        "description": "The economic reward for completing the Course."
-      },
-      {
-        "placeholder": "%parkour_course_players_(course)%",
-        "output": "3",
-        "description": "The number of online Parkour players on the specified Course."
-      },
-      {
-        "placeholder": "%parkour_course_playerlist_(course)%",
-        "output": "A5H73Y, steve4744, notch",
-        "description": "The names of online Parkour players on the specified Course."
-      },
-      {
         "placeholder": "%parkour_course_creator_(course)%",
         "output": "A5H73Y",
         "description": "The creator of the specified Course."
@@ -197,6 +177,31 @@
         "placeholder": "%parkour_course_checkpoints_(course)%",
         "output": "3",
         "description": "The number of Checkpoints on the Course."
+      },
+      {
+        "placeholder": "%parkour_course_joinfee_(course)%",
+        "output": "10",
+        "description": "The economic joining fee when joining the Course."
+      },
+      {
+        "placeholder": "%parkour_course_ecoreward_(course)%",
+        "output": "100",
+        "description": "The economic reward for completing the Course."
+      },
+      {
+        "placeholder": "%parkour_course_players_(course)%",
+        "output": "3",
+        "description": "The number of online Parkour players on the specified Course."
+      },
+      {
+        "placeholder": "%parkour_course_playerlist_(course)%",
+        "output": "A5H73Y, steve4744, notch",
+        "description": "The names of online Parkour players on the specified Course."
+      },
+      {
+        "placeholder": "%parkour_course_status_(course)%",
+        "output": "Active",
+        "description": "This is the current 'ready' status of the Course. The output can be customised in the strings.yml (PlaceholderAPI.CourseActive & PlaceholderAPI.CourseInactive)"
       }
     ]
   },
@@ -233,7 +238,7 @@
       {
         "placeholder": "%parkour_current_course_completed%",
         "output": "Yes",
-        "description": "Completion status for whether the Player completed the current Course. Output configurable in strings.yml (PlaceholderAPI.CurrentCourseCompleted & PlaceholderAPI.CurrentCourseNotCompleted)."
+        "description": "Completion status for whether the Player completed the current Course. The output can be customised in the strings.yml (PlaceholderAPI.CurrentCourseCompleted & PlaceholderAPI.CurrentCourseNotCompleted)."
       },
       {
         "placeholder": "%parkour_current_course_(Course Placeholder)%",
@@ -337,7 +342,7 @@
       {
         "placeholder": "%parkour_topten_(course)_(position)%",
         "output": "&f1) &bA5H73Y&f in &a00:01:23",
-        "description": "Display a summary of the global leaderboard entry, configurable in the strings.yml to make them themed. (PlaceholderAPI.TopTenResult)"
+        "description": "Display a summary of the global leaderboard entry. The output can be customised in the strings.yml (PlaceholderAPI.TopTenResult)"
       }
     ]
   }

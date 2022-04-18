@@ -45,63 +45,6 @@ If the plugin is linked to Vault, you are able to set a financial reward when th
 
 _Command: `/pa economy setprize (course) (amount)`_
 
-## Rewarding ParkourLevels
-
-There are currently 3 ways to achieve a new ParkourLevel.
-
-### /pa rewardlevel (course) (level)
-
-This means when you complete the specified Course, you will receive the specified level. If the Player's level is currently higher than the reward level, it will not be changed.
-
-The main purpose of this is incremental Courses, so you would have to complete the Level1 Course, before you could join the Level2 Course, etc.
-
-### /pa rewardleveladd (course) (amount)
-
-This means when you complete the specified Course, your level has the amount added to it. So if you had a ParkourLevel of 10, and completed the Course which had a rewardLevelAdd of 2, your new ParkourLevel becomes 12.
-
-The main purpose for this is for lobby setups where you have to complete all the Courses to unlock a new lobby; If you had an "Easy" lobby with 5 Courses, you would set the level requirement for "Medium" lobby to 5, and add a rewardLevelAdd to 1 for each Course in Easy, so they can be completed in any order. NOTE: For this you would have to enable `/pa rewardonce (course)` so they only get leveled up once per Course.
-
-### /pa setlevel (player) (level)
-
-This can be used by Admins to manually set a Player's level. This can be done for VIPs, or simply to quickly test what you've created is working as intended.
-
-## What is a ParkourRank?
-
-A ParkourRank is simply a title a Player earns when they reach a required ParkourLevel. As soon as the Player's ParkourLevel passes the threshold of the next ParkourRank to unlock, it will be applied to the player.
-
-A basic example could be similar to the following, when they reach or exceed each ParkourLevel they get the specified ParkourRank:
-
-    5 = &3Beginner
-    10 = &4Amateur
-    20 = &5Professional
-    30 = &6Expert
-    50 = &1M&2a&3s&4t&5e&6r
-
-## Rewarding ParkourRanks
-
-There are currently 2 ways to achieve a new ParkourRank.
-
-### /pa rewardrank (level) (rank)
-
-As demonstrated above, this will create a ParkourRank for a corresponding ParkourLevel. It can be colour coded, for example `/pa rewardlevel 30 &6Expert`.
-
-### /pa setrank (player) (rank)
-
-This will manually set a Player's ParkourRank to the specified rank. Can be used for testing how it will look, or giving to VIPs, etc.
-
-## ParkourRank Configuration
-
-ParkourRanks are disabled by default to avoid interfering with the Server's chat plugin.
-
-To enable, find `Other.Parkour.ChatRankPrefix.Enabled` in the `config.yml`, and set it to `true`.
-
-You must decide if you want to use Parkour's chat implementation, or extend your current chat plugin.
-
-If you choose to use Parkour's chat implementation, the chat string format is found in the `strings.yml` under `Event.Chat`.
-
-If you choose to extend your current chat plugin, you must set `Other.Parkour.ChatRankPrefix.OverrideChat` to `true` in the `config.yml`. You can then add `%RANK%` to your chat plugin format, which the Parkour plugin will detect and replace with the Player's ParkourRank.  
-Alternatively, if you use a Chat plugin that supports PlaceholderAPI, you can use the `%parkour_player_rank%` placeholder.
-
 ## Delaying / Limiting the Rewards
 
 You are able to delay the time a reward is given to the Player in hours, including decimals such as '0.5' = 30 minutes, or '48' = 2 full days. For example the Player could receive the prize on their first completion, but may have to wait 2 full days before they are able to receive the prize again. This is achieved by entering `/pa rewarddelay (course) (hours)`.
