@@ -24,13 +24,13 @@ import com.cryptomorin.xseries.XPotion;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.commands.CommandProcessor;
 import io.github.a5h73y.parkour.conversation.SetPlayerConversation;
-import io.github.a5h73y.parkour.event.PlayerAchieveCheckpointEvent;
-import io.github.a5h73y.parkour.event.PlayerDeathEvent;
-import io.github.a5h73y.parkour.event.PlayerFinishCourseEvent;
-import io.github.a5h73y.parkour.event.PlayerJoinCourseEvent;
-import io.github.a5h73y.parkour.event.PlayerLeaveCourseEvent;
-import io.github.a5h73y.parkour.event.PlayerParkourLevelEvent;
-import io.github.a5h73y.parkour.event.PlayerParkourRankEvent;
+import io.github.a5h73y.parkour.event.ParkourCheckpointEvent;
+import io.github.a5h73y.parkour.event.ParkourDeathEvent;
+import io.github.a5h73y.parkour.event.ParkourFinishEvent;
+import io.github.a5h73y.parkour.event.ParkourJoinEvent;
+import io.github.a5h73y.parkour.event.ParkourLeaveEvent;
+import io.github.a5h73y.parkour.event.ParkourPlayerNewLevelEvent;
+import io.github.a5h73y.parkour.event.ParkourPlayerNewRankEvent;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.ParkourConstants;
 import io.github.a5h73y.parkour.other.ParkourValidation;
@@ -189,7 +189,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 		parkour.getSoundsManager().playSound(player, SoundType.JOIN_COURSE);
 		parkour.getConfigManager().getCourseConfig(course.getName()).incrementViews();
-		Bukkit.getServer().getPluginManager().callEvent(new PlayerJoinCourseEvent(player, course.getName(), silent));
+		Bukkit.getServer().getPluginManager().callEvent(new ParkourJoinEvent(player, course.getName(), silent));
 	}
 
 	/**
@@ -270,7 +270,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		playerConfig.removeExistingSessionCourseName();
 
 		Bukkit.getServer().getPluginManager().callEvent(
-				new PlayerLeaveCourseEvent(player, session.getCourse().getName(), silent));
+				new ParkourLeaveEvent(player, session.getCourse().getName(), silent));
 	}
 
 	private void setGameMode(Player player, String gameModeName) {
@@ -368,7 +368,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		parkour.getBountifulApi().sendSubTitle(player, checkpointMessage, showTitle);
 
 		Bukkit.getServer().getPluginManager().callEvent(
-				new PlayerAchieveCheckpointEvent(player, session.getCourse().getName(), session.getCheckpoint()));
+				new ParkourCheckpointEvent(player, session.getCourse().getName(), session.getCheckpoint()));
 	}
 
 	/**
@@ -445,7 +445,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 		prepareParkourPlayer(player);
 		setGameMode(player, parkour.getParkourConfig().getString("OnJoin.SetGameMode"));
-		Bukkit.getServer().getPluginManager().callEvent(new PlayerDeathEvent(player, session.getCourse().getName()));
+		Bukkit.getServer().getPluginManager().callEvent(new ParkourDeathEvent(player, session.getCourse().getName()));
 	}
 
 	/**
@@ -490,7 +490,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 		final String courseName = session.getCourse().getName();
 		session.markTimeFinished();
-		Bukkit.getServer().getPluginManager().callEvent(new PlayerFinishCourseEvent(player, courseName));
+		Bukkit.getServer().getPluginManager().callEvent(new ParkourFinishEvent(player, courseName));
 
 		announceCourseFinishMessage(player, session);
 		teardownParkourMode(player);
@@ -1478,7 +1478,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 				playerConfig.setParkourRank(rewardRank);
 				TranslationUtils.sendValueTranslation("Parkour.RewardRank", rewardRank, player);
 				Bukkit.getServer().getPluginManager().callEvent(
-						new PlayerParkourRankEvent(player, courseName, rewardRank));
+						new ParkourPlayerNewRankEvent(player, courseName, rewardRank));
 			}
 
 			// update parkour level
@@ -1489,7 +1489,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 						.replace(COURSE_PLACEHOLDER, courseName));
 			}
 			Bukkit.getServer().getPluginManager().callEvent(
-					new PlayerParkourLevelEvent(player, courseName, newParkourLevel));
+					new ParkourPlayerNewLevelEvent(player, courseName, newParkourLevel));
 		}
 	}
 

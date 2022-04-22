@@ -18,9 +18,9 @@ Parkour natively supports [PlaceholderAPI](https://www.spigotmc.org/resources/pl
 
 To enable, set `Plugin.PlaceholderAPI.Enabled` to `true` in the `config.yml`.
 
-The `Plugin.PlaceholderAPI.CacheTime` value can be set to an interval in minutes for when to clear the cache. This is a performance improvement which caches Leaderboard results until a Player changes them, or the time interval is reached.
-
 **Please note that Parkour Expansion is no longer needed, as it has been implemented within the Parkour plugin.**
+
+The `Plugin.PlaceholderAPI.CacheTime` value can be set to an interval in minutes for when to clear the cache. This is a performance improvement which caches Leaderboard results until a Player changes them, or the time interval is reached.
 
 [All of the Parkour Placeholders are available here](essential/placeholders.md).
 
@@ -152,13 +152,52 @@ An example could be walking on a pressure plate to leave the Course:
 
 ![Parkour Top Ten](https://i.imgur.com/c2n6QUM.png "Parkour Top Ten")
 
+## ConditionalEvents
+
+[ConditionalEvents](https://www.spigotmc.org/resources/conditionalevents-custom-actions-for-certain-events-1-8-1-18.82271/) is a plugin that lets you execute actions when listening to different events.  
+_Please note that most actions can be achieved using the [Courses's event command system](/tutorials/parkour-courses?id=command)._
+
+Parkour provides the following custom events for you to listen to:
+
+* io.github.a5h73y.parkour.event.ParkourJoinEvent
+* io.github.a5h73y.parkour.event.ParkourDeathEvent
+* io.github.a5h73y.parkour.event.ParkourCheckpointEvent
+* io.github.a5h73y.parkour.event.ParkourCheckpointAllEvent
+* io.github.a5h73y.parkour.event.ParkourLeaveEvent
+* io.github.a5h73y.parkour.event.ParkourFinishEvent
+* io.github.a5h73y.parkour.event.ParkourPrizeEvent
+* io.github.a5h73y.parkour.event.ParkourPlayerNewLevelEvent
+* io.github.a5h73y.parkour.event.ParkourPlayerNewRankEvent
+
+### Example Usages
+
+<details><summary>Replace Me (Click to expand)</summary>
+
+[//]: # (Come up with a decent example.)
+
+```
+ event2:
+    type: custom
+    custom_event_data:
+      event: io.github.a5h73y.parkour.event.ParkourFinishEvent
+      player_variable: getPlayer()
+    conditions:
+      - '%player% equals %parkour_leaderboard_lett_1_player%'
+    actions:
+      default:
+      - 'console_command: say congratulations %player%!'
+```
+
+</details>
+
 ## LeaderHeads
 
 [LeaderHeads](https://www.spigotmc.org/resources/leaderheads.2079/) is a plugin that allows you to create all-time, daily, weekly, and monthly leaderboards from placeholders that return a numeric value.
 
 When used with Parkour, course leaderboards can be created using placeholder `%parkour_player_personal_best_(course)_milliseconds%`
 
-### Creating a LeaderHeads Sign
+<details><summary>Creating a LeaderHeads Sign (Click to expand)</summary>
+
 First place a sign, and then while looking at the sign, type:
 
 `/leaderheads setsign %parkour_player_personal_best_tutorial_milliseconds% 1 weekly`
@@ -185,3 +224,5 @@ The time format can be changed in LeaderHeads's `config.yml`, for example:
 ![LeaderHeads Example 3](https://i.imgur.com/XzwLLSL.png "LeaderHeads Example 3")
 
 Currently, LeaderHeads does not appear to support displaying milliseconds as part of the formatted time on the sign.
+
+</details>

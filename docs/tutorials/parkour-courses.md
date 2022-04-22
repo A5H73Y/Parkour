@@ -12,7 +12,50 @@ You are able to quickly access the Course settings using a GUI, this will act as
 
 _Command: `/pa settings (course)`_
 
-## Ready Status
+## Course Settings
+
+### challengeonly
+
+A Course can be marked to only be joinable if the Player is part of a Challenge. The Player will be notified upon trying to join the Course that they must be in a Challenge to join.
+
+_Command: `/pa challengeonly [course]`_
+
+### creator
+
+Each Course must have a Creator, by default this will be set to the Player who used the create Course command.
+If you want to overwrite the creator of a Course to a different Player, this will now allow the chosen Player to have elevated permissions for that Course.
+
+_Command: `/pa setcreator (course) (player)`_
+
+### dieinliquid
+### dieinvoid
+### displayname
+### linkedcourse
+### linkedlobby
+### manualcheckpoints
+### maxdeaths
+
+You are able to limit the amount of deaths a Player can accumilate before they are kicked off the Course for extra challenge. An example could be a quick challenging Course that allows the Player just 1 life to complete.
+
+_Command: `/pa setmaxdeaths (course) (amount)`_
+
+### maxfallticks
+### maxtime
+
+Set a limit the amount of time a Player can reach before they are kicked off the Course for extra challenge. An example could be a challenging Course that must be completed in a certain time.
+
+_Command: `/pa setmaxtime (course) (seconds)`_
+
+### minimumlevel
+### parkourkit
+### parkourmode
+### playerlimit
+
+Set a limit on the number of Players that can play the Course concurrently.
+
+_Command: `/pa setplayerlimit (course) (amount)`_
+
+### ready
 
 By default, Players can not join a Course that has not been set to ready (so they don't join a half-finished Course), this can be disabled by changing `OnJoin.EnforceReady` to `false` in the `config.yml`.
 
@@ -20,49 +63,52 @@ Only Courses marked as Ready will be added to Cache to allow for better performa
 
 _Command: `/pa ready [course]`_
 
-## Reward Once Status
-
-A Course can be marked to only give the Prize reward for the first time they complete a Course. This will include any Parkour Level rewards given, which is especially important if you've chosen to use "rewardleveladd" functionality.
-
-_Command: `/pa rewardonce [course]`_
-
-## Challenge Only Status
-
-A Course can be marked to only be joinable if the Player is part of a Challenge. The Player will be notified upon trying to join the Course that they must be in a Challenge to join.
-
-_Command: `/pa challengeonly [course]`_
-
-## Resumable Course progress
+### resumable
 
 By default, a Player's progress will be deleted when they leave a Course. To retain the Player's progress set `OnLeave.DestroyCourseProgress` to `false` in the `config.yml`; each Course will then be "resumable" meaning they can leave at any point and rejoin back to their last achieved checkpoint (with their accumulated time and amount of deaths restored).
 However, you can toggle the resumable status of the Course to set a Course to be non-resumable to prevent their progress from being saved.
 
 _Command: `/pa resumable [course]`_
 
-## Course Creator
+### rewarddelay
+### rewardlevel
+### rewardleveladd
+### rewardonce
 
-Each Course must have a Creator, by default this will be set to the Player who used the create Course command. 
-If you want to overwrite the creator of a Course to a different Player, this will now allow the chosen Player to have elevated permissions for that Course.
+A Course can be marked to only give the Prize reward for the first time they complete a Course. This will include any Parkour Level rewards given, which is especially important if you've chosen to use "rewardleveladd" functionality.
 
-_Command: `/pa setcreator (course) (player)`_
+_Command: `/pa rewardonce [course]`_
 
-## Set Maximum Deaths
+### rewardparkoins
+### autostart
+### prize
+### rename
+### resetlink
+### start
 
-You are able to limit the amount of deaths a Player can accumilate before they are kicked off the Course for extra challenge. An example could be a quick challenging Course that allows the Player just 1 life to complete.
+If you want to change the starting position of a Course, you can enter `/pa setstart`.
 
-_Command: `/pa setmaxdeath (course) (amount)`_
+_Remember that you must have the Course selected (editing), which can be achieved by entering `/pa select (course)`._
 
-## Set Maximum Time
+### message
 
-Set a limit the amount of time a Player can reach before they are kicked off the Course for extra challenge. An example could be a challenging Course that must be completed in a certain time.
+You can override the default Parkour messages to a custom per-course message for each event.
 
-_Command: `/pa setmaxtime (course) (seconds)`_
+![Event Message Example](https://i.imgur.com/ZyOeOom.png "Event Message Example")
 
-## Set Player Limit
+![Event Message Set](https://i.imgur.com/5pacqjk.png "Event Message Set")
 
-Set a limit on the number of Players that can play the Course concurrently.
+_Command: `/pa setcourse (course) message (event) (event)`_
 
-_Command: `/pa setplayerlimit (course) (amount)`_
+### command
+
+This will allow you to link Parkour to trigger other plugins using a command.
+
+![Event Command Example](https://i.imgur.com/patqUxL.png "Event Command Example")
+
+You are able to specify the command should be executed by the Player, by prefixing the command with `player:`.
+
+_Command: `/pa setcourse (course) command (event) (command)`_
 
 ## Adding a Join Item
 
@@ -91,12 +137,6 @@ If we want to link a Course to another Course, the command becomes `/pa link cou
 
 If you want to remove the link, simply enter `/pa link reset` which will result in the Player being teleported to the default Lobby.
 
-## Changing the Start of a Course
-
-If you want to change the starting position of a Course, you can enter `/pa setstart`.
-
-_Remember that you must have the Course selected (editing), which can be achieved by entering `/pa select (course)`._
-
 ## Parkour Events
 
 Parkour allows you to customise behaviours of each Parkour Event to display a message and / or execute a command.
@@ -120,26 +160,6 @@ You are able to use the following internal placeholders:
 * %DEATHS% _(amount of deaths)_
 * %TIME% _(current total time)_
 * %CHECKPOINT% _(current checkpoint number)_
-
-### Running Custom Event Commands
-
-This will allow you to link Parkour to trigger other plugins using a command. 
-
-![Event Command Example](https://i.imgur.com/patqUxL.png "Event Command Example")
-
-You are able to specify the command should be executed by the Player, by prefixing the command with `player:`.
-
-_Command: `/pa setcourse (course) command (event) (command)`_
-
-### Custom Event Messages
-
-You can override the default Parkour messages to a custom per-course message for each event.
-
-![Event Message Example](https://i.imgur.com/ZyOeOom.png "Event Message Example")
-
-![Event Message Set](https://i.imgur.com/5pacqjk.png "Event Message Set")
-
-_Command: `/pa setcourse (course) message (event) (event)`_
 
 ## Resetting Course Data
 

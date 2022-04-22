@@ -27,7 +27,7 @@ This can be used by Admins to manually set a Player's level. This can be done fo
 
 ParkourLevels can be used to apply restrictions to Courses and lobbies. For example, if a Course has a minimum ParkourLevel requirement of 10, and the Player has a ParkourLevel of 12, then they will be allowed to join the Course otherwise the Player will be notified.
 
-_Command: `/pa setminlevel (course) (level)`_  
+_Command: `/pa setminimumlevel (course) (level)`_  
 Set the minimum level of the specified Course to the specified ParkourLevel. Any Player that now attempts to join this Course will be prevented from doing so unless they have the minimum ParkourLevel required.
 
 _Command: `/pa setlobby (name) (level)`_  

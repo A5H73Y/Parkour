@@ -2,12 +2,28 @@ package io.github.a5h73y.parkour.type.course;
 
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_INVALID_AMOUNT;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.CHALLENGE_ONLY;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.CREATOR;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.DIE_IN_LIQUID;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.DIE_IN_VOID;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.DISPLAY_NAME;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.LINKED_COURSE;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.LINKED_LOBBY;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.MANUAL_CHECKPOINTS;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.MAX_DEATHS;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.MAX_FALL_TICKS;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.MAX_TIME;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.MINIMUM_LEVEL;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.PARKOUR_KIT;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.PARKOUR_MODE;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.PLAYER_LIMIT;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.READY;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.RESUMABLE;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_DELAY;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_LEVEL;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_LEVEL_ADD;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_ONCE;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_PARKOINS;
 
 import com.google.common.io.Files;
 import io.github.a5h73y.parkour.Parkour;
@@ -192,6 +208,54 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 
 		parkour.getConfigManager().getCourseConfig(courseName).setCreator(value);
 		notifyActionChange(commandSender, "Creator", courseName, value);
+	}
+
+	/**
+	 * Set the Course's DieInLiquid status.
+	 * Set whether the Player dies when they are within Liquid on the Course.
+	 *
+	 * @param commandSender command sender
+	 * @param courseName course name
+	 * @param value flag value
+	 */
+	public void setDieInLiquid(@NotNull final CommandSender commandSender,
+	                           @Nullable final String courseName,
+	                           @Nullable Boolean value) {
+		if (!doesCourseExist(courseName)) {
+			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
+			return;
+		}
+
+		CourseConfig config = parkour.getConfigManager().getCourseConfig(courseName);
+		if (value == null) {
+			value = !config.getDieInLiquid();
+		}
+		config.setDieInLiquid(value);
+		notifyActionChange(commandSender, "Die In Liquid", courseName, String.valueOf(value));
+	}
+
+	/**
+	 * Set the Course's DieInVoid status.
+	 * Set whether the Player dies when they are within the void.
+	 *
+	 * @param commandSender command sender
+	 * @param courseName course name
+	 * @param value flag value
+	 */
+	public void setDieInVoid(@NotNull final CommandSender commandSender,
+	                         @Nullable final String courseName,
+	                         @Nullable Boolean value) {
+		if (!doesCourseExist(courseName)) {
+			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
+			return;
+		}
+
+		CourseConfig config = parkour.getConfigManager().getCourseConfig(courseName);
+		if (value == null) {
+			value = !config.getDieInVoid();
+		}
+		config.setDieInVoid(value);
+		notifyActionChange(commandSender, "Die In Void", courseName, String.valueOf(value));
 	}
 
 	/**
@@ -809,30 +873,62 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 	}
 
 	private void populateCourseSettingActions() {
-		courseSettingActions.put("autostart", (commandSender, courseName, value) -> parkour.getAutoStartManager().createAutoStart((Player) commandSender, courseName));
-		courseSettingActions.put("challengeonly", (commandSender, courseName, value) -> setChallengeOnlyStatus(commandSender, courseName, Boolean.parseBoolean(value)));
-		courseSettingActions.put("creator", this::setCreator);
-		courseSettingActions.put("displayname", this::setDisplayName);
-		courseSettingActions.put("linkedcourse", this::setCourseToCourseLink);
-		courseSettingActions.put("linkedlobby", this::setCourseToLobbyLink);
-		courseSettingActions.put("manualcheckpoints", (commandSender, courseName, value) -> setManualCheckpoints(commandSender, courseName, Boolean.parseBoolean(value)));
-		courseSettingActions.put("maxdeath", this::setMaxDeaths);
-		courseSettingActions.put("maxfallticks", this::setMaxFallTicks);
-		courseSettingActions.put("maxtime", this::setMaxTime);
-		courseSettingActions.put("minlevel", this::setMinimumParkourLevel);
-		courseSettingActions.put("parkourkit", this::setParkourKit);
-		courseSettingActions.put("parkourmode", (commandSender, courseName, value) -> startParkourModeConversation(commandSender, courseName));
-		courseSettingActions.put("playerlimit", this::setPlayerLimit);
-		courseSettingActions.put("prize", (commandSender, courseName, value) -> startCoursePrizeConversation(commandSender, courseName));
-		courseSettingActions.put("ready", (commandSender, courseName, value) -> setReadyStatus(commandSender, courseName, value != null ? Boolean.parseBoolean(value) : null));
-		courseSettingActions.put("rename", this::setRenameCourse);
-		courseSettingActions.put("resetlink", (commandSender, courseName, value) -> resetCourseLinks(commandSender, courseName));
-		courseSettingActions.put("resumable", (commandSender, courseName, value) -> setResumable(commandSender, courseName, Boolean.parseBoolean(value)));
-		courseSettingActions.put("rewarddelay", this::setRewardDelay);
-		courseSettingActions.put("rewardlevel", this::setRewardParkourLevel);
-		courseSettingActions.put("rewardleveladd", this::setRewardParkourLevelIncrease);
-		courseSettingActions.put("rewardonce", (commandSender, courseName, value) -> setRewardOnceStatus(commandSender, courseName, Boolean.parseBoolean(value)));
-		courseSettingActions.put("rewardparkoins", this::setRewardParkoins);
-		courseSettingActions.put("start", ((commandSender, courseName, value) -> setStartLocation(commandSender, courseName)));
+		// actual course settings
+		courseSettingActions.put(CHALLENGE_ONLY.toLowerCase(), (commandSender, courseName, value) ->
+				setChallengeOnlyStatus(commandSender, courseName, value != null ? Boolean.parseBoolean(value) : null));
+		courseSettingActions.put(CREATOR.toLowerCase(),
+				this::setCreator);
+		courseSettingActions.put(DIE_IN_LIQUID.toLowerCase(), (commandSender, courseName, value) ->
+				setDieInLiquid(commandSender, courseName, value != null ? Boolean.parseBoolean(value) : null));
+		courseSettingActions.put(DIE_IN_VOID.toLowerCase(), (commandSender, courseName, value) ->
+				setDieInVoid(commandSender, courseName, value != null ? Boolean.parseBoolean(value) : null));
+		courseSettingActions.put(DISPLAY_NAME.toLowerCase(),
+				this::setDisplayName);
+		courseSettingActions.put(LINKED_COURSE.toLowerCase(),
+				this::setCourseToCourseLink);
+		courseSettingActions.put(LINKED_LOBBY.toLowerCase(),
+				this::setCourseToLobbyLink);
+		courseSettingActions.put(MANUAL_CHECKPOINTS.toLowerCase(), (commandSender, courseName, value) ->
+				setManualCheckpoints(commandSender, courseName, value != null ? Boolean.parseBoolean(value) : null));
+		courseSettingActions.put(MAX_DEATHS.toLowerCase(),
+				this::setMaxDeaths);
+		courseSettingActions.put(MAX_FALL_TICKS.toLowerCase(),
+				this::setMaxFallTicks);
+		courseSettingActions.put(MAX_TIME.toLowerCase(),
+				this::setMaxTime);
+		courseSettingActions.put(MINIMUM_LEVEL.toLowerCase(),
+				this::setMinimumParkourLevel);
+		courseSettingActions.put(PARKOUR_KIT.toLowerCase(),
+				this::setParkourKit);
+		courseSettingActions.put(PARKOUR_MODE.toLowerCase(), (commandSender, courseName, value) ->
+				startParkourModeConversation(commandSender, courseName));
+		courseSettingActions.put(PLAYER_LIMIT.toLowerCase(),
+				this::setPlayerLimit);
+		courseSettingActions.put(READY.toLowerCase(), (commandSender, courseName, value) ->
+				setReadyStatus(commandSender, courseName, value != null ? Boolean.parseBoolean(value) : null));
+		courseSettingActions.put(RESUMABLE.toLowerCase(), (commandSender, courseName, value) ->
+				setResumable(commandSender, courseName, value != null ? Boolean.parseBoolean(value) : null));
+		courseSettingActions.put(REWARD_DELAY.toLowerCase(),
+				this::setRewardDelay);
+		courseSettingActions.put(REWARD_LEVEL.toLowerCase(),
+				this::setRewardParkourLevel);
+		courseSettingActions.put(REWARD_LEVEL_ADD.toLowerCase(),
+				this::setRewardParkourLevelIncrease);
+		courseSettingActions.put(REWARD_ONCE.toLowerCase(), (commandSender, courseName, value) ->
+				setRewardOnceStatus(commandSender, courseName, value != null ? Boolean.parseBoolean(value) : null));
+		courseSettingActions.put(REWARD_PARKOINS.toLowerCase(),
+				this::setRewardParkoins);
+
+		// other actions
+		courseSettingActions.put("autostart", (commandSender, courseName, value) ->
+				parkour.getAutoStartManager().createAutoStart((Player) commandSender, courseName));
+		courseSettingActions.put("prize", (commandSender, courseName, value) ->
+				startCoursePrizeConversation(commandSender, courseName));
+		courseSettingActions.put("rename",
+				this::setRenameCourse);
+		courseSettingActions.put("resetlink", (commandSender, courseName, value) ->
+				resetCourseLinks(commandSender, courseName));
+		courseSettingActions.put("start", (commandSender, courseName, value) ->
+				setStartLocation(commandSender, courseName));
 	}
 }

@@ -114,6 +114,21 @@ public class DefaultConfig extends Yaml {
 
 		this.setDefault("OnServerRestart.KickPlayerFromCourse", false);
 
+		this.setDefault("CourseDefault.Settings." + MAX_FALL_TICKS, 80);
+		this.setDefault("CourseDefault.Settings." + DIE_IN_LIQUID, false);
+		this.setDefault("CourseDefault.Settings." + DIE_IN_VOID, false);
+		this.setDefault("CourseDefault.Settings." + REWARD_ONCE, false);
+		this.setDefault("CourseDefault.Settings." + REWARD_DELAY, 0);
+		this.setDefault("CourseDefault.Settings." + REWARD_LEVEL_ADD, 0);
+		this.setDefault("CourseDefault.Settings." + JOIN_ITEMS, new ArrayList<String>());
+
+		this.setDefault("CourseDefault.Prize.Material", "DIAMOND");
+		this.setDefault("CourseDefault.Prize.Amount", 1);
+		this.setDefault("CourseDefault.Prize.XP", 0);
+		this.setDefault("CourseDefault.Commands.CombinePerCourseCommands", true);
+		Arrays.stream(ParkourEventType.values()).forEach(eventType ->
+				this.setDefault("CourseDefault.Command." + eventType.getConfigEntry(), Collections.singletonList("")));
+
 		this.setDefault("ParkourTool.LastCheckpoint.Material", "ARROW");
 		this.setDefault("ParkourTool.LastCheckpoint.Slot", 0);
 		this.setDefault("ParkourTool.HideAll.Material", "BONE");
@@ -250,21 +265,6 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("Plugin.Vault.Enabled", true);
 		this.setDefault("Plugin.PlaceholderAPI.Enabled", true);
 		this.setDefault("Plugin.PlaceholderAPI.CacheTime", 15);
-
-		this.setDefault("CourseDefault.Settings." + MAX_FALL_TICKS, 80);
-		this.setDefault("CourseDefault.Settings." + DIE_IN_LIQUID, false);
-		this.setDefault("CourseDefault.Settings." + DIE_IN_VOID, false);
-		this.setDefault("CourseDefault.Settings." + REWARD_ONCE, false);
-		this.setDefault("CourseDefault.Settings." + REWARD_DELAY, 0);
-		this.setDefault("CourseDefault.Settings." + REWARD_LEVEL_ADD, 0);
-		this.setDefault("CourseDefault.Settings." + JOIN_ITEMS, new ArrayList<String>());
-
-		this.setDefault("CourseDefault.Prize.Material", "DIAMOND");
-		this.setDefault("CourseDefault.Prize.Amount", 1);
-		this.setDefault("CourseDefault.Prize.XP", 0);
-		this.setDefault("CourseDefault.Commands.PerCourseOverride", true);
-		Arrays.stream(ParkourEventType.values()).forEach(eventType ->
-				this.setDefault("CourseDefault.Command." + eventType.getConfigEntry(), Collections.singletonList("")));
 
 		this.setDefault("Database.MaximumCoursesCached", 10);
 		this.setDefault("SQLite.PathOverride", "");
@@ -445,8 +445,8 @@ public class DefaultConfig extends Yaml {
 		return this.getBoolean("OnLeave.DestroyCourseProgress");
 	}
 
-	public boolean isPerCourseCommandsOverride() {
-		return this.getBoolean("CourseDefault.Commands.PerCourseOverride");
+	public boolean isCombinePerCourseCommands() {
+		return this.getBoolean("CourseDefault.Commands.CombinePerCourseCommands");
 	}
 
 	/* Materials */

@@ -1,7 +1,8 @@
 Rewarding the Player
 ======
 
-There are several ways we can reward the Player for completing a Course. We are able to reward the Player with ParkourLevels that allow them to unlock new Courses, or achieve a ParkourRank that showcases how far they've progressed. All can be configured to match any server requirements, and even allow developers to natively add their own functionality.
+There are several ways we can reward the Player for completing a Course.  
+_Note that `OnFinish.EnablePrizes` must be set to `true` in the `config.yml` for any prize to be given._
 
 ## Course Prizes
 
@@ -13,9 +14,16 @@ This will start a conversation of what you want the prize to be, these can be st
 
 This was made to be as simple as possible, to allow you to answer each question with what you want. Follow each conversation as demonstrated below:
 
+### ParkourLevels & ParkourRanks
+
+We are able to reward the Player with ParkourLevels that allow them to unlock new Courses, or achieve a ParkourRank that showcases how far they've progressed.
+
+More information: [Click Here](/tutorials/parkour-level-ranks.md)
+
 ### Material
 
-You can provide the Player with a Material for completing the Course, and you can specify the amount. Once the Player completes the Course, the item and amount will be inserted into their inventory after their original inventory is restored.
+The Player can be rewarded with a Material for completing the Course, and amount can be specified.  
+_Once the Player completes the Course, the ItemStack will be inserted into their inventory after their original inventory is restored._
 
 ![Material Prize](https://i.imgur.com/xgLug6k.jpg "Material Prize")
 

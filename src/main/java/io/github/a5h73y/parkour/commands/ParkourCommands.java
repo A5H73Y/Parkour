@@ -533,9 +533,9 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
             case "ready":
             case "setautostart":
             case "setcreator":
-            case "setmaxdeath":
+            case "setmaxdeaths":
             case "setmaxtime":
-            case "setminlevel":
+            case "setminimumlevel":
             case "maxfallticks":
             case "challengeonly":
             case "prize":

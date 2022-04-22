@@ -324,7 +324,7 @@ public class CourseManager extends AbstractPluginReceiver {
         CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(session.getCourseName());
 
         List<String> eventCommands = courseConfig.getEventCommands(eventType);
-        if (eventCommands.isEmpty() || !parkour.getParkourConfig().isPerCourseCommandsOverride()) {
+        if (eventCommands.isEmpty() || parkour.getParkourConfig().isCombinePerCourseCommands()) {
             eventCommands.addAll(parkour.getParkourConfig().getDefaultEventCommands(eventType));
         }
 

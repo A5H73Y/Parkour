@@ -12,6 +12,8 @@ import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,8 +35,6 @@ import org.jetbrains.annotations.Nullable;
 public class CourseConfig extends Json {
 
     public static final String CHALLENGE_ONLY = "ChallengeOnly";
-    public static final String CHECKPOINTS = "Checkpoints";
-    public static final String COMMAND_PREFIX = "Command.";
     public static final String CREATOR = "Creator";
     public static final String DIE_IN_LIQUID = "DieInLiquid";
     public static final String DIE_IN_VOID = "DieInVoid";
@@ -48,20 +48,26 @@ public class CourseConfig extends Json {
     public static final String MAX_DEATHS = "MaxDeaths";
     public static final String MAX_FALL_TICKS = "MaxFallTicks";
     public static final String MAX_TIME = "MaxTime";
-    public static final String MESSAGE_PREFIX = "Message.";
     public static final String MINIMUM_LEVEL = "MinimumLevel";
-    public static final String PARKOINS = "Parkoins";
     public static final String PARKOUR_KIT = "ParkourKit";
     public static final String PARKOUR_MODE = "ParkourMode";
     public static final String PLAYER_LIMIT = "PlayerLimit";
+    public static final String POTION_PARKOUR_MODE_EFFECTS = "PotionParkourMode.Effects";
+    public static final String POTION_PARKOUR_MODE_JOIN_MESSAGE = "PotionParkourMode.JoinMessage";
     public static final String READY = "Ready";
     public static final String RESUMABLE = "Resumable";
     public static final String REWARD_DELAY = "RewardDelay";
-    public static final String REWARD_ONCE = "RewardOnce";
     public static final String REWARD_LEVEL = "RewardLevel";
     public static final String REWARD_LEVEL_ADD = "RewardLevelAdd";
-    public static final String POTION_PARKOUR_MODE_JOIN_MESSAGE = "PotionParkourMode.JoinMessage";
-    public static final String POTION_PARKOUR_MODE_EFFECTS = "PotionParkourMode.Effects";
+    public static final String REWARD_ONCE = "RewardOnce";
+    public static final String REWARD_PARKOINS = "RewardParkoins";
+
+    private static final String CHECKPOINTS = "Checkpoints";
+    private static final String COMMAND_PREFIX = "Command.";
+    private static final String MESSAGE_PREFIX = "Message.";
+    public static final String VIEWS = "Views";
+    public static final String PRIZE_MATERIAL = "Prize.Material";
+    public static final String PRIZE_AMOUNT = "Prize.Amount";
 
     private String courseName;
 
@@ -90,7 +96,11 @@ public class CourseConfig extends Json {
         File courseConfigFile = getCourseConfigFile(courseName);
 
         if (courseConfigFile.exists()) {
-            courseConfigFile.delete();
+            try {
+                Files.delete(courseConfigFile.toPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -386,11 +396,11 @@ public class CourseConfig extends Json {
     }
 
     /**
-     * Check if Course has a Material Prize.
+     * Check if the Course has a Material Prize.
      * @return course has Material prize
      */
     public boolean hasMaterialPrize() {
-        return this.contains("Prize.Material");
+        return this.contains(PRIZE_MATERIAL);
     }
 
     /**
@@ -399,7 +409,7 @@ public class CourseConfig extends Json {
      */
     @Nullable
     public Material getMaterialPrize() {
-        return MaterialUtils.lookupMaterial(this.get("Prize.Material", null));
+        return MaterialUtils.lookupMaterial(this.get(PRIZE_MATERIAL, null));
     }
 
     /**
@@ -407,7 +417,7 @@ public class CourseConfig extends Json {
      * @return amount of material prize
      */
     public int getMaterialPrizeAmount() {
-        return this.getInt("Prize.Amount");
+        return this.getInt(PRIZE_AMOUNT);
     }
 
     /**
@@ -417,8 +427,8 @@ public class CourseConfig extends Json {
      * @param amount prize amount
      */
     public void setMaterialPrize(@NotNull String materialName, int amount) {
-        this.set("Prize.Material", materialName);
-        this.set("Prize.Amount", amount);
+        this.set(PRIZE_MATERIAL, materialName);
+        this.set(PRIZE_AMOUNT, amount);
     }
 
     /**
@@ -465,14 +475,14 @@ public class CourseConfig extends Json {
      * @return number of views
      */
     public int getViews() {
-        return this.getInt("Views");
+        return this.getInt(VIEWS);
     }
 
     /**
      * Increment the number of Views for the Course.
      */
     public void incrementViews() {
-        this.set("Views", getViews() + 1);
+        this.set(VIEWS, getViews() + 1);
     }
 
     /**
@@ -573,6 +583,54 @@ public class CourseConfig extends Json {
     }
 
     /**
+     * Get the Die In Liquid status of the Course.
+     * @return die in liquid status
+     */
+    public boolean getDieInLiquid() {
+        return this.getBoolean(DIE_IN_LIQUID);
+    }
+
+    /**
+     * Set the Die In Liquid status of the Course.
+     * @param enabled die in liquid enabled
+     */
+    public void setDieInLiquid(boolean enabled) {
+        this.set(DIE_IN_LIQUID, enabled);
+    }
+
+    /**
+     * Toggle the Die In Liquid status of the Course.
+     */
+    public boolean toggleDieInLiquid() {
+        setDieInLiquid(!getDieInLiquid());
+        return getDieInLiquid();
+    }
+
+    /**
+     * Get the Die In Void status of the Course.
+     * @return die in void status
+     */
+    public boolean getDieInVoid() {
+        return this.getBoolean(DIE_IN_VOID);
+    }
+
+    /**
+     * Set the Die In Void status of the Course.
+     * @param enabled die in void enabled
+     */
+    public void setDieInVoid(boolean enabled) {
+        this.set(DIE_IN_VOID, enabled);
+    }
+
+    /**
+     * Toggle the Die In Void status of the Course.
+     */
+    public boolean toggleDieInVoid() {
+        setDieInVoid(!getDieInVoid());
+        return getDieInVoid();
+    }
+
+    /**
      * Get Reward Delay in Hours for the Course.
      * @return number of hours delay for Course
      */
@@ -601,7 +659,7 @@ public class CourseConfig extends Json {
      * @return Parkoins to reward
      */
     public double getRewardParkoins() {
-        return this.getDouble(PARKOINS);
+        return this.getDouble(REWARD_PARKOINS);
     }
 
     /**
@@ -609,7 +667,7 @@ public class CourseConfig extends Json {
      * @param parkoins Parkoins to reward
      */
     public void setRewardParkoins(double parkoins) {
-        this.set(PARKOINS, parkoins);
+        this.set(REWARD_PARKOINS, parkoins);
     }
 
     /**
@@ -637,7 +695,7 @@ public class CourseConfig extends Json {
         courseName = courseName.toLowerCase();
         List<String> results = this.getStringList(JOIN_ITEMS);
         results.add(Parkour.getInstance().getConfigManager().getItemStackSerializable().serialize(itemStack));
-        this.set("JoinItems", results);
+        this.set(JOIN_ITEMS, results);
     }
 
     /**
@@ -916,7 +974,7 @@ public class CourseConfig extends Json {
      * @param checkpoint checkpoint being saved
      */
     public void createCheckpointData(Location location, int checkpoint) {
-        int maximumCheckpoints = Math.max(checkpoint, this.getInt("Checkpoints"));
+        int maximumCheckpoints = Math.max(checkpoint, this.getInt(CHECKPOINTS));
 
         String prefix = "Checkpoint." + checkpoint + ".";
         this.getFileData().insert(prefix + "Location.x", location.getBlockX() + 0.5);
@@ -930,7 +988,7 @@ public class CourseConfig extends Json {
         this.getFileData().insert(prefix + "CheckpointY", location.getBlockY() - 1);
         this.getFileData().insert(prefix + "CheckpointZ", location.getBlockZ());
 
-        this.set("Checkpoints", maximumCheckpoints);
+        this.set(CHECKPOINTS, maximumCheckpoints);
     }
 
     public void deleteCheckpoint() {
@@ -939,7 +997,7 @@ public class CourseConfig extends Json {
 
         if (checkpoint > 0) {
             courseConfig.remove("Checkpoint." + checkpoint);
-            courseConfig.set("Checkpoints", checkpoint - 1);
+            courseConfig.set(CHECKPOINTS, checkpoint - 1);
         }
     }
 
@@ -949,8 +1007,9 @@ public class CourseConfig extends Json {
      * @param commandSender command sender
      * @param courseNameRaw course name
      */
-    public static void displayCourseInfo(@NotNull CommandSender commandSender, String courseNameRaw) {
-        if (!Parkour.getInstance().getCourseManager().doesCourseExist(courseNameRaw)) {
+    public static void displayCourseInfo(@NotNull CommandSender commandSender,
+                                         @Nullable String courseNameRaw) {
+        if (courseNameRaw == null || !Parkour.getInstance().getCourseManager().doesCourseExist(courseNameRaw)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseNameRaw, commandSender);
             return;
         }
@@ -960,7 +1019,7 @@ public class CourseConfig extends Json {
 
         sendConditionalValue(commandSender, "Display Name", config.hasCourseDisplayName(), config.getCourseDisplayName());
 
-        sendValue(commandSender, "Views", config.getViews());
+        sendValue(commandSender, VIEWS, config.getViews());
         sendValue(commandSender, "Completions", config.getCompletions()
                 + " (" + config.getCompletionPercent() + "%)");
         sendValue(commandSender, CHECKPOINTS, config.getCheckpointAmount());

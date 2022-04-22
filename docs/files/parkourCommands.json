@@ -507,13 +507,13 @@
   {
     "command": "setcourse",
     "title": "Set Course Attributes",
-    "arguments": "(course) (displayname / creator / minlevel / maxdeath / maxtime / maxfallticks / parkourkit / linkedcourse / linkedlobby / rewarddelay / playerlimit / rewardlevel / rewardleveladd / rewardparkoins / resetlink / resumable / challengeonly / ready / rewardonce / manualcheckpoints / prize / parkourmode / rename / start / message / command) [value]",
+    "arguments": "(course) (displayname / creator / minimumlevel / maxdeaths / maxtime / maxfallticks / parkourkit / linkedcourse / linkedlobby / rewarddelay / playerlimit / rewardlevel / rewardleveladd / rewardparkoins / resetlink / resumable / challengeonly / ready / rewardonce / manualcheckpoints / prize / parkourmode / rename / start / message / command) [value]",
     "example": "/pa setcourse tutorial creator A5H73Y",
     "description": "Quickly set Course attributes using a simple command. If a message is provided, an additional argument must match a message type and the following arguments will be combined to make the final event message; colour codes are supported.",
     "permission": "parkour.admin.course",
     "commandGroup": "3",
-    "consoleSyntax": "pac setcourse (course) (displayname / creator / minlevel / maxdeath / maxtime / maxfallticks / parkourkit / linkedcourse / linkedlobby / rewarddelay / playerlimit / rewardlevel / rewardleveladd / rewardparkoins / resetlink / resumable / challengeonly / ready / rewardonce / manualcheckpoints / prize / parkourmode / rename / start / message / command) [value]",
-    "autoTabSyntax": "(course) [displayname,creator,minlevel,maxdeath,maxtime,maxfallticks,parkourkit,linkedcourse,linkedlobby,rewarddelay,playerlimit,rewardlevel,rewardleveladd,rewardparkoins,resetlink,resumable,challengeonly,ready,rewardonce,manualcheckpoints,prize,parkourmode,rename,start,message,command] {2:message=(parkourevent),2:command=(parkourevent),2:parkourkit=(parkourkit),2:linkedcourse=(course),2:linkedlobby=(lobby),2:resetlink=(truefalse),2:resumable=(truefalse),2:challengeonly=(truefalse),2:ready=(truefalse),2:rewardonce=(truefalse),2:prize=(truefalse),2:parkourmode=(truefalse),2:manualcheckpoints=(truefalse),2:start=(nothing),*=(value)} {2:message=(value...),2:command=(value...)}"
+    "consoleSyntax": "pac setcourse (course) (displayname / creator / minimumlevel / maxdeaths / maxtime / maxfallticks / parkourkit / linkedcourse / linkedlobby / rewarddelay / playerlimit / rewardlevel / rewardleveladd / rewardparkoins / resetlink / resumable / challengeonly / ready / rewardonce / manualcheckpoints / prize / parkourmode / rename / start / message / command) [value]",
+    "autoTabSyntax": "(course) [displayname,creator,minimumlevel,maxdeaths,maxtime,maxfallticks,parkourkit,linkedcourse,linkedlobby,rewarddelay,playerlimit,rewardlevel,rewardleveladd,rewardparkoins,resetlink,resumable,challengeonly,ready,rewardonce,manualcheckpoints,prize,parkourmode,rename,start,message,command] {2:message=(parkourevent),2:command=(parkourevent),2:parkourkit=(parkourkit),2:linkedcourse=(course),2:linkedlobby=(lobby),2:resetlink=(truefalse),2:resumable=(truefalse),2:challengeonly=(truefalse),2:ready=(truefalse),2:rewardonce=(truefalse),2:prize=(truefalse),2:parkourmode=(truefalse),2:manualcheckpoints=(truefalse),2:start=(nothing),*=(value)} {2:message=(value...),2:command=(value...)}"
   },
   {
     "command": "setcreator",
@@ -556,10 +556,10 @@
     "autoTabSyntax": "(lobby) (command...)"
   },
   {
-    "command": "setmaxdeath",
+    "command": "setmaxdeaths",
     "title": "Set Maximum Deaths for Course",
     "arguments": "(course) (amount)",
-    "example": "/pa setmaxdeath tutorial 5",
+    "example": "/pa setmaxdeaths tutorial 5",
     "description": "By default, a Course does not have a maximum amount of deaths. However, you can enforce a limit on the amount of deaths the Player can accumulate before being forced to leave the Course.",
     "permission": "Parkour.Admin.Course",
     "commandGroup": "2",
@@ -576,10 +576,10 @@
     "autoTabSyntax": "(course) (seconds)"
   },
   {
-    "command": "setminlevel",
+    "command": "setminimumlevel",
     "title": "Set Minimum ParkourLevel for Course",
     "arguments": "(course) (level)",
-    "example": "/pa setminlevel tutorial 5",
+    "example": "/pa setminimumlevel tutorial 5",
     "description": "By default, a Course does not have a minimum ParkourLevel requirement to join. However, if you want to enforce the progression of Parkour Courses, you can require the Player to have a ParkourLevel greater than or equal to the minimum ParkourLevel specified.",
     "permission": "Parkour.Admin.Course",
     "commandGroup": "2",

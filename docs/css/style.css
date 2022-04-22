@@ -62,7 +62,7 @@ details > summary {
 }
 
 .markdown-section details p {
-    margin: 0.5em auto;
+    margin: 0.5em 1em;
 }
 
 .markdown-section code {

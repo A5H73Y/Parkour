@@ -70,7 +70,7 @@ _Additional thanks to the kind users who helped test early development builds!_
 * Added ability for entities to attack player (OnCourse.PreventEntities.Attacking)
 * Added "/pa setlobbycommand (lobby) (command)" command
 * Added "OnRestart.FullPlayerRestart" config to allow for a 'quick' restart alternative
-* Added / Changed Parkour event types to allow for better customisation ([more info](https://a5h73y.github.io/Parkour/#/tutorials/configuring-course?id=parkour-events))
+* Added / Changed Parkour event types to allow for better customisation ([more info](/tutorials/configuring-course?id=parkour-events))
 * Added "/pa manualcheckpoint" for FreeCheckpoint ParkourMode (ParkourModes.FreeCheckpoint.ManualCheckpointCommandEnabled)
 * Fixed "course_completed" placeholder
 * Fixed rewardonce not working correctly
@@ -81,7 +81,7 @@ _Additional thanks to the kind users who helped test early development builds!_
 * Changed Upgrader to be sync to prevent placeholder issues
 
 ### Breaking Changes
-* [Parkour Event Types](https://a5h73y.github.io/Parkour/#/tutorials/configuring-course?id=parkour-events) have been updated / renamed, so you'll have to reconfigure the Course events in some cases.
+* [Parkour Event Types](/tutorials/configuring-course?id=parkour-events) have been updated / renamed, so you'll have to reconfigure the Course events in some cases.
 
 ## Parkour 6.5
 ### Changes
