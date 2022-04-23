@@ -57,8 +57,17 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 parkour.getCourseSettingsManager().addJoinItem(commandSender, args);
                 break;
 
+            case "admin":
+            case "administrator":
+                if (!ValidationUtils.validateArgs(commandSender, args, 3)) {
+                    return false;
+                }
+
+                parkour.getAdministrationManager().processAdminCommand(commandSender, args[1], args[2]);
+                break;
+
             case "cache":
-                PluginUtils.processCacheCommand(commandSender, args.length == 2 ? args[1] : null);
+                parkour.getAdministrationManager().processCacheCommand(commandSender, args.length == 2 ? args[1] : null);
                 break;
 
             case "challengeonly":
@@ -83,7 +92,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                PluginUtils.deleteCommand(commandSender, args[1], args[2]);
+                parkour.getAdministrationManager().processDeleteCommand(commandSender, args[1], args[2]);
                 break;
 
             case "econ":
@@ -167,6 +176,17 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 parkour.getParkourKitManager().displayParkourKits(commandSender, args.length > 1 ? args[1] : DEFAULT);
                 break;
 
+            case "manualcheckpoint":
+                if (!ValidationUtils.validateArgs(commandSender, args, 2)) {
+                    return false;
+
+                } else if (findPlayer(commandSender, args[1]) == null) {
+                    return false;
+                }
+
+                parkour.getPlayerManager().setManualCheckpoint(findPlayer(commandSender, args[1]));
+                break;
+
             case "prize":
             case "setprize":
                 if (!ValidationUtils.validateArgs(commandSender, args, 2)) {
@@ -181,7 +201,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 break;
 
             case "reload":
-                PluginUtils.clearAllCache();
+                parkour.getAdministrationManager().clearAllCache();
                 parkour.getConfigManager().reloadConfigs();
                 TranslationUtils.sendTranslation("Parkour.ConfigReloaded", commandSender);
                 break;
@@ -191,7 +211,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                PluginUtils.resetCommand(commandSender, args[1], args[2], args.length == 4 ? args[3] : null);
+                parkour.getAdministrationManager().processResetCommand(commandSender, args[1], args[2], args.length == 4 ? args[3] : null);
                 break;
 
             case "respawn":
@@ -342,14 +362,6 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
 
             case "validatekit":
                 parkour.getParkourKitManager().validateParkourKit(commandSender, args.length == 2 ? args[1] : DEFAULT);
-                break;
-
-            case "whitelist":
-                if (!ValidationUtils.validateArgs(commandSender, args, 2)) {
-                    return false;
-                }
-
-                parkour.getParkourConfig().addWhitelistedCommand(commandSender, args[1]);
                 break;
 
             case "yes":

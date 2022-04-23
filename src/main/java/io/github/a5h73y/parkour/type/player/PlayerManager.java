@@ -33,9 +33,9 @@ import io.github.a5h73y.parkour.event.ParkourPlayerNewLevelEvent;
 import io.github.a5h73y.parkour.event.ParkourPlayerNewRankEvent;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.ParkourConstants;
-import io.github.a5h73y.parkour.other.ParkourValidation;
 import io.github.a5h73y.parkour.other.TriConsumer;
 import io.github.a5h73y.parkour.type.Initializable;
+import io.github.a5h73y.parkour.type.challenge.Challenge;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.course.Course;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
@@ -121,7 +121,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			return;
 		}
 
-		if (!ParkourValidation.canJoinCourse(player, course)) {
+		if (!canJoinCourse(player, course)) {
 			return;
 		}
 
@@ -1606,5 +1606,154 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}
 
 		playerActions.get(action.toLowerCase()).accept(commandSender, targetPlayer, value);
+	}
+
+	/**
+	 * Validate Player joining Course.
+	 *
+	 * @param player player
+	 * @param course course
+	 * @return player can join course
+	 */
+	public boolean canJoinCourse(Player player, Course course) {
+		/* World doesn't exist */
+		if (course.getCheckpoints().isEmpty()) {
+			TranslationUtils.sendTranslation("Error.UnknownWorld", player);
+			return false;
+		}
+
+		/* Player in wrong world */
+		if (parkour.getParkourConfig().isJoinEnforceWorld()
+				&& !player.getLocation().getWorld().getName().equals(course.getCheckpoints().get(0).getWorldName())) {
+			TranslationUtils.sendTranslation("Error.WrongWorld", player);
+			return false;
+		}
+
+		CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(course.getName());
+		/* Players level isn't high enough */
+		int minimumLevel = courseConfig.getMinimumParkourLevel();
+
+		if (minimumLevel > 0 && !PermissionUtils.hasPermission(player, Permission.ADMIN_LEVEL_BYPASS, false)
+				&& !PermissionUtils.hasSpecificPermission(
+				player, Permission.PARKOUR_LEVEL, String.valueOf(minimumLevel), false)) {
+			int currentLevel = parkour.getConfigManager().getPlayerConfig(player).getParkourLevel();
+
+			if (currentLevel < minimumLevel) {
+				TranslationUtils.sendValueTranslation("Error.RequiredLvl", String.valueOf(minimumLevel), player);
+				return false;
+			}
+		}
+
+		/* Permission system */
+		if (Parkour.getDefaultConfig().getBoolean("OnJoin.PerCoursePermission")
+				&& !PermissionUtils.hasSpecificPermission(player, Permission.PARKOUR_COURSE, course.getName(), true)) {
+			return false;
+		}
+
+		/* Course isn't ready */
+		if (!courseConfig.getReadyStatus()) {
+			if (Parkour.getDefaultConfig().getBoolean("OnJoin.EnforceReady")) {
+				if (!PermissionUtils.hasPermissionOrCourseOwnership(player, Permission.ADMIN_READY_BYPASS, course.getName())) {
+					TranslationUtils.sendTranslation("Error.NotReady", player);
+					return false;
+				}
+			} else {
+				TranslationUtils.sendTranslation("Error.NotReadyWarning", player);
+			}
+		}
+
+		/* Check if the player can leave the course for another */
+		if (parkour.getParkourSessionManager().isPlaying(player)) {
+			if (Parkour.getDefaultConfig().getBoolean("OnCourse.PreventJoiningDifferentCourse")) {
+				TranslationUtils.sendTranslation("Error.JoiningAnotherCourse", player);
+				return false;
+			}
+			if (Parkour.getDefaultConfig().isCourseEnforceWorld()
+					&& !player.getLocation().getWorld().getName().equals(course.getCheckpoints().get(0).getWorldName())) {
+				TranslationUtils.sendTranslation("Error.WrongWorld", player);
+				return false;
+			}
+		}
+
+		/* Check if player limit exceeded */
+		if (courseConfig.hasPlayerLimit()
+				&& parkour.getParkourSessionManager().getNumberOfPlayersOnCourse(course.getName())
+				>= courseConfig.getPlayerLimit()) {
+			TranslationUtils.sendTranslation("Error.LimitExceeded", player);
+			return false;
+		}
+
+		if (courseConfig.getChallengeOnly() && !parkour.getChallengeManager().hasPlayerBeenChallenged(player)) {
+			TranslationUtils.sendTranslation("Error.ChallengeOnly", player);
+			return false;
+		}
+
+		if (parkour.getChallengeManager().hasPlayerBeenChallenged(player)) {
+			Challenge challenge = parkour.getChallengeManager().getChallengeForPlayer(player);
+
+			if (challenge != null && !challenge.getCourseName().equals(course.getName())) {
+				TranslationUtils.sendTranslation("Error.OnChallenge", player);
+				return false;
+			}
+		}
+
+		// check if the Course has a reward delay, and they have a prize cooldown outstanding
+		if (courseConfig.hasRewardDelay()
+				&& !parkour.getPlayerManager().hasPrizeCooldownDurationPassed(player, course.getName(), false)) {
+			return true;
+		} else {
+			return parkour.getEconomyApi().validateAndChargeCourseJoin(player, course.getName());
+		}
+	}
+
+	/**
+	 * Validate Player joining Course Silently.
+	 * No messages will be sent to the requesting player, only checks if they could join.
+	 *
+	 * @param player player
+	 * @param courseName course name
+	 * @return player could join course
+	 */
+	public boolean canJoinCourseSilent(Player player, String courseName) {
+		CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(courseName);
+
+		/* Player in wrong world */
+		if (parkour.getParkourConfig().isJoinEnforceWorld()
+				&& !player.getLocation().getWorld().getName().equals(courseConfig.getStartingWorldName())) {
+			return false;
+		}
+
+		/* Players level isn't high enough */
+		int minimumLevel = courseConfig.getMinimumParkourLevel();
+
+		if (minimumLevel > 0
+				&& !PermissionUtils.hasPermission(player, Permission.ADMIN_LEVEL_BYPASS, false)
+				&& !PermissionUtils.hasSpecificPermission(
+				player, Permission.PARKOUR_LEVEL, String.valueOf(minimumLevel), false)) {
+			int currentLevel = parkour.getConfigManager().getPlayerConfig(player).getParkourLevel();
+
+			if (currentLevel < minimumLevel) {
+				return false;
+			}
+		}
+
+		/* Permission system */
+		if (Parkour.getDefaultConfig().getBoolean("OnJoin.PerCoursePermission")
+				&& !PermissionUtils.hasSpecificPermission(player, Permission.PARKOUR_COURSE, courseName, false)) {
+			return false;
+		}
+
+		/* Course isn't ready */
+		if (!courseConfig.getReadyStatus() && Parkour.getDefaultConfig().getBoolean("OnJoin.EnforceReady")) {
+			return false;
+		}
+
+		/* Check if player has enough currency to join */
+		if (parkour.getEconomyApi().isEnabled()) {
+			double joinFee = courseConfig.getEconomyJoiningFee();
+			return joinFee <= 0 || parkour.getEconomyApi().hasAmount(player, joinFee);
+		}
+
+		return true;
 	}
 }

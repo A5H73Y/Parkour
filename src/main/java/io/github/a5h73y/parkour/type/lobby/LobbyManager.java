@@ -3,16 +3,18 @@ package io.github.a5h73y.parkour.type.lobby;
 import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.other.ParkourValidation;
 import io.github.a5h73y.parkour.type.CacheableParkourManager;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
+import io.github.a5h73y.parkour.utility.permission.Permission;
+import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -65,7 +67,7 @@ public class LobbyManager extends CacheableParkourManager {
     public void joinLobby(Player player, @Nullable String lobbyName) {
         lobbyName = lobbyName == null ? DEFAULT : lobbyName.toLowerCase();
 
-        if (!ParkourValidation.isDefaultLobbySet(player)) {
+        if (!isDefaultLobbySet(player)) {
             return;
         }
 
@@ -76,7 +78,7 @@ public class LobbyManager extends CacheableParkourManager {
             return;
         }
 
-        if (!ParkourValidation.canJoinLobby(player, lobbyName)) {
+        if (!canJoinLobby(player, lobbyName)) {
             return;
         }
 
@@ -120,7 +122,7 @@ public class LobbyManager extends CacheableParkourManager {
      * @param player player
      */
     public void justTeleportToDefaultLobby(Player player) {
-        if (!ParkourValidation.isDefaultLobbySet(player)) {
+        if (!isDefaultLobbySet(player)) {
             return;
         }
         Lobby lobby = lobbyCache.getOrDefault(DEFAULT, populateLobby(DEFAULT));
@@ -148,7 +150,7 @@ public class LobbyManager extends CacheableParkourManager {
      * @param lobbyName lobby name
      */
     public void deleteLobby(CommandSender commandSender, String lobbyName) {
-        if (!ParkourValidation.canDeleteLobby(commandSender, lobbyName)) {
+        if (!parkour.getAdministrationManager().canDeleteLobby(commandSender, lobbyName)) {
             return;
         }
 
@@ -238,8 +240,98 @@ public class LobbyManager extends CacheableParkourManager {
     private Lobby getNearestLobby(Player player) {
         return lobbyCache.values().stream()
                 .filter(lobby -> lobby.getLocation().getWorld() == player.getWorld())
-                .filter(lobby -> ParkourValidation.canJoinLobbySilent(player, lobby.getName()))
+                .filter(lobby -> canJoinLobbySilent(player, lobby.getName()))
                 .min(Comparator.comparingDouble(o -> player.getLocation().distanceSquared(o.getLocation())))
                 .orElse(lobbyCache.getOrDefault(DEFAULT, populateLobby(DEFAULT)));
+    }
+
+    /**
+     * Validate the Default Lobby is set.
+     *
+     * @param player player
+     * @return default lobby set
+     */
+    private boolean isDefaultLobbySet(Player player) {
+        boolean lobbySet = Parkour.getLobbyConfig().doesDefaultLobbyExist();
+
+        if (!lobbySet) {
+            if (PermissionUtils.hasPermission(player, Permission.ADMIN_ALL, false)) {
+                TranslationUtils.sendMessage(player, "&cDefault Lobby has not been set!");
+                TranslationUtils.sendMessage(player, "Type &b'/pa setlobby' &fwhere you want the lobby to be set.");
+
+            } else {
+                TranslationUtils.sendMessage(player, "&cDefault Lobby has not been set! Please tell the Owner!");
+            }
+        } else if (Bukkit.getWorld(Parkour.getLobbyConfig().getLobbyWorld(DEFAULT)) == null) {
+            TranslationUtils.sendTranslation("Error.UnknownWorld", player);
+            lobbySet = false;
+        }
+        return lobbySet;
+    }
+
+    /**
+     * Validate Player joining Lobby.
+     *
+     * @param player player
+     * @param lobbyName lobby name
+     * @return player can join lobby
+     */
+    private boolean canJoinLobby(Player player, String lobbyName) {
+        if (!Parkour.getLobbyConfig().doesLobbyExist(lobbyName)) {
+            TranslationUtils.sendValueTranslation("Error.UnknownLobby", lobbyName, player);
+            return false;
+        }
+
+        if (Bukkit.getWorld(Parkour.getLobbyConfig().getLobbyWorld(lobbyName)) == null) {
+            TranslationUtils.sendTranslation("Error.UnknownWorld", player);
+            return false;
+        }
+
+        if (Parkour.getDefaultConfig().getBoolean("LobbySettings.EnforceWorld")
+                && !player.getWorld().getName().equals(Parkour.getLobbyConfig().getLobbyWorld(lobbyName))) {
+            TranslationUtils.sendTranslation("Error.WrongWorld", player);
+            return false;
+        }
+
+        int level = Parkour.getLobbyConfig().getRequiredLevel(lobbyName);
+
+        if (level > 0 && parkour.getConfigManager().getPlayerConfig(player).getParkourLevel() < level
+                && !PermissionUtils.hasPermission(player, Permission.ADMIN_LEVEL_BYPASS, false)) {
+            TranslationUtils.sendValueTranslation("Error.RequiredLvl", String.valueOf(level), player);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate Player joining Lobby Silently.
+     *
+     * @param player player
+     * @param lobbyName lobby name
+     * @return player can join lobby
+     */
+    private boolean canJoinLobbySilent(Player player, String lobbyName) {
+        if (!Parkour.getLobbyConfig().doesLobbyExist(lobbyName)) {
+            return false;
+        }
+
+        if (Bukkit.getWorld(Parkour.getDefaultConfig().getString("Lobby." + lobbyName + ".World")) == null) {
+            return false;
+        }
+
+        if (Parkour.getDefaultConfig().getBoolean("LobbySettings.EnforceWorld")
+                && !player.getWorld().getName().equals(Parkour.getLobbyConfig().getLobbyWorld(lobbyName))) {
+            return false;
+        }
+
+        int level = Parkour.getLobbyConfig().getRequiredLevel(lobbyName);
+
+        if (level > 0 && parkour.getConfigManager().getPlayerConfig(player).getParkourLevel() < level
+                && !PermissionUtils.hasPermission(player, Permission.ADMIN_LEVEL_BYPASS, false)) {
+            return false;
+        }
+
+        return true;
     }
 }

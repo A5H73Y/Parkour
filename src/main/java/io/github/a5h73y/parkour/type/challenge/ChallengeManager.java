@@ -2,28 +2,29 @@ package io.github.a5h73y.parkour.type.challenge;
 
 import static io.github.a5h73y.parkour.other.ParkourConstants.COURSE_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT_WALK_SPEED;
+import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 import static io.github.a5h73y.parkour.other.ParkourConstants.PLAYER_PLACEHOLDER;
 
+import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
+import io.github.a5h73y.parkour.plugin.EconomyApi;
+import io.github.a5h73y.parkour.type.player.session.ParkourSession;
+import io.github.a5h73y.parkour.utility.PlayerUtils;
+import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.utility.ValidationUtils;
+import io.github.a5h73y.parkour.utility.permission.Permission;
+import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.WeakHashMap;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Nullable;
-
-import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.other.ParkourValidation;
-import io.github.a5h73y.parkour.type.player.session.ParkourSession;
-import io.github.a5h73y.parkour.utility.PlayerUtils;
-import io.github.a5h73y.parkour.utility.TranslationUtils;
-import io.github.a5h73y.parkour.utility.ValidationUtils;
 
 /**
  * Challenge Manager.
@@ -80,7 +81,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
 
         if (match.isPresent()) {
             Challenge existingChallenge = match.get();
-            if (ParkourValidation.canJoinChallenge(requestingPlayer, requestingPlayer, existingChallenge)) {
+            if (canJoinChallenge(requestingPlayer, requestingPlayer, existingChallenge)) {
                 addParticipantToChallenge(existingChallenge, requestingPlayer);
                 TranslationUtils.sendValueTranslation("Parkour.Challenge.Joined", courseName, requestingPlayer);
                 TranslationUtils.sendMessage(existingChallenge.getChallengeHost(),
@@ -461,7 +462,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
             TranslationUtils.sendMessage(player, "To Terminate it, enter &b/pa challenge terminate");
             return;
 
-        } else if (!ParkourValidation.canCreateChallenge(player, courseName, wager)) {
+        } else if (!canCreateChallenge(player, courseName, wager)) {
             return;
         }
 
@@ -491,7 +492,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
         }
 
         for (String playerName : Arrays.asList(args).subList(2, args.length)) {
-            if (ParkourValidation.canChallengePlayer(player, challenge, playerName)) {
+            if (canChallengePlayer(player, challenge, playerName)) {
                 sendInviteToPlayer(challenge, Bukkit.getPlayer(playerName));
                 TranslationUtils.sendValueTranslation("Parkour.Challenge.InviteSent", playerName, player);
             }
@@ -539,8 +540,118 @@ public class ChallengeManager extends AbstractPluginReceiver {
         }
 
         challenge.getParticipatingPlayers().forEach(participantId ->
-            TranslationUtils.sendMessage(Bukkit.getPlayer(participantId), "The host has terminated the Challenge."));
+                TranslationUtils.sendMessage(Bukkit.getPlayer(participantId), "The host has terminated the Challenge."));
         removeChallenge(hostPlayer);
+    }
+
+    /**
+     * Can Target Player join Challenge.
+     *
+     * @param player player
+     * @param targetPlayer target player
+     * @param challenge challenge
+     * @return target player can join challenge
+     */
+    private boolean canJoinChallenge(Player player, Player targetPlayer, Challenge challenge) {
+        if (!parkour.getPlayerManager().canJoinCourseSilent(targetPlayer, challenge.getCourseName())) {
+            TranslationUtils.sendMessage(player, "Player is not able to join this Course!");
+            return false;
+        }
+
+        if (challenge.getWager() != null
+                && !parkour.getEconomyApi().hasAmount(targetPlayer, challenge.getWager())) {
+            TranslationUtils.sendMessage(player, "Player can not afford this wager.");
+            return false;
+        }
+
+        // they've accepted a challenge, but they haven't started the course yet
+        if (parkour.getChallengeManager().hasPlayerBeenChallenged(targetPlayer)) {
+            TranslationUtils.sendMessage(player, "Player has been Challenged already!");
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate Player creating a Challenge.
+     *
+     * @param player player
+     * @param courseNameInput course name
+     * @param wager wager amount
+     * @return player can create challenge
+     */
+    public boolean canCreateChallenge(Player player, String courseNameInput, String wager) {
+        if (!PermissionUtils.hasPermission(player, Permission.BASIC_CHALLENGE)) {
+            return false;
+        }
+
+        String courseName = courseNameInput.toLowerCase();
+
+        if (!parkour.getCourseManager().doesCourseExist(courseName)) {
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, player);
+            return false;
+        }
+
+        if (parkour.getParkourSessionManager().isPlaying(player)) {
+            TranslationUtils.sendMessage(player, "You are already on a Course!");
+            return false;
+        }
+
+        if (!parkour.getPlayerManager().canJoinCourseSilent(player, courseName)) {
+            TranslationUtils.sendMessage(player, "You are not able to join this Course!");
+            return false;
+        }
+
+        if (!parkour.getPlayerManager().delayPlayerWithMessage(player, 8)) {
+            return false;
+        }
+
+        if (wager != null) {
+            EconomyApi economyApi = parkour.getEconomyApi();
+
+            if (!economyApi.isEnabled()) {
+                TranslationUtils.sendMessage(player, "Economy is disabled, no wager will be made.");
+
+            } else if (!ValidationUtils.isPositiveDouble(wager)) {
+                TranslationUtils.sendMessage(player, "Wager must be a positive number.");
+                return false;
+
+            } else if (!economyApi.hasAmount(player, Double.parseDouble(wager))) {
+                TranslationUtils.sendMessage(player, "You do not have enough funds for this wager.");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Validate Player Challenging target Player.
+     *
+     * @param player player
+     * @param challenge challenge
+     * @param targetPlayerName target player name
+     * @return player can challenge player
+     */
+    public boolean canChallengePlayer(Player player, Challenge challenge, String targetPlayerName) {
+        Player targetPlayer = Bukkit.getPlayer(targetPlayerName);
+
+        if (targetPlayer == null) {
+            TranslationUtils.sendMessage(player, "This player is not online!");
+            return false;
+        }
+
+        if (parkour.getParkourSessionManager().isPlaying(targetPlayer)) {
+            TranslationUtils.sendMessage(player, "This player is already on a Course!");
+            return false;
+        }
+
+        if (player.getName().equalsIgnoreCase(targetPlayer.getName())) {
+            TranslationUtils.sendMessage(player, "You can't challenge yourself!");
+            return false;
+        }
+
+        return canJoinChallenge(player, targetPlayer, challenge);
     }
 
     /**

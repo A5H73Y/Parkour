@@ -23,6 +23,7 @@ import io.github.a5h73y.parkour.plugin.EconomyApi;
 import io.github.a5h73y.parkour.plugin.PlaceholderApi;
 import io.github.a5h73y.parkour.type.Initializable;
 import io.github.a5h73y.parkour.type.Teardownable;
+import io.github.a5h73y.parkour.type.admin.AdministrationManager;
 import io.github.a5h73y.parkour.type.challenge.ChallengeManager;
 import io.github.a5h73y.parkour.type.checkpoint.CheckpointManager;
 import io.github.a5h73y.parkour.type.course.CourseManager;
@@ -33,7 +34,6 @@ import io.github.a5h73y.parkour.type.kit.ParkourKitConfig;
 import io.github.a5h73y.parkour.type.kit.ParkourKitManager;
 import io.github.a5h73y.parkour.type.lobby.LobbyConfig;
 import io.github.a5h73y.parkour.type.lobby.LobbyManager;
-import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.type.player.PlayerManager;
 import io.github.a5h73y.parkour.type.player.quiet.QuietModeManager;
 import io.github.a5h73y.parkour.type.player.rank.ParkourRankManager;
@@ -51,7 +51,6 @@ import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -103,6 +102,7 @@ public class Parkour extends JavaPlugin {
     private QuietModeManager quietModeManager;
     private ScoreboardManager scoreboardManager;
     private SoundsManager soundsManager;
+    private AdministrationManager administrationManager;
 
     private ParkourCommands parkourCommands;
     private final List<AbstractPluginReceiver> managers = new ArrayList<>();
@@ -224,6 +224,7 @@ public class Parkour extends JavaPlugin {
         guiManager = (ParkourGuiManager) registerManager(new ParkourGuiManager(this));
         autoStartManager = (AutoStartManager) registerManager(new AutoStartManager(this));
         quietModeManager = (QuietModeManager) registerManager(new QuietModeManager(this));
+        administrationManager = (AdministrationManager) registerManager(new AdministrationManager(this));
 
         setupPlugins();
         initializeManagers();
@@ -389,6 +390,10 @@ public class Parkour extends JavaPlugin {
 
     public SoundsManager getSoundsManager() {
         return soundsManager;
+    }
+
+    public AdministrationManager getAdministrationManager() {
+        return administrationManager;
     }
 
     public ParkourCommands getParkourCommands() {

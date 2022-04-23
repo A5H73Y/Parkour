@@ -7,10 +7,7 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 import com.cryptomorin.xseries.XBlock;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.other.ParkourValidation;
 import io.github.a5h73y.parkour.type.course.Course;
-import io.github.a5h73y.parkour.type.course.CourseConfig;
-import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
@@ -44,7 +41,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
      * @param checkpoint optional checkpoint number to override
      */
     public void createCheckpoint(Player player, @Nullable Integer checkpoint) {
-        if (!ParkourValidation.canCreateCheckpoint(player, checkpoint)) {
+        if (!canCreateCheckpoint(player, checkpoint)) {
             return;
         }
 
@@ -150,5 +147,42 @@ public class CheckpointManager extends AbstractPluginReceiver {
                 .replace(COURSE_PLACEHOLDER, courseName));
 
         PluginUtils.logToFile("Checkpoint " + checkpoint + " was deleted on " + courseName + " by " + commandSender.getName());
+    }
+
+    /**
+     * Validate Player creating a Course Checkpoint.
+     *
+     * @param player player
+     * @param checkpoint checkpoint
+     * @return player is able to create checkpoint
+     */
+    public boolean canCreateCheckpoint(Player player, @Nullable Integer checkpoint) {
+        String selectedCourse = parkour.getConfigManager().getPlayerConfig(player).getSelectedCourse();
+
+        if (!parkour.getCourseManager().doesCourseExist(selectedCourse)) {
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, selectedCourse, player);
+            return false;
+        }
+
+        int checkpoints = parkour.getConfigManager().getCourseConfig(selectedCourse).getCheckpointAmount() + 1;
+
+        if (checkpoint != null) {
+            if (checkpoint < 1) {
+                TranslationUtils.sendMessage(player, "Checkpoint specified is not valid!");
+                return false;
+            }
+            if (checkpoints < checkpoint) {
+                TranslationUtils.sendMessage(player, "This checkpoint does not exist! &4Creation cancelled.");
+                return false;
+            }
+
+            checkpoints = checkpoint;
+        }
+
+        if (checkpoints < 1) {
+            TranslationUtils.sendMessage(player, "Invalid checkpoint number.");
+            return false;
+        }
+        return true;
     }
 }

@@ -11,6 +11,17 @@
     "autoTabSyntax": "(course) (material) (amount) (label) [true,false]"
   },
   {
+    "command": "admin",
+    "title": "Plugin Administration commands",
+    "arguments": "(addwhitelist / removewhitelist / disablecommand / enablecommand) (command)",
+    "example": "/pa admin disablecommand cmds",
+    "description": "Perform various administrator tasks around the plugin. Add / remove a whitelisted command that can be used whilst on a Course. Disable / enable a Parkour command which prevents players from using it.",
+    "permission": "parkour.admin.*",
+    "commandGroup": "4",
+    "consoleSyntax": "pac admin (addwhitelist / removewhitelist / disablecommand / enablecommand) (command)",
+    "autoTabSyntax": "[addwhitelist,removewhitelist,disablecommand,enablecommand] (command)"
+  },
+  {
     "command": "backup",
     "title": "Full Parkour Configuration Backup",
     "description": "CONSOLE ONLY - Creates a timestamped zip backup of the current Parkour configuration folder, including any subfolders.",
@@ -283,7 +294,8 @@
     "title": "Set Player Manual Checkpoint",
     "example": "/pa manualcheckpoint",
     "description": "Allows the Player to mark their current position as their manual checkpoint. This is exclusive to the Free_Checkpoint ParkourMode, and must be enabled in the config. This will allow external plugins to mark the Player's checkpoint for them using the command.",
-    "commandGroup": "1"
+    "commandGroup": "1",
+    "consoleSyntax": "pac manualcheckpoint (player)"
   },
   {
     "command": "material",
@@ -704,16 +716,5 @@
     "commandGroup": "3",
     "consoleSyntax": "pac validatekit [kitName]",
     "autoTabSyntax": "(parkourkit)"
-  },
-  {
-    "command": "whitelist",
-    "title": "Whitelist a Non-Parkour Command",
-    "arguments": "(command)",
-    "example": "/pa whitelist help",
-    "description": "By default, non-Parkour commands are disabled during the Course unless you whitelist a command that the Players are allowed to use.",
-    "permission": "parkour.admin.*",
-    "commandGroup": "4",
-    "consoleSyntax": "pac whitelist (command)",
-    "autoTabSyntax": "(command)"
   }
 ]

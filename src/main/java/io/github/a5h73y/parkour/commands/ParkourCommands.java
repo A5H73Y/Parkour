@@ -95,12 +95,24 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getCourseSettingsManager().addJoinItem(player, args);
                 break;
 
+            case "admin":
+            case "administrator":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                    return false;
+
+                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
+                    return false;
+                }
+
+                parkour.getAdministrationManager().processAdminCommand(player, args[1], args[2]);
+                break;
+
             case "cache":
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
                     return false;
                 }
 
-                PluginUtils.processCacheCommand(player, args.length == 2 ? args[1] : null);
+                parkour.getAdministrationManager().processCacheCommand(player, args.length == 2 ? args[1] : null);
                 break;
 
             case "challenge":
@@ -155,7 +167,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                PluginUtils.deleteCommand(player, args[1], args[2]);
+                parkour.getAdministrationManager().processDeleteCommand(player, args[1], args[2]);
                 break;
 
             case "done":
@@ -282,7 +294,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 }
 
                 parkour.getConfigManager().reloadConfigs();
-                PluginUtils.clearAllCache();
+                parkour.getAdministrationManager().clearAllCache();
                 TranslationUtils.sendTranslation("Parkour.ConfigReloaded", player);
                 PluginUtils.logToFile(player.getName() + " reloaded the Parkour config");
                 break;
@@ -301,7 +313,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                PluginUtils.resetCommand(player, args[1], args[2], args.length == 4 ? args[3] : null);
+                parkour.getAdministrationManager().processResetCommand(player, args[1], args[2], args.length == 4 ? args[3] : null);
                 break;
 
             case "respawn":
@@ -440,17 +452,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
             case "tutorial":
                 TranslationUtils.sendMessage(player, "To follow the official Parkour tutorials...");
                 TranslationUtils.sendMessage(player, "Click here:&3 https://a5h73y.github.io/Parkour/", false);
-                break;
-
-            case "whitelist":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 2)) {
-                    return false;
-                }
-
-                parkour.getParkourConfig().addWhitelistedCommand(player, args[1]);
                 break;
 
             //Other commands//

@@ -30,8 +30,8 @@ import de.leonhard.storage.util.FileUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Default Parkour configuration.
@@ -40,6 +40,8 @@ import org.jetbrains.annotations.NotNull;
  * Yaml config that automatically reloads itself when a change detected, order retained.
  */
 public class DefaultConfig extends Yaml {
+
+	private static final String WHITELISTED_COMMANDS = "OnCourse.EnforceParkourCommands.Whitelist";
 
 	private final DateFormat detailedTimeFormat;
 	private final DateFormat standardTimeFormat;
@@ -304,20 +306,35 @@ public class DefaultConfig extends Yaml {
 	/**
 	 * Add a command to the whitelist.
 	 *
-	 * @param commandSender command sender
-	 * @param command command to whitelist
+	 * @param command command to add
 	 */
-	public void addWhitelistedCommand(CommandSender commandSender, String command) {
+	public void addWhitelistCommand(@Nullable String command) {
 		List<String> whitelistedCommands = getWhitelistedCommands();
-		if (whitelistedCommands.contains(command.toLowerCase())) {
-			TranslationUtils.sendMessage(commandSender, "This command is already whitelisted!");
-			return;
+		if (command != null && !whitelistedCommands.contains(command.toLowerCase())) {
+			whitelistedCommands.add(command.toLowerCase());
+			set(WHITELISTED_COMMANDS, whitelistedCommands);
 		}
+	}
 
-		whitelistedCommands.add(command.toLowerCase());
-		set("OnCourse.EnforceParkourCommands.Whitelist", whitelistedCommands);
+	/**
+	 * Remove a command from the whitelist.
+	 *
+	 * @param command command to remove
+	 */
+	public void removeWhitelistCommand(@Nullable String command) {
+		List<String> whitelistedCommands = getWhitelistedCommands();
+		if (command != null && whitelistedCommands.contains(command.toLowerCase())) {
+			whitelistedCommands.remove(command.toLowerCase());
+			set(WHITELISTED_COMMANDS, whitelistedCommands);
+		}
+	}
 
-		TranslationUtils.sendMessage(commandSender, "Command &b" + command + "&f added to the whitelisted commands!");
+	public void addDisabledParkourCommand(@NotNull String command) {
+		this.set("Command." + command.toLowerCase() + ".Disabled", true);
+	}
+
+	public void removeDisabledParkourCommand(@NotNull String command) {
+		this.remove("Command." + command.toLowerCase() + ".Disabled");
 	}
 
 	public String getSignHeader() {
@@ -502,7 +519,7 @@ public class DefaultConfig extends Yaml {
 	/* Lists */
 
 	public List<String> getWhitelistedCommands() {
-		return this.getStringList("OnCourse.EnforceParkourCommands.Whitelist");
+		return this.getStringList(WHITELISTED_COMMANDS);
 	}
 
 	/* ints */

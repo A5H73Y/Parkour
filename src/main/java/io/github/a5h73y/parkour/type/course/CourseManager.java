@@ -9,7 +9,6 @@ import io.github.a5h73y.parkour.conversation.LeaderboardConversation;
 import io.github.a5h73y.parkour.database.TimeEntry;
 import io.github.a5h73y.parkour.gui.impl.CourseSettingsGui;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.other.ParkourValidation;
 import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
@@ -178,7 +177,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param courseNameInput requested course name
      */
     public void createCourse(final Player player, final String courseNameInput) {
-        if (!ParkourValidation.canCreateCourse(player, courseNameInput)) {
+        if (!canCreateCourse(player, courseNameInput)) {
             return;
         }
 
@@ -517,6 +516,39 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         commandSender.sendMessage("== " + page + " / " + ((courseList.size() + results - 1) / results) + " ==");
+    }
+
+    /**
+     * Validate Player creating Course.
+     *
+     * @param player player
+     * @param courseName desired course name
+     * @return player can create course
+     */
+    public boolean canCreateCourse(Player player, String courseName) {
+        if (courseName.length() > 15) {
+            TranslationUtils.sendMessage(player, "Course name is too long!");
+            return false;
+
+        } else if (courseName.contains(".")) {
+            TranslationUtils.sendMessage(player, "Course name can not contain &4.&f!");
+            return false;
+
+        } else if (courseName.contains("_")) {
+            TranslationUtils.sendMessage(player,
+                    "Course name can not contain &4_&f as it will break Placeholders. Instead, set a Course Display name.");
+            return false;
+
+        } else if (ValidationUtils.isInteger(courseName)) {
+            TranslationUtils.sendMessage(player, "Course name can not only be numeric!");
+            return false;
+
+        } else if (doesCourseExist(courseName)) {
+            TranslationUtils.sendTranslation("Error.Exist", player);
+            return false;
+        }
+
+        return true;
     }
 
     private void populateCourseCache() {

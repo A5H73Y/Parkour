@@ -18,42 +18,102 @@ _Command: `/pa settings (course)`_
 
 A Course can be marked to only be joinable if the Player is part of a Challenge. The Player will be notified upon trying to join the Course that they must be in a Challenge to join.
 
-_Command: `/pa challengeonly [course]`_
+_Command: `/pa setcourse (course) challengeonly (true/false)`_
 
 ### creator
 
 Each Course must have a Creator, by default this will be set to the Player who used the create Course command.
 If you want to overwrite the creator of a Course to a different Player, this will now allow the chosen Player to have elevated permissions for that Course.
 
-_Command: `/pa setcreator (course) (player)`_
+_Command: `/pa setcourse (course) creator (player)`_
 
 ### dieinliquid
+
+If the Player were to enter a liquid (water or lava) should this be considered a death.
+
+_Command: `/pa setcourse (course) dieinliquid [true/false]`_
+
 ### dieinvoid
+
+If the Player were to enter the void should this be considered a death.
+
+_Command: `/pa setcourse (course) dieinvoid [true/false]`_
+
 ### displayname
+
+Each Course has the ability to have a display name. As Course names have to be a unique and strict format to be valid, you are able to set the display name to anything you like, including spaces or color symbols. This display name will be displayed to the Player instead of the course name.
+
+_Command: `/pa setcourse (course) displayname (value...)`_
+
 ### linkedcourse
+
+Once the Player finishes a Course, you are able to make them join straight into a different Course.
+
+![Course Linked to Course](https://i.imgur.com/1YvM8zV.jpg "Course Linked to Course")
+
+_Command: `/pa setcourse (course) linkedcourse (course)`_
+
 ### linkedlobby
+
+Once the Player finishes a Course, by default they are teleported to the default Lobby. This can be changed to the desired Lobby so the Player is teleported to a different Lobby once they complete the Course.
+
+![Course Linked to Lobby](https://i.imgur.com/gc7UVkX.jpg "Course Linked to Lobby")
+
+_By default, the Player will be teleported to the default lobby when they *leave* a Course, this can be changed in the config.yml by setting `OnLeave.TeleportToLinkedLobby` to `true`._
+
+_Command: `/pa setcourse (course) linkedlobby (lobby)`_
+
 ### manualcheckpoints
+
+If you preferred an external way to set the Player's checkpoint position, you can enable manual checkpoints. This will allow the Player (and console) to use the "/pa manualcheckpoint" command, which sets the Player's current position to their Checkpoint.
+
+_Command: `/pa setcourse (course) manualcheckpoints [true/false]`_
+
 ### maxdeaths
 
-You are able to limit the amount of deaths a Player can accumilate before they are kicked off the Course for extra challenge. An example could be a quick challenging Course that allows the Player just 1 life to complete.
+You are able to limit the amount of deaths a Player can accumulate before they are kicked off the Course for extra challenge. An example could be a quick challenging Course that allows the Player just 1 life to complete.
 
-_Command: `/pa setmaxdeaths (course) (amount)`_
+_Command: `/pa setcourse (course) maxdeaths (amount)`_
 
 ### maxfallticks
+
+You are able to limit the amount of ticks (time) a Player can fall for before they are killed.
+
+_Command: `/pa setcourse (course) maxfallticks (amount)`_
+
 ### maxtime
 
 Set a limit the amount of time a Player can reach before they are kicked off the Course for extra challenge. An example could be a challenging Course that must be completed in a certain time.
 
-_Command: `/pa setmaxtime (course) (seconds)`_
+_Command: `/pa setcourse (course) maxtime (seconds)`_
 
 ### minimumlevel
+
+Set the minimum required ParkourLevel to join the Course.  
+_[More information on ParkourLevels.](/tutorials/parkour-level-ranks)_
+
+_Command: `/pa setcourse (course) minimumlevel (seconds)`_
+
 ### parkourkit
+
+Set the associated ParkourKit for the Course.  
+_[More information on ParkourKits.](/tutorials/parkour-kits)_
+
+_Command: `/pa setcourse (course) minimumlevel (seconds)`_
+
 ### parkourmode
+
+Set the ParkourMode for the Course.
+
+[More information on ParkourModes.](/tutorials/parkour-modes)
+
+_Command: `/pa setcourse (course) parkourmode (seconds)`_
+
 ### playerlimit
 
 Set a limit on the number of Players that can play the Course concurrently.
 
-_Command: `/pa setplayerlimit (course) (amount)`_
+_Command: `/pa setcourse (course) playerlimit (amount)`_
 
 ### ready
 
@@ -68,7 +128,7 @@ _Command: `/pa ready [course]`_
 By default, a Player's progress will be deleted when they leave a Course. To retain the Player's progress set `OnLeave.DestroyCourseProgress` to `false` in the `config.yml`; each Course will then be "resumable" meaning they can leave at any point and rejoin back to their last achieved checkpoint (with their accumulated time and amount of deaths restored).
 However, you can toggle the resumable status of the Course to set a Course to be non-resumable to prevent their progress from being saved.
 
-_Command: `/pa resumable [course]`_
+_Command: `/pa setcourse (course) resumable [true/false]`_
 
 ### rewarddelay
 ### rewardlevel
@@ -77,13 +137,18 @@ _Command: `/pa resumable [course]`_
 
 A Course can be marked to only give the Prize reward for the first time they complete a Course. This will include any Parkour Level rewards given, which is especially important if you've chosen to use "rewardleveladd" functionality.
 
-_Command: `/pa rewardonce [course]`_
+_Command: `/pa setcourse (course) rewardonce [true/false]`_
 
 ### rewardparkoins
 ### autostart
 ### prize
 ### rename
 ### resetlink
+
+To remove either the linked Course or linked Lobby from a Course, reset the link which will set the Player to be teleported to the default lobby.
+
+_Command: `/pa setcourse (course) resetlink`
+
 ### start
 
 If you want to change the starting position of a Course, you can enter `/pa setstart`.
@@ -123,19 +188,7 @@ The items can be given a label to display in the inventory. The items can be mad
 _Command: `/pa addjoinitem (course) (material) (amount) [label] [unbreakable]`_  
 _Example: `/pa addjoinitem tutorial ELYTRA 64`_
 
-## Linking a Course after completion
-
-We can change what happens to a Player after they complete a Course; They can either be teleported to the default Lobby, a custom Lobby, or join straight into a new Course. Firstly, we must select a Course to decide the outcome, this is achieved by entering `/pa select (course)`.
-
-After we have created a custom Lobby, we can link this Course to teleport us to this Lobby once we complete the Course, this is achieved with the following command `/pa link lobby (lobby name)`.
-
-![Course Linked to Lobby](https://i.imgur.com/gc7UVkX.jpg "Course Linked to Lobby")
-
-If we want to link a Course to another Course, the command becomes `/pa link course (course name)`.
-
-![Course Linked to Course](https://i.imgur.com/1YvM8zV.jpg "Course Linked to Course")
-
-If you want to remove the link, simply enter `/pa link reset` which will result in the Player being teleported to the default Lobby.
+[//]: # (add something here about the ability to just to /pa addjoinitem course, then it will add whatever is in their hand)
 
 ## Parkour Events
 
