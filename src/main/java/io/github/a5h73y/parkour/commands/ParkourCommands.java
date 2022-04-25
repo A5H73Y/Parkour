@@ -78,7 +78,8 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
         String commandLabel = args[0].toLowerCase();
 
-        if (parkour.getParkourConfig().getBoolean("Command." + commandLabel + ".Disabled")) {
+        if (parkour.getParkourConfig().getBoolean("DisableCommand." + commandLabel)
+                && !PermissionUtils.hasPermission(player, Permission.PARKOUR_ALL, false)) {
             TranslationUtils.sendTranslation("Error.DisabledCommand", player);
             return false;
         }

@@ -330,11 +330,11 @@ public class DefaultConfig extends Yaml {
 	}
 
 	public void addDisabledParkourCommand(@NotNull String command) {
-		this.set("Command." + command.toLowerCase() + ".Disabled", true);
+		this.set("DisableCommand." + command.toLowerCase(), true);
 	}
 
 	public void removeDisabledParkourCommand(@NotNull String command) {
-		this.remove("Command." + command.toLowerCase() + ".Disabled");
+		this.remove("DisableCommand." + command.toLowerCase());
 	}
 
 	public String getSignHeader() {

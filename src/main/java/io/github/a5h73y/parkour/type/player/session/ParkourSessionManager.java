@@ -184,7 +184,7 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Com
 	}
 
 	/**
-	 * Stash the Player's ParkourSession.
+	 * Save the Player's ParkourSession.
 	 * Persist the ParkourSession to a file under the Player's UUID.
 	 * Mark the current time accumulated, for the time difference to be recalculated when the Player rejoins.
 	 *

@@ -58,9 +58,3 @@ _Command: `/pa economy setprize (course) (amount)`_
 You are able to delay the time a reward is given to the Player in hours, including decimals such as '0.5' = 30 minutes, or '48' = 2 full days. For example the Player could receive the prize on their first completion, but may have to wait 2 full days before they are able to receive the prize again. This is achieved by entering `/pa rewarddelay (course) (hours)`.
 
 You can also have the Player only be rewarded a single time after they complete a Course. This is heavily recommended if you are doing anything advanced with ParkourLevels, such as using rewardleveladd. This is achieved by entering `/pa rewardonce (course)`.
-
-## Parkoins
-
-Parkoins are a currency within the Parkour plugin that can be configured like any other prize.
-
-Unfortunately due to time constraints and more important features, this has been underutilized by the plugin itself. Fortunately due to the easy developer API, you can create a plugin that can build on top of Parkour that uses the currency. An example could be requiring a certain amount of Parkoins before a Course can be purchased to join.

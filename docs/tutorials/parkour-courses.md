@@ -49,15 +49,11 @@ _Command: `/pa setcourse (course) displayname (value...)`_
 
 Once the Player finishes a Course, you are able to make them join straight into a different Course.
 
-![Course Linked to Course](https://i.imgur.com/1YvM8zV.jpg "Course Linked to Course")
-
 _Command: `/pa setcourse (course) linkedcourse (course)`_
 
 ### linkedlobby
 
 Once the Player finishes a Course, by default they are teleported to the default Lobby. This can be changed to the desired Lobby so the Player is teleported to a different Lobby once they complete the Course.
-
-![Course Linked to Lobby](https://i.imgur.com/gc7UVkX.jpg "Course Linked to Lobby")
 
 _By default, the Player will be teleported to the default lobby when they *leave* a Course, this can be changed in the config.yml by setting `OnLeave.TeleportToLinkedLobby` to `true`._
 
@@ -92,22 +88,21 @@ _Command: `/pa setcourse (course) maxtime (seconds)`_
 Set the minimum required ParkourLevel to join the Course.  
 _[More information on ParkourLevels.](/tutorials/parkour-level-ranks)_
 
-_Command: `/pa setcourse (course) minimumlevel (seconds)`_
+_Command: `/pa setcourse (course) minimumlevel (level)`_
 
 ### parkourkit
 
 Set the associated ParkourKit for the Course.  
 _[More information on ParkourKits.](/tutorials/parkour-kits)_
 
-_Command: `/pa setcourse (course) minimumlevel (seconds)`_
+_Command: `/pa setcourse (course) parkourkit (parkour-kit)`_
 
 ### parkourmode
 
-Set the ParkourMode for the Course.
+Set the ParkourMode for the Course.  
+_[More information on ParkourModes.](/tutorials/parkour-modes)_
 
-[More information on ParkourModes.](/tutorials/parkour-modes)
-
-_Command: `/pa setcourse (course) parkourmode (seconds)`_
+_Command: `/pa setcourse (course) parkourmode (parkour-mode)`_
 
 ### playerlimit
 
@@ -126,23 +121,66 @@ _Command: `/pa ready [course]`_
 ### resumable
 
 By default, a Player's progress will be deleted when they leave a Course. To retain the Player's progress set `OnLeave.DestroyCourseProgress` to `false` in the `config.yml`; each Course will then be "resumable" meaning they can leave at any point and rejoin back to their last achieved checkpoint (with their accumulated time and amount of deaths restored).
+
 However, you can toggle the resumable status of the Course to set a Course to be non-resumable to prevent their progress from being saved.
 
 _Command: `/pa setcourse (course) resumable [true/false]`_
 
 ### rewarddelay
+
+The amount of time that must pass before the Player can achieve the Course's prize again.
+
+_The time can be a fraction of hours. For example, `0.5` would be `30 minutes`, `48` would be `2 full days`._
+
+_Command: `/pa setcourse (course) rewarddelay (hours)`_
+
 ### rewardlevel
+
+The ParkourLevel the Player should be set to.  
+_[More information on reward ParkourLevels.](/tutorials/parkour-level-ranks?id=rewardlevel)_
+
+_Command: `/pa setcourse (course) rewardlevel (level)`_
+
 ### rewardleveladd
+
+The amount of ParkourLevel the Player should have added.  
+_[More information on reward ParkourLevels.](/tutorials/parkour-level-ranks?id=rewardleveladd)_
+
+_Command: `/pa setcourse (course) rewardleveladd (level)`_
+
 ### rewardonce
 
-A Course can be marked to only give the Prize reward for the first time they complete a Course. This will include any Parkour Level rewards given, which is especially important if you've chosen to use "rewardleveladd" functionality.
+A Course can be marked to only give the Prize reward for the first time they complete a Course. This will include any ParkourLevel rewards given, which is especially important if you've chosen to use "rewardleveladd" functionality.
 
 _Command: `/pa setcourse (course) rewardonce [true/false]`_
 
 ### rewardparkoins
+
+Parkoins are a currency within the Parkour plugin that can be configured like any other prize.
+
+With the easy developer API, you can create a plugin that can build on top of Parkour that uses the currency. An example could be requiring a certain amount of Parkoins before a Course can be purchased to join.
+
+_Command: `/pa setcourse (course) parkoins (amount)`_
+
 ### autostart
+
+Create an AutoStart for the Course at the Player's current position.  
+_[More information on AutoStarts.](/tutorials/parkour-autostart)_
+
+_Command: `/pa setcourse (course) autostart`_
+
 ### prize
+
+Begin a Conversation which will let you set the Course's prize, these can be stacked meaning you can include all options when the Player finishes a Course.
+
+_Command: `/pa setcourse (course) prize`_
+
 ### rename
+
+Rename a Course.
+
+_Command: `/pa setcourse (course) rename (new-name)`_
+
 ### resetlink
 
 To remove either the linked Course or linked Lobby from a Course, reset the link which will set the Player to be teleported to the default lobby.
@@ -195,24 +233,25 @@ _Example: `/pa addjoinitem tutorial ELYTRA 64`_
 Parkour allows you to customise behaviours of each Parkour Event to display a message and / or execute a command.
 
 The Parkour events include:
-* Join
-* Leave
-* Prize _(prize given to Player for completion)_
-* NoPrize _(prize not given due to RewardOnce)_
-* Finish _(every time the player finished a Course)_
-* Checkpoint
-* CheckpointAll _(all the checkpoints have been achieved)_
-* Death
-* PlayerCourseRecord _(player beats their best time)_
-* GlobalCourseRecord _(player beats the global best time)_
+* `Join` joining a Course
+* `Leave` leaving a Course
+* `Prize` prize given to Player for Course completion
+* `NoPrize` prize **not** given due to RewardOnce on Course completion
+* `Finish` every time a Player finishes a Course
+* `Checkpoint` achieving a Checkpoint on a Course
+* `CheckpointAll` achieving **all** checkpoints on a Course
+* `Death` dying whilst on a Course
+* `PlayerCourseRecord` player beats their best time on Course
+* `GlobalCourseRecord` player beats the global best time on Course
 
-You are able to use the following internal placeholders:
-* %PLAYER% _(player name)_
-* %PLAYER_DISPLAY% _(player display name)_
-* %COURSE% _(course name)_
-* %DEATHS% _(amount of deaths)_
-* %TIME% _(current total time)_
-* %CHECKPOINT% _(current checkpoint number)_
+You are able to use the following internal placeholders:  
+_They must be uppercase._
+* `%PLAYER%` the Player's name
+* `%PLAYER_DISPLAY%` the Player's display name
+* `%COURSE%` the Course's name
+* `%DEATHS%` the amount of deaths accumulated
+* `%TIME%` the amount of time accumulated
+* `%CHECKPOINT%` the current checkpoint number
 
 ## Resetting Course Data
 

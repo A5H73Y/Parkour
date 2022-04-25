@@ -640,21 +640,22 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 	 *
 	 * @param commandSender command sender
 	 * @param courseName course name
-	 * @param delay prize delay
+	 * @param delayInput prize delay
 	 */
-	public void setRewardDelay(final CommandSender commandSender, final String courseName, final String delay) {
+	public void setRewardDelay(final CommandSender commandSender, final String courseName, final String delayInput) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;
 		}
 
-		if (!ValidationUtils.isPositiveDouble(delay)) {
+		if (!ValidationUtils.isPositiveDouble(delayInput)) {
 			TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, commandSender);
 			return;
 		}
 
-		parkour.getConfigManager().getCourseConfig(courseName).setRewardDelay(Double.parseDouble(delay));
-		long milliseconds = DateTimeUtils.convertHoursToMilliseconds(Double.parseDouble(delay));
+		double delay = Double.parseDouble(delayInput);
+		parkour.getConfigManager().getCourseConfig(courseName).setRewardDelay(delay);
+		long milliseconds = DateTimeUtils.convertHoursToMilliseconds(delay);
 		notifyActionChange(commandSender, "Reward Delay", courseName,
 				DateTimeUtils.convertMillisecondsToDateTime(milliseconds));
 	}

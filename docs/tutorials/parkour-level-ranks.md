@@ -7,27 +7,33 @@ A Player can be rewarded with levels _(ParkourLevels)_ which will unlock new Cou
 
 There are 3 ways to achieve a new ParkourLevel.
 
-### /pa rewardlevel (course) (level)
+### rewardlevel
 
 This means when you complete the specified Course, your ParkourLevel will be **set** to specified level. If the Player's level is currently higher than the reward level, it will not be changed.
 
 The main purpose of this is incremental Courses, so you would have to complete the Level1 Course, before you could join the Level2 Course, etc.
 
-### /pa rewardleveladd (course) (amount)
+_Command: `/pa setcourse (course) rewardlevel (level)`_
+
+### rewardleveladd
 
 This means when you complete the specified Course, your level has the amount added to it. So if you had a ParkourLevel of 10, and completed the Course which had a rewardLevelAdd of 2, your new ParkourLevel becomes 12.
 
 The main purpose for this is for lobby setups where you have to complete all the Courses to unlock a new lobby; If you had an "Easy" lobby with 5 Courses, you would set the level requirement for "Medium" lobby to 5, and add a rewardLevelAdd to 1 for each Course in Easy, so they can be completed in any order. NOTE: For this you would have to enable `/pa rewardonce (course)` so they only get leveled up once per Course.
 
-### /pa setlevel (player) (level)
+_Command: `/pa setcourse (course) rewardleveladd (level)`_
+
+### setlevel
 
 This can be used by Admins to manually set a Player's level. This can be done for VIPs, or simply to quickly test what you've created is working as intended.
+
+_Command: `/pa setlevel (player) (level)`_
 
 ## ParkourLevel Restrictions
 
 ParkourLevels can be used to apply restrictions to Courses and lobbies. For example, if a Course has a minimum ParkourLevel requirement of 10, and the Player has a ParkourLevel of 12, then they will be allowed to join the Course otherwise the Player will be notified.
 
-_Command: `/pa setminimumlevel (course) (level)`_  
+_Command: `/pa setcourse (course) minlevel (level)`_  
 Set the minimum level of the specified Course to the specified ParkourLevel. Any Player that now attempts to join this Course will be prevented from doing so unless they have the minimum ParkourLevel required.
 
 _Command: `/pa setlobby (name) (level)`_  
