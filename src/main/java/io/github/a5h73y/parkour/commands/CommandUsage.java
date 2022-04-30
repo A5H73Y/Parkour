@@ -30,6 +30,7 @@ public class CommandUsage {
 	private String commandGroup;
 	private String consoleSyntax;
 	private String autoTabSyntax;
+	private String deprecated;
 
 	/**
 	 * Display Help Information for the Command.
@@ -118,6 +119,10 @@ public class CommandUsage {
 
 	public String getAutoTabSyntax() {
 		return autoTabSyntax;
+	}
+
+	public String getDeprecated() {
+		return deprecated;
 	}
 
 	public String resolveFormulaValue(String input, String[] args) {

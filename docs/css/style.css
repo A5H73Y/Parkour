@@ -29,6 +29,10 @@ details > summary {
     font-size: 18px;
 }
 
+summary.deprecated {
+    text-decoration: line-through;
+}
+
 /* docsify */
 
 .app-name-link img {

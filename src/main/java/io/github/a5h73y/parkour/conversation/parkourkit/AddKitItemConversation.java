@@ -1,6 +1,6 @@
-package io.github.a5h73y.parkour.conversation.other;
+package io.github.a5h73y.parkour.conversation.parkourkit;
 
-import static io.github.a5h73y.parkour.conversation.ParkourConversation.sendErrorMessage;
+import static io.github.a5h73y.parkour.conversation.other.ParkourConversation.sendErrorMessage;
 import static io.github.a5h73y.parkour.type.kit.ActionType.BOUNCE;
 import static io.github.a5h73y.parkour.type.kit.ActionType.CLIMB;
 import static io.github.a5h73y.parkour.type.kit.ActionType.LAUNCH;

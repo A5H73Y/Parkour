@@ -4,8 +4,8 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT;
 
 import com.cryptomorin.xseries.XMaterial;
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.conversation.CreateParkourKitConversation;
-import io.github.a5h73y.parkour.conversation.EditParkourKitConversation;
+import io.github.a5h73y.parkour.conversation.parkourkit.CreateParkourKitConversation;
+import io.github.a5h73y.parkour.conversation.parkourkit.EditParkourKitConversation;
 import io.github.a5h73y.parkour.other.TriConsumer;
 import io.github.a5h73y.parkour.type.CacheableParkourManager;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
@@ -26,6 +26,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.Conversable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -48,6 +49,10 @@ public class ParkourKitManager extends CacheableParkourManager {
 	@Override
 	protected ParkourKitConfig getConfig() {
 		return parkour.getConfigManager().getParkourKitConfig();
+	}
+
+	public boolean doesParkourKitExist(String kitName) {
+		return getConfig().doesParkourKitExist(kitName);
 	}
 
 	/**
@@ -234,62 +239,57 @@ public class ParkourKitManager extends CacheableParkourManager {
 		PluginUtils.logToFile(kitName + " parkourkit was deleted by " + commandSender.getName());
 	}
 
-	public void processParkourKitCommand(final CommandSender commandSender, final String... args) {
-		if (!PermissionUtils.hasPermission(commandSender, Permission.ADMIN_ALL)) {
-			return;
-
-		} else if (!ValidationUtils.validateArgs(commandSender, args, 2, 100)) {
-			return;
-		}
-
+	public void processParkourKitCommand(@NotNull CommandSender commandSender,
+	                                     @NotNull String command,
+	                                     @Nullable String argument,
+	                                     @Nullable String detail) {
 		// TODO - turn into actions
 
-		switch (args[1].toLowerCase()) {
+		switch (command.toLowerCase()) {
 			case "create":
 			case "createkit":
-				startCreateKitConversation(commandSender);
+				startCreateKitConversation(commandSender, argument);
 				break;
 
 			case "edit":
-				startEditKitConversation(commandSender);
+				startEditKitConversation(commandSender, argument);
 				break;
 
 			case "validate":
-				validateParkourKit(commandSender, args.length >= 3 ? args[2] : DEFAULT);
+				validateParkourKit(commandSender, argument != null ? argument : DEFAULT);
 				break;
 
 			case "list":
-				displayParkourKits(commandSender, args.length >= 3 ? args[2] : null);
+				displayParkourKits(commandSender, argument);
 				break;
 
-			case "link": //TODO check this
-				setLinkedParkourKit(commandSender, args.length >= 3 ? args[2] : null,
-						args.length >= 4 ? args[3] : null);
+			case "link":
+				setLinkedParkourKit(commandSender, argument, detail);
 				break;
 
 			case "give":
-				giveParkourKit((Player) commandSender, args.length >= 3 ? args[2] : DEFAULT);
+				giveParkourKit((Player) commandSender, argument != null ? argument : DEFAULT);
 				break;
 
 			default:
-				TranslationUtils.sendMessage(commandSender, "Unknown argument");
+				parkour.getParkourCommands().sendInvalidSyntax(commandSender, "parkourkit");
 		}
 	}
 
-	public void startCreateKitConversation(CommandSender commandSender) {
+	public void startCreateKitConversation(CommandSender commandSender, @Nullable String kitName) {
 		if (!PermissionUtils.hasPermission(commandSender, Permission.ADMIN_COURSE)) {
 			return;
 		}
 
-		new CreateParkourKitConversation((Conversable) commandSender).begin();
+		new CreateParkourKitConversation((Conversable) commandSender).withKitName(kitName).begin();
 	}
 
-	public void startEditKitConversation(CommandSender commandSender) {
+	public void startEditKitConversation(CommandSender commandSender, @Nullable String kitName) {
 		if (!PermissionUtils.hasPermission(commandSender, Permission.ADMIN_COURSE)) {
 			return;
 		}
 
-		new EditParkourKitConversation((Conversable) commandSender).begin();
+		new EditParkourKitConversation((Conversable) commandSender).withKitName(kitName).begin();
 	}
 
 	public void setLinkedParkourKit(CommandSender commandSender, String kitName, String courseName) {

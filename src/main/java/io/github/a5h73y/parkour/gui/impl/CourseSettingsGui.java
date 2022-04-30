@@ -59,6 +59,10 @@ public class CourseSettingsGui implements AbstractMenu {
 		parent.addElement(createSettingToggle('v', "Resumable", courseConfig.getResumable(),
 				click -> courseConfig.toggleResumable()));
 
+		// die in liquid
+		// die in void
+		// manual checkpoints
+
 		// input required
 		parent.addElement(createTextInput('q', player, "Creator",
 				courseConfig.getCreator(),
@@ -84,12 +88,16 @@ public class CourseSettingsGui implements AbstractMenu {
 		parent.addElement(createTextInput('i', player, "Reward Parkour Level Increase",
 				courseConfig.getRewardParkourLevelIncrease(),
 				input -> courseSettingsManager.setRewardParkourLevelIncrease(player, courseName, input)));
-		parent.addElement(createTextInput('o', player, "Reward Delay", DateTimeUtils.convertMillisecondsToDateTime(
+		parent.addElement(createTextInput('o', player, "Reward Delay",
+				DateTimeUtils.convertMillisecondsToDateTime(
 						DateTimeUtils.convertHoursToMilliseconds(courseConfig.getRewardDelay())),
 				input -> courseSettingsManager.setRewardDelay(player, courseName, input)));
 		parent.addElement(createTextInput('a', player, "Display Name",
 				StringUtils.colour(courseConfig.getCourseDisplayName()),
 				input -> courseSettingsManager.setDisplayName(player, courseName, input)));
+
+		// maxfallticks
+		// rename course
 
 		// start conversation
 		parent.addElement(createConversationStarter('s', "Prize", courseName,

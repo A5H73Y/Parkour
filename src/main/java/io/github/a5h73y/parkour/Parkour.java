@@ -75,6 +75,8 @@ Each 'type' must have the following:
  * either a permission check on every single method, or a check in the invoke method (setcourse)
  * each alias must feed down the correct path
 
+Check each command exists and works in ParkourCommands and Console, check json matches, make sure sorted.
+
  */
 
 public class Parkour extends JavaPlugin {

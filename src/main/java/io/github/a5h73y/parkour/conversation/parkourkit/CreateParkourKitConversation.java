@@ -1,7 +1,7 @@
-package io.github.a5h73y.parkour.conversation;
+package io.github.a5h73y.parkour.conversation.parkourkit;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.conversation.other.AddKitItemConversation;
+import io.github.a5h73y.parkour.conversation.other.ParkourConversation;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.BooleanPrompt;
@@ -11,18 +11,39 @@ import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.jetbrains.annotations.NotNull;
 
-public class CreateParkourKitConversation extends ParkourConversation {
+/**
+ * Conversation to create a new {@link io.github.a5h73y.parkour.type.kit.ParkourKit}.
+ */
+public class CreateParkourKitConversation extends ParkourKitConversation {
 
-    public CreateParkourKitConversation(Conversable conversable) {
+    /**
+     * Construct a Parkour Conversation.
+     *
+     * @param conversable conversable user
+     */
+    public CreateParkourKitConversation(@NotNull Conversable conversable) {
         super(conversable);
     }
 
     @Override
-    public Prompt getEntryPrompt() {
-        return new ChooseKitName();
+    protected boolean isProvidedNameValid() {
+        return this.kitName != null
+                && !this.kitName.isEmpty()
+                && !this.kitName.contains(" ")
+                && !Parkour.getParkourKitConfig().doesParkourKitExist(this.kitName);
     }
 
-    private static class ChooseKitName extends StringPrompt {
+    @Override
+    protected StringPrompt getProvideValidKitPrompt() {
+        return new ChooseNewKitNamePrompt();
+    }
+
+    @Override
+    protected Prompt getFirstPrompt() {
+        return new ShouldUseStandardBlocksPrompt();
+    }
+
+    private static class ChooseNewKitNamePrompt extends StringPrompt {
 
         @NotNull
         @Override
@@ -32,7 +53,7 @@ public class CreateParkourKitConversation extends ParkourConversation {
 
         @Override
         public Prompt acceptInput(@NotNull ConversationContext context, String name) {
-            if (name.isEmpty()) {
+            if (name == null || name.isEmpty()) {
                 return Prompt.END_OF_CONVERSATION;
             }
 
@@ -48,12 +69,12 @@ public class CreateParkourKitConversation extends ParkourConversation {
                 return this;
             }
 
-            context.setSessionData("name", name);
-            return new UseStandardKit();
+            context.setSessionData(PARKOUR_KIT_NAME, name);
+            return new ShouldUseStandardBlocksPrompt();
         }
     }
 
-    private static class UseStandardKit extends BooleanPrompt {
+    private static class ShouldUseStandardBlocksPrompt extends BooleanPrompt {
 
         @NotNull
         @Override
@@ -64,7 +85,7 @@ public class CreateParkourKitConversation extends ParkourConversation {
 
         @Override
         protected Prompt acceptValidatedInput(@NotNull ConversationContext context, boolean input) {
-            String name = context.getSessionData("name").toString();
+            String name = context.getSessionData(PARKOUR_KIT_NAME).toString();
 
             if (input) {
                 context.getForWhom().sendRawMessage(TranslationUtils.getPluginPrefix() + name + " will use standard blocks...");

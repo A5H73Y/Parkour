@@ -84,11 +84,6 @@ public class PermissionUtils {
 	 * @return player has permission or ownership
 	 */
 	public static boolean hasPermissionOrCourseOwnership(Player player, Permission permission, String courseName) {
-		if (!Parkour.getInstance().getPlayerManager().hasSelectedValidCourse(player) && courseName == null) {
-			TranslationUtils.sendTranslation("Error.Selected", player);
-			return false;
-		}
-
 		if (!Parkour.getInstance().getCourseManager().doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, player);
 			return false;

@@ -3,8 +3,8 @@ package io.github.a5h73y.parkour.conversation;
 import static io.github.a5h73y.parkour.other.ParkourConstants.PLAYER_PLACEHOLDER;
 
 import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.conversation.other.ParkourConversation;
 import io.github.a5h73y.parkour.type.course.ParkourEventType;
-import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.ChatColor;
@@ -47,7 +47,7 @@ public class CoursePrizeConversation extends ParkourConversation {
         @NotNull
         @Override
         public String getPromptText(@NotNull ConversationContext context) {
-            return ChatColor.LIGHT_PURPLE + " What type of prize would you like to set?\n"
+            return ChatColor.LIGHT_PURPLE + " Which type of prize would you like to set?\n"
                     + ChatColor.GREEN + formatFixedSet();
         }
 

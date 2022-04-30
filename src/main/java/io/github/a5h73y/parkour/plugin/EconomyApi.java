@@ -96,7 +96,7 @@ public class EconomyApi extends PluginWrapper {
 	 * @return currency name
 	 */
 	public String getCurrencyName() {
-		return !isEconomyLinked() || economy.currencyNamePlural() == null ? "" : " " + economy.currencyNamePlural();
+		return !isEconomyLinked() || !ValidationUtils.isStringValid(economy.currencyNamePlural()) ? "" : " " + economy.currencyNamePlural();
 	}
 
 	/**

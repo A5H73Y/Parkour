@@ -18,7 +18,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public class PlayerConfig extends Json {
 
-    public static final String SELECTED = "Selected";
     public static final String LAST_PLAYED = "LastPlayed";
     public static final String LAST_COMPLETED = "LastCompleted";
     public static final String PARKOUR_LEVEL = "ParkourLevel";
@@ -67,41 +66,7 @@ public class PlayerConfig extends Json {
         }
     }
 
-    /**
-     * Get the Player's selected Course name.
-     *
-     * @return selected course name
-     */
-    @Nullable
-    public String getSelectedCourse() {
-        return this.get(SELECTED, null);
-    }
 
-    /**
-     * Check if Player has selected a Course.
-     * This does not guarantee they've selected a valid course.
-     *
-     * @return player has selected course
-     */
-    public boolean hasSelectedCourse() {
-        return getSelectedCourse() != null;
-    }
-
-    /**
-     * Set the Player's selected Course name.
-     *
-     * @param courseName selected course name
-     */
-    public void setSelectedCourse(@NotNull String courseName) {
-        this.set(SELECTED, courseName.toLowerCase());
-    }
-
-    /**
-     * Reset the Player's selected Course Name.
-     */
-    public void resetSelected() {
-        this.remove(SELECTED);
-    }
 
     /**
      * Get the Player's last played Course.

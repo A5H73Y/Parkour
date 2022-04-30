@@ -1,5 +1,6 @@
 package io.github.a5h73y.parkour.type.admin;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_UNKNOWN_PLAYER;
 
@@ -15,6 +16,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,6 +25,41 @@ public class AdministrationManager extends AbstractPluginReceiver {
 	public AdministrationManager(final Parkour parkour) {
 		super(parkour);
 	}
+
+	public void processCreateCommand(@NotNull Player player,
+	                                 @NotNull String command,
+	                                 @Nullable String argument,
+	                                 @Nullable String detail) {
+
+		switch (command.toLowerCase()) {
+			case "course":
+				parkour.getCourseManager().createCourse(player, argument);
+				break;
+
+			case "checkpoint":
+				parkour.getCheckpointManager().createCheckpoint(player, argument,
+						ValidationUtils.isPositiveInteger(detail) ? Integer.parseInt(detail) : null);
+				break;
+
+			case "lobby":
+				parkour.getLobbyManager().createLobby(player, argument == null ? DEFAULT : argument, detail);
+				break;
+
+			case "kit":
+			case "parkourkit":
+				parkour.getParkourKitManager().startCreateKitConversation(player, argument); //TODO once parkoutkitmanager upgraded, use action
+				break;
+
+			case "autostart":
+				parkour.getAutoStartManager().createAutoStart(player, argument);
+				break;
+
+			default:
+				parkour.getParkourCommands().sendInvalidSyntax(player, "create");
+				break;
+		}
+	}
+
 
 	/**
 	 * Delete Command.

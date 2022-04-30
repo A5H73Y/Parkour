@@ -185,7 +185,6 @@ public class CourseManager extends AbstractPluginReceiver {
 
         parkour.getConfigManager().getCourseConfig(courseName).createCourseData(player);
         courseNames.add(courseName);
-        parkour.getConfigManager().getPlayerConfig(player).setSelectedCourse(courseName);
 
         TranslationUtils.sendValueTranslation("Parkour.Created", courseName, player);
         TranslationUtils.sendValueTranslation("Parkour.WhenReady", courseName, false, player);
@@ -526,7 +525,11 @@ public class CourseManager extends AbstractPluginReceiver {
      * @return player can create course
      */
     public boolean canCreateCourse(Player player, String courseName) {
-        if (courseName.length() > 15) {
+        if (courseName == null || courseName.trim().isEmpty()) {
+            TranslationUtils.sendMessage(player, "Please provide a Course name!");
+            return false;
+
+        } else if (courseName.length() > 15) {
             TranslationUtils.sendMessage(player, "Course name is too long!");
             return false;
 

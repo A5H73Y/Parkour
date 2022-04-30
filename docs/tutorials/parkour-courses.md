@@ -185,13 +185,13 @@ _Command: `/pa setcourse (course) rename (new-name)`_
 
 To remove either the linked Course or linked Lobby from a Course, reset the link which will set the Player to be teleported to the default lobby.
 
-_Command: `/pa setcourse (course) resetlink`
+_Command: `/pa setcourse (course) resetlink`_
 
 ### start
 
-If you want to change the starting position of a Course, you can enter `/pa setstart`.
+Change the starting position of a Course, the exact position you are in will be saved.
 
-_Remember that you must have the Course selected (editing), which can be achieved by entering `/pa select (course)`._
+_Command: `/pa setcourse (course) start`_
 
 ### message
 

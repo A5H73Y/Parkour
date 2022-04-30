@@ -252,6 +252,7 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("Other.Display.LevelReward", true);
 		this.setDefault("Other.Display.PrizeCooldown", true);
 		this.setDefault("Other.Display.OnlyReadyCourses", false);
+		this.setDefault("Other.Display.IncludeDeprecatedCommands", false);
 
 		this.setDefault("Other.Time.StandardFormat", "HH:mm:ss");
 		this.setDefault("Other.Time.DetailedFormat", "HH:mm:ss:SSS");

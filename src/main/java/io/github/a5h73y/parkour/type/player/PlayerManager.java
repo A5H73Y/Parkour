@@ -455,7 +455,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	 * @param player parkour player
 	 */
 	public void teardownParkourPlayer(Player player) {
-		parkour.getChallengeManager().forfeitChallenge(player);
+		parkour.getChallengeManager().teardownChallenge(player);
 		parkour.getQuestionManager().removeQuestion(player);
 		parkour.getParkourSessionManager().removeHiddenPlayer(player);
 		parkour.getParkourSessionManager().saveParkourSession(player, true);
@@ -954,7 +954,6 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		sendConditionalValue(commandSender, "ParkourLevel", playerConfig.getParkourLevel());
 		sendConditionalValue(commandSender, "ParkourRank", StringUtils.colour(playerConfig.getParkourRank()));
 		sendConditionalValue(commandSender, "Parkoins", playerConfig.getParkoins());
-		sendConditionalValue(commandSender, "Editing", playerConfig.getSelectedCourse());
 
 		int completedCourses = parkour.getConfigManager().getCourseCompletionsConfig().getNumberOfCompletedCourses(targetPlayer);
 
@@ -1065,17 +1064,6 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		} else {
 			parkour.getParkourCommands().sendInvalidSyntax(commandSender, "setplayer");
 		}
-	}
-
-	/**
-	 * Has Player selected a known Course.
-	 *
-	 * @param player player
-	 * @return selected valid course
-	 */
-	public boolean hasSelectedValidCourse(Player player) {
-		String selected = parkour.getConfigManager().getPlayerConfig(player).getSelectedCourse();
-		return parkour.getCourseManager().doesCourseExist(selected);
 	}
 
 	/**
@@ -1211,41 +1199,6 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		return parkour.getCourseManager().getCourseNames().stream()
 				.filter(course -> !completedCourses.contains(course))
 				.collect(Collectors.toList());
-	}
-
-
-	/**
-	 * Select the Course for editing.
-	 * This is used for commands that do not require a course parameter, such as "/pa checkpoint".
-	 *
-	 * @param player requesting player
-	 * @param courseName course name
-	 */
-	public void selectCourse(final Player player, final String courseName) {
-		if (!parkour.getCourseManager().doesCourseExist(courseName)) {
-			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, player);
-			return;
-		}
-
-		parkour.getConfigManager().getPlayerConfig(player).setSelectedCourse(courseName);
-		TranslationUtils.sendValueTranslation("Parkour.Selected", courseName, player);
-	}
-
-	/**
-	 * Deselect the Course for editing.
-	 *
-	 * @param player requesting player
-	 */
-	public void deselectCourse(final Player player) {
-		PlayerConfig playerConfig = parkour.getConfigManager().getPlayerConfig(player);
-
-		if (playerConfig.hasSelectedCourse()) {
-			playerConfig.resetSelected();
-			TranslationUtils.sendTranslation("Parkour.Deselected", player);
-
-		} else {
-			TranslationUtils.sendTranslation("Error.Selected", player);
-		}
 	}
 
 	/**

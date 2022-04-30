@@ -2,6 +2,7 @@ package io.github.a5h73y.parkour.type.checkpoint;
 
 import static io.github.a5h73y.parkour.other.ParkourConstants.CHECKPOINT_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.COURSE_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_INVALID_AMOUNT;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 
 import com.cryptomorin.xseries.XBlock;
@@ -12,6 +13,9 @@ import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.utility.ValidationUtils;
+import io.github.a5h73y.parkour.utility.permission.Permission;
+import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -40,14 +44,12 @@ public class CheckpointManager extends AbstractPluginReceiver {
      * @param player requesting player
      * @param checkpoint optional checkpoint number to override
      */
-    public void createCheckpoint(Player player, @Nullable Integer checkpoint) {
-        if (!canCreateCheckpoint(player, checkpoint)) {
+    public void createCheckpoint(Player player, String courseName, @Nullable Integer checkpoint) {
+        if (!canCreateCheckpoint(player, courseName, checkpoint)) {
             return;
         }
-
-        String selectedCourse = parkour.getConfigManager().getPlayerConfig(player).getSelectedCourse();
         // the checkpoint number to overwrite / create
-        checkpoint = checkpoint != null ? checkpoint : parkour.getConfigManager().getCourseConfig(selectedCourse).getCheckpointAmount() + 1;
+        checkpoint = checkpoint != null ? checkpoint : parkour.getConfigManager().getCourseConfig(courseName).getCheckpointAmount() + 1;
         Location location = player.getLocation();
         Block block = location.getBlock();
 
@@ -74,11 +76,11 @@ public class CheckpointManager extends AbstractPluginReceiver {
 
         block.setType(parkour.getParkourConfig().getCheckpointMaterial());
 
-        parkour.getConfigManager().getCourseConfig(selectedCourse).createCheckpointData(location, checkpoint);
-        parkour.getCourseManager().clearCache(selectedCourse);
+        parkour.getConfigManager().getCourseConfig(courseName).createCheckpointData(location, checkpoint);
+        parkour.getCourseManager().clearCache(courseName);
         player.sendMessage(TranslationUtils.getTranslation("Parkour.CheckpointCreated")
                 .replace(CHECKPOINT_PLACEHOLDER, String.valueOf(checkpoint))
-                .replace(COURSE_PLACEHOLDER, selectedCourse));
+                .replace(COURSE_PLACEHOLDER, courseName));
     }
 
     /**
@@ -156,15 +158,12 @@ public class CheckpointManager extends AbstractPluginReceiver {
      * @param checkpoint checkpoint
      * @return player is able to create checkpoint
      */
-    public boolean canCreateCheckpoint(Player player, @Nullable Integer checkpoint) {
-        String selectedCourse = parkour.getConfigManager().getPlayerConfig(player).getSelectedCourse();
-
-        if (!parkour.getCourseManager().doesCourseExist(selectedCourse)) {
-            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, selectedCourse, player);
+    public boolean canCreateCheckpoint(Player player, String courseName, @Nullable Integer checkpoint) {
+        if (!PermissionUtils.hasPermissionOrCourseOwnership(player, Permission.ADMIN_COURSE, courseName)) {
             return false;
         }
 
-        int checkpoints = parkour.getConfigManager().getCourseConfig(selectedCourse).getCheckpointAmount() + 1;
+        int checkpoints = parkour.getConfigManager().getCourseConfig(courseName).getCheckpointAmount() + 1;
 
         if (checkpoint != null) {
             if (checkpoint < 1) {

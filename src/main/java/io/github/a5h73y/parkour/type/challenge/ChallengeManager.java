@@ -120,6 +120,10 @@ public class ChallengeManager extends AbstractPluginReceiver {
             targetPlayer.sendMessage(TranslationUtils.getTranslation("Parkour.Challenge.InviteReceived")
                     .replace(COURSE_PLACEHOLDER, challenge.getCourseName())
                     .replace(PLAYER_PLACEHOLDER, challenge.getChallengeHost().getName()));
+            if (challenge.getWager() != null) {
+                TranslationUtils.sendValueTranslation("Parkour.Challenge.InviteReceivedWager",
+                        challenge.getWager() + parkour.getEconomyApi().getCurrencyName(), targetPlayer);
+            }
             TranslationUtils.sendTranslation("Parkour.Challenge.AcceptDecline", false, targetPlayer);
         }
     }
@@ -176,6 +180,21 @@ public class ChallengeManager extends AbstractPluginReceiver {
                 || challenges.values().stream().anyMatch(challenge -> challenge.isPlayerParticipating(player));
     }
 
+    public void teardownChallenge(Player player) {
+        Challenge challenge = getChallengeForHost(player);
+
+        // if they were the host of an unstarted challenge
+        if (challenge != null && !challenge.hasStarted()) {
+            for (UUID participantId : challenge.getParticipatingPlayers()) {
+                TranslationUtils.sendValueTranslation("Parkour.Challenge.Terminated",
+                        player.getName(), Bukkit.getPlayer(participantId));
+            }
+            removeChallenge(challenge.getChallengeHost());
+        } else {
+            forfeitChallenge(player);
+        }
+    }
+
     /**
      * Forfeit the Challenge for the Player.
      * If the Player leaves or fails the course, they have forfeited their change to win the Challenge.
@@ -188,25 +207,28 @@ public class ChallengeManager extends AbstractPluginReceiver {
         Challenge challenge = getChallengeForPlayer(player);
 
         if (challenge != null) {
-            challenge.setForfeited(player, true);
             player.setWalkSpeed(DEFAULT_WALK_SPEED);
 
-            if (challenge.allPlayersForfeited()) {
-                removeChallenge(challenge.getChallengeHost());
-                for (UUID participantId : challenge.getParticipatingPlayers()) {
-                    TranslationUtils.sendValueTranslation("Parkour.Challenge.Terminated",
-                            player.getName(), Bukkit.getPlayer(participantId));
-                }
+            if (challenge.hasStarted()) {
+                challenge.setForfeited(player, true);
 
-            } else {
-                TranslationUtils.sendTranslation("Parkour.Challenge.Quit", player);
-
-                challenge.getParticipantsForfeit().forEach((participantId, forfeited) -> {
-                    if (!forfeited) {
-                        TranslationUtils.sendValueTranslation("Parkour.Challenge.Forfeited",
+                if (challenge.allPlayersForfeited()) {
+                    for (UUID participantId : challenge.getParticipatingPlayers()) {
+                        TranslationUtils.sendValueTranslation("Parkour.Challenge.Terminated",
                                 player.getName(), Bukkit.getPlayer(participantId));
                     }
-                });
+                    removeChallenge(challenge.getChallengeHost());
+
+                } else {
+                    TranslationUtils.sendTranslation("Parkour.Challenge.Quit", player);
+
+                    challenge.getParticipantsForfeit().forEach((participantId, forfeited) -> {
+                        if (!forfeited) {
+                            TranslationUtils.sendValueTranslation("Parkour.Challenge.Forfeited",
+                                    player.getName(), Bukkit.getPlayer(participantId));
+                        }
+                    });
+                }
             }
         }
     }
@@ -221,7 +243,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
     public void completeChallenge(Player winner) {
         Challenge challenge = getChallengeForPlayer(winner);
 
-        if (challenge != null) {
+        if (challenge != null && !challenge.isForfeited(winner)) {
             removeChallenge(challenge.getChallengeHost());
 
             TranslationUtils.sendValueTranslation("Parkour.Challenge.Winner",
@@ -245,7 +267,10 @@ public class ChallengeManager extends AbstractPluginReceiver {
             }
 
             if (challenge.getWager() != null) {
-                parkour.getEconomyApi().rewardPlayer(winner, challenge.getWager() * (challenge.getNumberOfParticipants() - 1));
+                double amount = challenge.getWager() * (challenge.getNumberOfParticipants() - 1);
+                parkour.getEconomyApi().rewardPlayer(winner, amount);
+                TranslationUtils.sendValueTranslation("Parkour.Challenge.WinnerWager",
+                        amount + parkour.getEconomyApi().getCurrencyName(), winner);
             }
         }
     }
@@ -282,7 +307,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
         TranslationUtils.sendValueTranslation("Parkour.Challenge.Joined",
                 invite.getChallenge().getCourseName(), receivingPlayer);
         TranslationUtils.sendMessage(invite.getChallenge().getChallengeHost(),
-                receivingPlayer.getName() + " has accepted the Challenge!");
+                "&b" + receivingPlayer.getName() + " &fhas accepted your Challenge invite!");
     }
 
     /**
@@ -345,12 +370,15 @@ public class ChallengeManager extends AbstractPluginReceiver {
     public void beginCountdown(Challenge challenge) {
         new BukkitRunnable() {
             int count = parkour.getParkourConfig().getInt("ParkourChallenge.CountdownFrom") + 1;
+            final Player[] players = challenge.getParticipatingPlayers().stream()
+                    .map(Bukkit::getPlayer)
+                    .toArray(Player[]::new);
+
             @Override
             public void run() {
                 if (count > 1) {
                     count--;
-                    TranslationUtils.sendValueTranslation("Parkour.Countdown", String.valueOf(count),
-                            challenge.getParticipatingPlayers().toArray(new Player[0]));
+                    TranslationUtils.sendValueTranslation("Parkour.Countdown", String.valueOf(count), players);
 
                 } else {
                     this.cancel();
@@ -409,6 +437,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
                 processTerminateCommand(player);
                 break;
 
+            case "details":
             case "info":
                 displayChallengeInfo(player);
                 break;
@@ -428,7 +457,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
                     Player player = Bukkit.getPlayer(entry.getKey());
                     if (player != null && player.isOnline()) {
                         TranslationUtils.sendMessage(entry.getValue().getChallenge().getChallengeHost(),
-                                "The invite sent to " + player.getName() + " has expired.");
+                                "The invite sent to &b" + player.getName() + " &fhas expired.");
                         TranslationUtils.sendMessage(player, "Your Challenge invite has expired.");
                     }
                     iterable.remove();
@@ -507,6 +536,11 @@ public class ChallengeManager extends AbstractPluginReceiver {
             return;
         }
 
+        if (challenge.hasStarted()) {
+            TranslationUtils.sendMessage(player, "The Challenge has already started!");
+            return;
+        }
+
         if (challenge.getNumberOfParticipants() < 2) {
             TranslationUtils.sendMessage(player, "You need at least 2 players to start a Challenge.");
             return;
@@ -514,6 +548,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
 
         prepareParticipants(challenge);
         beginCountdown(challenge);
+        challenge.markStarted();
     }
 
     private void processInviteReceiveCommand(Player player, boolean accepted) {
@@ -539,8 +574,15 @@ public class ChallengeManager extends AbstractPluginReceiver {
             return;
         }
 
+        if (challenge.hasStarted()) {
+            TranslationUtils.sendMessage(hostPlayer, "You can not terminate a Challenge in progress.");
+            return;
+        }
+
         challenge.getParticipatingPlayers().forEach(participantId ->
                 TranslationUtils.sendMessage(Bukkit.getPlayer(participantId), "The host has terminated the Challenge."));
+
+        invites.entrySet().removeIf(entry -> entry.getValue().getChallenge().equals(challenge));
         removeChallenge(hostPlayer);
     }
 

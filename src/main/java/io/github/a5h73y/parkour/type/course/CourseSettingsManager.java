@@ -231,6 +231,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			value = !config.getDieInLiquid();
 		}
 		config.setDieInLiquid(value);
+		clearCourseCache(courseName);
 		notifyActionChange(commandSender, "Die In Liquid", courseName, String.valueOf(value));
 	}
 
@@ -255,6 +256,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			value = !config.getDieInVoid();
 		}
 		config.setDieInVoid(value);
+		clearCourseCache(courseName);
 		notifyActionChange(commandSender, "Die In Void", courseName, String.valueOf(value));
 	}
 
@@ -355,6 +357,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 		}
 
 		parkour.getConfigManager().getCourseConfig(courseName).setManualCheckpoints(value);
+		clearCourseCache(courseName);
 		notifyActionChange(commandSender, "Manual Checkpoints", courseName, String.valueOf(value));
 	}
 
@@ -482,7 +485,8 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 		CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(courseName);
 
 		if (courseConfig.hasParkourKit()) {
-			TranslationUtils.sendMessage(commandSender, "This Course is already linked to a ParkourKit, continuing anyway...");
+			TranslationUtils.sendMessage(commandSender, "This Course was already linked to &b"
+					+ courseConfig.getParkourKit() + " &fParkourKit, continuing anyway...");
 		}
 
 		courseConfig.setParkourKit(kitName);

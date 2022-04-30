@@ -21,17 +21,15 @@ This example has named the Course "tutorial", the name you have chosen will be u
 
 *This will create a Course entry in the database, allowing us to now track times against it.*
 
-The term "selected" means that you are editing the Course. This can be manually achieved by using the command `/pa select (course)`, this allows you to execute some commands without having to specify the Course, for example the following `/pa checkpoint` command.
-
 ## Create Checkpoints
 
-To create a checkpoint stand where you want your first checkpoint to be, face the direction you want the Players to teleport to and enter `/pa checkpoint`.
+To create a checkpoint stand where you want your first checkpoint to be, face the direction you want the Players to teleport to and enter `/pa create checkpoint (course)`.
 
 _This will place a pressure plate to activate the checkpoint._
 
 ![Checkpoint Created](https://i.imgur.com/IYgHBJs.jpg "Checkpoint Created")
 
-There is no limit to how many checkpoints you can create, they are automatically generated every time you enter `/pa checkpoint`. _The checkpoint is generated for the Course you have selected (editing); To select a Course use the command `/pa select (course)`._
+There is no limit to how many checkpoints you can create, they are automatically generated every time you enter `/pa create checkpoint (course)`.
 
 Now you've learnt how to create a single checkpoint, repeat the command to create as many checkpoints as needed for the Course.
 

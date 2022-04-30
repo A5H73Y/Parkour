@@ -1,4 +1,4 @@
-package io.github.a5h73y.parkour.conversation;
+package io.github.a5h73y.parkour.conversation.other;
 
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 
@@ -85,6 +85,11 @@ public abstract class ParkourConversation implements ConversationAbandonedListen
         if (targetPlayerName != null) {
             conversation.getContext().setSessionData(SESSION_TARGET_PLAYER_NAME, targetPlayerName);
         }
+        preBeginStep(conversation);
         conversation.begin();
+    }
+
+    public void preBeginStep(Conversation conversation) {
+        // let the implementing conversation apply
     }
 }

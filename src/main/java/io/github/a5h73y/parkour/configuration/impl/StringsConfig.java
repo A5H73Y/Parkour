@@ -33,11 +33,9 @@ public class StringsConfig extends Yaml {
 		this.setDefault("Parkour.TimerStarted", "Timer started!");
 		this.setDefault("Parkour.Restarting", "Restarting course");
 		this.setDefault("Parkour.Leave", "You left &b%VALUE%");
-		this.setDefault("Parkour.Created", "&b%VALUE% &fhas been created and selected!");
+		this.setDefault("Parkour.Created", "&b%VALUE% &fhas been created!");
 		this.setDefault("Parkour.CheckpointCreated", "Checkpoint &3%CHECKPOINT% &fhas been set on &b%COURSE%&f!");
-		this.setDefault("Parkour.Selected", "Now editing &b%VALUE%");
-		this.setDefault("Parkour.Deselected", "Finish editing.");
-		this.setDefault("Parkour.WhenReady", "&7Once you have finished editing &b%VALUE%&7, enter &b/pa ready");
+		this.setDefault("Parkour.WhenReady", "&7Once you have finished editing &b%VALUE%&7, enter &b/pa ready %VALUE%");
 		this.setDefault("Parkour.Delete", "&b%VALUE% &fhas been deleted!");
 		this.setDefault("Parkour.DeleteCheckpoint", "Checkpoint &b%CHECKPOINT% &fwas deleted on &b%COURSE%");
 		this.setDefault("Parkour.Reset", "&b%VALUE% &fhas been reset!");
@@ -77,15 +75,17 @@ public class StringsConfig extends Yaml {
 
 		this.setDefault("Parkour.Challenge.Created", "Challenge for &b%VALUE% &fcreated");
 		this.setDefault("Parkour.Challenge.StartCommand", "When ready, enter &b/pa challenge start");
-		this.setDefault("Parkour.Challenge.Wager", " &fwith a wager of &b%VALUE%&f!");
+		this.setDefault("Parkour.Challenge.Wager", ", &fwith a wager of &b%VALUE%&f!");
 		this.setDefault("Parkour.Challenge.InviteSent", "A Challenge invite was sent to &b%VALUE%&f!");
 		this.setDefault("Parkour.Challenge.InviteReceived", "You have been Challenged to &b%COURSE% &fby &b%PLAYER%&f!");
+		this.setDefault("Parkour.Challenge.InviteReceivedWager", "The wager is set to &b%VALUE%&f!");
 		this.setDefault("Parkour.Challenge.AcceptDecline", "To accept &a/pa accept &for &c/pa decline &fto decline.");
-		this.setDefault("Parkour.Challenge.Joined", "You have joined a Challenge on &b%VALUE%&f. Please wait until the host starts.");
+		this.setDefault("Parkour.Challenge.Joined", "You have accepted a Challenge on &b%VALUE%&f. Please wait until the host starts.");
 		this.setDefault("Parkour.Challenge.Terminated", "&b%VALUE% &fhas terminated the challenge!");
 		this.setDefault("Parkour.Challenge.Forfeited", "&b%VALUE% &fhas forfeited the challenge. Complete the course to win!");
 		this.setDefault("Parkour.Challenge.Quit", "You have forfeited the challenge. Another player must complete the course to win!");
 		this.setDefault("Parkour.Challenge.Winner", "Congratulations! You won the challenge on &b%VALUE%!");
+		this.setDefault("Parkour.Challenge.WinnerWager", "You have been rewarded &b%VALUE% &ffor winning the wager!");
 		this.setDefault("Parkour.Challenge.Loser", "&b%PLAYER% &fhas completed &b%COURSE% &fbefore you!");
 
 		this.setDefault("Event.Join", "This server uses &bParkour &3%VALUE%");
@@ -105,7 +105,6 @@ public class StringsConfig extends Yaml {
 		this.setDefault("Error.NoExist", "&b%VALUE% &fdoesn't exist!");
 		this.setDefault("Error.Command", "Non-Parkour commands have been disabled!");
 		this.setDefault("Error.Sign", "Non-Parkour signs have been disabled!");
-		this.setDefault("Error.Selected", "You have not selected a course!");
 		this.setDefault("Error.WrongWorld", "You are in the wrong world!");
 		this.setDefault("Error.WorldTeleport", "Teleporting to a different world has been prevented!");
 		this.setDefault("Error.RequiredLvl", "You require level &b%VALUE% &fto join!");

@@ -4,8 +4,8 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.conversation.CoursePrizeConversation;
-import io.github.a5h73y.parkour.conversation.CreateParkourKitConversation;
-import io.github.a5h73y.parkour.conversation.EditParkourKitConversation;
+import io.github.a5h73y.parkour.conversation.parkourkit.CreateParkourKitConversation;
+import io.github.a5h73y.parkour.conversation.parkourkit.EditParkourKitConversation;
 import io.github.a5h73y.parkour.conversation.ParkourModeConversation;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.PluginBackupUtil;
@@ -292,6 +292,17 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 }
 
                 parkour.getParkourRankManager().setRewardParkourRank(commandSender, args[1], args[2]);
+                break;
+
+            case "session":
+                if (!ValidationUtils.validateArgs(commandSender, args, 3)) {
+                    return false;
+
+                } else if (findPlayer(commandSender, args[2]) == null) {
+                    return false;
+                }
+
+                parkour.getParkourSessionManager().processCommand(findPlayer(commandSender, args[2]), args[1]);
                 break;
 
             case "setcheckpoint":

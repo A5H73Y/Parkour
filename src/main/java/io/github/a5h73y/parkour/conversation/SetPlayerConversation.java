@@ -1,7 +1,7 @@
 package io.github.a5h73y.parkour.conversation;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.conversation.other.ParkourConversation;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.util.Arrays;
 import java.util.Collections;
@@ -9,7 +9,6 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.FixedSetPrompt;
 import org.bukkit.conversations.Prompt;
@@ -76,10 +75,10 @@ public class SetPlayerConversation extends ParkourConversation {
             OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(targetPlayerName);
 
             Parkour parkour = Parkour.getInstance();
-            Bukkit.getScheduler().runTaskAsynchronously(parkour, () -> {
+            Bukkit.getScheduler().runTaskAsynchronously(parkour, () ->
                 // for messages to be sent - do it async
-                parkour.getPlayerManager().processCommand(player, targetPlayer, setOption, input);
-            });
+                parkour.getPlayerManager().processCommand(player, targetPlayer, setOption, input)
+            );
 
             return Prompt.END_OF_CONVERSATION;
         }

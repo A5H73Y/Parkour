@@ -1,7 +1,7 @@
 package io.github.a5h73y.parkour.conversation;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.course.CourseConfig;
+import io.github.a5h73y.parkour.conversation.other.ParkourConversation;
 import io.github.a5h73y.parkour.type.course.ParkourEventType;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
@@ -83,10 +83,11 @@ public class SetCourseConversation extends ParkourConversation {
             String setOption = (String) context.getSessionData("setOption");
 
             Parkour parkour = Parkour.getInstance();
-            Bukkit.getScheduler().runTaskAsynchronously(parkour, () -> {
+            Bukkit.getScheduler().runTaskAsynchronously(parkour, () ->
                 // for messages to be sent - do it async
-                parkour.getCourseSettingsManager().performAction((CommandSender) context.getForWhom(), courseName, setOption, input);
-            });
+                parkour.getCourseSettingsManager().performAction(
+                        (CommandSender) context.getForWhom(), courseName, setOption, input)
+            );
 
             return Prompt.END_OF_CONVERSATION;
         }

@@ -42,8 +42,9 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
     private static final String BASIC_COMMANDS = "1";
     private static final String CREATE_COMMANDS = "2";
-    private static final String CONFIG_COMMANDS = "3";
-    private static final String ADMIN_COMMANDS = "4";
+    private static final String COURSE_COMMANDS = "3";
+    private static final String PLAYER_COMMANDS = "4";
+    private static final String ADMIN_COMMANDS = "5";
 
     private final Map<String, CommandUsage> commandUsages = new HashMap<>();
 
@@ -125,20 +126,18 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "checkpoint":
-                if (!parkour.getPlayerManager().hasSelectedValidCourse(player)) {
-                    TranslationUtils.sendTranslation("Error.Selected", player);
+                if (!ValidationUtils.validateArgs(player, args, 2, 3)) {
                     return false;
 
-                } else if (!PermissionUtils.hasPermissionOrCourseOwnership(
-                        player, Permission.ADMIN_COURSE, parkour.getConfigManager().getPlayerConfig(player).getSelectedCourse())) {
+                } else if (!PermissionUtils.hasPermissionOrCourseOwnership(player, Permission.ADMIN_COURSE, args[1])) {
                     return false;
 
-                } else if (args.length == 2 && !ValidationUtils.isPositiveInteger(args[1])) {
+                } else if (args.length == 3 && !ValidationUtils.isPositiveInteger(args[2])) {
                     TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, sender);
                     return false;
                 }
 
-                parkour.getCheckpointManager().createCheckpoint(player, args.length == 2 ? Integer.parseInt(args[1]) : null);
+                parkour.getCheckpointManager().createCheckpoint(player, args[1], args.length == 3 ? Integer.parseInt(args[2]) : null);
                 break;
 
             case "cmds":
@@ -149,15 +148,27 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 if (!PermissionUtils.hasPermission(player, Permission.BASIC_CREATE)) {
                     return false;
 
-                } else if (!ValidationUtils.validateArgs(player, args, 2)) {
+                } else if (!ValidationUtils.validateArgs(player, args, 2, 5)) {
                     return false;
                 }
 
-                parkour.getCourseManager().createCourse(player, args[1]);
+                parkour.getAdministrationManager().processCreateCommand(player,
+                        args[1],
+                        args.length > 2 ? args[2] : null,
+                        args.length > 3 ? args[3] : null);
                 break;
 
             case "parkourkit": // TODO move me (because I need alphabetical sort)
-                parkour.getParkourKitManager().processParkourKitCommand(player, args);
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                    return false;
+
+                } else if (!ValidationUtils.validateArgs(player, args, 2, 100)) {
+                    return false;
+                }
+
+                parkour.getParkourKitManager().processParkourKitCommand(player, args[1],
+                        args.length > 2 ? args[2] : null,
+                        args.length > 3 ? args[3] : null);
                 break;
 
             case "delete":
@@ -169,11 +180,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 }
 
                 parkour.getAdministrationManager().processDeleteCommand(player, args[1], args[2]);
-                break;
-
-            case "done":
-            case "deselect":
-                parkour.getPlayerManager().deselectCourse(player);
                 break;
 
             case "econ":
@@ -203,7 +209,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getChallengeManager().processCommand(player, commandLabel, StringUtils.extractMessageFromArgs(args, 1));
+                parkour.getChallengeManager().processCommand(player, "", commandLabel, StringUtils.extractMessageFromArgs(args, 1));
                 break;
 
             case "join":
@@ -237,18 +243,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 }
 
                 parkour.getCourseManager().displayLeaderboards(player, args);
-                break;
-
-            case "link":
-                // TODO check this, is it still possible with selected Course?
-                break;
-
-            case "session": // TODO move me (alphabetically)
-                if (!ValidationUtils.validateArgs(player, args, 2)) {
-                    return false;
-                }
-
-                parkour.getParkourSessionManager().processCommand(player, args[1]);
                 break;
 
             case "list":
@@ -334,17 +328,12 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getParkourRankManager().setRewardParkourRank(player, args[1], args[2]);
                 break;
 
-            case "select":
-            case "edit":
+            case "session":
                 if (!ValidationUtils.validateArgs(player, args, 2)) {
-                    return false;
-
-                } else if (!PermissionUtils.hasPermissionOrCourseOwnership(
-                        player, Permission.ADMIN_COURSE, args[1])) {
                     return false;
                 }
 
-                parkour.getPlayerManager().selectCourse(player, args[1]);
+                parkour.getParkourSessionManager().processCommand(player, args[1]);
                 break;
 
             case "setcourse":
@@ -353,16 +342,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 }
 
                 parkour.getCourseSettingsManager().processCommand(player, args);
-                break;
-
-            case "setlobby":
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
-                    return false;
-                }
-
-                parkour.getLobbyManager().createLobby(player,
-                        args.length > 1 ? args[1] : DEFAULT,
-                        args.length == 3 ? args[2] : null);
                 break;
 
             case "setlobbycommand":
@@ -389,12 +368,15 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "settings":
-                if (!PermissionUtils.hasPermissionOrCourseOwnership(player,
-                        Permission.ADMIN_COURSE, getChosenCourseName(player, args, 1))) {
+                if (!ValidationUtils.validateArgs(player, args, 2)) {
                     return false;
                 }
 
-                parkour.getCourseManager().displaySettingsGui(player, getChosenCourseName(player, args, 1));
+                if (!PermissionUtils.hasPermissionOrCourseOwnership(player, Permission.ADMIN_COURSE, args[1])) {
+                    return false;
+                }
+
+                parkour.getCourseManager().displaySettingsGui(player, args[1]);
                 break;
 
             case "sql":
@@ -520,7 +502,10 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
             case "createkit":
             case "editkit":
             case "validatekit":
-                parkour.getParkourKitManager().processParkourKitCommand(player, commandLabel.replace("kit", ""), args.length > 1 ? args[1] : DEFAULT);
+                parkour.getParkourKitManager().processParkourKitCommand(player,
+                        commandLabel.replace("kit", ""),
+                        args.length > 1 ? args[1] : null,
+                        args.length > 2 ? args[2] : null);
                 break;
 
             // setcourse aliases
@@ -562,29 +547,17 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
         return true;
     }
 
-    /**
-     * Get the Player's chosen course.
-     * If they have provided a course parameter, use that.
-     * Otherwise fallback to the player's selected course.
-     *
-     * @param player player
-     * @param args command args
-     * @param courseArg position of course argument
-     * @return chosen course name
-     */
-    private String getChosenCourseName(Player player, String[] args, int courseArg) {
-        return args.length != courseArg + 1 ? parkour.getConfigManager().getPlayerConfig(player).getSelectedCourse() : args[courseArg];
-    }
-
     private void populateCommandUsages() {
         String json = new BufferedReader(new InputStreamReader(parkour.getResource("parkourCommands.json"), StandardCharsets.UTF_8))
                 .lines().collect(Collectors.joining("\n"));
 
         List<CommandUsage> commandUsageContents = Arrays.asList(new GsonBuilder().create().fromJson(json, CommandUsage[].class));
-        commandUsageContents.forEach(commandUsage -> commandUsages.put(commandUsage.getCommand(), commandUsage));
-
-        // TODO remove me
-//        commandUsageContents.stream().sorted(Comparator.comparing(CommandUsage::getCommand)).forEach(commandUsage -> System.out.println(commandUsage.getCommand()));
+        boolean includeDeprecated = parkour.getParkourConfig().getBoolean("Other.Display.IncludeDeprecatedCommands");
+        commandUsageContents.forEach(commandUsage -> {
+            if (includeDeprecated || commandUsage.getDeprecated() == null) {
+                commandUsages.put(commandUsage.getCommand(), commandUsage);
+            }
+        });
     }
 
     /**
@@ -629,22 +602,27 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
         switch (args[1].toLowerCase()) {
             case BASIC_COMMANDS:
             case "basic":
-                displayBasicCommands(player);
+                displayGroupCommands(player, "Basic Commands", BASIC_COMMANDS);
                 break;
 
             case CREATE_COMMANDS:
             case "create":
-                displayCreatingCommands(player);
+                displayGroupCommands(player, "Create Commands", CREATE_COMMANDS);
                 break;
 
-            case CONFIG_COMMANDS:
+            case COURSE_COMMANDS:
             case "configure":
-                displayConfigureCommands(player);
+                displayGroupCommands(player, "Configuration Commands", COURSE_COMMANDS);
+                break;
+
+            case PLAYER_COMMANDS:
+            case "player":
+                displayGroupCommands(player, "Player Commands", PLAYER_COMMANDS);
                 break;
 
             case ADMIN_COMMANDS:
             case "admin":
-                displayAdminCommands(player);
+                displayGroupCommands(player, "Admin Commands", ADMIN_COMMANDS);
                 break;
 
             case "signs":
@@ -669,7 +647,8 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
         TranslationUtils.sendMessage(player, " 1 &8: &7Basics", false);
         TranslationUtils.sendMessage(player, " 2 &8: &7Creating a Course", false);
         TranslationUtils.sendMessage(player, " 3 &8: &7Configuring a Course", false);
-        TranslationUtils.sendMessage(player, " 4 &8: &7Administration", false);
+        TranslationUtils.sendMessage(player, " 4 &8: &7Player commands", false);
+        TranslationUtils.sendMessage(player, " 5 &8: &7Administration", false);
         TranslationUtils.sendMessage(player, " signs &8: &7Sign Commands", false);
 
         player.sendMessage("");
@@ -728,24 +707,9 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 .replace("%DESCRIPTION%", description));
     }
 
-    private void displayBasicCommands(Player player) {
+    private void displayGroupCommands(Player player, String heading, String group) {
         TranslationUtils.sendHeading("Basic Commands", player);
-        displayCommands(player, BASIC_COMMANDS);
-    }
-
-    private void displayCreatingCommands(Player player) {
-        TranslationUtils.sendHeading("Create Commands", player);
-        displayCommands(player, CREATE_COMMANDS);
-    }
-
-    private void displayConfigureCommands(Player player) {
-        TranslationUtils.sendHeading("Configuration Commands", player);
-        displayCommands(player, CONFIG_COMMANDS);
-    }
-
-    private void displayAdminCommands(Player player) {
-        TranslationUtils.sendHeading("Admin Commands", player);
-        displayCommands(player, ADMIN_COMMANDS);
+        displayCommands(player, group);
     }
 
     @Nullable
