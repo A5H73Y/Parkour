@@ -412,7 +412,7 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Com
 	}
 
 	@Override
-	public void processCommand(CommandSender commandSender, String... args) {
+	public void processCommand(@NotNull CommandSender commandSender, String... args) {
 		if (!(commandSender instanceof Player) || !isPlaying((Player) commandSender)) {
 			TranslationUtils.sendTranslation("Error.NotOnAnyCourse", commandSender);
 			return;

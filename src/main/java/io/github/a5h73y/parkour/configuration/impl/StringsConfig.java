@@ -58,7 +58,7 @@ public class StringsConfig extends Yaml {
 		this.setDefault("Parkour.Accept", "&7Enter &a/pa accept &7to accept.");
 		this.setDefault("Parkour.RewardLevel", "Your level has been set to &b%LEVEL% &ffor completing &b%COURSE%&f!");
 		this.setDefault("Parkour.RewardRank", "Your rank has been set to %VALUE%");
-		this.setDefault("Parkour.RankInfo", "* For level &b%LEVEL% &fyou earn: %RANK%");
+		this.setDefault("Parkour.RankInfo", "* For ParkourLevel &b%LEVEL% &fyou earn: %RANK%");
 		this.setDefault("Parkour.RewardParkoins", "&b%AMOUNT% &fParkoins rewarded! New total: &7%TOTAL%");
 		this.setDefault("Parkour.Countdown", "Starting in &b%VALUE% &fseconds...");
 		this.setDefault("Parkour.Go", "Go!");

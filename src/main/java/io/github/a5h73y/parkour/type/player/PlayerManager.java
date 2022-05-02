@@ -919,7 +919,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 				List<Checkpoint> checkpoints = Collections.singletonList(
 						parkour.getCheckpointManager().createCheckpointFromPlayerLocation(player));
 				ParkourSession session = new ParkourSession(
-						new Course(TEST_MODE, TEST_MODE, checkpoints, kit, ParkourMode.NONE, null)); //TODO
+						new Course(TEST_MODE, TEST_MODE, checkpoints, kit, ParkourMode.NONE,
+								parkour.getCourseSettingsManager().getCourseSettings(TEST_MODE)));
 				parkour.getParkourSessionManager().addPlayer(player, session);
 				parkour.getBountifulApi().sendActionBar(player, TranslationUtils.getValueTranslation(
 						"Parkour.TestModeOn", kitName, false));
@@ -990,8 +991,6 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			newLevel += playerConfig.getParkourLevel();
 		}
 		newLevel = Math.min(newLevel, parkour.getParkourConfig().getInt("Other.Parkour.MaximumParkourLevel"));
-		playerConfig.setParkourLevel(newLevel);
-		TranslationUtils.sendMessage(commandSender, targetPlayer.getName() + "'s ParkourLevel was set to &b" + newLevel);
 
 		if (parkour.getParkourConfig().getBoolean("Other.OnSetPlayerParkourLevel.UpdateParkourRank")) {
 			String parkourRank = parkour.getParkourRankManager().getUnlockedParkourRank(targetPlayer, newLevel);
@@ -999,6 +998,9 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 				setParkourRank(commandSender, targetPlayer, parkourRank);
 			}
 		}
+
+		playerConfig.setParkourLevel(newLevel);
+		TranslationUtils.sendMessage(commandSender, targetPlayer.getName() + "'s ParkourLevel was set to &b" + newLevel);
 	}
 
 	/**
@@ -1016,7 +1018,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}
 
 		PlayerConfig.getConfig(targetPlayer).setParkourRank(value);
-		TranslationUtils.sendMessage(commandSender, targetPlayer.getName() + "'s Parkour was set to " + value);
+		TranslationUtils.sendMessage(commandSender, targetPlayer.getName() + "'s ParkourRank was set to " + value);
 	}
 
 	/**

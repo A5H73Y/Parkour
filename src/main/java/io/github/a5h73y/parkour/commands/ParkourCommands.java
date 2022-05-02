@@ -344,6 +344,12 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getCourseSettingsManager().processCommand(player, args);
                 break;
 
+            case "setlobby":
+                parkour.getLobbyManager().createLobby(player,
+                        args.length > 1 ? args[1] : DEFAULT,
+                        args.length > 2 ? args[2] : null);
+                break;
+
             case "setlobbycommand":
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
                     return false;
