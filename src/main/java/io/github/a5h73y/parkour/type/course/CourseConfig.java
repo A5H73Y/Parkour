@@ -41,6 +41,7 @@ public class CourseConfig extends Json {
     public static final String DISPLAY_NAME = "DisplayName";
     public static final String ECONOMY_FINISH_REWARD = "EconomyFinishReward";
     public static final String ECONOMY_JOINING_FEE = "EconomyJoiningFee";
+    public static final String HAS_FALL_DAMAGE = "HasFallDamage";
     public static final String JOIN_ITEMS = "JoinItems";
     public static final String LINKED_COURSE = "LinkedCourse";
     public static final String LINKED_LOBBY = "LinkedLobby";
@@ -822,6 +823,19 @@ public class CourseConfig extends Json {
      */
     public void setEconomyJoiningFee(@Nullable Double joinFee) {
         this.set(ECONOMY_JOINING_FEE, joinFee);
+    }
+
+    public boolean getHasFallDamage() {
+        return this.getBoolean(HAS_FALL_DAMAGE);
+    }
+
+    public void setHasFallDamage(boolean value) {
+        this.set(HAS_FALL_DAMAGE, value);
+    }
+
+    public boolean toggleHasFallDamage() {
+        setHasFallDamage(!getHasFallDamage());
+        return getHasFallDamage();
     }
 
     /**

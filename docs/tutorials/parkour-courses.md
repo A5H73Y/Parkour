@@ -75,6 +75,8 @@ _Command: `/pa setcourse (course) maxdeaths (amount)`_
 
 You are able to limit the amount of ticks (time) a Player can fall for before they are killed.
 
+Setting the value to 0 will disable the MaxFallTicks check.
+
 _Command: `/pa setcourse (course) maxfallticks (amount)`_
 
 ### maxtime

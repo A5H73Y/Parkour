@@ -11,6 +11,7 @@ public class CourseSettings implements Serializable {
 	private boolean manualCheckpoints;
 	private boolean dieInLiquid;
 	private boolean dieInVoid;
+	private boolean hasFallDamage;
 
 	/**
 	 * Determine if the Course has a configured maximum deaths.
@@ -88,5 +89,13 @@ public class CourseSettings implements Serializable {
 
 	public void setDieInVoid(boolean dieInVoid) {
 		this.dieInVoid = dieInVoid;
+	}
+
+	public boolean isHasFallDamage() {
+		return hasFallDamage;
+	}
+
+	public void setHasFallDamage(boolean hasFallDamage) {
+		this.hasFallDamage = hasFallDamage;
 	}
 }

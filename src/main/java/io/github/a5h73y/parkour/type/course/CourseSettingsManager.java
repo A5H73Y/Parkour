@@ -7,6 +7,7 @@ import static io.github.a5h73y.parkour.type.course.CourseConfig.CREATOR;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.DIE_IN_LIQUID;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.DIE_IN_VOID;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.DISPLAY_NAME;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.HAS_FALL_DAMAGE;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.LINKED_COURSE;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.LINKED_LOBBY;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.MANUAL_CHECKPOINTS;
@@ -77,6 +78,8 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 				courseConfig.get(MAX_DEATHS, defaultSection.getInt(MAX_DEATHS)));
 		courseSettings.setMaxTime(
 				courseConfig.get(MAX_TIME, defaultSection.getInt(MAX_TIME)));
+		courseSettings.setHasFallDamage(
+				courseConfig.get(HAS_FALL_DAMAGE, defaultSection.getBoolean(HAS_FALL_DAMAGE)));
 
 		return courseSettings;
 	}
@@ -343,6 +346,28 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 	}
 
 	/**
+	 * Set has fall damage on Course.
+	 *
+	 * @param commandSender command sender
+	 * @param courseName course name
+	 * @param value has fall damage value
+	 */
+	public void setHasFallDamage(final CommandSender commandSender, final String courseName, @Nullable Boolean value) {
+		if (!doesCourseExist(courseName)) {
+			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
+			return;
+		}
+
+		CourseConfig config = parkour.getConfigManager().getCourseConfig(courseName);
+		if (value == null) {
+			value = !config.getHasFallDamage();
+		}
+		config.setHasFallDamage(value);
+		clearCourseCache(courseName);
+		notifyActionChange(commandSender, "Has Fall Damage", courseName, String.valueOf(value));
+	}
+
+	/**
 	 * Set the Manual Checkpoints flag value.
 	 * Allows the Course to have manual checkpoints set on it, either by Player or by external source.
 	 *
@@ -350,13 +375,17 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 	 * @param courseName course name
 	 * @param value flag value
 	 */
-	public void setManualCheckpoints(CommandSender commandSender, String courseName, boolean value) {
+	public void setManualCheckpoints(CommandSender commandSender, String courseName, Boolean value) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;
 		}
 
-		parkour.getConfigManager().getCourseConfig(courseName).setManualCheckpoints(value);
+		CourseConfig config = parkour.getConfigManager().getCourseConfig(courseName);
+		if (value == null) {
+			value = !config.getManualCheckpoints();
+		}
+		config.setManualCheckpoints(value);
 		clearCourseCache(courseName);
 		notifyActionChange(commandSender, "Manual Checkpoints", courseName, String.valueOf(value));
 	}
@@ -889,6 +918,8 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 				setDieInVoid(commandSender, courseName, value != null ? Boolean.parseBoolean(value) : null));
 		courseSettingActions.put(DISPLAY_NAME.toLowerCase(),
 				this::setDisplayName);
+		courseSettingActions.put(HAS_FALL_DAMAGE.toLowerCase(), (commandSender, courseName, value) ->
+				setHasFallDamage(commandSender, courseName, value != null ? Boolean.parseBoolean(value) : null));
 		courseSettingActions.put(LINKED_COURSE.toLowerCase(),
 				this::setCourseToCourseLink);
 		courseSettingActions.put(LINKED_LOBBY.toLowerCase(),

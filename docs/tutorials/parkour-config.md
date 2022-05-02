@@ -216,10 +216,6 @@ ParkourModes:
   Speedy:
     SetSpeed: 0.7
     ResetSpeed: 0.2
-  # Allows the Player to fall endlessly 
-  Dropper:
-    # Should the Player take fall damage 
-    FallDamage: false
   # Allows the Player to have a Rocket which launches the Player
   Rockets:
     # Should the velocity be inverted (teleported forwards instead of backwards)

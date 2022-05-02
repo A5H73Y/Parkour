@@ -229,8 +229,9 @@ public class MaterialUtils {
 	 * @param location2 location 2
 	 * @return same block locations
 	 */
-	public static boolean sameBlockLocations(Location location1, Location location2) {
-		return location1.getBlockX() == location2.getBlockX()
+	public static boolean sameBlockLocations(@Nullable Location location1, @Nullable Location location2) {
+		return location1 != null && location2 != null
+				&& location1.getBlockX() == location2.getBlockX()
 				&& location1.getBlockY() == location2.getBlockY()
 				&& location1.getBlockZ() == location2.getBlockZ();
 	}

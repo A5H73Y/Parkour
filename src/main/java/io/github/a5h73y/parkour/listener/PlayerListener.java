@@ -94,18 +94,15 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        // if the player takes fall damage
-        // cancel damage if globally disabled or the ParkourMode is Dropper and fall damage is enabled
+        ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
+
+        // should the Player take fall damage
         if (event.getCause() == EntityDamageEvent.DamageCause.FALL
-                && (parkour.getParkourConfig().getBoolean("OnCourse.DisableFallDamage")
-                || (ParkourMode.DROPPER == parkour.getParkourSessionManager().getParkourSession(player).getParkourMode()
-                && !parkour.getParkourConfig().getBoolean("ParkourModes.Dropper.FallDamage")))) {
+                && !session.getCourse().getSettings().isHasFallDamage()) {
             event.setDamage(0);
             event.setCancelled(true);
             return;
         }
-
-        ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
 
         if (event.getCause() == EntityDamageEvent.DamageCause.VOID
                 && session.getCourse().getSettings().isDieInVoid()) {

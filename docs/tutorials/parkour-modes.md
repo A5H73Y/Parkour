@@ -39,7 +39,7 @@ Simply sets the Player's movement speed to what is set in the `config.yml`. Allo
 
 ## Dropper
 
-This allows you to integrate the plugin into the 'dropper' GameMode, allowing you to fall infinitely without dying or taking any fall damage. You can use DeathBlocks to allow the Player to die if they hit a block.
+This has now been replaced by the ability to set MaxFallTicks to 0, and setting "hasFallDamage" to false in the Course's config.
 
 ## Rockets
 

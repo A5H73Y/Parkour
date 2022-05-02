@@ -6,7 +6,6 @@ public enum ParkourMode {
     NONE,
     SPEEDY,
     FREEDOM,
-    DROPPER,
     ROCKETS,
     NORUN,
     POTION;

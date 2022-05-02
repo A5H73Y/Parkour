@@ -2,6 +2,7 @@ package io.github.a5h73y.parkour.configuration.impl;
 
 import static io.github.a5h73y.parkour.type.course.CourseConfig.DIE_IN_LIQUID;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.DIE_IN_VOID;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.HAS_FALL_DAMAGE;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.JOIN_ITEMS;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.MAX_FALL_TICKS;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_DELAY;
@@ -116,6 +117,7 @@ public class DefaultConfig extends Yaml {
 
 		this.setDefault("OnServerRestart.KickPlayerFromCourse", false);
 
+		this.setDefault("CourseDefault.Settings." + HAS_FALL_DAMAGE, true);
 		this.setDefault("CourseDefault.Settings." + MAX_FALL_TICKS, 80);
 		this.setDefault("CourseDefault.Settings." + DIE_IN_LIQUID, false);
 		this.setDefault("CourseDefault.Settings." + DIE_IN_VOID, false);
@@ -156,7 +158,6 @@ public class DefaultConfig extends Yaml {
 
 		this.setDefault("ParkourModes.Speedy.SetSpeed", 0.7);
 		this.setDefault("ParkourModes.Speedy.ResetSpeed", 0.2);
-		this.setDefault("ParkourModes.Dropper.FallDamage", false);
 		this.setDefault("ParkourModes.Rockets.Invert", false);
 		this.setDefault("ParkourModes.Rockets.SecondCooldown", 1);
 		this.setDefault("ParkourModes.Rockets.LaunchForce", 1.5);
