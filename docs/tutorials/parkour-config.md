@@ -18,8 +18,6 @@ This configuration file is very large and can look daunting at first, but each s
 ```yaml
 # All the options for when a Player joins a Course
 OnJoin:
-  # Should the Player be able to join the Course using "/pa join (course)"
-  AllowViaCommand: true
   # Should the Player be in the same World as the Course before being allowed to Join
   EnforceWorld: false
   # Should the Course be marked as Ready before it can be joined
@@ -50,10 +48,6 @@ OnCourse:
   AttemptLessChecks: false
   # Which Material should the Checkpoint pressure plates be made out of
   CheckpointMaterial: STONE_PLATE
-  # Should the Player die when they touch liquid (Water or Lava)
-  DieInLiquid: false
-  # Should the Player die when they take void damage
-  DieInVoid: false
   # Should the Player be prevented from dropping items
   DisableItemDrop: false
   # Should the Player be prevented from picking up items
@@ -86,6 +80,11 @@ OnCourse:
   PreventJoiningDifferentCourse: false
   # Should players have their collisions removed. You need to have the Scoreboard enabled for this to work.
   PreventPlayerCollisions: false
+  # Should players be prevented from taking fire damage
+  PreventFireDamage: true
+  # Should the Player only be allowed to achieve checkpoints sequentially (1 - 2 - 3...)
+  # Or can they be allowed to skip checkpoints (1 - 3 - 4...)
+  SequentialCheckpoints: true
   # Should the Players have to be sneaking to activate the Parkour Tools
   SneakToInteractItems: true
   # Should achieving the final Checkpoint trigger the Course finish for the Player
@@ -104,13 +103,6 @@ OnFinish:
   # What is the finish broadcast message level, options include:
   # "GLOBAL" = Every Player on the server, "WORLD" = Every Player on the World, "PARKOUR" = Every Parkour Player, "PLAYER" = Just the Player, nobody else. 
   BroadcastLevel: GLOBAL
-  # What should be the default prize given to the Player
-  # Set the amount to 0 to prevent a Default Material Prize
-  DefaultPrize:
-    Material: DIAMOND
-    Amount: 1
-    XP: 0
-    Command: ''
   # Should a message be displayed when a new record has been beaten
   DisplayNewRecords: false
   # Should the player be sent a summary of their stats after finishing
@@ -120,15 +112,12 @@ OnFinish:
   # Should the Player have to achieve all the Checkpoints before being able to finish
   # Prevents cheaters from skipping checkpoints
   EnforceCompletion: true
-  # Should the Player's completed courses be tracked
-  CompletedCourses:
-    Enabled: true
-    # Should the Player be notified if they have already completed the joined Course
-    JoinMessage: false
   # What GameMode should the Player be when finishing / leaving the Course. This can be set to 'KEEP' to not override the Player's GameMode.
   SetGameMode: SURVIVAL
   # Should the Player be teleported away after finishing a Course
   TeleportAway: true
+  # Should the Player be Teleported BEFORE the Prize is given
+  TeleportBeforePrize: false
   # Should there be a delay (in ticks) before being teleported away
   TeleportDelay: 0
   # Should the Player be teleported back to the Location they were in before joining the Course
@@ -167,6 +156,37 @@ OnLeaveServer:
   LeaveCourse: false
   # Should the Player be teleported back to the last Checkpoint
   TeleportToLastCheckpoint: false
+
+# All the options for when the Server restarts
+OnServerRestart:
+  # Should all Players be kicked from a Course when the server starts up
+  KickPlayerFromCourse: false
+
+# All the Default Course settings
+CourseDefault:
+  # Settings which will be defaulted to on ALL Courses
+  # These can be overridden on a per-Course basis
+  Settings:
+    HasFallDamage: true
+    MaxFallTicks: 80
+    DieInLiquid: false
+    DieInVoid: false
+    RewardOnce: false
+    RewardDelay: 0
+    RewardLevelAdd: 0
+    JoinItems: []
+  # Default Course Prize
+  Prize:
+    Material: DIAMOND
+    Amount: 1
+    XP: 0
+  # Should the per-course commands be combined with the default commands below
+  Commands:
+    CombinePerCourseCommands: true
+  # Default command to be run for each Parkour event while on a Course
+  # See /tutorials/parkour-courses?id=parkour-events for more information on each event
+  Command:
+    ...
  
 # Configuration for the Items the Player receives when Joining a Course, also known as Parkour Tools
 # The Material can be set to AIR if not wanted
@@ -222,11 +242,8 @@ ParkourModes:
     Invert: false
     # Seconds delay before being able to fire again
     Delay: 1
-  # Allow the Player to walk on any pressure plate to set their checkpoint to their current location
-  FreeCheckpoint:
-    # Allow the Player to use the "/pa manualcheckpoint" command to set their checkpoint to their current location
-    # Can be used by external plugins to trigger setting a checkpoint 
-    ManualCheckpointCommandEnabled: false
+    # Amount of force received from the rocket launching
+    LaunchForce: 1.5
  
 # All the options for displaying titles
 # Choose the durations for each stage, and choose which will be presented in a Title 
@@ -249,7 +266,7 @@ AutoStart:
   # Delay before triggering the Course Join
   TickDelay: 0
   # Include the world name in the AutoStart to allow multi-world support
-  IncludeWorldName: false
+  IncludeWorldName: true
  
 # All the options for displaying a Scoreboard while on a Course
 # Each entry can be disabled and the order changed
@@ -283,9 +300,9 @@ Scoreboard:
 # All the options for the various event Sounds
 # Each entry allows you to enable / disable the sound, also choose the Sound and the volume and pitch
 Sounds:
-  Enabled: true
+  Enabled: false
   JoinCourse:
-    Enabled: false
+    Enabled: true
     Sound: BLOCK_NOTE_BLOCK_PLING
     Volume: 0.05
     Pitch: 1.75
@@ -319,38 +336,47 @@ Sounds:
     Sound: BLOCK_CONDUIT_DEACTIVATE
     Volume: 0.1
     Pitch: 1.75
+  ReloadRocket:
+    Enabled: true
+    Sound: TODO // TODO
+    Volume: 0.1
+    Pitch: 1.75
  
-# All the options for when the Player is on a Course
+# ParkourGUI settings
 ParkourGUI:
   Material: BOOK
   # What should the empty space be filled with
   FillerMaterial: CYAN_STAINED_GLASS_PANE
+
+# ParkourKit settings
+ParkourKit:
+  # When a Kit is requested, should it replace the Player's inventory
+  ReplaceInventory: true
+  # When a Kit is requested, should a Sign be included in the Kit
+  GiveSign: true
+  # Should the plugin use the legacy ground detection. 
+  # This will always check what is below the Player, for example when standing on a LILYPAD on WATER will consider the Material WATER, similar for CARPET.
+  LegacyGroundDetection: false
+
+# ParkourRank Chat settings
+ParkourRankChat:
+  # Should the plugin insert the Player's ParkourRank into the Chat
+  Enabled: false
+  # Should the plugin override the Chat with its own format, otherwise it will simply replace the %RANK%, or PlaceholderAPI placeholder
+  OverrideChat: true
  
 # Everything else
 Other:
   # Should the Plugin check for updates on start up
   CheckForUpdates: true
   # Should certain events (delete / reset) be logged to a file
-  LogToFile: true
+  LogAdminTasksToFile: true
   # Should the Plugin attempt to check if the Checkpoint is being placed on a valid Material
   EnforceSafeCheckpoints: true
-  # Should the Plugin use auto tab completions
-  UseAutoTabCompletion: true
-  # ParkourKit settings
-  ParkourKit:
-    # When a Kit is requested, should it replace the Player's inventory
-    ReplaceInventory: true
-    # When a Kit is requested, should a Sign be included in the Kit
-    GiveSign: true
-    # Should the plugin use the legacy ground detection. 
-    # This will always check what is below the Player, for example when standing on a LILYPAD on WATER will consider the Material WATER, similar for CARPET.
-    LegacyGroundDetection: false
+  # Should the Player's config files be named using their UUID, otherwise their name
+  PlayerConfigUsePlayerUUID: true
+  
   Parkour:
-    # Should the plugin insert the Player's ParkourRank into the Chat
-    ChatRankPrefix:
-      Enabled: false
-      # Should the plugin override the Chat with its own format, otherwise it will simply replace the %RANK% placeholder
-      OverrideChat: true
     # Should destroying Parkour Signs be prevented by non-admins
     SignProtection: true
     # Should Parkour control the Player's inventory when joining / leaving a Course
@@ -373,6 +399,10 @@ Other:
     PrizeCooldown: true
     # Should the Course list exclude courses that aren't marked as ready
     OnlyReadyCourses: false
+    # Should the Player be notified if they have already completed the joined Course
+    CompletedCourseJoinMessage: false
+    # Should deprecated commands be included in auto-tab and help menus
+    IncludeDeprecatedCommands: false
     
   # Time output settings
   # Colour codes can be used, however they need to be in a format which is ignored by the format processor. Surround each colour code with ''&b'' for it to be ignored.
@@ -382,6 +412,8 @@ Other:
     StandardFormat: "HH:mm:ss"
     # The Detailed Time output format, with millisecond information. Used in leaderboard times
     DetailedFormat: "HH:mm:ss:SSS"
+    # The display value for the 'achieved' date value
+    AchievedFormat: "dd/MM/yyyy HH:mm:ss"
     # The TimeZone to use. Only change if you're having weird output.
     TimeZone: "GMT"
  
@@ -426,7 +458,7 @@ SQLite:
 # Replace each placeholder provided with your values i.e. (PORT) -> 3306
 MySQL:
   Use: false
-  URL: jdbc:mysql://(HOST):(PORT)/(DATABASE)?useSSL=false
+  URL: jdbc:mysql://HOST:PORT/DATABASE?useSSL=false
   Username: Username
   Password: Password
   LegacyDriver: false
@@ -436,10 +468,10 @@ LobbySettings:
   EnforceWorld: false
  
 # The installed version of the plugin, used by the updater to automatically update your config
-Version: '6.7'
+Version: '7.0.0'
 ```
 
-_This is correct as of Parkour v6.7_
+_This is correct as of Parkour v7.0.0_
 
 </details>
 

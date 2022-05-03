@@ -7,6 +7,7 @@ import io.github.a5h73y.parkour.other.PluginBackupUtil;
 import io.github.a5h73y.parkour.upgrade.major.CopyConfigUpgradeTask;
 import io.github.a5h73y.parkour.upgrade.major.CourseDataUpgradeTask;
 import io.github.a5h73y.parkour.upgrade.major.DatabaseUpgradeTask;
+import io.github.a5h73y.parkour.upgrade.major.DefaultConfigUpgradeTask;
 import io.github.a5h73y.parkour.upgrade.major.LobbyConfigUpgradeTask;
 import io.github.a5h73y.parkour.upgrade.major.PlayerDataUpgradeTask;
 import io.github.g00fy2.versioncompare.Version;
@@ -128,6 +129,10 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 			return false;
 		}
 
+		if (!new DefaultConfigUpgradeTask(this).start()) {
+			return false;
+		}
+
 		getLogger().info("Configuration files updated - removing old files");
 
 		coursesFile.delete();
@@ -136,7 +141,6 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 		inventoryFile.delete();
 		economyFile.delete();
 		parkourKitFile.delete();
-		getDefaultConfig().set("Lobby", null);
 
 		return true;
 	}

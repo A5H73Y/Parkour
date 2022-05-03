@@ -94,7 +94,6 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("OnFinish.DisplayStats", true);
 		this.setDefault("OnFinish.EnablePrizes", true);
 		this.setDefault("OnFinish.EnforceCompletion", true);
-		this.setDefault("OnFinish.CompletedCourses.JoinMessage", false);
 		this.setDefault("OnFinish.SetGameMode", "SURVIVAL");
 		this.setDefault("OnFinish.TeleportAway", true);
 		this.setDefault("OnFinish.TeleportBeforePrize", false);
@@ -252,10 +251,12 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("Other.Parkour.CommandUsePermissions", false);
 		this.setDefault("Other.Parkour.MaximumParkourLevel", 99999999);
 		this.setDefault("Other.Parkour.ResetPotionEffects", true);
+
 		this.setDefault("Other.Display.JoinWelcomeMessage", true);
 		this.setDefault("Other.Display.LevelReward", true);
 		this.setDefault("Other.Display.PrizeCooldown", true);
 		this.setDefault("Other.Display.OnlyReadyCourses", false);
+		this.setDefault("Other.Display.CompletedCourseJoinMessage", false);
 		this.setDefault("Other.Display.IncludeDeprecatedCommands", false);
 
 		this.setDefault("Other.Time.StandardFormat", "HH:mm:ss");

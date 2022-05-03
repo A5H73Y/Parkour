@@ -1498,7 +1498,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		Course course = session.getCourse();
 
 		if (parkour.getConfigManager().getCourseCompletionsConfig().hasCompletedCourse(player, course.getName())
-				&& parkour.getParkourConfig().getBoolean("OnFinish.CompletedCourses.JoinMessage")) {
+				&& parkour.getParkourConfig().getBoolean("Other.Display.CompletedCourseJoinMessage")) {
 			TranslationUtils.sendValueTranslation("Parkour.AlreadyCompleted",
 					course.getDisplayName(), player);
 		}
