@@ -215,8 +215,8 @@ public class Parkour extends JavaPlugin {
         challengeManager = (ChallengeManager) registerManager(new ChallengeManager(this));
         questionManager = (QuestionManager) registerManager(new QuestionManager(this));
         parkourKitManager = (ParkourKitManager) registerManager(new ParkourKitManager(this));
-        courseManager = (CourseManager) registerManager(new CourseManager(this));
         courseSettingsManager = (CourseSettingsManager) registerManager(new CourseSettingsManager(this));
+        courseManager = (CourseManager) registerManager(new CourseManager(this));
         checkpointManager = (CheckpointManager) registerManager(new CheckpointManager(this));
         lobbyManager = (LobbyManager) registerManager(new LobbyManager(this));
         parkourRankManager = (ParkourRankManager) registerManager(new ParkourRankManager(this));

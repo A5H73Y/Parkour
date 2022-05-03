@@ -493,12 +493,15 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getPlayerManager().processCommand(player, commandLabel.replace("set", ""), args[1], args[2]);
                 break;
 
+            case "quiet":
+                parkour.getQuietModeManager().toggleQuietMode(player);
+                break;
+
             // session aliases
             case "manualcheckpoint":
             case "hideall":
             case "leave":
             case "restart":
-            case "quiet":
                 parkour.getParkourSessionManager().processCommand(player, commandLabel);
                 break;
 

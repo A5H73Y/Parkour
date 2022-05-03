@@ -163,14 +163,17 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("ParkourModes.Rockets.LaunchForce", 1.5);
 
 		this.setDefault("DisplayTitle.FadeIn", 5);
-		this.setDefault("DisplayTitle.Stay", 20);
 		this.setDefault("DisplayTitle.FadeOut", 5);
-		this.setDefault("DisplayTitle.JoinCourse", true);
-		this.setDefault("DisplayTitle.Checkpoint", true);
-		this.setDefault("DisplayTitle.RewardLevel", true);
-		this.setDefault("DisplayTitle.Death", true);
-		this.setDefault("DisplayTitle.Leave", true);
-		this.setDefault("DisplayTitle.Finish", true);
+		this.setDefault("DisplayTitle.JoinCourse.Enabled", true);
+		this.setDefault("DisplayTitle.JoinCourse.Stay", 20);
+		this.setDefault("DisplayTitle.Checkpoint.Enabled", true);
+		this.setDefault("DisplayTitle.Checkpoint.Stay", 20);
+		this.setDefault("DisplayTitle.Death.Enabled", true);
+		this.setDefault("DisplayTitle.Death.Stay", 20);
+		this.setDefault("DisplayTitle.Leave.Enabled", true);
+		this.setDefault("DisplayTitle.Leave.Stay", 20);
+		this.setDefault("DisplayTitle.Finish.Enabled", true);
+		this.setDefault("DisplayTitle.Finish.Stay", 20);
 
 		this.setDefault("AutoStart.Enabled", true);
 		this.setDefault("AutoStart.Material", "BEDROCK");
@@ -528,10 +531,6 @@ public class DefaultConfig extends Yaml {
 
 	public int getTitleIn() {
 		return this.getInt("DisplayTitle.FadeIn");
-	}
-
-	public int getTitleStay() {
-		return this.getInt("DisplayTitle.Stay");
 	}
 
 	public int getTitleOut() {

@@ -8,6 +8,7 @@ import io.github.a5h73y.parkour.utility.ValidationUtils;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * BountifulAPI wrapper to provide Title and Action Bar messages to the Player.
@@ -15,9 +16,14 @@ import org.bukkit.entity.Player;
  */
 public class BountifulApi extends PluginWrapper {
 
+	public static final String JOIN_COURSE = "JoinCourse";
+	public static final String CHECKPOINT = "Checkpoint";
+	public static final String DEATH = "Death";
+	public static final String LEAVE = "Leave";
+	public static final String FINISH = "Finish";
+
 	private boolean useSpigotMethods;
 	private int inDuration;
-	private int stayDuration;
 	private int outDuration;
 
 	public BountifulApi(Parkour parkour) {
@@ -34,9 +40,8 @@ public class BountifulApi extends PluginWrapper {
 		super.initialise();
 
 		useSpigotMethods = PluginUtils.getMinorServerVersion() > 10;
-		inDuration = Parkour.getDefaultConfig().getTitleIn();
-		stayDuration = Parkour.getDefaultConfig().getTitleStay();
-		outDuration = Parkour.getDefaultConfig().getTitleOut();
+		inDuration = parkour.getParkourConfig().getTitleIn();
+		outDuration = parkour.getParkourConfig().getTitleOut();
 	}
 
 	public boolean hasTitleSupport() {
@@ -50,10 +55,10 @@ public class BountifulApi extends PluginWrapper {
 	 *
 	 * @param player target player
 	 * @param title title text
-	 * @param attemptTitle attempt to show the title
+	 * @param configEntry config entry for title
 	 */
-	public void sendTitle(Player player, String title, boolean attemptTitle) {
-		sendFullTitle(player, title, " ", attemptTitle);
+	public void sendTitle(Player player, String title, @Nullable String configEntry) {
+		sendFullTitle(player, title, " ", configEntry);
 	}
 
 	/**
@@ -63,10 +68,10 @@ public class BountifulApi extends PluginWrapper {
 	 *
 	 * @param player target player
 	 * @param subTitle sub title text
-	 * @param attemptTitle attempt to show the title
+	 * @param configEntry config entry for title
 	 */
-	public void sendSubTitle(Player player, String subTitle, boolean attemptTitle) {
-		sendFullTitle(player, " ", subTitle, attemptTitle);
+	public void sendSubTitle(Player player, String subTitle, @Nullable String configEntry) {
+		sendFullTitle(player, " ", subTitle, configEntry);
 	}
 
 	/**
@@ -78,14 +83,16 @@ public class BountifulApi extends PluginWrapper {
 	 * @param player target player
 	 * @param title main title text
 	 * @param subTitle sub title text
-	 * @param attemptTitle attempt to show the title
+	 * @param configEntry config entry for title
 	 */
-	public void sendFullTitle(Player player, String title, String subTitle, boolean attemptTitle) {
+	public void sendFullTitle(Player player, String title, String subTitle, @Nullable String configEntry) {
 		if (parkour.getQuietModeManager().isQuietMode(player)) {
 			return;
 		}
 
-		if (attemptTitle) {
+		if (isTitleEnabled(configEntry)) {
+			int stayDuration = getStayDuration(configEntry);
+
 			if (useSpigotMethods) {
 				player.sendTitle(title, subTitle, inDuration, stayDuration, outDuration);
 				return;
@@ -106,7 +113,7 @@ public class BountifulApi extends PluginWrapper {
 			message.append(subTitle);
 		}
 
-		TranslationUtils.sendMessage(player, message.toString());
+		TranslationUtils.sendMessage(player, message.toString().trim());
 	}
 
 	/**
@@ -116,14 +123,14 @@ public class BountifulApi extends PluginWrapper {
 	 *
 	 * @param player target player
 	 * @param title action bar text
-	 * @param attemptTitle attempt to show the title
+	 * @param configEntry config entry for title
 	 */
-	public void sendActionBar(Player player, String title, boolean attemptTitle) {
+	public void sendActionBar(Player player, String title, @Nullable String configEntry) {
 		if (parkour.getQuietModeManager().isQuietMode(player)) {
 			return;
 		}
 
-		if (attemptTitle) {
+		if (isTitleEnabled(configEntry)) {
 			if (useSpigotMethods) {
 				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(title));
 
@@ -139,6 +146,14 @@ public class BountifulApi extends PluginWrapper {
 	}
 
 	public void sendActionBar(Player player, String title) {
-		sendActionBar(player, title, true);
+		sendActionBar(player, title, null);
+	}
+
+	private boolean isTitleEnabled(@Nullable String configEntry) {
+		return configEntry == null || parkour.getParkourConfig().getBoolean("DisplayTitle." + configEntry + ".Enabled");
+	}
+
+	private int getStayDuration(String configEntry) {
+		return parkour.getParkourConfig().getInt("DisplayTitle." + configEntry + ".Stay");
 	}
 }

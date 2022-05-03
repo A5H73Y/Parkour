@@ -3,6 +3,7 @@ package io.github.a5h73y.parkour.listener;
 import com.cryptomorin.xseries.XBlock;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
+import io.github.a5h73y.parkour.plugin.BountifulApi;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.course.ParkourEventType;
 import io.github.a5h73y.parkour.type.player.ParkourMode;
@@ -215,12 +216,11 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
                         TranslationUtils.getTranslation("Parkour.TimerStarted", false));
             }
             parkour.getSoundsManager().playSound(event.getPlayer(), SoundType.CHECKPOINT_ACHIEVED);
-            boolean showTitle = parkour.getParkourConfig().getBoolean("DisplayTitle.Checkpoint");
 
             String checkpointMessage = TranslationUtils.getCourseEventMessage(session,
                     ParkourEventType.CHECKPOINT, "Event.FreeCheckpoints");
 
-            parkour.getBountifulApi().sendSubTitle(event.getPlayer(), checkpointMessage, showTitle);
+            parkour.getBountifulApi().sendSubTitle(event.getPlayer(), checkpointMessage, BountifulApi.CHECKPOINT);
             return;
         }
 

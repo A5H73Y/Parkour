@@ -2,6 +2,7 @@ package io.github.a5h73y.parkour.listener.interact;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
+import io.github.a5h73y.parkour.plugin.BountifulApi;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.block.Block;
@@ -55,9 +56,8 @@ public class AutoStartListener extends AbstractPluginReceiver implements Listene
 					session.resetProgress();
 					session.setFreedomLocation(null);
 
-					boolean displayTitle = parkour.getParkourConfig().getBoolean("DisplayTitle.JoinCourse");
 					parkour.getBountifulApi().sendSubTitle(event.getPlayer(),
-							TranslationUtils.getTranslation("Parkour.Restarting", false), displayTitle);
+							TranslationUtils.getTranslation("Parkour.Restarting", false), BountifulApi.JOIN_COURSE);
 				}
 			} else {
 				parkour.getPlayerManager().joinCourseButDelayed(

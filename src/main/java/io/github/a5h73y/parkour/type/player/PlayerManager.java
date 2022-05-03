@@ -34,6 +34,7 @@ import io.github.a5h73y.parkour.event.ParkourPlayerNewRankEvent;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.ParkourConstants;
 import io.github.a5h73y.parkour.other.TriConsumer;
+import io.github.a5h73y.parkour.plugin.BountifulApi;
 import io.github.a5h73y.parkour.type.Initializable;
 import io.github.a5h73y.parkour.type.challenge.Challenge;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
@@ -249,7 +250,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			parkour.getSoundsManager().playSound(player, SoundType.COURSE_FAILED);
 			parkour.getBountifulApi().sendSubTitle(player,
 					TranslationUtils.getCourseEventMessage(session, LEAVE, "Parkour.Leave"),
-					parkour.getParkourConfig().getBoolean("DisplayTitle.Leave"));
+					BountifulApi.LEAVE);
 
 			if (parkour.getParkourConfig().getBoolean("OnLeave.TeleportAway")) {
 				if (parkour.getParkourConfig().isTeleportToJoinLocation()) {
@@ -359,13 +360,11 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		parkour.getSoundsManager().playSound(player, SoundType.CHECKPOINT_ACHIEVED);
 		parkour.getScoreboardManager().updateScoreboardCheckpoints(player, session);
 
-		boolean showTitle = parkour.getParkourConfig().getBoolean("DisplayTitle.Checkpoint");
-
 		String checkpointMessage = TranslationUtils.getCourseEventMessage(session, eventType, checkpointTranslation)
 				.replace("%CURRENT%", String.valueOf(session.getCurrentCheckpoint()))
 				.replace("%TOTAL%", String.valueOf(session.getCourse().getNumberOfCheckpoints()));
 
-		parkour.getBountifulApi().sendSubTitle(player, checkpointMessage, showTitle);
+		parkour.getBountifulApi().sendSubTitle(player, checkpointMessage, BountifulApi.CHECKPOINT);
 
 		Bukkit.getServer().getPluginManager().callEvent(
 				new ParkourCheckpointEvent(player, session.getCourse().getName(), session.getCheckpoint()));
@@ -392,8 +391,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			if (session.getCourse().getSettings().getMaxDeaths() > session.getDeaths()) {
 				parkour.getBountifulApi().sendSubTitle(player,
 						TranslationUtils.getValueTranslation("Parkour.LifeCount",
-								String.valueOf(session.getRemainingDeaths()), false),
-						parkour.getParkourConfig().getBoolean("DisplayTitle.Death"));
+								String.valueOf(session.getRemainingDeaths()), false), BountifulApi.DEATH);
 
 			} else {
 				TranslationUtils.sendValueTranslation("Parkour.MaxDeaths",
@@ -562,9 +560,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			}
 		}
 
-		boolean displayTitle = parkour.getParkourConfig().getBoolean("DisplayTitle.JoinCourse");
 		parkour.getBountifulApi().sendSubTitle(player,
-				TranslationUtils.getTranslation("Parkour.Restarting", false), displayTitle);
+				TranslationUtils.getTranslation("Parkour.Restarting", false), BountifulApi.JOIN_COURSE);
 	}
 
 	/**
@@ -680,7 +677,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 				parkour.getBountifulApi().sendFullTitle(player,
 						TranslationUtils.getCourseEventMessage(session, eventType, fallbackKey),
-						displayTime, false);
+						displayTime, null);
 			}
 		}
 	}
@@ -1216,8 +1213,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 					TranslationUtils.getCourseEventMessage(session, FINISH, "Parkour.FinishCourse1"),
 					TranslationUtils.replaceAllParkourPlaceholders(
 							TranslationUtils.getTranslation("Parkour.FinishCourse2", false),
-							player, session),
-					parkour.getParkourConfig().getBoolean("DisplayTitle.Finish"));
+							player, session), BountifulApi.FINISH);
 		}
 
 		// don't announce the time if the course isn't ready
@@ -1532,10 +1528,9 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 					DateTimeUtils.convertSecondsToTime(course.getSettings().getMaxTime()), false);
 		}
 
-		boolean displayTitle = parkour.getParkourConfig().getBoolean("DisplayTitle.JoinCourse");
 		parkour.getBountifulApi().sendFullTitle(player,
 				TranslationUtils.getCourseEventMessage(session, JOIN, "Parkour.Join"),
-				subTitle, displayTitle);
+				subTitle, BountifulApi.JOIN_COURSE);
 	}
 
 	private void populateSetPlayerActions() {
