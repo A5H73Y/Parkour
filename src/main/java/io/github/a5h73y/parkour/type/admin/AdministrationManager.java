@@ -10,6 +10,8 @@ import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
+import io.github.a5h73y.parkour.utility.permission.Permission;
+import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -267,6 +269,41 @@ public class AdministrationManager extends AbstractPluginReceiver {
 			default:
 				parkour.getParkourCommands().sendInvalidSyntax(commandSender, "admin");
 				break;
+		}
+	}
+
+	/**
+	 * Display the Contents of a Reference Data List.
+	 * Possible selections include: players, courses, ranks, lobbies
+	 *
+	 * @param commandSender command sender
+	 * @param args command arguments
+	 */
+	public void processListCommand(final CommandSender commandSender, final String... args) {
+		if (args.length < 2) {
+			parkour.getParkourCommands().sendInvalidSyntax(commandSender, "list");
+			return;
+		}
+
+		if (args[1].equalsIgnoreCase("players")) {
+			parkour.getPlayerManager().displayParkourPlayers(commandSender);
+
+		} else if (args[1].equalsIgnoreCase("courses")) {
+			int page = args.length == 3 && args[2] != null
+					&& ValidationUtils.isPositiveInteger(args[2]) ? Integer.parseInt(args[2]) : 1;
+			parkour.getCourseManager().displayCourses(commandSender, page);
+
+		} else if (args[1].equalsIgnoreCase("ranks")) {
+			parkour.getParkourRankManager().displayParkourRanks(commandSender);
+
+		} else if (args[1].equalsIgnoreCase("lobbies")) {
+			if (!PermissionUtils.hasPermission(commandSender, Permission.ADMIN_ALL)) {
+				return;
+			}
+			parkour.getLobbyManager().displayLobbies(commandSender);
+
+		} else {
+			parkour.getParkourCommands().sendInvalidSyntax(commandSender, "list");
 		}
 	}
 

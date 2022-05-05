@@ -53,8 +53,10 @@ import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -275,7 +277,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	}
 
 	private void setGameMode(Player player, String gameModeName) {
-		if (!parkour.getParkourSessionManager().isPlayerInTestMode(player)) {
+		if (!"KEEP".equalsIgnoreCase(gameModeName) &&
+				!parkour.getParkourSessionManager().isPlayerInTestMode(player)) {
 			PlayerUtils.setGameMode(player, gameModeName);
 		}
 	}

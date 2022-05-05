@@ -26,7 +26,7 @@ OnJoin:
   FillHealth:
     Enabled: true
     Amount: 20
-  # What GameMode should the Player be while on the Course. This can be set to 'KEEP' to not override the Player's GameMode.
+  # What GameMode should the Player be while on the Course. Options include: CREATIVE, SURVIVAL, ADVENTURE, SPECTATOR, KEEP
   SetGameMode: SURVIVAL
   # Treat the first Checkpoint as the start of the Course. The timer will be started upon achieving the first checkpoint.
   TreatFirstCheckpointAsStart: false
@@ -112,7 +112,7 @@ OnFinish:
   # Should the Player have to achieve all the Checkpoints before being able to finish
   # Prevents cheaters from skipping checkpoints
   EnforceCompletion: true
-  # What GameMode should the Player be when finishing / leaving the Course. This can be set to 'KEEP' to not override the Player's GameMode.
+  # What GameMode should the Player be when finishing / leaving the Course. Options include: CREATIVE, SURVIVAL, ADVENTURE, SPECTATOR, KEEP, RESTORE
   SetGameMode: SURVIVAL
   # Should the Player be teleported away after finishing a Course
   TeleportAway: true

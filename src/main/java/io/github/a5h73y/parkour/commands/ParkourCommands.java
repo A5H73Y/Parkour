@@ -144,6 +144,29 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 processListCommands(player, args);
                 break;
 
+            case "config":
+                if (!PermissionUtils.hasPermission(player, Permission.PARKOUR_ALL)) {
+                    return false;
+                }
+
+                if (!ValidationUtils.validateArgs(player, args, 2)) {
+                    return false;
+                }
+
+                if (!args[1].startsWith("MySQL")) {
+                    TranslationUtils.sendValue(sender, args[1], parkour.getParkourConfig().getString(args[1]));
+                }
+                break;
+
+            case "course":
+            case "stats":
+                if (!ValidationUtils.validateArgs(player, args, 2)) {
+                    return false;
+                }
+
+                CourseConfig.displayCourseInfo(player, args[1]);
+                break;
+
             case "create":
                 if (!PermissionUtils.hasPermission(player, Permission.BASIC_CREATE)) {
                     return false;
@@ -154,19 +177,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
                 parkour.getAdministrationManager().processCreateCommand(player,
                         args[1],
-                        args.length > 2 ? args[2] : null,
-                        args.length > 3 ? args[3] : null);
-                break;
-
-            case "parkourkit": // TODO move me (because I need alphabetical sort)
-                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
-                    return false;
-
-                } else if (!ValidationUtils.validateArgs(player, args, 2, 100)) {
-                    return false;
-                }
-
-                parkour.getParkourKitManager().processParkourKitCommand(player, args[1],
                         args.length > 2 ? args[2] : null,
                         args.length > 3 ? args[3] : null);
                 break;
@@ -246,7 +256,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "list":
-                parkour.getCourseManager().displayList(player, args);
+                parkour.getAdministrationManager().processListCommand(player, args);
                 break;
 
             case "lobby":
@@ -257,13 +267,27 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 MaterialUtils.lookupMaterialInformation(player, args.length > 1 ? args[1] : null);
                 break;
 
+            case "parkourkit":
+                if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
+                    return false;
+
+                } else if (!ValidationUtils.validateArgs(player, args, 2, 100)) {
+                    return false;
+                }
+
+                parkour.getParkourKitManager().processParkourKitCommand(player, args[1],
+                        args.length > 2 ? args[2] : null,
+                        args.length > 3 ? args[3] : null);
+                break;
+
             case "perms":
             case "permissions":
                 parkour.getPlayerManager().displayPermissions(player);
                 break;
 
             case "placeholder":
-                if (!ValidationUtils.validateArgs(player, args, 2)) {
+            case "parse":
+                if (!ValidationUtils.validateArgs(player, args, 2, 3)) {
                     return false;
                 }
 
@@ -272,6 +296,10 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 }
 
                 parkour.getPlaceholderApi().evaluatePlaceholder(player, args[1]);
+                break;
+
+            case "quiet":
+                parkour.getQuietModeManager().toggleQuietMode(player);
                 break;
 
             case "recreate":
@@ -292,12 +320,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getAdministrationManager().clearAllCache();
                 TranslationUtils.sendTranslation("Parkour.ConfigReloaded", player);
                 PluginUtils.logToFile(player.getName() + " reloaded the Parkour config");
-                break;
-
-            case "request":
-            case "bug":
-                TranslationUtils.sendMessage(player, "To Request a feature or to Report a bug...");
-                TranslationUtils.sendMessage(player, "Click here:&3 https://github.com/A5H73Y/Parkour/issues", false);
                 break;
 
             case "reset":
@@ -393,15 +415,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 parkour.getDatabaseManager().displayInformation(player);
                 break;
 
-            case "stats":
-            case "course":
-                if (!ValidationUtils.validateArgs(player, args, 2)) {
-                    return false;
-                }
-
-                CourseConfig.displayCourseInfo(player, args[1]);
-                break;
-
             case "test":
             case "testmode":
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_TESTMODE)) {
@@ -439,19 +452,22 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
 
             case "tutorial":
+            case "request":
+            case "bug":
                 TranslationUtils.sendMessage(player, "To follow the official Parkour tutorials...");
                 TranslationUtils.sendMessage(player, "Click here:&3 https://a5h73y.github.io/Parkour/", false);
+                TranslationUtils.sendMessage(player, "To Request a feature or to Report a bug...");
+                TranslationUtils.sendMessage(player, "Click here:&3 https://github.com/A5H73Y/Parkour/issues", false);
                 break;
 
-            //Other commands//
             case "support":
             case "contact":
             case "about":
-            case "ver":
             case "version":
                 TranslationUtils.sendMessage(player, "Server is running Parkour &7" + parkour.getDescription().getVersion());
                 TranslationUtils.sendMessage(player, "Plugin proudly created by &bA5H73Y &f& &bsteve4744", false);
                 TranslationUtils.sendMessage(player, "Project Page:&b https://www.spigotmc.org/resources/parkour.23685/", false);
+                TranslationUtils.sendMessage(player, "Tutorials:&b https://a5h73y.github.io/Parkour/", false);
                 TranslationUtils.sendMessage(player, "Discord Server:&b https://discord.gg/Gc8RGYr", false);
                 break;
 
@@ -468,20 +484,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 TranslationUtils.sendTranslation("Error.NoQuestion", player);
                 break;
 
-            case "config":
-                if (!PermissionUtils.hasPermission(player, Permission.PARKOUR_ALL)) {
-                    return false;
-                }
-
-                if (!ValidationUtils.validateArgs(player, args, 2)) {
-                    return false;
-                }
-
-                if (!args[1].startsWith("MySQL")) {
-                    TranslationUtils.sendValue(sender, args[1], parkour.getParkourConfig().getString(args[1]));
-                }
-                break;
-
             // player aliases
             case "setlevel":
             case "setleveladd":
@@ -491,10 +493,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 }
 
                 parkour.getPlayerManager().processCommand(player, commandLabel.replace("set", ""), args[1], args[2]);
-                break;
-
-            case "quiet":
-                parkour.getQuietModeManager().toggleQuietMode(player);
                 break;
 
             // session aliases
@@ -567,6 +565,8 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 commandUsages.put(commandUsage.getCommand(), commandUsage);
             }
         });
+        // TODO remove me
+        commandUsageContents.stream().sorted(Comparator.comparing(CommandUsage::getCommand)).forEach(commandUsage -> System.out.println(commandUsage.getCommand()));
     }
 
     /**

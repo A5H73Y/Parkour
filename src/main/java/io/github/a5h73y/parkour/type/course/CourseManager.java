@@ -332,42 +332,6 @@ public class CourseManager extends AbstractPluginReceiver {
     }
 
     /**
-     * Display the Contents of a Reference Data List.
-     * Possible selections include: players, courses, ranks, lobbies
-     *
-     * @param commandSender command sender
-     * @param args command arguments
-     */
-    // TODO this shouldn't really live here?
-    public void displayList(final CommandSender commandSender, final String... args) {
-        if (args.length < 2) {
-            parkour.getParkourCommands().sendInvalidSyntax(commandSender, "list");
-            return;
-        }
-
-        if (args[1].equalsIgnoreCase("players")) {
-            parkour.getPlayerManager().displayParkourPlayers(commandSender);
-
-        } else if (args[1].equalsIgnoreCase("courses")) {
-            int page = args.length == 3 && args[2] != null
-                    && ValidationUtils.isPositiveInteger(args[2]) ? Integer.parseInt(args[2]) : 1;
-            displayCourses(commandSender, page);
-
-        } else if (args[1].equalsIgnoreCase("ranks")) {
-            parkour.getParkourRankManager().displayParkourRanks(commandSender);
-
-        } else if (args[1].equalsIgnoreCase("lobbies")) {
-            if (!PermissionUtils.hasPermission(commandSender, Permission.ADMIN_ALL)) {
-                return;
-            }
-            parkour.getLobbyManager().displayLobbies(commandSender);
-
-        } else {
-            parkour.getParkourCommands().sendInvalidSyntax(commandSender, "list");
-        }
-    }
-
-    /**
      * Request to display Course Leaderboards.
      * When provided with sufficient command arguments the results will be displayed in the Player's chat.
      * Otherwise, the Leaderboard Conversation will start to allow the Player to choose which results to display.
@@ -459,7 +423,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param commandSender command sender
      * @param page desired page number
      */
-    private void displayCourses(CommandSender commandSender, int page) {
+    public void displayCourses(CommandSender commandSender, int page) {
         if (courseNames.isEmpty()) {
             TranslationUtils.sendMessage(commandSender, "There are no Parkour courses!");
             return;

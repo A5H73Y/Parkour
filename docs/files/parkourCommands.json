@@ -316,6 +316,17 @@
     "commandGroup": "1"
   },
   {
+    "command": "placeholder",
+    "title": "Parse Parkour Placeholder",
+    "arguments": "(placeholder)",
+    "example": "/pa placeholder %parkour_global_version%",
+    "description": "Shortcut command to evaluate the Placeholder value using PlaceholderAPI. Validation will be done to ensure the Parkour plugin has successfully integrated with Placeholders first. The command will evaluate the equivalent to '/papi parse me (placeholder)'.",
+    "permission": "parkour.admin.*",
+    "commandGroup": "5",
+    "consoleSyntax": "pac placeholder (placeholder) (player)",
+    "autoTabSyntax": "%placeholder%"
+  },
+  {
     "command": "prize",
     "title": "Configure Course Prize",
     "arguments": "(course)",
@@ -326,16 +337,6 @@
     "consoleSyntax": "pac prize (course)",
     "autoTabSyntax": "(course)",
     "deprecated": "/pa setcourse (course) prize"
-  },
-  {
-    "command": "placeholder",
-    "title": "Parse Parkour Placeholder",
-    "arguments": "(placeholder) [player]",
-    "example": "/pa placeholder %parkour_global_version%",
-    "description": "Shortcut command to evaluate the Placeholder value using PlaceholderAPI. Validation will be done to ensure the Parkour plugin has successfully integrated with Placeholders first. The command will evaluate the equivalent to '/papi parse me (placeholder)'.",
-    "permission": "parkour.admin.*",
-    "commandGroup": "5",
-    "autoTabSyntax": "%placeholder% (player)"
   },
   {
     "command": "quiet",
@@ -491,6 +492,16 @@
     "commandGroup": "3",
     "consoleSyntax": "pac rewardrank (level) (rank)",
     "autoTabSyntax": "(level) (rank)"
+  },
+  {
+    "command": "session",
+    "title": "Parkour session actions",
+    "arguments": "(hideall / restart / back / leave / manualcheckpoint / quiet)",
+    "example": "/pa session restart",
+    "description": "Perform session actions using their command counterparts.",
+    "commandGroup": "4",
+    "consoleSyntax": "pac session (hideall / restart / back / leave / manualcheckpoint / quiet) (player)",
+    "autoTabSyntax": "[hideall,restart,back,leave,manualcheckpoint,quiet]"
   },
   {
     "command": "setautostart",
@@ -723,13 +734,11 @@
     "deprecated": "/pa parkourkit validate [kit]"
   },
   {
-    "command": "session",
-    "title": "Parkour session actions",
-    "arguments": "(hideall / restart / back / leave / manualcheckpoint / quiet)",
-    "example": "/pa session restart",
-    "description": "Perform session actions using their command counterparts.",
-    "commandGroup": "4",
-    "consoleSyntax": "pac session (hideall / restart / back / leave / manualcheckpoint / quiet) (player)",
-    "autoTabSyntax": "[hideall,restart,back,leave,manualcheckpoint,quiet]"
+    "command": "version",
+    "title": "Display Parkour information",
+    "example": "/pa version",
+    "description": "Display the currently installed Parkour version and any additional information for support.",
+    "commandGroup": "1",
+    "consoleSyntax": "pac version"
   }
 ]
