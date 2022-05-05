@@ -103,7 +103,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
 
             case "cu":
             case "current":
-                return getCurrentCoursePlaceholderValue(offlinePlayer, arguments);
+                return getCurrentPlaceholderValue(offlinePlayer, arguments);
 
             case "lb":
             case "leaderboard":
@@ -291,12 +291,12 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
         }
     }
 
-    private String getCurrentCoursePlaceholderValue(OfflinePlayer offlinePlayer, String... arguments) {
+    private String getCurrentPlaceholderValue(OfflinePlayer offlinePlayer, String... arguments) {
         Player player = offlinePlayer.getPlayer();
         if (player == null) {
             return "";
         }
-        ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player.getPlayer());
+        ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
 
         if (session == null) {
             return "";
@@ -307,54 +307,76 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 if (arguments.length < 3) {
                     return INVALID_SYNTAX;
                 }
-
-                switch (arguments[2]) {
-                    case "name":
-                        return session.getCourseName();
-
-                    case "displayname":
-                        return session.getCourse().getDisplayName();
-
-                    case "deaths":
-                        return String.valueOf(session.getDeaths());
-
-                    case "timer":
-                        return session.getDisplayTime();
-
-                    case "checkpoints":
-                        return String.valueOf(session.getCourse().getNumberOfCheckpoints());
-
-                    case "completed":
-                        return getOrRetrieveCache(player.getName() + arguments[2] + session.getCourseName(),
-                                () -> getCompletedMessage(player, session.getCourseName()));
-
-                    case "record":
-                        if (arguments.length != 4) {
-                            return INVALID_SYNTAX;
-                        }
-                        return getCourseRecord(session.getCourseName(), arguments[3]);
-
-                    case "personal":
-                        if (arguments.length != 5 && !arguments[3].equals("best")) {
-                            return INVALID_SYNTAX;
-                        }
-                        return getPersonalCourseRecord(player, session.getCourseName(), arguments[4]);
-
-                    case "remaining":
-                        if (arguments.length != 4 && !arguments[3].equals("deaths")) {
-                            return INVALID_SYNTAX;
-                        }
-                        return String.valueOf(session.getRemainingDeaths());
-
-                    default:
-                        return getCoursePlaceholderValue("", arguments[2], session.getCourseName());
-                }
+                return getCurrentCoursePlaceholderValue(player, session, arguments);
 
             case "checkpoint":
-                return String.valueOf(session.getCurrentCheckpoint());
+                if (arguments.length < 3) { // deprecated
+                    return String.valueOf(session.getCurrentCheckpoint());
+                }
+                return getCurrentCheckpointPlaceholderValue(player, session, arguments);
 
             default:
                 return INVALID_SYNTAX;
+        }
+    }
+
+    private String getCurrentCheckpointPlaceholderValue(Player player, ParkourSession session, String... arguments) {
+        switch (arguments[2]) {
+            case "number":
+                return String.valueOf(session.getCurrentCheckpoint());
+
+            case "hologram":
+                if (arguments.length != 5 || !ValidationUtils.isInteger(arguments[4])) {
+                    return INVALID_SYNTAX;
+                }
+                return getCheckpointHologramMessage(session, arguments[3], Integer.parseInt(arguments[4]));
+
+            default:
+                return INVALID_SYNTAX;
+        }
+    }
+
+    private String getCurrentCoursePlaceholderValue(Player player, ParkourSession session, String... arguments) {
+        switch (arguments[2]) {
+            case "name":
+                return session.getCourseName();
+
+            case "displayname":
+                return session.getCourse().getDisplayName();
+
+            case "deaths":
+                return String.valueOf(session.getDeaths());
+
+            case "timer":
+                return session.getDisplayTime();
+
+            case "checkpoints":
+                return String.valueOf(session.getCourse().getNumberOfCheckpoints());
+
+            case "completed":
+                return getOrRetrieveCache(player.getName() + arguments[2] + session.getCourseName(),
+                        () -> getCompletedMessage(player, session.getCourseName()));
+
+            case "record":
+                if (arguments.length != 4) {
+                    return INVALID_SYNTAX;
+                }
+                return getCourseRecord(session.getCourseName(), arguments[3]);
+
+            case "personal":
+                if (arguments.length != 5 && !arguments[3].equals("best")) {
+                    return INVALID_SYNTAX;
+                }
+                return getPersonalCourseRecord(player, session.getCourseName(), arguments[4]);
+
+            case "remaining":
+                if (arguments.length != 4 && !arguments[3].equals("deaths")) {
+                    return INVALID_SYNTAX;
+                }
+                return String.valueOf(session.getRemainingDeaths());
+
+            default:
+                return getCoursePlaceholderValue("", arguments[2], session.getCourseName());
         }
     }
 
@@ -429,9 +451,19 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
         }
     }
 
+    private String getCheckpointHologramMessage(ParkourSession session, String course, int checkpoint) {
+        if (session.getCurrentCheckpoint() + 1 == checkpoint
+                && session.getCourseName().equals(course.toLowerCase())) {
+            return TranslationUtils.getValueTranslation("PlaceholderAPI.CheckpointHologram",
+                    Integer.toString(checkpoint), false);
+        } else {
+            return "";
+        }
+    }
+
     private String getOrRetrieveCache(String key, Supplier<String> callback) {
         // check if the key exists or its 'get' is about to expire.
-        if (!cache.containsKey(key) || !cache.get(key).isPresent()) {
+        if (!cache.containsKey(key) || cache.get(key).isEmpty()) {
             cache.put(key, callback.get());
         }
 

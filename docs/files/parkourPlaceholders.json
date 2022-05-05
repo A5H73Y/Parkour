@@ -6,7 +6,7 @@
     "placeholders": [
       {
         "placeholder": "%parkour_global_version%",
-        "output": "6.7",
+        "output": "7.0.0",
         "description": "The installed version of the Parkour plugin."
       },
       {
@@ -294,11 +294,28 @@
         "placeholder": "%parkour_current_course_remaining_deaths%",
         "output": "3",
         "description": "The amount of lives remaining on the Course (when a Course has a maximum deaths set)."
-      },
+      }
+    ]
+  },
+  {
+    "heading": "Current Checkpoint Placeholders",
+    "alias": "cc",
+    "description": "These are values with context to the provided Player and their current Checkpoint.",
+    "placeholders": [
       {
-        "placeholder": "%parkour_current_checkpoint%",
+        "placeholder": "%parkour_current_checkpoint_number%",
         "output": "3",
         "description": "The number of checkpoints achieved by the Player so far while on the Course."
+      },
+      {
+        "placeholder": "%parkour_current_checkpoint_next",
+        "output": "4",
+        "description": "The number of the next Checkpoint, if there isn't another Checkpoint the output will be blank."
+      },
+      {
+        "placeholder": "%parkour_current_checkpoint_hologram_(course)_(number)%",
+        "output": "Checkpoint 3",
+        "description": "Used for holograms to display the location of the next checkpoint. If the number provided matches the next checkpoint, the message will be displayed, otherwise blank. The output can be customised in the strings.yml (PlaceholderAPI.CheckpointHologram)"
       }
     ]
   },

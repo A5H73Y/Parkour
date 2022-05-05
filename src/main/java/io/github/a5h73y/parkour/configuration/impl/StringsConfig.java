@@ -212,6 +212,7 @@ public class StringsConfig extends Yaml {
 		this.setDefault("PlaceholderAPI.TopTenResult", "&f%POSITION%) &b%PLAYER%&f in &a%TIME%");
 		this.setDefault("PlaceholderAPI.CourseActive", "Active");
 		this.setDefault("PlaceholderAPI.CourseInactive", "Inactive");
+		this.setDefault("PlaceholderAPI.CheckpointHologram", "Checkpoint &b%VALUE%");
 
 		this.setDefault("GUI.JoinCourses.Heading", "Parkour Courses");
 		this.setDefault("GUI.JoinCourses.Setup.Line1", "         ");

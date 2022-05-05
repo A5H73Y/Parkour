@@ -64,6 +64,24 @@ Add a line for each detail you want to display:
 
 </details>
 
+<details><summary>Next Checkpoint (Click to expand)</summary>
+
+Display the next checkpoint for the Player to achieve, which displays a hologram above the pressure plate / action required to achieve the checkpoint.
+
+For example, when checkpoint 2 is achieved only the hologram for checkpoint 3 will be visible. 
+
+![Next Checkpoint Example](https://i.imgur.com/JcnQsz6.png "Next Checkpoint Example")
+
+Stand over the place where you want the pressure plate to be and enter
+
+`/hd create (course)_checkpoint_(checkpoint) {papi:parkour_current_checkpoint_hologram_(course)_(checkpoint)}`
+
+For example:
+
+`/hd create tutorial_checkpoint_3 {papi:parkour_current_checkpoint_hologram_tutorial_3}`
+
+</details>
+
 ## Holographic Displays (v2.x.x)
 
 Parkour doesn't directly support [Holographic Displays](https://dev.bukkit.org/projects/holographic-displays/files), however you can use PlaceholderAPI which allows you to create dynamic and nice looking Parkour holograms.
