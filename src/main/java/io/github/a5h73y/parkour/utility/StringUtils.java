@@ -41,6 +41,13 @@ public class StringUtils {
 		return String.join(" ", args.subList(startIndex, args.size()));
 	}
 
+	/**
+	 * Get the Substring between both strings.
+	 * @param input input value
+	 * @param start start string
+	 * @param end end string
+	 * @return substring
+	 */
 	public static String substringBetween(String input, String start, String end) {
 		String result = null;
 		if (input != null && start != null && end != null) {
@@ -54,4 +61,6 @@ public class StringUtils {
 		}
 		return result;
 	}
+
+	private StringUtils() {}
 }

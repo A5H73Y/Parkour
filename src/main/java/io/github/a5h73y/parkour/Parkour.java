@@ -7,7 +7,7 @@ import io.github.a5h73y.parkour.configuration.ConfigManager;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
 import io.github.a5h73y.parkour.database.DatabaseManager;
 import io.github.a5h73y.parkour.gui.ParkourGuiManager;
-import io.github.a5h73y.parkour.listener.BlockListener;
+import io.github.a5h73y.parkour.listener.BreakPlaceListener;
 import io.github.a5h73y.parkour.listener.ChatListener;
 import io.github.a5h73y.parkour.listener.PlayerInteractListener;
 import io.github.a5h73y.parkour.listener.PlayerListener;
@@ -253,7 +253,7 @@ public class Parkour extends JavaPlugin {
 
     private void registerEvents() {
         PluginManager pluginManager = getServer().getPluginManager();
-        pluginManager.registerEvents(new BlockListener(this), this);
+        pluginManager.registerEvents(new BreakPlaceListener(this), this);
         pluginManager.registerEvents(new ChatListener(this), this);
         pluginManager.registerEvents(new PlayerInteractListener(this), this);
         pluginManager.registerEvents(new PlayerListener(this), this);

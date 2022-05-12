@@ -1,11 +1,9 @@
 package io.github.a5h73y.parkour.utility.time;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.course.CourseConfig;
-import io.github.a5h73y.parkour.type.player.PlayerConfig;
+import io.github.a5h73y.parkour.configuration.ConfigManager;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -69,8 +67,10 @@ public class DateTimeUtils {
 	 * @return formatted time left
 	 */
 	public static String getDelayTimeRemaining(OfflinePlayer player, String courseName) {
-		long hoursDelay = convertHoursToMilliseconds(Parkour.getInstance().getConfigManager().getCourseConfig(courseName).getRewardDelay());
-		long timeDifference = System.currentTimeMillis() - Parkour.getInstance().getConfigManager().getPlayerConfig(player).getLastRewardedTime(courseName);
+		ConfigManager configManager = Parkour.getInstance().getConfigManager();
+		long hoursDelay = convertHoursToMilliseconds(configManager.getCourseConfig(courseName).getRewardDelay());
+		long timeDifference = System.currentTimeMillis()
+				- configManager.getPlayerConfig(player).getLastRewardedTime(courseName);
 		return convertMillisecondsToDateTime(hoursDelay - timeDifference);
 	}
 
@@ -113,4 +113,5 @@ public class DateTimeUtils {
 		return (long) (hours * 3600000L); // 60 * 60 * 1000
 	}
 
+	private DateTimeUtils() {}
 }

@@ -1,10 +1,10 @@
 package io.github.a5h73y.parkour.type.lobby;
 
+import de.leonhard.storage.Yaml;
 import io.github.a5h73y.parkour.other.ParkourConstants;
 import java.io.File;
 import java.util.List;
 import java.util.Set;
-import de.leonhard.storage.Yaml;
 import org.bukkit.Location;
 
 /**

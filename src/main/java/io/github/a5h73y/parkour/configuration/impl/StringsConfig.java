@@ -1,11 +1,11 @@
 package io.github.a5h73y.parkour.configuration.impl;
 
-import java.io.File;
 import de.leonhard.storage.Yaml;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.FileUtils;
+import java.io.File;
 
 /**
  * Parkour strings configuration.
@@ -15,6 +15,10 @@ import de.leonhard.storage.util.FileUtils;
  */
 public class StringsConfig extends Yaml {
 
+	/**
+	 * Create the strings.yml instance.
+	 * @param file file
+	 */
 	public StringsConfig(File file) {
 		super(file.getName(), FileUtils.getParentDirPath(file), null,
 				ReloadSettings.INTELLIGENT, ConfigSettings.SKIP_COMMENTS, DataType.SORTED);
@@ -29,7 +33,8 @@ public class StringsConfig extends Yaml {
 		this.setDefault("Parkour.Join", "Joined &b%VALUE%");
 		this.setDefault("Parkour.JoinLives", "&7You have &3%VALUE% &7lives on this course!");
 		this.setDefault("Parkour.JoinTime", "&7You have &3%VALUE% &7to finish this course!");
-		this.setDefault("Parkour.JoinLivesAndTime", "&7You have &3%MAXTIME% &7and &3%LIVES% &7lives to finish this course!");
+		this.setDefault("Parkour.JoinLivesAndTime",
+				"&7You have &3%MAXTIME% &7and &3%LIVES% &7lives to finish this course!");
 		this.setDefault("Parkour.TimerStarted", "Timer started!");
 		this.setDefault("Parkour.Restarting", "Restarting course");
 		this.setDefault("Parkour.Leave", "You left &b%VALUE%");
@@ -40,7 +45,8 @@ public class StringsConfig extends Yaml {
 		this.setDefault("Parkour.DeleteCheckpoint", "Checkpoint &b%CHECKPOINT% &fwas deleted on &b%COURSE%");
 		this.setDefault("Parkour.Reset", "&b%VALUE% &fhas been reset!");
 		this.setDefault("Parkour.JoinBroadcast", "&3%PLAYER% &fjoined &b%COURSE%&f!");
-		this.setDefault("Parkour.FinishBroadcast", "&3%PLAYER% &ffinished &b%COURSE% &fwith &b%DEATHS% &fdeaths, in &b%TIME%&f!");
+		this.setDefault("Parkour.FinishBroadcast",
+				"&3%PLAYER% &ffinished &b%COURSE% &fwith &b%DEATHS% &fdeaths, in &b%TIME%&f!");
 		this.setDefault("Parkour.FinishCourse1", "Finished &b%VALUE%&f!");
 		this.setDefault("Parkour.FinishCourse2", "In &b%TIME%&f, dying &b%DEATHS% &ftimes");
 		this.setDefault("Parkour.Lobby", "You have joined the lobby");
@@ -80,10 +86,13 @@ public class StringsConfig extends Yaml {
 		this.setDefault("Parkour.Challenge.InviteReceived", "You have been Challenged to &b%COURSE% &fby &b%PLAYER%&f!");
 		this.setDefault("Parkour.Challenge.InviteReceivedWager", "The wager is set to &b%VALUE%&f!");
 		this.setDefault("Parkour.Challenge.AcceptDecline", "To accept &a/pa accept &for &c/pa decline &fto decline.");
-		this.setDefault("Parkour.Challenge.Joined", "You have accepted a Challenge on &b%VALUE%&f. Please wait until the host starts.");
+		this.setDefault("Parkour.Challenge.Joined",
+				"You have accepted a Challenge on &b%VALUE%&f. Please wait until the host starts.");
 		this.setDefault("Parkour.Challenge.Terminated", "&b%VALUE% &fhas terminated the challenge!");
-		this.setDefault("Parkour.Challenge.Forfeited", "&b%VALUE% &fhas forfeited the challenge. Complete the course to win!");
-		this.setDefault("Parkour.Challenge.Quit", "You have forfeited the challenge. Another player must complete the course to win!");
+		this.setDefault("Parkour.Challenge.Forfeited",
+				"&b%VALUE% &fhas forfeited the challenge. Complete the course to win!");
+		this.setDefault("Parkour.Challenge.Quit",
+				"You have forfeited the challenge. Another player must complete the course to win!");
 		this.setDefault("Parkour.Challenge.Winner", "Congratulations! You won the challenge on &b%VALUE%!");
 		this.setDefault("Parkour.Challenge.WinnerWager", "You have been rewarded &b%VALUE% &ffor winning the wager!");
 		this.setDefault("Parkour.Challenge.Loser", "&b%PLAYER% &fhas completed &b%COURSE% &fbefore you!");

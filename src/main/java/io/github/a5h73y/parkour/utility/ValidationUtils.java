@@ -41,7 +41,7 @@ public class ValidationUtils {
 	 * @return input is numeric and positive
 	 */
 	public static boolean isPositiveInteger(String input) {
-		return isInteger(input) && Integer.parseInt(input) >= 0;
+		return input != null && isInteger(input) && Integer.parseInt(input) >= 0;
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class ValidationUtils {
 	 * @return input is numeric and positive
 	 */
 	public static boolean isPositiveDouble(String input) {
-		return isDouble(input) && Double.parseDouble(input) >= 0;
+		return input != null && isDouble(input) && Double.parseDouble(input) >= 0;
 	}
 
 	public static boolean isUuidFormat(String input) {
@@ -108,4 +108,6 @@ public class ValidationUtils {
 		}
 		return true;
 	}
+
+	private ValidationUtils() {}
 }

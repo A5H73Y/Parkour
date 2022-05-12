@@ -1,9 +1,9 @@
 package io.github.a5h73y.parkour.type.player.completion;
 
+import de.leonhard.storage.Yaml;
 import io.github.a5h73y.parkour.Parkour;
 import java.io.File;
 import java.util.List;
-import de.leonhard.storage.Yaml;
 import org.bukkit.OfflinePlayer;
 
 public class CourseCompletionConfig extends Yaml {

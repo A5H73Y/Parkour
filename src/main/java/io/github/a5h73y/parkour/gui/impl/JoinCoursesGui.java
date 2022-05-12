@@ -5,7 +5,6 @@ import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.gui.AbstractMenu;
-import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.type.player.PlayerManager;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -53,10 +52,11 @@ public class JoinCoursesGui implements AbstractMenu {
 							TranslationUtils.getValueTranslation("GUI.JoinCourses.Description",
 									course, false),
 							TranslationUtils.getValueTranslation("GUI.JoinCourses.Players",
-									String.valueOf(Parkour.getInstance().getParkourSessionManager().getNumberOfPlayersOnCourse(
-											course)), false),
+									String.valueOf(Parkour.getInstance().getParkourSessionManager()
+											.getNumberOfPlayersOnCourse(course)), false),
 							TranslationUtils.getValueTranslation("GUI.JoinCourses.Checkpoints",
-									String.valueOf(Parkour.getInstance().getConfigManager().getCourseConfig(course).getCheckpointAmount()), false)
+									String.valueOf(Parkour.getInstance().getConfigManager()
+											.getCourseConfig(course).getCheckpointAmount()), false)
 					));
 		}
 		parent.addElement(group);

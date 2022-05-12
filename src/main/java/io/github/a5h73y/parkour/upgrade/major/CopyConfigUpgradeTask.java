@@ -1,10 +1,11 @@
 package io.github.a5h73y.parkour.upgrade.major;
 
+import de.leonhard.storage.Yaml;
 import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
 import io.github.a5h73y.parkour.upgrade.TimedUpgradeTask;
 import java.util.Set;
-import de.leonhard.storage.Yaml;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.Nullable;
 
 public class CopyConfigUpgradeTask extends TimedUpgradeTask {
 
@@ -13,7 +14,20 @@ public class CopyConfigUpgradeTask extends TimedUpgradeTask {
 	protected final Yaml newConfig;
 	protected final String startsWith;
 
-	public CopyConfigUpgradeTask(ParkourUpgrader parkourUpgrader, String title, FileConfiguration oldConfig, Yaml newConfig, String startsWith) {
+	/**
+	 * Copy values from one config to another.
+	 *
+	 * @param parkourUpgrader upgrader
+	 * @param title title of upgrade process
+	 * @param oldConfig old config to search
+	 * @param newConfig new config to create
+	 * @param startsWith configurable clause to select config that matches
+	 */
+	public CopyConfigUpgradeTask(ParkourUpgrader parkourUpgrader,
+	                             String title,
+	                             FileConfiguration oldConfig,
+	                             Yaml newConfig,
+	                             @Nullable String startsWith) {
 		super(parkourUpgrader);
 		this.title = title;
 		this.oldConfig = oldConfig;

@@ -164,8 +164,8 @@ public class MaterialUtils {
 			TranslationUtils.sendValue(player, "Material", material.name());
 			if (data != null) {
 				TranslationUtils.sendValue(player, "Data", data.toString());
-				TranslationUtils.sendValue(player, "Base 64",
-						Parkour.getInstance().getConfigManager().getItemStackSerializable().serialize(data));
+				TranslationUtils.sendValue(player, "Base 64", Parkour.getInstance()
+						.getConfigManager().getItemStackSerializable().serialize(data));
 			}
 		} else {
 			TranslationUtils.sendMessage(player, "Invalid Material!");
@@ -266,4 +266,6 @@ public class MaterialUtils {
 
 		return validCheckpointMaterials;
 	}
+
+	private MaterialUtils() {}
 }

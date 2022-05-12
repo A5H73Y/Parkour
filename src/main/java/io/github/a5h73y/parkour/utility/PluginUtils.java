@@ -171,4 +171,6 @@ public class PluginUtils {
 
         return valid;
     }
+
+    private PluginUtils() {}
 }

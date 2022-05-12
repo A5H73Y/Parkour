@@ -28,10 +28,19 @@ public class AdministrationManager extends AbstractPluginReceiver {
 		super(parkour);
 	}
 
+	/**
+	 * Create Command.
+	 * Process create command.
+	 *
+	 * @param player requesting player
+	 * @param command command choice
+	 * @param argument argument value
+	 * @param extraArgument extra argument value
+	 */
 	public void processCreateCommand(@NotNull Player player,
 	                                 @NotNull String command,
 	                                 @Nullable String argument,
-	                                 @Nullable String detail) {
+	                                 @Nullable String extraArgument) {
 
 		switch (command.toLowerCase()) {
 			case "course":
@@ -40,16 +49,16 @@ public class AdministrationManager extends AbstractPluginReceiver {
 
 			case "checkpoint":
 				parkour.getCheckpointManager().createCheckpoint(player, argument,
-						ValidationUtils.isPositiveInteger(detail) ? Integer.parseInt(detail) : null);
+						ValidationUtils.isPositiveInteger(extraArgument) ? Integer.parseInt(extraArgument) : null);
 				break;
 
 			case "lobby":
-				parkour.getLobbyManager().createLobby(player, argument == null ? DEFAULT : argument, detail);
+				parkour.getLobbyManager().createLobby(player, argument == null ? DEFAULT : argument, extraArgument);
 				break;
 
 			case "kit":
 			case "parkourkit":
-				parkour.getParkourKitManager().startCreateKitConversation(player, argument); //TODO once parkoutkitmanager upgraded, use action
+				parkour.getParkourKitManager().startCreateKitConversation(player, argument);
 				break;
 
 			case "autostart":
@@ -62,10 +71,8 @@ public class AdministrationManager extends AbstractPluginReceiver {
 		}
 	}
 
-
 	/**
 	 * Delete Command.
-	 * Possible choices include Course, Checkpoint, Lobby, ParkourKit.
 	 * Each option will create a Question for the Sender to confirm.
 	 *
 	 * @param commandSender command sender
@@ -127,7 +134,6 @@ public class AdministrationManager extends AbstractPluginReceiver {
 
 	/**
 	 * Reset Command.
-	 * Possible choices include Course, Player, Leaderboard, Prize.
 	 * Each option will create a Question for the Sender to confirm.
 	 *
 	 * @param commandSender command sender
@@ -173,7 +179,8 @@ public class AdministrationManager extends AbstractPluginReceiver {
 				}
 
 				if (extraArgument != null) {
-					parkour.getQuestionManager().askResetPlayerLeaderboardQuestion(commandSender, argument, extraArgument);
+					parkour.getQuestionManager().askResetPlayerLeaderboardQuestion(
+							commandSender, argument, extraArgument);
 				} else {
 					parkour.getQuestionManager().askResetLeaderboardQuestion(commandSender, argument);
 				}
@@ -196,7 +203,7 @@ public class AdministrationManager extends AbstractPluginReceiver {
 
 	/**
 	 * Cache Command.
-	 * View the number of results in each cache.
+	 * No argument displays the number of results in each cache.
 	 * Provide an argument to clear the selected cache.
 	 *
 	 * @param commandSender command sender
@@ -237,14 +244,27 @@ public class AdministrationManager extends AbstractPluginReceiver {
 
 		} else {
 			TranslationUtils.sendHeading("Parkour Cache", commandSender);
-			TranslationUtils.sendValue(commandSender, "Courses Cached", parkour.getCourseManager().getCacheSize());
-			TranslationUtils.sendValue(commandSender, "Database Times Cached", parkour.getDatabaseManager().getCacheSize());
-			TranslationUtils.sendValue(commandSender, "Lobbies Cached", parkour.getLobbyManager().getCacheSize());
-			TranslationUtils.sendValue(commandSender, "ParkourKits Cached", parkour.getParkourKitManager().getCacheSize());
-			TranslationUtils.sendValue(commandSender, "Sounds Cached", parkour.getSoundsManager().getCacheSize());
+			TranslationUtils.sendValue(commandSender, "Courses Cached",
+					parkour.getCourseManager().getCacheSize());
+			TranslationUtils.sendValue(commandSender, "Database Times Cached",
+					parkour.getDatabaseManager().getCacheSize());
+			TranslationUtils.sendValue(commandSender, "Lobbies Cached",
+					parkour.getLobbyManager().getCacheSize());
+			TranslationUtils.sendValue(commandSender, "ParkourKits Cached",
+					parkour.getParkourKitManager().getCacheSize());
+			TranslationUtils.sendValue(commandSender, "Sounds Cached",
+					parkour.getSoundsManager().getCacheSize());
 		}
 	}
 
+	/**
+	 * Admin Commands.
+	 * Allowing shortcut admin commands to add / remove commands from whitelists.
+	 *
+	 * @param commandSender command sender
+	 * @param command command
+	 * @param argument argument
+	 */
 	public void processAdminCommand(@NotNull CommandSender commandSender,
 	                                @NotNull String command,
 	                                @NotNull String argument) {
@@ -318,6 +338,13 @@ public class AdministrationManager extends AbstractPluginReceiver {
 		parkour.getSoundsManager().clearCache();
 	}
 
+	/**
+	 * Add Command to the whitelist.
+	 * Commands on the whitelist are allowed to be used while on a Course.
+	 *
+	 * @param commandSender command sender
+	 * @param command command to add
+	 */
 	public void addCommandToWhitelist(@Nullable CommandSender commandSender, @Nullable String command) {
 		List<String> whitelistedCommands = parkour.getConfigManager().getDefaultConfig().getWhitelistedCommands();
 		if (command != null && whitelistedCommands.contains(command.toLowerCase())) {
@@ -325,10 +352,17 @@ public class AdministrationManager extends AbstractPluginReceiver {
 
 		} else {
 			parkour.getConfigManager().getDefaultConfig().addWhitelistCommand(command);
-			TranslationUtils.sendMessage(commandSender, "Command &b" + command + "&f added to the whitelisted commands!");
+			TranslationUtils.sendMessage(commandSender, "Command &b" + command
+					+ "&f added to the whitelisted commands!");
 		}
 	}
 
+	/**
+	 * Remove command from whitelist.
+	 *
+	 * @param commandSender command sender
+	 * @param command command to remove
+	 */
 	public void removeCommandFromWhitelist(@Nullable CommandSender commandSender, @Nullable String command) {
 		List<String> whitelistedCommands = parkour.getConfigManager().getDefaultConfig().getWhitelistedCommands();
 		if (command != null && !whitelistedCommands.contains(command.toLowerCase())) {
@@ -336,15 +370,28 @@ public class AdministrationManager extends AbstractPluginReceiver {
 
 		} else {
 			parkour.getConfigManager().getDefaultConfig().removeWhitelistCommand(command);
-			TranslationUtils.sendMessage(commandSender, "Command &b" + command + "&f removed from the whitelisted commands!");
+			TranslationUtils.sendMessage(commandSender, "Command &b" + command
+					+ "&f removed from the whitelisted commands!");
 		}
 	}
 
+	/**
+	 * Disable Parkour command.
+	 *
+	 * @param commandSender command sender
+	 * @param command command to disable
+	 */
 	public void disableParkourCommand(@Nullable CommandSender commandSender, @NotNull String command) {
 		parkour.getConfigManager().getDefaultConfig().addDisabledParkourCommand(command);
 		TranslationUtils.sendMessage(commandSender, "Parkour Command &b" + command + "&f has been disabled!");
 	}
 
+	/**
+	 * Re-enable Parkour command.
+	 *
+	 * @param commandSender command sender
+	 * @param command command to enable
+	 */
 	public void enableParkourCommand(@Nullable CommandSender commandSender, @NotNull String command) {
 		parkour.getConfigManager().getDefaultConfig().removeDisabledParkourCommand(command);
 		TranslationUtils.sendMessage(commandSender, "Parkour Command &b" + command + "&f has been enabled!");
@@ -385,6 +432,7 @@ public class AdministrationManager extends AbstractPluginReceiver {
 
 	/**
 	 * Validate Sender deleting a Checkpoint.
+	 *
 	 * @param commandSender command sender
 	 * @param courseName course name
 	 * @return command sender can delete checkpoint
@@ -464,6 +512,7 @@ public class AdministrationManager extends AbstractPluginReceiver {
 
 	/**
 	 * Validate Sender deleting a ParkourRank from ParkourLevel.
+	 *
 	 * @param commandSender command sender
 	 * @param parkourLevel parkour level value
 	 * @return command sender can delete parkour rank

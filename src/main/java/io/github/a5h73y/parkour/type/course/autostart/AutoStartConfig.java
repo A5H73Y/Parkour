@@ -1,7 +1,7 @@
 package io.github.a5h73y.parkour.type.course.autostart;
 
-import java.io.File;
 import de.leonhard.storage.Yaml;
+import java.io.File;
 
 /**
  * AutoStart Information Utility class.

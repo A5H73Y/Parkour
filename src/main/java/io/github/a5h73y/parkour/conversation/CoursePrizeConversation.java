@@ -34,10 +34,6 @@ public class CoursePrizeConversation extends ParkourConversation {
         return new PrizeType();
     }
 
-    private MessagePrompt getCommandProcessCompletePrompt() {
-        return new CommandProcessComplete();
-    }
-
     private class PrizeType extends FixedSetPrompt {
 
         public PrizeType() {
@@ -176,7 +172,7 @@ public class CoursePrizeConversation extends ParkourConversation {
                         context.getSessionData(COMMAND).toString()
                                 .replace(PLAYER_PLACEHOLDER, context.getSessionData(SESSION_PLAYER_NAME).toString()));
             }
-            return getCommandProcessCompletePrompt();
+            return new CommandProcessComplete();
         }
     }
 
@@ -186,7 +182,8 @@ public class CoursePrizeConversation extends ParkourConversation {
         @Override
         public String getPromptText(@NotNull ConversationContext context) {
             String courseName = context.getSessionData(SESSION_COURSE_NAME).toString();
-            Parkour.getInstance().getConfigManager().getCourseConfig(courseName).addEventCommand(ParkourEventType.PRIZE, context.getSessionData(COMMAND).toString());
+            Parkour.getInstance().getConfigManager().getCourseConfig(courseName)
+                    .addEventCommand(ParkourEventType.PRIZE, context.getSessionData(COMMAND).toString());
 
             return TranslationUtils.getPropertySet("Command Prize", courseName,
                     "/" + context.getSessionData(COMMAND));

@@ -2,7 +2,6 @@ package io.github.a5h73y.parkour.type.checkpoint;
 
 import static io.github.a5h73y.parkour.other.ParkourConstants.CHECKPOINT_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.COURSE_PLACEHOLDER;
-import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_INVALID_AMOUNT;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 
 import com.cryptomorin.xseries.XBlock;
@@ -13,7 +12,6 @@ import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
-import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import org.bukkit.Location;
@@ -49,7 +47,8 @@ public class CheckpointManager extends AbstractPluginReceiver {
             return;
         }
         // the checkpoint number to overwrite / create
-        checkpoint = checkpoint != null ? checkpoint : parkour.getConfigManager().getCourseConfig(courseName).getCheckpointAmount() + 1;
+        checkpoint = checkpoint != null ? checkpoint
+                : parkour.getConfigManager().getCourseConfig(courseName).getCheckpointAmount() + 1;
         Location location = player.getLocation();
         Block block = location.getBlock();
 

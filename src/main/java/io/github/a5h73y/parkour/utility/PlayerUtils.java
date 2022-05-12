@@ -13,6 +13,8 @@ import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Player Utility methods.
@@ -218,15 +220,30 @@ public class PlayerUtils {
 		return uuid.toString();
 	}
 
+	/**
+	 * Find Player's name by UUID.
+	 * @param uuid uuid
+	 * @return player name
+	 */
+	@NotNull
 	public static String findPlayerName(String uuid) {
 		OfflinePlayer player = findPlayer(uuid);
 		return player.getName() != null ? player.getName() : "Unknown Player";
 	}
 
+	/**
+	 * Find OfflinePlayer by UUID.
+	 * @param uuid uuid
+	 * @return matching Player
+	 */
 	public static OfflinePlayer findPlayer(String uuid) {
 		return Bukkit.getOfflinePlayer(UUID.fromString(padPlayerUuid(uuid)));
 	}
 
+	/**
+	 * Clear the Player's inventory and Armor.
+	 * @param player player
+	 */
 	public static void clearInventoryArmor(Player player) {
 		player.getInventory().clear();
 		player.getInventory().setHelmet(null);
@@ -236,4 +253,6 @@ public class PlayerUtils {
 
 		player.updateInventory();
 	}
+
+	private PlayerUtils() {}
 }

@@ -26,7 +26,8 @@ public enum QuestionType {
             (sender, value) -> Parkour.getInstance().getParkourKitManager().deleteParkourKit(sender, value)),
 
     DELETE_PARKOUR_RANK("You are about to delete ParkourRank &b%s&f...",
-            "&7Deleting a ParkourRank will remove the ability for players to unlock it. Players that have already unlocked it will not be affected.",
+            "&7Deleting a ParkourRank will remove the ability for players to unlock it. "
+                    + "Players that have already unlocked it will not be affected.",
             (sender, value) -> Parkour.getInstance().getParkourRankManager().deleteParkourRank(sender, value)),
 
     RESET_COURSE("You are about to reset Course &b%s&f...",

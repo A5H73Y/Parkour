@@ -180,6 +180,10 @@ public class ChallengeManager extends AbstractPluginReceiver {
                 || challenges.values().stream().anyMatch(challenge -> challenge.isPlayerParticipating(player));
     }
 
+    /**
+     * Teardown the Player's challenge.
+     * @param player player
+     */
     public void teardownChallenge(Player player) {
         Challenge challenge = getChallengeForHost(player);
 

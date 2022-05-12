@@ -1,7 +1,6 @@
 package io.github.a5h73y.parkour.type.course;
 
 import java.io.Serializable;
-import java.util.Map;
 
 public class CourseSettings implements Serializable {
 

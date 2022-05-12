@@ -51,12 +51,20 @@ public class ParkourSession implements ParkourSerializable {
         resetTime();
     }
 
-    public ParkourSession(Course course,
-                          int deaths,
-                          int currentCheckpoint,
-                          int secondsAccumulated,
-                          long timeStarted,
-                          long timeAccumulated,
+    /**
+     * Construct a ParkourSession from a Course.
+     * Used by the deserialization for restoring a ParkourSession from JSON.
+     *
+     * @param course course
+     * @param deaths amount of deaths
+     * @param currentCheckpoint current checkpoint number
+     * @param secondsAccumulated seconds accumulated
+     * @param timeStarted time started
+     * @param timeAccumulated time accumulated so far
+     * @param freedomLocation freedom location
+     */
+    public ParkourSession(Course course, int deaths, int currentCheckpoint,
+                          int secondsAccumulated, long timeStarted, long timeAccumulated,
                           Location freedomLocation) {
         setCourse(course);
         this.deaths = deaths;
@@ -83,6 +91,10 @@ public class ParkourSession implements ParkourSerializable {
         return course.getCheckpoints().get(currentCheckpoint);
     }
 
+    /**
+     * Get the next Checkpoint to achieve.
+     * @return next {@link Checkpoint}
+     */
     @Nullable
     public Checkpoint getNextCheckpoint() {
         Checkpoint checkpoint = null;
@@ -214,9 +226,7 @@ public class ParkourSession implements ParkourSerializable {
     /**
      * Get name of the Course.
      * @return course name
-     * @deprecated a fallback for deserializing old objects during upgrade.
      */
-    @Deprecated
     public String getCourseName() {
         return courseName;
     }
@@ -278,8 +288,15 @@ public class ParkourSession implements ParkourSerializable {
         return data;
     }
 
+    /**
+     * Deserialize ParkourSession from JSON.
+     *
+     * @param input key value map
+     * @return populated ParkourSession
+     */
     public static ParkourSession deserialize(Map<String, Object> input) {
-        Course course = Parkour.getInstance().getCourseManager().findByName(String.valueOf(input.get("CourseName")));
+        Course course = Parkour.getInstance().getCourseManager().findByName(
+                String.valueOf(input.get("CourseName")));
         int deaths = NumberConversions.toInt(input.get("Deaths"));
         int currentCheckpoint = NumberConversions.toInt(input.get("CurrentCheckpoint"));
         int secondsAccumulated = NumberConversions.toInt(input.get("SecondsAccumulated"));
@@ -292,6 +309,7 @@ public class ParkourSession implements ParkourSerializable {
             freedomLocation = Location.deserialize(getMapValue(input.get("FreedomLocation")));
         }
 
-        return new ParkourSession(course, deaths, currentCheckpoint, secondsAccumulated, timeStarted, timeAccumulated, freedomLocation);
+        return new ParkourSession(course, deaths, currentCheckpoint,
+                secondsAccumulated, timeStarted, timeAccumulated, freedomLocation);
     }
 }

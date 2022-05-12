@@ -27,6 +27,7 @@ import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_ONCE;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_PARKOINS;
 
 import com.google.common.io.Files;
+import de.leonhard.storage.sections.FlatFileSection;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.commands.CommandProcessor;
 import io.github.a5h73y.parkour.conversation.CoursePrizeConversation;
@@ -47,7 +48,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import de.leonhard.storage.sections.FlatFileSection;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.Conversable;
@@ -56,11 +56,22 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Course Settings Manager.
+ * Actions performing changes to the Course settings.
+ */
 public class CourseSettingsManager extends AbstractPluginReceiver implements CommandProcessor {
 
 	// course actions to set data
 	private final Map<String, TriConsumer<CommandSender, String, String>> courseSettingActions = new HashMap<>();
 
+	/**
+	 * Get the Course Settings.
+	 * Each setting has a fallback default.
+	 *
+	 * @param courseName course name
+	 * @return course settings
+	 */
 	public CourseSettings getCourseSettings(String courseName) {
 		FlatFileSection defaultSection = parkour.getParkourConfig().getSection("CourseDefault.Settings");
 		CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(courseName);
@@ -94,13 +105,13 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 	}
 
 	/**
-	 * Check if Course is known by Parkour.
+	 * Check whether Course is known by Parkour.
 	 *
 	 * @param courseName course name
 	 * @return course exists
 	 */
 	private boolean doesCourseExist(final String courseName) {
-		return parkour.getCourseManager().doesCourseExist(courseName);
+		return courseName != null && parkour.getCourseManager().doesCourseExist(courseName);
 	}
 
 	private void clearCourseCache() {
@@ -137,10 +148,10 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 
 		} else {
 			if (args[2].equalsIgnoreCase("message")) {
-				setCourseMessage(commandSender, args[1], args[3], StringUtils.extractMessageFromArgs(args, 4));
+				setCourseEventMessage(commandSender, args[1], args[3], StringUtils.extractMessageFromArgs(args, 4));
 
 			} else if (args[2].equalsIgnoreCase("command")) {
-				setCourseCommand(commandSender, args[1], args[3], StringUtils.extractMessageFromArgs(args, 4));
+				setCourseEventCommand(commandSender, args[1], args[3], StringUtils.extractMessageFromArgs(args, 4));
 
 			} else if (args[2].equalsIgnoreCase("displayname")) {
 				performAction(commandSender, args[1], args[2], StringUtils.extractMessageFromArgs(args, 3));
@@ -151,6 +162,14 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 		}
 	}
 
+	/**
+	 * Perform Course Settings action.
+	 *
+	 * @param commandSender command sender
+	 * @param courseName course name
+	 * @param action requested action
+	 * @param value value
+	 */
 	public void performAction(CommandSender commandSender, String courseName, String action, String value) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
@@ -167,7 +186,8 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 
 	private void notifyActionChange(CommandSender commandSender, String property, String courseName, String newValue) {
 		TranslationUtils.sendPropertySet(commandSender, property, courseName, newValue);
-		PluginUtils.logToFile("The " + property + " for " + courseName + " was set to " + newValue + " by " + commandSender.getName());
+		PluginUtils.logToFile("The " + property + " for " + courseName + " was set to " + newValue
+				+ " by " + commandSender.getName());
 	}
 
 	/**
@@ -177,7 +197,9 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 	 * @param commandSender command sender
 	 * @param courseName course name
 	 */
-	public void setChallengeOnlyStatus(@NotNull CommandSender commandSender, @Nullable String courseName, @Nullable Boolean value) {
+	public void setChallengeOnlyStatus(@NotNull CommandSender commandSender,
+	                                   @Nullable String courseName,
+	                                   @Nullable Boolean value) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;
@@ -523,6 +545,13 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 		notifyActionChange(commandSender, "ParkourKit", courseName, kitName);
 	}
 
+	/**
+	 * Set Course's {@link ParkourMode}.
+	 *
+	 * @param commandSender command sender
+	 * @param courseName course name
+	 * @param value parkour mode value
+	 */
 	public void setParkourMode(final CommandSender commandSender, final String courseName, final ParkourMode value) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
@@ -533,8 +562,20 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 		notifyActionChange(commandSender, "ParkourMode", courseName, value.getDisplayName());
 	}
 
-	public void setPotionParkourMode(final CommandSender commandSender, final String courseName,
-	                                 String potionEffectType, @Nullable String durationAmplifier, @Nullable String joinMessage) {
+	/**
+	 * Set the Course's Potion {@link ParkourMode}.
+	 *
+	 * @param commandSender command sender
+	 * @param courseName course name
+	 * @param potionEffectType potion effect type
+	 * @param durationAmplifier duration amplifier
+	 * @param joinMessage join message
+	 */
+	public void setPotionParkourMode(@NotNull final CommandSender commandSender,
+	                                 @NotNull final String courseName,
+	                                 @NotNull String potionEffectType,
+	                                 @Nullable String durationAmplifier,
+	                                 @Nullable String joinMessage) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;
@@ -629,6 +670,13 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 		}
 	}
 
+	/**
+	 * Reset the Course links.
+	 * Removes linked Course or linked Lobby.
+	 *
+	 * @param commandSender command sender
+	 * @param courseName course name
+	 */
 	public void resetCourseLinks(final CommandSender commandSender, final String courseName) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
@@ -799,14 +847,26 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 		}
 
 		if (commandSender instanceof Player) {
-			parkour.getConfigManager().getCourseConfig(courseName).createCheckpointData(((Player) commandSender).getLocation(), 0);
+			parkour.getConfigManager().getCourseConfig(courseName)
+					.createCheckpointData(((Player) commandSender).getLocation(), 0);
 			notifyActionChange(commandSender, "Start Location", courseName, "your position");
 		} else {
 			TranslationUtils.sendMessage(commandSender, "This command is limited to Players.");
 		}
 	}
 
-	public void setCourseMessage(CommandSender commandSender, String courseName, String eventTypeName, String message) {
+	/**
+	 * Set the Course Event Message.
+	 *
+	 * @param commandSender command sender
+	 * @param courseName course name
+	 * @param eventTypeName event type name
+	 * @param message message
+	 */
+	public void setCourseEventMessage(@NotNull CommandSender commandSender,
+	                                  @Nullable String courseName,
+	                                  @Nullable String eventTypeName,
+	                                  @Nullable String message) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;
@@ -824,7 +884,18 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 		notifyActionChange(commandSender, eventType.getConfigEntry() + " Message", courseName, StringUtils.colour(message));
 	}
 
-	public void setCourseCommand(CommandSender commandSender, String courseName, String eventTypeName, String message) {
+	/**
+	 * Set the Course's Event Command.
+	 *
+	 * @param commandSender command sender
+	 * @param courseName course name
+	 * @param eventTypeName event type name
+	 * @param command message
+	 */
+	public void setCourseEventCommand(@NotNull CommandSender commandSender,
+	                                  @Nullable String courseName,
+	                                  @Nullable String eventTypeName,
+	                                  @Nullable String command) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;
@@ -838,8 +909,8 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			return;
 		}
 
-		parkour.getConfigManager().getCourseConfig(courseName).addEventCommand(eventType, message);
-		notifyActionChange(commandSender, eventType.getConfigEntry() + " Command", courseName, "/" + message);
+		parkour.getConfigManager().getCourseConfig(courseName).addEventCommand(eventType, command);
+		notifyActionChange(commandSender, eventType.getConfigEntry() + " Command", courseName, "/" + command);
 	}
 
 	/**
@@ -888,7 +959,14 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 		notifyActionChange(commandSender, "Add Join Item", args[1], itemStack.getType().name() + " x" + itemStack.getAmount());
 	}
 
-	public void startCoursePrizeConversation(CommandSender commandSender, String courseName) {
+	/**
+	 * Start Course Prize Conversation.
+	 *
+	 * @param commandSender command sender
+	 * @param courseName course name
+	 */
+	public void startCoursePrizeConversation(@NotNull CommandSender commandSender,
+	                                         @Nullable String courseName) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;
@@ -897,6 +975,12 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 		new CoursePrizeConversation((Conversable) commandSender).withCourseName(courseName).begin();
 	}
 
+	/**
+	 * Start Course ParkourMode Conversation.
+	 *
+	 * @param commandSender command sender
+	 * @param courseName course name
+	 */
 	public void startParkourModeConversation(CommandSender commandSender, String courseName) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);

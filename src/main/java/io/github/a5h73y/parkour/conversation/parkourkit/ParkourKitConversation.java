@@ -68,12 +68,18 @@ public abstract class ParkourKitConversation extends ParkourConversation {
 		public String getPromptText(@NotNull ConversationContext context) {
 			Object parkourKitName = context.getSessionData(PARKOUR_KIT_NAME);
 			if (parkourKitName != null) {
-				context.getForWhom().sendRawMessage(TranslationUtils.getPluginPrefix() + "Using ParkourKit name: " + parkourKitName);
+				context.getForWhom().sendRawMessage(TranslationUtils.getPluginPrefix()
+						+ "Using ParkourKit name: " + parkourKitName);
 			}
 			return "";
 		}
 	}
 
+	/**
+	 * Provide kit name to bypass name input prompts.
+	 * @param kitName kit name
+	 * @return conversation instance
+	 */
 	public ParkourKitConversation withKitName(@Nullable String kitName) {
 		if (kitName != null) {
 			this.kitName = kitName.toLowerCase();

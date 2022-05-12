@@ -7,7 +7,6 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 import static org.bukkit.Bukkit.getServer;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
@@ -96,7 +95,8 @@ public class EconomyApi extends PluginWrapper {
 	 * @return currency name
 	 */
 	public String getCurrencyName() {
-		return !isEconomyLinked() || !ValidationUtils.isStringValid(economy.currencyNamePlural()) ? "" : " " + economy.currencyNamePlural();
+		return !isEconomyLinked() || !ValidationUtils.isStringValid(economy.currencyNamePlural())
+				? "" : " " + economy.currencyNamePlural();
 	}
 
 	/**

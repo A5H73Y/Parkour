@@ -10,6 +10,11 @@ import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_LEVEL_ADD
 import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_ONCE;
 
 import com.cryptomorin.xseries.XMaterial;
+import de.leonhard.storage.Yaml;
+import de.leonhard.storage.internal.settings.ConfigSettings;
+import de.leonhard.storage.internal.settings.DataType;
+import de.leonhard.storage.internal.settings.ReloadSettings;
+import de.leonhard.storage.util.FileUtils;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.type.course.ParkourEventType;
 import io.github.a5h73y.parkour.type.sounds.SoundType;
@@ -23,11 +28,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
-import de.leonhard.storage.Yaml;
-import de.leonhard.storage.internal.settings.ConfigSettings;
-import de.leonhard.storage.internal.settings.DataType;
-import de.leonhard.storage.internal.settings.ReloadSettings;
-import de.leonhard.storage.util.FileUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -48,6 +48,10 @@ public class DefaultConfig extends Yaml {
 	private final DateFormat standardTimeFormat;
 	private final DateFormat achievedFormat;
 
+	/**
+	 * Create the config.yml instance.
+	 * @param file file
+	 */
 	public DefaultConfig(File file) {
 		super(file.getName(), FileUtils.getParentDirPath(file), null,
 				ReloadSettings.INTELLIGENT, ConfigSettings.SKIP_COMMENTS, DataType.SORTED);
@@ -130,7 +134,8 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("CourseDefault.Prize.XP", 0);
 		this.setDefault("CourseDefault.Commands.CombinePerCourseCommands", true);
 		Arrays.stream(ParkourEventType.values()).forEach(eventType ->
-				this.setDefault("CourseDefault.Command." + eventType.getConfigEntry(), Collections.singletonList("")));
+				this.setDefault("CourseDefault.Command." + eventType.getConfigEntry(),
+						Collections.singletonList("")));
 
 		this.setDefault("ParkourTool.LastCheckpoint.Material", "ARROW");
 		this.setDefault("ParkourTool.LastCheckpoint.Slot", 0);

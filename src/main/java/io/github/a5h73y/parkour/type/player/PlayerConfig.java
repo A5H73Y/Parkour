@@ -1,10 +1,10 @@
 package io.github.a5h73y.parkour.type.player;
 
+import de.leonhard.storage.Json;
+import de.leonhard.storage.internal.FileType;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.io.File;
-import de.leonhard.storage.Json;
-import de.leonhard.storage.internal.FileType;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -51,6 +51,7 @@ public class PlayerConfig extends Json {
      * @param player player
      * @return PlayerConfig instance
      */
+    @NotNull
     public static PlayerConfig getConfig(OfflinePlayer player) {
         return new PlayerConfig(getPlayerJsonFile(player));
     }

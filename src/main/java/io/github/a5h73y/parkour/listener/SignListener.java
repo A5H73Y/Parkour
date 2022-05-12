@@ -4,14 +4,14 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.gui.GuiMenu;
-import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
-import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.SignUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
+import io.github.a5h73y.parkour.utility.permission.Permission;
+import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;

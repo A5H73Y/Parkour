@@ -4,7 +4,6 @@ import com.cryptomorin.xseries.XSound;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
 import io.github.a5h73y.parkour.type.CacheableParkourManager;
-import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import java.util.EnumMap;
 import java.util.Optional;

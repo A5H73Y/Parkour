@@ -48,9 +48,11 @@ public class PlaceholderApi extends PluginWrapper {
 		if (!isEnabled()) {
 			TranslationUtils.sendMessage(commandSender, "PlaceholderAPI hasn't been linked.");
 		} else if (!placeholder.startsWith("%") && !placeholder.endsWith("%")) {
-			TranslationUtils.sendMessage(commandSender, "Invalid Placeholder syntax, must start and end with &b%&f.");
+			TranslationUtils.sendMessage(commandSender,
+					"Invalid Placeholder syntax, must start and end with &b%&f.");
 		} else {
-			TranslationUtils.sendMessage(commandSender, PlaceholderAPI.setPlaceholders(targetPlayer, placeholder), false);
+			TranslationUtils.sendMessage(commandSender,
+					PlaceholderAPI.setPlaceholders(targetPlayer, placeholder), false);
 		}
 	}
 

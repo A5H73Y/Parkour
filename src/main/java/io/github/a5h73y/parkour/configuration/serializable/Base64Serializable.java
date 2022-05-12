@@ -1,9 +1,9 @@
 package io.github.a5h73y.parkour.configuration.serializable;
 
+import de.leonhard.storage.internal.serialize.LightningSerializable;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import de.leonhard.storage.internal.serialize.LightningSerializable;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.NotNull;

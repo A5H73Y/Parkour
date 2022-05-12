@@ -2,7 +2,6 @@ package io.github.a5h73y.parkour.listener;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.type.player.ParkourMode;
 import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -16,7 +15,6 @@ import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -273,8 +271,8 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         }
 
         ParkourSession session = parkour.getParkourSessionManager().getParkourSession(event.getPlayer());
-        World nextCheckpointWorld = session.getNextCheckpoint() != null ?
-                session.getNextCheckpoint().getLocation().getWorld() : null;
+        World nextCheckpointWorld = session.getNextCheckpoint() != null
+                ? session.getNextCheckpoint().getLocation().getWorld() : null;
 
         if (event.getFrom().getWorld() != event.getPlayer().getWorld()
                 && (nextCheckpointWorld == null || nextCheckpointWorld != event.getTo().getWorld())) {

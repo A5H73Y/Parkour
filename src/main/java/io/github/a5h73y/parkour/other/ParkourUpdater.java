@@ -3,9 +3,9 @@ package io.github.a5h73y.parkour.other;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
-import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.g00fy2.versioncompare.Version;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -63,7 +63,7 @@ public class ParkourUpdater implements Listener {
 			connection.addRequestProperty("User-Agent", USER_AGENT);
 
 			InputStreamReader reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8);
-			JsonElement element = new JsonParser().parse(reader);
+			JsonElement element = JsonParser.parseReader(reader);
 
 			reader.close();
 			connection.disconnect();

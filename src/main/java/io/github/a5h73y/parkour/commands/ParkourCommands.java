@@ -137,7 +137,8 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getCheckpointManager().createCheckpoint(player, args[1], args.length == 3 ? Integer.parseInt(args[2]) : null);
+                parkour.getCheckpointManager().createCheckpoint(player,
+                        args[1], args.length == 3 ? Integer.parseInt(args[2]) : null);
                 break;
 
             case "cmds":
@@ -219,7 +220,8 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getChallengeManager().processCommand(player, "", commandLabel, StringUtils.extractMessageFromArgs(args, 1));
+                parkour.getChallengeManager().processCommand(player, "", commandLabel,
+                        StringUtils.extractMessageFromArgs(args, 1));
                 break;
 
             case "join":
@@ -330,7 +332,8 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getAdministrationManager().processResetCommand(player, args[1], args[2], args.length == 4 ? args[3] : null);
+                parkour.getAdministrationManager().processResetCommand(player,
+                        args[1], args[2], args.length == 4 ? args[3] : null);
                 break;
 
             case "respawn":
@@ -543,7 +546,8 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getCourseSettingsManager().performAction(player, args[1], commandLabel.replace("set", ""), args.length > 2 ? args[2] : null);
+                parkour.getCourseSettingsManager().performAction(player, args[1],
+                        commandLabel.replace("set", ""), args.length > 2 ? args[2] : null);
                 break;
 
             default:
@@ -552,21 +556,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 break;
         }
         return true;
-    }
-
-    private void populateCommandUsages() {
-        String json = new BufferedReader(new InputStreamReader(parkour.getResource("parkourCommands.json"), StandardCharsets.UTF_8))
-                .lines().collect(Collectors.joining("\n"));
-
-        List<CommandUsage> commandUsageContents = Arrays.asList(new GsonBuilder().create().fromJson(json, CommandUsage[].class));
-        boolean includeDeprecated = parkour.getParkourConfig().getBoolean("Other.Display.IncludeDeprecatedCommands");
-        commandUsageContents.forEach(commandUsage -> {
-            if (includeDeprecated || commandUsage.getDeprecated() == null) {
-                commandUsages.put(commandUsage.getCommand(), commandUsage);
-            }
-        });
-        // TODO remove me
-        commandUsageContents.stream().sorted(Comparator.comparing(CommandUsage::getCommand)).forEach(commandUsage -> System.out.println(commandUsage.getCommand()));
     }
 
     /**
@@ -604,9 +593,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
             displayParkourCommandsMenu(player);
             return;
         }
-
-        // TODO FIX THE GROUPING
-        // TODO WHY IS 'setplayer' in CONFIG_COMMANDS?
 
         switch (args[1].toLowerCase()) {
             case BASIC_COMMANDS:
@@ -646,6 +632,57 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
     }
 
     /**
+     * Display all the matching Commands for the group type.
+     * @param commandSender command sender
+     * @param commandGroup command group key
+     */
+    public void displayCommands(CommandSender commandSender, String commandGroup) {
+        commandUsages.values().stream()
+                .filter(commandUsage -> commandGroup.equals(commandUsage.getCommandGroup()))
+                .sorted(Comparator.comparing(CommandUsage::getCommand))
+                .forEach(commandUsage -> commandUsage.displayCommandUsage(commandSender));
+    }
+
+    /**
+     * Display all the console commands.
+     * @param commandSender command sender
+     */
+    public void displayConsoleCommands(CommandSender commandSender) {
+        commandUsages.values().stream()
+                .filter(commandUsage -> commandUsage.getConsoleSyntax() != null)
+                .forEach(commandUsage -> commandSender.sendMessage(commandUsage.getConsoleSyntax()));
+    }
+
+    @Nullable
+    public CommandUsage getCommandUsage(@NotNull String command) {
+        return commandUsages.get(command.toLowerCase());
+    }
+
+    /**
+     * Display command invalid syntax.
+     * The correct syntax will be displayed to the User.
+     *
+     * @param commandSender command sender
+     * @param command requested command
+     */
+    public void sendInvalidSyntax(CommandSender commandSender, String command) {
+        CommandUsage commandUsage = getCommandUsage(command);
+
+        if (commandUsage != null) {
+            String arguments = commandUsage.getArguments() != null ? " " + commandUsage.getArguments() : "";
+            TranslationUtils.sendInvalidSyntax(commandSender, command, arguments);
+        }
+    }
+
+    /**
+     * Get all Parkour command usages.
+     * @return command usages
+     */
+    public Collection<CommandUsage> getCommandUsages() {
+        return commandUsages.values();
+    }
+
+    /**
      * Display the Parkour Commands Menu.
      * @param player player
      */
@@ -663,24 +700,6 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
         player.sendMessage("");
         TranslationUtils.sendValueTranslation("Help.CommandSyntax", "cmds 1", false, player);
         TranslationUtils.sendMessage(player, "&8Remember: &b() &7means required, &b[] &7means optional.", false);
-    }
-
-    /**
-     * Display all the matching Commands for the group type.
-     * @param commandSender command sender
-     * @param commandGroup command group key
-     */
-    private void displayCommands(CommandSender commandSender, String commandGroup) {
-        commandUsages.values().stream()
-                .filter(commandUsage -> commandGroup.equals(commandUsage.getCommandGroup()))
-                .sorted(Comparator.comparing(CommandUsage::getCommand))
-                .forEach(commandUsage -> commandUsage.displayCommandUsage(commandSender));
-    }
-
-    public void displayConsoleCommands(CommandSender commandSender) {
-        commandUsages.values().stream()
-                .filter(commandUsage -> commandUsage.getConsoleSyntax() != null)
-                .forEach(commandUsage -> commandSender.sendMessage(commandUsage.getConsoleSyntax()));
     }
 
     /**
@@ -717,25 +736,21 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
     }
 
     private void displayGroupCommands(Player player, String heading, String group) {
-        TranslationUtils.sendHeading("Basic Commands", player);
+        TranslationUtils.sendHeading(heading, player);
         displayCommands(player, group);
     }
 
-    @Nullable
-    public CommandUsage getCommandUsage(@NotNull String command) {
-        return commandUsages.get(command.toLowerCase());
-    }
+    private void populateCommandUsages() {
+        String json = new BufferedReader(new InputStreamReader(
+                parkour.getResource("parkourCommands.json"), StandardCharsets.UTF_8))
+                .lines().collect(Collectors.joining("\n"));
 
-    public void sendInvalidSyntax(CommandSender commandSender, String command) {
-        CommandUsage commandUsage = getCommandUsage(command);
-
-        if (commandUsage != null) {
-            String arguments = commandUsage.getArguments() != null ? " " + commandUsage.getArguments() : "";
-            TranslationUtils.sendInvalidSyntax(commandSender, command, arguments);
-        }
-    }
-
-    public Collection<CommandUsage> getCommandUsages() {
-        return commandUsages.values();
+        List<CommandUsage> commandUsageContents = Arrays.asList(new GsonBuilder().create().fromJson(json, CommandUsage[].class));
+        boolean includeDeprecated = parkour.getParkourConfig().getBoolean("Other.Display.IncludeDeprecatedCommands");
+        commandUsageContents.forEach(commandUsage -> {
+            if (includeDeprecated || commandUsage.getDeprecated() == null) {
+                commandUsages.put(commandUsage.getCommand(), commandUsage);
+            }
+        });
     }
 }

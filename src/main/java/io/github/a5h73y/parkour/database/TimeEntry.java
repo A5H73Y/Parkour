@@ -34,6 +34,10 @@ public class TimeEntry {
         this.achieved = achieved;
     }
 
+    /**
+     * Find the Player's name using the UUID.
+     * @return player name
+     */
     public String getPlayerName() {
         if (playerName == null) {
             playerName = PlayerUtils.findPlayerName(this.playerId);

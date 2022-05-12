@@ -125,6 +125,12 @@ public class CommandUsage {
 		return deprecated;
 	}
 
+	/**
+	 * Calculate Formula Value from AutoTab completion.
+	 * @param input input
+	 * @param args arguments
+	 * @return resolved formula value
+	 */
 	public String resolveFormulaValue(String input, String[] args) {
 		String[] possibleReplacements = StringUtils.substringBetween(input, FORMULA_OPEN, FORMULA_CLOSE).split(COMMA);
 		for (String replacement : possibleReplacements) {

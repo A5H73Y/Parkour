@@ -2,8 +2,8 @@ package io.github.a5h73y.parkour.configuration.serializable;
 
 import static io.github.a5h73y.parkour.configuration.serializable.ParkourSerializable.getMapValue;
 
-import java.util.Map;
 import de.leonhard.storage.internal.serialize.LightningSerializable;
+import java.util.Map;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 

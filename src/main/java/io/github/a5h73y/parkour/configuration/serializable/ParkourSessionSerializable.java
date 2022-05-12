@@ -2,9 +2,9 @@ package io.github.a5h73y.parkour.configuration.serializable;
 
 import static io.github.a5h73y.parkour.configuration.serializable.ParkourSerializable.getMapValue;
 
+import de.leonhard.storage.internal.serialize.LightningSerializable;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import java.util.Map;
-import de.leonhard.storage.internal.serialize.LightningSerializable;
 import org.jetbrains.annotations.NotNull;
 
 public class ParkourSessionSerializable implements LightningSerializable<ParkourSession> {

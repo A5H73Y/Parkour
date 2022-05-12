@@ -225,11 +225,12 @@ public class AddKitItemConversation {
 
         @Override
         protected Prompt acceptValidatedInput(@NotNull ConversationContext context, boolean addAnother) {
-            String material = context.getSessionData(MATERIAL).toString();
-            String action = context.getSessionData(ACTION).toString();
-
-            Parkour.getParkourKitConfig().addMaterialToParkourKit(kitName, material, action, context.getSessionData(STRENGTH),
-                    context.getSessionData(DURATION), context.getSessionData(POTION));
+            Parkour.getParkourKitConfig().addMaterialToParkourKit(kitName,
+                    context.getSessionData(MATERIAL).toString(),
+                    context.getSessionData(ACTION).toString(),
+                    getValue(context.getSessionData(STRENGTH)),
+                    getValue(context.getSessionData(DURATION)),
+                    getValue(context.getSessionData(POTION)));
 
             if (addAnother) {
                 context.setSessionData(STRENGTH, null);
@@ -238,12 +239,17 @@ public class AddKitItemConversation {
                 return new ChooseMaterial();
             }
 
-            context.getForWhom().sendRawMessage(TranslationUtils.getPluginPrefix() + kitName + " ParkourKit has been successfully saved.");
+            context.getForWhom().sendRawMessage(TranslationUtils.getPluginPrefix() + kitName
+                    + " ParkourKit has been successfully saved.");
             Parkour.getInstance().getParkourKitManager().clearCache(kitName);
             for (String courseName : Parkour.getParkourKitConfig().getDependentCourses(kitName)) {
                 Parkour.getInstance().getCourseManager().clearCache(courseName);
             }
             return endingConversation;
+        }
+
+        private String getValue(Object object) {
+            return object != null ? object.toString() : null;
         }
     }
 }

@@ -3,6 +3,7 @@ package io.github.a5h73y.parkour.type.course;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public enum ParkourEventType {
 	JOIN("Join"),
@@ -42,9 +43,15 @@ public enum ParkourEventType {
 				.toLowerCase();
 	}
 
-	public static ParkourEventType findByConfigEntry(@NotNull String eventName) {
+	/**
+	 * Find ParkourEventType by config entry value.
+	 * @param eventConfigEntry event config entry
+	 * @return matching ParkourEventType
+	 */
+	@Nullable
+	public static ParkourEventType findByConfigEntry(@NotNull String eventConfigEntry) {
 		return Arrays.stream(values())
-				.filter(parkourEventType -> parkourEventType.getConfigEntry().equalsIgnoreCase(eventName))
+				.filter(parkourEventType -> parkourEventType.getConfigEntry().equalsIgnoreCase(eventConfigEntry))
 				.findFirst().orElse(null);
 	}
 }

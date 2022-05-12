@@ -44,7 +44,6 @@ public class PlayerDataUpgradeTask extends TimedConfigUpgradeTask {
 
 	@Override
 	protected boolean doWork() {
-		boolean success = true;
 		// every player uuid
 		Set<String> playerIds = getConfig().getKeys(false);
 
@@ -86,9 +85,13 @@ public class PlayerDataUpgradeTask extends TimedConfigUpgradeTask {
 			count++;
 		}
 
-		return success;
+		return true;
 	}
 
+	/**
+	 * Update the Player's ParkourSessions.
+	 * Session has to be deserialized then converted into JSON.
+	 */
 	public void updateParkourSessions() {
 		for (OfflinePlayer player : upgradedPlayers) {
 			File playerSessionsPath = new File(getParkourUpgrader().getNewConfigManager().getParkourSessionsDir(),
@@ -101,24 +104,27 @@ public class PlayerDataUpgradeTask extends TimedConfigUpgradeTask {
 			try (Stream<Path> paths = Files.walk(Paths.get(playerSessionsPath.toURI()), 1)) {
 				paths.filter(Files::isRegularFile)
 						.filter(path -> !path.getFileName().toString().toLowerCase().contains("."))
-						.forEach(path -> {
-							ParkourSession session = loadParkourSession(path.toFile());
-
-							// it's a valid session, which hasn't got an upgraded file
-							// also the Course exists
-							if (session != null && session.getCourseName() != null
-									&& !ParkourSessionConfig.hasParkourSessionConfig(player, session.getCourseName())
-									&& CourseConfig.hasCourseConfig(session.getCourseName())) {
-								// deserialize Course from config
-								session.setCourseName(session.getCourseName());
-								ParkourSessionConfig.getConfig(player, session.getCourseName()).saveParkourSession(session);
-							}
-							path.toFile().delete();
-						});
+						.forEach(path -> updateParkourSession(player, path));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private void updateParkourSession(OfflinePlayer player, Path path) {
+		ParkourSession session = loadParkourSession(path.toFile());
+
+		// it's a valid session, which hasn't got an upgraded file
+		// also the Course exists
+		if (session != null && session.getCourseName() != null
+				&& !ParkourSessionConfig.hasParkourSessionConfig(player, session.getCourseName())
+				&& CourseConfig.hasCourseConfig(session.getCourseName())) {
+			// deserialize Course from config
+			session.setCourseName(session.getCourseName());
+			ParkourSessionConfig.getConfig(player, session.getCourseName())
+					.saveParkourSession(session);
+		}
+		path.toFile().delete();
 	}
 
 	private ParkourSession loadParkourSession(File sessionFile) {
@@ -139,10 +145,8 @@ public class PlayerDataUpgradeTask extends TimedConfigUpgradeTask {
 	private void updateCompletedCoursesSection(PlayerConfig newPlayerConfig, OfflinePlayer player) {
 		if (newPlayerConfig.contains("Completed")) {
 			List<String> completedCourses = newPlayerConfig.getStringList("Completed");
-
-			getParkourUpgrader().getNewConfigManager().getCourseCompletionsConfig().set(
-					getParkourUpgrader().getNewConfigManager().getDefaultConfig().getPlayerConfigName(player), completedCourses);
-
+			String playerKey = getParkourUpgrader().getNewConfigManager().getDefaultConfig().getPlayerConfigName(player);
+			getParkourUpgrader().getNewConfigManager().getCourseCompletionsConfig().set(playerKey, completedCourses);
 			newPlayerConfig.remove("Completed");
 		}
 	}

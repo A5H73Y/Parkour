@@ -53,10 +53,8 @@ import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -164,7 +162,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 		// already on a different course
 		if (parkour.getParkourSessionManager().isPlaying(player)
-				&& !parkour.getParkourSessionManager().getParkourSession(player).getCourseName().equals(course.getName())) {
+				&& !parkour.getParkourSessionManager().getParkourSession(player)
+				.getCourseName().equals(course.getName())) {
 			parkour.getParkourSessionManager().removePlayer(player);
 		}
 
@@ -277,8 +276,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	}
 
 	private void setGameMode(Player player, String gameModeName) {
-		if (!"KEEP".equalsIgnoreCase(gameModeName) &&
-				!parkour.getParkourSessionManager().isPlayerInTestMode(player)) {
+		if (!"KEEP".equalsIgnoreCase(gameModeName)
+				&& !parkour.getParkourSessionManager().isPlayerInTestMode(player)) {
 			PlayerUtils.setGameMode(player, gameModeName);
 		}
 	}
@@ -595,7 +594,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 				return;
 			}
 			// otherwise make a note of last time rewarded, and let them continue
-			parkour.getConfigManager().getPlayerConfig(player).setLastRewardedTime(courseName, System.currentTimeMillis());
+			parkour.getConfigManager().getPlayerConfig(player)
+					.setLastRewardedTime(courseName, System.currentTimeMillis());
 		}
 
 		ItemStack courseMaterialPrize = getCourseMaterialPrize(courseConfig);
@@ -620,7 +620,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			amount = courseConfig.getMaterialPrizeAmount();
 
 		} else {
-			material = MaterialUtils.lookupMaterial(parkour.getParkourConfig().getString("CourseDefault.Prize.Material"));
+			material = MaterialUtils.lookupMaterial(
+					parkour.getParkourConfig().getString("CourseDefault.Prize.Material"));
 			amount = parkour.getParkourConfig().getOrDefault("CourseDefault.Prize.Amount", 0);
 		}
 
@@ -794,8 +795,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
 
 		if (session != null && session.getParkourMode() == ParkourMode.POTION) {
-			XPotion.addEffects(player,
-					parkour.getConfigManager().getCourseConfig(session.getCourseName()).getPotionParkourModeEffects());
+			XPotion.addEffects(player, parkour.getConfigManager().getCourseConfig(session.getCourseName())
+					.getPotionParkourModeEffects());
 		}
 
 		Damageable playerDamage = player;
@@ -956,7 +957,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		sendConditionalValue(commandSender, "ParkourRank", StringUtils.colour(playerConfig.getParkourRank()));
 		sendConditionalValue(commandSender, "Parkoins", playerConfig.getParkoins());
 
-		int completedCourses = parkour.getConfigManager().getCourseCompletionsConfig().getNumberOfCompletedCourses(targetPlayer);
+		int completedCourses = parkour.getConfigManager().getCourseCompletionsConfig()
+				.getNumberOfCompletedCourses(targetPlayer);
 
 		sendValue(commandSender, "Courses Completed",
 				completedCourses + " / " + parkour.getCourseManager().getCourseNames().size());
@@ -1197,7 +1199,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	 * @return uncompleted course names
 	 */
 	public List<String> getUncompletedCourses(OfflinePlayer player) {
-		List<String> completedCourses = parkour.getConfigManager().getCourseCompletionsConfig().getCompletedCourses(player);
+		List<String> completedCourses = parkour.getConfigManager().getCourseCompletionsConfig()
+				.getCompletedCourses(player);
 		return parkour.getCourseManager().getCourseNames().stream()
 				.filter(course -> !completedCourses.contains(course))
 				.collect(Collectors.toList());
@@ -1324,7 +1327,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		if (parkour.getParkourConfig().getBoolean("OnFinish.DisplayNewRecords")
 				|| parkour.getParkourConfig().getBoolean("OnFinish.UpdatePlayerDatabaseTime")) {
 
-			if (parkour.getDatabaseManager().isBestCourseTime(session.getCourse().getName(), session.getTimeFinished())) {
+			if (parkour.getDatabaseManager().isBestCourseTime(session.getCourse().getName(),
+					session.getTimeFinished())) {
 				result = TimeResult.GLOBAL_BEST;
 
 			} else if (parkour.getDatabaseManager().isBestCourseTime(player,
@@ -1350,7 +1354,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}
 
 		Bukkit.getScheduler().runTaskTimer(parkour, () -> {
-			for (Map.Entry<UUID, ParkourSession> parkourPlayer : parkour.getParkourSessionManager().getParkourPlayers().entrySet()) {
+			for (Map.Entry<UUID, ParkourSession> parkourPlayer :
+					parkour.getParkourSessionManager().getParkourPlayers().entrySet()) {
 				Player player = Bukkit.getPlayer(parkourPlayer.getKey());
 				ParkourSession session = parkourPlayer.getValue();
 
@@ -1422,7 +1427,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			newParkourLevel = currentLevel + rewardAddLevel;
 		}
 
-		newParkourLevel = Math.min(newParkourLevel, parkour.getParkourConfig().getInt("Other.Parkour.MaximumParkourLevel"));
+		newParkourLevel = Math.min(newParkourLevel,
+				parkour.getParkourConfig().getInt("Other.Parkour.MaximumParkourLevel"));
 
 		// if their parkour level has increased
 		if (newParkourLevel > currentLevel) {
@@ -1475,7 +1481,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			}
 
 		} else if (parkour.getParkourConfig().isTeleportToJoinLocation()) {
-			PlayerUtils.teleportToLocation(player, parkour.getConfigManager().getPlayerConfig(player).getSnapshotJoinLocation());
+			PlayerUtils.teleportToLocation(player, parkour.getConfigManager().getPlayerConfig(player)
+					.getSnapshotJoinLocation());
 			TranslationUtils.sendTranslation("Parkour.JoinLocation", player);
 			return;
 		}
@@ -1538,8 +1545,10 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 	private void populateSetPlayerActions() {
 		playerActions.put("rank", (this::setParkourRank));
-		playerActions.put("level", (sender, targetPlayer, value) -> setParkourLevel(sender, targetPlayer, value, false));
-		playerActions.put("leveladd", (sender, targetPlayer, value) -> setParkourLevel(sender, targetPlayer, value, true));
+		playerActions.put("level", (sender, targetPlayer, value) ->
+				setParkourLevel(sender, targetPlayer, value, false));
+		playerActions.put("leveladd", (sender, targetPlayer, value) ->
+				setParkourLevel(sender, targetPlayer, value, true));
 	}
 
 	@Override
@@ -1547,6 +1556,14 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		processCommand(commandSender, Bukkit.getOfflinePlayer(args[1]), args[0], args[2]);
 	}
 
+	/**
+	 * Process Player Command.
+	 *
+	 * @param commandSender command sender
+	 * @param targetPlayer target player
+	 * @param action requested action
+	 * @param value value
+	 */
 	public void processCommand(CommandSender commandSender, OfflinePlayer targetPlayer, String action, String value) {
 		if (!PlayerConfig.hasPlayerConfig(targetPlayer)) {
 			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, commandSender);
@@ -1592,21 +1609,24 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			int currentLevel = parkour.getConfigManager().getPlayerConfig(player).getParkourLevel();
 
 			if (currentLevel < minimumLevel) {
-				TranslationUtils.sendValueTranslation("Error.RequiredLvl", String.valueOf(minimumLevel), player);
+				TranslationUtils.sendValueTranslation("Error.RequiredLvl",
+						String.valueOf(minimumLevel), player);
 				return false;
 			}
 		}
 
 		/* Permission system */
 		if (Parkour.getDefaultConfig().getBoolean("OnJoin.PerCoursePermission")
-				&& !PermissionUtils.hasSpecificPermission(player, Permission.PARKOUR_COURSE, course.getName(), true)) {
+				&& !PermissionUtils.hasSpecificPermission(player,
+				Permission.PARKOUR_COURSE, course.getName(), true)) {
 			return false;
 		}
 
 		/* Course isn't ready */
 		if (!courseConfig.getReadyStatus()) {
 			if (Parkour.getDefaultConfig().getBoolean("OnJoin.EnforceReady")) {
-				if (!PermissionUtils.hasPermissionOrCourseOwnership(player, Permission.ADMIN_READY_BYPASS, course.getName())) {
+				if (!PermissionUtils.hasPermissionOrCourseOwnership(player,
+						Permission.ADMIN_READY_BYPASS, course.getName())) {
 					TranslationUtils.sendTranslation("Error.NotReady", player);
 					return false;
 				}
@@ -1622,7 +1642,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 				return false;
 			}
 			if (Parkour.getDefaultConfig().isCourseEnforceWorld()
-					&& !player.getLocation().getWorld().getName().equals(course.getCheckpoints().get(0).getWorldName())) {
+					&& !player.getLocation().getWorld().getName()
+					.equals(course.getCheckpoints().get(0).getWorldName())) {
 				TranslationUtils.sendTranslation("Error.WrongWorld", player);
 				return false;
 			}

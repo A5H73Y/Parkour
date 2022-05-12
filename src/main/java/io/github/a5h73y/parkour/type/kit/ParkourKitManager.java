@@ -239,6 +239,14 @@ public class ParkourKitManager extends CacheableParkourManager {
 		PluginUtils.logToFile(kitName + " parkourkit was deleted by " + commandSender.getName());
 	}
 
+	/**
+	 * Process ParkourKit command.
+	 *
+	 * @param commandSender command sender
+	 * @param command command
+	 * @param argument argument
+	 * @param detail detail
+	 */
 	public void processParkourKitCommand(@NotNull CommandSender commandSender,
 	                                     @NotNull String command,
 	                                     @Nullable String argument,
@@ -276,7 +284,13 @@ public class ParkourKitManager extends CacheableParkourManager {
 		}
 	}
 
-	public void startCreateKitConversation(CommandSender commandSender, @Nullable String kitName) {
+	/**
+	 * Start the Create Kit Conversation.
+	 * @param commandSender command sender
+	 * @param kitName optional kit name
+	 */
+	public void startCreateKitConversation(@NotNull CommandSender commandSender,
+	                                       @Nullable String kitName) {
 		if (!PermissionUtils.hasPermission(commandSender, Permission.ADMIN_COURSE)) {
 			return;
 		}
@@ -284,6 +298,11 @@ public class ParkourKitManager extends CacheableParkourManager {
 		new CreateParkourKitConversation((Conversable) commandSender).withKitName(kitName).begin();
 	}
 
+	/**
+	 * Start the Edit Kit Conversation.
+	 * @param commandSender command sender
+	 * @param kitName optional kit name
+	 */
 	public void startEditKitConversation(CommandSender commandSender, @Nullable String kitName) {
 		if (!PermissionUtils.hasPermission(commandSender, Permission.ADMIN_COURSE)) {
 			return;
@@ -292,6 +311,12 @@ public class ParkourKitManager extends CacheableParkourManager {
 		new EditParkourKitConversation((Conversable) commandSender).withKitName(kitName).begin();
 	}
 
+	/**
+	 * Set the Course's linked ParkourKit.
+	 * @param commandSender command sender
+	 * @param kitName parkour kit name
+	 * @param courseName course name
+	 */
 	public void setLinkedParkourKit(CommandSender commandSender, String kitName, String courseName) {
 		if (commandSender instanceof Player
 				&& !PermissionUtils.hasPermissionOrCourseOwnership(
@@ -398,7 +423,7 @@ public class ParkourKitManager extends CacheableParkourManager {
 	}
 
 	private void updateOutdatedMaterial(String kitName, String oldMaterial, String newMaterial) {
-		Set<String> oldAction = getConfig().getSection( kitName + "." + oldMaterial).singleLayerKeySet();
+		Set<String> oldAction = getConfig().getSection(kitName + "." + oldMaterial).singleLayerKeySet();
 
 		// we copy all of the attributes from the old action (strength, duration, etc)
 		for (String attribute : oldAction) {

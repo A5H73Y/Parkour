@@ -88,6 +88,11 @@ public class Checkpoint implements ParkourSerializable {
         return data;
     }
 
+    /**
+     * Deserialize the Checkpoint from JSON.
+     * @param input key value map
+     * @return populated Checkpoint
+     */
     public static Checkpoint deserialize(Map<String, Object> input) {
         Location checkpointLocation = Location.deserialize(getMapValue(input.get("Location")));
         double checkpointX = NumberConversions.toDouble(input.get("CheckpointX"));

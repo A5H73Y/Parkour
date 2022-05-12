@@ -3,7 +3,6 @@ package io.github.a5h73y.parkour.utility;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -89,7 +88,8 @@ public class SignUtils {
             return;
         }
 
-        int minimumLevel = Parkour.getInstance().getConfigManager().getCourseConfig(signEvent.getLine(2)).getMinimumParkourLevel();
+        int minimumLevel = Parkour.getInstance().getConfigManager().getCourseConfig(signEvent.getLine(2))
+                .getMinimumParkourLevel();
 
         if (minimumLevel > 0) {
             signEvent.setLine(3, ChatColor.RED + String.valueOf(minimumLevel));
@@ -232,4 +232,6 @@ public class SignUtils {
         event.getBlock().breakNaturally();
         event.setCancelled(true);
     }
+
+    private SignUtils() {}
 }

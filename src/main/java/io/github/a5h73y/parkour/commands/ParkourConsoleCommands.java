@@ -235,7 +235,8 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                parkour.getAdministrationManager().processResetCommand(commandSender, args[1], args[2], args.length == 4 ? args[3] : null);
+                parkour.getAdministrationManager().processResetCommand(
+                        commandSender, args[1], args[2], args.length == 4 ? args[3] : null);
                 break;
 
             case "respawn":
@@ -342,7 +343,8 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
             case "contact":
             case "about":
             case "version":
-                TranslationUtils.sendMessage(commandSender, "Server is running Parkour &7" + parkour.getDescription().getVersion());
+                TranslationUtils.sendMessage(commandSender, "Server is running Parkour &7"
+                        + parkour.getDescription().getVersion());
                 TranslationUtils.sendMessage(commandSender, "Plugin proudly created by &bA5H73Y &f& &bsteve4744", false);
                 TranslationUtils.sendMessage(commandSender, "Project Page:&b https://www.spigotmc.org/resources/parkour.23685/", false);
                 TranslationUtils.sendMessage(commandSender, "Tutorials:&b https://a5h73y.github.io/Parkour/", false);

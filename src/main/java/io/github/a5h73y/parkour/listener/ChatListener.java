@@ -4,12 +4,12 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.PARKOUR_RANK_PLACE
 import static io.github.a5h73y.parkour.other.ParkourConstants.PLAYER_PLACEHOLDER;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.player.PlayerConfig;
-import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.utility.permission.Permission;
+import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import java.util.List;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

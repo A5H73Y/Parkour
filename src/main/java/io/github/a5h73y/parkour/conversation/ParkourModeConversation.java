@@ -53,7 +53,8 @@ public class ParkourModeConversation extends ParkourConversation {
 
             ParkourMode parkourMode = ParkourMode.valueOf(choice.toUpperCase());
             String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);
-            Parkour.getInstance().getCourseSettingsManager().setParkourMode((CommandSender) context.getForWhom(), courseName, parkourMode);
+            Parkour.getInstance().getCourseSettingsManager()
+                    .setParkourMode((CommandSender) context.getForWhom(), courseName, parkourMode);
             return Prompt.END_OF_CONVERSATION;
         }
     }
@@ -179,7 +180,8 @@ public class ParkourModeConversation extends ParkourConversation {
             String potionEffect = (String) context.getSessionData("potion");
             String durationAmplifier = (String) context.getSessionData("durationAmplifier");
             String joinMessage = (String) context.getSessionData("joinMessage");
-            Parkour.getInstance().getCourseSettingsManager().setPotionParkourMode((CommandSender) context.getForWhom(), courseName, potionEffect, durationAmplifier, joinMessage);
+            Parkour.getInstance().getCourseSettingsManager().setPotionParkourMode(
+                    (CommandSender) context.getForWhom(), courseName, potionEffect, durationAmplifier, joinMessage);
             return "";
         }
     }

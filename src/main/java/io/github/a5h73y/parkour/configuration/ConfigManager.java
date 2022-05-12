@@ -1,10 +1,12 @@
 package io.github.a5h73y.parkour.configuration;
 
+import de.leonhard.storage.internal.FlatFile;
+import de.leonhard.storage.internal.serialize.LightningSerializer;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
 import io.github.a5h73y.parkour.configuration.impl.StringsConfig;
 import io.github.a5h73y.parkour.configuration.serializable.CourseSerializable;
-import io.github.a5h73y.parkour.configuration.serializable.ItemStackSerializable;
 import io.github.a5h73y.parkour.configuration.serializable.ItemStackArraySerializable;
+import io.github.a5h73y.parkour.configuration.serializable.ItemStackSerializable;
 import io.github.a5h73y.parkour.configuration.serializable.LocationSerializable;
 import io.github.a5h73y.parkour.configuration.serializable.ParkourSessionSerializable;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
@@ -19,11 +21,8 @@ import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.cache.GenericCache;
 import java.io.File;
 import java.util.UUID;
-import de.leonhard.storage.internal.FlatFile;
-import de.leonhard.storage.internal.serialize.LightningSerializer;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Parkour Configuration Manager.
@@ -93,16 +92,30 @@ public class ConfigManager {
 		LightningSerializer.registerSerializable(new ParkourSessionSerializable());
 	}
 
-	@Nullable
-	public PlayerConfig getPlayerConfig(OfflinePlayer player) {
+	/**
+	 * Get the Player's JSON config file.
+	 * Cached result will be retrieved, or fresh copy will be gathered otherwise.
+	 *
+	 * @param player offline player
+	 * @return player's config
+	 */
+	@NotNull
+	public PlayerConfig getPlayerConfig(@NotNull OfflinePlayer player) {
 		UUID key = player.getUniqueId();
 		if (!playerConfigCache.containsKey(key) || playerConfigCache.get(key).isEmpty()) {
 			playerConfigCache.put(key, PlayerConfig.getConfig(player));
 		}
 
-		return playerConfigCache.get(key).orElse(null);
+		return playerConfigCache.get(key).orElse(PlayerConfig.getConfig(player));
 	}
 
+	/**
+	 * Get the Course's JSON config file.
+	 * Cached result will be retrieved, or fresh copy will be gathered otherwise.
+	 *
+	 * @param courseName course name
+	 * @return course's config
+	 */
 	@NotNull
 	public CourseConfig getCourseConfig(@NotNull String courseName) {
 		String key = courseName.toLowerCase();
@@ -110,7 +123,7 @@ public class ConfigManager {
 			courseConfigCache.put(key, CourseConfig.getConfig(courseName));
 		}
 
-		return courseConfigCache.get(key).orElseThrow();
+		return courseConfigCache.get(key).orElse(CourseConfig.getConfig(courseName));
 	}
 
 	/**

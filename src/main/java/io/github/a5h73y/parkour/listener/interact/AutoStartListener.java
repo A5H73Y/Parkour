@@ -57,7 +57,8 @@ public class AutoStartListener extends AbstractPluginReceiver implements Listene
 					session.setFreedomLocation(null);
 
 					parkour.getBountifulApi().sendSubTitle(event.getPlayer(),
-							TranslationUtils.getTranslation("Parkour.Restarting", false), BountifulApi.JOIN_COURSE);
+							TranslationUtils.getTranslation("Parkour.Restarting", false),
+							BountifulApi.JOIN_COURSE);
 				}
 			} else {
 				parkour.getPlayerManager().joinCourseButDelayed(

@@ -33,6 +33,12 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
 
     private static final List<String> QUESTION_ANSWER_COMMANDS = Arrays.asList("yes", "no");
 
+    /**
+     * Instantiate AutoTabCompleter.
+     * Declare autotab constants.
+     *
+     * @param parkour parkour instance
+     */
     public ParkourAutoTabCompleter(final Parkour parkour) {
         super(parkour);
         substitutions.put("(course)", parkour.getCourseManager().getCourseNames());

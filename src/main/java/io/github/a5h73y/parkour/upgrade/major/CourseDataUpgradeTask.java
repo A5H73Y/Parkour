@@ -24,7 +24,6 @@ public class CourseDataUpgradeTask extends TimedConfigUpgradeTask {
 
 	@Override
 	protected boolean doWork() {
-		boolean success = true;
 		List<String> courseNames = getConfig().getStringList("Courses");
 
 		getParkourUpgrader().getLogger().log(Level.INFO, "Converting {0} courses.", courseNames.size());
@@ -60,18 +59,20 @@ public class CourseDataUpgradeTask extends TimedConfigUpgradeTask {
 		}
 
 		updateAutoStartSection();
-		return success;
+		return true;
 	}
 
 	private void updateEventsSection(CourseConfig newCourseConfig) {
 		Arrays.stream(ParkourEventType.values()).forEach(parkourEventType -> {
 			if (newCourseConfig.contains(parkourEventType.getConfigEntry() + "Command")) {
-				newCourseConfig.set("Command." + parkourEventType.getConfigEntry(), newCourseConfig.getStringList(parkourEventType.getConfigEntry() + "Command"));
+				newCourseConfig.set("Command." + parkourEventType.getConfigEntry(),
+						newCourseConfig.getStringList(parkourEventType.getConfigEntry() + "Command"));
 				newCourseConfig.remove(parkourEventType.getConfigEntry() + "Command");
 			}
 
 			if (newCourseConfig.contains(parkourEventType.getConfigEntry() + "Message")) {
-				newCourseConfig.set("Message." + parkourEventType.getConfigEntry(), newCourseConfig.getString(parkourEventType.getConfigEntry() + "Message"));
+				newCourseConfig.set("Message." + parkourEventType.getConfigEntry(),
+						newCourseConfig.getString(parkourEventType.getConfigEntry() + "Message"));
 				newCourseConfig.remove(parkourEventType.getConfigEntry() + "Message");
 			}
 		});
@@ -109,7 +110,8 @@ public class CourseDataUpgradeTask extends TimedConfigUpgradeTask {
 			// update each checkpoint to include world name
 			String courseWorld = courseConfig.getString("World");
 			Set<String> eachCheckpoint = courseConfig.getSection("Checkpoint").singleLayerKeySet();
-			eachCheckpoint.forEach(checkpointNumber -> courseConfig.set("Checkpoint." + checkpointNumber + ".Location.world", courseWorld));
+			eachCheckpoint.forEach(checkpointNumber ->
+					courseConfig.set("Checkpoint." + checkpointNumber + ".Location.world", courseWorld));
 		}
 	}
 

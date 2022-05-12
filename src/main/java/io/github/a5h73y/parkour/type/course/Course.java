@@ -107,6 +107,11 @@ public class Course implements Serializable {
         return settings;
     }
 
+    /**
+     * Deserialize the Course instane from the JSON.
+     * @param input config key / values
+     * @return populated Course
+     */
     public static Course deserialize(Map<String, Object> input) {
         String name = String.valueOf(input.get("Name"));
         String displayName = String.valueOf(input.getOrDefault("DisplayName", input.get("Name")));

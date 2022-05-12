@@ -3,7 +3,6 @@ package io.github.a5h73y.parkour.utility.permission;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -112,4 +111,6 @@ public class PermissionUtils {
 		}
 		return true;
 	}
+
+	private PermissionUtils() {}
 }

@@ -35,7 +35,8 @@ public class DatabaseUpgradeTask extends TimedUpgradeTask {
 			database.update(readContentsOfResource(sqlResourcePrefix + "time.sql"));
 
 			getParkourUpgrader().getLogger().info("Transferring times back...");
-			database.update("INSERT INTO time (courseId, playerId, time, deaths) SELECT courseId, playerId, time, deaths FROM time_backup;");
+			database.update("INSERT INTO time (courseId, playerId, time, deaths) "
+					+ "SELECT courseId, playerId, time, deaths FROM time_backup;");
 			database.update("DROP TABLE time_backup;");
 		} catch (SQLException | IOException e) {
 			e.printStackTrace();

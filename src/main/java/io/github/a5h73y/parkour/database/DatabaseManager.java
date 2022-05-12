@@ -376,7 +376,9 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
      * @param time time in milliseconds
      * @param deaths deaths accumulated
      */
-    public void insertOrUpdateTime(@NotNull String courseName, @NotNull Player player, long time, int deaths, boolean isNewRecord) {
+    public void insertOrUpdateTime(@NotNull String courseName,
+                                   @NotNull Player player,
+                                   long time, int deaths, boolean isNewRecord) {
         boolean updatePlayerTime = getConfig().getBoolean("OnFinish.UpdatePlayerDatabaseTime");
         PluginUtils.debug("Potentially Inserting or Updating Time for player: " + player.getName()
                 + ", isNewRecord: " + isNewRecord + ", updatePlayerTime: " + updatePlayerTime);
@@ -392,24 +394,30 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
         }
     }
 
-    public void renameCourse(String courseName, String targetCourseName) {
-        PluginUtils.debug("Renaming course " + courseName + " to " + targetCourseName);
+    /**
+     * Rename the specified course name to the desired course name.
+     *
+     * @param targetCourseName target course name
+     * @param desiredCourseName desired course name
+     */
+    public void renameCourse(String targetCourseName, String desiredCourseName) {
+        PluginUtils.debug("Renaming course " + targetCourseName + " to " + desiredCourseName);
         String renameCourseQuery = "UPDATE course SET name=? WHERE name=?";
 
         try {
             CompletableFuture.supplyAsync(() -> {
                 int results = 0;
                 try (PreparedStatement statement = getDatabaseConnection().prepareStatement(renameCourseQuery)) {
-                    statement.setString(1, courseName);
-                    statement.setString(2, targetCourseName);
+                    statement.setString(1, targetCourseName);
+                    statement.setString(2, desiredCourseName);
                     results = statement.executeUpdate();
                 } catch (SQLException e) {
                     logSqlException(e);
                 }
                 return results;
             }).get();
-            resultsCache.remove(courseName);
-            courseIdCache.remove(courseName);
+            resultsCache.remove(targetCourseName);
+            courseIdCache.remove(targetCourseName);
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
@@ -603,7 +611,9 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
      * @param courseName name of the course
      * @param times {@link TimeEntry} results
      */
-    public void displayTimeEntries(@NotNull CommandSender commandSender, @NotNull String courseName, @Nullable List<TimeEntry> times) {
+    public void displayTimeEntries(@NotNull CommandSender commandSender,
+                                   @NotNull String courseName,
+                                   @Nullable List<TimeEntry> times) {
         if (times == null || times.isEmpty()) {
             TranslationUtils.sendMessage(commandSender, "No results were found!");
             return;

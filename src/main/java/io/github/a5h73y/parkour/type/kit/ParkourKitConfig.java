@@ -1,20 +1,24 @@
 package io.github.a5h73y.parkour.type.kit;
 
+import de.leonhard.storage.Yaml;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.ParkourConstants;
-import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import de.leonhard.storage.Yaml;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ParkourKitConfig extends Yaml {
 
+	/**
+	 * Create parkour-kits.yml config.
+	 * @param path path
+	 */
 	public ParkourKitConfig(File path) {
 		super(path);
 
@@ -85,7 +89,8 @@ public class ParkourKitConfig extends Yaml {
 	public List<String> getDependentCourses(String kitName) {
 		List<String> dependentCourses = new ArrayList<>();
 		for (String courseName : Parkour.getInstance().getCourseManager().getCourseNames()) {
-			String linkedKitName = Parkour.getInstance().getConfigManager().getCourseConfig(courseName).getParkourKit();
+			String linkedKitName = Parkour.getInstance().getConfigManager().getCourseConfig(courseName)
+					.getParkourKit();
 			if (kitName.equals(linkedKitName)) {
 				dependentCourses.add(courseName);
 			}
@@ -106,14 +111,24 @@ public class ParkourKitConfig extends Yaml {
 		this.remove(kitName.toLowerCase() + "." + material.toUpperCase());
 	}
 
+	/**
+	 * Add Material to ParkourKit.
+	 *
+	 * @param kitName parkour kit name
+	 * @param materialName material name
+	 * @param action kit action
+	 * @param strength action strength
+	 * @param duration action duration
+	 * @param potion potion effect
+	 */
 	public void addMaterialToParkourKit(@NotNull String kitName,
 	                                    @NotNull String materialName,
 	                                    @NotNull String action,
-	                                    Object strength,
-	                                    Object duration,
-	                                    Object potion) {
+	                                    @Nullable String strength,
+	                                    @Nullable String duration,
+	                                    @Nullable String potion) {
 
-		String pathPrefix = kitName + "." + materialName + ".";
+		String pathPrefix = kitName.toLowerCase() + "." + materialName.toUpperCase() + ".";
 		this.set(pathPrefix + "Action", action);
 		if (strength != null) {
 			this.set(pathPrefix + "Strength", strength);

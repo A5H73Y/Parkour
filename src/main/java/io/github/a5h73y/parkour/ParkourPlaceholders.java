@@ -178,7 +178,8 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 }
                 switch (arguments[2]) {
                     case "completed":
-                        return String.valueOf(parkour.getConfigManager().getCourseCompletionsConfig().getNumberOfCompletedCourses(offlinePlayer));
+                        return String.valueOf(parkour.getConfigManager().getCourseCompletionsConfig()
+                                .getNumberOfCompletedCourses(offlinePlayer));
 
                     case "uncompleted":
                         return String.valueOf(parkour.getPlayerManager().getNumberOfUncompletedCourses(offlinePlayer));

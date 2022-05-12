@@ -4,6 +4,7 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_INVALID_AMOU
 import static io.github.a5h73y.parkour.other.ParkourConstants.PARKOUR_LEVEL_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.PARKOUR_RANK_PLACEHOLDER;
 
+import de.leonhard.storage.Yaml;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.type.CacheableParkourManager;
 import io.github.a5h73y.parkour.utility.StringUtils;
@@ -14,7 +15,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-import de.leonhard.storage.Yaml;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
@@ -89,16 +89,21 @@ public class ParkourRankManager extends CacheableParkourManager {
 				StringUtils.colour(parkourRank));
 	}
 
-	public void deleteParkourRank(CommandSender commandSender, String input) {
-		if (input == null || !ValidationUtils.isPositiveInteger(input)) {
+	/**
+	 * Delete ParkourRank for provided ParkourLevel.
+	 * @param commandSender command sender
+	 * @param parkourLevel parkour level
+	 */
+	public void deleteParkourRank(CommandSender commandSender, String parkourLevel) {
+		if (parkourLevel == null || !ValidationUtils.isPositiveInteger(parkourLevel)) {
 			TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, commandSender);
 			return;
 		}
 
-		Integer parkourLevel = Integer.parseInt(input);
-		if (parkourRankExists(parkourLevel)) {
-			parkour.getConfigManager().getParkourKitConfig().remove(input);
-			parkourRanks.remove(parkourLevel);
+		Integer level = Integer.parseInt(parkourLevel);
+		if (parkourRankExists(level)) {
+			parkour.getConfigManager().getParkourKitConfig().remove(parkourLevel);
+			parkourRanks.remove(level);
 		} else {
 			TranslationUtils.sendMessage(commandSender, "ParkourRank not found for provided ParkourLevel.");
 		}

@@ -1,8 +1,8 @@
 package io.github.a5h73y.parkour.listener;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
+import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -13,9 +13,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 
-public class BlockListener extends AbstractPluginReceiver implements Listener {
+public class BreakPlaceListener extends AbstractPluginReceiver implements Listener {
 
-    public BlockListener(final Parkour parkour) {
+    public BreakPlaceListener(final Parkour parkour) {
         super(parkour);
     }
 

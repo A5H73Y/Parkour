@@ -5,6 +5,9 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT;
 import static io.github.a5h73y.parkour.utility.TranslationUtils.sendConditionalValue;
 import static io.github.a5h73y.parkour.utility.TranslationUtils.sendValue;
 
+import de.leonhard.storage.Json;
+import de.leonhard.storage.internal.FileType;
+import de.leonhard.storage.internal.serialize.LightningSerializer;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.type.player.ParkourMode;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
@@ -17,9 +20,6 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import de.leonhard.storage.Json;
-import de.leonhard.storage.internal.FileType;
-import de.leonhard.storage.internal.serialize.LightningSerializer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -960,12 +960,16 @@ public class CourseConfig extends Json {
      * @param value command to run
      */
     public void addEventCommand(@NotNull ParkourEventType eventType,
-                                @NotNull String value) {
+                                @Nullable String value) {
         List<String> commands = getEventCommands(eventType);
         commands.add(value);
         this.set(COMMAND_PREFIX + eventType.getConfigEntry(), commands);
     }
 
+    /**
+     * Reset the Course data.
+     * This does not delete the Course, but simply remove non-essential config.
+     */
     public void resetCourseData() {
         this.removeAll(this.singleLayerKeySet().stream().filter(property ->
                         !CREATOR.equals(property)
@@ -974,6 +978,11 @@ public class CourseConfig extends Json {
                 .toArray(String[]::new));
     }
 
+    /**
+     * Create Course data.
+     * Required to set the essential Course data.
+     * @param player creating player
+     */
     public void createCourseData(Player player) {
         this.set("Name", this.courseName);
         this.set(CREATOR, player.getName());
@@ -988,8 +997,6 @@ public class CourseConfig extends Json {
      * @param checkpoint checkpoint being saved
      */
     public void createCheckpointData(Location location, int checkpoint) {
-        int maximumCheckpoints = Math.max(checkpoint, this.getInt(CHECKPOINTS));
-
         String prefix = "Checkpoint." + checkpoint + ".";
         this.getFileData().insert(prefix + "Location.x", location.getBlockX() + 0.5);
         this.getFileData().insert(prefix + "Location.y", location.getBlockY() + 0.5);
@@ -1002,9 +1009,13 @@ public class CourseConfig extends Json {
         this.getFileData().insert(prefix + "CheckpointY", location.getBlockY() - 1);
         this.getFileData().insert(prefix + "CheckpointZ", location.getBlockZ());
 
-        this.set(CHECKPOINTS, maximumCheckpoints);
+        this.set(CHECKPOINTS, Math.max(checkpoint, this.getInt(CHECKPOINTS)));
     }
 
+    /**
+     * Delete highest Checkpoint.
+     * The highest numbered checkpoint will be deleted.
+     */
     public void deleteCheckpoint() {
         Json courseConfig = this;
         int checkpoint = courseConfig.getInt(CHECKPOINTS);
@@ -1023,12 +1034,13 @@ public class CourseConfig extends Json {
      */
     public static void displayCourseInfo(@NotNull CommandSender commandSender,
                                          @Nullable String courseNameRaw) {
-        if (courseNameRaw == null || !Parkour.getInstance().getCourseManager().doesCourseExist(courseNameRaw)) {
+        Parkour parkour = Parkour.getInstance();
+        if (courseNameRaw == null || !parkour.getCourseManager().doesCourseExist(courseNameRaw)) {
             TranslationUtils.sendValueTranslation("Error.NoExist", courseNameRaw, commandSender);
             return;
         }
         String courseName = courseNameRaw.toLowerCase();
-        TranslationUtils.sendHeading(StringUtils.standardizeText(courseName) + " statistics", commandSender);
+        TranslationUtils.sendHeading(StringUtils.standardizeText(courseName) + " Information", commandSender);
         CourseConfig config = getConfig(courseName);
 
         sendConditionalValue(commandSender, "Display Name", config.hasCourseDisplayName(), config.getCourseDisplayName());
@@ -1061,7 +1073,7 @@ public class CourseConfig extends Json {
                 config.getMaterialPrize() + " x " + config.getMaterialPrizeAmount());
         sendConditionalValue(commandSender, "XP Prize", config.getXpPrize());
 
-        if (Parkour.getInstance().getEconomyApi().isEnabled()) {
+        if (parkour.getEconomyApi().isEnabled()) {
             sendConditionalValue(commandSender, "Join Fee", config.getEconomyJoiningFee());
             sendConditionalValue(commandSender, "Economy Reward", config.getEconomyFinishReward());
         }
@@ -1070,9 +1082,10 @@ public class CourseConfig extends Json {
             sendValue(commandSender, "Reward Cooldown", DateTimeUtils.convertMillisecondsToDateTime(
                     DateTimeUtils.convertHoursToMilliseconds(config.getRewardDelay())));
 
-            if (commandSender instanceof Player && !Parkour.getInstance().getPlayerManager().hasPrizeCooldownDurationPassed(
+            if (commandSender instanceof Player && !parkour.getPlayerManager().hasPrizeCooldownDurationPassed(
                     (Player) commandSender, courseName, false)) {
-                sendValue(commandSender, "Cool down Remaining", DateTimeUtils.getDelayTimeRemaining((Player) commandSender, courseName));
+                sendValue(commandSender, "Cooldown Remaining",
+                        DateTimeUtils.getDelayTimeRemaining((Player) commandSender, courseName));
             }
         }
         for (ParkourEventType value : ParkourEventType.values()) {
