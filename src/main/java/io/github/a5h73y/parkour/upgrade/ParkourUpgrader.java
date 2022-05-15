@@ -83,7 +83,7 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 			parkour.getLogger().warning("This version is too outdated.");
 			parkour.getLogger().warning("Please upgrade to 6.7.1 and then reinstall this version.");
 
-		} else if (existingVersion.isLowerThan("7.0")) {
+		} else if (existingVersion.isLowerThan("7.0.0")) {
 			success = performFullUpgrade();
 		}
 

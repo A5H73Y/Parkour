@@ -51,6 +51,7 @@ import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -245,9 +246,12 @@ public class Parkour extends JavaPlugin {
 
     private void registerCommands() {
         parkourCommands = new ParkourCommands(this);
+        PluginCommand parkourCommand = getCommand(PLUGIN_NAME);
+        parkourCommand.setExecutor(parkourCommands);
+        if (this.getConfig().getBoolean("Other.UseAutoTabCompletion")) {
+            parkourCommand.setTabCompleter(new ParkourAutoTabCompleter(this));
+        }
 
-        getCommand(PLUGIN_NAME).setExecutor(parkourCommands);
-        getCommand(PLUGIN_NAME).setTabCompleter(new ParkourAutoTabCompleter(this));
         getCommand("paconsole").setExecutor(new ParkourConsoleCommands(this));
     }
 

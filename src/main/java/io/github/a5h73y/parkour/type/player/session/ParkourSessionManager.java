@@ -75,7 +75,7 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Com
 	 * @param player target player
 	 */
 	public void removePlayer(Player player) {
-		if (isPlaying(player)) {
+		if (player != null && isPlaying(player)) {
 			parkourPlayers.remove(player.getUniqueId());
 		}
 	}
@@ -102,7 +102,7 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Com
 	 * @return player session exists
 	 */
 	public boolean isPlaying(Player player) {
-		return parkourPlayers.containsKey(player.getUniqueId());
+		return player != null && parkourPlayers.containsKey(player.getUniqueId());
 	}
 
 	public boolean isPlayingParkourCourse(Player player) {

@@ -16,14 +16,14 @@ _Command: `/pa settings (course)`_
 
 ### challengeonly
 
-A Course can be marked to only be joinable if the Player is part of a Challenge. The Player will be notified upon trying to join the Course that they must be in a Challenge to join.
+Ability to prevent a Player from joining a Course unless they are currently part of a Challenge. The Player will be notified upon trying to join the Course that they must be in a Challenge to join.
 
 _Command: `/pa setcourse (course) challengeonly (true/false)`_
 
 ### creator
 
 Each Course must have a Creator, by default this will be set to the Player who used the create Course command.
-If you want to overwrite the creator of a Course to a different Player, this will now allow the chosen Player to have elevated permissions for that Course.
+Overwriting the creator of a Course to a different Player, will allow the specified Player to have elevated permissions for that Course.
 
 _Command: `/pa setcourse (course) creator (player)`_
 
@@ -41,7 +41,7 @@ _Command: `/pa setcourse (course) dieinvoid [true/false]`_
 
 ### displayname
 
-Each Course has the ability to have a display name. As Course names have to be a unique and strict format to be valid, you are able to set the display name to anything you like, including spaces or color symbols. This display name will be displayed to the Player instead of the course name.
+Each Course has the ability to have a display name. As Course names have to be a unique and strict format to be valid, you are able to set the display name to any text you like, including spaces or color symbols. The Course's display name will be displayed to the Player instead of the course name.
 
 _Command: `/pa setcourse (course) displayname (value...)`_
 
@@ -53,21 +53,23 @@ _Command: `/pa setcourse (course) linkedcourse (course)`_
 
 ### linkedlobby
 
-Once the Player finishes a Course, by default they are teleported to the default Lobby. This can be changed to the desired Lobby so the Player is teleported to a different Lobby once they complete the Course.
+Once the Player finishes a Course, by default they are teleported to the default Lobby. This can be changed to the specified Lobby so the Player is teleported to that Lobby once they complete the Course. 
 
 _By default, the Player will be teleported to the default lobby when they *leave* a Course, this can be changed in the config.yml by setting `OnLeave.TeleportToLinkedLobby` to `true`._
+
+_Note that the Player must still abide to the minimum ParkourLevel requirement for the Lobby to successfully join it._
 
 _Command: `/pa setcourse (course) linkedlobby (lobby)`_
 
 ### manualcheckpoints
 
-If you preferred an external way to set the Player's checkpoint position, you can enable manual checkpoints. This will allow the Player (and console) to use the "/pa manualcheckpoint" command, which sets the Player's current position to their Checkpoint.
+When enabled, the Player's checkpoint position can be manually set whenever you want. This will allow the Player (and console) to use the "/pa manualcheckpoint" command, which sets the Player's current position to their Checkpoint. This can be used as an external way to set the Player's checkpoint position.
 
 _Command: `/pa setcourse (course) manualcheckpoints [true/false]`_
 
 ### maxdeaths
 
-You are able to limit the amount of deaths a Player can accumulate before they are kicked off the Course for extra challenge. An example could be a quick challenging Course that allows the Player just 1 life to complete.
+You are able to limit the amount of deaths a Player can accumulate before they are kicked off the Course, for extra challenge. An example could be a quick challenging Course that allows the Player just 1 life to complete.
 
 _Command: `/pa setcourse (course) maxdeaths (amount)`_
 
@@ -75,13 +77,13 @@ _Command: `/pa setcourse (course) maxdeaths (amount)`_
 
 You are able to limit the amount of ticks (time) a Player can fall for before they are killed.
 
-Setting the value to 0 will disable the MaxFallTicks check.
+Setting the value to 0 will disable the MaxFallTicks check and allow them to fall infinitely (this can be used in Dropper styled Courses).
 
 _Command: `/pa setcourse (course) maxfallticks (amount)`_
 
 ### maxtime
 
-Set a limit the amount of time a Player can reach before they are kicked off the Course for extra challenge. An example could be a challenging Course that must be completed in a certain time.
+Set a limit for the amount of time a Player can reach before they are kicked off the Course, for extra challenge. An example could be a challenging Course that must be completed within a certain time.
 
 _Command: `/pa setcourse (course) maxtime (seconds)`_
 
@@ -116,13 +118,13 @@ _Command: `/pa setcourse (course) playerlimit (amount)`_
 
 By default, Players can not join a Course that has not been set to ready (so they don't join a half-finished Course), this can be disabled by changing `OnJoin.EnforceReady` to `false` in the `config.yml`.
 
-Only Courses marked as Ready will be added to Cache to allow for better performance when Players join it.
+Only Courses marked as Ready will be cached, to allow for better performance when Players join it.
 
-_Command: `/pa ready [course]`_
+_Command: `/pa setcourse (course) ready` OR `/pa ready [course]`_
 
 ### resumable
 
-By default, a Player's progress will be deleted when they leave a Course. To retain the Player's progress set `OnLeave.DestroyCourseProgress` to `false` in the `config.yml`; each Course will then be "resumable" meaning they can leave at any point and rejoin back to their last achieved checkpoint (with their accumulated time and amount of deaths restored).
+By default, a Player's progress will be deleted when they leave a Course. To retain the Player's progress set `OnLeave.DestroyCourseProgress` to `false` in the `config.yml`; each Course will then be "resumable" meaning they can leave at any point and rejoin back, which will restore their last achieved checkpoint with their accumulated time and amount of deaths.
 
 However, you can toggle the resumable status of the Course to set a Course to be non-resumable to prevent their progress from being saved.
 
@@ -132,27 +134,27 @@ _Command: `/pa setcourse (course) resumable [true/false]`_
 
 The amount of time that must pass before the Player can achieve the Course's prize again.
 
-_The time can be a fraction of hours. For example, `0.5` would be `30 minutes`, `48` would be `2 full days`._
+The time can be a fraction of hours. For example, `0.5` would be `30 minutes`, `48` would be `2 full days`.
 
 _Command: `/pa setcourse (course) rewarddelay (hours)`_
 
 ### rewardlevel
 
-The ParkourLevel the Player should be set to.  
+The ParkourLevel the Player should be set to for completing the Course.  
 _[More information on reward ParkourLevels.](/tutorials/parkour-level-ranks?id=rewardlevel)_
 
 _Command: `/pa setcourse (course) rewardlevel (level)`_
 
 ### rewardleveladd
 
-The amount of ParkourLevel the Player should have added.  
+The amount of ParkourLevel the Player should have added for completing the Course.  
 _[More information on reward ParkourLevels.](/tutorials/parkour-level-ranks?id=rewardleveladd)_
 
 _Command: `/pa setcourse (course) rewardleveladd (level)`_
 
 ### rewardonce
 
-A Course can be marked to only give the Prize reward for the first time they complete a Course. This will include any ParkourLevel rewards given, which is especially important if you've chosen to use "rewardleveladd" functionality.
+A Course can be set to give the Prize reward **only** for the first time they complete a Course. This will include any ParkourLevel rewards given, which is especially important if you've chosen to use "rewardleveladd" functionality.
 
 _Command: `/pa setcourse (course) rewardonce [true/false]`_
 
@@ -179,19 +181,21 @@ _Command: `/pa setcourse (course) prize`_
 
 ### rename
 
-Rename a Course.
+If you don't like the name of the Course you can rename it to something else, this will keep all the Course data and leaderboards intact.
+
+Know that you can set a `displayname` to give the Course a better name for the Player to see if preferred, instead of renaming.
 
 _Command: `/pa setcourse (course) rename (new-name)`_
 
 ### resetlink
 
-To remove either the linked Course or linked Lobby from a Course, reset the link which will set the Player to be teleported to the default lobby.
+To remove the linked Course or linked Lobby from a Course, reset the link. This will result in the Player being teleported to the default lobby on Course completion.
 
 _Command: `/pa setcourse (course) resetlink`_
 
 ### start
 
-Change the starting position of a Course, the exact position you are in will be saved.
+You can change the starting position of a Course; where the command is executed is the exact position which will be saved.
 
 _Command: `/pa setcourse (course) start`_
 

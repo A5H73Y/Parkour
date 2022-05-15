@@ -6,8 +6,8 @@ Please note that each version of Parkour is backwards compatible with the previo
 ### Configuration Changes
 Parkour 6.7.1 used a config system which hadn't changed since the Plugin's inception in 2012, by combining all the Courses and Players data into their single config file. This resulted in insanely slow performance when changing and saving data regularly.
 
-Parkour 7.0 introduced a new system of configuration, where each Player and each Course has its own JSON config file with its own data and nothing else. 
-The performance improvements are outstanding: ![7.0 Performance](https://i.imgur.com/t3t4gbD.png "7.0 Performance")
+Parkour 7.0.0 introduced a new system of configuration, where each Player and each Course has its own JSON config file with its own data and nothing else. 
+The performance improvements are outstanding: ![7.0.0 Performance](https://i.imgur.com/t3t4gbD.png "7.0.0 Performance")
 
 Many new smaller config files have been introduced to store appropriate data.
 ### Default Course Settings

@@ -355,10 +355,9 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
             case "no":
                 if (!parkour.getQuestionManager().hasBeenAskedQuestion(commandSender)) {
                     TranslationUtils.sendTranslation("Error.NoQuestion", commandSender);
-                    break;
+                } else {
+                    parkour.getQuestionManager().answerQuestion(commandSender, args[0]);
                 }
-
-                parkour.getQuestionManager().answerQuestion(commandSender, args[0]);
                 break;
 
             case "backup":

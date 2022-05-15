@@ -484,7 +484,11 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
             case "yes":
             case "no":
-                TranslationUtils.sendTranslation("Error.NoQuestion", player);
+                if (!parkour.getQuestionManager().hasBeenAskedQuestion(player)) {
+                    TranslationUtils.sendTranslation("Error.NoQuestion", player);
+                } else {
+                    parkour.getQuestionManager().answerQuestion(player, args[1]);
+                }
                 break;
 
             // player aliases

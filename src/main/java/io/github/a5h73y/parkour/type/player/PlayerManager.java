@@ -300,9 +300,9 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	 * Manually Increase Player Checkpoint.
 	 * Set the Player's checkpoint to the checkpoint provided.
 	 * @param player player
-	 * @param checkpoint checkpoint
+	 * @param desiredCheckpoint checkpoint number
 	 */
-	public void manuallyIncreaseCheckpoint(Player player, int checkpoint) {
+	public void manuallyIncreaseCheckpoint(Player player, int desiredCheckpoint) {
 		if (!parkour.getParkourSessionManager().isPlaying(player)) {
 			TranslationUtils.sendTranslation("Error.NotOnCourse", player);
 			return;
@@ -310,13 +310,17 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 		ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
 
-		if (session.hasAchievedAllCheckpoints()
-				|| session.getCurrentCheckpoint() >= checkpoint
-				|| session.getCurrentCheckpoint() + 1 < checkpoint) {
+		if (session.hasAchievedAllCheckpoints() || session.getCurrentCheckpoint() >= desiredCheckpoint) {
 			return;
 		}
 
-		increaseCheckpoint(player, null);
+		// sequential and they've requested one exceeding the next
+		if (parkour.getParkourConfig().getBoolean("OnCourse.SequentialCheckpoints")
+				&& session.getCurrentCheckpoint() + 1 < desiredCheckpoint) {
+			return;
+		}
+
+		increaseCheckpoint(player, desiredCheckpoint);
 	}
 
 	/**
@@ -1083,11 +1087,6 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			targetPlayer = Bukkit.getOfflinePlayer(UUID.fromString(targetPlayerId));
 		} else {
 			targetPlayer = Bukkit.getOfflinePlayer(targetPlayerId);
-		}
-
-		if (!PlayerConfig.hasPlayerConfig(targetPlayer)) {
-			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, commandSender);
-			return;
 		}
 
 		resetPlayer(targetPlayer);

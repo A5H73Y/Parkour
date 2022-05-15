@@ -33,7 +33,6 @@ public class DefaultConfigUpgradeTask extends TimedConfigUpgradeTask {
 		getConfig().set("ParkourModes.Dropper", null);
 		getConfig().set("ParkourModes.FreeCheckpoint", null);
 		getConfig().set("DisplayTitle", null); // laziness
-		getConfig().set("Other.UseAutoTabCompletion", null);
 		getConfig().set("Other.ParkourKit", null);
 		getConfig().set("Other.Parkour.ChatRankPrefix", null);
 		getConfig().set("Lobby", null);

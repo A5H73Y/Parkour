@@ -246,6 +246,7 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("ParkourRankChat.Enabled", false);
 		this.setDefault("ParkourRankChat.OverrideChat", true);
 
+		this.setDefault("Other.UseAutoTabCompletion", true);
 		this.setDefault("Other.CheckForUpdates", true);
 		this.setDefault("Other.LogAdminTasksToFile", true);
 		this.setDefault("Other.EnforceSafeCheckpoints", true);

@@ -285,8 +285,8 @@
     "command": "manualcheckpoint",
     "title": "Set Player Manual Checkpoint",
     "example": "/pa manualcheckpoint",
-    "description": "Allows the Player to mark their current position as their manual checkpoint. This is exclusive to the Free_Checkpoint ParkourMode, and must be enabled in the config. This will allow external plugins to mark the Player's checkpoint for them using the command.",
-    "commandGroup": "1",
+    "description": "Allows the Player to mark their current position as their manual checkpoint. This will allow external plugins to mark the Player's checkpoint for them using the command. The use of manualcheckpoints must be enabled on the Course to allow this command.",
+    "commandGroup": "4",
     "consoleSyntax": "pac manualcheckpoint (player)"
   },
   {
@@ -295,17 +295,16 @@
     "arguments": "[material]",
     "example": "/pa material",
     "description": "Display the matching Material information. The name of the Material in the Player's hand will be displayed which can be used throughout the plugin, if an argument is provided and will display if a match was found. All the names are server dependent, so if you have an older server version the names may differ.",
-    "commandGroup": "1"
+    "commandGroup": "5"
   },
   {
     "command": "parkourkit",
     "title": "ParkourKit commands",
-    "arguments": "(action) [parkourkit] [value]",
-    "example": "/pa listkit default",
-    "description": "TODO.",
+    "arguments": "(create / edit / validate / list / link / give) [parkourkit] [value]",
+    "example": "/pa parkourkit list default",
+    "description": "Perform various actions with ParkourKits. The additional value argument is only required for the link command which will be the Course to link to.",
     "permission": "parkour.admin.course",
-    "commandGroup": "4",
-    "consoleSyntax": "pac parkourkit (action) [parkourkit] [value]",
+    "commandGroup": "5",
     "autoTabSyntax": "[create,edit,validate,list,link,give] {1:create=(name),*=(parkourkit)} {1:link=(course)}"
   },
   {
@@ -489,7 +488,7 @@
     "example": "/pa rewardrank 4 \u00264Pro",
     "description": "You can link a ParkourLevel to a ParkourRank, which would display beside their name if you enable the Parkour Chat Prefix setting. This would allow you to differentiate each ParkourLevel a Player is, based on their ParkourRank.",
     "permission": "parkour.admin.course",
-    "commandGroup": "3",
+    "commandGroup": "5",
     "consoleSyntax": "pac rewardrank (level) (rank)",
     "autoTabSyntax": "(level) (rank)"
   },
@@ -516,8 +515,8 @@
   },
   {
     "command": "setcheckpoint",
-    "title": "Set Player Manual Checkpoint",
-    "description": "Allows the Player's checkpoint to be manually set using a console command. This will allow multiple external actions to increase the player's current checkpoint. Checkpoint provided must match the Player's next checkpoint to achieve.",
+    "title": "Manually Set Player's Checkpoint",
+    "description": "Allows the Player's checkpoint to be manually set using a console command. This will allow multiple external actions to increase the player's current checkpoint. This command will respect the value of the sequential checkpoints config.",
     "consoleSyntax": "pac setcheckpoint (player) (checkpoint)",
     "consoleOnly": true
   },
@@ -681,7 +680,7 @@
     "example": "/pa sql",
     "description": "Display the SQL information of the server connected to the database.",
     "permission": "parkour.admin.*",
-    "commandGroup": "4",
+    "commandGroup": "5",
     "consoleSyntax": "pac sql"
   },
   {

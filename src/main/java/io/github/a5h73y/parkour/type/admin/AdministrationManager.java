@@ -165,8 +165,8 @@ public class AdministrationManager extends AbstractPluginReceiver {
 				}
 
 				if (!PlayerConfig.hasPlayerConfig(targetPlayer)) {
-					TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, commandSender);
-					return;
+					TranslationUtils.sendMessage(commandSender,
+							"This Parkour Player was not found, continuing reset any way...");
 				}
 
 				parkour.getQuestionManager().askResetPlayerQuestion(commandSender, argument);

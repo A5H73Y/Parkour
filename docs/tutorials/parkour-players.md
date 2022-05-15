@@ -1,7 +1,7 @@
 Players
 ======
 
-As of Parkour 7.0 each player has their own configuration file, which contains their progress and data.
+As of Parkour 7.0.0 each player has their own configuration file, which contains their progress and data.
 
 ## Player Information
 
