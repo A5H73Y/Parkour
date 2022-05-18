@@ -315,7 +315,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}
 
 		// sequential and they've requested one exceeding the next
-		if (parkour.getParkourConfig().getBoolean("OnCourse.SequentialCheckpoints")
+		if (parkour.getParkourConfig().getBoolean("OnCourse.SequentialCheckpoints.Enabled")
 				&& session.getCurrentCheckpoint() + 1 < desiredCheckpoint) {
 			return;
 		}
@@ -439,8 +439,12 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 				TranslationUtils.sendMessage(player, message.toString());
 			}
 		} else if (!inQuietMode) {
-			TranslationUtils.sendValueTranslation("Parkour.Die2",
-					String.valueOf(session.getCurrentCheckpoint()), player);
+			if (session.getCourse().getSettings().isManualCheckpoints()) {
+				TranslationUtils.sendTranslation("Parkour.Die3", player);
+			} else {
+				TranslationUtils.sendValueTranslation("Parkour.Die2",
+						String.valueOf(session.getCurrentCheckpoint()), player);
+			}
 		}
 
 		if (parkour.getParkourConfig().getBoolean("OnDie.SetXPBarToDeathCount")) {
@@ -688,66 +692,6 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 						displayTime, null);
 			}
 		}
-	}
-
-	/**
-	 * Delay the Player's Requested Event with message.
-	 * Some actions may require a cooldown, the event will only be permitted if enough time has passed.
-	 *
-	 * @param player requesting player
-	 * @param secondsToWait seconds elapsed before permitted again
-	 * @return player allowed to perform action
-	 */
-	public boolean delayPlayerWithMessage(Player player, int secondsToWait) {
-		return delayPlayer(player, secondsToWait, "Error.Cooldown", false);
-	}
-
-	/**
-	 * Delay the Player's Requested Event.
-	 * Some actions may require a cooldown, the event will only be permitted if enough time has passed.
-	 *
-	 * @param player requesting player
-	 * @param secondsToWait seconds elapsed before permitted again
-	 * @return player allowed to perform action
-	 */
-	public boolean delayPlayer(Player player, int secondsToWait) {
-		return delayPlayer(player, secondsToWait, null, false);
-	}
-
-	/**
-	 * Delay the Player's Requested Event.
-	 * Some actions may require a cooldown, the event will only be permitted if enough time has passed.
-	 * If requested, operators can be exempt from the cooldown.
-	 *
-	 * @param player requesting player
-	 * @param secondsToWait seconds elapsed before permitted again
-	 * @param displayMessageKey the cooldown message key
-	 * @param opsBypass operators bypass cooldown
-	 * @return player allowed to perform action
-	 */
-	public boolean delayPlayer(Player player, int secondsToWait, @Nullable String displayMessageKey, boolean opsBypass) {
-		if (player.isOp() && opsBypass) {
-			return true;
-		}
-
-		if (!playerDelay.containsKey(player.getUniqueId())) {
-			playerDelay.put(player.getUniqueId(), System.currentTimeMillis());
-			return true;
-		}
-
-		long lastAction = playerDelay.get(player.getUniqueId());
-		int secondsElapsed = (int) ((System.currentTimeMillis() - lastAction) / 1000);
-
-		if (secondsElapsed >= secondsToWait) {
-			playerDelay.put(player.getUniqueId(), System.currentTimeMillis());
-			return true;
-		}
-
-		if (displayMessageKey != null) {
-			TranslationUtils.sendValueTranslation(displayMessageKey,
-					String.valueOf(secondsToWait - secondsElapsed), player);
-		}
-		return false;
 	}
 
 	/**
@@ -1171,7 +1115,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	 * Set a Manual Checkpoint at the Player's Location.
 	 * @param player player
 	 */
-	public void setManualCheckpoint(Player player) {
+	public void setManualCheckpoint(Player player, @Nullable Location location) {
 		if (!parkour.getParkourSessionManager().isPlaying(player)) {
 			TranslationUtils.sendTranslation("Error.NotOnAnyCourse", player);
 			return;
@@ -1179,13 +1123,24 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 		ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
 
-		if (session.getCourse().getSettings().isManualCheckpoints()) {
-			session.setFreedomLocation(player.getLocation());
-			TranslationUtils.sendTranslation("Event.FreeCheckpoints", player);
-
-		} else {
-			TranslationUtils.sendMessage(player, "You are currently unable to set a manual Checkpoint.");
+		if (!session.getCourse().getSettings().isManualCheckpoints()) {
+			TranslationUtils.sendMessage(player, "Manual Checkpoints are disabled on this Course.");
+			return;
 		}
+
+		if (parkour.getParkourConfig().isTreatFirstCheckpointAsStart() && session.getFreedomLocation() == null) {
+			session.resetTime();
+			session.setStartTimer(true);
+			parkour.getBountifulApi().sendActionBar(player,
+					TranslationUtils.getTranslation("Parkour.TimerStarted", false));
+		}
+		session.setFreedomLocation(location != null ? location : player.getLocation());
+		parkour.getSoundsManager().playSound(player, SoundType.CHECKPOINT_ACHIEVED);
+
+		String checkpointMessage = TranslationUtils.getCourseEventMessage(session,
+				ParkourEventType.CHECKPOINT, "Event.FreeCheckpoints");
+
+		parkour.getBountifulApi().sendSubTitle(player, checkpointMessage, BountifulApi.CHECKPOINT);
 	}
 
 	public int getNumberOfUncompletedCourses(OfflinePlayer player) {

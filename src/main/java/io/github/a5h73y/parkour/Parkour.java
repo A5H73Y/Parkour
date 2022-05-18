@@ -162,9 +162,11 @@ public class Parkour extends JavaPlugin {
     /**
      * Get the Default config.
      * Overrides the default getConfig() method.
+     * @deprecated use getDefaultConfig()
      *
      * @return default config
      */
+    @Deprecated
     @Override
     public FileConfiguration getConfig() {
         throw new UnsupportedOperationException("Use getDefaultConfig()");
@@ -248,7 +250,7 @@ public class Parkour extends JavaPlugin {
         parkourCommands = new ParkourCommands(this);
         PluginCommand parkourCommand = getCommand(PLUGIN_NAME);
         parkourCommand.setExecutor(parkourCommands);
-        if (this.getConfig().getBoolean("Other.UseAutoTabCompletion")) {
+        if (this.getParkourConfig().getBoolean("Other.UseAutoTabCompletion")) {
             parkourCommand.setTabCompleter(new ParkourAutoTabCompleter(this));
         }
 

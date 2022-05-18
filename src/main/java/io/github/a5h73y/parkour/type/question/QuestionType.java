@@ -36,7 +36,7 @@ public enum QuestionType {
             (sender, value) -> Parkour.getInstance().getCourseManager().resetCourse(sender, value)),
 
     RESET_PLAYER("You are about to reset Player &b%s&f...",
-            "&7Resetting a Player will delete all their times across all Courses and delete all various Parkour attributes.",
+            "&7Resetting a Player will delete all their leaderboard times across all Courses and delete their Parkour data.",
             (sender, value) -> Parkour.getInstance().getPlayerManager().resetPlayer(sender, value)),
 
     RESET_LEADERBOARD("You are about to reset Leaderboards for &b%s&f...",

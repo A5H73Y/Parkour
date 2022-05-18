@@ -13,6 +13,7 @@ import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
+import io.github.a5h73y.parkour.utility.TaskCooldowns;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.permission.Permission;
@@ -340,7 +341,7 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param args command arguments
      */
     public void displayLeaderboards(final Player player, final String... args) {
-        if (!parkour.getPlayerManager().delayPlayerWithMessage(player, 1)) {
+        if (!TaskCooldowns.getInstance().delayPlayerWithMessage(player, "leaderboards", 1)) {
             return;
         }
 

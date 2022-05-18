@@ -433,7 +433,7 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Com
 		sessionActions.put("restart", player -> parkour.getPlayerManager().restartCourse(player));
 		sessionActions.put("back", player -> parkour.getPlayerManager().playerDie(player));
 		sessionActions.put("leave", player -> parkour.getPlayerManager().leaveCourse(player));
-		sessionActions.put("manualcheckpoint", player -> parkour.getPlayerManager().setManualCheckpoint(player));
+		sessionActions.put("manualcheckpoint", player -> parkour.getPlayerManager().setManualCheckpoint(player, null));
 		sessionActions.put("quiet", player -> parkour.getQuietModeManager().toggleQuietMode(player));
 	}
 }

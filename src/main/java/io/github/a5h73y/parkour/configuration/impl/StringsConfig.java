@@ -59,6 +59,7 @@ public class StringsConfig extends Yaml {
 		this.setDefault("Parkour.MaxTime", "Sorry, you have reached the maximum time limit of %VALUE%!");
 		this.setDefault("Parkour.Die1", "You died! Going back to the start!");
 		this.setDefault("Parkour.Die2", "You died! Going back to checkpoint &b%VALUE%");
+		this.setDefault("Parkour.Die3", "You died! Going back to your checkpoint.");
 		this.setDefault("Parkour.LifeCount", "&b%VALUE% &flives remaining!");
 		this.setDefault("Parkour.Playing", " &b%PLAYER% &f- &8C: &7%COURSE% &8D: &7%DEATHS% &8T: &7%TIME%");
 		this.setDefault("Parkour.Accept", "&7Enter &a/pa accept &7to accept.");
@@ -133,6 +134,7 @@ public class StringsConfig extends Yaml {
 		this.setDefault("Error.UnknownCheckpoint", "Unknown or invalid Checkpoint.");
 		this.setDefault("Error.Cheating1", "Please do not cheat.");
 		this.setDefault("Error.Cheating2", "&lYou must achieve all &4&l%VALUE% &f&lcheckpoints!");
+		this.setDefault("Error.MissedCheckpoints", "You have missed &4%VALUE% &fcheckpoints!");
 		this.setDefault("Error.Cooldown", "Slow down! Please wait &b%VALUE% &fmore seconds.");
 		this.setDefault("Error.PrizeCooldown", "You have to wait &b%VALUE% &fbefore you can receive this prize again!");
 		this.setDefault("Error.NoQuestion", "You have not been asked a question!");

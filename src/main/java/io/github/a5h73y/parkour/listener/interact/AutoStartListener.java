@@ -4,6 +4,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.plugin.BountifulApi;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
+import io.github.a5h73y.parkour.utility.TaskCooldowns;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -42,7 +43,7 @@ public class AutoStartListener extends AbstractPluginReceiver implements Listene
 		}
 
 		// Prevent a user spamming the joins
-		if (!parkour.getPlayerManager().delayPlayer(event.getPlayer(), 1)) {
+		if (!TaskCooldowns.getInstance().delayPlayer(event.getPlayer(), "autostart", 1)) {
 			return;
 		}
 

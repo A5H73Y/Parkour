@@ -75,80 +75,83 @@ public class ParkourBlockListener extends AbstractPluginReceiver implements List
 		ParkourKitAction kitAction = parkourKit.getAction(belowMaterial);
 
 		if (kitAction != null) {
-			switch (kitAction.getActionType()) {
-				case FINISH:
-					parkour.getPlayerManager().finishCourse(player);
-					break;
-
-				case DEATH:
-					parkour.getPlayerManager().playerDie(player);
-					break;
-
-				case LAUNCH:
-					player.setVelocity(new Vector(0, kitAction.getStrength(), 0));
-					break;
-
-				case BOUNCE:
-					if (!player.hasPotionEffect(PotionEffectType.JUMP)) {
-						PlayerUtils.applyPotionEffect(PotionEffectType.JUMP, kitAction.getDuration(),
-								(int) kitAction.getStrength(), player);
-					}
-					break;
-
-				case SPEED:
-					if (!player.hasPotionEffect(PotionEffectType.SPEED)) {
-						PlayerUtils.applyPotionEffect(PotionEffectType.SPEED, kitAction.getDuration(),
-								(int) kitAction.getStrength(), player);
-					}
-					break;
-
-				case POTION:
-					PotionEffectType effect = PotionEffectType.getByName(kitAction.getEffect());
-					if (effect != null) {
-						PlayerUtils.applyPotionEffect(effect, kitAction.getDuration(),
-								(int) kitAction.getStrength(), player);
-					}
-					break;
-
-				case NORUN:
-					player.setSprinting(false);
-					break;
-
-				case NOPOTION:
-					PlayerUtils.removeAllPotionEffects(player);
-					player.setFireTicks(0);
-					break;
-
-				default:
-					break;
-			}
+			performBelowAction(player, kitAction);
 		} else {
-			for (BlockFace blockFace : BLOCK_FACES) {
-				Material material = player.getLocation().getBlock().getRelative(blockFace).getType();
-				kitAction = parkourKit.getAction(material);
+			performWallAction(player, parkourKit);
+		}
+	}
 
-				if (kitAction != null) {
-					switch (kitAction.getActionType()) {
-						case CLIMB:
-							if (!player.isSneaking()) {
-								player.setVelocity(new Vector(0, kitAction.getStrength(), 0));
-							}
-							break;
+	private void performWallAction(Player player, ParkourKit parkourKit) {
+		for (BlockFace blockFace : BLOCK_FACES) {
+			Material material = player.getLocation().getBlock().getRelative(blockFace).getType();
+			ParkourKitAction kitAction = parkourKit.getAction(material);
 
-						case REPULSE:
-							double strength = kitAction.getStrength();
-							double x = blockFace == BlockFace.NORTH || blockFace == BlockFace.SOUTH ? 0
-									: blockFace == BlockFace.EAST ? -strength : strength;
-							double z = blockFace == BlockFace.EAST || blockFace == BlockFace.WEST ? 0
-									: blockFace == BlockFace.NORTH ? strength : -strength;
+			if (kitAction != null) {
+				switch (kitAction.getActionType()) {
+					case CLIMB:
+						if (!player.isSneaking()) {
+							player.setVelocity(new Vector(0, kitAction.getStrength(), 0));
+						}
+						break;
 
-							player.setVelocity(new Vector(x, 0.1, z));
-							break;
+					case REPULSE:
+						double strength = kitAction.getStrength();
+						double x = blockFace == BlockFace.NORTH || blockFace == BlockFace.SOUTH ? 0
+								: blockFace == BlockFace.EAST ? -strength : strength;
+						double z = blockFace == BlockFace.EAST || blockFace == BlockFace.WEST ? 0
+								: blockFace == BlockFace.NORTH ? strength : -strength;
 
-						default:
-					}
+						player.setVelocity(new Vector(x, 0.1, z));
+						break;
 				}
 			}
+		}
+	}
+
+	private void performBelowAction(Player player, ParkourKitAction kitAction) {
+		switch (kitAction.getActionType()) {
+			case FINISH:
+				parkour.getPlayerManager().finishCourse(player);
+				break;
+
+			case DEATH:
+				parkour.getPlayerManager().playerDie(player);
+				break;
+
+			case LAUNCH:
+				player.setVelocity(new Vector(0, kitAction.getStrength(), 0));
+				break;
+
+			case BOUNCE:
+				if (!player.hasPotionEffect(PotionEffectType.JUMP)) {
+					PlayerUtils.applyPotionEffect(PotionEffectType.JUMP, kitAction.getDuration(),
+							(int) kitAction.getStrength(), player);
+				}
+				break;
+
+			case SPEED:
+				if (!player.hasPotionEffect(PotionEffectType.SPEED)) {
+					PlayerUtils.applyPotionEffect(PotionEffectType.SPEED, kitAction.getDuration(),
+							(int) kitAction.getStrength(), player);
+				}
+				break;
+
+			case POTION:
+				PotionEffectType effect = PotionEffectType.getByName(kitAction.getEffect());
+				if (effect != null) {
+					PlayerUtils.applyPotionEffect(effect, kitAction.getDuration(),
+							(int) kitAction.getStrength(), player);
+				}
+				break;
+
+			case NORUN:
+				player.setSprinting(false);
+				break;
+
+			case NOPOTION:
+				PlayerUtils.removeAllPotionEffects(player);
+				player.setFireTicks(0);
+				break;
 		}
 	}
 

@@ -196,7 +196,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                parkour.getPlayerManager().setManualCheckpoint(findPlayer(commandSender, args[1]));
+                parkour.getPlayerManager().setManualCheckpoint(findPlayer(commandSender, args[1]), null);
                 break;
 
             case "placeholder":

@@ -151,7 +151,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 				setCourseEventMessage(commandSender, args[1], args[3], StringUtils.extractMessageFromArgs(args, 4));
 
 			} else if (args[2].equalsIgnoreCase("command")) {
-				setCourseEventCommand(commandSender, args[1], args[3], StringUtils.extractMessageFromArgs(args, 4));
+				addCourseEventCommand(commandSender, args[1], args[3], StringUtils.extractMessageFromArgs(args, 4));
 
 			} else if (args[2].equalsIgnoreCase("displayname")) {
 				performAction(commandSender, args[1], args[2], StringUtils.extractMessageFromArgs(args, 3));
@@ -885,14 +885,14 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 	}
 
 	/**
-	 * Set the Course's Event Command.
+	 * Add a Course Event Command.
 	 *
 	 * @param commandSender command sender
 	 * @param courseName course name
 	 * @param eventTypeName event type name
 	 * @param command message
 	 */
-	public void setCourseEventCommand(@NotNull CommandSender commandSender,
+	public void addCourseEventCommand(@NotNull CommandSender commandSender,
 	                                  @Nullable String courseName,
 	                                  @Nullable String eventTypeName,
 	                                  @Nullable String command) {

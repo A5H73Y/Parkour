@@ -246,11 +246,13 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
      */
     @EventHandler
     public void onPlayerDisconnect(PlayerQuitEvent event) {
-        parkour.getPlayerManager().teardownParkourPlayer(event.getPlayer());
+        Player player = event.getPlayer();
 
-        if (event.getPlayer().isBanned()
+        parkour.getPlayerManager().teardownParkourPlayer(player);
+
+        if (player.isBanned()
                 && parkour.getParkourConfig().getBoolean("Other.OnPlayerBan.ResetParkourInfo")) {
-            parkour.getPlayerManager().resetPlayer(event.getPlayer());
+            parkour.getPlayerManager().resetPlayer(player);
         }
     }
 
@@ -262,7 +264,9 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
      */
     @EventHandler
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (!parkour.getParkourSessionManager().isPlayingParkourCourse(event.getPlayer())) {
+        Player player = event.getPlayer();
+
+        if (!parkour.getParkourSessionManager().isPlayingParkourCourse(player)) {
             return;
         }
 
@@ -270,18 +274,18 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        ParkourSession session = parkour.getParkourSessionManager().getParkourSession(event.getPlayer());
+        ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
         World nextCheckpointWorld = session.getNextCheckpoint() != null
                 ? session.getNextCheckpoint().getLocation().getWorld() : null;
 
-        if (event.getFrom().getWorld() != event.getPlayer().getWorld()
+        if (event.getFrom().getWorld() != player.getWorld()
                 && (nextCheckpointWorld == null || nextCheckpointWorld != event.getTo().getWorld())) {
             if (parkour.getParkourConfig().isCourseEnforceWorldLeaveCourse()) {
-                parkour.getPlayerManager().leaveCourse(event.getPlayer(), true);
+                parkour.getPlayerManager().leaveCourse(player, true);
 
             } else {
                 event.setCancelled(true);
-                TranslationUtils.sendTranslation("Error.WorldTeleport", event.getPlayer());
+                TranslationUtils.sendTranslation("Error.WorldTeleport", player);
             }
         }
     }
@@ -294,7 +298,9 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
      */
     @EventHandler
     public void onPlayerToggleFlight(PlayerToggleFlightEvent event) {
-        if (!parkour.getParkourSessionManager().isPlaying(event.getPlayer())) {
+        Player player = event.getPlayer();
+
+        if (!parkour.getParkourSessionManager().isPlaying(player)) {
             return;
         }
 
@@ -302,10 +308,10 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
+        if (player.getGameMode() != GameMode.CREATIVE) {
             event.setCancelled(true);
-            event.getPlayer().setAllowFlight(false);
-            event.getPlayer().setFlying(false);
+            player.setAllowFlight(false);
+            player.setFlying(false);
         }
     }
 

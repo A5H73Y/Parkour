@@ -49,7 +49,7 @@ public enum ParkourEventType {
 	 * @return matching ParkourEventType
 	 */
 	@Nullable
-	public static ParkourEventType findByConfigEntry(@NotNull String eventConfigEntry) {
+	public static ParkourEventType findByConfigEntry(@Nullable String eventConfigEntry) {
 		return Arrays.stream(values())
 				.filter(parkourEventType -> parkourEventType.getConfigEntry().equalsIgnoreCase(eventConfigEntry))
 				.findFirst().orElse(null);

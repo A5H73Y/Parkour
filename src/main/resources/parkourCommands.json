@@ -287,7 +287,8 @@
     "example": "/pa manualcheckpoint",
     "description": "Allows the Player to mark their current position as their manual checkpoint. This will allow external plugins to mark the Player's checkpoint for them using the command. The use of manualcheckpoints must be enabled on the Course to allow this command.",
     "commandGroup": "4",
-    "consoleSyntax": "pac manualcheckpoint (player)"
+    "consoleSyntax": "pac manualcheckpoint (player)",
+    "deprecated": "/pa session manualcheckpoint"
   },
   {
     "command": "material",

@@ -8,6 +8,7 @@ import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.SignUtils;
+import io.github.a5h73y.parkour.utility.TaskCooldowns;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.permission.Permission;
@@ -256,7 +257,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExist(lines[2])) {
                     TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, lines[2], player);
 
-                } else if (parkour.getPlayerManager().delayPlayerWithMessage(player, 4)) {
+                } else if (TaskCooldowns.getInstance().delayPlayerWithMessage(player, "leaderboards", 4)) {
                     int amount = lines[3].isEmpty() ? 5 : Integer.parseInt(lines[3]);
                     parkour.getDatabaseManager().displayTimeEntries(player, lines[2],
                             parkour.getDatabaseManager().getTopCourseResults(lines[2], amount));

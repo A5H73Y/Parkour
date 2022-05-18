@@ -19,8 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class SetPlayerConversation extends ParkourConversation {
 
-    public static final List<String> SET_PLAYER_OPTIONS = Collections.unmodifiableList(
-            Arrays.asList("level", "leveladd", "rank"));
+    public static final List<String> SET_PLAYER_OPTIONS = List.of("level", "leveladd", "rank");
 
     public SetPlayerConversation(Player player) {
         super(player);

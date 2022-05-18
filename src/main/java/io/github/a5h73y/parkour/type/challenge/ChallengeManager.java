@@ -10,6 +10,7 @@ import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.plugin.EconomyApi;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
+import io.github.a5h73y.parkour.utility.TaskCooldowns;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.permission.Permission;
@@ -649,7 +650,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
             return false;
         }
 
-        if (!parkour.getPlayerManager().delayPlayerWithMessage(player, 8)) {
+        if (!TaskCooldowns.getInstance().delayPlayerWithMessage(player, "challenge", 8)) {
             return false;
         }
 

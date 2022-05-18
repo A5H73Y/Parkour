@@ -86,7 +86,8 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("OnCourse.PreventJoiningDifferentCourse", false);
 		this.setDefault("OnCourse.PreventPlayerCollisions", false);
 		this.setDefault("OnCourse.PreventFireDamage", true);
-		this.setDefault("OnCourse.SequentialCheckpoints", true);
+		this.setDefault("OnCourse.SequentialCheckpoints.Enabled", true);
+		this.setDefault("OnCourse.SequentialCheckpoints.AlertPlayer", true);
 		this.setDefault("OnCourse.SneakToInteractItems", true);
 		this.setDefault("OnCourse.TreatLastCheckpointAsFinish", false);
 		this.setDefault("OnCourse.UseParkourKit", true);
