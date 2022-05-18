@@ -167,7 +167,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
 
     /**
      * Construct the Player's Scoreboard.
-     * Setup the Scoreboard with title and value placeholders.
+     * Set up the Scoreboard with title and value placeholders.
      *
      * @param player player
      * @param session parkour session

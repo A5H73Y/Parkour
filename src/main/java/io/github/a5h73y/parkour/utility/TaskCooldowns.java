@@ -31,7 +31,7 @@ public enum TaskCooldowns {
      *
      * @param player requesting player
      * @param secondsToWait seconds elapsed before permitted again
-     * @return player allowed to perform action
+     * @return whether player allowed to perform the action
      */
     public boolean delayPlayerWithMessage(Player player, int secondsToWait) {
         return delayPlayerWithMessage(player, "", secondsToWait);
@@ -47,7 +47,7 @@ public enum TaskCooldowns {
      *
      * @param player requesting player
      * @param secondsToWait seconds elapsed before permitted again
-     * @return player allowed to perform action
+     * @return whether player allowed to perform the action
      */
     public boolean delayPlayer(Player player, int secondsToWait) {
         return delayPlayer(player, "", secondsToWait);

@@ -2,7 +2,6 @@ package io.github.a5h73y.parkour.type.admin;
 
 import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
-import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_UNKNOWN_PLAYER;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
@@ -49,11 +48,13 @@ public class AdministrationManager extends AbstractPluginReceiver {
 
 			case "checkpoint":
 				parkour.getCheckpointManager().createCheckpoint(player, argument,
-						ValidationUtils.isPositiveInteger(extraArgument) ? Integer.parseInt(extraArgument) : null);
+						ValidationUtils.isPositiveInteger(extraArgument)
+								? Integer.parseInt(extraArgument) : null);
 				break;
 
 			case "lobby":
-				parkour.getLobbyManager().createLobby(player, argument == null ? DEFAULT : argument, extraArgument);
+				parkour.getLobbyManager().createLobby(player,
+						argument == null ? DEFAULT : argument, extraArgument);
 				break;
 
 			case "kit":
@@ -423,7 +424,8 @@ public class AdministrationManager extends AbstractPluginReceiver {
 
 		if (!dependentCourses.isEmpty()) {
 			TranslationUtils.sendMessage(commandSender,
-					"This Course can not be deleted as there are other dependent Courses: " + dependentCourses);
+					"This Course can not be deleted as there are other dependent Courses: "
+							+ dependentCourses);
 			return false;
 		}
 
@@ -518,7 +520,7 @@ public class AdministrationManager extends AbstractPluginReceiver {
 	 * @return command sender can delete parkour rank
 	 */
 	public boolean canDeleteParkourRank(CommandSender commandSender, String parkourLevel) {
-		if (parkourLevel == null || !ValidationUtils.isPositiveInteger(parkourLevel)) {
+		if (!ValidationUtils.isPositiveInteger(parkourLevel)) {
 			TranslationUtils.sendMessage(commandSender, "Invalid ParkourLevel provided.");
 			return false;
 		}

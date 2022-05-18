@@ -108,7 +108,7 @@ public class Course implements Serializable {
     }
 
     /**
-     * Deserialize the Course instane from the JSON.
+     * Deserialize the Course instance from the JSON.
      * @param input config key / values
      * @return populated Course
      */

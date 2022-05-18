@@ -33,7 +33,8 @@ public class JoinCoursesGui implements AbstractMenu {
 	@Override
 	public void addContent(InventoryGui parent, Player player) {
 		GuiElementGroup group = new GuiElementGroup('g');
-		PlayerManager playerManager = Parkour.getInstance().getPlayerManager();
+		Parkour parkour = Parkour.getInstance();
+		PlayerManager playerManager = parkour.getPlayerManager();
 
 		for (String course : Parkour.getInstance().getCourseManager().getCourseNames()) {
 			group.addElement(
@@ -52,11 +53,11 @@ public class JoinCoursesGui implements AbstractMenu {
 							TranslationUtils.getValueTranslation("GUI.JoinCourses.Description",
 									course, false),
 							TranslationUtils.getValueTranslation("GUI.JoinCourses.Players",
-									String.valueOf(Parkour.getInstance().getParkourSessionManager()
+									String.valueOf(parkour.getParkourSessionManager()
 											.getNumberOfPlayersOnCourse(course)), false),
 							TranslationUtils.getValueTranslation("GUI.JoinCourses.Checkpoints",
-									String.valueOf(Parkour.getInstance().getConfigManager()
-											.getCourseConfig(course).getCheckpointAmount()), false)
+									String.valueOf(parkour.getConfigManager().getCourseConfig(course)
+											.getCheckpointAmount()), false)
 					));
 		}
 		parent.addElement(group);

@@ -80,7 +80,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public class PlayerManager extends AbstractPluginReceiver implements Initializable, CommandProcessor {
 
-	private final Map<UUID, Long> playerDelay = new HashMap<>();
 	// player actions to set data
 	private final Map<String, TriConsumer<CommandSender, OfflinePlayer, String>> playerActions = new HashMap<>();
 
@@ -395,9 +394,10 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 		if (session.getCourse().getSettings().hasMaxDeaths()) {
 			if (session.getCourse().getSettings().getMaxDeaths() > session.getDeaths()) {
+				String deaths = String.valueOf(session.getRemainingDeaths());
 				parkour.getBountifulApi().sendSubTitle(player,
 						TranslationUtils.getValueTranslation("Parkour.LifeCount",
-								String.valueOf(session.getRemainingDeaths()), false), BountifulApi.DEATH);
+								deaths, false), BountifulApi.DEATH);
 
 			} else {
 				TranslationUtils.sendValueTranslation("Parkour.MaxDeaths",
@@ -467,7 +467,6 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		parkour.getQuestionManager().removeQuestion(player);
 		parkour.getParkourSessionManager().removeHiddenPlayer(player);
 		parkour.getParkourSessionManager().saveParkourSession(player, true);
-		playerDelay.remove(player.getUniqueId());
 	}
 
 	/**
@@ -577,7 +576,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	/**
 	 * Reward the Player with the Course Prize.
 	 * A Prize Delay validation be applied after the Player has completed the Course too recently.
-	 * If 'Reward Once' is enabled and they've completed the Course, only the {@code ParkourEventType.FINISH} event will fire.
+	 * If 'Reward Once' is enabled, and they've completed the Course, only the {@code ParkourEventType.FINISH} event will fire.
 	 *
 	 * @param player requesting player
 	 * @param session parkour session
@@ -601,7 +600,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			if (!hasPrizeCooldownDurationPassed(player, courseName, true)) {
 				return;
 			}
-			// otherwise make a note of last time rewarded, and let them continue
+			// otherwise, make a note of last time rewarded, and let them continue
 			parkour.getConfigManager().getPlayerConfig(player)
 					.setLastRewardedTime(courseName, System.currentTimeMillis());
 		}
@@ -731,7 +730,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 	/**
 	 * Prepare the player for Parkour.
-	 * Executed when the player dies, will reset them to a prepared state so they can continue.
+	 * Executed when the player dies, will reset them to a prepared state, so they can continue.
 	 *
 	 * @param player player
 	 */
@@ -1480,8 +1479,10 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		String subTitle = "";
 		if (course.getSettings().hasMaxDeaths() && course.getSettings().hasMaxTime()) {
 			subTitle = TranslationUtils.getTranslation("Parkour.JoinLivesAndTime", false)
-					.replace("%LIVES%", String.valueOf(course.getSettings().getMaxDeaths()))
-					.replace("%MAXTIME%", DateTimeUtils.convertSecondsToTime(course.getSettings().getMaxTime()));
+					.replace("%LIVES%",
+							String.valueOf(course.getSettings().getMaxDeaths()))
+					.replace("%MAXTIME%",
+							DateTimeUtils.convertSecondsToTime(course.getSettings().getMaxTime()));
 
 		} else if (course.getSettings().hasMaxDeaths()) {
 			subTitle = TranslationUtils.getValueTranslation("Parkour.JoinLives",
@@ -1548,7 +1549,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 		/* Player in wrong world */
 		if (parkour.getParkourConfig().isJoinEnforceWorld()
-				&& !player.getLocation().getWorld().getName().equals(course.getCheckpoints().get(0).getWorldName())) {
+				&& !player.getLocation().getWorld().getName().equals(
+						course.getCheckpoints().get(0).getWorldName())) {
 			TranslationUtils.sendTranslation("Error.WrongWorld", player);
 			return false;
 		}

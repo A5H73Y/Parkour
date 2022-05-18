@@ -148,10 +148,12 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 
 		} else {
 			if (args[2].equalsIgnoreCase("message")) {
-				setCourseEventMessage(commandSender, args[1], args[3], StringUtils.extractMessageFromArgs(args, 4));
+				setCourseEventMessage(commandSender, args[1], args[3],
+						StringUtils.extractMessageFromArgs(args, 4));
 
 			} else if (args[2].equalsIgnoreCase("command")) {
-				addCourseEventCommand(commandSender, args[1], args[3], StringUtils.extractMessageFromArgs(args, 4));
+				addCourseEventCommand(commandSender, args[1], args[3],
+						StringUtils.extractMessageFromArgs(args, 4));
 
 			} else if (args[2].equalsIgnoreCase("displayname")) {
 				performAction(commandSender, args[1], args[2], StringUtils.extractMessageFromArgs(args, 3));
@@ -657,7 +659,8 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 		}
 
 		try {
-			Files.copy(CourseConfig.getCourseConfigFile(courseName), CourseConfig.getCourseConfigFile(targetCourseName));
+			Files.copy(CourseConfig.getCourseConfigFile(courseName),
+					CourseConfig.getCourseConfigFile(targetCourseName));
 			parkour.getConfigManager().getCourseConfig(targetCourseName).set("Name", targetCourseName.toLowerCase());
 			CourseConfig.deleteCourseData(courseName);
 			parkour.getDatabaseManager().renameCourse(courseName, targetCourseName);
@@ -702,7 +705,8 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 
 		if (parkour.getParkourConfig().isLeaveDestroyCourseProgress()) {
 			TranslationUtils.sendMessage(commandSender,
-					"Set &bOnLeave.DestroyCourseProgress&f to &bfalse &fin the plugin configuration to allow for Courses to be resumable.");
+					"Set &bOnLeave.DestroyCourseProgress&f to &bfalse &fin the plugin configuration "
+							+ "to allow for Courses to be resumable.");
 			return;
 		}
 
@@ -881,7 +885,8 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 		}
 
 		parkour.getConfigManager().getCourseConfig(courseName).setEventMessage(eventType, message);
-		notifyActionChange(commandSender, eventType.getConfigEntry() + " Message", courseName, StringUtils.colour(message));
+		notifyActionChange(commandSender, eventType.getConfigEntry() + " Message", courseName,
+				StringUtils.colour(message));
 	}
 
 	/**
@@ -939,7 +944,8 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 		} else {
 			Material material = MaterialUtils.lookupMaterial(args[2].toUpperCase());
 			if (material == null) {
-				TranslationUtils.sendValueTranslation("Error.UnknownMaterial", args[2].toUpperCase(), commandSender);
+				TranslationUtils.sendValueTranslation("Error.UnknownMaterial",
+						args[2].toUpperCase(), commandSender);
 				return;
 			}
 
@@ -956,7 +962,8 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 		}
 
 		parkour.getConfigManager().getCourseConfig(args[1]).addJoinItem(itemStack);
-		notifyActionChange(commandSender, "Add Join Item", args[1], itemStack.getType().name() + " x" + itemStack.getAmount());
+		notifyActionChange(commandSender, "Add Join Item", args[1],
+				itemStack.getType().name() + " x" + itemStack.getAmount());
 	}
 
 	/**

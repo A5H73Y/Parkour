@@ -70,8 +70,8 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             return;
         }
 
-        int secondsDelay = materialInHand == parkour.getParkourConfig().getRestartTool() ?
-                parkour.getParkourConfig().getInt("ParkourTool.Restart.SecondCooldown") : 1;
+        int secondsDelay = materialInHand == parkour.getParkourConfig().getRestartTool()
+                ? parkour.getParkourConfig().getInt("ParkourTool.Restart.SecondCooldown") : 1;
 
         if (!TaskCooldowns.getInstance().delayPlayer(player, "parkourtool", secondsDelay)) {
             return;
@@ -261,7 +261,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
     private void handleRocketTool(Player player) {
         int secondDelay = parkour.getParkourConfig().getInt("ParkourModes.Rockets.SecondCooldown");
         if (TaskCooldowns.getInstance().delayPlayer(player, "reloading",
-                secondDelay, "Mode.Rockets.Reloading", false) ){
+                secondDelay, "Mode.Rockets.Reloading", false)) {
             parkour.getPlayerManager().rocketLaunchPlayer(player);
         }
     }

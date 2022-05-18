@@ -145,7 +145,8 @@ public class PlayerDataUpgradeTask extends TimedConfigUpgradeTask {
 	private void updateCompletedCoursesSection(PlayerConfig newPlayerConfig, OfflinePlayer player) {
 		if (newPlayerConfig.contains("Completed")) {
 			List<String> completedCourses = newPlayerConfig.getStringList("Completed");
-			String playerKey = getParkourUpgrader().getNewConfigManager().getDefaultConfig().getPlayerConfigName(player);
+			String playerKey = getParkourUpgrader().getNewConfigManager()
+					.getDefaultConfig().getPlayerConfigName(player);
 			getParkourUpgrader().getNewConfigManager().getCourseCompletionsConfig().set(playerKey, completedCourses);
 			newPlayerConfig.remove("Completed");
 		}

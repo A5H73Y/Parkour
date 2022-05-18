@@ -35,7 +35,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
     /**
      * Create (or overwrite) a checkpoint.
      * If valid numeric argument is supplied, will attempt to overwrite the existing checkpoint.
-     * Otherwise a new checkpoint will be generated.
+     * Otherwise, a new checkpoint will be generated.
      * The block on which the checkpoint is created must be able to have a pressure plate
      * placed on it (if configured).
      *
@@ -96,7 +96,7 @@ public class CheckpointManager extends AbstractPluginReceiver {
     /**
      * Teleport Player to a checkpoint.
      * If a checkpoint number is provided that will be the checkpoint loaded.
-     * Otherwise the Player will teleported to the course start (checkpoint 0).
+     * Otherwise, the Player will be teleported to the course start (checkpoint 0).
      *
      * @param player requesting player
      * @param courseName the desired course

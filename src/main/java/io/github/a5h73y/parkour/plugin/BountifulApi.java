@@ -62,7 +62,7 @@ public class BountifulApi extends PluginWrapper {
 	}
 
 	/**
-	 * Send the Player the sub title.
+	 * Send the Player the subtitle.
 	 * Quiet Mode will be respected and not message the Player when enabled.
 	 * Attempting the Title will mean either spigot's title implementation or BountifulAPI will be used.
 	 *

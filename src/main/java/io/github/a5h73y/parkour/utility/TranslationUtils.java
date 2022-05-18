@@ -363,7 +363,8 @@ public class TranslationUtils {
 				}
 				return;
 			case "PARKOUR":
-				for (Player players : Parkour.getInstance().getParkourSessionManager().getOnlineParkourPlayers()) {
+				for (Player players :
+						Parkour.getInstance().getParkourSessionManager().getOnlineParkourPlayers()) {
 					players.sendMessage(message);
 				}
 				return;

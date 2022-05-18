@@ -57,7 +57,7 @@ public class CourseManager extends AbstractPluginReceiver {
     }
 
     /**
-     * Check if Course is known by Parkour.
+     * Check if the Course is known by Parkour.
      *
      * @param courseName course name
      * @return course exists
@@ -73,7 +73,7 @@ public class CourseManager extends AbstractPluginReceiver {
     /**
      * Get Course by input field.
      * If the Course numeric index is provided, that will be retrieved.
-     * Otherwise a search will be made by Course name.
+     * Otherwise, a search will be made by Course name.
      *
      * @param input course name
      * @return matching Course
@@ -91,7 +91,7 @@ public class CourseManager extends AbstractPluginReceiver {
     /**
      * Find Course by unique name.
      * If the Course is cached it can be returned directly.
-     * Otherwise the entire Course will be populated, including Checkpoints and ParkourKit.
+     * Otherwise, the entire Course will be populated, including Checkpoints and ParkourKit.
      * If the Course is in 'Ready' status, it will be added to the Cache.
      *
      * @param courseNameInput course name
@@ -116,7 +116,7 @@ public class CourseManager extends AbstractPluginReceiver {
             // deserialize Course from config
             course = config.getCourse();
 
-            // if course is ready, cache it.
+            // if the course is ready, cache it.
             if (config.getReadyStatus()) {
                 courseCache.put(courseName, course);
             }

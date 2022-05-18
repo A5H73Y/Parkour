@@ -19,4 +19,4 @@ You should now have the latest version of Parkour installed, and have a Parkour 
 
 Parkour is incredibly customisable, using the `config.yml` to set the plugin up perfectly for any server. Changes can be made freely and applied using `/pa reload` but note that some changes require a full server restart to take effect.
 
-For more information on the `config.yml` contents, [click here](tutorials/plugin-config?id=configyml).
+For more information on the `config.yml` contents, [click here](/tutorials/plugin-config?id=configyml).

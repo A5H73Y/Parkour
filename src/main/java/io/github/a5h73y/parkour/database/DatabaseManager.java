@@ -424,7 +424,7 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
     }
 
     /**
-     * Delete all of the Player's leaderboard entries.
+     * Delete all the Player's leaderboard entries.
      * For usage if a player has been banned for cheating etc.
      *
      * @param player target offline player
@@ -451,7 +451,7 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
     }
 
     /**
-     * Delete all of the times for the course.
+     * Delete all the times for the course.
      *
      * @param courseName name of the course
      */
@@ -695,7 +695,7 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
         try {
             // attempt to create the required SQL tables
             // this will be the first time a connection is opened
-            // if the attempt fails, it will fallback to SQLite by disabling MySQL (if enabled)
+            // if the attempt fails, it will fall back to SQLite by disabling MySQL (if enabled)
             setupTables();
         } catch (SQLException ex) {
             handleSqlConnectionException(ex);

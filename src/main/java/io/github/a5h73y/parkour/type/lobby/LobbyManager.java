@@ -50,7 +50,7 @@ public class LobbyManager extends CacheableParkourManager {
         setLobby(player, lobbyName);
         TranslationUtils.sendValueTranslation("Lobby.Created", lobbyName, player);
 
-        if (requiredLevel != null && ValidationUtils.isPositiveInteger(requiredLevel)) {
+        if (ValidationUtils.isPositiveInteger(requiredLevel)) {
             getConfig().setRequiredLevel(lobbyName, Integer.parseInt(requiredLevel));
             TranslationUtils.sendValueTranslation("Lobby.RequiredLevelSet", requiredLevel, player);
         }
@@ -230,7 +230,7 @@ public class LobbyManager extends CacheableParkourManager {
 
     /**
      * Find the nearest valid Lobby to the Player.
-     * If no nearest lobby was found, the default lobby will be returned.
+     * If no lobby was found, the default lobby will be returned.
      * If no lobby was set, null is returned.
      *
      * @param player player
@@ -327,11 +327,7 @@ public class LobbyManager extends CacheableParkourManager {
 
         int level = Parkour.getLobbyConfig().getRequiredLevel(lobbyName);
 
-        if (level > 0 && parkour.getConfigManager().getPlayerConfig(player).getParkourLevel() < level
-                && !PermissionUtils.hasPermission(player, Permission.ADMIN_LEVEL_BYPASS, false)) {
-            return false;
-        }
-
-        return true;
+        return level <= 0 || parkour.getConfigManager().getPlayerConfig(player).getParkourLevel() >= level
+                || PermissionUtils.hasPermission(player, Permission.ADMIN_LEVEL_BYPASS, false);
     }
 }

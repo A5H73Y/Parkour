@@ -63,7 +63,7 @@ Create a sign for Players to easily leave the Course.
 
 ## Effect Signs
 
-You can apply several effects to the Player on the Course. These are activated by right clicking the signs whilst on a Course.
+You can apply several effects to the Player on the Course. These are activated by right-clicking the signs whilst on a Course.
 
 The effects are derived from PotionEffectType available from the server.
 
@@ -88,7 +88,7 @@ For resistance effects that may not fit on the line such as `DAMAGE_RESISTANCE` 
 
 ## Course Stats
 
-Display the Course information in the Player's chat when they right click the sign.
+Display the Course information in the Player's chat when they right-click the sign.
 
 ##### Syntax
 

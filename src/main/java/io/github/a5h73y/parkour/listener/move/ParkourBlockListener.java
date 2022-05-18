@@ -103,6 +103,8 @@ public class ParkourBlockListener extends AbstractPluginReceiver implements List
 
 						player.setVelocity(new Vector(x, 0.1, z));
 						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -151,6 +153,9 @@ public class ParkourBlockListener extends AbstractPluginReceiver implements List
 			case NOPOTION:
 				PlayerUtils.removeAllPotionEffects(player);
 				player.setFireTicks(0);
+				break;
+
+			default:
 				break;
 		}
 	}

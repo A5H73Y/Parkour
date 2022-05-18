@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Player Utility methods.
@@ -139,7 +138,7 @@ public class PlayerUtils {
 
 	/**
 	 * Teleport Player to Location.
-	 * Reset their fall distance so they don't take damage upon teleportation.
+	 * Reset their fall distance, so they don't take damage upon teleportation.
 	 *
 	 * @param player player
 	 * @param location location

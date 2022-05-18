@@ -138,7 +138,6 @@ OnLeave:
 # All the options for when the Player restarts the Course
 OnRestart:
   # When the Player restarts the Course should it do the full Leave and Join cycle, or should it just reset their progress
-  # Leaving this as true has been known to have major performance impacts
   FullPlayerRestart: false
   # Should be Player be asked to confirm if they want to restart their progress in case they accidentally use the Restart Tool
   RequireConfirmation: false
@@ -227,7 +226,7 @@ ParkourChallenge:
   HidePlayers: true
   # What should the countdown start from
   CountdownFrom: 5
-    # Should the Player be prepared for the Challenge (teleported to the Course unable to move) when the accept the challenge
+    # Should the Player be prepared for the Challenge (teleported to the Course unable to move) when they accept the challenge
   PrepareOnAccept: false
  
 # All the options for ParkourModes

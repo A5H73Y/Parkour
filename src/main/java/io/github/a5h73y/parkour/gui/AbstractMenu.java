@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 /**
  * Abstract GUI Menu.
- * Can specify it's layout, and contents of the GUI.
+ * Can specify its layout, and contents of the GUI.
  */
 public interface AbstractMenu {
 
@@ -18,7 +18,7 @@ public interface AbstractMenu {
 
 	/**
 	 * Get the layout of the GUI setup.
-	 * Each character acts as a placeholder for a Item to interact with.
+	 * Each character acts as a placeholder for an Item to interact with.
 	 *
 	 * @return gui layout
 	 */

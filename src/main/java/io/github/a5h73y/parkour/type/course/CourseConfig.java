@@ -153,7 +153,7 @@ public class CourseConfig extends Json {
     }
 
     /**
-     * Check if Course is linked to another Course.
+     * Check if the Course is linked to another Course.
      * @return if linked course is found
      */
     public boolean hasLinkedCourse() {
@@ -179,7 +179,7 @@ public class CourseConfig extends Json {
     }
 
     /**
-     * Check if Course is linked to a Lobby.
+     * Check if the Course is linked to a Lobby.
      * @return if linked lobby is found
      */
     public boolean hasLinkedLobby() {
@@ -786,7 +786,7 @@ public class CourseConfig extends Json {
     }
 
     /**
-     * Check if the Course has a Economy Finish Reward.
+     * Check if the Course has an Economy Finish Reward.
      * @return has finish reward
      */
     public boolean hasEconomyFinishReward() {
@@ -810,7 +810,7 @@ public class CourseConfig extends Json {
     }
 
     /**
-     * Check if the Course has a Economy Joining fee.
+     * Check if the Course has an Economy Joining fee.
      * @return has joining fee
      */
     public boolean hasEconomyJoiningFee() {
@@ -847,7 +847,7 @@ public class CourseConfig extends Json {
     }
 
     /**
-     * Check if Course has Player Limit.
+     * Check if the Course has a Player Limit.
      * @return course has player limit
      */
     public boolean hasPlayerLimit() {
@@ -1013,7 +1013,7 @@ public class CourseConfig extends Json {
     }
 
     /**
-     * Delete highest Checkpoint.
+     * Delete the highest Checkpoint.
      * The highest numbered checkpoint will be deleted.
      */
     public void deleteCheckpoint() {

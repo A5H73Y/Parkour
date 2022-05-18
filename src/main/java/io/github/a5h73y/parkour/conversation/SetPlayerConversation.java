@@ -3,8 +3,6 @@ package io.github.a5h73y.parkour.conversation;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.conversation.other.ParkourConversation;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

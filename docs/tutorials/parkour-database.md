@@ -19,7 +19,7 @@ SQLite is stored locally on the server and exists in `plugins/Parkour/sqlite-db/
 
 You are able to modify the path of the SQLite location in the `config.yml`, but only do this if you know what you are doing.
 
-If you modify the contents of the database, it is strongly suggested to stop the server, make your changes and then start your server again to avoid any problems.
+If you modify the contents of the database, it is strongly suggested stopping the server, make your changes and then start your server again to avoid any problems.
 
 ## Resetting Data
 

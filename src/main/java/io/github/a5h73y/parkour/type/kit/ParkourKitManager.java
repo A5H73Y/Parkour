@@ -58,7 +58,7 @@ public class ParkourKitManager extends CacheableParkourManager {
 	/**
 	 * Find ParkourKit by unique name.
 	 * If the ParkourKit is cached it can be returned directly.
-	 * Otherwise the entire ParkourKit will be populated from the config.
+	 * Otherwise, the entire ParkourKit will be populated from the config.
 	 *
 	 * @param name parkour kit name
 	 * @return populated {@link ParkourKit}
@@ -347,7 +347,7 @@ public class ParkourKitManager extends CacheableParkourManager {
 	}
 
 	/**
-	 * Construct the {@link ParkourKit} object, retrieving it's relevant information.
+	 * Construct the {@link ParkourKit} object, retrieving its relevant information.
 	 * If the Material provided is invalid, then it won't be added to our list of materials.
 	 * If the Action name provided is invalid, then it won't be added to our list of materials.
 	 *
@@ -381,7 +381,7 @@ public class ParkourKitManager extends CacheableParkourManager {
 
 	/**
 	 * Find and Validate matching Material.
-	 * Checks if the found Material is invalid and try to replace it with it's correct name.
+	 * Checks if the found Material is invalid and try to replace it with its correct name.
 	 * If a valid match cannot be found, it will be ignored from the ParkourKit creation.
 	 *
 	 * @param kitName parkour kit name
@@ -398,7 +398,7 @@ public class ParkourKitManager extends CacheableParkourManager {
 			material = MaterialUtils.lookupMaterial(materialName);
 
 			if (material != null) {
-				// if we find a old matching version, replace it with the new version
+				// if we find an old matching version, replace it with the new version
 				PluginUtils.log("Outdated Material found " + materialName + " found new version "
 						+ material.name(), 1);
 				updateOutdatedMaterial(kitName, materialName, material.name());
@@ -425,7 +425,7 @@ public class ParkourKitManager extends CacheableParkourManager {
 	private void updateOutdatedMaterial(String kitName, String oldMaterial, String newMaterial) {
 		Set<String> oldAction = getConfig().getSection(kitName + "." + oldMaterial).singleLayerKeySet();
 
-		// we copy all of the attributes from the old action (strength, duration, etc)
+		// we copy all the attributes from the old action (strength, duration, etc)
 		for (String attribute : oldAction) {
 			String matchingValue = getConfig().getString(
 					kitName + "." + oldMaterial + "." + attribute);

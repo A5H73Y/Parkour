@@ -28,7 +28,7 @@ public class QuestionManager extends AbstractPluginReceiver {
      * Has the Sender been asked a Question.
      *
      * @param commandSender command sender
-     * @return sender has a outstanding question
+     * @return sender has an outstanding question
      */
     public boolean hasBeenAskedQuestion(CommandSender commandSender) {
         return questionMap.containsKey(commandSender);
@@ -65,7 +65,7 @@ public class QuestionManager extends AbstractPluginReceiver {
     }
 
     /**
-     * Ask the Delete Checkpoint Question.
+     * Ask the "Delete Checkpoint" Question.
      *
      * @param commandSender command sender
      * @param courseName course name
@@ -103,7 +103,7 @@ public class QuestionManager extends AbstractPluginReceiver {
     }
 
     /**
-     * Ask the Reset Player Leaderboards Question.
+     * Ask the "Reset Player Leaderboards" Question.
      *
      * @param commandSender command sender
      * @param courseName course name
@@ -121,7 +121,7 @@ public class QuestionManager extends AbstractPluginReceiver {
     }
 
     /**
-     * Ask the Restart Progress Question..
+     * Ask the "Restart Progress" Question..
      *
      * @param commandSender command sender
      * @param courseName course name

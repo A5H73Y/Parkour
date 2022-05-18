@@ -37,9 +37,9 @@ Now you've learnt how to create a single checkpoint, repeat the command to creat
 ![Checkpoints Created](https://i.imgur.com/nlFsGsC.jpg "Checkpoints Created")
 
 If you happen to make a mistake, or want to move a checkpoint, you can use the same command but with an optional number parameter to overwrite that existing checkpoint.  
-For example `/pa checkpoint 2` would overwrite the second checkpoint. If preferred, you can [delete the checkpoint](tutorials/administration?id=delete-a-checkpoint).
+For example `/pa checkpoint 2` would overwrite the second checkpoint. If preferred, you can [delete the checkpoint](/tutorials/administration?id=delete-a-checkpoint).
 
-_Note that these checkpoints have to be achieved sequentially, otherwise they will not work. If you'd prefer there be no restriction to the order they are achieved use the [Free Checkpoint ParkourMode](tutorials/parkour-modes?id=free-checkpoint)._
+_Note that these checkpoints have to be achieved sequentially, otherwise they will not work. If you'd prefer there be no restriction to the order they are achieved use the [Free Checkpoint ParkourMode](/tutorials/parkour-modes?id=free-checkpoint). Or disable sequential checkpoints. TODO_
 
 ## Ability to Finish Course
 

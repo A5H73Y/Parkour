@@ -66,7 +66,7 @@ public class ParkourRankManager extends CacheableParkourManager {
 
 	/**
 	 * Set a ParkourRank reward for a ParkourLevel.
-	 * A ParkourRank will be awarded to the Player when the pass the threshold of the ParkourLevel required.
+	 * A ParkourRank will be awarded to the Player when they pass the threshold of the ParkourLevel required.
 	 *
 	 * @param commandSender command sender
 	 * @param parkourLevel associated parkour level
@@ -95,7 +95,7 @@ public class ParkourRankManager extends CacheableParkourManager {
 	 * @param parkourLevel parkour level
 	 */
 	public void deleteParkourRank(CommandSender commandSender, String parkourLevel) {
-		if (parkourLevel == null || !ValidationUtils.isPositiveInteger(parkourLevel)) {
+		if (!ValidationUtils.isPositiveInteger(parkourLevel)) {
 			TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, commandSender);
 			return;
 		}

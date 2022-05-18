@@ -62,7 +62,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
     /**
      * Create or Join existing Challenge.
      * If there is a Challenge that exists for the course, then it will be joined.
-     * Otherwise a new Challenge will be created and the Player becomes the host.
+     * Otherwise, a new Challenge will be created and the Player becomes the host.
      *
      * @param requestingPlayer requesting Player
      * @param courseName course name

@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Parkour Session Manager.
  * Holds reference to Players currently on a Course.
- * Adds actions to perform to the Player whilst on a Course.
+ * Add actions to perform to the Player whilst on a Course.
  */
 public class ParkourSessionManager extends AbstractPluginReceiver implements CommandProcessor, Teardownable, Initializable {
 

@@ -22,7 +22,7 @@ To enable, set `Plugin.PlaceholderAPI.Enabled` to `true` in the `config.yml`.
 
 The `Plugin.PlaceholderAPI.CacheTime` value can be set to an interval in minutes for when to clear the cache. This is a performance improvement which caches Leaderboard results until a Player changes them, or the time interval is reached.
 
-[All of the Parkour Placeholders are available here](essential/placeholders.md).
+[All the Parkour Placeholders are available here](/essential/placeholders.md).
 
 ## Holographic Displays (v3.0.0+)
 
@@ -173,7 +173,7 @@ An example could be walking on a pressure plate to leave the Course:
 ## ConditionalEvents
 
 [ConditionalEvents](https://www.spigotmc.org/resources/conditionalevents-custom-actions-for-certain-events-1-8-1-18.82271/) is a plugin that lets you execute actions when listening to different events.  
-_Please note that most actions can be achieved using the [Courses's event command system](/tutorials/parkour-courses?id=command)._
+_Please note that most actions can be achieved using the [Courses' event command system](/tutorials/parkour-courses?id=command)._
 
 Parkour provides the following custom events for you to listen to:
 
@@ -235,7 +235,7 @@ Reload LeaderHeads, and the sign will update to display a formatted time.
 
 ![LeaderHeads Example 2](https://i.imgur.com/swbtPkt.png "LeaderHeads Example 2")
 
-The time format can be changed in LeaderHeads's `config.yml`, for example:
+The time format can be changed in LeaderHeads' `config.yml`, for example:
 
 `time-format: "{hours}:{minutes}:{seconds}"`
 

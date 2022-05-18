@@ -155,7 +155,7 @@ public class CoursePrizeConversation extends ParkourConversation {
         }
     }
 
-    private class ChooseRunNow extends BooleanPrompt {
+    private static class ChooseRunNow extends BooleanPrompt {
 
         @NotNull
         @Override

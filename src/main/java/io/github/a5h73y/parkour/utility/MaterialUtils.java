@@ -144,7 +144,7 @@ public class MaterialUtils {
 	/**
 	 * Lookup the Material information requested by Player.
 	 * If arguments are provided it will try to match a Material based on name.
-	 * Otherwise it will display the Material information of the item in the Player's main hand.
+	 * Otherwise, it will display the Material information of the item in the Player's main hand.
 	 *
 	 * @param player player
 	 * @param materialName optional material name

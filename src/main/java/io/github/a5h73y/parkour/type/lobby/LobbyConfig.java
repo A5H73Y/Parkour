@@ -62,7 +62,7 @@ public class LobbyConfig extends Yaml {
 
 	/**
 	 * Set the lobby's Location.
-	 * The location will stored against the lobby name provided.
+	 * The location will be stored against the lobby name provided.
 	 * @param lobbyName lobby name
 	 * @param location location
 	 */
