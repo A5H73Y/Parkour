@@ -31,6 +31,8 @@ import io.github.a5h73y.parkour.event.ParkourJoinEvent;
 import io.github.a5h73y.parkour.event.ParkourLeaveEvent;
 import io.github.a5h73y.parkour.event.ParkourPlayerNewLevelEvent;
 import io.github.a5h73y.parkour.event.ParkourPlayerNewRankEvent;
+import io.github.a5h73y.parkour.event.ParkourResetCourseEvent;
+import io.github.a5h73y.parkour.event.ParkourResetPlayerEvent;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.ParkourConstants;
 import io.github.a5h73y.parkour.other.TriConsumer;
@@ -1093,6 +1095,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		resetPlayer(targetPlayer);
 		TranslationUtils.sendValueTranslation("Parkour.Reset", targetPlayerId, commandSender);
 		PluginUtils.logToFile(targetPlayerId + " player was reset by " + commandSender.getName());
+		Bukkit.getServer().getPluginManager().callEvent(new ParkourResetPlayerEvent((Player)targetPlayer, null));
 	}
 
 	/**

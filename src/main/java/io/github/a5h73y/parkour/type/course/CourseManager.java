@@ -7,6 +7,8 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_UNKNOWN_PLAY
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.conversation.LeaderboardConversation;
 import io.github.a5h73y.parkour.database.TimeEntry;
+import io.github.a5h73y.parkour.event.ParkourResetCourseEvent;
+import io.github.a5h73y.parkour.event.ParkourResetLeaderboardEvent;
 import io.github.a5h73y.parkour.gui.impl.CourseSettingsGui;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.player.PlayerConfig;
@@ -235,6 +237,7 @@ public class CourseManager extends AbstractPluginReceiver {
         parkour.getConfigManager().getCourseCompletionsConfig().removeCompletedCourse(courseName);
         TranslationUtils.sendValueTranslation("Parkour.Reset", courseName, commandSender);
         PluginUtils.logToFile(courseName + " course was reset by " + commandSender.getName());
+        Bukkit.getServer().getPluginManager().callEvent(new ParkourResetCourseEvent(null, courseName));
     }
 
     /**
@@ -254,6 +257,7 @@ public class CourseManager extends AbstractPluginReceiver {
         parkour.getPlaceholderApi().clearCache();
         TranslationUtils.sendValueTranslation("Parkour.Reset", courseName + " Leaderboards", commandSender);
         PluginUtils.logToFile(courseName + " leaderboards were reset by " + commandSender.getName());
+        Bukkit.getServer().getPluginManager().callEvent(new ParkourResetLeaderboardEvent(null, courseName));
     }
 
     /**
@@ -288,6 +292,7 @@ public class CourseManager extends AbstractPluginReceiver {
         TranslationUtils.sendValueTranslation("Parkour.Reset", targetPlayerId + "'s "
                 + courseName + " Leaderboards", commandSender);
         PluginUtils.logToFile(targetPlayerId + "'s " + courseName + " leaderboards were reset by " + commandSender.getName());
+        Bukkit.getServer().getPluginManager().callEvent(new ParkourResetLeaderboardEvent((Player) targetPlayer, courseName));
     }
 
     /**
