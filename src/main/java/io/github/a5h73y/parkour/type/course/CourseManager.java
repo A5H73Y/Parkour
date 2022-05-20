@@ -292,7 +292,7 @@ public class CourseManager extends AbstractPluginReceiver {
         TranslationUtils.sendValueTranslation("Parkour.Reset", targetPlayerId + "'s "
                 + courseName + " Leaderboards", commandSender);
         PluginUtils.logToFile(targetPlayerId + "'s " + courseName + " leaderboards were reset by " + commandSender.getName());
-        Bukkit.getServer().getPluginManager().callEvent(new ParkourResetLeaderboardEvent((Player) targetPlayer, courseName));
+        Bukkit.getServer().getPluginManager().callEvent(new ParkourResetLeaderboardEvent(targetPlayer.getPlayer(), courseName));
     }
 
     /**

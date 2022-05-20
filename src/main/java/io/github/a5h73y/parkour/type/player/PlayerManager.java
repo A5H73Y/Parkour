@@ -1095,7 +1095,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		resetPlayer(targetPlayer);
 		TranslationUtils.sendValueTranslation("Parkour.Reset", targetPlayerId, commandSender);
 		PluginUtils.logToFile(targetPlayerId + " player was reset by " + commandSender.getName());
-		Bukkit.getServer().getPluginManager().callEvent(new ParkourResetPlayerEvent((Player)targetPlayer, null));
+		Bukkit.getServer().getPluginManager().callEvent(new ParkourResetPlayerEvent(targetPlayer.getPlayer(), null));
 	}
 
 	/**
