@@ -50,25 +50,6 @@ public class BreakPlaceListener extends AbstractPluginReceiver implements Listen
         handleBlockPlaceBreakEvent((Player) event.getRemover(), event);
     }
 
-    /**
-     * On pressure plate break event.
-     * @param event block break event
-     */
-    @EventHandler
-    public void onPlateBreak(BlockBreakEvent event) {
-        if (event.getBlock().getType().name().endsWith("PRESSURE_PLATE")
-                && parkour.getAutoStartManager().doesAutoStartExist(event.getBlock().getLocation())) {
-            if (!PermissionUtils.hasPermission(event.getPlayer(), Permission.ADMIN_DELETE)) {
-                event.setCancelled(true);
-
-            } else {
-                Location location = event.getBlock().getLocation();
-                String coordinates = parkour.getAutoStartManager().getAutoStartCoordinates(location.getBlock());
-                parkour.getAutoStartManager().deleteAutoStart(event.getPlayer(), coordinates);
-            }
-        }
-    }
-
     private void handleBlockPlaceBreakEvent(Player player, Cancellable event) {
         if (!parkour.getParkourSessionManager().isPlaying(player)) {
             return;

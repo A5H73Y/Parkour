@@ -3,8 +3,13 @@ Frequently Asked Questions
 
 ##### Parkour Welcome Message
 
-To disable the Parkour Join message, in the `config.yml` find `Other.Display.JoinWelcomeMessage` and set it to `false`.
+To disable the Parkour Join message, set `Other.Display.JoinWelcomeMessage` to `false` in the `config.yml`.
 
 ##### Stuck Pressure Plates
 
-To allow for multiple Players to stand on a pressure plate at once, in the `config.yml` find `OnCourse.PreventPlateStick` and set it to `true`.
+To allow for multiple Players to stand on a pressure plate at once, in the `config.yml` find `OnCourse.PreventPlateStick` and set it to `true`.  
+_Note that this will prevent normal pressure plates from working while on a Course._
+
+##### Leaving Course Lobby
+
+For the Player to be teleported to the Linked Lobby instead of the default lobby, set `OnLeave.TeleportToLinkedLobby` to `true` in the `config.yml`

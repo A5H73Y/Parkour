@@ -308,7 +308,7 @@
         "description": "The number of checkpoints achieved by the Player so far while on the Course."
       },
       {
-        "placeholder": "%parkour_current_checkpoint_next",
+        "placeholder": "%parkour_current_checkpoint_next%",
         "output": "4",
         "description": "The number of the next Checkpoint, if there isn't another Checkpoint the output will be blank."
       },

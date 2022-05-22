@@ -9,8 +9,9 @@ An AutoStart pressure plate will trigger an automatic joining of a Course, inste
 
 ![Create AutoStart](https://i.imgur.com/jIEpcFy.png "Create AutoStart")
 
-_Command: `/pa setautostart (course)`_  
 Stand where you would like the AutoStart location to be, and the configured Material will be placed below you with a pressure plate on top.
+
+_Command: `/pa create autostart (course)`_  
 
 ### Delete an AutoStart
 

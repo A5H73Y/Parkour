@@ -1,7 +1,9 @@
 Parkour Level & Ranks
 ======
 
-A Player can be rewarded with levels _(ParkourLevels)_ which will unlock new Courses for them to join. An example could be 'course2' will be locked until they complete 'course1'. The ParkourLevel reward can either be an exact level, or an addition to their current level. For example, you can finish all the 'easy' Courses in any order before having enough levels to join the 'medium' Courses. The Player's ParkourLevel can never decrease, only increase or remain the same.
+A Player can be rewarded with levels _(ParkourLevels)_ which will unlock new Courses for them to join.
+The ParkourLevel reward can either be an exact level, or an addition to their current level. For example, you can finish all the 'easy' Courses in any order before having enough levels to join the 'medium' Courses.  
+The Player's ParkourLevel can never decrease, only increase or remain the same.
 
 ## Rewarding ParkourLevels
 
@@ -11,7 +13,7 @@ There are 3 ways to achieve a new ParkourLevel.
 
 This means when you complete the specified Course, your ParkourLevel will be **set** to specified level. If the Player's level is currently higher than the reward level, it will not be changed.
 
-The main purpose of this is incremental Courses, so you would have to complete the Level1 Course, before you could join the Level2 Course, etc.
+The main purpose of this is incremental Courses, so you would have to complete the level1 Course, before you could join the level2 Course, etc.
 
 _Command: `/pa setcourse (course) rewardlevel (level)`_
 
@@ -19,7 +21,8 @@ _Command: `/pa setcourse (course) rewardlevel (level)`_
 
 This means when you complete the specified Course, your level has the amount added to it. So if you had a ParkourLevel of 10, and completed the Course which had a rewardLevelAdd of 2, your new ParkourLevel becomes 12.
 
-The main purpose for this is for lobby setups where you have to complete all the Courses to unlock a new lobby; If you had an "Easy" lobby with 5 Courses, you would set the level requirement for "Medium" lobby to 5, and add a rewardLevelAdd to 1 for each Course in Easy, so they can be completed in any order. NOTE: For this you would have to enable `/pa rewardonce (course)` so they only get leveled up once per Course.
+The main purpose for this is for lobby setups where you have to complete all the Courses to unlock a new lobby; If you had an "Easy" lobby with 5 Courses, you would set the level requirement for "Medium" lobby to 5, and add a rewardLevelAdd to 1 for each Course in Easy, so they can be completed in any order.  
+NOTE: For this you should enable `/pa setcourse (course) rewardonce` so they only get leveled up once per Course completion.
 
 _Command: `/pa setcourse (course) rewardleveladd (level)`_
 
@@ -60,7 +63,7 @@ There are currently 2 ways to achieve a new ParkourRank.
 
 ### /pa rewardrank (level) (rank)
 
-As demonstrated above, this will create a ParkourRank for a corresponding ParkourLevel. It can be colour coded, for example `/pa rewardlevel 30 &6Expert`.
+As demonstrated above, this will create a ParkourRank for a corresponding ParkourLevel. It can be colour coded, for example `/pa rewardrank 30 &6Expert`.
 
 ### /pa setrank (player) (rank)
 

@@ -6,11 +6,15 @@ import io.github.a5h73y.parkour.plugin.BountifulApi;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import io.github.a5h73y.parkour.utility.TaskCooldowns;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.utility.permission.Permission;
+import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class AutoStartListener extends AbstractPluginReceiver implements Listener {
@@ -64,6 +68,25 @@ public class AutoStartListener extends AbstractPluginReceiver implements Listene
 			} else {
 				parkour.getPlayerManager().joinCourseButDelayed(
 						event.getPlayer(), courseName, parkour.getParkourConfig().getAutoStartDelay());
+			}
+		}
+	}
+
+	/**
+	 * On AutoStart plate break.
+	 * @param event block break event
+	 */
+	@EventHandler
+	public void onBreakAutoStart(BlockBreakEvent event) {
+		if (event.getBlock().getType().name().endsWith("PRESSURE_PLATE")
+				&& parkour.getAutoStartManager().doesAutoStartExist(event.getBlock().getLocation())) {
+			if (!PermissionUtils.hasPermission(event.getPlayer(), Permission.ADMIN_DELETE)) {
+				event.setCancelled(true);
+
+			} else if (!event.getPlayer().isSneaking()) {
+				Location location = event.getBlock().getLocation();
+				String coordinates = parkour.getAutoStartManager().getAutoStartCoordinates(location.getBlock());
+				parkour.getAutoStartManager().deleteAutoStart(event.getPlayer(), coordinates);
 			}
 		}
 	}

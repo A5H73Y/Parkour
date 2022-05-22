@@ -4,7 +4,13 @@ Rewarding the Player
 There are several ways we can reward the Player for completing a Course.  
 _Note that `OnFinish.EnablePrizes` must be set to `true` in the `config.yml` for any prize to be given._
 
-## Course Prizes
+## ParkourLevels & ParkourRanks
+
+We are able to reward the Player with ParkourLevels that allow them to unlock new Courses, or achieve a ParkourRank that showcases how far they've progressed.
+
+More information: [Click Here](/tutorials/parkour-level-ranks.md)
+
+## Course Prize
 
 You can reward the Player several ways after they complete a Course, this can be configured by starting the Prize conversation which is initiated by entering `/pa prize (course)`.
 
@@ -14,24 +20,20 @@ This will start a conversation of what you want the prize to be, these can be st
 
 This was made to be as simple as possible, to allow you to answer each question with what you want. Follow each conversation as demonstrated below:
 
-### ParkourLevels & ParkourRanks
-
-We are able to reward the Player with ParkourLevels that allow them to unlock new Courses, or achieve a ParkourRank that showcases how far they've progressed.
-
-More information: [Click Here](/tutorials/parkour-level-ranks.md)
-
 ### Material
 
-The Player can be rewarded with a Material for completing the Course, and amount can be specified.  
+The Player can be rewarded with a Material for completing the Course, and amount can be specified. The example Materials available for each server version will differ, example Material names can be [found here](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html).  
 _Once the Player completes the Course, the ItemStack will be inserted into their inventory after their original inventory is restored._
 
 ![Material Prize](https://i.imgur.com/xgLug6k.jpg "Material Prize")
 
 ### Commands
 
-You are able to execute multiple commands when a Player completes the Course, simply choose the "command" option, and it will ask you for the command to execute. Note that these commands will be run by the server, so will have elevated permission to run anything.
+Multiple commands can be executed when a Player completes the Course, simply choose the "command" option, and it will prompt for the command to execute.
 
-You can use the placeholder `%PLAYER%` to insert the Players name at execution, this is case-sensitive to be recognized by the plugin. As a basic example I have set the command prize to `give %PLAYER% minecraft:torch 10` when they complete, the plugin will give you the option to run the command to test to see if it works correctly, by inserting your name into the placeholder.
+This is a shortcut to the [Prize Event Command](/tutorials/parkour-courses?id=command).
+
+As a basic example I have set the command prize to `give %PLAYER% minecraft:torch 10` when they complete, the plugin will give you the option to run the command to test to see if it works correctly, by inserting your name into the placeholder.
 
 ![Command Prize](https://i.imgur.com/i9Vfb98.jpg "Command Prize")
 
@@ -45,7 +47,7 @@ You can give the Player Minecraft XP when they complete the Course, which is as 
 
 ![XP Prize](https://i.imgur.com/43qKmUn.jpg "XP Prize")
 
-### Ecomomy
+## Ecomomy
 
 If the plugin is linked to Vault, you are able to set a financial reward when the player completes the course.
 
@@ -55,6 +57,6 @@ _Command: `/pa economy setprize (course) (amount)`_
 
 ## Delaying / Limiting the Rewards
 
-You are able to delay the time a reward is given to the Player in hours, including decimals such as '0.5' = 30 minutes, or '48' = 2 full days. For example the Player could receive the prize on their first completion, but may have to wait 2 full days before they are able to receive the prize again. This is achieved by entering `/pa rewarddelay (course) (hours)`.
+Delay the time between rewards using the Course [rewarddelay Setting](/tutorials/parkour-courses?id=rewarddelay).
 
-You can also have the Player only be rewarded a single time after they complete a Course. This is heavily recommended if you are doing anything advanced with ParkourLevels, such as using rewardleveladd. This is achieved by entering `/pa rewardonce (course)`.
+Limit the Prize to be received only once using Course [rewardonce Setting](/tutorials/parkour-courses?id=rewardonce).

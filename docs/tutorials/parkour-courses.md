@@ -8,7 +8,7 @@ A Parkour Course is a physical path that you've created for the Player to use wh
 You are able to quickly access the Course settings using a GUI, this will act as a shortcut of using traditional commands. Each Item in the GUI will act as either a setting toggle, or start a new conversation to take user input for a new value.
 
 ![Course Settings Toggle](https://i.imgur.com/s0CANvK.png "Course Settings Toggle")
-![Course Settings Conversation](https://i.imgur.com/5YahlJI.png "Course Settings Conversation") 
+![Course Settings Conversation](https://i.imgur.com/5YahlJI.png "Course Settings Conversation")
 
 _Command: `/pa settings (course)`_
 
@@ -53,9 +53,9 @@ _Command: `/pa setcourse (course) linkedcourse (course)`_
 
 ### linkedlobby
 
-Once the Player finishes a Course, by default they are teleported to the default Lobby. This can be changed to the specified Lobby so the Player is teleported to that Lobby once they complete the Course. 
+Once the Player finishes a Course, by default they are teleported to the default Lobby. This can be changed to the specified Lobby so the Player is teleported to that Lobby once they complete the Course.
 
-_By default, the Player will be teleported to the default lobby when they *leave* a Course, this can be changed in the config.yml by setting `OnLeave.TeleportToLinkedLobby` to `true`._
+By default, the Player will be teleported to the default lobby when they *leave* a Course, this can be changed in the config.yml by setting `OnLeave.TeleportToLinkedLobby` to `true`.
 
 _Note that the Player must still abide to the minimum ParkourLevel requirement for the Lobby to successfully join it._
 
@@ -132,8 +132,7 @@ _Command: `/pa setcourse (course) resumable [true/false]`_
 
 ### rewarddelay
 
-The amount of time that must pass before the Player can achieve the Course's prize again.
-
+The amount of time that must pass before the Player can achieve the Course's prize again.  
 The time can be a fraction of hours. For example, `0.5` would be `30 minutes`, `48` would be `2 full days`.
 
 _Command: `/pa setcourse (course) rewarddelay (hours)`_
@@ -203,6 +202,8 @@ _Command: `/pa setcourse (course) start`_
 
 You can override the default Parkour messages to a custom per-course message for each event.
 
+[Internal Parkour placeholders](/tutorials/parkour-courses?id=parkour-internal-placeholders) AND [PlaceholderAPI](/guides/compatible-plugins?id=placeholderapi) values will be evaluated. [Available event values](/tutorials/parkour-courses?id=parkour-internal-events).
+
 ![Event Message Example](https://i.imgur.com/ZyOeOom.png "Event Message Example")
 
 ![Event Message Set](https://i.imgur.com/5pacqjk.png "Event Message Set")
@@ -211,13 +212,42 @@ _Command: `/pa setcourse (course) message (event) (event)`_
 
 ### command
 
-This will allow you to link Parkour to trigger other plugins using a command.
+Allow each Course to execute multiple commands for each Parkour event.
+
+You are able to specify that the command should be executed by the Player by prefixing the command with `player:`, otherwise it will be executed as the Console.
+
+[Internal Parkour placeholders](/tutorials/parkour-courses?id=parkour-internal-placeholders) AND [PlaceholderAPI](/guides/compatible-plugins?id=placeholderapi) values will be evaluated. [Available event values](/tutorials/parkour-courses?id=parkour-internal-events).
 
 ![Event Command Example](https://i.imgur.com/patqUxL.png "Event Command Example")
 
-You are able to specify the command should be executed by the Player, by prefixing the command with `player:`.
-
 _Command: `/pa setcourse (course) command (event) (command)`_
+
+## Parkour Events
+
+Parkour allows you to customise behaviours of each Parkour Event to display a message and / or execute a command.
+
+### Parkour internal events
+
+* `Join` joining a Course
+* `Leave` leaving a Course
+* `Prize` prize given to Player for Course completion
+* `NoPrize` prize **not** given due to RewardOnce on Course completion
+* `Finish` every time a Player finishes a Course
+* `Checkpoint` achieving a Checkpoint on a Course
+* `CheckpointAll` achieving **all** checkpoints on a Course
+* `Death` dying whilst on a Course
+* `PlayerCourseRecord` player beats their best time on Course
+* `GlobalCourseRecord` player beats the global best time on Course
+
+### Parkour internal placeholders
+
+_They **must** be uppercase._
+* `%PLAYER%` the Player's name
+* `%PLAYER_DISPLAY%` the Player's display name
+* `%COURSE%` the Course's name
+* `%DEATHS%` the amount of deaths accumulated
+* `%TIME%` the amount of time accumulated
+* `%CHECKPOINT%` the current checkpoint number
 
 ## Adding a Join Item
 
@@ -233,31 +263,6 @@ _Command: `/pa addjoinitem (course) (material) (amount) [label] [unbreakable]`_
 _Example: `/pa addjoinitem tutorial ELYTRA 64`_
 
 [//]: # (add something here about the ability to just to /pa addjoinitem course, then it will add whatever is in their hand)
-
-## Parkour Events
-
-Parkour allows you to customise behaviours of each Parkour Event to display a message and / or execute a command.
-
-The Parkour events include:
-* `Join` joining a Course
-* `Leave` leaving a Course
-* `Prize` prize given to Player for Course completion
-* `NoPrize` prize **not** given due to RewardOnce on Course completion
-* `Finish` every time a Player finishes a Course
-* `Checkpoint` achieving a Checkpoint on a Course
-* `CheckpointAll` achieving **all** checkpoints on a Course
-* `Death` dying whilst on a Course
-* `PlayerCourseRecord` player beats their best time on Course
-* `GlobalCourseRecord` player beats the global best time on Course
-
-You are able to use the following internal placeholders:  
-_They must be uppercase._
-* `%PLAYER%` the Player's name
-* `%PLAYER_DISPLAY%` the Player's display name
-* `%COURSE%` the Course's name
-* `%DEATHS%` the amount of deaths accumulated
-* `%TIME%` the amount of time accumulated
-* `%CHECKPOINT%` the current checkpoint number
 
 ## Resetting Course Data
 

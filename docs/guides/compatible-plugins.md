@@ -177,15 +177,18 @@ _Please note that most actions can be achieved using the [Courses' event command
 
 Parkour provides the following custom events for you to listen to:
 
-* io.github.a5h73y.parkour.event.ParkourJoinEvent
-* io.github.a5h73y.parkour.event.ParkourDeathEvent
-* io.github.a5h73y.parkour.event.ParkourCheckpointEvent
 * io.github.a5h73y.parkour.event.ParkourCheckpointAllEvent
-* io.github.a5h73y.parkour.event.ParkourLeaveEvent
+* io.github.a5h73y.parkour.event.ParkourCheckpointEvent
+* io.github.a5h73y.parkour.event.ParkourDeathEvent
 * io.github.a5h73y.parkour.event.ParkourFinishEvent
-* io.github.a5h73y.parkour.event.ParkourPrizeEvent
+* io.github.a5h73y.parkour.event.ParkourJoinEvent
+* io.github.a5h73y.parkour.event.ParkourLeaveEvent
 * io.github.a5h73y.parkour.event.ParkourPlayerNewLevelEvent
 * io.github.a5h73y.parkour.event.ParkourPlayerNewRankEvent
+* io.github.a5h73y.parkour.event.ParkourPrizeEvent
+* io.github.a5h73y.parkour.event.ParkourResetCourseEvent
+* io.github.a5h73y.parkour.event.ParkourResetLeaderboardEvent
+* io.github.a5h73y.parkour.event.ParkourResetPlayerEvent
 
 ### Example Usages
 
