@@ -1,15 +1,14 @@
 <!-- docs/_sidebar.md -->
 
-- [Home](index.md)
-    
-- Essential Information
+- Getting Started
+  - [Introduction](index.md)
   - [Commands](essential/commands.md)
   - [Permissions](essential/permissions.md)
   - [Placeholders](essential/placeholders.md)
   - [FAQ](essential/faq.md)
 
 - Guides
-  - [Fresh Install](guides/fresh-install.md)
+  - [Fresh Install Setup](guides/fresh-install.md)
   - [Creating a Course](guides/creating-course.md)
   - [Compatible Plugins](guides/compatible-plugins.md)
   - [Rewarding the Player](guides/rewarding-player.md)

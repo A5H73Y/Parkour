@@ -30,7 +30,7 @@ _Command: `/pa reset leaderboard (course)`_
 
 ### Reset a Player Course Leaderboard
 
-This action will remove the specified Player's times from a specified Course, when provided.
+This action will remove the specified Player's times from a specified Course, when provided.  
 _Command: `/pa reset leaderboard (course) [player]`_
 
 

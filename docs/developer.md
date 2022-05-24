@@ -58,12 +58,18 @@ If your Plugin successfully links with Parkour, your plugin can now interact wit
 
 There are a list of Events that Parkour creates, that you can listen to:
 
-- PlayerJoinCourseEvent
-- PlayerLeaveCourseEvent
-- PlayerAchieveCheckpointEvent
-- PlayerDeathEvent
-- PlayerFinishCourseEvent
-- PlayerParkourLevelEvent
+* io.github.a5h73y.parkour.event.ParkourCheckpointAllEvent
+* io.github.a5h73y.parkour.event.ParkourCheckpointEvent
+* io.github.a5h73y.parkour.event.ParkourDeathEvent
+* io.github.a5h73y.parkour.event.ParkourFinishEvent
+* io.github.a5h73y.parkour.event.ParkourJoinEvent
+* io.github.a5h73y.parkour.event.ParkourLeaveEvent
+* io.github.a5h73y.parkour.event.ParkourPlayerNewLevelEvent
+* io.github.a5h73y.parkour.event.ParkourPlayerNewRankEvent
+* io.github.a5h73y.parkour.event.ParkourPrizeEvent
+* io.github.a5h73y.parkour.event.ParkourResetCourseEvent
+* io.github.a5h73y.parkour.event.ParkourResetLeaderboardEvent
+* io.github.a5h73y.parkour.event.ParkourResetPlayerEvent
 
 Each of these will give you at least the Player Object and the Course name for you to use. The Checkpoint and Level event will give you the relevant values also.
 
@@ -71,7 +77,7 @@ To listen for a Parkour event you must create a Listener class and register it c
 
 ```
 @EventHandler
-public void onCourseCompletion(PlayerFinishCourseEvent event) {
+public void onCourseCompletion(ParkourFinishEvent event) {
     String completedCourse = event.getCourseName();
     Player player = event.getPlayer();
 

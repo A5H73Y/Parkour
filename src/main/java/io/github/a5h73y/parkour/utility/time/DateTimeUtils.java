@@ -17,7 +17,9 @@ import org.bukkit.OfflinePlayer;
 public class DateTimeUtils {
 
 	public static final String DD_MM_YYYY = "dd-MM-yyyy";
-	public static final String DD_MM_YYYY_HH_MM_SS = "[dd/MM/yyyy | HH:mm:ss]";
+	public static final String DD_MM_YYYY_HH_MM_SS = "dd-MM-yyyy HH-mm-ss";
+	public static final String LOG_FORMAT = "[dd/MM/yyyy | HH:mm:ss]";
+	public static final String ZIP_FILE_FORMAT = "yyyy-MM-dd_HH-mm-ss";
 
 	/**
 	 * Display time representation of milliseconds.
@@ -58,6 +60,26 @@ public class DateTimeUtils {
 	public static String displayCurrentDateTime() {
 		LocalDateTime localDateTime = LocalDateTime.now();
 		return localDateTime.format(DateTimeFormatter.ofPattern(DD_MM_YYYY_HH_MM_SS));
+	}
+
+	/**
+	 * Display current date and time.
+	 *
+	 * @return formatted datetime DD/MM/YYYY | HH:MM:SS
+	 */
+	public static String generateCurrentDateTimeLog() {
+		LocalDateTime localDateTime = LocalDateTime.now();
+		return localDateTime.format(DateTimeFormatter.ofPattern(LOG_FORMAT));
+	}
+
+	/**
+	 * Display current date and time.
+	 *
+	 * @return formatted datetime DD/MM/YYYY | HH:MM:SS
+	 */
+	public static String generateZipNameTimeLog() {
+		LocalDateTime localDateTime = LocalDateTime.now();
+		return localDateTime.format(DateTimeFormatter.ofPattern(ZIP_FILE_FORMAT));
 	}
 
 	/**

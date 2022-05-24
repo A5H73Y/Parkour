@@ -1,4 +1,4 @@
-Fresh Installation
+Fresh Install Setup
 ======
 
 ## Installing the plugin

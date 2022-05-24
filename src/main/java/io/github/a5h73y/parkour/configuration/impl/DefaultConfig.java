@@ -10,6 +10,7 @@ import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_LEVEL_ADD
 import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_ONCE;
 
 import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.XSound;
 import de.leonhard.storage.Yaml;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
@@ -205,40 +206,40 @@ public class DefaultConfig extends Yaml {
 
 		this.setDefault("Sounds.Enabled", false);
 		this.setDefault("Sounds.JoinCourse.Enabled", true);
-		this.setDefault("Sounds.JoinCourse.Sound", "BLOCK_NOTE_BLOCK_PLING");
+		this.setDefault("Sounds.JoinCourse.Sound", XSound.BLOCK_NOTE_BLOCK_PLING.parseSound().name());
 		this.setDefault("Sounds.JoinCourse.Volume", 0.05f);
 		this.setDefault("Sounds.JoinCourse.Pitch", 1.75f);
 		this.setDefault("Sounds.SecondIncrement.Enabled", true);
-		this.setDefault("Sounds.SecondIncrement.Sound", "BLOCK_NOTE_BLOCK_PLING");
+		this.setDefault("Sounds.SecondIncrement.Sound", XSound.BLOCK_NOTE_BLOCK_PLING.parseSound().name());
 		this.setDefault("Sounds.SecondIncrement.Volume", 0.05f);
 		this.setDefault("Sounds.SecondIncrement.Pitch", 1.75f);
 		this.setDefault("Sounds.SecondDecrement.Enabled", true);
-		this.setDefault("Sounds.SecondDecrement.Sound", "BLOCK_NOTE_BLOCK_PLING");
+		this.setDefault("Sounds.SecondDecrement.Sound", XSound.BLOCK_NOTE_BLOCK_PLING.parseSound().name());
 		this.setDefault("Sounds.SecondDecrement.Volume", 0.05f);
 		this.setDefault("Sounds.SecondDecrement.Pitch", 4f);
 		this.setDefault("Sounds.PlayerDeath.Enabled", true);
-		this.setDefault("Sounds.PlayerDeath.Sound", "ENTITY_PLAYER_DEATH");
+		this.setDefault("Sounds.PlayerDeath.Sound", XSound.ENTITY_PLAYER_DEATH.parseSound().name());
 		this.setDefault("Sounds.PlayerDeath.Volume", 0.1f);
 		this.setDefault("Sounds.PlayerDeath.Pitch", 1.75f);
 		this.setDefault("Sounds.CheckpointAchieved.Enabled", true);
-		this.setDefault("Sounds.CheckpointAchieved.Sound", "BLOCK_NOTE_BLOCK_CHIME");
+		this.setDefault("Sounds.CheckpointAchieved.Sound", XSound.BLOCK_NOTE_BLOCK_CHIME.parseSound().name());
 		this.setDefault("Sounds.CheckpointAchieved.Volume", 0.1f);
 		this.setDefault("Sounds.CheckpointAchieved.Pitch", 1.75f);
 		this.setDefault("Sounds.CourseFinished.Enabled", true);
-		this.setDefault("Sounds.CourseFinished.Sound", "BLOCK_CONDUIT_ACTIVATE");
+		this.setDefault("Sounds.CourseFinished.Sound", XSound.BLOCK_CONDUIT_ACTIVATE.parseSound().name());
 		this.setDefault("Sounds.CourseFinished.Volume", 0.1f);
 		this.setDefault("Sounds.CourseFinished.Pitch", 1.75f);
 		this.setDefault("Sounds.CourseFailed.Enabled", true);
-		this.setDefault("Sounds.CourseFailed.Sound", "BLOCK_CONDUIT_DEACTIVATE");
+		this.setDefault("Sounds.CourseFailed.Sound", XSound.BLOCK_CONDUIT_DEACTIVATE.parseSound().name());
 		this.setDefault("Sounds.CourseFailed.Volume", 0.1f);
 		this.setDefault("Sounds.CourseFailed.Pitch", 1.75f);
 		this.setDefault("Sounds.ReloadRocket.Enabled", true);
-		this.setDefault("Sounds.ReloadRocket.Sound", "TODO"); // TODO nice reload sound
+		this.setDefault("Sounds.ReloadRocket.Sound", XSound.ENTITY_PHANTOM_HURT.parseSound().name());
 		this.setDefault("Sounds.ReloadRocket.Volume", 0.1f);
 		this.setDefault("Sounds.ReloadRocket.Pitch", 1.75f);
 
 		this.setDefault("ParkourGUI.Material", "BOOK");
-		this.setDefault("ParkourGUI.FillerMaterial", "CYAN_STAINED_GLASS_PANE");
+		this.setDefault("ParkourGUI.FillerMaterial", XMaterial.CYAN_STAINED_GLASS_PANE.parseMaterial().name());
 
 		this.setDefault("ParkourKit.ReplaceInventory", true);
 		this.setDefault("ParkourKit.GiveSign", true);

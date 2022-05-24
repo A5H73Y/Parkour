@@ -1,4 +1,4 @@
-# Parkour Tutorials - Home <!-- {docsify-ignore-all} -->
+# Parkour Tutorials <!-- {docsify-ignore-all} -->
 
 Welcome! This website documents the various features of the Parkour plugin. If you want to learn everything there is to know, then go through each part step by step. Otherwise, just skip to the part(s) you are interested in.  
 Use the Search bar in the top left to quickly find anything you're looking for.

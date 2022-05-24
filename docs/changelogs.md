@@ -2,7 +2,7 @@ Changelogs
 ======
 
 Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon server start up. There will be no manual intervention, unless stated in breaking changes.
-## Parkour 7.0.0
+## 7.0.0
 ### Configuration Changes
 Parkour 6.7.1 used a config system which hadn't changed since the Plugin's inception in 2012, by combining all the Courses and Players data into their single config file. This resulted in insanely slow performance when changing and saving data regularly.
 
@@ -42,12 +42,12 @@ These can now be overridden on a per-course basis.
 _Thank you to steve4744, and the various contributors for helping with this major update._  
 _Additional thanks to the kind users who helped test early development builds!_
 
-## Parkour 6.7.1
+## 6.7.1
 ### Changes
 * Clear PlaceholderAPI cache on database updates
 * Fixes to Parkour messages being sent to Players
 
-## Parkour 6.7
+## 6.7
 ### Changes
 * Added Potion ParkourBlock
 * Added configurable time formats
@@ -65,7 +65,7 @@ _Additional thanks to the kind users who helped test early development builds!_
 * Fixes for titles not appearing
 * Reintroduced BountifulAPI support
 
-## Parkour 6.6
+## 6.6
 ### Changes
 * Added ability for entities to attack player (OnCourse.PreventEntities.Attacking)
 * Added "/pa setlobbycommand (lobby) (command)" command
@@ -83,7 +83,7 @@ _Additional thanks to the kind users who helped test early development builds!_
 ### Breaking Changes
 * [Parkour Event Types](/tutorials/configuring-course?id=parkour-events) have been updated / renamed, so you'll have to reconfigure the Course events in some cases.
 
-## Parkour 6.5
+## 6.5
 ### Changes
 * Added Course display names `/pa setcourse (course) displayname (value)` (with new placeholders)
 * Added Join Broadcast (OnJoin.BroadcastLevel)
@@ -107,7 +107,7 @@ _Additional thanks to the kind users who helped test early development builds!_
 * Changed AutoStart reactivation to reset session rather than restart course
 * Fixed config issues after a fresh install
 
-## Parkour 6.4
+## 6.4
 ### Changes
 * Added ability to remove Parkour messages
 * Added remaining lives placeholder
@@ -132,7 +132,7 @@ _Additional thanks to the kind users who helped test early development builds!_
 * Remove players reappeared message after leaving / finishing
 * Changed "OnJoin.Item" to be "ParkourTool." in the config.yml
 
-## Parkour 6.3
+## 6.3
 ### Changes
 * Added Option to Automatically hide players on Course join
 * Added %DEATHS% as a placeholder in TopTen Placeholder
@@ -149,7 +149,7 @@ _Additional thanks to the kind users who helped test early development builds!_
 ### Breaking Changes
 * The `course_record` placeholder variables have changed order, now `%parkour_course_record_(course)_(value)%`
 
-## Parkour 6.2
+## 6.2
 ### Changes
 * Option to treat last checkpoint as Finish
 * Fixed ParkourLevel and ParkourRank format
@@ -158,14 +158,14 @@ _Additional thanks to the kind users who helped test early development builds!_
 * Option to teleport to the nearest Lobby when taking void damage (not on Course) Thanks to FrankHeijden
 * Fix Placeholders when cache expired
 
-## Parkour 6.1
+## 6.1
 ### Changes
 * Reimplemented placeholders: `%parkour_player_personal_best_(course)_time%` & `%parkour_player_personal_best_(course)_deaths%`
 * Placeholders fix for not matching lowercase
 * Added option to append the world name to AutoStart
 * Various fixes and improvements
 
-## Parkour 6.0
+## 6.0
 This update is a rewrite of v5.3 with performance and usability being at the forefront of every decision.
 
 **If you have 5.3 installed, Parkour 6.0 will automatically upgrade your configuration.**

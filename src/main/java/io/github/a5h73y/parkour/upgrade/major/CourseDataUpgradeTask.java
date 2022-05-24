@@ -5,6 +5,7 @@ import io.github.a5h73y.parkour.type.course.ParkourEventType;
 import io.github.a5h73y.parkour.type.course.autostart.AutoStartConfig;
 import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
 import io.github.a5h73y.parkour.upgrade.TimedConfigUpgradeTask;
+import io.github.a5h73y.parkour.utility.StringUtils;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -64,16 +65,18 @@ public class CourseDataUpgradeTask extends TimedConfigUpgradeTask {
 
 	private void updateEventsSection(CourseConfig newCourseConfig) {
 		Arrays.stream(ParkourEventType.values()).forEach(parkourEventType -> {
-			if (newCourseConfig.contains(parkourEventType.getConfigEntry() + "Command")) {
+			String oldEventName = StringUtils.standardizeText(parkourEventType.getDisplayName());
+
+			if (newCourseConfig.contains(oldEventName + "Command")) {
 				newCourseConfig.set("Command." + parkourEventType.getConfigEntry(),
-						newCourseConfig.getStringList(parkourEventType.getConfigEntry() + "Command"));
-				newCourseConfig.remove(parkourEventType.getConfigEntry() + "Command");
+						newCourseConfig.getStringList(oldEventName + "Command"));
+				newCourseConfig.remove(oldEventName + "Command");
 			}
 
-			if (newCourseConfig.contains(parkourEventType.getConfigEntry() + "Message")) {
+			if (newCourseConfig.contains(oldEventName + "Message")) {
 				newCourseConfig.set("Message." + parkourEventType.getConfigEntry(),
-						newCourseConfig.getString(parkourEventType.getConfigEntry() + "Message"));
-				newCourseConfig.remove(parkourEventType.getConfigEntry() + "Message");
+						newCourseConfig.getString(oldEventName + "Message"));
+				newCourseConfig.remove(oldEventName + "Message");
 			}
 		});
 	}

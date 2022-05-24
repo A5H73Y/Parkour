@@ -11,7 +11,29 @@ This will include any information stored, as well as any details on the Course t
 
 [//]: # (TODO put picture here)
 
-### Reset a Player
+## Player Settings
+
+The player value provided can be their username, or their matching UUID.
+
+### rank
+
+Set the Player's ParkourRank to the specified value. This is a manual process and should only be used for testing purposes.
+
+_Command: `/pa setplayer (player) rank (value)`_
+
+### level
+
+Set the Player's ParkourLevel to the specified value. This is a manual process and should only be used for testing purposes.
+
+_Command: `/pa setplayer (player) level (value)`_
+
+### leveladd
+
+Increase the Player's ParkourLevel to the specified value. This is a manual process and should only be used for testing purposes.
+
+_Command: `/pa setplayer (player) addlevel (value)`_
+
+## Reset a Player
 
 This will delete all their leaderboards across all Courses and delete all various Parkour attributes.  
 _Command: `/pa reset player (player)`_
