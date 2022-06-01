@@ -86,7 +86,7 @@ For example:
 
 Parkour doesn't directly support [Holographic Displays](https://dev.bukkit.org/projects/holographic-displays/files), however you can use PlaceholderAPI which allows you to create dynamic and nice looking Parkour holograms.
 
-You will need to install a few plugins to achieve this:
+You will need to install the following plugins to achieve this:
 * [Holographic Displays](https://dev.bukkit.org/projects/holographic-displays?gameCategorySlug=bukkit-plugins&projectID=75097)
 * [Holographic Extension](https://www.spigotmc.org/resources/holographic-extension.18461/)
 * [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/)
@@ -247,3 +247,39 @@ The time format can be changed in LeaderHeads' `config.yml`, for example:
 Currently, LeaderHeads does not appear to support displaying milliseconds as part of the formatted time on the sign.
 
 </details>
+
+[//]: # (Currently no known way of getting this to work, issue raised with the developer for support)
+[//]: # (## AdvancedReplay)
+
+[//]: # ()
+[//]: # (Want to be able to record and play back each player's best time?)
+
+[//]: # ()
+[//]: # (You will need to install the following plugins to achieve this:)
+
+[//]: # (* [Holographic Displays]&#40;https://www.spigotmc.org/resources/advancedreplay-1-8-1-18.52849/&#41;)
+
+[//]: # (* [ProtocolLib]&#40;https://www.spigotmc.org/resources/protocollib.1997/&#41;)
+
+[//]: # ()
+[//]: # (To achieve seamless integration with the plugin, Parkour's command event system will be used.)
+
+[//]: # ()
+[//]: # (To apply to every single Course, set the `CourseDefault.Command.Join` to:)
+
+[//]: # ()
+[//]: # (`replay start %PLAYER%-%COURSE% %PLAYER%`  )
+
+[//]: # (This means only the Player which joined the Course is recorded, the recording name will be a combination of the Player's name and the Course name.)
+
+[//]: # ()
+[//]: # (To avoid complications, the recording will only be saved if they complete the Course with either their best time ever, or the Course's best time ever. All other events will discard the recording.)
+
+[//]: # ()
+[//]: # (Set the `Leave`, `Prize` and `NoPrize` commands to `replay stop %PLAYER%-%COURSE% -nosave`)
+
+[//]: # ()
+[//]: # (Set the `PlayerCourseRecord` and `GlobalCourseRecord` commands to `replay stop %PLAYER%-%COURSE%`)
+
+[//]: # ()
+[//]: # (![Default Course Command Config]&#40;https://i.imgur.com/CR8gcp3.png "Default Course Command Config"&#41;)

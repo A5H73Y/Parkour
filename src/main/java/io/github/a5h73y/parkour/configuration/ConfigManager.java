@@ -1,7 +1,7 @@
 package io.github.a5h73y.parkour.configuration;
 
 import de.leonhard.storage.internal.FlatFile;
-import de.leonhard.storage.internal.serialize.LightningSerializer;
+import de.leonhard.storage.internal.serialize.SimplixSerializer;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
 import io.github.a5h73y.parkour.configuration.impl.StringsConfig;
 import io.github.a5h73y.parkour.configuration.serializable.CourseSerializable;
@@ -85,11 +85,11 @@ public class ConfigManager {
 		this.playerConfigCache = new GenericCache<>(30L);
 		this.courseConfigCache = new GenericCache<>(30L);
 
-		LightningSerializer.registerSerializable(itemStackSerializable);
-		LightningSerializer.registerSerializable(new ItemStackArraySerializable());
-		LightningSerializer.registerSerializable(new LocationSerializable());
-		LightningSerializer.registerSerializable(new CourseSerializable());
-		LightningSerializer.registerSerializable(new ParkourSessionSerializable());
+		SimplixSerializer.registerSerializable(itemStackSerializable);
+		SimplixSerializer.registerSerializable(new ItemStackArraySerializable());
+		SimplixSerializer.registerSerializable(new LocationSerializable());
+		SimplixSerializer.registerSerializable(new CourseSerializable());
+		SimplixSerializer.registerSerializable(new ParkourSessionSerializable());
 	}
 
 	/**

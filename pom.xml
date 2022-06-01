@@ -154,16 +154,17 @@
 			<scope>compile</scope>
 		</dependency>
 		<!-- Simplix Storage -->
+<!--		<dependency>-->
+<!--			<groupId>com.github.simplix-softworks</groupId>-->
+<!--			<artifactId>simplixstorage</artifactId>-->
+<!--			<version>3.2.4</version>-->
+<!--		</dependency>-->
+		<!-- temporary until there's a release -->
 		<dependency>
 			<groupId>com.github.simplix-softworks</groupId>
 			<artifactId>simplixstorage</artifactId>
-			<version>3.2.4</version>
+			<version>master-SNAPSHOT</version>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>com.github.javafactorydev</groupId>-->
-<!--			<artifactId>simplixstorage</artifactId>-->
-<!--			<version>3.2.6</version>-->
-<!--		</dependency>-->
 	</dependencies>
 
 	<build>

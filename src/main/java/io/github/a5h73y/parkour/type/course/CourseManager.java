@@ -2,7 +2,6 @@ package io.github.a5h73y.parkour.type.course;
 
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_INVALID_AMOUNT;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
-import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_UNKNOWN_PLAYER;
 
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.conversation.LeaderboardConversation;
@@ -284,8 +283,8 @@ public class CourseManager extends AbstractPluginReceiver {
         }
 
         if (!PlayerConfig.hasPlayerConfig(targetPlayer)) {
-            TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, commandSender);
-            return;
+            TranslationUtils.sendMessage(commandSender,
+                    "This Parkour Player was not found, continuing reset any way...");
         }
 
         parkour.getDatabaseManager().deletePlayerCourseTimes(targetPlayer, courseName);

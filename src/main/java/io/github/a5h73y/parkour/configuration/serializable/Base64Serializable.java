@@ -1,6 +1,6 @@
 package io.github.a5h73y.parkour.configuration.serializable;
 
-import de.leonhard.storage.internal.serialize.LightningSerializable;
+import de.leonhard.storage.internal.serialize.SimplixSerializable;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-public abstract class Base64Serializable<T> implements LightningSerializable<T> {
+public abstract class Base64Serializable<T> implements SimplixSerializable<T> {
 
 	@Override
 	public T deserialize(Object input) throws ClassCastException {

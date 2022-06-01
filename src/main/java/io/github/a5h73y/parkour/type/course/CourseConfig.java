@@ -7,7 +7,7 @@ import static io.github.a5h73y.parkour.utility.TranslationUtils.sendValue;
 
 import de.leonhard.storage.Json;
 import de.leonhard.storage.internal.FileType;
-import de.leonhard.storage.internal.serialize.LightningSerializer;
+import de.leonhard.storage.internal.serialize.SimplixSerializer;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.type.player.ParkourMode;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
@@ -106,11 +106,11 @@ public class CourseConfig extends Json {
     }
 
     public Course getCourse() {
-        return LightningSerializer.deserialize(this.getData(), Course.class);
+        return SimplixSerializer.deserialize(this.getData(), Course.class);
     }
 
     public void saveCourse(Course course) {
-        getMapValue(LightningSerializer.serialize(course)).forEach(this::set);
+        getMapValue(SimplixSerializer.serialize(course)).forEach(this::set);
     }
 
     public String getCourseName() {

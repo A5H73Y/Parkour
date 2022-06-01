@@ -2,12 +2,12 @@ package io.github.a5h73y.parkour.configuration.serializable;
 
 import static io.github.a5h73y.parkour.configuration.serializable.ParkourSerializable.getMapValue;
 
-import de.leonhard.storage.internal.serialize.LightningSerializable;
+import de.leonhard.storage.internal.serialize.SimplixSerializable;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
-public class ParkourSessionSerializable implements LightningSerializable<ParkourSession> {
+public class ParkourSessionSerializable implements SimplixSerializable<ParkourSession> {
 
 	@Override
 	public Map<String, Object> serialize(@NotNull ParkourSession parkourSession) throws ClassCastException {

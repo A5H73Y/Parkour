@@ -5,6 +5,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
 import io.github.a5h73y.parkour.type.CacheableParkourManager;
 import io.github.a5h73y.parkour.utility.PluginUtils;
+import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.util.EnumMap;
 import java.util.Optional;
 import org.bukkit.Sound;
@@ -66,12 +67,12 @@ public class SoundsManager extends CacheableParkourManager {
 	private void populateCache() {
 		if (getConfig().isSoundEnabled()) {
 			for (SoundType soundType : SoundType.values()) {
-				if (!getConfig().isSoundEnabled(soundType)) {
+				if (!getConfig().isSoundEnabled(soundType)
+						|| !ValidationUtils.isStringValid(getConfig().getSoundName(soundType))) {
 					continue;
 				}
 
-				String soundName = getConfig().getString("Sounds."
-						+ soundType.getConfigEntry() + ".Sound");
+				String soundName = getConfig().getSoundName(soundType);
 				Optional<XSound> matchingSound = XSound.matchXSound(soundName);
 
 				if (matchingSound.isPresent()) {

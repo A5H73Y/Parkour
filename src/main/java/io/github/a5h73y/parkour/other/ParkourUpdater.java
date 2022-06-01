@@ -63,7 +63,8 @@ public class ParkourUpdater implements Listener {
 			connection.addRequestProperty("User-Agent", USER_AGENT);
 
 			InputStreamReader reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8);
-			JsonElement element = JsonParser.parseReader(reader);
+			// using deprecated because 1.8 is old
+			JsonElement element = new JsonParser().parse(reader);
 
 			reader.close();
 			connection.disconnect();

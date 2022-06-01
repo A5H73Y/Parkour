@@ -206,35 +206,35 @@ public class DefaultConfig extends Yaml {
 
 		this.setDefault("Sounds.Enabled", false);
 		this.setDefault("Sounds.JoinCourse.Enabled", true);
-		this.setDefault("Sounds.JoinCourse.Sound", XSound.BLOCK_NOTE_BLOCK_PLING.parseSound().name());
+		this.setDefault("Sounds.JoinCourse.Sound", getSound(XSound.BLOCK_NOTE_BLOCK_PLING));
 		this.setDefault("Sounds.JoinCourse.Volume", 0.05f);
 		this.setDefault("Sounds.JoinCourse.Pitch", 1.75f);
 		this.setDefault("Sounds.SecondIncrement.Enabled", true);
-		this.setDefault("Sounds.SecondIncrement.Sound", XSound.BLOCK_NOTE_BLOCK_PLING.parseSound().name());
+		this.setDefault("Sounds.SecondIncrement.Sound", getSound(XSound.BLOCK_NOTE_BLOCK_PLING));
 		this.setDefault("Sounds.SecondIncrement.Volume", 0.05f);
 		this.setDefault("Sounds.SecondIncrement.Pitch", 1.75f);
 		this.setDefault("Sounds.SecondDecrement.Enabled", true);
-		this.setDefault("Sounds.SecondDecrement.Sound", XSound.BLOCK_NOTE_BLOCK_PLING.parseSound().name());
+		this.setDefault("Sounds.SecondDecrement.Sound", getSound(XSound.BLOCK_NOTE_BLOCK_PLING));
 		this.setDefault("Sounds.SecondDecrement.Volume", 0.05f);
 		this.setDefault("Sounds.SecondDecrement.Pitch", 4f);
 		this.setDefault("Sounds.PlayerDeath.Enabled", true);
-		this.setDefault("Sounds.PlayerDeath.Sound", XSound.ENTITY_PLAYER_DEATH.parseSound().name());
+		this.setDefault("Sounds.PlayerDeath.Sound", getSound(XSound.ENTITY_PLAYER_DEATH));
 		this.setDefault("Sounds.PlayerDeath.Volume", 0.1f);
 		this.setDefault("Sounds.PlayerDeath.Pitch", 1.75f);
 		this.setDefault("Sounds.CheckpointAchieved.Enabled", true);
-		this.setDefault("Sounds.CheckpointAchieved.Sound", XSound.BLOCK_NOTE_BLOCK_CHIME.parseSound().name());
+		this.setDefault("Sounds.CheckpointAchieved.Sound", getSound(XSound.BLOCK_NOTE_BLOCK_CHIME));
 		this.setDefault("Sounds.CheckpointAchieved.Volume", 0.1f);
 		this.setDefault("Sounds.CheckpointAchieved.Pitch", 1.75f);
 		this.setDefault("Sounds.CourseFinished.Enabled", true);
-		this.setDefault("Sounds.CourseFinished.Sound", XSound.BLOCK_CONDUIT_ACTIVATE.parseSound().name());
+		this.setDefault("Sounds.CourseFinished.Sound", getSound(XSound.BLOCK_CONDUIT_ACTIVATE));
 		this.setDefault("Sounds.CourseFinished.Volume", 0.1f);
 		this.setDefault("Sounds.CourseFinished.Pitch", 1.75f);
 		this.setDefault("Sounds.CourseFailed.Enabled", true);
-		this.setDefault("Sounds.CourseFailed.Sound", XSound.BLOCK_CONDUIT_DEACTIVATE.parseSound().name());
+		this.setDefault("Sounds.CourseFailed.Sound", getSound(XSound.BLOCK_CONDUIT_DEACTIVATE));
 		this.setDefault("Sounds.CourseFailed.Volume", 0.1f);
 		this.setDefault("Sounds.CourseFailed.Pitch", 1.75f);
 		this.setDefault("Sounds.ReloadRocket.Enabled", true);
-		this.setDefault("Sounds.ReloadRocket.Sound", XSound.ENTITY_PHANTOM_HURT.parseSound().name());
+		this.setDefault("Sounds.ReloadRocket.Sound", getSound(XSound.ENTITY_PHANTOM_HURT));
 		this.setDefault("Sounds.ReloadRocket.Volume", 0.1f);
 		this.setDefault("Sounds.ReloadRocket.Pitch", 1.75f);
 
@@ -300,6 +300,20 @@ public class DefaultConfig extends Yaml {
 		achievedFormat = setupDateFormat(this.getTimeAchievedFormatValue(), timeZone);
 	}
 
+	/**
+	 * Find the matching Sound value for this server version.
+	 * If it doesn't exist, there's nothing we can do - let the Player set it.
+	 * @param xSound sound
+	 * @return sound name
+	 */
+	private String getSound(XSound xSound) {
+		if (xSound.isSupported()) {
+			return xSound.parseSound().name();
+		} else {
+			return "";
+		}
+	}
+
 	private DateFormat setupDateFormat(String format, TimeZone timeZone) {
 		DateFormat result = new SimpleDateFormat(format);
 		result.setTimeZone(timeZone);
@@ -362,6 +376,10 @@ public class DefaultConfig extends Yaml {
 	@NotNull
 	public List<String> getDefaultEventCommands(@NotNull ParkourEventType eventType) {
 		return this.get("CourseDefault.Command." + eventType.getConfigEntry(), new ArrayList<>());
+	}
+
+	public String getSoundName(@NotNull SoundType soundType) {
+		return this.getString("Sounds." + soundType.getConfigEntry() + ".Sound");
 	}
 
 	public String getTimeStandardFormatValue() {

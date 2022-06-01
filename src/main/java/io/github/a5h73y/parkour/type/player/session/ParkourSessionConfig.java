@@ -4,7 +4,7 @@ import static io.github.a5h73y.parkour.configuration.serializable.ParkourSeriali
 
 import de.leonhard.storage.Json;
 import de.leonhard.storage.internal.FileType;
-import de.leonhard.storage.internal.serialize.LightningSerializer;
+import de.leonhard.storage.internal.serialize.SimplixSerializer;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import java.io.File;
@@ -78,7 +78,7 @@ public class ParkourSessionConfig extends Json {
     }
 
     public ParkourSession getParkourSession() {
-        return LightningSerializer.deserialize(this.getData(), ParkourSession.class);
+        return SimplixSerializer.deserialize(this.getData(), ParkourSession.class);
     }
 
     @Nullable
@@ -87,6 +87,6 @@ public class ParkourSessionConfig extends Json {
     }
 
     public void saveParkourSession(ParkourSession parkourSession) {
-        getMapValue(LightningSerializer.serialize(parkourSession)).forEach(this::set);
+        getMapValue(SimplixSerializer.serialize(parkourSession)).forEach(this::set);
     }
 }
