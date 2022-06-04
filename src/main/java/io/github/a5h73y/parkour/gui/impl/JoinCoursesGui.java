@@ -32,14 +32,14 @@ public class JoinCoursesGui implements AbstractMenu {
 
 	@Override
 	public void addContent(InventoryGui parent, Player player) {
-		GuiElementGroup group = new GuiElementGroup('g');
+		GuiElementGroup group = new GuiElementGroup('G');
 		Parkour parkour = Parkour.getInstance();
 		PlayerManager playerManager = parkour.getPlayerManager();
 
-		for (String course : Parkour.getInstance().getCourseManager().getCourseNames()) {
+		for (String course : parkour.getCourseManager().getCourseNames()) {
 			group.addElement(
 					new StaticGuiElement('e',
-							new ItemStack(Parkour.getDefaultConfig().getGuiMaterial()),
+							new ItemStack(parkour.getParkourConfig().getGuiMaterial()),
 							click -> {
 								playerManager.joinCourse(player, course);
 								parent.close();

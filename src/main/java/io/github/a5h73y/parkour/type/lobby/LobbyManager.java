@@ -92,9 +92,9 @@ public class LobbyManager extends CacheableParkourManager {
         }
 
         if (lobbyName.equals(DEFAULT)) {
-            TranslationUtils.sendTranslation("Parkour.Lobby", player);
+            TranslationUtils.sendTranslation("Lobby.Joined", player);
         } else {
-            TranslationUtils.sendValueTranslation("Parkour.LobbyOther", lobbyName, player);
+            TranslationUtils.sendValueTranslation("Lobby.JoinedOther", lobbyName, player);
         }
     }
 
@@ -127,7 +127,7 @@ public class LobbyManager extends CacheableParkourManager {
         }
         Lobby lobby = lobbyCache.getOrDefault(DEFAULT, populateLobby(DEFAULT));
         PlayerUtils.teleportToLocation(player, lobby.getLocation());
-        TranslationUtils.sendTranslation("Parkour.Lobby", player);
+        TranslationUtils.sendTranslation("Lobby.Joined", player);
     }
 
     /**
@@ -138,7 +138,7 @@ public class LobbyManager extends CacheableParkourManager {
         Lobby lobby = getNearestLobby(player);
         if (lobby != null) {
             PlayerUtils.teleportToLocation(player, lobby.getLocation());
-            TranslationUtils.sendValueTranslation("Parkour.LobbyOther", lobby.getName(), player);
+            TranslationUtils.sendValueTranslation("Lobby.JoinedOther", lobby.getName(), player);
         }
     }
 
@@ -257,7 +257,7 @@ public class LobbyManager extends CacheableParkourManager {
         if (!lobbySet) {
             if (PermissionUtils.hasPermission(player, Permission.ADMIN_ALL, false)) {
                 TranslationUtils.sendMessage(player, "&cDefault Lobby has not been set!");
-                TranslationUtils.sendMessage(player, "Type &b'/pa setlobby' &fwhere you want the lobby to be set.");
+                TranslationUtils.sendMessage(player, "Type &b'/pa create lobby' &fwhere you want the lobby to be set.");
 
             } else {
                 TranslationUtils.sendMessage(player, "&cDefault Lobby has not been set! Please tell the Owner!");

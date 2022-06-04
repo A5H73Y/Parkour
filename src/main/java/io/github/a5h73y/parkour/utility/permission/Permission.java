@@ -29,19 +29,7 @@ public enum Permission {
 	ADMIN_DELETE(Constants.PARKOUR_ADMIN, "delete"),
 	ADMIN_RESET(Constants.PARKOUR_ADMIN, "reset"),
 	ADMIN_TESTMODE(Constants.PARKOUR_ADMIN, "testmode"),
-
-	// Create Parkour Signs
-	CREATE_SIGN_ALL(Constants.PARKOUR_CREATE_SIGN, "*"),
-	CREATE_SIGN_JOIN(Constants.PARKOUR_CREATE_SIGN, "join"),
-	CREATE_SIGN_JOINALL(Constants.PARKOUR_CREATE_SIGN, "joinall"),
-	CREATE_SIGN_FINISH(Constants.PARKOUR_CREATE_SIGN, "finish"),
-	CREATE_SIGN_LEAVE(Constants.PARKOUR_CREATE_SIGN, "leave"),
-	CREATE_SIGN_EFFECT(Constants.PARKOUR_CREATE_SIGN, "effect"),
-	CREATE_SIGN_STATS(Constants.PARKOUR_CREATE_SIGN, "stats"),
-	CREATE_SIGN_LEADERBOARDS(Constants.PARKOUR_CREATE_SIGN, "leaderboards"),
-	CREATE_SIGN_LOBBY(Constants.PARKOUR_CREATE_SIGN, "lobby"),
-	CREATE_SIGN_CHALLENGE(Constants.PARKOUR_CREATE_SIGN, "challenge"),
-	CREATE_SIGN_CHECKPOINT(Constants.PARKOUR_CREATE_SIGN, "checkpoint"),
+	ADMIN_CREATESIGN(Constants.PARKOUR_ADMIN, "createsign"),
 
 	// Other
 	PARKOUR_LEVEL("parkour.level", "99999"),
@@ -70,7 +58,6 @@ public enum Permission {
 	private static class Constants {
 		private static final String PARKOUR_BASIC = "parkour.basic";
 		private static final String PARKOUR_ADMIN = "parkour.admin";
-		private static final String PARKOUR_CREATE_SIGN = "parkour.createsign";
 	}
 }
 

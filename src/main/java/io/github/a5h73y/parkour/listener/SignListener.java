@@ -37,12 +37,17 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onSignCreate(SignChangeEvent event) {
-        if (!event.getLine(0).equalsIgnoreCase("[parkour]")
-                && !event.getLine(0).equalsIgnoreCase("[pa]")) {
+        if (!"[parkour]".equalsIgnoreCase(event.getLine(0))
+                && !"[pa]".equalsIgnoreCase(event.getLine(0))) {
             return;
         }
 
         Player player = event.getPlayer();
+
+        if (!PermissionUtils.hasSignPermission(player, event)) {
+            SignUtils.breakSignAndCancelEvent(event);
+            return;
+        }
 
         switch (event.getLine(1).toLowerCase()) {
             case "join":

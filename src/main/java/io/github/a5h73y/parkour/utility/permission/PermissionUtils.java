@@ -97,14 +97,10 @@ public class PermissionUtils {
 	 * SignChangeEvent is used to destroy sign if the permissions aren't granted.
 	 *
 	 * @param player target player
-	 * @param permissionNode sign permission node
 	 * @return player has permission
 	 */
-	public static boolean hasSignPermission(Player player, String permissionNode, SignChangeEvent sign) {
-		Permission matchingPermission = Permission.valueOf("CREATE_SIGN_" + permissionNode.toUpperCase());
-
-		if (!hasPermission(player, Permission.CREATE_SIGN_ALL, false)
-				&& !hasPermission(player, matchingPermission, false)) {
+	public static boolean hasSignPermission(Player player, SignChangeEvent sign) {
+		if (!hasPermission(player, Permission.ADMIN_CREATESIGN)) {
 			sign.setCancelled(true);
 			sign.getBlock().breakNaturally();
 			return false;

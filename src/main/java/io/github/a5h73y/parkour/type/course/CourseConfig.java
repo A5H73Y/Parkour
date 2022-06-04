@@ -826,7 +826,7 @@ public class CourseConfig extends Json {
     }
 
     public boolean getHasFallDamage() {
-        return this.getBoolean(HAS_FALL_DAMAGE);
+        return this.getOrDefault(HAS_FALL_DAMAGE, true);
     }
 
     public void setHasFallDamage(boolean value) {
@@ -884,11 +884,11 @@ public class CourseConfig extends Json {
     }
 
     /**
-     * Get Resumable flag for Course.
-     * @return course resumable
+     * Get Manual Checkpoints flag for Course.
+     * @return course has manual checkpoints
      */
     public boolean getManualCheckpoints() {
-        return this.getOrDefault(MANUAL_CHECKPOINTS, true);
+        return this.getBoolean(MANUAL_CHECKPOINTS);
     }
 
     /**

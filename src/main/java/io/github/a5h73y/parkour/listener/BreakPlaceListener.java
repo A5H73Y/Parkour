@@ -4,10 +4,10 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -23,7 +23,7 @@ public class BreakPlaceListener extends AbstractPluginReceiver implements Listen
      * Prevent the Player from Placing Blocks.
      * @param event BlockPlaceEvent
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onBlockPlace(BlockPlaceEvent event) {
         handleBlockPlaceBreakEvent(event.getPlayer(), event);
     }
@@ -32,7 +32,7 @@ public class BreakPlaceListener extends AbstractPluginReceiver implements Listen
      * Prevent the Player from Breaking Blocks.
      * @param event BlockBreakEvent
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onBlockBreak(BlockBreakEvent event) {
         handleBlockPlaceBreakEvent(event.getPlayer(), event);
     }

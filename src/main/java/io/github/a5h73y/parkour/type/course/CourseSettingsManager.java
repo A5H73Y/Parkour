@@ -399,7 +399,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 	 * @param courseName course name
 	 * @param value flag value
 	 */
-	public void setManualCheckpoints(CommandSender commandSender, String courseName, Boolean value) {
+	public void setManualCheckpoints(CommandSender commandSender, String courseName, @Nullable Boolean value) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;

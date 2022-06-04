@@ -10,7 +10,7 @@ import java.io.File;
 /**
  * Parkour strings configuration.
  * Stored in strings.yml and is used to offer customisable messages throughout the plugin.
- * Messages are sent to Players through the {@code TranslationUtils}.
+ * Messages are sent to Players through the {@link io.github.a5h73y.parkour.utility.TranslationUtils}.
  * Yaml config that automatically reloads itself when a change detected, order retained.
  */
 public class StringsConfig extends Yaml {
@@ -49,8 +49,6 @@ public class StringsConfig extends Yaml {
 				"&3%PLAYER% &ffinished &b%COURSE% &fwith &b%DEATHS% &fdeaths, in &b%TIME%&f!");
 		this.setDefault("Parkour.FinishCourse1", "Finished &b%VALUE%&f!");
 		this.setDefault("Parkour.FinishCourse2", "In &b%TIME%&f, dying &b%DEATHS% &ftimes");
-		this.setDefault("Parkour.Lobby", "You have joined the lobby");
-		this.setDefault("Parkour.LobbyOther", "You have joined the &b%VALUE% &flobby");
 		this.setDefault("Parkour.JoinLocation", "You have returned to your original location");
 		this.setDefault("Parkour.Continue", "Continuing progress on &b%VALUE%");
 		this.setDefault("Parkour.TimeReset", "Your time has been restarted!");
@@ -62,7 +60,6 @@ public class StringsConfig extends Yaml {
 		this.setDefault("Parkour.Die3", "You died! Going back to your checkpoint.");
 		this.setDefault("Parkour.LifeCount", "&b%VALUE% &flives remaining!");
 		this.setDefault("Parkour.Playing", " &b%PLAYER% &f- &8C: &7%COURSE% &8D: &7%DEATHS% &8T: &7%TIME%");
-		this.setDefault("Parkour.Accept", "&7Enter &a/pa accept &7to accept.");
 		this.setDefault("Parkour.RewardLevel", "Your level has been set to &b%LEVEL% &ffor completing &b%COURSE%&f!");
 		this.setDefault("Parkour.RewardRank", "Your rank has been set to %VALUE%");
 		this.setDefault("Parkour.RankInfo", "* For ParkourLevel &b%LEVEL% &fyou earn: %RANK%");
@@ -151,7 +148,7 @@ public class StringsConfig extends Yaml {
 		this.setDefault("Error.InvalidValue", "Please enter a valid value.");
 		this.setDefault("Error.DisabledCommand", "This command has been disabled.");
 
-		this.setDefault("Help.Command", "&7/pa help &9%VALUE% &0: &7To learn more about the command.");
+		this.setDefault("Help.Command", "Use &b/pa help &9%VALUE% &fto learn more about the command.");
 		this.setDefault("Help.Commands", "To display the commands menu, enter &b/pa cmds");
 		this.setDefault("Help.ConsoleCommands", "To display all commands, enter &f/pac cmds");
 		this.setDefault("Help.SignCommands", "To display the sign commands menu, enter &b/pa cmds signs");
@@ -174,6 +171,8 @@ public class StringsConfig extends Yaml {
 		this.setDefault("Other.Kit", "&b%VALUE% &fParkourKit received!");
 		this.setDefault("Other.PropertySet", "The &3%PROPERTY% &ffor &3%COURSE% &fwas set to &b%VALUE%&f!");
 
+		this.setDefault("Lobby.Joined", "You have joined the lobby");
+		this.setDefault("Lobby.JoinedOther", "You have joined the &b%VALUE% &flobby");
 		this.setDefault("Lobby.Created", "&b%VALUE% &flobby created.");
 		this.setDefault("Lobby.RequiredLevelSet", "You have set the required ParkourLevel to &b%VALUE%&f.");
 
@@ -227,15 +226,15 @@ public class StringsConfig extends Yaml {
 
 		this.setDefault("GUI.JoinCourses.Heading", "Parkour Courses");
 		this.setDefault("GUI.JoinCourses.Setup.Line1", "         ");
-		this.setDefault("GUI.JoinCourses.Setup.Line2", " ggggggg ");
-		this.setDefault("GUI.JoinCourses.Setup.Line3", "  fp nl  ");
+		this.setDefault("GUI.JoinCourses.Setup.Line2", " GGGGGGG ");
+		this.setDefault("GUI.JoinCourses.Setup.Line3", "  12 34  ");
 		this.setDefault("GUI.JoinCourses.Description", "&fJoin &b%VALUE%");
 		this.setDefault("GUI.JoinCourses.Players", "Players: &b%VALUE%");
 		this.setDefault("GUI.JoinCourses.Checkpoints", "Checkpoints: &b%VALUE%");
 		this.setDefault("GUI.CourseSettings.Heading", "%VALUE% Settings");
-		this.setDefault("GUI.CourseSettings.Setup.Line1", "  zxcv   ");
-		this.setDefault("GUI.CourseSettings.Setup.Line2", " qwertyu ");
-		this.setDefault("GUI.CourseSettings.Setup.Line3", " ioasdgh ");
+		this.setDefault("GUI.CourseSettings.Setup.Line1", "qwertyui ");
+		this.setDefault("GUI.CourseSettings.Setup.Line2", "asdfghjkl");
+		this.setDefault("GUI.CourseSettings.Setup.Line3", "zxcvbnm  ");
 
 		this.setDefault("Display.Day", "%VALUE% day");
 		this.setDefault("Display.Days", "%VALUE% days");

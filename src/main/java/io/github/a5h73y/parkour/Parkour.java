@@ -56,30 +56,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-/*
-
-Tidy up before release:
-
-Types include:
-
- * challenge
- * course? info etc.
- * setcourse
- * parkourkit
- * setplayer
- * session
-
-Each 'type' must have the following:
-
- * set of actions
- * a method to invoke the action
- * either a permission check on every single method, or a check in the invoke method (setcourse)
- * each alias must feed down the correct path
-
-Check each command exists and works in ParkourCommands and Console, check json matches, make sure sorted.
-
- */
-
 public class Parkour extends JavaPlugin {
 
     public static final String PLUGIN_NAME = "parkour";

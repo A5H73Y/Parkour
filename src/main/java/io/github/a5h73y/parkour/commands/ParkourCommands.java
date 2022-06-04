@@ -467,7 +467,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
             case "contact":
             case "about":
             case "version":
-                TranslationUtils.sendMessage(player, "Server is running Parkour &7" + parkour.getDescription().getVersion());
+                TranslationUtils.sendMessage(player, "Server is running Parkour &6" + parkour.getDescription().getVersion());
                 TranslationUtils.sendMessage(player, "Plugin proudly created by &bA5H73Y &f& &bsteve4744", false);
                 TranslationUtils.sendMessage(player, "Project Page:&b https://www.spigotmc.org/resources/parkour.23685/", false);
                 TranslationUtils.sendMessage(player, "Tutorials:&b https://a5h73y.github.io/Parkour/", false);

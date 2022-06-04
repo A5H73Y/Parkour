@@ -104,12 +104,12 @@
   {
     "command": "create",
     "title": "Create Parkour Objects",
-    "arguments": "(object) [argument] [argument]",
+    "arguments": "(course / checkpoint / kit / autostart / lobby) [argument] [argument]",
     "example": "/pa create course tutorial",
-    "description": "TODO",
+    "description": "Create the specified action. Courses will require a unique name and will be created in the Player's location. Checkpoints must have the course name provided, and can have an optional number to override. ParkourKits will require a unique name. Autostarts must have the course name provided and will be created at the Player's location. Creating a lobby without a name will set the default lobby, creating a lobby with a name will allow you to provide an optional minimum ParkourLevel requirement.",
     "permission": "parkour.basic.create",
     "commandGroup": "2",
-    "autoTabSyntax": "[course,checkpoint,kit,autostart,lobby] {1:checkpoint=(course),1:autostart=(course),*=(value)} {1:lobby=(parkour-level_}"
+    "autoTabSyntax": "[course,checkpoint,kit,autostart,lobby] {1:checkpoint=(course),1:autostart=(course),*=(value)} {1:lobby=(parkour-level),1:checkpoint=(override)}"
   },
   {
     "command": "createkit",

@@ -13,30 +13,37 @@ Many new smaller config files have been introduced to store appropriate data.
 ### Default Course Settings
 There is a new section in the config.yml that specifies default Course settings. A few examples include the "RewardOnce" flag, "MaxFallTicks" and "RewardDelay".
 
-These can now be overridden on a per-course basis.
+These can now be overridden on a per-course basis, using the "/pa setcourse (course)" command.
 ### Changes
 * New AutoTabCompleter system to allow for more dynamic prompts
 * New Config files (parkour-ranks.yml, auto-starts.yml, course-completions.yml, quiet-players.yml, parkour-lobbies.yml)
+* Changed "/pa create" to allow for many creations
 * Added 'achieved' column to 'time' table, includes Placeholders to access.
 * Added "/pa session" and "/pa parkourkit" commands
 * Added "/pa delete rank (parkour-level)"
+* Added "/pa admin" for administration commands
+* Added "pac manualcheckpoint (player)" 
 * Added "pac leaveall" console command to kick ALL Players from Courses
 * Added "OnFinish.TeleportBeforePrize" to change finish order
 * Added Course status Placeholders, with translations
 * Added "Restore" option to "OnFinish.SetGameMode" to restore the Player's GameMode
+* Added "%parkour_current_checkpoint_hologram_(course)_(number)%" placeholder for use with Holograms
+* Added option to warn players if they've missed checkpoints
 * Fixed the inconsistent Course finish time
 * External Plugin is no longer disabled when not found on first startup. 
 * Cancel void damage if DisablePlayerDamage is enabled
 * More messages are processed through PlaceholderAPI
 * Added 'OnServerRestart.KickPlayerFromCourse' config option
 * ParkourSessions are now stored as JSON, instead of serialized objects as they were problematic
-* Fix to Player floating on death blocks (still not perfect)
+* Improvements to prevent Players floating on death blocks
 * Allow Player look-up to use UUIDs
-* Commands can now be manually deleted from the config.yml
+* Parkour Commands can now be disabled
 * Improved SQL to use PreparedStatements for improved security
 * Added a default entry for each event command in the config.yml
 * Allowed for Per-Course event commands to be combined with default commands
 * Allowed JoinItems to be ItemStacks
+* Allowed "MaxFallTick" to be 0 which disables the check
+* Removed individual CreateSign permissions, replaced with parkour.admin.createsign
 * Tons of fixes and performance improvements
 
 _Thank you to steve4744, and the various contributors for helping with this major update._  

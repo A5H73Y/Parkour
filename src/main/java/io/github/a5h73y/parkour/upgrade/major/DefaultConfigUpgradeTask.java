@@ -36,6 +36,8 @@ public class DefaultConfigUpgradeTask extends TimedConfigUpgradeTask {
 		getConfig().set("Other.ParkourKit", null);
 		getConfig().set("Other.Parkour.ChatRankPrefix", null);
 		getConfig().set("Lobby", null);
+		getConfig().set("GUI.JoinCourses.Setup", null);
+		getConfig().set("GUI.CourseSettings.Setup", null);
 
 		return true;
 	}

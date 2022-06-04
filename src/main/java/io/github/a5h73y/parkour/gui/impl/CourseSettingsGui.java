@@ -46,68 +46,75 @@ public class CourseSettingsGui implements AbstractMenu {
 
 	@Override
 	public void addContent(InventoryGui parent, Player player) {
-		CourseSettingsManager courseSettingsManager = Parkour.getInstance().getCourseSettingsManager();
+		CourseSettingsManager courseSettings = Parkour.getInstance().getCourseSettingsManager();
 		CourseConfig courseConfig = Parkour.getInstance().getConfigManager().getCourseConfig(courseName);
 
 		// toggleable
-		parent.addElement(createSettingToggle('z', "Ready Status", courseConfig.getReadyStatus(),
-				click -> courseConfig.toggleReadyStatus()));
-		parent.addElement(createSettingToggle('x', "Reward Once", courseConfig.getRewardOnce(),
-				click -> courseConfig.toggleRewardOnce()));
-		parent.addElement(createSettingToggle('c', "Challenge Only", courseConfig.getChallengeOnly(),
-				click -> courseConfig.toggleChallengeOnly()));
-		parent.addElement(createSettingToggle('v', "Resumable", courseConfig.getResumable(),
-				click -> courseConfig.toggleResumable()));
-
-		// die in liquid
-		// die in void
-		// manual checkpoints
+		parent.addElement(createSettingToggle('q', "Ready Status", courseConfig.getReadyStatus(),
+				click -> courseSettings.setReadyStatus(player, courseName, null)));
+		parent.addElement(createSettingToggle('w', "Reward Once", courseConfig.getRewardOnce(),
+				click -> courseSettings.setRewardOnceStatus(player, courseName, null)));
+		parent.addElement(createSettingToggle('e', "Challenge Only", courseConfig.getChallengeOnly(),
+				click -> courseSettings.setChallengeOnlyStatus(player, courseName, null)));
+		parent.addElement(createSettingToggle('r', "Resumable", courseConfig.getResumable(),
+				click -> courseSettings.setResumable(player, courseName, null)));
+		parent.addElement(createSettingToggle('t', "Die in Liquid", courseConfig.getDieInLiquid(),
+				click -> courseSettings.setDieInLiquid(player, courseName, null)));
+		parent.addElement(createSettingToggle('y', "Die in Void", courseConfig.getDieInVoid(),
+				click -> courseSettings.setDieInVoid(player, courseName, null)));
+		parent.addElement(createSettingToggle('u', "Fall Damage", courseConfig.getHasFallDamage(),
+				click -> courseSettings.setHasFallDamage(player, courseName, null)));
+		parent.addElement(createSettingToggle('i', "Manual Checkpoints", courseConfig.getManualCheckpoints(),
+				click -> courseSettings.setManualCheckpoints(player, courseName, null)));
 
 		// input required
-		parent.addElement(createTextInput('q', player, "Creator",
+		parent.addElement(createTextInput('a', player, "Creator",
 				courseConfig.getCreator(),
-				input -> courseSettingsManager.setCreator(player, courseName, input)));
-		parent.addElement(createTextInput('w', player, "Minimum Parkour Level",
+				input -> courseSettings.setCreator(player, courseName, input)));
+		parent.addElement(createTextInput('s', player, "Minimum Parkour Level",
 				courseConfig.getMinimumParkourLevel(),
-				input -> courseSettingsManager.setMinimumParkourLevel(player, courseName, input)));
-		parent.addElement(createTextInput('e', player, "Maximum Deaths",
+				input -> courseSettings.setMinimumParkourLevel(player, courseName, input)));
+		parent.addElement(createTextInput('d', player, "Maximum Deaths",
 				courseConfig.getMaximumDeaths(),
-				input -> courseSettingsManager.setMaxDeaths(player, courseName, input)));
-		parent.addElement(createTextInput('r', player, "Maximum Time",
+				input -> courseSettings.setMaxDeaths(player, courseName, input)));
+		parent.addElement(createTextInput('f', player, "Maximum Time",
 				DateTimeUtils.convertSecondsToTime(courseConfig.getMaximumTime()),
-				input -> courseSettingsManager.setMaxTime(player, courseName, input)));
-		parent.addElement(createTextInput('t', player, "Player Limit",
+				input -> courseSettings.setMaxTime(player, courseName, input)));
+		parent.addElement(createTextInput('g', player, "Player Limit",
 				courseConfig.getPlayerLimit(),
-				input -> courseSettingsManager.setPlayerLimit(player, courseName, input)));
-		parent.addElement(createTextInput('y', player, "ParkourKit",
+				input -> courseSettings.setPlayerLimit(player, courseName, input)));
+		parent.addElement(createTextInput('h', player, "ParkourKit",
 				courseConfig.getParkourKit(),
-				input -> courseSettingsManager.setParkourKit(player, courseName, input)));
-		parent.addElement(createTextInput('u', player, "Reward Parkour Level",
+				input -> courseSettings.setParkourKit(player, courseName, input)));
+		parent.addElement(createTextInput('j', player, "Reward Parkour Level",
 				courseConfig.getRewardParkourLevel(),
-				input -> courseSettingsManager.setRewardParkourLevel(player, courseName, input)));
-		parent.addElement(createTextInput('i', player, "Reward Parkour Level Increase",
+				input -> courseSettings.setRewardParkourLevel(player, courseName, input)));
+		parent.addElement(createTextInput('k', player, "Reward Parkour Level Increase",
 				courseConfig.getRewardParkourLevelIncrease(),
-				input -> courseSettingsManager.setRewardParkourLevelIncrease(player, courseName, input)));
-		parent.addElement(createTextInput('o', player, "Reward Delay",
+				input -> courseSettings.setRewardParkourLevelIncrease(player, courseName, input)));
+		parent.addElement(createTextInput('l', player, "Reward Delay",
 				DateTimeUtils.convertMillisecondsToDateTime(
 						DateTimeUtils.convertHoursToMilliseconds(courseConfig.getRewardDelay())),
-				input -> courseSettingsManager.setRewardDelay(player, courseName, input)));
-		parent.addElement(createTextInput('a', player, "Display Name",
+				input -> courseSettings.setRewardDelay(player, courseName, input)));
+		parent.addElement(createTextInput('z', player, "Display Name",
 				StringUtils.colour(courseConfig.getCourseDisplayName()),
-				input -> courseSettingsManager.setDisplayName(player, courseName, input)));
-
-		// maxfallticks
-		// rename course
+				input -> courseSettings.setDisplayName(player, courseName, input)));
+		parent.addElement(createTextInput('x', player, "Max Fall Ticks",
+				courseConfig.getMaximumFallTicks(),
+				input -> courseSettings.setMaxFallTicks(player, courseName, input)));
+		parent.addElement(createTextInput('c', player, "Rename Course",
+				courseConfig.getCourseName(),
+				input -> courseSettings.setRenameCourse(player, courseName, input)));
 
 		// start conversation
-		parent.addElement(createConversationStarter('s', "Prize", courseName,
+		parent.addElement(createConversationStarter('v', "Prize", courseName,
 				course -> new CoursePrizeConversation(player).withCourseName(course).begin()));
-		parent.addElement(createConversationStarter('d', "ParkourMode", courseName,
+		parent.addElement(createConversationStarter('b', "ParkourMode", courseName,
 				course -> new ParkourModeConversation(player).withCourseName(course).begin()));
-		parent.addElement(createConversationStarter('g', "Event Message", courseName,
+		parent.addElement(createConversationStarter('n', "Event Message", courseName,
 				course -> new SetCourseConversation.CourseMessageConversation(player)
 						.withCourseName(course).begin()));
-		parent.addElement(createConversationStarter('h', "Event Command", courseName,
+		parent.addElement(createConversationStarter('m', "Event Command", courseName,
 				course -> new SetCourseConversation.CourseCommandConversation(player)
 						.withCourseName(course).begin()));
 	}

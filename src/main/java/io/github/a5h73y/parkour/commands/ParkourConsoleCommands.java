@@ -343,7 +343,7 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
             case "contact":
             case "about":
             case "version":
-                TranslationUtils.sendMessage(commandSender, "Server is running Parkour &7"
+                TranslationUtils.sendMessage(commandSender, "Server is running Parkour &6"
                         + parkour.getDescription().getVersion());
                 TranslationUtils.sendMessage(commandSender, "Plugin proudly created by &bA5H73Y &f& &bsteve4744", false);
                 TranslationUtils.sendMessage(commandSender, "Project Page:&b https://www.spigotmc.org/resources/parkour.23685/", false);
