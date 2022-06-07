@@ -82,7 +82,8 @@ public class AdministrationManager extends AbstractPluginReceiver {
 	 */
 	public void processDeleteCommand(@NotNull CommandSender commandSender,
 	                                 @NotNull String command,
-	                                 @NotNull String argument) {
+	                                 @NotNull String argument,
+	                                 @Nullable String detail) {
 		switch (command.toLowerCase()) {
 			case "course":
 				if (!canDeleteCourse(commandSender, argument)) {
@@ -125,6 +126,14 @@ public class AdministrationManager extends AbstractPluginReceiver {
 				}
 
 				parkour.getQuestionManager().askDeleteParkourRank(commandSender, argument);
+				break;
+
+			case "leaderboardrow":
+				if (!canDeleteLeaderboardRow(commandSender, argument, detail)) {
+					return;
+				}
+
+				parkour.getQuestionManager().askDeleteLeaderboardRow(commandSender, argument, detail);
 				break;
 
 			default:
@@ -527,6 +536,25 @@ public class AdministrationManager extends AbstractPluginReceiver {
 
 		if (!parkour.getParkourRankManager().parkourRankExists(Integer.parseInt(parkourLevel))) {
 			TranslationUtils.sendMessage(commandSender, "ParkourRank not found for provided ParkourLevel.");
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean canDeleteLeaderboardRow(CommandSender commandSender, String courseName, String rowNumber) {
+		if (!parkour.getCourseManager().doesCourseExist(courseName)) {
+			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
+			return false;
+		}
+
+		if (!ValidationUtils.isPositiveInteger(rowNumber)) {
+			TranslationUtils.sendMessage(commandSender, "Invalid row number provided.");
+			return false;
+		}
+
+		if (parkour.getDatabaseManager().getNthBestTime(courseName, Integer.parseInt(rowNumber)) == null) {
+			TranslationUtils.sendMessage(commandSender, "The leaderboard row provided wasn't found.");
 			return false;
 		}
 

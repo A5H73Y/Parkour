@@ -1,6 +1,7 @@
 package io.github.a5h73y.parkour.type.question;
 
 import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.function.BiConsumer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -29,6 +30,14 @@ public enum QuestionType {
             "&7Deleting a ParkourRank will remove the ability for players to unlock it. "
                     + "Players that have already unlocked it will not be affected.",
             (sender, value) -> Parkour.getInstance().getParkourRankManager().deleteParkourRank(sender, value)),
+
+    DELETE_LEADERBOARD_ROW("You are about to delete a Leaderboard row &b%s&f...",
+            "&This leaderboard row will be deleted and the leaderboards will be recalculated. ",
+            (sender, value) -> {
+                String[] args = value.split(";");
+                Parkour.getInstance().getDatabaseManager().deleteNthRow(args[0], Integer.parseInt(args[1]));
+                TranslationUtils.sendMessage(sender, "Row deleted.");
+            }),
 
     RESET_COURSE("You are about to reset Course &b%s&f...",
             "&7Resetting a Course will delete all the statistics stored, which includes leaderboards and "

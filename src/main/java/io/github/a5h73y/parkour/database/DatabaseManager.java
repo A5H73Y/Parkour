@@ -12,6 +12,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
 import io.github.a5h73y.parkour.type.CacheableParkourManager;
 import io.github.a5h73y.parkour.type.Initializable;
+import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
@@ -256,6 +257,7 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
      * @param position position
      * @return matching {@link TimeEntry}
      */
+    @Nullable
     public TimeEntry getNthBestTime(String courseName, int position) {
         List<TimeEntry> cachedResults = getCourseCache(courseName);
         return position > cachedResults.size() ? null : cachedResults.get(position - 1);
@@ -538,6 +540,13 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
             courseIdCache.remove(courseName);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void deleteNthRow(@NotNull String courseName, int rowNumber) {
+        TimeEntry result = getNthBestTime(courseName, rowNumber);
+        if (result != null) {
+            deletePlayerCourseTimes(PlayerUtils.findPlayer(result.getPlayerId()), courseName);
         }
     }
 

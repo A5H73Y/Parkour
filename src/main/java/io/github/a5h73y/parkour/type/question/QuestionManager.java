@@ -149,7 +149,14 @@ public class QuestionManager extends AbstractPluginReceiver {
         questionMap.put(commandSender, new Question(type, argument));
     }
 
-    /**
+    public void askDeleteLeaderboardRow(CommandSender commandSender, String argument, String detail) {
+        QuestionType type = QuestionType.DELETE_LEADERBOARD_ROW;
+        TranslationUtils.sendMessage(commandSender, String.format(type.getActionSummary(), detail));
+        TranslationUtils.sendMessage(commandSender, type.getDescription(), false);
+        submitQuestion(commandSender, argument + ";" + detail, type);
+    }
+
+	/**
      * The Question Model.
      */
     private static class Question {

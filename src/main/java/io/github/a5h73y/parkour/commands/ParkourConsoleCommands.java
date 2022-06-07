@@ -98,11 +98,11 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 break;
 
             case "delete":
-                if (!ValidationUtils.validateArgs(commandSender, args, 3)) {
+                if (!ValidationUtils.validateArgs(commandSender, args, 3, 4)) {
                     return false;
                 }
 
-                parkour.getAdministrationManager().processDeleteCommand(commandSender, args[1], args[2]);
+                parkour.getAdministrationManager().processDeleteCommand(commandSender, args[1], args[2], args.length > 3 ? args[3] : null);
                 break;
 
             case "econ":

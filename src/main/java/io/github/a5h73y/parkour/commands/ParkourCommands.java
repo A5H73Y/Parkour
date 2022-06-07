@@ -186,11 +186,11 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_DELETE)) {
                     return false;
 
-                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
+                } else if (!ValidationUtils.validateArgs(player, args, 3, 4)) {
                     return false;
                 }
 
-                parkour.getAdministrationManager().processDeleteCommand(player, args[1], args[2]);
+                parkour.getAdministrationManager().processDeleteCommand(player, args[1], args[2], args.length > 3 ? args[3] : null);
                 break;
 
             case "econ":
