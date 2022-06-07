@@ -577,7 +577,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	/**
 	 * Reward the Player with the Course Prize.
 	 * A Prize Delay validation be applied after the Player has completed the Course too recently.
-	 * If 'Reward Once' is enabled, and they've completed the Course, only the {@code ParkourEventType.FINISH} event will fire.
+	 * If 'Reward Once' is enabled, and they've completed the Course,
+	 * only the {@code ParkourEventType.FINISH} event will fire.
 	 *
 	 * @param player requesting player
 	 * @param session parkour session

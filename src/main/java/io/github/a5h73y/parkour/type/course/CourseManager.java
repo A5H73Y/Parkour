@@ -296,6 +296,34 @@ public class CourseManager extends AbstractPluginReceiver {
     }
 
     /**
+     * Delete the nth leaderboard row.
+     * Will delete all the leaderboard rows for the Player who achieved the nth row on the specified Course.
+     *
+     * @param commandSender command sender
+     * @param courseName course name
+     * @param rowNumber row number
+     */
+    public void deleteNthLeaderboardRow(CommandSender commandSender, String courseName, int rowNumber) {
+        if (!doesCourseExist(courseName)) {
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
+            return;
+        }
+
+        TimeEntry result = parkour.getDatabaseManager().getNthBestTime(courseName, rowNumber);
+
+        if (result == null) {
+            TranslationUtils.sendMessage(commandSender, "The matching leaderboard row couldn't be found.");
+            return;
+        }
+
+        parkour.getDatabaseManager().deletePlayerCourseTimes(PlayerUtils.findPlayer(result.getPlayerId()), courseName);
+        parkour.getPlaceholderApi().clearCache();
+        TranslationUtils.sendValueTranslation("Parkour.Delete",  "Leaderboard row " + rowNumber, commandSender);
+        PluginUtils.logToFile("Leaderboard row " + rowNumber + " was deleted by " + commandSender.getName());
+        Bukkit.getServer().getPluginManager().callEvent(new ParkourResetLeaderboardEvent(null, courseName));
+    }
+
+    /**
      * Reset the Course Prize.
      * Will result in the Course using the Default prize.
      *

@@ -543,13 +543,6 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
         }
     }
 
-    public void deleteNthRow(@NotNull String courseName, int rowNumber) {
-        TimeEntry result = getNthBestTime(courseName, rowNumber);
-        if (result != null) {
-            deletePlayerCourseTimes(PlayerUtils.findPlayer(result.getPlayerId()), courseName);
-        }
-    }
-
     /**
      * Display Database Connection summary details.
      *

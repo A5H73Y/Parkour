@@ -1,7 +1,6 @@
 package io.github.a5h73y.parkour.type.question;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.util.function.BiConsumer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -35,8 +34,7 @@ public enum QuestionType {
             "&This leaderboard row will be deleted and the leaderboards will be recalculated. ",
             (sender, value) -> {
                 String[] args = value.split(";");
-                Parkour.getInstance().getDatabaseManager().deleteNthRow(args[0], Integer.parseInt(args[1]));
-                TranslationUtils.sendMessage(sender, "Row deleted.");
+                Parkour.getInstance().getCourseManager().deleteNthLeaderboardRow(sender, args[0], Integer.parseInt(args[1]));
             }),
 
     RESET_COURSE("You are about to reset Course &b%s&f...",

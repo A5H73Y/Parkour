@@ -102,7 +102,8 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                     return false;
                 }
 
-                parkour.getAdministrationManager().processDeleteCommand(commandSender, args[1], args[2], args.length > 3 ? args[3] : null);
+                parkour.getAdministrationManager().processDeleteCommand(
+                        commandSender, args[1], args[2], args.length > 3 ? args[3] : null);
                 break;
 
             case "econ":

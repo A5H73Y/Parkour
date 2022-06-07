@@ -303,12 +303,12 @@ public class DefaultConfig extends Yaml {
 	/**
 	 * Find the matching Sound value for this server version.
 	 * If it doesn't exist, there's nothing we can do - let the Player set it.
-	 * @param xSound sound
+	 * @param xsound sound
 	 * @return sound name
 	 */
-	private String getSound(XSound xSound) {
-		if (xSound.isSupported()) {
-			return xSound.parseSound().name();
+	private String getSound(XSound xsound) {
+		if (xsound.isSupported()) {
+			return xsound.parseSound().name();
 		} else {
 			return "";
 		}

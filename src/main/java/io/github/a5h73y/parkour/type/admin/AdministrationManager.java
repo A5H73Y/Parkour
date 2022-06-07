@@ -554,7 +554,7 @@ public class AdministrationManager extends AbstractPluginReceiver {
 		}
 
 		if (parkour.getDatabaseManager().getNthBestTime(courseName, Integer.parseInt(rowNumber)) == null) {
-			TranslationUtils.sendMessage(commandSender, "The leaderboard row provided wasn't found.");
+			TranslationUtils.sendMessage(commandSender, "The matching leaderboard row couldn't be found.");
 			return false;
 		}
 

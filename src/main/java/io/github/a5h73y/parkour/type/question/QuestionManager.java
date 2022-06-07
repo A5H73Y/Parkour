@@ -121,7 +121,7 @@ public class QuestionManager extends AbstractPluginReceiver {
     }
 
     /**
-     * Ask the "Restart Progress" Question..
+     * Ask the "Restart Progress" Question.
      *
      * @param commandSender command sender
      * @param courseName course name
@@ -138,6 +138,20 @@ public class QuestionManager extends AbstractPluginReceiver {
         questionMap.remove(commandSender);
     }
 
+    /**
+     * Ask the "Delete Leaderboard Row" Question.
+     *
+     * @param commandSender command sender
+     * @param courseName course name
+     * @param rowNumber row number
+     */
+    public void askDeleteLeaderboardRow(CommandSender commandSender, String courseName, String rowNumber) {
+        QuestionType type = QuestionType.DELETE_LEADERBOARD_ROW;
+        TranslationUtils.sendMessage(commandSender, String.format(type.getActionSummary(), rowNumber));
+        TranslationUtils.sendMessage(commandSender, type.getDescription(), false);
+        submitQuestion(commandSender, courseName + ";" + rowNumber, type);
+    }
+
     private void askGenericQuestion(CommandSender commandSender, QuestionType questionType, String value) {
         TranslationUtils.sendMessage(commandSender, String.format(questionType.getActionSummary(), value));
         TranslationUtils.sendMessage(commandSender, questionType.getDescription(), false);
@@ -149,14 +163,7 @@ public class QuestionManager extends AbstractPluginReceiver {
         questionMap.put(commandSender, new Question(type, argument));
     }
 
-    public void askDeleteLeaderboardRow(CommandSender commandSender, String argument, String detail) {
-        QuestionType type = QuestionType.DELETE_LEADERBOARD_ROW;
-        TranslationUtils.sendMessage(commandSender, String.format(type.getActionSummary(), detail));
-        TranslationUtils.sendMessage(commandSender, type.getDescription(), false);
-        submitQuestion(commandSender, argument + ";" + detail, type);
-    }
-
-	/**
+    /**
      * The Question Model.
      */
     private static class Question {

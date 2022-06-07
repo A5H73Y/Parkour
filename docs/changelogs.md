@@ -3,6 +3,9 @@ Changelogs
 
 Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon server start up. There will be no manual intervention, unless stated in breaking changes.
 ## 7.0.0
+### Java 11
+The plugin now requires a minimum Java version of 11 to function.
+
 ### Configuration Changes
 Parkour 6.7.1 used a config system which hadn't changed since the Plugin's inception in 2012, by combining all the Courses and Players data into their single config file. This resulted in insanely slow performance when changing and saving data regularly.
 
@@ -29,6 +32,7 @@ These can now be overridden on a per-course basis, using the "/pa setcourse (cou
 * Added "Restore" option to "OnFinish.SetGameMode" to restore the Player's GameMode
 * Added "%parkour_current_checkpoint_hologram_(course)_(number)%" placeholder for use with Holograms
 * Added option to warn players if they've missed checkpoints
+* Added "/pa delete leaderboardrow (course) (row)" to delete leaderboard rows manually
 * Fixed the inconsistent Course finish time
 * External Plugin is no longer disabled when not found on first startup. 
 * Cancel void damage if DisablePlayerDamage is enabled
@@ -45,6 +49,7 @@ These can now be overridden on a per-course basis, using the "/pa setcourse (cou
 * Allowed "MaxFallTick" to be 0 which disables the check
 * Removed individual CreateSign permissions, replaced with parkour.admin.createsign
 * Tons of fixes and performance improvements
+* Project now requires Java 11 to function
 
 _Thank you to steve4744, and the various contributors for helping with this major update._  
 _Additional thanks to the kind users who helped test early development builds!_

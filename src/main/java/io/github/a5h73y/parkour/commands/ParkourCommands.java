@@ -190,7 +190,8 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getAdministrationManager().processDeleteCommand(player, args[1], args[2], args.length > 3 ? args[3] : null);
+                parkour.getAdministrationManager().processDeleteCommand(
+                        player, args[1], args[2], args.length > 3 ? args[3] : null);
                 break;
 
             case "econ":
