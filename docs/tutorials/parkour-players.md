@@ -35,5 +35,4 @@ _Command: `/pa setplayer (player) addlevel (value)`_
 
 ## Reset a Player
 
-This will delete all their leaderboards across all Courses and delete all various Parkour attributes.  
-_Command: `/pa reset player (player)`_
+[Administration - Reset a Player](/tutorials/administration?id=reset-a-player)

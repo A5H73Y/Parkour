@@ -23,16 +23,9 @@ If you modify the contents of the database, it is strongly suggested stopping th
 
 ## Resetting Data
 
-### Reset a Course Leaderboard
+[Administration - Reset a Course Leaderboard](/tutorials/administration?id=reset-a-course-leaderboard)
 
-This action will remove **all** the times for the specified Course.  
-_Command: `/pa reset leaderboard (course)`_
-
-### Reset a Player Course Leaderboard
-
-This action will remove the specified Player's times from a specified Course, when provided.  
-_Command: `/pa reset leaderboard (course) [player]`_
-
+[Administration - Reset a Player Course Leaderboard](/tutorials/administration?id=reset-a-player-course-leaderboard)
 
 ## Database Troubleshooting
 

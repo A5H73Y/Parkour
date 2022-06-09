@@ -33,10 +33,4 @@ You are able to move the location of an existing Parkour Lobby by re-entering th
 
 ## Delete a Lobby
 
-You can delete a Lobby by using the command `/pa delete lobby (lobby)`.
-
-If there are any Courses linked to this lobby, it will error and present a list of Courses still dependent on this lobby. You must link these Courses to a different Lobby before you are able to delete it.
-
-![Delete Validation](https://i.imgur.com/wCO9jrU.png "Delete Validation")
-
-_Command: `/pa delete lobby (lobby)`_
+[Administration - Delete a Lobby](/tutorials/administration?id=delete-a-lobby)

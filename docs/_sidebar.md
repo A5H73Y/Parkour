@@ -21,6 +21,7 @@
   - [ParkourModes](tutorials/parkour-modes.md)
   - [Level & Ranks](tutorials/parkour-level-ranks.md)
   - [AutoStarts](tutorials/parkour-autostart.md)
+  - [Administration](tutorials/administration.md)
   - [Challenge Mode](tutorials/challenge-mode.md)
   - [Sign Commands](tutorials/sign-commands.md)
   - [Leaderboard Database](tutorials/parkour-database.md)

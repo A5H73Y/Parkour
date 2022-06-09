@@ -25,8 +25,6 @@ Parkour allows you to create unlimited Courses, each with unlimited checkpoints,
 
 Whether you are setting the plugin up as a mini-game, or as a dedicated Parkour server, the powerful configuration will allow you to choose exactly how you want the plugin to work. A 'ParkourKit' is a set of customisable Materials which will add a whole new level of fun to each Course.
 
-Parkour uses a database to store all the leaderboards for each Course, allowing for powerful and customisable results. By default, the plugin will create a SQLite database locally in the `plugins` folder, in a folder named `sqlite-db`, however if you wish to use a MySQL server of your choice, this can be configured in the `config.yml`.
-
 ## Featured Servers
 
 These are servers that utilise the Parkour plugin well for you to try it out.

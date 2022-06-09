@@ -253,43 +253,24 @@ _They **must** be uppercase._
 
 When a Player joins a Course you are able to give them items which they can use throughout the Course. An example could be an Elytra to help navigate the Course, instead of relying on a chest / another plugin.
 
-The items can be given a label to display in the inventory. The items can be made unbreakable by providing a boolean as the final argument.
+For the easiest convenience, you are able to hold the ItemStack you would like to set as a Join Item in your main hand, then run the command which will save and load the ItemStack exactly as presented.
+
+Optionally, additional arguments can be provided to specify the Material, amount and an optional label to display in the inventory. The items can be made unbreakable by providing a boolean as the final argument.
 
 ![Add JoinItem](https://i.imgur.com/ZQeDY5K.png "Add JoinItem")
 
 ![Add JoinItem Inventory](https://i.imgur.com/WoYOdxb.png "Add JoinItem Inventory")
 
-_Command: `/pa addjoinitem (course) (material) (amount) [label] [unbreakable]`_  
-_Example: `/pa addjoinitem tutorial ELYTRA 64`_
+_Command: `/pa addjoinitem (course) [material] [amount] [label] [unbreakable]`_  
+_Example 1: `/pa addjoinitem tutorial`_  
+_Example 2: `/pa addjoinitem tutorial ELYTRA 64`_
 
-[//]: # (add something here about the ability to just to /pa addjoinitem course, then it will add whatever is in their hand)
+## Deleting / Resetting Course Data
 
-## Resetting Course Data
+[Administration - Reset a Prize](/tutorials/administration?id=reset-a-prize)
 
-### Reset a Course
+[Administration - Reset a Course](/tutorials/administration?id=reset-a-course)
 
-This will delete all the statistics stored, which includes leaderboards and various Parkour attributes. This will NOT affect the spawn / checkpoints.  
-_Command: `/pa reset course (course)`_
+[Administration - Delete a Course](/tutorials/administration?id=delete-a-course)
 
-### Reset a Prize
-
-This will reset all the prizes for a Course, causing it to use the default prize specified in the `config.yml`.  
-_Command: `/pa reset prize (course)`_
-
-## Deleting Course Data
-
-### Delete a Course
-
-If you delete a Course it will remove all information stored on the server about it, including all references from the database so only use as a last resort. If preferred, you can reset a Course which will keep its structure (start location & checkpoints), but reset all of its stats and leaderboards.
-
-![Deleting Course](https://i.imgur.com/apa5azA.png "Deleting Course")
-
-![Delete Confirm](https://i.imgur.com/8ucihM7.png "Delete Confirm")  
-_Command: `/pa delete course (course)`_
-
-### Delete a Checkpoint
-
-If you want to delete a checkpoint, it will start with the highest number and decrease to the lowest, for safety reasons. For example if your Course has 5 checkpoints, and you enter `/pa delete checkpoint (course)` it will ask if you want to delete checkpoint 5, if you execute the command again it will ask if you want to delete checkpoint 4, etc.
-
-Note that you may want to overwrite a checkpoint if it needs moving, instead of deleting many. For example if you had 5 checkpoints and wanted to move the location of checkpoint 2, you can enter `/pa checkpoint 2` in the desired location.  
-_Command: `/pa delete checkpoint (course)`_
+[Administration - Delete a Checkpoint](/tutorials/administration?id=delete-a-checkpoint)

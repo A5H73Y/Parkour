@@ -15,6 +15,6 @@ _Command: `/pa create autostart (course)`_
 
 ### Delete an AutoStart
 
-Deleting an AutoStart is simple, with the correct permission you are able to break the pressure plate which will delete the AutoStart.
+Deleting an AutoStart is simple, with the correct permission you are able to break the pressure plate which will automatically delete the AutoStart.
 
 If you wish to change the pressure plate to a different type, SNEAK and break the pressure plate to prevent deleting the AutoStart, and place a new pressure plate in its place.

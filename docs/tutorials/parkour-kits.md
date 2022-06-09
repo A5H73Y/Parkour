@@ -68,9 +68,7 @@ If you want to see the Materials that make up the set, you can add an argument f
 
 ## Deleting a ParkourKit
 
-If there are any Courses linked to the ParkourKit, it will error and present a list of Courses still dependent on this kit. You must link these Courses to a different ParkourKit before you are able to delete it.  
-
-_Command: `/pa delete kit (kit)`_
+[Administration - Delete a ParkourKit](/tutorials/administration?id=delete-a-parkourkit)
 
 ## The ParkourBlocks
 

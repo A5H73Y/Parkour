@@ -84,7 +84,10 @@ OnCourse:
   PreventFireDamage: true
   # Should the Player only be allowed to achieve checkpoints sequentially (1 - 2 - 3...)
   # Or can they be allowed to skip checkpoints (1 - 3 - 4...)
-  SequentialCheckpoints: true
+  SequentialCheckpoints:
+    Enabled: true
+    # Notify the Player when they've achieved a checkpoint which was non-sequential (i.e. they've missed a checkpoint)
+    AlertPlayer: true
   # Should the Players have to be sneaking to activate the Parkour Tools
   SneakToInteractItems: true
   # Should achieving the final Checkpoint trigger the Course finish for the Player
@@ -240,7 +243,7 @@ ParkourModes:
     # Should the velocity be inverted (teleported forwards instead of backwards)
     Invert: false
     # Seconds delay before being able to fire again
-    Delay: 1
+    SecondCooldown: 1
     # Amount of force received from the rocket launching
     LaunchForce: 1.5
  
@@ -248,14 +251,25 @@ ParkourModes:
 # Choose the durations for each stage, and choose which will be presented in a Title 
 DisplayTitle:
   FadeIn: 5
-  Stay: 20
   FadeOut: 5
-  JoinCourse: true
-  Checkpoint: true
-  RewardLevel: true
-  Death: true
-  Leave: true
-  Finish: true
+  JoinCourse: 
+    Enabled: true
+    Stay: 20
+  Checkpoint:
+    Enabled: true
+    Stay: 20
+  RewardLevel:
+    Enabled: true
+    Stay: 20
+  Death:
+    Enabled: true
+    Stay: 20
+  Leave:
+    Enabled: true
+    Stay: 20
+  Finish:
+    Enabled: true
+    Stay: 20
  
 # All the options for AutoStarts
 AutoStart:
@@ -337,7 +351,7 @@ Sounds:
     Pitch: 1.75
   ReloadRocket:
     Enabled: true
-    Sound: TODO // TODO
+    Sound: ENTITY_PHANTOM_HURT
     Volume: 0.1
     Pitch: 1.75
  
@@ -366,6 +380,8 @@ ParkourRankChat:
  
 # Everything else
 Other:
+  # Should the Plugin use AutoTabCompletion - this is highly recommended
+  UseAutoTabCompletion: true
   # Should the Plugin check for updates on start up
   CheckForUpdates: true
   # Should certain events (delete / reset) be logged to a file
@@ -420,7 +436,7 @@ Other:
   OnServerShutdown:
     BackupFiles: false
  
-  # Should the Player's Parkour Infomation be deleted if Parkour detects they've been banned
+  # Should the Player's Parkour Information be deleted if Parkour detects they've been banned
   # For example if a Player has been banned for cheating in many Courses, all of their times will be deleted automatically upon banning
   OnPlayerBan:
     ResetParkourInfo: false
@@ -429,16 +445,19 @@ Other:
   OnSetPlayerParkourLevel:
     UpdateParkourRank: true
  
-  # When the Player takes Void damage, should the Player be teleported to the closest Lobby
+  # When the Player takes Void damage, should the Player be teleported to the closest Lobby when not on a Course
   OnVoid:
     TeleportToLobby: false
  
 # Each Parkour compatible plugin config
 Plugin:
+  # BountifulAPI is required for titles and action bar messages on servers before 1.11
   BountifulAPI:
     Enabled: true
+  # Vault is required to use economy functionality
   Vault:
     Enabled: true
+  # Allows Parkour to offer external placeholders, also allows using placeholderapi values in multiple places 
   PlaceholderAPI:
     Enabled: true
     # How many seconds should database results be cached for

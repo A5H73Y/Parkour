@@ -88,3 +88,7 @@ _PlaceholderAPI values will be evaluated._
 You can add `%RANK%` to your chat plugin's format, which the Parkour plugin will detect and replace with the Player's ParkourRank.  
 
 Alternatively, if you use a Chat plugin that supports PlaceholderAPI, you can use the `%parkour_player_rank%` placeholder.
+
+### Delete ParkourRank
+
+[Administration - Delete a ParkourRank](/tutorials/administration?id=delete-a-parkourrank)
