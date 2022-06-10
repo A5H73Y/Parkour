@@ -23,6 +23,7 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 	private PlayerDataUpgradeTask playerDataUpgradeTask;
 
 	private final File defaultFile;
+	private final File stringsFile;
 	private final File playerFile;
 	private final File inventoryFile;
 	private final File coursesFile;
@@ -31,6 +32,7 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 	private final File parkourKitFile;
 
 	private final FileConfiguration defaultConfig;
+	private final FileConfiguration stringsConfig;
 	private final FileConfiguration playerConfig;
 	private final FileConfiguration inventoryConfig;
 	private final FileConfiguration coursesConfig;
@@ -47,6 +49,7 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 		super(parkour);
 
 		defaultFile = new File(parkour.getDataFolder(), "config.yml");
+		stringsFile = new File(parkour.getDataFolder(), "strings.yml");
 		playerFile = new File(parkour.getDataFolder(), "players.yml");
 		inventoryFile = new File(parkour.getDataFolder(), "inventory.yml");
 		coursesFile = new File(parkour.getDataFolder(), "courses.yml");
@@ -55,6 +58,7 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 		parkourKitFile = new File(parkour.getDataFolder(), "parkourkit.yml");
 
 		defaultConfig = YamlConfiguration.loadConfiguration(defaultFile);
+		stringsConfig = YamlConfiguration.loadConfiguration(stringsFile);
 		playerConfig = YamlConfiguration.loadConfiguration(playerFile);
 		inventoryConfig = YamlConfiguration.loadConfiguration(inventoryFile);
 		coursesConfig = YamlConfiguration.loadConfiguration(coursesFile);
@@ -133,6 +137,7 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 			return false;
 		}
 
+		saveStringsConfig();
 		getLogger().info("Configuration files updated - removing old files");
 
 		coursesFile.delete();
@@ -157,6 +162,10 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 
 	public FileConfiguration getDefaultConfig() {
 		return defaultConfig;
+	}
+
+	public FileConfiguration getStringsConfig() {
+		return stringsConfig;
 	}
 
 	public FileConfiguration getPlayerConfig() {
@@ -201,5 +210,13 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 
 	public Database getDatabase() {
 		return parkour.getDatabaseManager().getDatabase();
+	}
+
+	private void saveStringsConfig() {
+		try {
+			stringsConfig.save(stringsFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -36,9 +36,16 @@ public class DefaultConfigUpgradeTask extends TimedConfigUpgradeTask {
 		getConfig().set("Other.ParkourKit", null);
 		getConfig().set("Other.Parkour.ChatRankPrefix", null);
 		getConfig().set("Lobby", null);
-		getConfig().set("GUI.JoinCourses.Setup", null);
-		getConfig().set("GUI.CourseSettings.Setup", null);
 
+		// strings
+		getParkourUpgrader().getStringsConfig().set("GUI.JoinCourses.Setup", null);
+		getParkourUpgrader().getStringsConfig().set("GUI.CourseSettings.Setup", null);
+		getParkourUpgrader().getStringsConfig().set("Parkour.Lobby", null);
+		getParkourUpgrader().getStringsConfig().set("Parkour.LobbyOther", null);
+		getParkourUpgrader().getStringsConfig().set("Parkour.Selected", null);
+		getParkourUpgrader().getStringsConfig().set("Parkour.Deselected", null);
+		getParkourUpgrader().getStringsConfig().set("Parkour.Accept", null);
+		getParkourUpgrader().getStringsConfig().set("Error.Selected", null);
 		return true;
 	}
 }
