@@ -1,14 +1,24 @@
 package io.github.a5h73y.parkour.type.course;
 
-import io.github.a5h73y.parkour.enums.ParkourMode;
+import static io.github.a5h73y.parkour.configuration.serializable.ParkourSerializable.getMapValue;
+
+import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.other.ParkourConstants;
 import io.github.a5h73y.parkour.type.checkpoint.Checkpoint;
 import io.github.a5h73y.parkour.type.kit.ParkourKit;
+import io.github.a5h73y.parkour.type.player.ParkourMode;
+import io.github.a5h73y.parkour.utility.StringUtils;
+import io.github.a5h73y.parkour.utility.ValidationUtils;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Parkour Course.
- * Stores references to the Checkpoints that consist of the Course.
+ * Stores reference to the Checkpoints that consist of the Course.
  * The ParkourKit will be used to apply the appropriate actions while on the course.
  */
 public class Course implements Serializable {
@@ -16,12 +26,11 @@ public class Course implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final String name;
+    private final String displayName;
     private final List<Checkpoint> checkpoints;
     private final ParkourKit parkourKit;
     private final ParkourMode parkourMode;
-
-    private final int maxDeaths;
-    private final int maxTime;
+    private final CourseSettings settings;
 
     /**
      * Construct a Course from the details.
@@ -32,13 +41,14 @@ public class Course implements Serializable {
      * @param parkourKit the {@link ParkourKit} for the Course
      * @param parkourMode the {@link ParkourMode} to apply
      */
-    public Course(String name, List<Checkpoint> checkpoints, ParkourKit parkourKit, ParkourMode parkourMode) {
+    public Course(String name, String displayName, List<Checkpoint> checkpoints,
+                  ParkourKit parkourKit, ParkourMode parkourMode, CourseSettings settings) {
         this.name = name;
+        this.displayName = displayName;
         this.checkpoints = checkpoints;
         this.parkourKit = parkourKit;
         this.parkourMode = parkourMode;
-        this.maxDeaths = CourseInfo.getMaximumDeaths(name);
-        this.maxTime = CourseInfo.getMaximumTime(name);
+        this.settings = settings;
     }
 
     /**
@@ -51,10 +61,10 @@ public class Course implements Serializable {
 
     /**
      * Get the Course's display name.
-     * @return display course name
+     * @return course display name
      */
     public String getDisplayName() {
-        return CourseInfo.getCourseDisplayName(name);
+        return StringUtils.colour(displayName);
     }
 
     /**
@@ -90,37 +100,40 @@ public class Course implements Serializable {
     }
 
     /**
-     * Determine if Course has a configured maximum deaths.
-     * @return has maximum deaths set
+     * Get the {@link CourseSettings} for the Course.
+     * @return course settings
      */
-    public boolean hasMaxDeaths() {
-        return maxDeaths > 0;
+    public CourseSettings getSettings() {
+        return settings;
     }
 
     /**
-     * Get Course's maximum deaths.
-     * Maximum number of deaths a player can accumulate before failing the Course.
-     * @return maximum deaths for course
+     * Deserialize the Course instance from the JSON.
+     * @param input config key / values
+     * @return populated Course
      */
-    public int getMaxDeaths() {
-        return maxDeaths;
-    }
+    public static Course deserialize(Map<String, Object> input) {
+        String name = String.valueOf(input.get("Name"));
+        String displayName = String.valueOf(input.getOrDefault("DisplayName", input.get("Name")));
+        String parkourModeName = String.valueOf(input.getOrDefault("ParkourMode", ParkourMode.NONE));
+        String parkourKitName = String.valueOf(input.getOrDefault("ParkourKit", ParkourConstants.DEFAULT));
 
-    /**
-     * Determine if Course has a configured maximum time limit.
-     * @return has maximum time set
-     */
-    public boolean hasMaxTime() {
-        return maxTime > 0;
-    }
+        List<Checkpoint> checkpoints = new ArrayList<>();
+        Parkour parkour = Parkour.getInstance();
+        ParkourKit parkourKit = parkour.getParkourKitManager().getParkourKit(parkourKitName);
 
-    /**
-     * Get Course's maximum time.
-     * Maximum number of seconds a player can accumulate before failing the Course.
-     * @return maximum time in seconds
-     */
-    public int getMaxTime() {
-        return maxTime;
-    }
+        if (input.containsKey("Checkpoint")) {
+            checkpoints = getMapValue(input.get("Checkpoint")).entrySet().stream()
+                    .filter(checkpointMap -> ValidationUtils.isPositiveInteger(checkpointMap.getKey()))
+                    .sorted(Comparator.comparing(checkpointMap -> Integer.valueOf(checkpointMap.getKey())))
+                    .map(checkpointMap -> getMapValue(checkpointMap.getValue()))
+                    .map(Checkpoint::deserialize)
+                    .collect(Collectors.toList());
+        }
 
+        CourseSettings settings = parkour.getCourseSettingsManager().getCourseSettings(name);
+
+        return new Course(name, displayName, checkpoints, parkourKit,
+                ParkourMode.valueOf(parkourModeName), settings);
+    }
 }

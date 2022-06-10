@@ -1,26 +1,31 @@
 <!-- docs/_sidebar.md -->
 
-- [Home](index.md)
-    
-- Essential Information
+- Getting Started
+  - [Introduction](index.md)
   - [Commands](essential/commands.md)
   - [Permissions](essential/permissions.md)
   - [Placeholders](essential/placeholders.md)
   - [FAQ](essential/faq.md)
 
-- Tutorials
+- Guides
+  - [Fresh Install Setup](guides/fresh-install.md)
+  - [Creating a Course](guides/creating-course.md)
+  - [Compatible Plugins](guides/compatible-plugins.md)
+  - [Rewarding the Player](guides/rewarding-player.md)
 
-  - [Fresh Install](tutorials/fresh-install.md)
-  - [Creating a Course](tutorials/creating-course.md)
-  - [Configuring a Course](tutorials/configuring-course.md)
+- Tutorials
+  - [Courses](tutorials/parkour-courses.md)
   - [ParkourKits](tutorials/parkour-kits.md)
-  - [Sign Commands](tutorials/sign-commands.md)
-  - [Rewarding the Player](tutorials/rewarding-player.md)
-  - [Challenge Mode](tutorials/challenge-mode.md)
+  - [Lobbies](tutorials/parkour-lobby.md)
+  - [Players](tutorials/parkour-players.md)
   - [ParkourModes](tutorials/parkour-modes.md)
+  - [Level & Ranks](tutorials/parkour-level-ranks.md)
+  - [AutoStarts](tutorials/parkour-autostart.md)
   - [Administration](tutorials/administration.md)
-  - [Plugin Configuration](tutorials/plugin-config.md)
-  - [Compatible Plugins](tutorials/compatible-plugins.md)
+  - [Challenge Mode](tutorials/challenge-mode.md)
+  - [Sign Commands](tutorials/sign-commands.md)
+  - [Leaderboard Database](tutorials/parkour-database.md)
+  - [Plugin Configuration](tutorials/parkour-config.md)
 
 - [Developer Tutorials](developer.md)
 - [Changelogs](changelogs.md)

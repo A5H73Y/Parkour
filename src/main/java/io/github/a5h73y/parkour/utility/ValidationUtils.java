@@ -1,6 +1,5 @@
 package io.github.a5h73y.parkour.utility;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -15,7 +14,7 @@ public class ValidationUtils {
 	 * @return input is a valid String
 	 */
 	public static boolean isStringValid(String input) {
-		return !StringUtils.isBlank(input);
+		return input != null && !input.trim().isEmpty();
 	}
 
 	/**
@@ -42,7 +41,7 @@ public class ValidationUtils {
 	 * @return input is numeric and positive
 	 */
 	public static boolean isPositiveInteger(String input) {
-		return isInteger(input) && Integer.parseInt(input) >= 0;
+		return input != null && isInteger(input) && Integer.parseInt(input) >= 0;
 	}
 
 	/**
@@ -68,41 +67,47 @@ public class ValidationUtils {
 	 * @return input is numeric and positive
 	 */
 	public static boolean isPositiveDouble(String input) {
-		return isDouble(input) && Double.parseDouble(input) >= 0;
+		return input != null && isDouble(input) && Double.parseDouble(input) >= 0;
+	}
+
+	public static boolean isUuidFormat(String input) {
+		return input != null && input.split("-").length == 5;
 	}
 
 	/**
 	 * Validate the length of the arguments before allowing it to be processed further.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param args command arguments
 	 * @param required required args length
 	 * @return whether the arguments match the criteria
 	 */
-	public static boolean validateArgs(CommandSender sender, String[] args, int required) {
-		return validateArgs(sender, args, required, required);
+	public static boolean validateArgs(CommandSender commandSender, String[] args, int required) {
+		return validateArgs(commandSender, args, required, required);
 	}
 
 	/**
 	 * Validate the range of the arguments before allowing it to be processed further.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param args command arguments
 	 * @param minimum minimum args length
 	 * @param maximum maximum args length
 	 * @return whether the arguments match the criteria
 	 */
-	public static boolean validateArgs(CommandSender sender, String[] args, int minimum, int maximum) {
+	public static boolean validateArgs(CommandSender commandSender, String[] args, int minimum, int maximum) {
 		if (args.length > maximum) {
-			TranslationUtils.sendValueTranslation("Error.TooMany", String.valueOf(maximum), sender);
-			TranslationUtils.sendValueTranslation("Help.Command", args[0].toLowerCase(), sender);
+			TranslationUtils.sendValueTranslation("Error.TooMany", String.valueOf(maximum), commandSender);
+			TranslationUtils.sendValueTranslation("Help.Command", args[0].toLowerCase(), false, commandSender);
 			return false;
 
 		} else if (args.length < minimum) {
-			TranslationUtils.sendValueTranslation("Error.TooLittle", String.valueOf(minimum), sender);
-			TranslationUtils.sendValueTranslation("Help.Command", args[0].toLowerCase(), sender);
+			TranslationUtils.sendValueTranslation("Error.TooLittle", String.valueOf(minimum), commandSender);
+			TranslationUtils.sendValueTranslation("Help.Command", args[0].toLowerCase(), false, commandSender);
 			return false;
 		}
 		return true;
 	}
+
+	private ValidationUtils() {}
 }

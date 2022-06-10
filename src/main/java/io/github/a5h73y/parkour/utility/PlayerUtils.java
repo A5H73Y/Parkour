@@ -2,14 +2,18 @@ package io.github.a5h73y.parkour.utility;
 
 import com.cryptomorin.xseries.XPotion;
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.player.ParkourSession;
+import io.github.a5h73y.parkour.type.player.session.ParkourSession;
+import java.util.UUID;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Player Utility methods.
@@ -65,7 +69,7 @@ public class PlayerUtils {
 	 */
 	public static void applyPotionEffect(String potionTypeName, int duration, int amplifier, Player... players) {
 		XPotion.matchXPotion(potionTypeName).ifPresent(action ->
-				applyPotionEffect(action.parsePotionEffectType(), duration, amplifier, players));
+				applyPotionEffect(action.getPotionEffectType(), duration, amplifier, players));
 	}
 
 	/**
@@ -134,7 +138,7 @@ public class PlayerUtils {
 
 	/**
 	 * Teleport Player to Location.
-	 * Reset their fall distance so they don't take damage upon teleportation.
+	 * Reset their fall distance, so they don't take damage upon teleportation.
 	 *
 	 * @param player player
 	 * @param location location
@@ -201,4 +205,53 @@ public class PlayerUtils {
 			player.setGameMode(PluginUtils.getGameMode(gameMode));
 		}
 	}
+
+	/**
+	 * The player's full UUID including hyphens.
+	 * @return player UUID including hyphens
+	 */
+	public static String padPlayerUuid(String playerId) {
+		StringBuilder uuid = new StringBuilder(playerId);
+		uuid.insert(20, "-");
+		uuid.insert(16, "-");
+		uuid.insert(12, "-");
+		uuid.insert(8, "-");
+		return uuid.toString();
+	}
+
+	/**
+	 * Find Player's name by UUID.
+	 * @param uuid uuid
+	 * @return player name
+	 */
+	@NotNull
+	public static String findPlayerName(String uuid) {
+		OfflinePlayer player = findPlayer(uuid);
+		return player.getName() != null ? player.getName() : "Unknown Player";
+	}
+
+	/**
+	 * Find OfflinePlayer by UUID.
+	 * @param uuid uuid
+	 * @return matching Player
+	 */
+	public static OfflinePlayer findPlayer(String uuid) {
+		return Bukkit.getOfflinePlayer(UUID.fromString(padPlayerUuid(uuid)));
+	}
+
+	/**
+	 * Clear the Player's inventory and Armor.
+	 * @param player player
+	 */
+	public static void clearInventoryArmor(Player player) {
+		player.getInventory().clear();
+		player.getInventory().setHelmet(null);
+		player.getInventory().setChestplate(null);
+		player.getInventory().setLeggings(null);
+		player.getInventory().setBoots(null);
+
+		player.updateInventory();
+	}
+
+	private PlayerUtils() {}
 }

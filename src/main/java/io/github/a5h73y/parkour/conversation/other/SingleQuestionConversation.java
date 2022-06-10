@@ -1,7 +1,6 @@
 package io.github.a5h73y.parkour.conversation.other;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.conversation.ParkourConversation;
 import java.util.function.Consumer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

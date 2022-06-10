@@ -1,11 +1,9 @@
 Parkour Modes
 ======
 
-## What is a ParkourMode?
-
 A Course can have a ParkourMode assigned to it, these allow the Courses to behave differently and add a new dynamic. Below each ParkourMode is listed with the gameplay affects they make once applied.
 
-To set a ParkourMode to a Course, you start the conversation by entering `/pa setmode (course)`, which will talk you through the setup process of each option. Some ParkourModes require additional information to set up.
+To set a ParkourMode to a Course, you start the conversation by entering `/pa setcourse (course) mode`, which will talk you through the setup process of each option. Some ParkourModes require additional information to set up.
 
 _If you want to remove a ParkourMode, you can set the mode back to "None"._
 
@@ -41,7 +39,7 @@ Simply sets the Player's movement speed to what is set in the `config.yml`. Allo
 
 ## Dropper
 
-This allows you to integrate the plugin into the 'dropper' GameMode, allowing you to fall infinitely without dying or taking any fall damage. You can use DeathBlocks to allow the Player to die if they hit a block.
+This has now been replaced by the ability to set MaxFallTicks to 0, and setting "hasFallDamage" to false in the Course's config.
 
 ## Rockets
 
@@ -58,5 +56,3 @@ You will be given a 'Rocket Launcher', which is a Rocket by default. Simply righ
 This ParkourMode allows you to treat any Pressure Plate as a checkpoint. Upon walking on a Pressure Plate the Player will be notified that a checkpoint has been set, if the Player dies they will be taken back to the last checkpoint they set. This allows you to create alternate routes through a Course.
 
 ![Free Checkpoints](https://i.imgur.com/zYyvTD9.png "Free Checkpoints")
-
-You are also able to set manual checkpoints using "/pa manualcheckpoint" when "ParkourModes.FreeCheckpoint.ManualCheckpointCommandEnabled" is enabled.

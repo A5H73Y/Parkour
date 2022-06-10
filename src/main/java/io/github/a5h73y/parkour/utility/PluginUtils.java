@@ -1,29 +1,20 @@
 package io.github.a5h73y.parkour.utility;
 
-import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
-import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_UNKNOWN_PLAYER;
-
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.enums.Permission;
-import io.github.a5h73y.parkour.other.ParkourValidation;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
-import io.github.a5h73y.parkour.type.player.PlayerInfo;
+import io.github.a5h73y.parkour.utility.permission.Permission;
+import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Parkour Plugin related utility methods.
@@ -82,7 +73,7 @@ public class PluginUtils {
      * @param message message to log
      */
     public static void debug(String message) {
-        if (Parkour.getDefaultConfig().getBoolean("Debug", false)) {
+        if (Parkour.getDefaultConfig().getOrDefault("Debug", false)) {
             log(message, 3);
         }
     }
@@ -95,7 +86,7 @@ public class PluginUtils {
      * @param message message to log
      */
     public static void logToFile(String message) {
-        if (!Parkour.getDefaultConfig().getBoolean("Other.LogToFile")) {
+        if (!Parkour.getDefaultConfig().getBoolean("Other.LogAdminTasksToFile")) {
             return;
         }
 
@@ -110,11 +101,16 @@ public class PluginUtils {
 
         try (FileWriter writer = new FileWriter(saveTo, true);
              BufferedWriter bw = new BufferedWriter(writer)) {
-            bw.write(DateTimeUtils.getDisplayDateTime() + " " + message + System.lineSeparator());
+            bw.write(DateTimeUtils.generateCurrentDateTimeLog() + " - " + message + System.lineSeparator());
         } catch (IOException e) {
             log(e.getMessage(), 2);
             log(e.toString(), 2);
         }
+    }
+
+    public static String readContentsOfResource(String resourcePath) throws IOException {
+        InputStream inputStream = Parkour.getInstance().getResource(resourcePath);
+        return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
     }
 
     /**
@@ -168,7 +164,7 @@ public class PluginUtils {
         boolean valid = true;
 
         try {
-            GameMode.valueOf(gameMode.toUpperCase(Locale.ROOT));
+            GameMode.valueOf(gameMode.toUpperCase());
         } catch (IllegalArgumentException e) {
             valid = false;
         }
@@ -176,196 +172,5 @@ public class PluginUtils {
         return valid;
     }
 
-    /**
-     * Delete Command.
-     * Possible choices include Course, Checkpoint, Lobby, ParkourKit, AutoStart.
-     * Each option will create a Question for the Sender to confirm.
-     *
-     * @param sender command sender
-     * @param command command choice
-     * @param argument argument value
-     */
-    public static void deleteCommand(CommandSender sender, String command, String argument) {
-        Parkour parkour = Parkour.getInstance();
-
-        switch (command.toLowerCase()) {
-            case "course":
-                if (!ParkourValidation.canDeleteCourse(sender, argument)) {
-                    return;
-                }
-
-                parkour.getQuestionManager().askDeleteCourseQuestion(sender, argument);
-                break;
-
-            case "checkpoint":
-                if (!ParkourValidation.canDeleteCheckpoint(sender, argument)) {
-                    return;
-                }
-
-                int checkpoints = CourseInfo.getCheckpointAmount(argument);
-                parkour.getQuestionManager().askDeleteCheckpointQuestion(sender, argument, checkpoints);
-                break;
-
-            case "lobby":
-                if (!ParkourValidation.canDeleteLobby(sender, argument)) {
-                    return;
-                }
-
-                parkour.getQuestionManager().askDeleteLobbyQuestion(sender, argument);
-                break;
-
-            case "kit":
-            case "parkourkit":
-                if (!ParkourValidation.canDeleteParkourKit(sender, argument)) {
-                    return;
-                }
-
-                parkour.getQuestionManager().askDeleteKitQuestion(sender, argument);
-                break;
-
-            case "autostart":
-                if (!(sender instanceof Player)) {
-                    TranslationUtils.sendMessage(sender, "This command can only be performed by players!");
-                    return;
-                }
-
-                Location location = ((Player) sender).getLocation();
-                String coordinates = location.getBlockX() + "-" + location.getBlockY() + "-" + location.getBlockZ();
-                if (!ParkourValidation.canDeleteAutoStart((Player) sender, argument, coordinates)) {
-                    return;
-                }
-
-                parkour.getQuestionManager().askDeleteAutoStartQuestion(sender, coordinates);
-                break;
-
-            default:
-                TranslationUtils.sendInvalidSyntax(sender, "delete", "(course / checkpoint / lobby / kit / autostart) (name)");
-                break;
-        }
-    }
-
-    /**
-     * Reset Command.
-     * Possible choices include Course, Player, Leaderboard, Prize.
-     * Each option will create a Question for the Sender to confirm.
-     *
-     * @param sender command sender
-     * @param command command choice
-     * @param argument argument value
-     * @param extraArgument extra argument value
-     */
-    public static void resetCommand(CommandSender sender, String command, String argument, @Nullable String extraArgument) {
-        Parkour parkour = Parkour.getInstance();
-
-        switch (command.toLowerCase()) {
-            case "course":
-                if (!parkour.getCourseManager().doesCourseExists(argument)) {
-                    TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, argument, sender);
-                    return;
-                }
-
-                parkour.getQuestionManager().askResetCourseQuestion(sender, argument);
-                break;
-
-            case "player":
-                OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(argument);
-
-                if (!PlayerInfo.hasPlayerInfo(targetPlayer)) {
-                    TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, sender);
-                    return;
-                }
-
-                parkour.getQuestionManager().askResetPlayerQuestion(sender, argument);
-                break;
-
-            case "leaderboard":
-                if (!parkour.getCourseManager().doesCourseExists(argument)) {
-                    TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, argument, sender);
-                    return;
-                }
-
-                if (extraArgument != null) {
-                    parkour.getQuestionManager().askResetPlayerLeaderboardQuestion(sender, argument, extraArgument);
-                } else {
-                    parkour.getQuestionManager().askResetLeaderboardQuestion(sender, argument);
-                }
-                break;
-
-            case "prize":
-                if (!parkour.getCourseManager().doesCourseExists(argument)) {
-                    TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, argument, sender);
-                    return;
-                }
-
-                parkour.getQuestionManager().askResetPrizeQuestion(sender, argument);
-                break;
-
-            default:
-                TranslationUtils.sendInvalidSyntax(sender, "reset", "(course / player / leaderboard / prize) (argument)");
-                break;
-        }
-    }
-
-    /**
-     * Cache Command.
-     * View the number of results in each cache.
-     * Provide an argument to clear the selected cache.
-     *
-     * @param sender command sender
-     * @param argument argument value
-     */
-    public static void cacheCommand(CommandSender sender, @Nullable String argument) {
-        Parkour parkour = Parkour.getInstance();
-        if (argument != null) {
-            switch (argument.toLowerCase()) {
-                case "course":
-                case "courses":
-                    parkour.getCourseManager().clearCache();
-                    break;
-                case "database":
-                    parkour.getDatabase().clearCache();
-                    break;
-                case "lobby":
-                case "lobbies":
-                    parkour.getLobbyManager().clearCache();
-                    break;
-                case "parkourkit":
-                case "parkourkits":
-                    parkour.getParkourKitManager().clearCache();
-                    break;
-                case "sound":
-                case "sounds":
-                    parkour.getSoundsManager().clearCache();
-                    break;
-                case "all":
-                case "clear":
-                    clearAllCache();
-                    break;
-                default:
-                    TranslationUtils.sendInvalidSyntax(sender, "cache", "[course / database / lobby / parkourkit / sound]");
-                    return;
-            }
-            TranslationUtils.sendPropertySet(sender, "Cache", StringUtils.standardizeText(argument), "empty");
-
-        } else {
-            TranslationUtils.sendHeading("Parkour Cache", sender);
-            TranslationUtils.sendValue(sender, "Courses Cached", parkour.getCourseManager().getCacheSize());
-            TranslationUtils.sendValue(sender, "Database Times Cached", parkour.getDatabase().getCacheSize());
-            TranslationUtils.sendValue(sender, "Lobbies Cached", parkour.getLobbyManager().getCacheSize());
-            TranslationUtils.sendValue(sender, "ParkourKits Cached", parkour.getParkourKitManager().getCacheSize());
-            TranslationUtils.sendValue(sender, "Sounds Cached", parkour.getSoundsManager().getCacheSize());
-        }
-    }
-
-    /**
-     * Clear all the Caches.
-     */
-    public static void clearAllCache() {
-        Parkour parkour = Parkour.getInstance();
-        parkour.getCourseManager().clearCache();
-        parkour.getDatabase().clearCache();
-        parkour.getLobbyManager().clearCache();
-        parkour.getParkourKitManager().clearCache();
-        parkour.getSoundsManager().clearCache();
-    }
+    private PluginUtils() {}
 }

@@ -72,7 +72,7 @@ public class GenericCache<K, V> implements IGenericCache<K, V> {
 
     protected CacheValue<V> createCacheValue(V value) {
         LocalDateTime now = LocalDateTime.now();
-        return new CacheValue<V>() {
+        return new CacheValue<>() {
             @Override
             public V getValue() {
                 return value;

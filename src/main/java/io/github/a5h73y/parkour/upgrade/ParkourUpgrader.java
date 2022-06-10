@@ -1,39 +1,46 @@
 package io.github.a5h73y.parkour.upgrade;
 
 import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.configuration.ConfigManager;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.other.Backup;
-import io.github.a5h73y.parkour.upgrade.major.CourseInfoUpgradeTask;
+import io.github.a5h73y.parkour.other.PluginBackupUtil;
+import io.github.a5h73y.parkour.upgrade.major.CopyConfigUpgradeTask;
+import io.github.a5h73y.parkour.upgrade.major.CourseDataUpgradeTask;
 import io.github.a5h73y.parkour.upgrade.major.DatabaseUpgradeTask;
 import io.github.a5h73y.parkour.upgrade.major.DefaultConfigUpgradeTask;
-import io.github.a5h73y.parkour.upgrade.major.PlayerInfoUpgradeTask;
-import io.github.a5h73y.parkour.upgrade.major.StringsConfigUpgradeTask;
-import io.github.a5h73y.parkour.upgrade.minor.PartialUpgradeTask;
+import io.github.a5h73y.parkour.upgrade.major.LobbyConfigUpgradeTask;
+import io.github.a5h73y.parkour.upgrade.major.PlayerDataUpgradeTask;
 import io.github.g00fy2.versioncompare.Version;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import pro.husk.Database;
 
 public class ParkourUpgrader extends AbstractPluginReceiver {
+
+	private PlayerDataUpgradeTask playerDataUpgradeTask;
 
 	private final File defaultFile;
 	private final File playerFile;
 	private final File inventoryFile;
 	private final File coursesFile;
 	private final File checkpointsFile;
-	private final File stringsFile;
+	private final File economyFile;
+	private final File parkourKitFile;
 
 	private final FileConfiguration defaultConfig;
 	private final FileConfiguration playerConfig;
 	private final FileConfiguration inventoryConfig;
 	private final FileConfiguration coursesConfig;
 	private final FileConfiguration checkpointsConfig;
-	private final FileConfiguration stringsConfig;
+	private final FileConfiguration economyConfig;
+	private final FileConfiguration parkourKitConfig;
 
 	/**
 	 * Initialise the Parkour Upgrader.
+	 *
 	 * @param parkour plugin instance
 	 */
 	public ParkourUpgrader(final Parkour parkour) {
@@ -44,18 +51,21 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 		inventoryFile = new File(parkour.getDataFolder(), "inventory.yml");
 		coursesFile = new File(parkour.getDataFolder(), "courses.yml");
 		checkpointsFile = new File(parkour.getDataFolder(), "checkpoints.yml");
-		stringsFile = new File(parkour.getDataFolder(), "strings.yml");
+		economyFile = new File(parkour.getDataFolder(), "economy.yml");
+		parkourKitFile = new File(parkour.getDataFolder(), "parkourkit.yml");
 
 		defaultConfig = YamlConfiguration.loadConfiguration(defaultFile);
 		playerConfig = YamlConfiguration.loadConfiguration(playerFile);
 		inventoryConfig = YamlConfiguration.loadConfiguration(inventoryFile);
 		coursesConfig = YamlConfiguration.loadConfiguration(coursesFile);
 		checkpointsConfig = YamlConfiguration.loadConfiguration(checkpointsFile);
-		stringsConfig = YamlConfiguration.loadConfiguration(stringsFile);
+		economyConfig = YamlConfiguration.loadConfiguration(economyFile);
+		parkourKitConfig = YamlConfiguration.loadConfiguration(parkourKitFile);
 	}
 
 	/**
 	 * Begin the Parkour upgrade process.
+	 *
 	 * @return upgrade success
 	 */
 	public boolean beginUpgrade() {
@@ -64,21 +74,17 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 				defaultConfig.getString("Version"), parkour.getDescription().getVersion()));
 
 		parkour.getLogger().info("Creating backup of current install...");
-		Backup.backupNow(true);
+		PluginBackupUtil.backupNow(true);
 
-		boolean success;
+		boolean success = false;
 		Version existingVersion = new Version(defaultConfig.getString("Version"));
 
-		if (existingVersion.isLowerThan("5.0")) {
+		if (existingVersion.isLowerThan("6.0")) {
 			parkour.getLogger().warning("This version is too outdated.");
-			parkour.getLogger().warning("Please upgrade to 4.8 and then reinstall this version.");
-			success = false;
+			parkour.getLogger().warning("Please upgrade to 6.7.1 and then reinstall this version.");
 
-		} else if (existingVersion.isLowerThan("6.0")) {
+		} else if (existingVersion.isLowerThan("7.0.0")) {
 			success = performFullUpgrade();
-
-		} else {
-			success = performPartialUpgrade();
 		}
 
 		if (success) {
@@ -100,15 +106,26 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 	}
 
 	private boolean performFullUpgrade() {
-		if (!new PlayerInfoUpgradeTask(this).start()) {
+		playerDataUpgradeTask = new PlayerDataUpgradeTask(this);
+
+		if (!playerDataUpgradeTask.start()) {
 			return false;
 		}
 
-		if (!new CourseInfoUpgradeTask(this).start()) {
+		if (!new CourseDataUpgradeTask(this).start()) {
 			return false;
 		}
 
-		if (!new StringsConfigUpgradeTask(this).start()) {
+		if (!new DatabaseUpgradeTask(this).start()) {
+			return false;
+		}
+
+		if (!new CopyConfigUpgradeTask(this, "ParkourKit Config",
+				getParkourKitConfig(), getNewConfigManager().getParkourKitConfig(), "ParkourKit.").start()) {
+			return false;
+		}
+
+		if (!new LobbyConfigUpgradeTask(this).start()) {
 			return false;
 		}
 
@@ -116,21 +133,26 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 			return false;
 		}
 
-		// the database upgrade has to be done in two steps
-		// transferring the existing times to a temporary table, deleting the tables
-		// initialise the actual databases, then transfer the times back into it
-		DatabaseUpgradeTask databaseUpgrade = new DatabaseUpgradeTask(this);
-		if (!databaseUpgrade.start()) {
-			return false;
-		}
+		getLogger().info("Configuration files updated - removing old files");
 
-		parkour.getLogger().info("Setting up Configs and Database...");
-		parkour.registerEssentialManagers();
-		return databaseUpgrade.doMoreWork();
+		coursesFile.delete();
+		checkpointsFile.delete();
+		playerFile.delete();
+		inventoryFile.delete();
+		economyFile.delete();
+		parkourKitFile.delete();
+
+		return true;
 	}
 
-	private boolean performPartialUpgrade() {
-		return new PartialUpgradeTask(this, defaultConfig.getString("Version")).start();
+	/**
+	 * Upgrade Player ParkourSessions.
+	 * Reason it has to be done after plugin start up so all managers are registered.
+	 */
+	public void upgradeParkourSessions() {
+		if (playerDataUpgradeTask != null) {
+			playerDataUpgradeTask.updateParkourSessions();
+		}
 	}
 
 	public FileConfiguration getDefaultConfig() {
@@ -153,35 +175,31 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 		return checkpointsConfig;
 	}
 
-	public FileConfiguration getStringsConfig() {
-		return stringsConfig;
+	public FileConfiguration getEconomyConfig() {
+		return economyConfig;
 	}
 
-	public Logger getLogger() {
-		return parkour.getLogger();
+	public FileConfiguration getParkourKitConfig() {
+		return parkourKitConfig;
 	}
 
 	public void saveDefaultConfig() throws IOException {
 		defaultConfig.save(defaultFile);
 	}
 
-	public void savePlayerConfig() throws IOException {
-		playerConfig.save(playerFile);
+	/**
+	 * Named thus to avoid using any old references.
+	 * @return config manager
+	 */
+	public ConfigManager getNewConfigManager() {
+		return parkour.getConfigManager();
 	}
 
-	public void saveInventoryConfig() throws IOException {
-		inventoryConfig.save(inventoryFile);
+	public Logger getLogger() {
+		return parkour.getLogger();
 	}
 
-	public void saveCoursesConfig() throws IOException {
-		coursesConfig.save(coursesFile);
-	}
-
-	public void saveCheckpointsConfig() throws IOException {
-		checkpointsConfig.save(checkpointsFile);
-	}
-
-	public void saveStringsConfig() throws IOException {
-		stringsConfig.save(stringsFile);
+	public Database getDatabase() {
+		return parkour.getDatabaseManager().getDatabase();
 	}
 }

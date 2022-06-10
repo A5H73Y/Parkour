@@ -1,9 +1,59 @@
+/* html tags */
+
+img {
+    max-width: 60%;
+}
+
+h1.app-name {
+    display: none;
+}
+
+h5 {
+    margin: 0;
+}
+
+details tbody {
+    width: 100%;
+    display: table;
+}
+
+details th {
+    width: 15%;
+}
+
+details > summary {
+    background-color: #f8f8f8;
+    padding: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+summary.deprecated {
+    text-decoration: line-through;
+}
+
+/* docsify */
+
+.app-name-link img {
+    max-width: 30%;
+}
+
 .markdown-section h1 {
     font-size: 3rem;
 }
 
+.markdown-section h2 {
+    margin: 30px 0 .8rem;
+}
+
+.markdown-section h3 {
+    margin: 20px 0 .6rem;
+}
+
 .markdown-section h5 {
     font-size: 1.1rem;
+    margin-top: 15px;
 }
 
 .markdown-section h1, .markdown-section h2 {
@@ -17,7 +67,11 @@
 }
 
 .markdown-section details p {
-    margin: 0.5em auto;
+    margin: 0.5em 1em;
+}
+
+.markdown-section code {
+    margin: 0;
 }
 
 .sidebar ul li a {
@@ -28,38 +82,4 @@
     padding-top: 0;
 }
 
-img {
-    max-width: 60%;
-}
 
-.app-name-link img {
-    max-width: 30%;
-}
-
-h1.app-name {
-    display: none;
-}
-
-h5 {
-    margin: 0;
-}
-
-details > summary {
-    background-color: #f8f8f8;
-    padding: 8px;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-}
-details tbody {
-    width: 100%;
-    display: table;
-}
-
-details th {
-    width: 15%;
-}
-
-.markdown-section code {
-    margin: 0;
-}

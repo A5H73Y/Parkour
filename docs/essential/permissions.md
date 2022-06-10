@@ -3,37 +3,29 @@ Parkour Permissions
 
 | Permission Node | Description |
 |-|-|
-| **Parkour.\*** | **All Parkour permissions.** |
+| **parkour.\*** | **All Parkour permissions.** |
 |  |  |
-| **Parkour.Basic.\*** | **All Basic Parkour permissions.** |
-| Parkour.Basic.Create | Create a Parkour Course. |
-| Parkour.Basic.Kit | Receive a ParkourKit. |
-| Parkour.Basic.TP | Teleport to a Course. |
-| Parkour.Basic.TPC | Teleport to a Course Checkpoint. |
-| Parkour.Basic.Leaderboard | View Leaderboard results via command. |
-| Parkour.Basic.Challenge | Send Parkour Challenges to other Players. |
-| Parkour.Basic.JoinAll | Use the Join All Courses GUI. |
-| Parkour.Basic.Signs | Ability to use Parkour Signs only if Other.Parkour.SignUsePermissions is set to true. |
-| Parkour.Basic.Commands | Ability to use Parkour Commands only if Other.Parkour.CommandUsePermissions is set to true. |
+| **parkour.basic.\*** | **All Basic Parkour permissions.** |
+| parkour.basic.create | Create a Parkour Course. |
+| parkour.basic.kit | Receive a ParkourKit. |
+| parkour.basic.tp | Teleport to a Course. |
+| parkour.basic.tpc | Teleport to a Course Checkpoint. |
+| parkour.basic.leaderboard | View Leaderboard results via command. |
+| parkour.basic.challenge | Send Parkour Challenges to other Players. |
+| parkour.basic.joinall | Use the Join All Courses GUI. |
+| parkour.basic.signs | Ability to use Parkour Signs only if Other.Parkour.SignUsePermissions is set to true. |
+| parkour.basic.commands | Ability to use Parkour Commands only if Other.Parkour.CommandUsePermissions is set to true. |
 |  |  |
-| **Parkour.Admin.\*** | **All Admin Parkour permissions.** |
-| Parkour.Admin.Course | Perform administration tasks to a Course. |
-| Parkour.Admin.Prize | Configure a Prize for a Course. |
-| Parkour.Admin.Delete | Ability to delete Courses / checkpoints / lobbies / parkourkits. |
-| Parkour.Admin.Reset | Ability to reset Courses, Players / leaderboards / prizes. |
-| Parkour.Admin.TestMode | Ability to activate TestMode. |
-| Parkour.Admin.ReadyBypass | Bypass the ready requirement of a Course. |
-| Parkour.Admin.LevelBypass | Bypass the Parkour Level requirement of a Course. |
+| **parkour.admin.\*** | **All Admin Parkour permissions.** |
+| parkour.admin.course | Perform administration tasks to a Course. |
+| parkour.admin.prize | Configure a Prize for a Course. |
+| parkour.admin.delete | Ability to delete Courses / checkpoints / lobbies / parkourkits. |
+| parkour.admin.reset | Ability to reset Courses, Players / leaderboards / prizes. |
+| parkour.admin.testmode | Ability to activate TestMode. |
+| parkour.admin.readybypass | Bypass the ready requirement of a Course. |
+| parkour.admin.levelbypass | Bypass the Parkour Level requirement of a Course. |
+| parkour.admin.createsign | Ability to create any Parkour signs. |
 |  |  |
-| **Parkour.CreateSign.\*** | **All Create Parkour Sign permissions.** |
-| Parkour.CreateSign.Join | Create a Join Course sign. |
-| Parkour.CreateSign.Finish | Create a Finish Course sign. |
-| Parkour.CreateSign.Leave | Create a Leave Course sign. |
-| Parkour.CreateSign.Lobby | Create a Parkour Lobby sign. |
-| Parkour.CreateSign.Effect | Create an Effect sign. |
-| Parkour.CreateSign.Stats | Create a Course Stats sign. |
-| Parkour.CreateSign.Leaderboards | Create a Leaderboards sign. |
+| **parkour.level.(LEVEL)** | **Give the Player a specific Parkour Level.** |
 |  |  |
-| **Parkour.Level.(LEVEL)** | **Give the Player a specific Parkour Level.** |
-|  |  |
-| **Parkour.Course.(COURSE)** | **Give the Player permission to join a specific Parkour Course.** |
+| **parkour.course.(COURSE)** | **Give the Player permission to join a specific Parkour Course.** |

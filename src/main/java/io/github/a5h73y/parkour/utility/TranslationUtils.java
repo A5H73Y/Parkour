@@ -1,6 +1,8 @@
 package io.github.a5h73y.parkour.utility;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.ARGUMENTS_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.CHECKPOINT_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.COMMAND_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.COURSE_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.DEATHS_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.PLAYER_DISPLAY_PLACEHOLDER;
@@ -9,15 +11,14 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.TIME_PLACEHOLDER;
 import static io.github.a5h73y.parkour.utility.StringUtils.colour;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.enums.ConfigType;
-import io.github.a5h73y.parkour.enums.ParkourEventType;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
-import io.github.a5h73y.parkour.type.player.ParkourSession;
+import io.github.a5h73y.parkour.type.course.ParkourEventType;
+import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Translations related utility methods.
@@ -35,16 +36,17 @@ public class TranslationUtils {
 	 * @param prefix display Parkour prefix
 	 * @return String of appropriate translation
 	 */
-	public static String getTranslation(String translationKey, boolean prefix) {
+	public static String getTranslation(@Nullable String translationKey,
+	                                    boolean prefix) {
 		if (!ValidationUtils.isStringValid(translationKey)) {
 			return "Invalid translation.";
 		}
 
-		String translated = Parkour.getConfig(ConfigType.STRINGS).getString(translationKey);
+		String translated = Parkour.getInstance().getConfigManager().getStringsConfig().getString(translationKey);
 		translated = translated != null ? colour(translated) : "String not found: " + translationKey;
 
 		return prefix && ValidationUtils.isStringValid(translated)
-				? Parkour.getPrefix().concat(translated) : translated;
+				? getPluginPrefix().concat(translated) : translated;
 	}
 
 	/**
@@ -54,7 +56,7 @@ public class TranslationUtils {
 	 * @param translationKey to translate
 	 * @return String of appropriate translation
 	 */
-	public static String getTranslation(String translationKey) {
+	public static String getTranslation(@Nullable String translationKey) {
 		return getTranslation(translationKey, true);
 	}
 
@@ -68,7 +70,9 @@ public class TranslationUtils {
 	 * @param prefix display Parkour prefix
 	 * @return String of appropriate translation
 	 */
-	public static String getValueTranslation(String translationKey, String value, boolean prefix) {
+	public static String getValueTranslation(@Nullable String translationKey,
+	                                         @Nullable String value,
+	                                         boolean prefix) {
 		return VALUE_PLACEHOLDER.matcher(getTranslation(translationKey, prefix))
 				.replaceAll(value == null ? "" : value);
 	}
@@ -83,7 +87,9 @@ public class TranslationUtils {
 	 * @param prefix display Parkour prefix
 	 * @return String of appropriate translation
 	 */
-	public static String getValueTranslation(String translationKey, Number value, boolean prefix) {
+	public static String getValueTranslation(@Nullable String translationKey,
+	                                         @Nullable Number value,
+	                                         boolean prefix) {
 		return getValueTranslation(translationKey, String.valueOf(value), prefix);
 	}
 
@@ -96,7 +102,8 @@ public class TranslationUtils {
 	 * @param value to populate
 	 * @return String of appropriate translation
 	 */
-	public static String getValueTranslation(String translationKey, String value) {
+	public static String getValueTranslation(@Nullable String translationKey,
+	                                         @Nullable String value) {
 		return getValueTranslation(translationKey, value, true);
 	}
 
@@ -110,29 +117,33 @@ public class TranslationUtils {
 	 * @param fallbackKey fallback translation key
 	 * @return course event message
 	 */
-	public static String getCourseEventMessage(ParkourSession session, ParkourEventType eventType, String fallbackKey) {
-		String result = CourseInfo.getEventMessage(session.getCourseName(), eventType);
+	public static String getCourseEventMessage(@NotNull ParkourSession session,
+	                                           @NotNull ParkourEventType eventType,
+	                                           @Nullable String fallbackKey) {
+		String result = Parkour.getInstance().getConfigManager().getCourseConfig(session.getCourseName())
+				.getEventMessage(eventType);
 
 		// if there is no custom message, fallback to default
 		if (result == null) {
 			result = getTranslation(fallbackKey, false);
 		}
 
-		return VALUE_PLACEHOLDER.matcher(colour(result)).replaceAll(session.getCourse().getDisplayName());
+		return colour(VALUE_PLACEHOLDER.matcher(result).replaceAll(session.getCourse().getDisplayName()));
 	}
 
 	/**
-	 * Send the translated message to the player(s).
+	 * Send the translated message to the recipient(s).
 	 *
 	 * @param translationKey to translate
 	 * @param prefix display prefix
-	 * @param players targets to receive the message
+	 * @param recipients targets to receive the message
 	 */
-	public static void sendTranslation(String translationKey, boolean prefix, CommandSender... players) {
+	public static void sendTranslation(@Nullable String translationKey, boolean prefix,
+	                                   @Nullable CommandSender... recipients) {
 		String translation = getTranslation(translationKey, prefix);
-		if (!translation.isEmpty()) {
-			for (CommandSender player : players) {
-				player.sendMessage(translation);
+		if (recipients != null && !translation.isEmpty()) {
+			for (CommandSender recipient : recipients) {
+				recipient.sendMessage(translation);
 			}
 		}
 	}
@@ -143,7 +154,8 @@ public class TranslationUtils {
 	 * @param translationKey translationKey to translate
 	 * @param players to receive the message
 	 */
-	public static void sendTranslation(String translationKey, CommandSender... players) {
+	public static void sendTranslation(@Nullable String translationKey,
+	                                   @Nullable CommandSender... players) {
 		sendTranslation(translationKey, true, players);
 	}
 
@@ -154,24 +166,27 @@ public class TranslationUtils {
 	 * @param value to replace
 	 * @param players targets to receive the message
 	 */
-	public static void sendValueTranslation(String translationKey, String value, CommandSender... players) {
+	public static void sendValueTranslation(@Nullable String translationKey,
+	                                        @Nullable String value,
+	                                        @Nullable CommandSender... players) {
 		sendValueTranslation(translationKey, value, true, players);
 	}
 
 	/**
-	 * Send the translated message to the player(s), replacing a value placeholder.
-	 *
+	 * Send the translated message to the recipient(s), replacing a value placeholder.
 	 *
 	 * @param translationKey to translate
 	 * @param value to replace
-	 * @param players targets to receive the message
+	 * @param recipients targets to receive the message
 	 */
-	public static void sendValueTranslation(String translationKey, String value, boolean prefix, CommandSender... players) {
+	public static void sendValueTranslation(@Nullable String translationKey,
+	                                        @Nullable String value, boolean prefix,
+	                                        @Nullable CommandSender... recipients) {
 		String translation = getValueTranslation(translationKey, value, prefix);
-		if (!translation.isEmpty()) {
-			for (CommandSender player : players) {
-				if (player != null) {
-					player.sendMessage(translation);
+		if (recipients != null && !translation.isEmpty()) {
+			for (CommandSender recipient : recipients) {
+				if (recipient != null) {
+					recipient.sendMessage(translation);
 				}
 			}
 		}
@@ -191,26 +206,26 @@ public class TranslationUtils {
 	 * Display invalid syntax error.
 	 * Using parameters to populate the translation message
 	 *
-	 * @param sender target command sender
+	 * @param commandSender command sender
 	 * @param command requested command
 	 * @param arguments command arguments
 	 */
-	public static void sendInvalidSyntax(CommandSender sender, String command, String arguments) {
-		sender.sendMessage(getTranslation("Error.Syntax")
-				.replace("%COMMAND%", command)
-				.replace("%ARGUMENTS%", arguments));
+	public static void sendInvalidSyntax(CommandSender commandSender, String command, String arguments) {
+		commandSender.sendMessage(getTranslation("Error.Syntax")
+				.replace(COMMAND_PLACEHOLDER, command)
+				.replace(ARGUMENTS_PLACEHOLDER, arguments));
 	}
 
 	/**
 	 * Send the Property Set translation, replacing placeholders.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param property property name
 	 * @param courseName course name
 	 * @param value value set
 	 */
-	public static void sendPropertySet(CommandSender sender, String property, String courseName, String value) {
-		sender.sendMessage(getPropertySet(property, courseName, value));
+	public static void sendPropertySet(CommandSender commandSender, String property, String courseName, String value) {
+		commandSender.sendMessage(getPropertySet(property, courseName, value));
 	}
 
 	/**
@@ -232,12 +247,12 @@ public class TranslationUtils {
 	 * Send the Player a Parkour prefixed Message.
 	 * For messages that don't require a Translation entry.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param message message to send
 	 */
-	public static void sendMessage(CommandSender sender, String message) {
-		if (!message.isEmpty()) {
-			sender.sendMessage(Parkour.getPrefix().concat(colour(message)));
+	public static void sendMessage(CommandSender commandSender, String message) {
+		if (commandSender != null && ValidationUtils.isStringValid(message)) {
+			commandSender.sendMessage(getPluginPrefix().concat(colour(message)));
 		}
 	}
 
@@ -245,52 +260,53 @@ public class TranslationUtils {
 	 * Send the Player a Message.
 	 * For messages that don't require a Translation entry.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param message message to send
 	 * @param prefix display prefix
 	 */
-	public static void sendMessage(CommandSender sender, String message, boolean prefix) {
+	public static void sendMessage(CommandSender commandSender, String message, boolean prefix) {
 		if (prefix) {
-			sendMessage(sender, message);
-		} else {
-			sender.sendMessage(colour(message));
+			sendMessage(commandSender, message);
+		} else if (commandSender != null) {
+			commandSender.sendMessage(colour(message));
 		}
 	}
 
 	/**
 	 * Send a Title Value Summary.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param title value title
 	 * @param value value
 	 */
-	public static void sendValue(CommandSender sender, String title, String value) {
-		sender.sendMessage(title + ": " + ChatColor.AQUA + value);
+	public static void sendValue(CommandSender commandSender, String title, String value) {
+		String displayValue = getValueTranslation("Help.DisplayValue", value, false);
+		sendMessage(commandSender, displayValue.replace("%TITLE%", title), false);
 	}
 
 	/**
 	 * Send a Title Value Summary.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param title value title
 	 * @param value value
 	 */
-	public static void sendValue(CommandSender sender, String title, Number value) {
-		sendValue(sender, title, String.valueOf(value));
+	public static void sendValue(CommandSender commandSender, String title, Number value) {
+		sendValue(commandSender, title, String.valueOf(value));
 	}
 
 	/**
 	 * Send conditional Value Summary.
 	 * Message is sent if the condition is met.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param title value title
 	 * @param conditionMet condition is met
 	 * @param value value
 	 */
-	public static void sendConditionalValue(CommandSender sender, String title, Boolean conditionMet, String value) {
+	public static void sendConditionalValue(CommandSender commandSender, String title, Boolean conditionMet, String value) {
 		if (Boolean.TRUE.equals(conditionMet)) {
-			sendValue(sender, title, value);
+			sendValue(commandSender, title, value);
 		}
 	}
 
@@ -298,13 +314,13 @@ public class TranslationUtils {
 	 * Send conditional Value Summary.
 	 * Message is sent if the numeric value is positive.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param title value title
 	 * @param value value
 	 */
-	public static void sendConditionalValue(CommandSender sender, String title, Number value) {
+	public static void sendConditionalValue(CommandSender commandSender, String title, Number value) {
 		if (value != null && value.doubleValue() > 0) {
-			sendValue(sender, title, String.valueOf(value));
+			sendValue(commandSender, title, String.valueOf(value));
 		}
 	}
 
@@ -312,13 +328,13 @@ public class TranslationUtils {
 	 * Send conditional Value Summary.
 	 * Message is sent if the value is valid.
 	 *
-	 * @param sender command sender
+	 * @param commandSender command sender
 	 * @param title value title
 	 * @param value value
 	 */
-	public static void sendConditionalValue(CommandSender sender, String title, String value) {
+	public static void sendConditionalValue(CommandSender commandSender, String title, String value) {
 		if (ValidationUtils.isStringValid(value)) {
-			sendValue(sender, title, value);
+			sendValue(commandSender, title, value);
 		}
 	}
 
@@ -347,7 +363,8 @@ public class TranslationUtils {
 				}
 				return;
 			case "PARKOUR":
-				for (Player players : Parkour.getInstance().getPlayerManager().getOnlineParkourPlayers()) {
+				for (Player players :
+						Parkour.getInstance().getParkourSessionManager().getOnlineParkourPlayers()) {
 					players.sendMessage(message);
 				}
 				return;
@@ -368,12 +385,13 @@ public class TranslationUtils {
 	 * @return updated input message
 	 */
 	public static String replaceAllParkourPlaceholders(String input, Player player, ParkourSession session) {
-		return input.replace(PLAYER_PLACEHOLDER, player.getName())
+		String result = input.replace(PLAYER_PLACEHOLDER, player.getName())
 				.replace(PLAYER_DISPLAY_PLACEHOLDER, player.getDisplayName())
 				.replace(COURSE_PLACEHOLDER, session.getCourse().getDisplayName())
 				.replace(DEATHS_PLACEHOLDER, String.valueOf(session.getDeaths()))
 				.replace(TIME_PLACEHOLDER, session.getDisplayTime())
 				.replace(CHECKPOINT_PLACEHOLDER, String.valueOf(session.getCurrentCheckpoint()));
+		return Parkour.getInstance().getPlaceholderApi().parsePlaceholders(player, result);
 	}
 
 	/**
@@ -388,4 +406,10 @@ public class TranslationUtils {
 		return input.replace(PLAYER_PLACEHOLDER, player.getName())
 				.replace(PLAYER_DISPLAY_PLACEHOLDER, player.getDisplayName());
 	}
+
+	public static String getPluginPrefix() {
+		return getTranslation("Parkour.Prefix", false);
+	}
+
+	private TranslationUtils() {}
 }

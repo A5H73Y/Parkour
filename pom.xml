@@ -5,28 +5,30 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.a5h73y</groupId>
 	<artifactId>Parkour</artifactId>
-	<version>6.7.1</version>
+	<version>7.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>Parkour</name>
 	<description>The ultimate Parkour plugin.</description>
+	<inceptionYear>2012</inceptionYear>
 	<url>https://a5h73y.github.io/Parkour/</url>
 
 	<properties>
+		<java.version>11</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>8</maven.compiler.source>
-		<maven.compiler.target>8</maven.compiler.target>
 	</properties>
 
 	<issueManagement>
-		<url>https://github.com/A5H73Y/Parkour/issues</url>
 		<system>GitHub Issues</system>
+		<url>https://github.com/A5H73Y/Parkour/issues</url>
 	</issueManagement>
 
 	<licenses>
 		<license>
 			<name>MIT License</name>
-			<url>http://www.opensource.org/licenses/mit-license.php</url>
+			<url>https://opensource.org/licenses/mit-license.php</url>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
@@ -45,12 +47,12 @@
 		<!-- Placeholder API Repo -->
 		<repository>
 			<id>placeholderapi-repo</id>
-			<url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+			<url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
 		</repository>
 		<!-- MySQL database Repo -->
 		<repository>
 			<id>husk</id>
-			<url>https://maven.husk.pro/snapshots/</url>
+			<url>https://maven.husk.pro/repository/maven-releases/</url>
 		</repository>
 		<!-- InventoryGui -->
 		<repository>
@@ -64,8 +66,18 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.16.3-R0.1-SNAPSHOT</version>
+			<version>1.18.1-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>com.google.code.findbugs</groupId>
+					<artifactId>jsr305</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.google.j2objc</groupId>
+					<artifactId>j2objc-annotations</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- Vault API -->
 		<dependency>
@@ -84,7 +96,7 @@
 		<dependency>
 			<groupId>me.clip</groupId>
 			<artifactId>placeholderapi</artifactId>
-			<version>2.10.10</version>
+			<version>2.11.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- Bountiful API -->
@@ -104,14 +116,14 @@
 		<dependency>
 			<groupId>org.bstats</groupId>
 			<artifactId>bstats-bukkit</artifactId>
-			<version>2.2.1</version>
+			<version>3.0.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<!-- MySQL Database -->
 		<dependency>
 			<groupId>pro.husk</groupId>
 			<artifactId>mysql</artifactId>
-			<version>1.4.1-SNAPSHOT</version>
+			<version>1.4.2</version>
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
@@ -124,22 +136,34 @@
 		<dependency>
 			<groupId>de.themoep</groupId>
 			<artifactId>inventorygui</artifactId>
-			<version>1.4.2-SNAPSHOT</version>
+			<version>1.5-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<!-- XSeries -->
 		<dependency>
 			<groupId>com.github.cryptomorin</groupId>
 			<artifactId>XSeries</artifactId>
-			<version>8.3.0</version>
+			<version>8.7.1</version>
 			<scope>compile</scope>
 		</dependency>
 		<!-- Version Compare -->
 		<dependency>
 			<groupId>io.github.g00fy2</groupId>
 			<artifactId>versioncompare</artifactId>
-			<version>1.4.1</version>
+			<version>1.5.0</version>
 			<scope>compile</scope>
+		</dependency>
+		<!-- Simplix Storage -->
+<!--		<dependency>-->
+<!--			<groupId>com.github.simplix-softworks</groupId>-->
+<!--			<artifactId>simplixstorage</artifactId>-->
+<!--			<version>3.2.4</version>-->
+<!--		</dependency>-->
+		<!-- temporary until there's a release -->
+		<dependency>
+			<groupId>com.github.simplix-softworks</groupId>
+			<artifactId>simplixstorage</artifactId>
+			<version>master-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
@@ -160,19 +184,17 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
 				</configuration>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>3.3.0</version>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
 				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
+					<outputDirectory>${export_dir}</outputDirectory>
 				</configuration>
 			</plugin>
 
@@ -191,6 +213,12 @@
 							</excludes>
 						</filter>
 					</filters>
+					<artifactSet>
+						<excludes>
+							<exclude>org.jetbrains:annotations</exclude>
+							<exclude>org.slf4j:*</exclude>
+						</excludes>
+					</artifactSet>
 					<relocations>
 						<relocation>
 							<pattern>org.bstats</pattern>
@@ -199,6 +227,10 @@
 						<relocation>
 							<pattern>com.cryptomorin.xseries</pattern>
 							<shadedPattern>io.github.a5h73y.parkour.support</shadedPattern>
+						</relocation>
+						<relocation>
+							<pattern>com.github.simplix-softworks</pattern>
+							<shadedPattern>io.github.a5h73y.parkour.storage</shadedPattern>
 						</relocation>
 					</relocations>
 				</configuration>
@@ -245,8 +277,8 @@
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<version>3.1.1</version>
 				<configuration>
-					<configLocation>src/main/resources/a5h73y_checks.xml</configLocation>
-					<encoding>UTF-8</encoding>
+					<configLocation>src/main/resources/parkourCheckstyles.xml</configLocation>
+					<encoding>${project.build.sourceEncoding}</encoding>
 					<consoleOutput>true</consoleOutput>
 					<failsOnError>true</failsOnError>
 					<linkXRef>false</linkXRef>

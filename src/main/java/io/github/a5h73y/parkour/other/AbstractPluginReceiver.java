@@ -13,7 +13,7 @@ public abstract class AbstractPluginReceiver {
 		this.parkour = parkour;
 	}
 
-	public Parkour getParkour() {
+	protected Parkour getParkour() {
 		return this.parkour;
 	}
 

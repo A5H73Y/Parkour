@@ -1,12 +1,13 @@
 package io.github.a5h73y.parkour.conversation;
 
-import com.cryptomorin.xseries.XPotion;
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.enums.ParkourMode;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
-import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.conversation.other.ParkourConversation;
+import io.github.a5h73y.parkour.type.player.ParkourMode;
+import java.util.Arrays;
 import java.util.stream.Stream;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.BooleanPrompt;
 import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.ConversationContext;
@@ -15,6 +16,7 @@ import org.bukkit.conversations.MessagePrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.bukkit.conversations.ValidatingPrompt;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,22 +53,31 @@ public class ParkourModeConversation extends ParkourConversation {
             }
 
             ParkourMode parkourMode = ParkourMode.valueOf(choice.toUpperCase());
-
             String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);
-            CourseInfo.setParkourMode(courseName, parkourMode);
-            Parkour.getInstance().getCourseManager().clearCache(courseName);
 
-            context.getForWhom().sendRawMessage(TranslationUtils.getPropertySet("ParkourMode", courseName, choice));
+            Bukkit.getScheduler().runTaskAsynchronously(Parkour.getInstance(), () ->
+                Parkour.getInstance().getCourseSettingsManager()
+                        .setParkourMode((CommandSender) context.getForWhom(), courseName, parkourMode));
             return Prompt.END_OF_CONVERSATION;
         }
     }
 
-    private static class ChoosePotionEffect extends ValidatingPrompt {
+    private static class ChoosePotionEffect extends FixedSetPrompt {
+
+        ChoosePotionEffect() {
+            super(Arrays.stream(PotionEffectType.values()).map(PotionEffectType::getName).toArray(String[]::new));
+        }
+
+        @NotNull
+        @Override
+        public String getPromptText(@NotNull ConversationContext context) {
+            return ChatColor.LIGHT_PURPLE + " What type of Potion Effect would you like to apply?\n"
+                    + ChatColor.GREEN + formatFixedSet();
+        }
 
         @Override
-        protected boolean isInputValid(@NotNull ConversationContext context,
-                                       @NotNull String input) {
-            return XPotion.matchXPotion(input.toUpperCase()).isPresent();
+        protected boolean isInputValid(@NotNull ConversationContext context, @NotNull String input) {
+            return super.isInputValid(context, input.toUpperCase());
         }
 
         @NotNull
@@ -75,12 +86,6 @@ public class ParkourModeConversation extends ParkourConversation {
                                               @NotNull String input) {
             context.setSessionData("potion", input.toUpperCase());
             return new WantSpecifyDurationAmplifier();
-        }
-
-        @NotNull
-        @Override
-        public String getPromptText(@NotNull ConversationContext context) {
-            return ChatColor.LIGHT_PURPLE + " What type of Potion Effect would you like to apply?";
         }
 
         @Nullable
@@ -178,15 +183,10 @@ public class ParkourModeConversation extends ParkourConversation {
             String potionEffect = (String) context.getSessionData("potion");
             String durationAmplifier = (String) context.getSessionData("durationAmplifier");
             String joinMessage = (String) context.getSessionData("joinMessage");
-
-            CourseInfo.setParkourMode(courseName, ParkourMode.POTION);
-            CourseInfo.addPotionParkourModeEffect(courseName, potionEffect, durationAmplifier);
-            CourseInfo.setPotionJoinMessage(courseName, joinMessage);
-
-            Parkour.getInstance().getCourseManager().clearCache(courseName);
-
-            return TranslationUtils.getPropertySet("ParkourMode", courseName,
-                    ParkourMode.POTION.getDisplayName() + " (" + potionEffect + ")");
+            Bukkit.getScheduler().runTaskAsynchronously(Parkour.getInstance(), () ->
+                Parkour.getInstance().getCourseSettingsManager().setPotionParkourMode(
+                        (CommandSender) context.getForWhom(), courseName, potionEffect, durationAmplifier, joinMessage));
+            return "";
         }
     }
 }

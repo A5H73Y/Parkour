@@ -1,7 +1,7 @@
 package io.github.a5h73y.parkour.conversation;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
+import io.github.a5h73y.parkour.conversation.other.ParkourConversation;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.Conversable;
@@ -35,7 +35,7 @@ public class LeaderboardConversation extends ParkourConversation {
 
         @Override
         public Prompt acceptInput(@NotNull ConversationContext context, String message) {
-            if (!CourseInfo.getAllCourseNames().contains(message.toLowerCase())) {
+            if (!Parkour.getInstance().getCourseManager().getCourseNames().contains(message.toLowerCase())) {
                 ParkourConversation.sendErrorMessage(context, "This course does not exist");
                 return this;
             }
@@ -105,11 +105,11 @@ public class LeaderboardConversation extends ParkourConversation {
 
             Bukkit.getScheduler().runTaskAsynchronously(Parkour.getInstance(), () -> {
                 if (leaderboardType.equals("personal")) {
-                    Parkour.getInstance().getDatabase().displayTimeEntries(player, courseName,
-                            Parkour.getInstance().getDatabase().getTopPlayerCourseResults(player, courseName, amount));
+                    Parkour.getInstance().getDatabaseManager().displayTimeEntries(player, courseName,
+                            Parkour.getInstance().getDatabaseManager().getTopPlayerCourseResults(player, courseName, amount));
                 } else if (leaderboardType.equals("global")) {
-                    Parkour.getInstance().getDatabase().displayTimeEntries(player, courseName,
-                            Parkour.getInstance().getDatabase().getTopCourseResults(courseName, amount));
+                    Parkour.getInstance().getDatabaseManager().displayTimeEntries(player, courseName,
+                            Parkour.getInstance().getDatabaseManager().getTopCourseResults(courseName, amount));
                 }
             });
 

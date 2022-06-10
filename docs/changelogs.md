@@ -1,13 +1,65 @@
 Changelogs
 ======
 
-Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon start up. There will be no manual intervention unless stated in breaking changes.
-## Parkour 6.7.1
+Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon server start up. There will be no manual intervention, unless stated in breaking changes.
+## 7.0.0
+### Java 11
+The plugin now requires a minimum Java version of 11 to function.
+
+### Configuration Changes
+Parkour 6.7.1 used a config system which hadn't changed since the Plugin's inception in 2012, by combining all the Courses and Players data into their single config file. This resulted in insanely slow performance when changing and saving data regularly.
+
+Parkour 7.0.0 introduced a new system of configuration, where each Player and each Course has its own JSON config file with its own data and nothing else. 
+The performance improvements are outstanding: ![7.0.0 Performance](https://i.imgur.com/t3t4gbD.png "7.0.0 Performance")
+
+Many new smaller config files have been introduced to store appropriate data.
+### Default Course Settings
+There is a new section in the config.yml that specifies default Course settings. A few examples include the "RewardOnce" flag, "MaxFallTicks" and "RewardDelay".
+
+These can now be overridden on a per-course basis, using the "/pa setcourse (course)" command.
+### Changes
+* New AutoTabCompleter system to allow for more dynamic prompts
+* New Config files (parkour-ranks.yml, auto-starts.yml, course-completions.yml, quiet-players.yml, parkour-lobbies.yml)
+* Changed "/pa create" to allow for many creations
+* Added 'achieved' column to 'time' table, includes Placeholders to access.
+* Added "/pa session" and "/pa parkourkit" commands
+* Added "/pa delete rank (parkour-level)"
+* Added "/pa admin" for administration commands
+* Added "pac manualcheckpoint (player)" 
+* Added "pac leaveall" console command to kick ALL Players from Courses
+* Added "OnFinish.TeleportBeforePrize" to change finish order
+* Added Course status Placeholders, with translations
+* Added "Restore" option to "OnFinish.SetGameMode" to restore the Player's GameMode
+* Added "%parkour_current_checkpoint_hologram_(course)_(number)%" placeholder for use with Holograms
+* Added option to warn players if they've missed checkpoints
+* Added "/pa delete leaderboardrow (course) (row)" to delete leaderboard rows manually
+* Fixed the inconsistent Course finish time
+* External Plugin is no longer disabled when not found on first startup. 
+* Cancel void damage if DisablePlayerDamage is enabled
+* More messages are processed through PlaceholderAPI
+* Added 'OnServerRestart.KickPlayerFromCourse' config option
+* ParkourSessions are now stored as JSON, instead of serialized objects as they were problematic
+* Improvements to prevent Players floating on death blocks
+* Allow Player look-up to use UUIDs
+* Parkour Commands can now be disabled
+* Improved SQL to use PreparedStatements for improved security
+* Added a default entry for each event command in the config.yml
+* Allowed for Per-Course event commands to be combined with default commands
+* Allowed JoinItems to be ItemStacks
+* Allowed "MaxFallTick" to be 0 which disables the check
+* Removed individual CreateSign permissions, replaced with parkour.admin.createsign
+* Tons of fixes and performance improvements
+* Project now requires Java 11 to function
+
+_Thank you to steve4744, and the various contributors for helping with this major update._  
+_Additional thanks to the kind users who helped test early development builds!_
+
+## 6.7.1
 ### Changes
 * Clear PlaceholderAPI cache on database updates
 * Fixes to Parkour messages being sent to Players
 
-## Parkour 6.7
+## 6.7
 ### Changes
 * Added Potion ParkourBlock
 * Added configurable time formats
@@ -25,12 +77,12 @@ Please note that each version of Parkour is backwards compatible with the previo
 * Fixes for titles not appearing
 * Reintroduced BountifulAPI support
 
-## Parkour 6.6
+## 6.6
 ### Changes
 * Added ability for entities to attack player (OnCourse.PreventEntities.Attacking)
 * Added "/pa setlobbycommand (lobby) (command)" command
 * Added "OnRestart.FullPlayerRestart" config to allow for a 'quick' restart alternative
-* Added / Changed Parkour event types to allow for better customisation ([more info](https://a5h73y.github.io/Parkour/#/tutorials/configuring-course?id=parkour-events))
+* Added / Changed Parkour event types to allow for better customisation ([more info](/tutorials/configuring-course?id=parkour-events))
 * Added "/pa manualcheckpoint" for FreeCheckpoint ParkourMode (ParkourModes.FreeCheckpoint.ManualCheckpointCommandEnabled)
 * Fixed "course_completed" placeholder
 * Fixed rewardonce not working correctly
@@ -41,9 +93,9 @@ Please note that each version of Parkour is backwards compatible with the previo
 * Changed Upgrader to be sync to prevent placeholder issues
 
 ### Breaking Changes
-* [Parkour Event Types](https://a5h73y.github.io/Parkour/#/tutorials/configuring-course?id=parkour-events) have been updated / renamed, so you'll have to reconfigure the Course events in some cases.
+* [Parkour Event Types](/tutorials/configuring-course?id=parkour-events) have been updated / renamed, so you'll have to reconfigure the Course events in some cases.
 
-## Parkour 6.5
+## 6.5
 ### Changes
 * Added Course display names `/pa setcourse (course) displayname (value)` (with new placeholders)
 * Added Join Broadcast (OnJoin.BroadcastLevel)
@@ -67,7 +119,7 @@ Please note that each version of Parkour is backwards compatible with the previo
 * Changed AutoStart reactivation to reset session rather than restart course
 * Fixed config issues after a fresh install
 
-## Parkour 6.4
+## 6.4
 ### Changes
 * Added ability to remove Parkour messages
 * Added remaining lives placeholder
@@ -92,7 +144,7 @@ Please note that each version of Parkour is backwards compatible with the previo
 * Remove players reappeared message after leaving / finishing
 * Changed "OnJoin.Item" to be "ParkourTool." in the config.yml
 
-## Parkour 6.3
+## 6.3
 ### Changes
 * Added Option to Automatically hide players on Course join
 * Added %DEATHS% as a placeholder in TopTen Placeholder
@@ -109,7 +161,7 @@ Please note that each version of Parkour is backwards compatible with the previo
 ### Breaking Changes
 * The `course_record` placeholder variables have changed order, now `%parkour_course_record_(course)_(value)%`
 
-## Parkour 6.2
+## 6.2
 ### Changes
 * Option to treat last checkpoint as Finish
 * Fixed ParkourLevel and ParkourRank format
@@ -118,14 +170,14 @@ Please note that each version of Parkour is backwards compatible with the previo
 * Option to teleport to the nearest Lobby when taking void damage (not on Course) Thanks to FrankHeijden
 * Fix Placeholders when cache expired
 
-## Parkour 6.1
+## 6.1
 ### Changes
 * Reimplemented placeholders: `%parkour_player_personal_best_(course)_time%` & `%parkour_player_personal_best_(course)_deaths%`
 * Placeholders fix for not matching lowercase
 * Added option to append the world name to AutoStart
 * Various fixes and improvements
 
-## Parkour 6.0
+## 6.0
 This update is a rewrite of v5.3 with performance and usability being at the forefront of every decision.
 
 **If you have 5.3 installed, Parkour 6.0 will automatically upgrade your configuration.**

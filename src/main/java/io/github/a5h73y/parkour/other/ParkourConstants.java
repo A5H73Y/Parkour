@@ -30,6 +30,12 @@ public class ParkourConstants {
 
     public static final String PARKOUR_LEVEL_PLACEHOLDER = "%LEVEL%";
 
+    public static final String POSITION_PLACEHOLDER = "%POSITION%";
+
+    public static final String COMMAND_PLACEHOLDER = "%COMMAND%";
+
+    public static final String ARGUMENTS_PLACEHOLDER = "%ARGUMENTS%";
+
     public static final float DEFAULT_WALK_SPEED = 0.2f;
 
     private ParkourConstants() {

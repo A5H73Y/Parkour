@@ -1,12 +1,9 @@
 package io.github.a5h73y.parkour.conversation;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.enums.ParkourEventType;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
-import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.conversation.other.ParkourConversation;
+import io.github.a5h73y.parkour.type.course.ParkourEventType;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -18,20 +15,18 @@ import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.FixedSetPrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SetCourseConversation extends ParkourConversation {
 
-    public static final List<String> SET_COURSE_OPTIONS = Collections.unmodifiableList(
-            Arrays.asList("displayname", "creator", "minlevel", "maxdeath", "maxtime", "command", "message"));
-
+    private static final String SESSION_EVENT_NAME = "eventName";
     public static final List<String> PARKOUR_EVENT_TYPE_NAMES =
-            Stream.of(ParkourEventType.values()).map(ParkourEventType::getDisplayName).collect(Collectors.toList());
+            Stream.of(ParkourEventType.values())
+                    .map(parkourEventType -> parkourEventType.getConfigEntry().toLowerCase()).collect(Collectors.toList());
 
-    public SetCourseConversation(Player player) {
-        super(player);
+    public SetCourseConversation(Conversable conversable) {
+        super(conversable);
     }
 
     @NotNull
@@ -43,7 +38,8 @@ public class SetCourseConversation extends ParkourConversation {
     private static class ChooseSetCourseOption extends FixedSetPrompt {
 
         ChooseSetCourseOption() {
-            super(SET_COURSE_OPTIONS.toArray(new String[0]));
+            super(Stream.concat(Parkour.getInstance().getCourseSettingsManager().getCourseSettingActions().stream(),
+                    Stream.of("message", "command")).toArray(String[]::new));
         }
 
         @NotNull
@@ -84,12 +80,15 @@ public class SetCourseConversation extends ParkourConversation {
                 return null;
             }
 
-            String playerName = (String) context.getSessionData(SESSION_PLAYER_NAME);
             String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);
             String setOption = (String) context.getSessionData("setOption");
-            Player player = Bukkit.getPlayer(playerName);
 
-            performAction(player, courseName, setOption, input);
+            Parkour parkour = Parkour.getInstance();
+            Bukkit.getScheduler().runTaskAsynchronously(parkour, () ->
+                    // for messages to be sent - do it async
+                    parkour.getCourseSettingsManager().performAction(
+                            (CommandSender) context.getForWhom(), courseName, setOption, input)
+            );
 
             return Prompt.END_OF_CONVERSATION;
         }
@@ -124,7 +123,7 @@ public class SetCourseConversation extends ParkourConversation {
         @Override
         protected Prompt acceptValidatedInput(@NotNull ConversationContext context,
                                               @NotNull String choice) {
-            context.setSessionData("setCommandOption", choice);
+            context.setSessionData(SESSION_EVENT_NAME, choice);
             return new ChooseCourseCommandValue();
         }
     }
@@ -143,10 +142,11 @@ public class SetCourseConversation extends ParkourConversation {
                                   @Nullable String input) {
 
             String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);
-            ParkourEventType type = ParkourEventType.valueOf(context.getSessionData("setCommandOption").toString().toUpperCase());
-            CourseInfo.addEventCommand(courseName, type, input);
-            context.getForWhom().sendRawMessage(TranslationUtils.getPropertySet(
-                    type.getConfigEntry() + " command", courseName, "/" + input));
+            String eventName = (String) context.getSessionData(SESSION_EVENT_NAME);
+
+            Bukkit.getScheduler().runTaskAsynchronously(Parkour.getInstance(), () ->
+                    Parkour.getInstance().getCourseSettingsManager().addCourseEventCommand(
+                            (CommandSender) context.getForWhom(), courseName, eventName, input));
             return Prompt.END_OF_CONVERSATION;
         }
     }
@@ -180,7 +180,7 @@ public class SetCourseConversation extends ParkourConversation {
         @Override
         protected Prompt acceptValidatedInput(@NotNull ConversationContext context,
                                               @NotNull String choice) {
-            context.setSessionData("setMessageOption", choice);
+            context.setSessionData(SESSION_EVENT_NAME, choice);
             return new ChooseCourseMessageValue();
         }
     }
@@ -198,49 +198,12 @@ public class SetCourseConversation extends ParkourConversation {
                                   @Nullable String input) {
 
             String courseName = (String) context.getSessionData(SESSION_COURSE_NAME);
-            String messageValue = (String) context.getSessionData("setMessageOption");
-            CourseInfo.setEventMessage(courseName, messageValue, input);
-            context.getForWhom().sendRawMessage(TranslationUtils.getPropertySet(messageValue + " message", courseName, input));
+            String eventName = (String) context.getSessionData(SESSION_EVENT_NAME);
+
+            Bukkit.getScheduler().runTaskAsynchronously(Parkour.getInstance(), () ->
+                    Parkour.getInstance().getCourseSettingsManager().setCourseEventMessage(
+                            (CommandSender) context.getForWhom(), courseName, eventName, input));
             return Prompt.END_OF_CONVERSATION;
         }
-    }
-
-    /**
-     * Perform Set Course Command.
-     *
-     * @param sender command sender
-     * @param courseName course name
-     * @param setOption option to set
-     * @param input input value
-     */
-    public static void performAction(CommandSender sender, String courseName, String setOption, String input) {
-        Parkour parkour = Parkour.getInstance();
-        Bukkit.getScheduler().runTaskAsynchronously(parkour, () -> {
-            switch (setOption) {
-                case "creator":
-                    parkour.getCourseManager().setCreator(sender, courseName, input);
-                    break;
-
-                case "minlevel":
-                    parkour.getCourseManager().setMinimumParkourLevel(sender, courseName, input);
-                    break;
-
-                case "maxdeath":
-                    parkour.getCourseManager().setMaxDeaths(sender, courseName, input);
-                    break;
-
-                case "maxtime":
-                    parkour.getCourseManager().setMaxTime(sender, courseName, input);
-                    break;
-
-                case "displayname":
-                    parkour.getCourseManager().setDisplayName(sender, courseName, input);
-                    break;
-
-                default:
-                    TranslationUtils.sendInvalidSyntax(sender, "setcourse",
-                            "(courseName) [displayname, creator, minlevel, maxdeath, maxtime] [value]");
-            }
-        });
     }
 }

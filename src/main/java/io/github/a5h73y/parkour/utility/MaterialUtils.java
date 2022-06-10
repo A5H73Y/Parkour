@@ -32,6 +32,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Stairs;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Material Utility methods.
@@ -90,7 +92,7 @@ public class MaterialUtils {
 	 * @return created {@link ItemStack}
 	 */
 	public static ItemStack createItemStack(Material material, String itemLabel) {
-		return createItemStack(material, 1, itemLabel);
+		return createItemStack(material, 1, itemLabel, false);
 	}
 
 	/**
@@ -101,14 +103,20 @@ public class MaterialUtils {
 	 * @param itemLabel display name
 	 * @return created {@link ItemStack}
 	 */
-	public static ItemStack createItemStack(Material material, Integer amount, String itemLabel) {
-		ItemStack item = new ItemStack(material, amount);
+	public static ItemStack createItemStack(@NotNull Material material, int amount,
+	                                        @Nullable String itemLabel,
+	                                        @Nullable Boolean unbreakable) {
+		ItemStack itemStack = new ItemStack(material, amount);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+
 		if (itemLabel != null) {
-			ItemMeta meta = item.getItemMeta();
-			meta.setDisplayName(itemLabel);
-			item.setItemMeta(meta);
+			itemMeta.setDisplayName(itemLabel);
 		}
-		return item;
+		if (Boolean.TRUE.equals(unbreakable)) {
+			itemMeta.setUnbreakable(true);
+		}
+		itemStack.setItemMeta(itemMeta);
+		return itemStack;
 	}
 
 	/**
@@ -136,17 +144,17 @@ public class MaterialUtils {
 	/**
 	 * Lookup the Material information requested by Player.
 	 * If arguments are provided it will try to match a Material based on name.
-	 * Otherwise it will display the Material information of the item in the Player's main hand.
+	 * Otherwise, it will display the Material information of the item in the Player's main hand.
 	 *
 	 * @param player player
-	 * @param args command arguments
+	 * @param materialName optional material name
 	 */
-	public static void lookupMaterialInformation(Player player, String... args) {
+	public static void lookupMaterialInformation(Player player, @Nullable String materialName) {
 		Material material;
 		ItemStack data = null;
 
-		if (args.length > 1) {
-			material = Material.getMaterial(args[1].toUpperCase());
+		if (materialName != null) {
+			material = Material.getMaterial(materialName.toUpperCase());
 
 		} else {
 			data = getItemStackInPlayersHand(player);
@@ -156,6 +164,8 @@ public class MaterialUtils {
 			TranslationUtils.sendValue(player, "Material", material.name());
 			if (data != null) {
 				TranslationUtils.sendValue(player, "Data", data.toString());
+				TranslationUtils.sendValue(player, "Base 64", Parkour.getInstance()
+						.getConfigManager().getItemStackSerializable().serialize(data));
 			}
 		} else {
 			TranslationUtils.sendMessage(player, "Invalid Material!");
@@ -178,7 +188,7 @@ public class MaterialUtils {
 		//check if player is standing in a half-block
 		if (!block.getType().equals(Material.AIR) && !block.getType().equals(CAVE_AIR.parseMaterial())
 				&& !block.getType().equals(lookupMaterial(
-						Parkour.getDefaultConfig().getString("OnCourse.CheckpointMaterial")))) {
+				Parkour.getDefaultConfig().getString("OnCourse.CheckpointMaterial")))) {
 			TranslationUtils.sendMessage(player, "Invalid Material for Checkpoint: &b" + block.getType());
 			return false;
 		}
@@ -204,9 +214,9 @@ public class MaterialUtils {
 					return false;
 				}
 			} else if (!validMaterials.contains(blockUnder.getType())) {
-					TranslationUtils.sendMessage(player,
-							"Invalid Material for Checkpoint: &b" + blockUnder.getType());
-					return false;
+				TranslationUtils.sendMessage(player,
+						"Invalid Material for Checkpoint: &b" + blockUnder.getType());
+				return false;
 			}
 		}
 		return true;
@@ -219,8 +229,9 @@ public class MaterialUtils {
 	 * @param location2 location 2
 	 * @return same block locations
 	 */
-	public static boolean sameBlockLocations(Location location1, Location location2) {
-		return location1.getBlockX() == location2.getBlockX()
+	public static boolean sameBlockLocations(@Nullable Location location1, @Nullable Location location2) {
+		return location1 != null && location2 != null
+				&& location1.getBlockX() == location2.getBlockX()
 				&& location1.getBlockY() == location2.getBlockY()
 				&& location1.getBlockZ() == location2.getBlockZ();
 	}
@@ -255,4 +266,6 @@ public class MaterialUtils {
 
 		return validCheckpointMaterials;
 	}
+
+	private MaterialUtils() {}
 }

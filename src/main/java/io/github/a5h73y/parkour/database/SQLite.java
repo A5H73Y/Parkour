@@ -33,32 +33,36 @@ public class SQLite extends Database {
     @Override
     public Connection getConnection() throws SQLException {
         if (this.connection == null || this.connection.isClosed()) {
-            File dbLocationFolder = new File(dbLocation);
-
-            if (!dbLocationFolder.exists()) {
-                dbLocationFolder.mkdirs();
-            }
-
-            File dbFile = new File(dbLocation, dbName);
-
-            if (!dbFile.exists()) {
-                try {
-                    dbLocationFolder.createNewFile();
-                } catch (IOException e) {
-                    PluginUtils.log("Unable to create database: " + e.getMessage(), 2);
-                    e.printStackTrace();
-                }
-            }
-
-            try {
-                Class.forName("org.sqlite.JDBC");
-            } catch (ClassNotFoundException e) {
-                PluginUtils.log("Unable to load SQLite class: " + e.getMessage(), 2);
-                e.printStackTrace();
-            }
-            this.connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile);
+            this.connection = createConnection();
         }
 
         return this.connection;
+    }
+
+    private Connection createConnection() throws SQLException {
+        File dbLocationFolder = new File(dbLocation);
+
+        if (!dbLocationFolder.exists()) {
+            dbLocationFolder.mkdirs();
+        }
+
+        File dbFile = new File(dbLocation, dbName);
+
+        if (!dbFile.exists()) {
+            try {
+                dbLocationFolder.createNewFile();
+            } catch (IOException e) {
+                PluginUtils.log("Unable to create database: " + e.getMessage(), 2);
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            PluginUtils.log("Unable to load SQLite class: " + e.getMessage(), 2);
+            e.printStackTrace();
+        }
+        return DriverManager.getConnection("jdbc:sqlite:" + dbFile.getPath());
     }
 }

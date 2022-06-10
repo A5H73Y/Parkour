@@ -3,8 +3,7 @@ package io.github.a5h73y.parkour.utility;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
-import io.github.a5h73y.parkour.type.lobby.LobbyInfo;
+import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
@@ -24,10 +23,6 @@ public class SignUtils {
      * @param signType requested sign type
      */
     public static void createStandardSign(SignChangeEvent signEvent, Player player, String signType) {
-        if (!PermissionUtils.hasSignPermission(player, signType, signEvent)) {
-            return;
-        }
-
         signEvent.setLine(1, signType);
         signEvent.setLine(2, "");
         signEvent.setLine(3, "-----");
@@ -58,12 +53,8 @@ public class SignUtils {
      */
     public static boolean createStandardCourseSign(SignChangeEvent signEvent, Player player,
                                                    String signType, boolean displayMessage) {
-        if (!PermissionUtils.hasSignPermission(player, signType, signEvent)) {
-            breakSignAndCancelEvent(signEvent);
-            return false;
-        }
 
-        if (!Parkour.getInstance().getCourseManager().doesCourseExists(signEvent.getLine(2))) {
+        if (!Parkour.getInstance().getCourseManager().doesCourseExist(signEvent.getLine(2))) {
             TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, signEvent.getLine(2), player);
             breakSignAndCancelEvent(signEvent);
             return false;
@@ -89,7 +80,8 @@ public class SignUtils {
             return;
         }
 
-        int minimumLevel = CourseInfo.getMinimumParkourLevel(signEvent.getLine(2));
+        int minimumLevel = Parkour.getInstance().getConfigManager().getCourseConfig(signEvent.getLine(2))
+                .getMinimumParkourLevel();
 
         if (minimumLevel > 0) {
             signEvent.setLine(3, ChatColor.RED + String.valueOf(minimumLevel));
@@ -106,10 +98,6 @@ public class SignUtils {
      * @param player player
      */
     public static void createLobbyJoinSign(SignChangeEvent signEvent, Player player) {
-        if (!PermissionUtils.hasSignPermission(player, "Lobby", signEvent)) {
-            return;
-        }
-
         signEvent.setLine(1, "Lobby");
 
         if (signEvent.getLine(2).isEmpty()) {
@@ -119,15 +107,15 @@ public class SignUtils {
         } else {
             String lobbyName = signEvent.getLine(2);
 
-            if (!LobbyInfo.doesLobbyExist(lobbyName)) {
+            if (!Parkour.getLobbyConfig().doesLobbyExist(lobbyName)) {
                 TranslationUtils.sendValueTranslation("Error.UnknownLobby", signEvent.getLine(2), player);
                 signEvent.setLine(2, "");
                 signEvent.setLine(3, "-----");
                 return;
             }
 
-            if (LobbyInfo.hasRequiredLevel(lobbyName)) {
-                signEvent.setLine(3, ChatColor.RED + LobbyInfo.getRequiredLevel(lobbyName).toString());
+            if (Parkour.getLobbyConfig().hasRequiredLevel(lobbyName)) {
+                signEvent.setLine(3, ChatColor.RED + Parkour.getLobbyConfig().getRequiredLevel(lobbyName).toString());
             }
             TranslationUtils.sendValueTranslation("Parkour.SignCreated", "Lobby", player);
         }
@@ -142,10 +130,6 @@ public class SignUtils {
      * @param player player
      */
     public static void createEffectSign(SignChangeEvent signEvent, Player player) {
-        if (!PermissionUtils.hasSignPermission(player, "Effect", signEvent)) {
-            return;
-        }
-
         signEvent.setLine(1, "Effect");
 
         if (signEvent.getLine(2).equalsIgnoreCase("heal")) {
@@ -232,4 +216,6 @@ public class SignUtils {
         event.getBlock().breakNaturally();
         event.setCancelled(true);
     }
+
+    private SignUtils() {}
 }

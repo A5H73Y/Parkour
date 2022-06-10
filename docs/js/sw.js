@@ -16,8 +16,8 @@ const HOSTNAME_WHITELIST = [
 
 // The Util Function to hack URLs of intercepted requests
 const getFixedUrl = (req) => {
-    var now = Date.now()
-    var url = new URL(req.url)
+    const now = Date.now()
+    const url = new URL(req.url)
 
     // 1. fixed http URL
     // Just keep syncing with location.protocol
@@ -26,7 +26,7 @@ const getFixedUrl = (req) => {
     url.protocol = self.location.protocol
 
     // 2. add query for caching-busting.
-    // Github Pages served with Cache-Control: max-age=600
+    // GitHub Pages served with Cache-Control: max-age=600
     // max-age on mutable content is error-prone, with SW life of bugs can even extend.
     // Until cache mode of Fetch API landed, we have to workaround cache-busting with query string.
     // Cache-Control-Bug: https://bugs.chromium.org/p/chromium/issues/detail?id=453190
@@ -38,7 +38,7 @@ const getFixedUrl = (req) => {
 
 /**
  *  @Lifecycle Activate
- *  New one activated when old isnt being used.
+ *  New one activated when old isn't being used.
  *
  *  waitUntil(): activating ====> activated
  */
@@ -64,7 +64,7 @@ self.addEventListener('fetch', event => {
         const fetchedCopy = fetched.then(resp => resp.clone())
 
         // Call respondWith() with whatever we get first.
-        // If the fetch fails (e.g disconnected), wait for the cache.
+        // If the fetch fails (e.g. disconnected), wait for the cache.
         // If there’s nothing in cache, wait for the fetch.
         // If neither yields a response, return offline pages.
         event.respondWith(

@@ -3,19 +3,18 @@ package io.github.a5h73y.parkour.type.lobby;
 import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.other.ParkourValidation;
-import io.github.a5h73y.parkour.type.Cacheable;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
-import io.github.a5h73y.parkour.type.player.ParkourSession;
-import io.github.a5h73y.parkour.type.player.PlayerInfo;
+import io.github.a5h73y.parkour.type.CacheableParkourManager;
+import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
+import io.github.a5h73y.parkour.utility.permission.Permission;
+import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -25,12 +24,17 @@ import org.jetbrains.annotations.Nullable;
  * Parkour Lobby Manager.
  * Keeps a lazy Cache of {@link Lobby} which can be reused by other players.
  */
-public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lobby> {
+public class LobbyManager extends CacheableParkourManager {
 
     private final Map<String, Lobby> lobbyCache = new HashMap<>();
 
     public LobbyManager(final Parkour parkour) {
         super(parkour);
+    }
+
+    @Override
+    protected LobbyConfig getConfig() {
+        return parkour.getConfigManager().getLobbyConfig();
     }
 
     /**
@@ -46,8 +50,8 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
         setLobby(player, lobbyName);
         TranslationUtils.sendValueTranslation("Lobby.Created", lobbyName, player);
 
-        if (requiredLevel != null && ValidationUtils.isPositiveInteger(requiredLevel)) {
-            LobbyInfo.setRequiredLevel(lobbyName, Integer.parseInt(requiredLevel));
+        if (ValidationUtils.isPositiveInteger(requiredLevel)) {
+            getConfig().setRequiredLevel(lobbyName, Integer.parseInt(requiredLevel));
             TranslationUtils.sendValueTranslation("Lobby.RequiredLevelSet", requiredLevel, player);
         }
     }
@@ -63,52 +67,52 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
     public void joinLobby(Player player, @Nullable String lobbyName) {
         lobbyName = lobbyName == null ? DEFAULT : lobbyName.toLowerCase();
 
-        if (!ParkourValidation.isDefaultLobbySet(player)) {
+        if (!isDefaultLobbySet(player)) {
             return;
         }
 
         // if they are on a course, force them to leave, which will ultimately run this method again.
-        if (parkour.getPlayerManager().isPlaying(player)) {
-            PlayerInfo.resetJoinLocation(player);
+        if (parkour.getParkourSessionManager().isPlaying(player)) {
+            parkour.getConfigManager().getPlayerConfig(player).resetSessionJoinLocation();
             parkour.getPlayerManager().leaveCourse(player);
             return;
         }
 
-        if (!ParkourValidation.canJoinLobby(player, lobbyName)) {
+        if (!canJoinLobby(player, lobbyName)) {
             return;
         }
 
         Lobby lobby = lobbyCache.getOrDefault(lobbyName, populateLobby(lobbyName));
         PlayerUtils.teleportToLocation(player, lobby.getLocation());
 
-        if (LobbyInfo.hasLobbyCommand(lobbyName)) {
-            for (String command : LobbyInfo.getLobbyCommands(lobbyName)) {
+        if (getConfig().hasLobbyCommand(lobbyName)) {
+            for (String command : getConfig().getLobbyCommands(lobbyName)) {
                 PlayerUtils.dispatchServerPlayerCommand(command, player);
             }
         }
 
         if (lobbyName.equals(DEFAULT)) {
-            TranslationUtils.sendTranslation("Parkour.Lobby", player);
+            TranslationUtils.sendTranslation("Lobby.Joined", player);
         } else {
-            TranslationUtils.sendValueTranslation("Parkour.LobbyOther", lobbyName, player);
+            TranslationUtils.sendValueTranslation("Lobby.JoinedOther", lobbyName, player);
         }
     }
 
     /**
      * Add a Command to be executed when the Player visits a Lobby.
      *
-     * @param sender player
+     * @param commandSender command sender
      * @param lobbyName lobby name
      * @param command command to run
      */
-    public void addLobbyCommand(CommandSender sender, String lobbyName, String command) {
-        if (!LobbyInfo.doesLobbyExist(lobbyName)) {
-            TranslationUtils.sendValueTranslation("Error.UnknownLobby", lobbyName, sender);
+    public void addLobbyCommand(CommandSender commandSender, String lobbyName, String command) {
+        if (!getConfig().doesLobbyExist(lobbyName)) {
+            TranslationUtils.sendValueTranslation("Error.UnknownLobby", lobbyName, commandSender);
             return;
         }
 
-        LobbyInfo.addLobbyCommand(lobbyName, command);
-        TranslationUtils.sendPropertySet(sender, "Lobby Command", lobbyName, "/" + command);
+        getConfig().addLobbyCommand(lobbyName, command);
+        TranslationUtils.sendPropertySet(commandSender, "Lobby Command", lobbyName, "/" + command);
     }
 
     /**
@@ -118,12 +122,12 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
      * @param player player
      */
     public void justTeleportToDefaultLobby(Player player) {
-        if (!ParkourValidation.isDefaultLobbySet(player)) {
+        if (!isDefaultLobbySet(player)) {
             return;
         }
         Lobby lobby = lobbyCache.getOrDefault(DEFAULT, populateLobby(DEFAULT));
         PlayerUtils.teleportToLocation(player, lobby.getLocation());
-        TranslationUtils.sendTranslation("Parkour.Lobby", player);
+        TranslationUtils.sendTranslation("Lobby.Joined", player);
     }
 
     /**
@@ -134,7 +138,7 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
         Lobby lobby = getNearestLobby(player);
         if (lobby != null) {
             PlayerUtils.teleportToLocation(player, lobby.getLocation());
-            TranslationUtils.sendValueTranslation("Parkour.LobbyOther", lobby.getName(), player);
+            TranslationUtils.sendValueTranslation("Lobby.JoinedOther", lobby.getName(), player);
         }
     }
 
@@ -142,18 +146,18 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
      * Delete a Parkour Lobby.
      * All references to the Lobby will be deleted.
      *
-     * @param sender requesting sender
+     * @param commandSender command sender
      * @param lobbyName lobby name
      */
-    public void deleteLobby(CommandSender sender, String lobbyName) {
-        if (!ParkourValidation.canDeleteLobby(sender, lobbyName)) {
+    public void deleteLobby(CommandSender commandSender, String lobbyName) {
+        if (!parkour.getAdministrationManager().canDeleteLobby(commandSender, lobbyName)) {
             return;
         }
 
-        LobbyInfo.deleteLobby(lobbyName);
+        getConfig().deleteLobby(lobbyName);
         clearCache(lobbyName);
-        TranslationUtils.sendValueTranslation("Parkour.Delete", lobbyName + " Lobby", sender);
-        PluginUtils.logToFile(lobbyName + " lobby was deleted by " + sender.getName());
+        TranslationUtils.sendValueTranslation("Parkour.Delete", lobbyName + " Lobby", commandSender);
+        PluginUtils.logToFile(lobbyName + " lobby was deleted by " + commandSender.getName());
     }
 
     /**
@@ -166,8 +170,8 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
     public void teleportToLeaveDestination(Player player, ParkourSession session) {
         String lobbyName = null;
 
-        if (parkour.getConfig().getBoolean("OnLeave.TeleportToLinkedLobby")) {
-            lobbyName = CourseInfo.getLinkedLobby(session.getCourse().getName());
+        if (parkour.getParkourConfig().getBoolean("OnLeave.TeleportToLinkedLobby")) {
+            lobbyName = parkour.getConfigManager().getCourseConfig(session.getCourse().getName()).getLinkedLobby();
         }
 
         joinLobby(player, lobbyName);
@@ -175,11 +179,11 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
 
     /**
      * Display all Parkour Lobbies to sender.
-     * @param sender requesting sender
+     * @param commandSender command sender
      */
-    public void displayLobbies(CommandSender sender) {
-        TranslationUtils.sendHeading("Available Lobbies", sender);
-        LobbyInfo.getAllLobbyNames().forEach(s -> sender.sendMessage("* " + s));
+    public void displayLobbies(CommandSender commandSender) {
+        TranslationUtils.sendHeading("Available Lobbies", commandSender);
+        getConfig().getAllLobbyNames().forEach(s -> commandSender.sendMessage("* " + s));
     }
 
     @Override
@@ -208,7 +212,7 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
      */
     private Lobby populateLobby(@NotNull String lobbyName) {
         Lobby lobby = new Lobby(lobbyName.toLowerCase(),
-                LobbyInfo.getLobbyLocation(lobbyName), LobbyInfo.getRequiredLevel(lobbyName));
+                getConfig().getLobbyLocation(lobbyName), getConfig().getRequiredLevel(lobbyName));
         lobbyCache.put(lobbyName.toLowerCase(), lobby);
         return lobby;
     }
@@ -220,13 +224,13 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
      * @param lobbyName lobby name
      */
     private void setLobby(Player player, String lobbyName) {
-        LobbyInfo.setLobby(lobbyName, player.getLocation());
+        getConfig().setLobbyLocation(lobbyName, player.getLocation());
         PluginUtils.logToFile(lobbyName + " lobby was set by " + player.getName());
     }
 
     /**
      * Find the nearest valid Lobby to the Player.
-     * If no nearest lobby was found, the default lobby will be returned.
+     * If no lobby was found, the default lobby will be returned.
      * If no lobby was set, null is returned.
      *
      * @param player player
@@ -236,8 +240,94 @@ public class LobbyManager extends AbstractPluginReceiver implements Cacheable<Lo
     private Lobby getNearestLobby(Player player) {
         return lobbyCache.values().stream()
                 .filter(lobby -> lobby.getLocation().getWorld() == player.getWorld())
-                .filter(lobby -> ParkourValidation.canJoinLobbySilent(player, lobby.getName()))
+                .filter(lobby -> canJoinLobbySilent(player, lobby.getName()))
                 .min(Comparator.comparingDouble(o -> player.getLocation().distanceSquared(o.getLocation())))
                 .orElse(lobbyCache.getOrDefault(DEFAULT, populateLobby(DEFAULT)));
+    }
+
+    /**
+     * Validate the Default Lobby is set.
+     *
+     * @param player player
+     * @return default lobby set
+     */
+    private boolean isDefaultLobbySet(Player player) {
+        boolean lobbySet = Parkour.getLobbyConfig().doesDefaultLobbyExist();
+
+        if (!lobbySet) {
+            if (PermissionUtils.hasPermission(player, Permission.ADMIN_ALL, false)) {
+                TranslationUtils.sendMessage(player, "&cDefault Lobby has not been set!");
+                TranslationUtils.sendMessage(player, "Type &b'/pa create lobby' &fwhere you want the lobby to be set.");
+
+            } else {
+                TranslationUtils.sendMessage(player, "&cDefault Lobby has not been set! Please tell the Owner!");
+            }
+        } else if (Bukkit.getWorld(Parkour.getLobbyConfig().getLobbyWorld(DEFAULT)) == null) {
+            TranslationUtils.sendTranslation("Error.UnknownWorld", player);
+            lobbySet = false;
+        }
+        return lobbySet;
+    }
+
+    /**
+     * Validate Player joining Lobby.
+     *
+     * @param player player
+     * @param lobbyName lobby name
+     * @return player can join lobby
+     */
+    private boolean canJoinLobby(Player player, String lobbyName) {
+        if (!Parkour.getLobbyConfig().doesLobbyExist(lobbyName)) {
+            TranslationUtils.sendValueTranslation("Error.UnknownLobby", lobbyName, player);
+            return false;
+        }
+
+        if (Bukkit.getWorld(Parkour.getLobbyConfig().getLobbyWorld(lobbyName)) == null) {
+            TranslationUtils.sendTranslation("Error.UnknownWorld", player);
+            return false;
+        }
+
+        if (Parkour.getDefaultConfig().getBoolean("LobbySettings.EnforceWorld")
+                && !player.getWorld().getName().equals(Parkour.getLobbyConfig().getLobbyWorld(lobbyName))) {
+            TranslationUtils.sendTranslation("Error.WrongWorld", player);
+            return false;
+        }
+
+        int level = Parkour.getLobbyConfig().getRequiredLevel(lobbyName);
+
+        if (level > 0 && parkour.getConfigManager().getPlayerConfig(player).getParkourLevel() < level
+                && !PermissionUtils.hasPermission(player, Permission.ADMIN_LEVEL_BYPASS, false)) {
+            TranslationUtils.sendValueTranslation("Error.RequiredLvl", String.valueOf(level), player);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate Player joining Lobby Silently.
+     *
+     * @param player player
+     * @param lobbyName lobby name
+     * @return player can join lobby
+     */
+    private boolean canJoinLobbySilent(Player player, String lobbyName) {
+        if (!Parkour.getLobbyConfig().doesLobbyExist(lobbyName)) {
+            return false;
+        }
+
+        if (Bukkit.getWorld(Parkour.getDefaultConfig().getString("Lobby." + lobbyName + ".World")) == null) {
+            return false;
+        }
+
+        if (Parkour.getDefaultConfig().getBoolean("LobbySettings.EnforceWorld")
+                && !player.getWorld().getName().equals(Parkour.getLobbyConfig().getLobbyWorld(lobbyName))) {
+            return false;
+        }
+
+        int level = Parkour.getLobbyConfig().getRequiredLevel(lobbyName);
+
+        return level <= 0 || parkour.getConfigManager().getPlayerConfig(player).getParkourLevel() >= level
+                || PermissionUtils.hasPermission(player, Permission.ADMIN_LEVEL_BYPASS, false);
     }
 }

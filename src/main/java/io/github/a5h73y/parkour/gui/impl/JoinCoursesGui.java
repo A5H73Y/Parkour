@@ -5,7 +5,6 @@ import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.gui.AbstractMenu;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
 import io.github.a5h73y.parkour.type.player.PlayerManager;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
@@ -33,13 +32,14 @@ public class JoinCoursesGui implements AbstractMenu {
 
 	@Override
 	public void addContent(InventoryGui parent, Player player) {
-		GuiElementGroup group = new GuiElementGroup('g');
-		PlayerManager playerManager = Parkour.getInstance().getPlayerManager();
+		GuiElementGroup group = new GuiElementGroup('G');
+		Parkour parkour = Parkour.getInstance();
+		PlayerManager playerManager = parkour.getPlayerManager();
 
-		for (String course : CourseInfo.getAllCourseNames()) {
+		for (String course : parkour.getCourseManager().getCourseNames()) {
 			group.addElement(
 					new StaticGuiElement('e',
-							new ItemStack(Parkour.getDefaultConfig().getGuiMaterial()),
+							new ItemStack(parkour.getParkourConfig().getGuiMaterial()),
 							click -> {
 								playerManager.joinCourse(player, course);
 								parent.close();
@@ -53,11 +53,11 @@ public class JoinCoursesGui implements AbstractMenu {
 							TranslationUtils.getValueTranslation("GUI.JoinCourses.Description",
 									course, false),
 							TranslationUtils.getValueTranslation("GUI.JoinCourses.Players",
-									String.valueOf(playerManager.getNumberOfPlayersOnCourse(
-											course)), false),
+									String.valueOf(parkour.getParkourSessionManager()
+											.getNumberOfPlayersOnCourse(course)), false),
 							TranslationUtils.getValueTranslation("GUI.JoinCourses.Checkpoints",
-									String.valueOf(CourseInfo
-											.getCheckpointAmount(course)), false)
+									String.valueOf(parkour.getConfigManager().getCourseConfig(course)
+											.getCheckpointAmount()), false)
 					));
 		}
 		parent.addElement(group);

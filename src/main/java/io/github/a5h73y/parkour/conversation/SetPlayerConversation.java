@@ -1,15 +1,12 @@
 package io.github.a5h73y.parkour.conversation;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.conversation.other.ParkourConversation;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.FixedSetPrompt;
 import org.bukkit.conversations.Prompt;
@@ -20,8 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class SetPlayerConversation extends ParkourConversation {
 
-    public static final List<String> SET_PLAYER_OPTIONS = Collections.unmodifiableList(
-            Arrays.asList("level", "leveladd", "rank"));
+    public static final List<String> SET_PLAYER_OPTIONS = List.of("level", "leveladd", "rank");
 
     public SetPlayerConversation(Player player) {
         super(player);
@@ -75,40 +71,13 @@ public class SetPlayerConversation extends ParkourConversation {
             Player player = Bukkit.getPlayer(playerName);
             OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(targetPlayerName);
 
-            performAction(player, targetPlayer, setOption, input);
+            Parkour parkour = Parkour.getInstance();
+            Bukkit.getScheduler().runTaskAsynchronously(parkour, () ->
+                // for messages to be sent - do it async
+                parkour.getPlayerManager().processCommand(player, targetPlayer, setOption, input)
+            );
 
             return Prompt.END_OF_CONVERSATION;
         }
-    }
-
-    /**
-     * Perform Set Player Command.
-     *
-     * @param sender command sender
-     * @param targetPlayer target player
-     * @param setOption option to set
-     * @param input input value
-     */
-    public static void performAction(CommandSender sender, OfflinePlayer targetPlayer, String setOption, String input) {
-        Parkour parkour = Parkour.getInstance();
-        Bukkit.getScheduler().runTaskAsynchronously(parkour, () -> {
-            switch (setOption) {
-                case "level":
-                    parkour.getPlayerManager().setParkourLevel(sender, targetPlayer, input, false);
-                    break;
-
-                case "leveladd":
-                    parkour.getPlayerManager().setParkourLevel(sender, targetPlayer, input, true);
-                    break;
-
-                case "rank":
-                    parkour.getPlayerManager().setParkourRank(sender, targetPlayer, input);
-                    break;
-
-                default:
-                    TranslationUtils.sendInvalidSyntax(sender, "setplayer",
-                            "(player) [level / leveladd / rank] [value]");
-            }
-        });
     }
 }

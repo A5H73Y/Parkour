@@ -3,16 +3,16 @@ package io.github.a5h73y.parkour.listener;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.enums.GuiMenu;
-import io.github.a5h73y.parkour.enums.Permission;
+import io.github.a5h73y.parkour.gui.GuiMenu;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
-import io.github.a5h73y.parkour.type.course.CourseInfo;
-import io.github.a5h73y.parkour.type.player.ParkourSession;
-import io.github.a5h73y.parkour.utility.PermissionUtils;
+import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.SignUtils;
+import io.github.a5h73y.parkour.utility.TaskCooldowns;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
+import io.github.a5h73y.parkour.utility.permission.Permission;
+import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -37,12 +37,17 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onSignCreate(SignChangeEvent event) {
-        if (!event.getLine(0).equalsIgnoreCase("[parkour]")
-                && !event.getLine(0).equalsIgnoreCase("[pa]")) {
+        if (!"[parkour]".equalsIgnoreCase(event.getLine(0))
+                && !"[pa]".equalsIgnoreCase(event.getLine(0))) {
             return;
         }
 
         Player player = event.getPlayer();
+
+        if (!PermissionUtils.hasSignPermission(player, event)) {
+            SignUtils.breakSignAndCancelEvent(event);
+            return;
+        }
 
         switch (event.getLine(1).toLowerCase()) {
             case "join":
@@ -102,7 +107,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 return;
         }
 
-        event.setLine(0, parkour.getConfig().getSignHeader());
+        event.setLine(0, parkour.getParkourConfig().getSignHeader());
     }
 
     /**
@@ -122,13 +127,13 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        if (!parkour.getConfig().getBoolean("Other.Parkour.SignProtection")) {
+        if (!parkour.getParkourConfig().getBoolean("Other.Parkour.SignProtection")) {
             return;
         }
 
         String[] lines = ((Sign) event.getClickedBlock().getState()).getLines();
 
-        if (!ChatColor.stripColor(lines[0]).equalsIgnoreCase(parkour.getConfig().getStrippedSignHeader())) {
+        if (!ChatColor.stripColor(lines[0]).equalsIgnoreCase(parkour.getParkourConfig().getStrippedSignHeader())) {
             return;
         }
 
@@ -163,12 +168,12 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
         Sign sign = (Sign) event.getClickedBlock().getState();
         String[] lines = sign.getLines();
 
-        if (!ChatColor.stripColor(lines[0]).equalsIgnoreCase(parkour.getConfig().getStrippedSignHeader())) {
-            if (!parkour.getPlayerManager().isPlaying(event.getPlayer())) {
+        if (!ChatColor.stripColor(lines[0]).equalsIgnoreCase(parkour.getParkourConfig().getStrippedSignHeader())) {
+            if (!parkour.getParkourSessionManager().isPlaying(event.getPlayer())) {
                 return;
             }
 
-            if (!parkour.getConfig().getBoolean("OnCourse.EnforceParkourSigns")) {
+            if (!parkour.getParkourConfig().getBoolean("OnCourse.EnforceParkourSigns")) {
                 return;
             }
 
@@ -177,7 +182,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
             return;
         }
 
-        if (parkour.getConfig().isPermissionForSignInteraction()
+        if (parkour.getParkourConfig().isPermissionForSignInteraction()
                 && !PermissionUtils.hasPermission(event.getPlayer(), Permission.BASIC_SIGNS)) {
             return;
         }
@@ -187,7 +192,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
 
         switch (lines[1].toLowerCase()) {
             case "join":
-                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
+                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExist(lines[2])) {
                     TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, lines[2], player);
                     return;
                 }
@@ -204,7 +209,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 break;
 
             case "checkpoint":
-                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
+                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExist(lines[2])) {
                     TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, lines[2], player);
                     return;
                 }
@@ -221,12 +226,12 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 break;
 
             case "stats":
-                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
+                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExist(lines[2])) {
                     TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, lines[2], player);
                     return;
                 }
 
-                CourseInfo.displayCourseInfo(player, lines[2]);
+                CourseConfig.displayCourseInfo(player, lines[2]);
                 break;
 
             case "leave":
@@ -234,13 +239,13 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 break;
 
             case "finish":
-                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
+                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExist(lines[2])) {
                     TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, lines[2], player);
 
-                } else if (!parkour.getPlayerManager().isPlaying(player)) {
+                } else if (!parkour.getParkourSessionManager().isPlaying(player)) {
                     TranslationUtils.sendTranslation("Error.NotOnAnyCourse", player);
 
-                } else if (!parkour.getPlayerManager().getParkourSession(player).getCourse().getName()
+                } else if (!parkour.getParkourSessionManager().getParkourSession(player).getCourse().getName()
                         .equalsIgnoreCase(lines[2])) {
                     TranslationUtils.sendTranslation("Error.NotOnCourse", player);
 
@@ -254,18 +259,18 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                 break;
 
             case "leaderboards":
-                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
+                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExist(lines[2])) {
                     TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, lines[2], player);
 
-                } else if (parkour.getPlayerManager().delayPlayerWithMessage(player, 4)) {
+                } else if (TaskCooldowns.getInstance().delayPlayerWithMessage(player, "leaderboards", 4)) {
                     int amount = lines[3].isEmpty() ? 5 : Integer.parseInt(lines[3]);
-                    parkour.getDatabase().displayTimeEntries(player, lines[2],
-                            parkour.getDatabase().getTopCourseResults(lines[2], amount));
+                    parkour.getDatabaseManager().displayTimeEntries(player, lines[2],
+                            parkour.getDatabaseManager().getTopCourseResults(lines[2], amount));
                 }
                 break;
 
             case "challenge":
-                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExists(lines[2])) {
+                if (lines[2].isEmpty() || !parkour.getCourseManager().doesCourseExist(lines[2])) {
                     TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, lines[2], player);
                     return;
                 }

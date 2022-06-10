@@ -11,7 +11,7 @@ public abstract class TimedConfigUpgradeTask extends TimedUpgradeTask {
 		this.configuration = configuration;
 	}
 
-	protected void transferAndDelete(String fromPath, String toPath) {
+	protected void updateConfigEntry(String fromPath, String toPath) {
 		configuration.set(toPath, configuration.get(fromPath));
 		configuration.set(fromPath, null);
 	}
