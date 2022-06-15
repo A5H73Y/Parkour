@@ -1217,13 +1217,9 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	private void preparePlayerForCourse(Player player, String courseName) {
 		CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(courseName);
 
-		List<ItemStack> joinItems = Stream.of(
-						parkour.getConfigManager().getDefaultConfig().getDefaultJoinItems(),
-						courseConfig.getJoinItems())
-				.flatMap(Collection::stream)
-				.collect(Collectors.toList());
-
-		populatePlayersInventory(player, joinItems);
+		populatePlayersInventory(player);
+		addItemsToInventory(player, parkour.getConfigManager().getDefaultConfig().getDefaultJoinItems());
+		addItemsToInventory(player, courseConfig.getJoinItems());
 		prepareParkourPlayer(player);
 		setGameMode(player, parkour.getParkourConfig().getString("OnJoin.SetGameMode"));
 
@@ -1258,9 +1254,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	 * Each Tool and JoinItem can be disabled - leaving no impact on their inventory.
 	 *
 	 * @param player player
-	 * @param joinItems course join items
 	 */
-	private void populatePlayersInventory(Player player, List<ItemStack> joinItems) {
+	private void populatePlayersInventory(Player player) {
 		if (parkour.getParkourConfig().getBoolean("Other.Parkour.InventoryManagement")) {
 			PlayerUtils.clearInventoryArmor(player);
 		}
@@ -1270,8 +1265,12 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		giveParkourTool(player, "ParkourTool.Leave");
 		giveParkourTool(player, "ParkourTool.Restart");
 
-		if (joinItems != null) {
-			for (ItemStack joinItem : joinItems) {
+		player.updateInventory();
+	}
+
+	private void addItemsToInventory(Player player, List<ItemStack> items) {
+		if (items != null) {
+			for (ItemStack joinItem : items) {
 				player.getInventory().addItem(joinItem);
 			}
 		}
