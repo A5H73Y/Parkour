@@ -89,6 +89,9 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 
 		} else if (existingVersion.isLowerThan("7.0.0")) {
 			success = performFullUpgrade();
+		} else {
+			// nothing to partially upgrade yet
+			success = true;
 		}
 
 		if (success) {

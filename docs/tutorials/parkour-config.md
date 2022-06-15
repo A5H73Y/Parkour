@@ -427,8 +427,6 @@ Other:
     StandardFormat: "HH:mm:ss"
     # The Detailed Time output format, with millisecond information. Used in leaderboard times
     DetailedFormat: "HH:mm:ss:SSS"
-    # The display value for the 'achieved' date value
-    AchievedFormat: "dd/MM/yyyy HH:mm:ss"
     # The TimeZone to use. Only change if you're having weird output.
     TimeZone: "GMT"
  

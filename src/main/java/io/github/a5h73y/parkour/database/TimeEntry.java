@@ -12,7 +12,6 @@ public class TimeEntry {
     private final String playerId;
     private final long time;
     private final int deaths;
-    private final Date achieved;
 
     private String playerName;
 
@@ -24,14 +23,12 @@ public class TimeEntry {
      * @param playerId player UUID
      * @param time time in ms
      * @param deaths deaths accumulated
-     * @param achieved datetime achieved
      */
-    public TimeEntry(String courseId, String playerId, long time, int deaths, Date achieved) {
+    public TimeEntry(String courseId, String playerId, long time, int deaths) {
         this.courseId = courseId;
         this.playerId = playerId;
         this.time = time;
         this.deaths = deaths;
-        this.achieved = achieved;
     }
 
     /**
@@ -75,9 +72,5 @@ public class TimeEntry {
      */
     public int getDeaths() {
         return deaths;
-    }
-
-    public Date getAchievedDate() {
-        return achieved;
     }
 }

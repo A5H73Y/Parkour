@@ -1,16 +1,22 @@
 package io.github.a5h73y.parkour.upgrade.major;
 
+import de.leonhard.storage.sections.FlatFileSection;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.type.course.ParkourEventType;
 import io.github.a5h73y.parkour.type.course.autostart.AutoStartConfig;
 import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
 import io.github.a5h73y.parkour.upgrade.TimedConfigUpgradeTask;
+import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
 
 public class CourseDataUpgradeTask extends TimedConfigUpgradeTask {
 
@@ -48,9 +54,15 @@ public class CourseDataUpgradeTask extends TimedConfigUpgradeTask {
 					newCourseConfig.set(key, courseSection.get(key));
 				}
 
+				if ("DROPPER".equals(newCourseConfig.getParkourModeName())) {
+					newCourseConfig.setMaximumFallTicks(0);
+					newCourseConfig.remove(CourseConfig.PARKOUR_MODE);
+				}
+
 				updateEventsSection(newCourseConfig);
 				updateCheckpointSection(newCourseConfig, courseName);
 				updateEconomySection(newCourseConfig, courseName);
+				updateJoinItems(newCourseConfig);
 
 				newCourseConfig.set("Name", courseName);
 				newCourseConfig.remove("World");
@@ -61,6 +73,33 @@ public class CourseDataUpgradeTask extends TimedConfigUpgradeTask {
 
 		updateAutoStartSection();
 		return true;
+	}
+
+	private void updateJoinItems(CourseConfig newCourseConfig) {
+		FlatFileSection section = newCourseConfig.getSection(CourseConfig.JOIN_ITEMS);
+		if (section != null && section.singleLayerKeySet().size() > 0) {
+			Set<String> materialNames = section.singleLayerKeySet();
+			List<ItemStack> itemStacks = new ArrayList<>();
+
+			for (String materialName : materialNames) {
+				Material material = Material.getMaterial(materialName);
+				if (material != null) {
+					int amount = section.getInt(materialName + ".Amount");
+					String label = section.getString(materialName + ".Label");
+					boolean unbreakable = section.getBoolean(materialName + ".Unbreakable");
+					itemStacks.add(MaterialUtils.createItemStack(material, amount, label, unbreakable));
+				}
+			}
+
+			newCourseConfig.remove(CourseConfig.JOIN_ITEMS);
+
+			List<String> results = itemStacks.stream()
+					.map(itemStack ->
+							getParkourUpgrader().getNewConfigManager().getItemStackSerializable().serialize(itemStack))
+					.collect(Collectors.toList());
+
+			newCourseConfig.set(CourseConfig.JOIN_ITEMS, results);
+		}
 	}
 
 	private void updateEventsSection(CourseConfig newCourseConfig) {

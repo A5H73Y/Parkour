@@ -928,17 +928,18 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 	 * @param args command arguments
 	 */
 	public void addJoinItem(final CommandSender commandSender, final String... args) {
-		if (!doesCourseExist(args[1])) {
+		if (args.length > 1 && !doesCourseExist(args[1])) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, args[1], commandSender);
 			return;
-		} else if (args.length != 2 && args.length < 4) {
+
+		} else if (args.length > 1 && args.length < 4) {
 			parkour.getParkourCommands().sendInvalidSyntax(commandSender, "addjoinitem");
 			return;
 		}
 
 		ItemStack itemStack;
 
-		if (args.length == 2 && commandSender instanceof Player) {
+		if (args.length < 4 && commandSender instanceof Player) {
 			itemStack = MaterialUtils.getItemStackInPlayersHand((Player) commandSender);
 
 		} else {
@@ -961,8 +962,17 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			itemStack = MaterialUtils.createItemStack(material, amount, label, unbreakable);
 		}
 
-		parkour.getConfigManager().getCourseConfig(args[1]).addJoinItem(itemStack);
-		notifyActionChange(commandSender, "Add Join Item", args[1],
+		String name;
+		// we didn't provide a course name
+		if (args.length > 1) {
+			name = args[1];
+			parkour.getConfigManager().getCourseConfig(args[1]).addJoinItem(itemStack);
+		} else {
+			name = "all courses";
+			parkour.getConfigManager().getDefaultConfig().addDefaultJoinItem(itemStack);
+		}
+
+		notifyActionChange(commandSender, "Add Join Item", name,
 				itemStack.getType().name() + " x" + itemStack.getAmount());
 	}
 

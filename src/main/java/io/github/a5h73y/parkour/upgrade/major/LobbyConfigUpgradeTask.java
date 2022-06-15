@@ -4,9 +4,6 @@ import io.github.a5h73y.parkour.type.lobby.LobbyConfig;
 import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
 import io.github.a5h73y.parkour.upgrade.TimedUpgradeTask;
 import java.util.Set;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class LobbyConfigUpgradeTask extends TimedUpgradeTask {
@@ -29,16 +26,17 @@ public class LobbyConfigUpgradeTask extends TimedUpgradeTask {
 			Set<String> lobbies = section.getKeys(false);
 
 			for (String lobbyName : lobbies) {
-				// extract the old location manually
-				double x = section.getDouble(lobbyName + ".X");
-				double y = section.getDouble(lobbyName + ".Y");
-				double z = section.getDouble(lobbyName + ".Z");
-				float yaw = section.getLong(lobbyName + ".Yaw");
-				float pitch = section.getLong(lobbyName + ".Pitch");
-				World world = Bukkit.getWorld(section.getString(lobbyName + ".World"));
+				if (!section.contains(lobbyName + ".World")) {
+					continue;
+				}
 
-				// create new lobby at the location
-				lobbyConfig.setLobbyLocation(lobbyName, new Location(world, x, y, z, yaw, pitch));
+				// extract the old location manually
+				lobbyConfig.set(lobbyName + ".Location.x", section.getString(lobbyName + ".X"));
+				lobbyConfig.set(lobbyName + ".Location.y", section.getString(lobbyName + ".Y"));
+				lobbyConfig.set(lobbyName + ".Location.z", section.getString(lobbyName + ".Z"));
+				lobbyConfig.set(lobbyName + ".Location.yaw", section.getString(lobbyName + ".Yaw"));
+				lobbyConfig.set(lobbyName + ".Location.pitch", section.getString(lobbyName + ".Pitch"));
+				lobbyConfig.set(lobbyName + ".Location.world", section.getString(lobbyName + ".World"));
 
 				// transfer details across
 				if (section.contains(lobbyName + ".RequiredLevel")) {

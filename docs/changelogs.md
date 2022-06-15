@@ -21,7 +21,7 @@ These can now be overridden on a per-course basis, using the "/pa setcourse (cou
 * New AutoTabCompleter system to allow for more dynamic prompts
 * New Config files (parkour-ranks.yml, auto-starts.yml, course-completions.yml, quiet-players.yml, parkour-lobbies.yml)
 * Changed "/pa create" to allow for many creations
-* Added 'achieved' column to 'time' table, includes Placeholders to access.
+* Added 'achieved' column to 'time' table
 * Added "/pa session" and "/pa parkourkit" commands
 * Added "/pa delete rank (parkour-level)"
 * Added "/pa admin" for administration commands

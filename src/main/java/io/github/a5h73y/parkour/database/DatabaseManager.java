@@ -12,7 +12,6 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
 import io.github.a5h73y.parkour.type.CacheableParkourManager;
 import io.github.a5h73y.parkour.type.Initializable;
-import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
@@ -44,7 +43,7 @@ import pro.husk.mysql.MySQL;
  */
 public class DatabaseManager extends CacheableParkourManager implements Initializable {
 
-    private static final String SELECT_TIME_DATA_QUERY = "SELECT courseId, playerId, time, deaths, achieved FROM time";
+    private static final String SELECT_TIME_DATA_QUERY = "SELECT courseId, playerId, time, deaths FROM time";
 
     private Database database;
 
@@ -751,8 +750,8 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
                     resultSet.getString(1),
                     resultSet.getString(2),
                     resultSet.getLong(3),
-                    resultSet.getInt(4),
-                    resultSet.getDate(5));
+                    resultSet.getInt(4));
+
             times.add(time);
         }
         return times;

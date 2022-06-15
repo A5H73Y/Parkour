@@ -8,6 +8,7 @@ import io.github.a5h73y.parkour.type.player.session.ParkourSessionConfig;
 import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
 import io.github.a5h73y.parkour.upgrade.TimedConfigUpgradeTask;
 import io.github.a5h73y.parkour.utility.PluginUtils;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -130,7 +131,7 @@ public class PlayerDataUpgradeTask extends TimedConfigUpgradeTask {
 	private ParkourSession loadParkourSession(File sessionFile) {
 		ParkourSession session = null;
 		try (
-				FileInputStream fout = new FileInputStream(sessionFile);
+				BufferedInputStream fout = new BufferedInputStream(new FileInputStream(sessionFile));
 				RelocateSessionObjectInputStream oos = new RelocateSessionObjectInputStream(fout)
 		) {
 			session = (ParkourSession) oos.readObject();

@@ -54,6 +54,7 @@ import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +62,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
@@ -1214,7 +1216,14 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	 */
 	private void preparePlayerForCourse(Player player, String courseName) {
 		CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(courseName);
-		populatePlayersInventory(player, courseConfig.getJoinItems());
+
+		List<ItemStack> joinItems = Stream.of(
+						parkour.getConfigManager().getDefaultConfig().getDefaultJoinItems(),
+						courseConfig.getJoinItems())
+				.flatMap(Collection::stream)
+				.collect(Collectors.toList());
+
+		populatePlayersInventory(player, joinItems);
 		prepareParkourPlayer(player);
 		setGameMode(player, parkour.getParkourConfig().getString("OnJoin.SetGameMode"));
 
@@ -1553,7 +1562,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		/* Player in wrong world */
 		if (parkour.getParkourConfig().isJoinEnforceWorld()
 				&& !player.getLocation().getWorld().getName().equals(
-						course.getCheckpoints().get(0).getWorldName())) {
+				course.getCheckpoints().get(0).getWorldName())) {
 			TranslationUtils.sendTranslation("Error.WrongWorld", player);
 			return false;
 		}

@@ -85,11 +85,6 @@
         "placeholder": "%parkour_player_personal_best_(course)_deaths%",
         "output": "3",
         "description": "The number of deaths accumulated for the Player's personal best time on the specified Course."
-      },
-      {
-        "placeholder": "%parkour_player_personal_best_(course)_achieved%",
-        "output": "24/12/2021 12:02:37",
-        "description": "The date the time was achieved. Output configurable in config.yml (Other.Time.AchievedFormat)."
       }
     ]
   },
@@ -117,11 +112,6 @@
         "placeholder": "%parkour_course_record_(course)_deaths%",
         "output": "3",
         "description": "The number of deaths accumulated for the global best time on the specified Course."
-      },
-      {
-        "placeholder": "%parkour_course_record_(course)_achieved%",
-        "output": "24/12/2021 12:02:37",
-        "description": "The date the time was achieved. Output configurable in config.yml (Other.Time.AchievedFormat)."
       },
       {
         "placeholder": "%parkour_course_record_(course)_player%",
@@ -261,11 +251,6 @@
         "description": "The number of deaths accumulated for the global best time on the current Course."
       },
       {
-        "placeholder": "%parkour_current_course_record_achieved%",
-        "output": "24/12/2021 12:02:37",
-        "description": "The date the time was achieved. Output configurable in config.yml (Other.Time.AchievedFormat)."
-      },
-      {
         "placeholder": "%parkour_current_course_record_player%",
         "output": "A5H73Y",
         "description": "The Player's name for the global best time on the current Course."
@@ -284,11 +269,6 @@
         "placeholder": "%parkour_current_course_personal_best_deaths%",
         "output": "3",
         "description": "The number of deaths accumulated for the Player's best time on the current Course."
-      },
-      {
-        "placeholder": "%parkour_current_course_personal_best_achieved%",
-        "output": "24/12/2021 12:02:37",
-        "description": "The date the time was achieved. Output configurable in config.yml (Other.Time.AchievedFormat)."
       },
       {
         "placeholder": "%parkour_current_course_remaining_deaths%",
@@ -343,11 +323,6 @@
         "placeholder": "%parkour_leaderboard_(course)_(position)_player%",
         "output": "A5H73Y",
         "description": "The Player name on the specified Course, given the leaderboard position."
-      },
-      {
-        "placeholder": "%parkour_leaderboard_(course)_(position)_achieved%",
-        "output": "24/12/2021 12:02:37",
-        "description": "The date the time was achieved. Output configurable in config.yml (Other.Time.AchievedFormat)."
       }
     ]
   },

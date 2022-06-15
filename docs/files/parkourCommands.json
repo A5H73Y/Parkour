@@ -2,9 +2,9 @@
   {
     "command": "addjoinitem",
     "title": "Add Join Item to Course",
-    "arguments": "(course) (material) (amount) [label] [unbreakable]",
+    "arguments": "[course] [material] [amount] [label] [unbreakable]",
     "example": "/pa addjoinitem tutorial elytra 1 \u00266Wings true",
-    "description": "By default, joining a Course will give you a set of tools. You can provide the Player with additional items when they join a Course, such as Elytra or Ender pearls for a certain types of Courses etc. You must provide the Material and the amount, a label is optional. The item can be made unbreakable by specifying 'true'.",
+    "description": "By default, joining a Course will give you a set of tools. You can provide the Player with additional ItemStacks when they join a Course, such as Elytra or Ender pearls for a certain types of Courses etc. If no Course name is provided the ItemStack in the Player's had will be added to ALL courses via the default JoinItems. Providing just a course name will add the ItemStack in the Player's had will be to the Course's JoinItems. Providing the Material and Amount will add the defined ItemStack to the Course's JoinItems, with an optional label and unbreakable flag.",
     "permission": "parkour.admin.course",
     "commandGroup": "3",
     "consoleSyntax": "pac addjoinitem (course) (material) (amount) [label] [unbreakable]",

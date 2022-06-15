@@ -32,6 +32,7 @@ import java.util.TimeZone;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,7 +48,6 @@ public class DefaultConfig extends Yaml {
 
 	private final DateFormat detailedTimeFormat;
 	private final DateFormat standardTimeFormat;
-	private final DateFormat achievedFormat;
 
 	/**
 	 * Create the config.yml instance.
@@ -269,7 +269,6 @@ public class DefaultConfig extends Yaml {
 
 		this.setDefault("Other.Time.StandardFormat", "HH:mm:ss");
 		this.setDefault("Other.Time.DetailedFormat", "HH:mm:ss:SSS");
-		this.setDefault("Other.Time.AchievedFormat", "dd/MM/yyyy HH:mm:ss");
 		this.setDefault("Other.Time.TimeZone", "GMT");
 
 		this.setDefault("Other.OnServerShutdown.BackupFiles", false);
@@ -297,7 +296,6 @@ public class DefaultConfig extends Yaml {
 		TimeZone timeZone = TimeZone.getTimeZone(this.getTimeZone());
 		detailedTimeFormat = setupDateFormat(this.getTimeDetailedFormatValue(), timeZone);
 		standardTimeFormat = setupDateFormat(this.getTimeStandardFormatValue(), timeZone);
-		achievedFormat = setupDateFormat(this.getTimeAchievedFormatValue(), timeZone);
 	}
 
 	/**
@@ -357,6 +355,17 @@ public class DefaultConfig extends Yaml {
 		}
 	}
 
+	@Nullable
+	public List<ItemStack> getDefaultJoinItems() {
+		return this.getSerializableList("CourseDefault.Settings." + JOIN_ITEMS, ItemStack.class);
+	}
+
+	public void addDefaultJoinItem(ItemStack itemStack) {
+		List<String> results = this.getStringList("CourseDefault.Settings." + JOIN_ITEMS);
+		results.add(Parkour.getInstance().getConfigManager().getItemStackSerializable().serialize(itemStack));
+		this.set("CourseDefault.Settings." + JOIN_ITEMS, results);
+	}
+
 	public void addDisabledParkourCommand(@NotNull String command) {
 		this.set("DisableCommand." + command.toLowerCase(), true);
 	}
@@ -388,10 +397,6 @@ public class DefaultConfig extends Yaml {
 
 	public String getTimeDetailedFormatValue() {
 		return this.getString("Other.Time.DetailedFormat");
-	}
-
-	public String getTimeAchievedFormatValue() {
-		return this.getString("Other.Time.AchievedFormat");
 	}
 
 	public String getTimeZone() {
@@ -580,9 +585,5 @@ public class DefaultConfig extends Yaml {
 
 	public DateFormat getStandardTimeFormat() {
 		return standardTimeFormat;
-	}
-
-	public DateFormat getAchievedDateTimeFormat() {
-		return achievedFormat;
 	}
 }

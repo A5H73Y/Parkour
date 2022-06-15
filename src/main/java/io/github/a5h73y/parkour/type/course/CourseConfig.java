@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -679,21 +678,13 @@ public class CourseConfig extends Json {
      */
     @Nullable
     public List<ItemStack> getJoinItems() {
-        List<ItemStack> results = new ArrayList<>();
-        List<ItemStack[]> data = this.getSerializableList(JOIN_ITEMS, ItemStack[].class);
-
-        if (data != null) {
-            results = data.stream().map(itemStacks -> itemStacks[0]).collect(Collectors.toList());
-        }
-
-        return results;
+        return this.getSerializableList(JOIN_ITEMS, ItemStack.class);
     }
 
     /**
      * Add a Join Item to the Course.
      */
     public void addJoinItem(@NotNull ItemStack itemStack) {
-        courseName = courseName.toLowerCase();
         List<String> results = this.getStringList(JOIN_ITEMS);
         results.add(Parkour.getInstance().getConfigManager().getItemStackSerializable().serialize(itemStack));
         this.set(JOIN_ITEMS, results);
