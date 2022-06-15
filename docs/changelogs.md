@@ -2,6 +2,16 @@ Changelogs
 ======
 
 Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon server start up. There will be no manual intervention, unless stated in breaking changes.
+
+## 7.0.1
+
+* Fixed JoinItems, and to include default join items
+* Updated "/pa addjoinitem" to allow for no argument to add to default config
+* Fixed upgrader for Lobby
+* Fixed upgrader for JoinItems
+* Fixed upgrader for DROPPER courses
+* Removed 'achieved' placeholder for now as it's a pain
+
 ## 7.0.0
 ### Java 11
 The plugin now requires a minimum Java version of 11 to function.
