@@ -3,7 +3,7 @@ Frequently Asked Questions
 
 ##### Server version support
 
-Parkour 7.0.0 supports all versions between 1.8 to 1.19+.
+Parkour 7.0.0+ supports all versions between 1.8 to 1.19+.
 
 ##### Parkour Welcome Message
 
