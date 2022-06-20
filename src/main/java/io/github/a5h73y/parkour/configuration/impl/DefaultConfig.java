@@ -305,11 +305,7 @@ public class DefaultConfig extends Yaml {
 	 * @return sound name
 	 */
 	private String getSound(XSound xsound) {
-		if (xsound.isSupported()) {
-			return xsound.parseSound().name();
-		} else {
-			return "";
-		}
+		return xsound.isSupported() ? xsound.parseSound().name() : "";
 	}
 
 	private DateFormat setupDateFormat(String format, TimeZone timeZone) {
