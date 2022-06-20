@@ -168,7 +168,7 @@ An example could be walking on a pressure plate to leave the Course:
 
 [Parkour Top Ten](https://www.spigotmc.org/resources/parkour-top-ten.46268/) was created by steve4744 to allow for the Player's Head to be proudly displayed next to their best times, great for a competitive Parkour server.
 
-![Parkour Top Ten](https://i.imgur.com/c2n6QUM.png "Parkour Top Ten")
+![Parkour Top Ten](https://i.imgur.com/OGBAYkr.png "Parkour Top Ten")
 
 ## ConditionalEvents
 
