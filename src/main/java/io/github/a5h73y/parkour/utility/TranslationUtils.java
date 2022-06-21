@@ -13,6 +13,7 @@ import static io.github.a5h73y.parkour.utility.StringUtils.colour;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.type.course.ParkourEventType;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -74,7 +75,7 @@ public class TranslationUtils {
 	                                         @Nullable String value,
 	                                         boolean prefix) {
 		return VALUE_PLACEHOLDER.matcher(getTranslation(translationKey, prefix))
-				.replaceAll(value == null ? "" : value);
+				.replaceAll(value == null ? "" : Matcher.quoteReplacement(value));
 	}
 
 	/**
