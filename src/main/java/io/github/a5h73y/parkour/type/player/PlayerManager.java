@@ -54,7 +54,6 @@ import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +61,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
@@ -522,6 +520,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 				teleportCourseCompletion(player, courseName);
 			}
 			playerConfig.resetPlayerDataSnapshot();
+			parkour.getConfigManager().getCourseCompletionsConfig().addCompletedCourse(player, courseName);
 		}, parkour.getParkourConfig().getLong("OnFinish.TeleportDelay"));
 
 		playerConfig.setLastCompletedCourse(courseName);
@@ -531,8 +530,6 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		parkour.getParkourSessionManager().forceVisible(player);
 		parkour.getParkourSessionManager().deleteParkourSession(player, courseName);
 		parkour.getCourseManager().runEventCommands(player, session, FINISH);
-
-		parkour.getConfigManager().getCourseCompletionsConfig().addCompletedCourse(player, courseName);
 		parkour.getConfigManager().getCourseConfig(courseName).incrementCompletions();
 	}
 
@@ -592,18 +589,18 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}
 
 		CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(courseName);
+		boolean rewardOnce = courseConfig.getCourseSettingOrDefault(CourseConfig.REWARD_ONCE, false);
 
-		if (courseConfig.getRewardOnce() && parkour.getDatabaseManager().hasPlayerAchievedTime(player, courseName)) {
+		if (rewardOnce && parkour.getConfigManager().getCourseCompletionsConfig().hasCompletedCourse(player, courseName)) {
 			parkour.getCourseManager().runEventCommands(player, session, NO_PRIZE);
 			return;
 		}
 
-		// check if the Course has a reward delay
-		if (courseConfig.hasRewardDelay()) {
-			// if the player has not exceeded the Course delay, no prize will be given
-			if (!hasPrizeCooldownDurationPassed(player, courseName, true)) {
-				return;
-			}
+		// if the player has not exceeded the Course delay, no prize will be given
+		if (!hasPrizeCooldownDurationPassed(player, courseName, true)) {
+			return;
+
+		} else {
 			// otherwise, make a note of last time rewarded, and let them continue
 			parkour.getConfigManager().getPlayerConfig(player)
 					.setLastRewardedTime(courseName, System.currentTimeMillis());
@@ -706,7 +703,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	 * @return course prize cooldown passed
 	 */
 	public boolean hasPrizeCooldownDurationPassed(Player player, String courseName, boolean displayMessage) {
-		double rewardDelay = parkour.getConfigManager().getCourseConfig(courseName).getRewardDelay();
+		double rewardDelay = parkour.getConfigManager().getCourseConfig(courseName)
+				.getCourseSettingOrDefault(CourseConfig.REWARD_DELAY, 0);
 
 		if (rewardDelay <= 0) {
 			return true;
@@ -765,22 +763,22 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	 * @param player player
 	 */
 	public void restoreInventoryArmor(Player player, PlayerConfig playerConfig) {
-		if (!parkour.getParkourConfig().getBoolean("Other.Parkour.InventoryManagement")) {
-			return;
+		if (parkour.getParkourConfig().getBoolean("Other.Parkour.InventoryManagement")) {
+			ItemStack[] inventoryContents = playerConfig.getSnapshotInventory();
+
+			if (inventoryContents == null) {
+				TranslationUtils.sendMessage(player, "No saved inventory to load.");
+				return;
+			}
+
+			player.getInventory().clear();
+			player.getInventory().setContents(inventoryContents);
+
+			ItemStack[] armorContents = playerConfig.getSnapshotArmor();
+			player.getInventory().setArmorContents(armorContents);
+		} else {
+//			TODO attempt to remove the Parkour Tools
 		}
-
-		ItemStack[] inventoryContents = playerConfig.getSnapshotInventory();
-
-		if (inventoryContents == null) {
-			TranslationUtils.sendMessage(player, "No saved inventory to load.");
-			return;
-		}
-
-		player.getInventory().clear();
-		player.getInventory().setContents(inventoryContents);
-
-		ItemStack[] armorContents = playerConfig.getSnapshotArmor();
-		player.getInventory().setArmorContents(armorContents);
 		player.updateInventory();
 	}
 
@@ -1049,6 +1047,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	 */
 	public void resetPlayer(OfflinePlayer targetPlayer) {
 		PlayerConfig.deletePlayerData(targetPlayer);
+		parkour.getConfigManager().getCourseCompletionsConfig().removePlayer(targetPlayer);
 		parkour.getParkourSessionManager().deleteParkourSessions(targetPlayer);
 		parkour.getDatabaseManager().deletePlayerTimes(targetPlayer);
 		parkour.getPlaceholderApi().clearCache();
@@ -1386,7 +1385,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}
 
 		// increase parkour level
-		int rewardAddLevel = courseConfig.getRewardParkourLevelIncrease();
+		int rewardAddLevel = courseConfig.getCourseSettingOrDefault(CourseConfig.REWARD_LEVEL_ADD, 0);
 		if (rewardAddLevel > 0) {
 			newParkourLevel = currentLevel + rewardAddLevel;
 		}

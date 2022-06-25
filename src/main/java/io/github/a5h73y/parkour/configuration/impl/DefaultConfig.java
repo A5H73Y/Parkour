@@ -4,7 +4,10 @@ import static io.github.a5h73y.parkour.type.course.CourseConfig.DIE_IN_LIQUID;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.DIE_IN_VOID;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.HAS_FALL_DAMAGE;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.JOIN_ITEMS;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.MANUAL_CHECKPOINTS;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.MAX_DEATHS;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.MAX_FALL_TICKS;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.MAX_TIME;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_DELAY;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_LEVEL_ADD;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_ONCE;
@@ -122,10 +125,14 @@ public class DefaultConfig extends Yaml {
 
 		this.setDefault("OnServerRestart.KickPlayerFromCourse", false);
 
-		this.setDefault("CourseDefault.Settings." + HAS_FALL_DAMAGE, true);
-		this.setDefault("CourseDefault.Settings." + MAX_FALL_TICKS, 80);
 		this.setDefault("CourseDefault.Settings." + DIE_IN_LIQUID, false);
 		this.setDefault("CourseDefault.Settings." + DIE_IN_VOID, false);
+		this.setDefault("CourseDefault.Settings." + HAS_FALL_DAMAGE, true);
+		this.setDefault("CourseDefault.Settings." + MANUAL_CHECKPOINTS, false);
+		this.setDefault("CourseDefault.Settings." + MAX_FALL_TICKS, 80);
+		this.setDefault("CourseDefault.Settings." + MAX_DEATHS, 0);
+		this.setDefault("CourseDefault.Settings." + MAX_TIME, 0);
+
 		this.setDefault("CourseDefault.Settings." + REWARD_ONCE, false);
 		this.setDefault("CourseDefault.Settings." + REWARD_DELAY, 0);
 		this.setDefault("CourseDefault.Settings." + REWARD_LEVEL_ADD, 0);

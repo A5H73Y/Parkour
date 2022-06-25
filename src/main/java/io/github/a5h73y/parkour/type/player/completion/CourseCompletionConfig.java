@@ -60,4 +60,12 @@ public class CourseCompletionConfig extends Yaml {
             }
         }
     }
+
+    /**
+     * Remove the Player's completed courses.
+     * @param targetPlayer target player
+     */
+    public void removePlayer(OfflinePlayer targetPlayer) {
+        this.remove(Parkour.getDefaultConfig().getPlayerConfigName(targetPlayer));
+    }
 }

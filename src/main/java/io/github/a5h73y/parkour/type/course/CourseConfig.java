@@ -8,6 +8,7 @@ import static io.github.a5h73y.parkour.utility.TranslationUtils.sendValue;
 import de.leonhard.storage.Json;
 import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.serialize.SimplixSerializer;
+import de.leonhard.storage.util.ClassWrapper;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.type.player.ParkourMode;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
@@ -62,14 +63,15 @@ public class CourseConfig extends Json {
     public static final String REWARD_ONCE = "RewardOnce";
     public static final String REWARD_PARKOINS = "RewardParkoins";
 
-    private static final String CHECKPOINTS = "Checkpoints";
-    private static final String COMMAND_PREFIX = "Command.";
-    private static final String MESSAGE_PREFIX = "Message.";
     public static final String VIEWS = "Views";
     public static final String PRIZE_MATERIAL = "Prize.Material";
     public static final String PRIZE_AMOUNT = "Prize.Amount";
 
-    private String courseName;
+    private static final String CHECKPOINTS = "Checkpoints";
+    private static final String COMMAND_PREFIX = "Command.";
+    private static final String MESSAGE_PREFIX = "Message.";
+
+    private final String courseName;
 
     public CourseConfig(String courseName, File file) {
         super(file);
@@ -1085,5 +1087,12 @@ public class CourseConfig extends Json {
                 config.getEventCommands(value).forEach(commandSender::sendMessage);
             }
         }
+    }
+
+    public <T> T getCourseSettingOrDefault(String key, T def) {
+        Object raw = this.get(key);
+        return raw == null
+                ? Parkour.getDefaultConfig().get("CourseDefault.Settings." + key, def)
+                : ClassWrapper.getFromDef(raw, def);
     }
 }

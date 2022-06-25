@@ -81,16 +81,16 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 				courseConfig.get(DIE_IN_LIQUID, defaultSection.getBoolean(DIE_IN_LIQUID)));
 		courseSettings.setDieInVoid(
 				courseConfig.get(DIE_IN_VOID, defaultSection.getBoolean(DIE_IN_VOID)));
-		courseSettings.setManualCheckpoints(
-				courseConfig.get(MANUAL_CHECKPOINTS, defaultSection.getBoolean(MANUAL_CHECKPOINTS)));
-		courseSettings.setMaxFallTicks(
-				courseConfig.get(MAX_FALL_TICKS, defaultSection.getInt(MAX_FALL_TICKS)));
-		courseSettings.setMaxDeaths(
-				courseConfig.get(MAX_DEATHS, defaultSection.getInt(MAX_DEATHS)));
-		courseSettings.setMaxTime(
-				courseConfig.get(MAX_TIME, defaultSection.getInt(MAX_TIME)));
 		courseSettings.setHasFallDamage(
 				courseConfig.get(HAS_FALL_DAMAGE, defaultSection.getBoolean(HAS_FALL_DAMAGE)));
+		courseSettings.setManualCheckpoints(
+				courseConfig.get(MANUAL_CHECKPOINTS, defaultSection.getBoolean(MANUAL_CHECKPOINTS)));
+		courseSettings.setMaxDeaths(
+				courseConfig.get(MAX_DEATHS, defaultSection.getInt(MAX_DEATHS)));
+		courseSettings.setMaxFallTicks(
+				courseConfig.get(MAX_FALL_TICKS, defaultSection.getInt(MAX_FALL_TICKS)));
+		courseSettings.setMaxTime(
+				courseConfig.get(MAX_TIME, defaultSection.getInt(MAX_TIME)));
 
 		return courseSettings;
 	}
