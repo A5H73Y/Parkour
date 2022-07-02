@@ -1270,11 +1270,31 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	private void addItemsToInventory(Player player, List<ItemStack> items) {
 		if (items != null) {
 			for (ItemStack joinItem : items) {
-				player.getInventory().addItem(joinItem);
+				setJoinItem(player, joinItem);
 			}
 		}
 
 		player.updateInventory();
+	}
+
+	/**
+	 * Equip the join item if it is armour or an elytra.
+	 *
+	 * @param player
+	 * @param item
+	 */
+	private void setJoinItem(Player player, ItemStack joinItem) {
+		if (joinItem.toString().contains("BOOTS")) {
+			player.getInventory().setBoots(joinItem);
+		} else if (joinItem.toString().contains("LEGGINGS")) {
+			player.getInventory().setLeggings(joinItem);
+		} else if (joinItem.toString().contains("CHESTPLATE") || joinItem.toString().contains("ELYTRA")) {
+			player.getInventory().setChestplate(joinItem);
+		} else if (joinItem.toString().contains("HELMET")) {
+			player.getInventory().setHelmet(joinItem);
+		} else {
+			player.getInventory().addItem(joinItem);
+		}
 	}
 
 	/**
