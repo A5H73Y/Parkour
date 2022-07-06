@@ -154,6 +154,13 @@
     "deprecated": "/pa parkourkit edit [kit]"
   },
   {
+    "command": "finish",
+    "title": "Trigger Finish Course",
+    "description": "Trigger the specified Player to request to finish the Course. This will not force a finish, simply trigger the finish event similar to walking on a Finish Block or using a Finish sign. Can be used to externally finish the Course for the Player.",
+    "consoleSyntax": "pac finish (player)",
+    "consoleOnly": true
+  },
+  {
     "command": "help",
     "title": "Display Parkour Command Help",
     "arguments": "(command)",

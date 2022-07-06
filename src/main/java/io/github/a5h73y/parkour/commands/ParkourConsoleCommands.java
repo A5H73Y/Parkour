@@ -120,6 +120,17 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 new EditParkourKitConversation((Conversable) commandSender).begin();
                 break;
 
+            case "finish":
+                if (!ValidationUtils.validateArgs(commandSender, args, 2)) {
+                    return false;
+
+                } else if (findPlayer(commandSender, args[1]) == null) {
+                    return false;
+                }
+
+                parkour.getPlayerManager().finishCourse(findPlayer(commandSender, args[1]));
+                break;
+
             case "help":
                 parkour.getParkourCommands().displayCommandHelp(commandSender, args);
                 break;
@@ -168,7 +179,6 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
 
                 parkour.getPlayerManager().leaveCourse(findPlayer(commandSender, args[1]));
                 break;
-
 
             case "leaveall":
                 TranslationUtils.sendMessage(commandSender,
