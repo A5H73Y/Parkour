@@ -3,6 +3,22 @@ Changelogs
 
 Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon server start up. There will be no manual intervention, unless stated in breaking changes.
 
+## 7.0.3
+
+* Automatically apply JoinItems (thanks Steve)
+* Added "pac finish (player)" to trigger finish for Player
+* Update dependency versions
+
+## 7.0.2
+
+* Fix error if wager amount contains $
+* Added Multiverse as a soft-depend to fix server startup world missing errors
+* Removed race condition of rewardonce
+* Rewardonce check changed to use course-completions file
+* Fixed Course defaults
+* Fixed not resetting Players completed courses
+* Update dependency versions
+
 ## 7.0.1
 
 * Fixed JoinItems, and to include default join items

@@ -1270,7 +1270,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	private void addItemsToInventory(Player player, List<ItemStack> items) {
 		if (items != null) {
 			for (ItemStack joinItem : items) {
-				setJoinItem(player, joinItem);
+				applyJoinItem(player, joinItem);
 			}
 		}
 
@@ -1280,17 +1280,19 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	/**
 	 * Equip the join item if it is armour or an elytra.
 	 *
-	 * @param player
-	 * @param item
+	 * @param player player
+	 * @param joinItem join item itemStack
 	 */
-	private void setJoinItem(Player player, ItemStack joinItem) {
-		if (joinItem.toString().contains("BOOTS")) {
+	private void applyJoinItem(Player player, ItemStack joinItem) {
+		String joinItemString = joinItem.toString();
+
+		if (joinItemString.contains("BOOTS")) {
 			player.getInventory().setBoots(joinItem);
-		} else if (joinItem.toString().contains("LEGGINGS")) {
+		} else if (joinItemString.contains("LEGGINGS")) {
 			player.getInventory().setLeggings(joinItem);
-		} else if (joinItem.toString().contains("CHESTPLATE") || joinItem.toString().contains("ELYTRA")) {
+		} else if (joinItemString.contains("CHESTPLATE") || joinItemString.contains("ELYTRA")) {
 			player.getInventory().setChestplate(joinItem);
-		} else if (joinItem.toString().contains("HELMET")) {
+		} else if (joinItemString.contains("HELMET")) {
 			player.getInventory().setHelmet(joinItem);
 		} else {
 			player.getInventory().addItem(joinItem);
