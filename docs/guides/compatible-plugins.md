@@ -20,7 +20,7 @@ To enable, set `Plugin.PlaceholderAPI.Enabled` to `true` in the `config.yml`.
 
 **Please note that Parkour Expansion is no longer needed, as it has been implemented within the Parkour plugin.**
 
-The `Plugin.PlaceholderAPI.CacheTime` value can be set to an interval in minutes for when to clear the cache. This is a performance improvement which caches Leaderboard results until a Player changes them, or the time interval is reached.
+The `Plugin.PlaceholderAPI.CacheTime` value can be set to an interval in minutes for when to clear the cache. This is a performance improvement which caches the placeholder output until the time interval is reached.
 
 [All the Parkour Placeholders are available here](/essential/placeholders.md).
 
@@ -28,7 +28,7 @@ The `Plugin.PlaceholderAPI.CacheTime` value can be set to an interval in minutes
 
 **At the time of writing, Holographic Displays v3.0.0 is still in beta and has some known issues and could change in the future.**
 
-Parkour doesn't directly support [Holographic Displays](https://dev.bukkit.org/projects/holographic-displays/files), however you can use PlaceholderAPI which allows you to create dynamic and nice looking Parkour holograms.  
+Parkour doesn't directly support [Holographic Displays](https://dev.bukkit.org/projects/holographic-displays/files), however it can use PlaceholderAPI to create dynamic and nice looking Parkour holograms.  
 _Holographic Displays now natively supports PlaceholderAPI, so no other plugins are required._
 
 ### Example Usages
@@ -249,6 +249,7 @@ Currently, LeaderHeads does not appear to support displaying milliseconds as par
 </details>
 
 [//]: # (Currently no known way of getting this to work, issue raised with the developer for support)
+[//]: # (https://github.com/Jumper251/AdvancedReplay/issues/96)
 [//]: # (## AdvancedReplay)
 
 [//]: # ()

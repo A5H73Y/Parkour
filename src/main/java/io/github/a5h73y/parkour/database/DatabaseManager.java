@@ -188,7 +188,7 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
      * @param time time in milliseconds
      * @return leaderboard position
      */
-    public int getPositionOnLeaderboard(@Nullable OfflinePlayer player, String courseName, long time) {
+    public int getPositionEntryOnLeaderboard(@Nullable OfflinePlayer player, String courseName, long time) {
         int result = -1;
         int courseId = getCourseId(courseName);
 
@@ -230,8 +230,43 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
      * @param time time in milliseconds
      * @return global leaderboard position
      */
-    public int getPositionOnLeaderboard(String courseName, long time) {
-        return getPositionOnLeaderboard(null, courseName, time);
+    public int getPositionEntryOnLeaderboard(String courseName, long time) {
+        return getPositionEntryOnLeaderboard(null, courseName, time);
+    }
+
+    /**
+     * Get the Player's best time position on specified Course.
+     * 
+     * @param player player
+     * @param courseName course name
+     * @return leaderboard position
+     */
+    public int getPositionOnLeaderboard(OfflinePlayer player, String courseName) {
+        int result = -1;
+        int courseId = getCourseId(courseName);
+
+        if (courseId > 0 && hasPlayerAchievedTime(player, courseName)) {
+            String leaderboardPositionQuery = "SELECT COUNT(*) AS position FROM time WHERE courseId=? AND time < " +
+                    "(SELECT time FROM time WHERE courseId=? AND playerId=?)";
+
+            PluginUtils.debug("Checking leaderboard position for: " + leaderboardPositionQuery);
+
+            try (PreparedStatement statement = getDatabaseConnection().prepareStatement(leaderboardPositionQuery)) {
+                statement.setInt(1, courseId);
+                statement.setInt(2, courseId);
+                statement.setString(3, getPlayerId(player));
+
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    result = resultSet.getInt("position");
+                }
+                resultSet.getStatement().close();
+            } catch (SQLException e) {
+                logSqlException(e);
+            }
+            PluginUtils.debug("Leaderboard position is: " + result);
+        }
+        return result;
     }
 
     /**
@@ -298,7 +333,7 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
      * @return is best course time
      */
     public boolean isBestCourseTime(String courseName, long time) {
-        return getPositionOnLeaderboard(courseName, time) == 1;
+        return getPositionEntryOnLeaderboard(courseName, time) == 1;
     }
 
     /**
@@ -309,7 +344,7 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
      * @return is best course time
      */
     public boolean isBestCourseTime(OfflinePlayer player, String courseName, long time) {
-        return getPositionOnLeaderboard(player, courseName, time) == 1;
+        return getPositionEntryOnLeaderboard(player, courseName, time) == 1;
     }
 
     /**

@@ -13,8 +13,8 @@ Parkour Permissions
 | parkour.basic.leaderboard | View Leaderboard results via command. |
 | parkour.basic.challenge | Send Parkour Challenges to other Players. |
 | parkour.basic.joinall | Use the Join All Courses GUI. |
-| parkour.basic.signs | Ability to use Parkour Signs only if Other.Parkour.SignUsePermissions is set to true. |
-| parkour.basic.commands | Ability to use Parkour Commands only if Other.Parkour.CommandUsePermissions is set to true. |
+| parkour.basic.signs | Ability to use Parkour Signs _(Only if Other.Parkour.SignUsePermissions is set to true)_ |
+| parkour.basic.commands | Ability to use Parkour Commands _(Only if Other.Parkour.CommandUsePermissions is set to true)_ |
 |  |  |
 | **parkour.admin.\*** | **All Admin Parkour permissions.** |
 | parkour.admin.course | Perform administration tasks to a Course. |

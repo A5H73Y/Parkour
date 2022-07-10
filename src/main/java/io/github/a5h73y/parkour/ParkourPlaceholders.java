@@ -32,6 +32,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     private static final String TOP_TEN_RESULT = TranslationUtils.getTranslation("PlaceholderAPI.TopTenResult", false);
     private static final String COURSE_ACTIVE = TranslationUtils.getTranslation("PlaceholderAPI.CourseActive", false);
     private static final String COURSE_INACTIVE = TranslationUtils.getTranslation("PlaceholderAPI.CourseInactive", false);
+    private static final String NO_COOLDOWN_REMAINING = TranslationUtils.getTranslation("PlaceholderAPI.NoPrizeCooldown", false);
 
     private final Parkour parkour;
     private final GenericCache<String, String> cache;
@@ -189,11 +190,21 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 }
 
             case "course":
-                if (arguments.length == 4 && arguments[2].equals("completed")) {
-                    return getOrRetrieveCache(offlinePlayer.getName() + arguments[2] + arguments[3],
-                            () -> getCompletedMessage(offlinePlayer, arguments[3]));
-                } else {
+                if (arguments.length < 3) {
                     return INVALID_SYNTAX;
+                }
+
+                switch (arguments[2]) {
+                    case "completed":
+                        return getOrRetrieveCache(offlinePlayer.getName() + arguments[2] + arguments[3],
+                                () -> getCompletedMessage(offlinePlayer, arguments[3]));
+
+                    case "position":
+                        return getOrRetrieveCache(offlinePlayer.getName() + arguments[2] + arguments[3],
+                                () -> getLeaderboardPosition(offlinePlayer, arguments[3]));
+
+                    default:
+                        return INVALID_SYNTAX;
                 }
 
             case "prize":
@@ -204,7 +215,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                     if (parkour.getConfigManager().getCourseConfig(arguments[3]).hasRewardDelay()) {
                         return DateTimeUtils.getDelayTimeRemaining(offlinePlayer, arguments[3]);
                     } else {
-                        return "0";
+                        return NO_COOLDOWN_REMAINING;
                     }
                 }
                 return INVALID_SYNTAX;
@@ -423,6 +434,11 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     private String getPersonalCourseRecord(Player player, String courseName, String key) {
         return getOrRetrieveCache(player.getName() + courseName + key,
                 () -> extractResultDetails(getTopPlayerResultForCourse(player, courseName), key));
+    }
+
+    private String getLeaderboardPosition(OfflinePlayer player, String courseName) {
+        int result = parkour.getDatabaseManager().getPositionOnLeaderboard(player, courseName);
+        return result < 0 ? NO_TIME_RECORDED : String.valueOf(result + 1);
     }
 
     private String extractResultDetails(TimeEntry result, String key) {

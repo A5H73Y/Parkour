@@ -67,6 +67,11 @@
         "description": "Completion status for whether the Player completed the specified Course. The output can be customised in the strings.yml (PlaceholderAPI.CurrentCourseCompleted & PlaceholderAPI.CurrentCourseNotCompleted)."
       },
       {
+        "placeholder": "%parkour_player_course_position_(course)%",
+        "output": "3",
+        "description": "Output the Player's position on the leaderboards for the provided course."
+      },
+      {
         "placeholder": "%parkour_player_prize_delay_(course)%",
         "output": "1 day, 2 hours",
         "description": "The time delay before the Player can receive the specified Course prize again. The output can be customised in the strings.yml (Display.X)."

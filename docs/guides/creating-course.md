@@ -13,7 +13,7 @@ Decide where the Course starts, stand in the position and face the direction you
 
 ![Create Course](https://i.imgur.com/OcbCbL8.jpg "Create Course")
 
-The Course is named `tutorial` in this tutorial. The unique name you choose will be used to reference the Course later on. If everything was successful, the following message will appear.
+The Course is named `tutorial` for this tutorial. The unique name you choose will be used to reference the Course later on. If everything was successful, the following message will appear.
 
 ![Create Success](https://i.imgur.com/hA8HpnU.jpg "Create Success")
 
@@ -35,7 +35,8 @@ There is no limit to how many checkpoints you can create, they are automatically
 If you make a mistake, or want to move a Checkpoint, the same command can be used but with an extra number provided to overwrite that existing checkpoint.  
 Using `/pa create checkpoint 2` would overwrite the second checkpoint. If preferred, you can [delete the checkpoint](/tutorials/administration?id=delete-a-checkpoint).
 
-By default, Checkpoints have to be achieved sequentially, 1 - 2 - 3 etc. If preferred, you can disable this by setting `OnCourse.SequentialCheckpoints.Enabled` to `false`. Alternatively you can set the Course to allow [manualcheckpoints](/tutorials/parkour-courses?id=manualcheckpoints) which will let the Player achieve a Checkpoint anywhere.
+By default, Checkpoints have to be achieved sequentially, 1 - 2 - 3 etc. If preferred, you can disable this by setting `OnCourse.SequentialCheckpoints.Enabled` to `false`.  
+Alternatively, you can set the Course to allow [manualcheckpoints](/tutorials/parkour-courses?id=manualcheckpoints) which will let the Player achieve a Checkpoint anywhere.
 
 ## Ability to Finish Course
 
@@ -47,9 +48,9 @@ _If preferred, the final Checkpoint can trigger the Course finish by setting `On
 
 ## Course Ready Status
 
-Once the Course is ready for other Players to join, then it's time to set the status of the Course to "ready". To set the Course as ready, enter `/pa setcourse (course) ready`.
+Once the Course is ready for other Players to join, then it's time to set the status of the Course to "ready", using `/pa setcourse (course) ready`.
 
-By default, Players are unable to join a Course that has not been set to ready (so they don't join a half-finished Course), this can be disabled by setting `OnJoin.EnforceReady` to `false` in the `config.yml`.
+By default, Players are unable to join a Course that has not been set to ready (so that they don't join a half-finished Course), this can be disabled by setting `OnJoin.EnforceReady` to `false` in the `config.yml`.
 
 ![Course Ready](https://i.imgur.com/kd1KkqU.jpg "Course Ready")
 
