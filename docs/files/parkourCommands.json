@@ -360,8 +360,7 @@
     "description": "When you first create a Course, it will not be join-able until it has been marked as 'ready' by its creator. The command will toggle the Course's ready status. A Course should only be marked as ready when other Players can join it, as it will be added to the Cache for performance.",
     "permission": "parkour.admin.course",
     "commandGroup": "3",
-    "autoTabSyntax": "(course)",
-    "deprecated": "/pa setcourse (course) ready [true/false]"
+    "autoTabSyntax": "(course)"
   },
   {
     "command": "recreate",

@@ -212,11 +212,8 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                     return INVALID_SYNTAX;
                 }
                 if ("delay".equals(arguments[2])) {
-                    if (parkour.getConfigManager().getCourseConfig(arguments[3]).hasRewardDelay()) {
-                        return DateTimeUtils.getDelayTimeRemaining(offlinePlayer, arguments[3]);
-                    } else {
-                        return NO_COOLDOWN_REMAINING;
-                    }
+                    return getOrRetrieveCache(offlinePlayer.getName() + arguments[2] + arguments[3],
+                            () -> getDelayCooldown(offlinePlayer, arguments[3]));
                 }
                 return INVALID_SYNTAX;
 
@@ -232,6 +229,15 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
 
             default:
                 return INVALID_SYNTAX;
+        }
+    }
+
+    private String getDelayCooldown(OfflinePlayer offlinePlayer, String courseName) {
+        if (parkour.getConfigManager().getCourseConfig(courseName).hasRewardDelay()) {
+            String remaining = DateTimeUtils.getDelayTimeRemaining(offlinePlayer, courseName);
+            return "0".equals(remaining) ? NO_COOLDOWN_REMAINING : remaining;
+        } else {
+            return NO_COOLDOWN_REMAINING;
         }
     }
 

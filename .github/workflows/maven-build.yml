@@ -1,7 +1,7 @@
 name: Build
 
 env:
-  artifact_name: 'Parkour-7.0.3'
+  artifact_name: 'Parkour-7.0.4'
   release_type: '-RELEASE'
 
 on: push

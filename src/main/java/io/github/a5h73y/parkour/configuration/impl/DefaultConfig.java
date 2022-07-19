@@ -266,6 +266,7 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("Other.Parkour.CommandUsePermissions", false);
 		this.setDefault("Other.Parkour.MaximumParkourLevel", 99999999);
 		this.setDefault("Other.Parkour.ResetPotionEffects", true);
+		this.setDefault("Other.Parkour.OpsBypassGameModeSet", false);
 
 		this.setDefault("Other.Display.JoinWelcomeMessage", true);
 		this.setDefault("Other.Display.LevelReward", true);
@@ -286,7 +287,7 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("Plugin.BountifulAPI.Enabled", true);
 		this.setDefault("Plugin.Vault.Enabled", true);
 		this.setDefault("Plugin.PlaceholderAPI.Enabled", true);
-		this.setDefault("Plugin.PlaceholderAPI.CacheTime", 15);
+		this.setDefault("Plugin.PlaceholderAPI.CacheTime", 3);
 
 		this.setDefault("Database.MaximumCoursesCached", 10);
 		this.setDefault("SQLite.PathOverride", "");
@@ -504,6 +505,10 @@ public class DefaultConfig extends Yaml {
 
 	public boolean isCombinePerCourseCommands() {
 		return this.getBoolean("CourseDefault.Commands.CombinePerCourseCommands");
+	}
+
+	public boolean isOpsBypassGameModeSet() {
+		return this.getBoolean("Other.Parkour.OpsBypassGameModeSet");
 	}
 
 	/* Materials */

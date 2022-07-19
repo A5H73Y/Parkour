@@ -277,7 +277,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 	private void setGameMode(Player player, String gameModeName) {
 		if (!"KEEP".equalsIgnoreCase(gameModeName)
-				&& !parkour.getParkourSessionManager().isPlayerInTestMode(player)) {
+				&& !parkour.getParkourSessionManager().isPlayerInTestMode(player)
+				&& (!player.isOp() || !parkour.getParkourConfig().isOpsBypassGameModeSet())) {
 			PlayerUtils.setGameMode(player, gameModeName);
 		}
 	}

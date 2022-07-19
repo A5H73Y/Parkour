@@ -3,6 +3,11 @@ Changelogs
 
 Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon server start up. There will be no manual intervention, unless stated in breaking changes.
 
+## 7.0.4
+
+* Added option "Other.Parkour.OpsBypassGameModeSet" to prevent op's GameMode changing
+* Decreased default PlaceholderAPI Cache
+
 ## 7.0.3
 
 * Automatically apply JoinItems (thanks Steve)
