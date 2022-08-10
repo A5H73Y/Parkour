@@ -3,6 +3,12 @@ Changelogs
 
 Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon server start up. There will be no manual intervention, unless stated in breaking changes.
 
+## 7.0.5
+* Fixed ParkourModes not being restored after quick restart
+* Fixed Player's data being reset prior to linked course
+* Parkour can now be registered as an Economy plugin using Vault (Plugin.Vault.RegisterParkoins)
+* Added more economy command (add / deduct / amount)
+
 ## 7.0.4
 
 * Added option "Other.Parkour.OpsBypassGameModeSet" to prevent op's GameMode changing
