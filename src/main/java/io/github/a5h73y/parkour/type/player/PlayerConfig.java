@@ -286,6 +286,14 @@ public class PlayerConfig extends Json {
     }
 
     /**
+     * Increase the amount of Parkoins the Player has.
+     * @param amount amount to increase by
+     */
+    public void decreaseParkoins(double amount) {
+        setParkoins(getParkoins() - amount);
+    }
+
+    /**
      * Set the number of Parkoins for Player.
      * @param amount amount to set
      */

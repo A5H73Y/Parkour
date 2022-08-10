@@ -4,6 +4,7 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.AMOUNT_PLACEHOLDER
 import static io.github.a5h73y.parkour.other.ParkourConstants.COURSE_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_INVALID_AMOUNT;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
+import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_UNKNOWN_PLAYER;
 import static org.bukkit.Bukkit.getServer;
 
 import io.github.a5h73y.parkour.Parkour;
@@ -11,9 +12,13 @@ import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.economy.EconomyResponse;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.ServicePriority;
 
 /**
  * Vault Economy integration.
@@ -39,6 +44,10 @@ public class EconomyApi extends PluginWrapper {
 		super.initialise();
 
 		if (isEnabled()) {
+			if (parkour.getParkourConfig().getBoolean("Plugin.Vault.RegisterParkoins")) {
+				getServer().getServicesManager().register(Economy.class, new ParkoinsVault(parkour), parkour, ServicePriority.Normal);
+			}
+
 			RegisteredServiceProvider<Economy> economyProvider =
 					getServer().getServicesManager().getRegistration(Economy.class);
 
@@ -194,8 +203,20 @@ public class EconomyApi extends PluginWrapper {
 				displayEconomyInformation(commandSender);
 				break;
 
+			case "add":
+				processAddCommand(commandSender, args);
+				break;
+
+			case "deduct":
+				processDeductCommand(commandSender, args);
+				break;
+
+			case "amount":
+				processAmountCommand(commandSender, args);
+				break;
+
 			default:
-				TranslationUtils.sendInvalidSyntax(commandSender, "econ", "(info / setprize / setfee)");
+				parkour.getParkourCommands().sendInvalidSyntax(commandSender, "economy");
 		}
 	}
 
@@ -237,5 +258,75 @@ public class EconomyApi extends PluginWrapper {
 
 		parkour.getConfigManager().getCourseConfig(args[2]).setEconomyJoiningFee(Double.parseDouble(args[3]));
 		TranslationUtils.sendPropertySet(commandSender, "Join Fee", args[2], args[3]);
+	}
+
+	private void processAddCommand(CommandSender commandSender, String... args) {
+		if (args.length != 4) {
+			TranslationUtils.sendInvalidSyntax(commandSender, "econ", "add (player) (amount)");
+			return;
+		}
+
+		OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(args[2]);
+
+		if (!economy.hasAccount(targetPlayer)) {
+			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, commandSender);
+			return;
+		}
+
+		if (!ValidationUtils.isPositiveDouble(args[3])) {
+			TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, commandSender);
+			return;
+		}
+
+		EconomyResponse response = economy.depositPlayer(targetPlayer, Double.parseDouble(args[3]));
+		if (response.transactionSuccess()) {
+			TranslationUtils.sendMessage(commandSender, "Added &b" + args[3] + getCurrencyName() + "&f. "
+					+ args[2] + "'s new amount: &b" + economy.getBalance(targetPlayer) + getCurrencyName());
+		} else {
+			TranslationUtils.sendMessage(commandSender, "Failed to add amount to Player.");
+		}
+	}
+
+	private void processDeductCommand(CommandSender commandSender, String... args) {
+		if (args.length != 4) {
+			TranslationUtils.sendInvalidSyntax(commandSender, "econ", "deduct (player) (amount)");
+			return;
+		}
+
+		OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(args[2]);
+
+		if (!economy.hasAccount(targetPlayer)) {
+			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, commandSender);
+			return;
+		}
+
+		if (!ValidationUtils.isPositiveDouble(args[3])) {
+			TranslationUtils.sendTranslation(ERROR_INVALID_AMOUNT, commandSender);
+			return;
+		}
+
+		EconomyResponse response = economy.withdrawPlayer(targetPlayer, Double.parseDouble(args[3]));
+		if (response.transactionSuccess()) {
+			TranslationUtils.sendMessage(commandSender, "Deducted &b" + args[3] + getCurrencyName() + "&f. "
+					+ args[2] + "'s new amount: &b" + economy.getBalance(targetPlayer) + getCurrencyName());
+		} else {
+			TranslationUtils.sendMessage(commandSender, "Failed to deduct amount to Player.");
+		}
+	}
+
+	private void processAmountCommand(CommandSender commandSender, String... args) {
+		if (args.length != 3) {
+			TranslationUtils.sendInvalidSyntax(commandSender, "econ", "amount (player)");
+			return;
+		}
+
+		OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(args[2]);
+
+		if (!economy.hasAccount(targetPlayer)) {
+			TranslationUtils.sendTranslation(ERROR_UNKNOWN_PLAYER, commandSender);
+			return;
+		}
+
+		TranslationUtils.sendMessage(commandSender, args[2] + "'s balance: &b" + economy.getBalance(targetPlayer) + getCurrencyName());
 	}
 }

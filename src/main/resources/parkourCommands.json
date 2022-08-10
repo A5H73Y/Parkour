@@ -135,13 +135,13 @@
   {
     "command": "economy",
     "title": "Display Economy information",
-    "arguments": "(info / setprize / setfee)",
+    "arguments": "(info / setprize / setfee / add / deduct / amount)",
     "example": "/pa economy info",
     "description": "If you have linked Parkour to a compatible Economy plugin, you are able to set the fee to join a Course and set the prize for completing a Course.",
     "permission": "parkour.admin.*",
     "commandGroup": "5",
-    "consoleSyntax": "pac economy (info / setprize / setfee)",
-    "autoTabSyntax": "[info,setprize,setfee] {1:setprize=(course),1:setfee=(course)} {1:setprize=(amount),1:setfee=(amount)}"
+    "consoleSyntax": "pac economy (info / setprize / setfee / add / deduct / amount)",
+    "autoTabSyntax": "[info,setprize,setfee,add,deduct,amount] {1:setprize=(course),1:setfee=(course),1:info=(nothing),*=(player)} {1:info=(nothing),1:amount=(nothing),*=(amount)}"
   },
   {
     "command": "editkit",

@@ -264,12 +264,12 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}
 		prepareParkourPlayer(player);
 		restorePlayerData(player, playerConfig);
+		playerConfig.resetPlayerDataSnapshot();
+		playerConfig.removeExistingSessionCourseName();
 
 		parkour.getParkourSessionManager().forceVisible(player);
 		parkour.getScoreboardManager().removeScoreboard(player);
 		parkour.getChallengeManager().forfeitChallenge(player);
-		playerConfig.resetPlayerDataSnapshot();
-		playerConfig.removeExistingSessionCourseName();
 
 		Bukkit.getServer().getPluginManager().callEvent(
 				new ParkourLeaveEvent(player, session.getCourse().getName(), silent));
@@ -514,13 +514,14 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			if (parkour.getParkourConfig().getBoolean("OnFinish.TeleportBeforePrize")) {
 				teleportCourseCompletion(player, courseName);
 				restorePlayerData(player, playerConfig);
+				playerConfig.resetPlayerDataSnapshot();
 				rewardPrize(player, session);
 			} else {
 				restorePlayerData(player, playerConfig);
+				playerConfig.resetPlayerDataSnapshot();
 				rewardPrize(player, session);
 				teleportCourseCompletion(player, courseName);
 			}
-			playerConfig.resetPlayerDataSnapshot();
 			parkour.getConfigManager().getCourseCompletionsConfig().addCompletedCourse(player, courseName);
 		}, parkour.getParkourConfig().getLong("OnFinish.TeleportDelay"));
 
@@ -559,19 +560,28 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 				PlayerUtils.teleportToLocation(player, course.getCheckpoints().get(0).getLocation());
 			}
 		} else {
+			fastRestartCourse(player);
+		}
+
+		parkour.getBountifulApi().sendSubTitle(player,
+				TranslationUtils.getTranslation("Parkour.Restarting", false), BountifulApi.JOIN_COURSE);
+	}
+
+	private void fastRestartCourse(Player player) {
+		ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
+
+		if (session != null) {
 			session.resetProgress();
 			session.setFreedomLocation(null);
-			preparePlayerForCourse(player, course.getName());
+			preparePlayerForCourse(player, session.getCourse().getName());
 			PlayerUtils.teleportToLocation(player, session.getCheckpoint().getLocation());
 			parkour.getScoreboardManager().addScoreboard(player, session);
 
 			if (parkour.getParkourConfig().isTreatFirstCheckpointAsStart()) {
 				session.setStartTimer(false);
 			}
+			setupParkourMode(player);
 		}
-
-		parkour.getBountifulApi().sendSubTitle(player,
-				TranslationUtils.getTranslation("Parkour.Restarting", false), BountifulApi.JOIN_COURSE);
 	}
 
 	/**
