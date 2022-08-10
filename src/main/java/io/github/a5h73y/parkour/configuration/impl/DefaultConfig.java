@@ -286,7 +286,7 @@ public class DefaultConfig extends Yaml {
 
 		this.setDefault("Plugin.BountifulAPI.Enabled", true);
 		this.setDefault("Plugin.Vault.Enabled", true);
-		this.setDefault("Plugin.Vault.RegisterParkoins", true);
+		this.setDefault("Plugin.Vault.RegisterParkoins", false);
 		this.setDefault("Plugin.PlaceholderAPI.Enabled", true);
 		this.setDefault("Plugin.PlaceholderAPI.CacheTime", 3);
 
