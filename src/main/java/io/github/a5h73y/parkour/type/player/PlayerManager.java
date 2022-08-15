@@ -254,7 +254,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 					BountifulApi.LEAVE);
 
 			if (parkour.getParkourConfig().getBoolean("OnLeave.TeleportAway")) {
-				if (parkour.getParkourConfig().isTeleportToJoinLocation()) {
+				if (parkour.getParkourConfig().isTeleportToJoinLocation()
+						&& playerConfig.hasSnapshotJoinLocation()) {
 					PlayerUtils.teleportToLocation(player, playerConfig.getSnapshotJoinLocation());
 				} else {
 					parkour.getLobbyManager().teleportToLeaveDestination(player, session);
@@ -1463,6 +1464,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}
 
 		CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(courseName);
+		PlayerConfig playerConfig = parkour.getConfigManager().getPlayerConfig(player);
+
 		if (courseConfig.hasLinkedCourse()) {
 			String linkedCourseName = courseConfig.getLinkedCourse();
 			joinCourse(player, linkedCourseName);
@@ -1476,9 +1479,9 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 				return;
 			}
 
-		} else if (parkour.getParkourConfig().isTeleportToJoinLocation()) {
-			PlayerUtils.teleportToLocation(player, parkour.getConfigManager().getPlayerConfig(player)
-					.getSnapshotJoinLocation());
+		} else if (parkour.getParkourConfig().isTeleportToJoinLocation()
+				&& playerConfig.hasSnapshotJoinLocation()) {
+			PlayerUtils.teleportToLocation(player, playerConfig.getSnapshotJoinLocation());
 			TranslationUtils.sendTranslation("Parkour.JoinLocation", player);
 			return;
 		}

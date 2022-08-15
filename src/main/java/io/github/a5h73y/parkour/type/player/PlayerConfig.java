@@ -229,6 +229,16 @@ public class PlayerConfig extends Json {
      *
      * @return join location
      */
+    public boolean hasSnapshotJoinLocation() {
+        return this.contains(SNAPSHOT + JOIN_LOCATION);
+    }
+
+    /**
+     * Get the Player's Join Location Snapshot.
+     * The {@link Location} from which the player joined the course.
+     *
+     * @return join location
+     */
     public Location getSnapshotJoinLocation() {
         return this.getSerializable(SNAPSHOT + JOIN_LOCATION, Location.class);
     }
