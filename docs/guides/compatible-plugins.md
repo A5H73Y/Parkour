@@ -248,39 +248,26 @@ Currently, LeaderHeads does not appear to support displaying milliseconds as par
 
 </details>
 
-[//]: # (Currently no known way of getting this to work, issue raised with the developer for support)
-[//]: # (https://github.com/Jumper251/AdvancedReplay/issues/96)
-[//]: # (## AdvancedReplay)
+## AdvancedReplay
 
-[//]: # ()
-[//]: # (Want to be able to record and play back each player's best time?)
+Parkour doesn't directly support [AdvancedReplay](https://www.spigotmc.org/resources/advancedreplay-1-8-1-19.52849/), however you can use PlaceholderAPI which allows you to record and play back each Player's best time.
 
-[//]: # ()
-[//]: # (You will need to install the following plugins to achieve this:)
+You will need to install the following plugins to achieve this:
 
-[//]: # (* [Holographic Displays]&#40;https://www.spigotmc.org/resources/advancedreplay-1-8-1-18.52849/&#41;)
+* [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/)
 
-[//]: # (* [ProtocolLib]&#40;https://www.spigotmc.org/resources/protocollib.1997/&#41;)
+To achieve seamless integration with the plugin, Parkour's event command system will be used.
 
-[//]: # ()
-[//]: # (To achieve seamless integration with the plugin, Parkour's command event system will be used.)
+To apply to every single Course, set the `CourseDefault.Command.Join` to:
 
-[//]: # ()
-[//]: # (To apply to every single Course, set the `CourseDefault.Command.Join` to:)
+`replay start %PLAYER%-%COURSE% %PLAYER%`  
 
-[//]: # ()
-[//]: # (`replay start %PLAYER%-%COURSE% %PLAYER%`  )
+This means only the Player which joined the Course is recorded, the recording name will be a combination of the Player's name and the Course name.
 
-[//]: # (This means only the Player which joined the Course is recorded, the recording name will be a combination of the Player's name and the Course name.)
+To avoid complications, the recording will only be saved if they complete the Course with either their best time ever, or the Course's best time ever. All other events will discard the recording.
 
-[//]: # ()
-[//]: # (To avoid complications, the recording will only be saved if they complete the Course with either their best time ever, or the Course's best time ever. All other events will discard the recording.)
+Set the `Leave`, `Finish` commands to `replay stop %PLAYER%-%COURSE% -nosave`
 
-[//]: # ()
-[//]: # (Set the `Leave`, `Prize` and `NoPrize` commands to `replay stop %PLAYER%-%COURSE% -nosave`)
+Set the `PlayerCourseRecord` and `GlobalCourseRecord` commands to `replay stop %PLAYER%-%COURSE% -force`
 
-[//]: # ()
-[//]: # (Set the `PlayerCourseRecord` and `GlobalCourseRecord` commands to `replay stop %PLAYER%-%COURSE%`)
-
-[//]: # ()
-[//]: # (![Default Course Command Config]&#40;https://i.imgur.com/CR8gcp3.png "Default Course Command Config"&#41;)
+Now you can use `/replay play (player)-(course)` to see that Player's best time on the Course. Also, if you have PlaceholderAPI integration you could evaluate the best Player on a given Course to see the best Course time run.
