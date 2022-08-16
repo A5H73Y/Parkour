@@ -40,3 +40,7 @@ The setting `OnFinish.EnablePrizes` must be set to `true` in the `config.yml` to
 If the `RewardOnce` flag is set to `true` for the Course, you will not receive a Prize if you have an appropriate entry in the `course-completions.yml` file.
 
 _Note if you are looking to stop giving the Player a diamond by default, set `CourseDefault.Prize.Amount` to `0`._
+
+##### Why aren't Players able to use signs?
+
+If Parkour signs aren't working for non-ops, this will be because of an external reason. This could include the `server.properties` `spawn-protection` property or a 3rd party plugin, and not because of the Parkour plugin. By default, there is no permission required to use Parkour signs.

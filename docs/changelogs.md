@@ -8,6 +8,7 @@ Please note that each version of Parkour is backwards compatible with the previo
 * Fixed Player's data being reset prior to linked course
 * Parkour can now be registered as an Economy plugin using Vault (Plugin.Vault.RegisterParkoins)
 * Added more economy command (add / deduct / amount)
+* Fixed Join Locations being null
 
 ## 7.0.4
 
