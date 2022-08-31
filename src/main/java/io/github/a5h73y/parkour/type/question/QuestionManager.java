@@ -120,6 +120,10 @@ public class QuestionManager extends AbstractPluginReceiver {
         askGenericQuestion(commandSender, QuestionType.RESET_PRIZES, courseName.toLowerCase());
     }
 
+    public void askResetCommandsQuestion(CommandSender commandSender, String courseName) {
+        askGenericQuestion(commandSender, QuestionType.RESET_COMMANDS, courseName.toLowerCase());
+    }
+
     /**
      * Ask the "Restart Progress" Question.
      *

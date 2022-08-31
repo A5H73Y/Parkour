@@ -63,6 +63,10 @@ public enum QuestionType {
             "Resetting the prizes for this course will set the prize to the default prize found in the main configuration file.",
             (sender, value) -> Parkour.getInstance().getCourseManager().resetPrize(sender, value)),
 
+    RESET_COMMANDS("You are about to reset the commands for &b%s&f...",
+            "Resetting the Course's event commands will remove the per-course commands however the default commands will remain.",
+            (sender, value) -> Parkour.getInstance().getCourseManager().resetCommands(sender, value)),
+
     RESTART_COURSE("You are about to restart your progress on &b%s&f...",
             "All of your current progress will be lost, taking you back to the start of the Course "
                     + "with your time and deaths reset.",

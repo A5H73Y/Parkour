@@ -342,6 +342,24 @@ public class CourseManager extends AbstractPluginReceiver {
     }
 
     /**
+     * Reset the Course Commands.
+     * Will result in the Course having no event commands.
+     *
+     * @param commandSender command sender
+     * @param courseName course name
+     */
+    public void resetCommands(CommandSender commandSender, String courseName) {
+        if (!doesCourseExist(courseName)) {
+            TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
+            return;
+        }
+
+        parkour.getConfigManager().getCourseConfig(courseName).resetCommands();
+        TranslationUtils.sendValueTranslation("Parkour.Reset", courseName + " Commands", commandSender);
+        PluginUtils.logToFile(courseName + " commands were reset by " + commandSender.getName());
+    }
+
+    /**
      * Execute the appropriate Event Commands for Course.
      * When a Course has a matching Command for the {@link ParkourEventType}, execute each of them.
      * The Commands will be dispatched either from the Console Sender or Player, based on prefix.

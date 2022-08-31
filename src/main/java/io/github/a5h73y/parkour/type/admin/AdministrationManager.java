@@ -205,6 +205,15 @@ public class AdministrationManager extends AbstractPluginReceiver {
 				parkour.getQuestionManager().askResetPrizeQuestion(commandSender, argument);
 				break;
 
+			case "commands":
+				if (!parkour.getCourseManager().doesCourseExist(argument)) {
+					TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, argument, commandSender);
+					return;
+				}
+
+				parkour.getQuestionManager().askResetCommandsQuestion(commandSender, argument);
+				break;
+
 			default:
 				parkour.getParkourCommands().sendInvalidSyntax(commandSender, "reset");
 				break;

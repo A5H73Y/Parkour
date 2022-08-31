@@ -35,7 +35,7 @@ Add a whole new element of fun to any server, highly competitive gameplay with r
 <dependency>
     <groupId>com.github.A5H73Y</groupId>
     <artifactId>Parkour</artifactId>
-    <version>7.0.5</version>
+    <version>7.0.6</version>
     <type>jar</type>
     <scope>provided</scope>
 </dependency>
@@ -51,5 +51,5 @@ repositories {
 ```
 
 ```
-compile 'com.github.A5H73Y:Parkour:7.0.5'
+compile 'com.github.A5H73Y:Parkour:7.0.6'
 ```

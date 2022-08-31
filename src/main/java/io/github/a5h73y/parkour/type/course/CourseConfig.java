@@ -709,6 +709,13 @@ public class CourseConfig extends Json {
     }
 
     /**
+     * Reset Course commands.
+     */
+    public void resetCommands() {
+        this.remove("Command");
+    }
+
+    /**
      * Reset the Links of the Course.
      * Removes any linked Lobby or Course.
      */

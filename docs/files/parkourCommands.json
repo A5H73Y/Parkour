@@ -390,13 +390,13 @@
   {
     "command": "reset",
     "title": "Request Reset Command",
-    "arguments": "(course / player / leaderboard / prize) (argument)",
+    "arguments": "(course / player / leaderboard / prize / commands) (argument)",
     "example": "/pa reset player A5H73Y",
     "description": "The Reset command allows you to request to reset an entry from the Parkour plugin. A summary of the request, with any consequences, will be displayed to the user before they are asked to confirm the action. Each request will be validated and require confirmation before it is actioned.",
     "permission": "parkour.admin.reset",
     "commandGroup": "5",
-    "consoleSyntax": "pac reset (course / player / leaderboard / prize) (argument)",
-    "autoTabSyntax": "[course,player,leaderboard,prize] {1:course=(course),1:leaderboard=(course),1:prize=(course),1:player=(player)}"
+    "consoleSyntax": "pac reset (course / player / leaderboard / prize / commands) (argument)",
+    "autoTabSyntax": "[course,player,leaderboard,prize,commands] {1:player=(player),*=(course)}"
   },
   {
     "command": "respawn",
