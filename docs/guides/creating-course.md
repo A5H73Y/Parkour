@@ -54,6 +54,16 @@ By default, Players are unable to join a Course that has not been set to ready (
 
 ![Course Ready](https://i.imgur.com/kd1KkqU.jpg "Course Ready")
 
+## Joining a Course
+
+The Player is able to join Parkour Course's in multiple ways.
+
+* The easiest is using the command `/pa join (course)`.
+* Right-clicking a Parkour [Join Sign](/tutorials/sign-commands?id=join-course).
+* Walking on an [AutoStart](/tutorials/parkour-autostart) pressure plate.
+* Running the console command `pac join (course) (player)`
+* Using the [JoinAll GUI](/tutorials/sign-commands?id=join-all).
+
 ## Test Mode
 
 You are able to simulate how each ParkourKit will behave by enabling Test Mode, this can be achieved using `/pa test [kitName]`.  
