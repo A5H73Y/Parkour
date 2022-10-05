@@ -218,7 +218,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return INVALID_SYNTAX;
 
             case "personal":
-                if (arguments.length != 5 && !arguments[2].equals("best")) {
+                if (arguments.length != 5 || !arguments[2].equals("best")) {
                     return INVALID_SYNTAX;
                 }
                 Player player = offlinePlayer.getPlayer();
@@ -382,13 +382,13 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return getCourseRecord(session.getCourseName(), arguments[3]);
 
             case "personal":
-                if (arguments.length != 5 && !arguments[3].equals("best")) {
+                if (arguments.length != 5 || !arguments[3].equals("best")) {
                     return INVALID_SYNTAX;
                 }
                 return getPersonalCourseRecord(player, session.getCourseName(), arguments[4]);
 
             case "remaining":
-                if (arguments.length != 4 && !arguments[3].equals("deaths")) {
+                if (arguments.length != 4 || !arguments[3].equals("deaths")) {
                     return INVALID_SYNTAX;
                 }
                 return String.valueOf(session.getRemainingDeaths());
