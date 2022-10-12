@@ -143,7 +143,7 @@
 		<dependency>
 			<groupId>com.github.cryptomorin</groupId>
 			<artifactId>XSeries</artifactId>
-			<version>9.0.0</version>
+			<version>9.1.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<!-- Version Compare -->
@@ -158,6 +158,12 @@
 			<groupId>com.github.simplix-softworks</groupId>
 			<artifactId>simplixstorage</artifactId>
 			<version>3.2.5</version>
+		</dependency>
+		<!-- Update to remove known vulnerabilities -->
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>1.33</version>
 		</dependency>
 	</dependencies>
 

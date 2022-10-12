@@ -9,10 +9,12 @@ import io.github.a5h73y.parkour.database.TimeEntry;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
+import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.cache.GenericCache;
 import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Supplier;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -412,7 +414,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
         } else {
             return TOP_TEN_RESULT.replace(PLAYER_PLACEHOLDER, result.getPlayerName())
                     .replace(POSITION_PLACEHOLDER, String.valueOf(position))
-                    .replace(TIME_PLACEHOLDER, DateTimeUtils.displayCurrentTime(result.getTime()))
+                    .replace(TIME_PLACEHOLDER, getTimeValue(result.getTime()))
                     .replace(DEATHS_PLACEHOLDER, String.valueOf(result.getDeaths()));
         }
     }
@@ -454,7 +456,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
         } else {
             switch (key) {
                 case "time":
-                    return DateTimeUtils.displayCurrentTime(result.getTime());
+                    return getTimeValue(result.getTime());
 
                 case "milliseconds":
                     return String.valueOf(result.getTime());
@@ -492,5 +494,9 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
 
     public void clearCache() {
         this.cache.clear();
+    }
+
+    private String getTimeValue(long milliseconds) {
+        return StringUtils.colour(parkour.getParkourConfig().getPlaceholderTimeFormat().format(new Date(milliseconds)));
     }
 }

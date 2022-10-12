@@ -27,7 +27,6 @@ import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_ONCE;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_PARKOINS;
 
 import com.google.common.io.Files;
-import de.leonhard.storage.sections.FlatFileSection;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.commands.CommandProcessor;
 import io.github.a5h73y.parkour.conversation.CoursePrizeConversation;
@@ -48,6 +47,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import de.leonhard.storage.sections.FlatFileSection;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.Conversable;
@@ -332,8 +332,8 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 
 		CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(courseName);
 		if (courseConfig.hasLinkedLobby()) {
-			TranslationUtils.sendMessage(commandSender, "This Course is linked to a Lobby!");
-			return;
+			TranslationUtils.sendMessage(commandSender, "A linked lobby exists on this Course.");
+			TranslationUtils.sendMessage(commandSender, "The Player will be taken to the linked Course instead of the Lobby on finish.");
 		}
 
 		courseConfig.setLinkedCourse(targetCourse);
@@ -360,9 +360,10 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 		}
 
 		CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(courseName);
+
 		if (courseConfig.hasLinkedCourse()) {
-			TranslationUtils.sendMessage(commandSender, "This Course is linked to a Course!");
-			return;
+			TranslationUtils.sendMessage(commandSender, "A linked Course exists on this Course.");
+			TranslationUtils.sendMessage(commandSender, "The Player will be taken to the linked Course instead of the Lobby on finish.");
 		}
 
 		courseConfig.setLinkedLobby(targetLobby);

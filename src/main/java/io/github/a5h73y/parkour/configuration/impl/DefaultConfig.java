@@ -48,9 +48,11 @@ import org.jetbrains.annotations.Nullable;
 public class DefaultConfig extends Yaml {
 
 	private static final String WHITELISTED_COMMANDS = "OnCourse.EnforceParkourCommands.Whitelist";
+	private static final String COURSE_DEFAULT_SETTINGS = "CourseDefault.Settings.";
 
 	private final DateFormat detailedTimeFormat;
 	private final DateFormat standardTimeFormat;
+	private final DateFormat placeholderTimeFormat;
 
 	/**
 	 * Create the config.yml instance.
@@ -125,18 +127,18 @@ public class DefaultConfig extends Yaml {
 
 		this.setDefault("OnServerRestart.KickPlayerFromCourse", false);
 
-		this.setDefault("CourseDefault.Settings." + DIE_IN_LIQUID, false);
-		this.setDefault("CourseDefault.Settings." + DIE_IN_VOID, false);
-		this.setDefault("CourseDefault.Settings." + HAS_FALL_DAMAGE, true);
-		this.setDefault("CourseDefault.Settings." + MANUAL_CHECKPOINTS, false);
-		this.setDefault("CourseDefault.Settings." + MAX_FALL_TICKS, 80);
-		this.setDefault("CourseDefault.Settings." + MAX_DEATHS, 0);
-		this.setDefault("CourseDefault.Settings." + MAX_TIME, 0);
+		this.setDefault(COURSE_DEFAULT_SETTINGS + DIE_IN_LIQUID, false);
+		this.setDefault(COURSE_DEFAULT_SETTINGS + DIE_IN_VOID, false);
+		this.setDefault(COURSE_DEFAULT_SETTINGS + HAS_FALL_DAMAGE, true);
+		this.setDefault(COURSE_DEFAULT_SETTINGS + MANUAL_CHECKPOINTS, false);
+		this.setDefault(COURSE_DEFAULT_SETTINGS + MAX_FALL_TICKS, 80);
+		this.setDefault(COURSE_DEFAULT_SETTINGS + MAX_DEATHS, 0);
+		this.setDefault(COURSE_DEFAULT_SETTINGS + MAX_TIME, 0);
 
-		this.setDefault("CourseDefault.Settings." + REWARD_ONCE, false);
-		this.setDefault("CourseDefault.Settings." + REWARD_DELAY, 0);
-		this.setDefault("CourseDefault.Settings." + REWARD_LEVEL_ADD, 0);
-		this.setDefault("CourseDefault.Settings." + JOIN_ITEMS, new ArrayList<String>());
+		this.setDefault(COURSE_DEFAULT_SETTINGS + REWARD_ONCE, false);
+		this.setDefault(COURSE_DEFAULT_SETTINGS + REWARD_DELAY, 0);
+		this.setDefault(COURSE_DEFAULT_SETTINGS + REWARD_LEVEL_ADD, 0);
+		this.setDefault(COURSE_DEFAULT_SETTINGS + JOIN_ITEMS, new ArrayList<String>());
 
 		this.setDefault("CourseDefault.Prize.Material", "DIAMOND");
 		this.setDefault("CourseDefault.Prize.Amount", 1);
@@ -277,6 +279,7 @@ public class DefaultConfig extends Yaml {
 
 		this.setDefault("Other.Time.StandardFormat", "HH:mm:ss");
 		this.setDefault("Other.Time.DetailedFormat", "HH:mm:ss:SSS");
+		this.setDefault("Other.Time.PlaceholderFormat", "HH:mm:ss:SSS");
 		this.setDefault("Other.Time.TimeZone", "GMT");
 
 		this.setDefault("Other.OnServerShutdown.BackupFiles", false);
@@ -305,6 +308,7 @@ public class DefaultConfig extends Yaml {
 		TimeZone timeZone = TimeZone.getTimeZone(this.getTimeZone());
 		detailedTimeFormat = setupDateFormat(this.getTimeDetailedFormatValue(), timeZone);
 		standardTimeFormat = setupDateFormat(this.getTimeStandardFormatValue(), timeZone);
+		placeholderTimeFormat = setupDateFormat(this.getTimePlaceholderValue(), timeZone);
 	}
 
 	/**
@@ -362,13 +366,13 @@ public class DefaultConfig extends Yaml {
 
 	@Nullable
 	public List<ItemStack> getDefaultJoinItems() {
-		return this.getSerializableList("CourseDefault.Settings." + JOIN_ITEMS, ItemStack.class);
+		return this.getSerializableList(COURSE_DEFAULT_SETTINGS + JOIN_ITEMS, ItemStack.class);
 	}
 
 	public void addDefaultJoinItem(ItemStack itemStack) {
-		List<String> results = this.getStringList("CourseDefault.Settings." + JOIN_ITEMS);
+		List<String> results = this.getStringList(COURSE_DEFAULT_SETTINGS + JOIN_ITEMS);
 		results.add(Parkour.getInstance().getConfigManager().getItemStackSerializable().serialize(itemStack));
-		this.set("CourseDefault.Settings." + JOIN_ITEMS, results);
+		this.set(COURSE_DEFAULT_SETTINGS + JOIN_ITEMS, results);
 	}
 
 	public void addDisabledParkourCommand(@NotNull String command) {
@@ -402,6 +406,10 @@ public class DefaultConfig extends Yaml {
 
 	public String getTimeDetailedFormatValue() {
 		return this.getString("Other.Time.DetailedFormat");
+	}
+
+	public String getTimePlaceholderValue() {
+		return this.getString("Other.Time.PlaceholderFormat");
 	}
 
 	public String getTimeZone() {
@@ -594,5 +602,9 @@ public class DefaultConfig extends Yaml {
 
 	public DateFormat getStandardTimeFormat() {
 		return standardTimeFormat;
+	}
+
+	public DateFormat getPlaceholderTimeFormat() {
+		return placeholderTimeFormat;
 	}
 }
