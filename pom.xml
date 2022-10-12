@@ -49,11 +49,6 @@
 			<id>placeholderapi-repo</id>
 			<url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
 		</repository>
-		<!-- MySQL database Repo -->
-		<repository>
-			<id>husk</id>
-			<url>https://maven.husk.pro/repository/maven-releases/</url>
-		</repository>
 		<!-- InventoryGui -->
 		<repository>
 			<id>minebench-repo</id>
@@ -121,9 +116,9 @@
 		</dependency>
 		<!-- MySQL Database -->
 		<dependency>
-			<groupId>pro.husk</groupId>
-			<artifactId>mysql</artifactId>
-			<version>1.4.2</version>
+			<groupId>com.github.Huskehhh</groupId>
+			<artifactId>MySQL</artifactId>
+			<version>63040a058d</version>
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
