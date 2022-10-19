@@ -933,7 +933,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, args[1], commandSender);
 			return;
 
-		} else if (args.length > 1 && args.length < 4) {
+		} else if (args.length == 3) {
 			parkour.getParkourCommands().sendInvalidSyntax(commandSender, "addjoinitem");
 			return;
 		}
