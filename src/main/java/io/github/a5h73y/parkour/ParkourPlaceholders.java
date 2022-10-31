@@ -192,7 +192,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 }
 
             case "course":
-                if (arguments.length < 3) {
+                if (arguments.length < 4) {
                     return INVALID_SYNTAX;
                 }
 
