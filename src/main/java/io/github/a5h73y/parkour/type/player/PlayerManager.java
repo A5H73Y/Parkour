@@ -519,9 +519,9 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 				rewardPrize(player, session);
 			} else {
 				restorePlayerData(player, playerConfig);
-				playerConfig.resetPlayerDataSnapshot();
 				rewardPrize(player, session);
 				teleportCourseCompletion(player, courseName);
+				playerConfig.resetPlayerDataSnapshot();
 			}
 			parkour.getConfigManager().getCourseCompletionsConfig().addCompletedCourse(player, courseName);
 		}, parkour.getParkourConfig().getLong("OnFinish.TeleportDelay"));
