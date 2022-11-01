@@ -24,6 +24,61 @@ The `Plugin.PlaceholderAPI.CacheTime` value can be set to an interval in minutes
 
 [All the Parkour Placeholders are available here](/essential/placeholders.md).
 
+## Decent Holograms
+
+Parkour doesn't directly support [Decent Holograms](https://www.spigotmc.org/resources/decentholograms.96927/), however it can use PlaceholderAPI to create dynamic and nice looking Parkour holograms.
+
+### Example usages
+
+We can create a few examples of what is now possible. For demonstration purposes, I will be using a Course named "tutorial".
+
+<details><summary>Parkour Leaderboards (Click to expand)</summary>
+
+First we create a new Parkour leaderboard Hologram using the command and giving it a title.
+`/dh create Leaderboard_tutorial Parkour Leaderboard - Tutorial`
+
+Add a line for each position you want on the leaderboard (up to 10):
+
+`/dh line add Leaderboard_tutorial 1 %parkour_topten_tutorial_1%`
+`/dh line add Leaderboard_tutorial 1 %parkour_topten_tutorial_2%`
+`/dh line add Leaderboard_tutorial 1 %parkour_topten_tutorial_3%`
+
+Above we are using the Parkour placeholder `%parkour_topten_(course)_(position)%`.
+There is an entry in the `strings.yml` named `PlaceholderAPI.TopTenResult` which will allow you to customise the appearance and colours used.
+
+</details>
+
+<details><summary>Parkour Course Best Player (Click to expand)</summary>
+
+First we create a new Parkour leader Hologram using the command and giving it a title.
+`/dh create Leader_tutorial Parkour Leader - Tutorial`
+
+Add a line for each detail you want to display:
+
+`/dh line add Leader_tutorial 1 Best Player: %parkour_leaderboard_tutorial_1_player%`
+`/dh line add Leader_tutorial 1 Time: %parkour_leaderboard_tutorial_1_time%`
+`/dh line add Leader_tutorial 1 Deaths: %parkour_leaderboard_tutorial_1_deaths%`
+
+</details>
+
+<details><summary>Next Checkpoint (Click to expand)</summary>
+
+Display the next checkpoint for the Player to achieve, which displays a hologram above the pressure plate / action required to achieve the checkpoint.
+
+For example, when checkpoint 2 is achieved only the hologram for checkpoint 3 will be visible.
+
+![Next Checkpoint Example](https://i.imgur.com/JcnQsz6.png "Next Checkpoint Example")
+
+Stand over the place where you want the pressure plate to be and enter
+
+`/dh create (course)_checkpoint_(checkpoint) %parkour_current_checkpoint_hologram_(course)_(checkpoint)%`
+
+For example:
+
+`/dh create tutorial_checkpoint_3 %parkour_current_checkpoint_hologram_tutorial_3%`
+
+</details>
+
 ## Holographic Displays (v3.0.0+)
 
 **At the time of writing, Holographic Displays v3.0.0 is still in beta and has some known issues and could change in the future.**
@@ -84,7 +139,7 @@ For example:
 
 ## Holographic Displays (v2.x.x)
 
-Parkour doesn't directly support [Holographic Displays](https://dev.bukkit.org/projects/holographic-displays/files), however you can use PlaceholderAPI which allows you to create dynamic and nice looking Parkour holograms.
+Parkour doesn't directly support [Holographic Displays](https://dev.bukkit.org/projects/holographic-displays/files), however it can use PlaceholderAPI to create dynamic and nice looking Parkour holograms.
 
 You will need to install the following plugins to achieve this:
 * [Holographic Displays](https://dev.bukkit.org/projects/holographic-displays?gameCategorySlug=bukkit-plugins&projectID=75097)
