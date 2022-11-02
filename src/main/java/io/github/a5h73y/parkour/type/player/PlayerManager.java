@@ -266,6 +266,9 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		prepareParkourPlayer(player);
 		restorePlayerData(player, playerConfig);
 		playerConfig.resetPlayerDataSnapshot();
+		if (!silent) {
+		    playerConfig.resetSessionJoinLocation();
+		}
 		playerConfig.removeExistingSessionCourseName();
 
 		parkour.getParkourSessionManager().forceVisible(player);
@@ -520,8 +523,11 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			} else {
 				restorePlayerData(player, playerConfig);
 				rewardPrize(player, session);
-				teleportCourseCompletion(player, courseName);
 				playerConfig.resetPlayerDataSnapshot();
+				teleportCourseCompletion(player, courseName);
+				if (!parkour.getParkourSessionManager().isPlaying(player)) {
+				    playerConfig.resetSessionJoinLocation();
+				}
 			}
 			parkour.getConfigManager().getCourseCompletionsConfig().addCompletedCourse(player, courseName);
 		}, parkour.getParkourConfig().getLong("OnFinish.TeleportDelay"));
