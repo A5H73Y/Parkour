@@ -247,7 +247,7 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
 
         if (courseId > 0 && hasPlayerAchievedTime(player, courseName)) {
             String leaderboardPositionQuery = "SELECT COUNT(*) AS position FROM time WHERE courseId=? AND time < " +
-                    "(SELECT time FROM time WHERE courseId=? AND playerId=?)";
+                    "(SELECT time FROM time WHERE courseId=? AND playerId=? ORDER BY time LIMIT 1)";
 
             PluginUtils.debug("Checking leaderboard position for: " + leaderboardPositionQuery);
 

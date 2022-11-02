@@ -192,7 +192,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 }
 
             case "course":
-                if (arguments.length < 3) {
+                if (arguments.length < 4) {
                     return INVALID_SYNTAX;
                 }
 
@@ -344,6 +344,10 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
         switch (arguments[2]) {
             case "number":
                 return String.valueOf(session.getCurrentCheckpoint());
+
+            case "next":
+                return session.getCurrentCheckpoint() < session.getCourse().getNumberOfCheckpoints()
+                        ? String.valueOf(session.getCurrentCheckpoint() + 1) : "";
 
             case "hologram":
                 if (arguments.length != 5 || !ValidationUtils.isInteger(arguments[4])) {
