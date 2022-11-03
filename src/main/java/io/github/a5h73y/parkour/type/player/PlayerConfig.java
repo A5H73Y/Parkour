@@ -187,8 +187,9 @@ public class PlayerConfig extends Json {
         if (!hasPlayerDataSnapshot()) {
             this.setSerializable(SNAPSHOT + INVENTORY, player.getInventory().getContents());
             this.setSerializable(SNAPSHOT + ARMOR, player.getInventory().getArmorContents());
-            this.setSerializable(SNAPSHOT + JOIN_LOCATION, player.getLocation());
-
+            if (!hasSnapshotJoinLocation()) {
+                this.setSerializable(JOIN_LOCATION, player.getLocation());
+            }
             this.set(SNAPSHOT + HEALTH, player.getHealth());
             this.set(SNAPSHOT + HUNGER, player.getFoodLevel());
             this.set(SNAPSHOT + XP_LEVEL, player.getLevel());
@@ -230,7 +231,7 @@ public class PlayerConfig extends Json {
      * @return join location
      */
     public boolean hasSnapshotJoinLocation() {
-        return this.contains(SNAPSHOT + JOIN_LOCATION);
+        return this.contains(JOIN_LOCATION);
     }
 
     /**
@@ -240,11 +241,11 @@ public class PlayerConfig extends Json {
      * @return join location
      */
     public Location getSnapshotJoinLocation() {
-        return this.getSerializable(SNAPSHOT + JOIN_LOCATION, Location.class);
+        return this.getSerializable(JOIN_LOCATION, Location.class);
     }
 
     public void resetSessionJoinLocation() {
-        this.remove(SNAPSHOT + JOIN_LOCATION);
+        this.remove(JOIN_LOCATION);
     }
 
     /**
