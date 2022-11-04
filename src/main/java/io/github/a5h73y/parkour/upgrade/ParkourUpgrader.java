@@ -10,6 +10,8 @@ import io.github.a5h73y.parkour.upgrade.major.DatabaseUpgradeTask;
 import io.github.a5h73y.parkour.upgrade.major.DefaultConfigUpgradeTask;
 import io.github.a5h73y.parkour.upgrade.major.LobbyConfigUpgradeTask;
 import io.github.a5h73y.parkour.upgrade.major.PlayerDataUpgradeTask;
+import io.github.a5h73y.parkour.upgrade.minor.ConfigMinorUpgradeTask;
+import io.github.a5h73y.parkour.upgrade.minor.PlayerMinorUpgradeTask;
 import io.github.g00fy2.versioncompare.Version;
 import java.io.File;
 import java.io.IOException;
@@ -89,9 +91,12 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 
 		} else if (existingVersion.isLowerThan("7.0.0")) {
 			success = performFullUpgrade();
+			if (success) {
+				success = performPartialUpgrade();
+			}
 		} else {
 			// nothing to partially upgrade yet
-			success = true;
+			success = performPartialUpgrade();
 		}
 
 		if (success) {
@@ -102,6 +107,8 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 				parkour.getLogger().info("Parkour successfully upgraded to v"
 						+ parkour.getDescription().getVersion());
 				parkour.getLogger().info("The plugin will now start up...");
+				parkour.onEnable();
+				upgradeParkourSessions();
 
 			} catch (IOException e) {
 				parkour.getLogger().severe("An error occurred during upgrade: " + e.getMessage());
@@ -151,6 +158,14 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 		parkourKitFile.delete();
 
 		return true;
+	}
+
+	private boolean performPartialUpgrade() {
+		if (!new ConfigMinorUpgradeTask(this).start()) {
+			return false;
+		}
+
+		return new PlayerMinorUpgradeTask(this).start();
 	}
 
 	/**

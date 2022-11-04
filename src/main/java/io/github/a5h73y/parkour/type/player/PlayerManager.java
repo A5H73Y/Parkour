@@ -49,6 +49,7 @@ import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
+import io.github.a5h73y.parkour.utility.TaskCooldowns;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.permission.Permission;
@@ -265,10 +266,12 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}
 		prepareParkourPlayer(player);
 		restorePlayerData(player, playerConfig);
-		playerConfig.resetPlayerDataSnapshot();
+
 		if (!silent) {
-		    playerConfig.resetSessionJoinLocation();
+			playerConfig.resetPlayerDataSnapshot();
+			playerConfig.resetSessionJoinLocation();
 		}
+		playerConfig.resetSessionData();
 		playerConfig.removeExistingSessionCourseName();
 
 		parkour.getParkourSessionManager().forceVisible(player);
@@ -512,23 +515,36 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		parkour.getChallengeManager().completeChallenge(player);
 		parkour.getSoundsManager().playSound(player, SoundType.COURSE_FINISHED);
 		PlayerConfig playerConfig = parkour.getConfigManager().getPlayerConfig(player);
+		CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(courseName);
 
 		Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () -> {
 			parkour.getScoreboardManager().removeScoreboard(player);
-			if (parkour.getParkourConfig().getBoolean("OnFinish.TeleportBeforePrize")) {
-				teleportCourseCompletion(player, courseName);
+
+			if (courseConfig.hasLinkedCourse()) {
 				restorePlayerData(player, playerConfig);
-				playerConfig.resetPlayerDataSnapshot();
 				rewardPrize(player, session);
+				playerConfig.resetPlayerDataSnapshot();
+				playerConfig.resetSessionData();
+				joinCourse(player, courseConfig.getLinkedCourse());
+
 			} else {
+				boolean teleportBeforePrize = parkour.getParkourConfig().getBoolean("OnFinish.TeleportBeforePrize");
+
+				if (teleportBeforePrize) {
+					teleportCourseCompletion(player, courseName);
+				}
 				restorePlayerData(player, playerConfig);
 				rewardPrize(player, session);
-				playerConfig.resetPlayerDataSnapshot();
-				teleportCourseCompletion(player, courseName);
-				if (!parkour.getParkourSessionManager().isPlaying(player)) {
-				    playerConfig.resetSessionJoinLocation();
+
+				if (!teleportBeforePrize) {
+					teleportCourseCompletion(player, courseName);
 				}
+
+				playerConfig.resetPlayerDataSnapshot();
+				playerConfig.resetSessionJoinLocation();
+				playerConfig.resetSessionData();
 			}
+
 			parkour.getConfigManager().getCourseCompletionsConfig().addCompletedCourse(player, courseName);
 		}, parkour.getParkourConfig().getLong("OnFinish.TeleportDelay"));
 
@@ -1118,7 +1134,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		if (material != null && material != Material.AIR && !player.getInventory().contains(material)) {
 			int slot = parkour.getParkourConfig().getInt(configPath + ".Slot");
 			player.getInventory().setItem(slot, MaterialUtils.createItemStack(material,
-					TranslationUtils.getTranslation(translationKey, false)));
+					TranslationUtils.getTranslation(translationKey + ".Info", false)));
 		}
 	}
 
@@ -1257,6 +1273,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		if (parkour.getParkourConfig().getBoolean("ParkourTool.HideAll.ActivateOnJoin")) {
 			parkour.getParkourSessionManager().hideVisibility(player, true);
 		}
+
+		TaskCooldowns.getInstance().clearCoolDowns(player);
 	}
 
 	private void resetDeathCounter(Player player) {
@@ -1472,12 +1490,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(courseName);
 		PlayerConfig playerConfig = parkour.getConfigManager().getPlayerConfig(player);
 
-		if (courseConfig.hasLinkedCourse()) {
-			String linkedCourseName = courseConfig.getLinkedCourse();
-			joinCourse(player, linkedCourseName);
-			return;
-
-		} else if (courseConfig.hasLinkedLobby()) {
+		if (courseConfig.hasLinkedLobby()) {
 			String lobbyName = courseConfig.getLinkedLobby();
 
 			if (parkour.getConfigManager().getLobbyConfig().doesLobbyExist(lobbyName)) {

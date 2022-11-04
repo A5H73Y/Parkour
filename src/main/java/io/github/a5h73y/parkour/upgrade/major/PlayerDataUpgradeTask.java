@@ -6,7 +6,6 @@ import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import io.github.a5h73y.parkour.type.player.session.ParkourSessionConfig;
 import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
-import io.github.a5h73y.parkour.upgrade.TimedConfigUpgradeTask;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -28,7 +27,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-public class PlayerDataUpgradeTask extends TimedConfigUpgradeTask {
+public class PlayerDataUpgradeTask extends TimedLegacyConfigUpgradeTask {
 
 	private final ItemStackArraySerializable itemStackArraySerializable = new ItemStackArraySerializable();
 

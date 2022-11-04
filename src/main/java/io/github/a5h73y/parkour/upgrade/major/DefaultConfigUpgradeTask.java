@@ -1,9 +1,8 @@
 package io.github.a5h73y.parkour.upgrade.major;
 
 import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
-import io.github.a5h73y.parkour.upgrade.TimedConfigUpgradeTask;
 
-public class DefaultConfigUpgradeTask extends TimedConfigUpgradeTask {
+public class DefaultConfigUpgradeTask extends TimedLegacyConfigUpgradeTask {
 
 	public DefaultConfigUpgradeTask(ParkourUpgrader parkourUpgrader) {
 		super(parkourUpgrader, parkourUpgrader.getDefaultConfig());

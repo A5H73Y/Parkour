@@ -19,16 +19,11 @@ import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Stream;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -570,20 +565,13 @@ public class CourseManager extends AbstractPluginReceiver {
     }
 
     private void populateCourseCache() {
-        try (Stream<Path> paths = Files.walk(Paths.get(parkour.getConfigManager().getCoursesDir().toURI()), 1)) {
-            paths.filter(Files::isRegularFile)
-                    .map(p -> p.getFileName().toString().toLowerCase())
-                    .filter(path -> path.endsWith(".json"))
-                    .map(path -> path.split("\\.")[0])
-                    .forEach(courseName -> {
-                        courseNames.add(courseName);
-                        findByName(courseName);
-                    });
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            PluginUtils.log(courseNames.size() + " courses found.");
-            PluginUtils.log(courseCache.size() + " courses cached.");
-        }
+        parkour.getConfigManager().getAllCourseNames()
+                .forEach(courseName -> {
+                    courseNames.add(courseName);
+                    findByName(courseName);
+                });
+
+        PluginUtils.log(courseNames.size() + " courses found.");
+        PluginUtils.log(courseCache.size() + " courses cached.");
     }
 }

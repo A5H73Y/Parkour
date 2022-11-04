@@ -91,11 +91,24 @@ public enum TaskCooldowns {
             return true;
         }
 
-        if (displayMessageKey != null) {
+        if (TranslationUtils.containsTranslation(displayMessageKey)) {
             TranslationUtils.sendValueTranslation(displayMessageKey,
                     String.valueOf(secondsToWait - secondsElapsed), player);
         }
         return false;
+    }
+
+    public void clearCoolDowns() {
+        taskDelays.clear();
+    }
+
+    public void clearCoolDowns(Player player) {
+        taskDelays.entrySet()
+                .removeIf(entry -> entry.getKey().startsWith(String.valueOf(player.getUniqueId())));
+    }
+
+    public void clearCoolDown(Player player, String eventName) {
+        taskDelays.remove(player.getUniqueId() + eventName);
     }
 
     /**

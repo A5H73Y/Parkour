@@ -1,10 +1,10 @@
 package io.github.a5h73y.parkour.type.player;
 
-import de.leonhard.storage.Json;
-import de.leonhard.storage.internal.FileType;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import java.io.File;
+import de.leonhard.storage.Json;
+import de.leonhard.storage.internal.FileType;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -23,7 +23,6 @@ public class PlayerConfig extends Json {
     public static final String PARKOUR_LEVEL = "ParkourLevel";
     public static final String PARKOUR_RANK = "ParkourRank";
     public static final String LAST_REWARDED = "LastRewarded.";
-    public static final String SNAPSHOT = "Snapshot.";
     public static final String INVENTORY = "Inventory";
     public static final String ARMOR = "Armor";
     public static final String HEALTH = "Health";
@@ -33,6 +32,8 @@ public class PlayerConfig extends Json {
     public static final String GAMEMODE = "GameMode";
     public static final String PARKOINS = "Parkoins";
     public static final String EXISTING_SESSION_COURSE_NAME = "ExistingSessionCourseName";
+    public static final String SNAPSHOT = "Snapshot.";
+    public static final String SESSION = "Session.";
 
 
     public PlayerConfig(File playerFile) {
@@ -66,8 +67,6 @@ public class PlayerConfig extends Json {
             playerConfig.delete();
         }
     }
-
-
 
     /**
      * Get the Player's last played Course.
@@ -187,13 +186,14 @@ public class PlayerConfig extends Json {
         if (!hasPlayerDataSnapshot()) {
             this.setSerializable(SNAPSHOT + INVENTORY, player.getInventory().getContents());
             this.setSerializable(SNAPSHOT + ARMOR, player.getInventory().getArmorContents());
-            if (!hasSnapshotJoinLocation()) {
-                this.setSerializable(JOIN_LOCATION, player.getLocation());
-            }
             this.set(SNAPSHOT + HEALTH, player.getHealth());
             this.set(SNAPSHOT + HUNGER, player.getFoodLevel());
             this.set(SNAPSHOT + XP_LEVEL, player.getLevel());
             this.set(SNAPSHOT + GAMEMODE, player.getGameMode().name());
+
+            if (!hasSnapshotJoinLocation()) {
+                setPlayerJoinLocation(player);
+            }
         }
     }
 
@@ -235,7 +235,7 @@ public class PlayerConfig extends Json {
     }
 
     /**
-     * Get the Player's Join Location Snapshot.
+     * Get the Player's Join Location.
      * The {@link Location} from which the player joined the course.
      *
      * @return join location
@@ -244,6 +244,19 @@ public class PlayerConfig extends Json {
         return this.getSerializable(JOIN_LOCATION, Location.class);
     }
 
+    /**
+     * Set the Player's Join Location.
+     * The Player's {@link Location} will be stored.
+     *
+     * @param player player
+     */
+    public void setPlayerJoinLocation(Player player) {
+        this.setSerializable(JOIN_LOCATION, player.getLocation());
+    }
+
+    /**
+     * Reset the Player's Join Location.
+     */
     public void resetSessionJoinLocation() {
         this.remove(JOIN_LOCATION);
     }
@@ -340,6 +353,13 @@ public class PlayerConfig extends Json {
 
     public void removeExistingSessionCourseName() {
         this.remove(EXISTING_SESSION_COURSE_NAME);
+    }
+
+    /**
+     * Session Data is any random data to associate with the Player's current Parkour session.
+     */
+    public void resetSessionData() {
+        this.remove(SESSION);
     }
 
     private static String getPlayerJsonPath(OfflinePlayer player) {

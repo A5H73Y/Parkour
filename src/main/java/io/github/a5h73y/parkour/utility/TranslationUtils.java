@@ -50,6 +50,11 @@ public class TranslationUtils {
 				? getPluginPrefix().concat(translated) : translated;
 	}
 
+	public static boolean containsTranslation(@Nullable String translationKey) {
+		return translationKey != null
+				&& Parkour.getInstance().getConfigManager().getStringsConfig().contains(translationKey);
+	}
+
 	/**
 	 * Get translation of string key with prefix.
 	 * The string parameter will be matched to an entry in the Strings.yml.

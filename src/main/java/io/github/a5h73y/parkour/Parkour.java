@@ -274,11 +274,7 @@ public class Parkour extends JavaPlugin {
     private void upgradeParkour() {
         // easier to create the new config system, then update them.
         registerEssentialManagers();
-        ParkourUpgrader upgrader = new ParkourUpgrader(this);
-        if (upgrader.beginUpgrade()) {
-            onEnable();
-            upgrader.upgradeParkourSessions();
-        }
+        new ParkourUpgrader(this).beginUpgrade();
     }
 
     private void initializeManagers() {

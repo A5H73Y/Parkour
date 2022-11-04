@@ -1,12 +1,14 @@
-package io.github.a5h73y.parkour.upgrade;
+package io.github.a5h73y.parkour.upgrade.major;
 
+import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
+import io.github.a5h73y.parkour.upgrade.TimedUpgradeTask;
 import org.bukkit.configuration.file.FileConfiguration;
 
-public abstract class TimedConfigUpgradeTask extends TimedUpgradeTask {
+public abstract class TimedLegacyConfigUpgradeTask extends TimedUpgradeTask {
 
 	private final FileConfiguration configuration;
 
-	protected TimedConfigUpgradeTask(ParkourUpgrader parkourUpgrader, FileConfiguration configuration) {
+	protected TimedLegacyConfigUpgradeTask(ParkourUpgrader parkourUpgrader, FileConfiguration configuration) {
 		super(parkourUpgrader);
 		this.configuration = configuration;
 	}

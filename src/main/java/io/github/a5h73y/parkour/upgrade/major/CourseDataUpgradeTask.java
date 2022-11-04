@@ -5,7 +5,6 @@ import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.type.course.ParkourEventType;
 import io.github.a5h73y.parkour.type.course.autostart.AutoStartConfig;
 import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
-import io.github.a5h73y.parkour.upgrade.TimedConfigUpgradeTask;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-public class CourseDataUpgradeTask extends TimedConfigUpgradeTask {
+public class CourseDataUpgradeTask extends TimedLegacyConfigUpgradeTask {
 
 	public CourseDataUpgradeTask(ParkourUpgrader parkourUpgrader) {
 		super(parkourUpgrader, parkourUpgrader.getCoursesConfig());

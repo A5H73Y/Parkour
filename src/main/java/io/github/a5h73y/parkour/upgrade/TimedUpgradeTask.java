@@ -26,8 +26,8 @@ public abstract class TimedUpgradeTask {
 
 		boolean success = doWork();
 
-		Parkour.getInstance().getLogger().info(this.getTitle() + " Upgrade complete. Time taken: "
-				+ (System.currentTimeMillis() - startTime) + "ms");
+		Parkour.getInstance().getLogger().info(String.format("%s Upgrade complete. Time taken: %dms",
+				this.getTitle(), System.currentTimeMillis() - startTime));
 		return success;
 	}
 

@@ -159,14 +159,15 @@ public class StringsConfig extends Yaml {
 		this.setDefault("Help.SignUsage", "&b%COMMAND% &e%SHORTCUT% &0: &f%DESCRIPTION%");
 		this.setDefault("Help.DisplayValue", "%TITLE%: &b%VALUE%");
 
-		this.setDefault("ParkourTool.LastCheckpoint", "&7SHIFT + &6Right click to go back to last checkpoint");
-		this.setDefault("ParkourTool.HideAll", "&7SHIFT + &6Right click to toggle visibility");
-		this.setDefault("ParkourTool.HideAllEnabled", "&7SHIFT + &6Right click to toggle visibility");
-		this.setDefault("ParkourTool.Leave", "&7SHIFT + &6Right click to leave course");
-		this.setDefault("ParkourTool.Restart", "&7SHIFT + &6Right click to restart course");
+		this.setDefault("ParkourTool.LastCheckpoint.Info", "&7SHIFT + &6Right click to go back to last checkpoint");
+		this.setDefault("ParkourTool.HideAll.Info", "&7SHIFT + &6Right click to toggle visibility");
+		this.setDefault("ParkourTool.HideAllEnabled.Info", "&7SHIFT + &6Right click to toggle visibility");
+		this.setDefault("ParkourTool.Leave.Info", "&7SHIFT + &6Right click to leave course");
+		this.setDefault("ParkourTool.Restart.Info", "&7SHIFT + &6Right click to restart course");
 		this.setDefault("ParkourTool.RestartConfirmation", "Please use the Restart Tool again to confirm.");
-		this.setDefault("ParkourTool.Freedom", "&6Freedom Tool");
-		this.setDefault("ParkourTool.Rockets", "&6Rocket Launcher");
+		this.setDefault("ParkourTool.Freedom.Info", "&6Freedom Tool");
+		this.setDefault("ParkourTool.Rockets.Info", "&6Right click to launch rocket");
+		this.setDefault("ParkourTool.Rockets.Cooldown", "&b%VALUE% &fseconds remaining to reload rocket.");
 
 		this.setDefault("Other.Kit", "&b%VALUE% &fParkourKit received!");
 		this.setDefault("Other.PropertySet", "The &3%PROPERTY% &ffor &3%COURSE% &fwas set to &b%VALUE%&f!");
@@ -208,11 +209,10 @@ public class StringsConfig extends Yaml {
 		this.setDefault("Kit.Repulse", "&bRepulse Block");
 		this.setDefault("Kit.Potion", "&bPotion Block");
 
-		this.setDefault("Mode.Freedom.JoinText", "&6Freedom Mode &f- Right click: &2Save&f, Left click: &5Load");
+		this.setDefault("Mode.Freedom.JoinText", "&6Freedom Tool &f- Right click: &2Save&f, Left click: &5Load");
 		this.setDefault("Mode.Freedom.Save", "Position saved");
 		this.setDefault("Mode.Freedom.Load", "Position loaded");
 		this.setDefault("Mode.Rockets.JoinText", "Use the Rocket Launcher to launch yourself");
-		this.setDefault("Mode.Rockets.Reloading", "Reloading rocket...");
 
 		this.setDefault("PlaceholderAPI.UnknownCourse", "Unknown Course");
 		this.setDefault("PlaceholderAPI.InvalidSyntax", "Invalid syntax");

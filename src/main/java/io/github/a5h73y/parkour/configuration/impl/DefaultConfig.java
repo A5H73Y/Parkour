@@ -166,6 +166,7 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("ParkourTool.Freedom.SecondCooldown", 1);
 		this.setDefault("ParkourTool.Rockets.Material", XMaterial.FIREWORK_ROCKET.parseMaterial().name());
 		this.setDefault("ParkourTool.Rockets.Slot", 4);
+		this.setDefault("ParkourTool.Rockets.SecondCooldown", 1);
 
 		this.setDefault("ParkourChallenge.HidePlayers", true);
 		this.setDefault("ParkourChallenge.CountdownFrom", 5);
@@ -174,7 +175,6 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("ParkourModes.Speedy.SetSpeed", 0.7);
 		this.setDefault("ParkourModes.Speedy.ResetSpeed", 0.2);
 		this.setDefault("ParkourModes.Rockets.Invert", false);
-		this.setDefault("ParkourModes.Rockets.SecondCooldown", 1);
 		this.setDefault("ParkourModes.Rockets.LaunchForce", 1.5);
 
 		this.setDefault("DisplayTitle.FadeIn", 5);
@@ -191,7 +191,7 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("DisplayTitle.Finish.Stay", 20);
 
 		this.setDefault("AutoStart.Enabled", true);
-		this.setDefault("AutoStart.ResetIfOnCousre", true);
+		this.setDefault("AutoStart.ResetWhenOnCourse", true);
 		this.setDefault("AutoStart.Material", "BEDROCK");
 		this.setDefault("AutoStart.TickDelay", 0);
 		this.setDefault("AutoStart.IncludeWorldName", true);

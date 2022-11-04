@@ -1,7 +1,5 @@
 package io.github.a5h73y.parkour.configuration;
 
-import de.leonhard.storage.internal.FlatFile;
-import de.leonhard.storage.internal.serialize.SimplixSerializer;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
 import io.github.a5h73y.parkour.configuration.impl.StringsConfig;
 import io.github.a5h73y.parkour.configuration.serializable.CourseSerializable;
@@ -20,7 +18,18 @@ import io.github.a5h73y.parkour.type.player.rank.ParkourRankConfig;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.cache.GenericCache;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import de.leonhard.storage.internal.FlatFile;
+import de.leonhard.storage.internal.serialize.SimplixSerializer;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -124,6 +133,35 @@ public class ConfigManager {
 		}
 
 		return courseConfigCache.get(key).orElse(CourseConfig.getConfig(courseName));
+	}
+
+	/**
+	 * Find every single Player UUID known to Parkour.
+	 */
+	public List<String> getAllPlayerUuids() {
+		return findEveryJsonInDir(getPlayersDir().toURI());
+	}
+
+	/**
+	 * Find every single Course name known to Parkour.
+	 */
+	public List<String> getAllCourseNames() {
+		return findEveryJsonInDir(getCoursesDir().toURI());
+	}
+
+	private List<String> findEveryJsonInDir(URI uri) {
+		List<String> results = new ArrayList<>();
+		try (Stream<Path> paths = Files.walk(Paths.get(uri), 1)) {
+			results = paths.filter(Files::isRegularFile)
+					.map(p -> p.getFileName().toString().toLowerCase())
+					.filter(path -> path.endsWith(".json"))
+					.map(path -> path.split("\\.")[0])
+					.collect(Collectors.toList());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return results;
 	}
 
 	/**

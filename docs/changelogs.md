@@ -3,8 +3,20 @@ Changelogs
 
 Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon server start up. There will be no manual intervention, unless stated in breaking changes.
 
+## 7.0.7
+* Fixes to losing Player's JoinLocation
+* Reset Player's cooldowns on Restart
+* Reworked ParkourTools to be more structured
+
+### Breaking Changes
+* Please reapply your translations to the `ParkourTool` section.
+
 ## 7.0.6
 * Added "/pa reset commands (course)"
+* Updated docs to include joining course detail
+* Small bug fix in placeholder logic
+* Added "Other.Time.PlaceholderFormat" to change time output from Placeholders
+* Removed limitation for linked course & linked lobby
 
 ## 7.0.5
 * Fixed ParkourModes not being restored after quick restart
