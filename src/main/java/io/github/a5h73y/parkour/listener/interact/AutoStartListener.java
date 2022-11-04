@@ -57,7 +57,7 @@ public class AutoStartListener extends AbstractPluginReceiver implements Listene
 			ParkourSession session = parkour.getParkourSessionManager().getParkourSession(event.getPlayer());
 			if (session != null) {
 				// we only want to do something if the names match
-				if (session.getCourseName().equals(courseName)) {
+				if (session.getCourseName().equals(courseName) && parkour.getParkourConfig().getBoolean("AutoStart.ResetIfOnCourse")) {
 					session.resetProgress();
 					session.setFreedomLocation(null);
 
