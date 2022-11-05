@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -269,13 +268,7 @@ public class CourseManager extends AbstractPluginReceiver {
             return;
         }
 
-        OfflinePlayer targetPlayer;
-
-        if (ValidationUtils.isUuidFormat(targetPlayerId)) {
-            targetPlayer = Bukkit.getOfflinePlayer(UUID.fromString(targetPlayerId));
-        } else {
-            targetPlayer = Bukkit.getOfflinePlayer(targetPlayerId);
-        }
+        OfflinePlayer targetPlayer = PlayerUtils.findPlayer(targetPlayerId);
 
         if (!PlayerConfig.hasPlayerConfig(targetPlayer)) {
             TranslationUtils.sendMessage(commandSender,
@@ -311,7 +304,8 @@ public class CourseManager extends AbstractPluginReceiver {
             return;
         }
 
-        parkour.getDatabaseManager().deletePlayerCourseTimes(PlayerUtils.findPlayer(result.getPlayerId()), courseName);
+        parkour.getDatabaseManager().deletePlayerCourseTimes(
+                PlayerUtils.findDatabasePlayer(result.getPlayerId()), courseName);
         parkour.getPlaceholderApi().clearCache();
         TranslationUtils.sendValueTranslation("Parkour.Delete",  "Leaderboard row " + rowNumber, commandSender);
         PluginUtils.logToFile("Leaderboard row " + rowNumber + " was deleted by " + commandSender.getName());

@@ -9,11 +9,14 @@ import io.github.a5h73y.parkour.conversation.parkourkit.EditParkourKitConversati
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.PluginBackupUtil;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
+import io.github.a5h73y.parkour.type.player.PlayerConfig;
+import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -375,11 +378,52 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 PluginBackupUtil.backupNow(true);
                 break;
 
+            case "setpropertyforeverysingleplayer":
+                if (!ValidationUtils.validateArgs(commandSender, args, 2)) {
+                    return false;
+                }
+
+                setPropertyForEverySinglePlayerConfig(args[1], args.length == 3 ? args[2] : null);
+                break;
+
+            case "setpropertyforeverysinglecourse":
+                if (!ValidationUtils.validateArgs(commandSender, args, 2, 3)) {
+                    return false;
+                }
+
+                setPropertyForEverySingleCourseConfig(args[1], args.length == 3 ? args[2] : null);
+                break;
+
             default:
                 TranslationUtils.sendMessage(commandSender, "Unknown Command. Enter 'pac cmds' to display all console commands.");
                 break;
         }
         return true;
+    }
+
+    private void setPropertyForEverySinglePlayerConfig(String property, String value) {
+        parkour.getConfigManager().getAllPlayerUuids()
+                .forEach(uuid -> {
+                    OfflinePlayer player = PlayerUtils.findPlayer(uuid);
+                    PlayerConfig config = parkour.getConfigManager().getPlayerConfig(player);
+                    if (value == null || value.trim().isEmpty()) {
+                        config.remove(property);
+                    } else {
+                        config.set(property, value);
+                    }
+                });
+    }
+
+    private void setPropertyForEverySingleCourseConfig(String property, String value) {
+        parkour.getConfigManager().getAllCourseNames()
+                .forEach(courseName -> {
+                    CourseConfig config = parkour.getConfigManager().getCourseConfig(courseName);
+                    if (value == null || value.trim().isEmpty()) {
+                        config.remove(property);
+                    } else {
+                        config.set(property, value);
+                    }
+                });
     }
 
     private void displayConsoleCommands() {

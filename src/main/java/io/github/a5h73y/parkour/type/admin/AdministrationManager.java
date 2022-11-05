@@ -6,6 +6,7 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.player.PlayerConfig;
+import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
@@ -13,8 +14,6 @@ import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -166,13 +165,7 @@ public class AdministrationManager extends AbstractPluginReceiver {
 				break;
 
 			case "player":
-				OfflinePlayer targetPlayer;
-
-				if (ValidationUtils.isUuidFormat(argument)) {
-					targetPlayer = Bukkit.getOfflinePlayer(UUID.fromString(argument));
-				} else {
-					targetPlayer = Bukkit.getOfflinePlayer(argument);
-				}
+				OfflinePlayer targetPlayer = PlayerUtils.findPlayer(argument);
 
 				if (!PlayerConfig.hasPlayerConfig(targetPlayer)) {
 					TranslationUtils.sendMessage(commandSender,

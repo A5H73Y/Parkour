@@ -226,7 +226,7 @@ public class PlayerUtils {
 	 */
 	@NotNull
 	public static String findPlayerName(String uuid) {
-		OfflinePlayer player = findPlayer(uuid);
+		OfflinePlayer player = findDatabasePlayer(uuid);
 		return player.getName() != null ? player.getName() : "Unknown Player";
 	}
 
@@ -235,8 +235,19 @@ public class PlayerUtils {
 	 * @param uuid uuid
 	 * @return matching Player
 	 */
-	public static OfflinePlayer findPlayer(String uuid) {
+	public static OfflinePlayer findDatabasePlayer(String uuid) {
 		return Bukkit.getOfflinePlayer(UUID.fromString(padPlayerUuid(uuid)));
+	}
+
+	public static OfflinePlayer findPlayer(String playerId) {
+		OfflinePlayer result;
+		if (ValidationUtils.isUuidFormat(playerId)) {
+			result = Bukkit.getOfflinePlayer(UUID.fromString(playerId));
+		} else {
+			result = Bukkit.getOfflinePlayer(playerId);
+		}
+
+		return result;
 	}
 
 	/**

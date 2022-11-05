@@ -6,6 +6,7 @@ import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import io.github.a5h73y.parkour.type.player.session.ParkourSessionConfig;
 import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
+import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -20,9 +21,7 @@ import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Stream;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -66,7 +65,7 @@ public class PlayerDataUpgradeTask extends TimedLegacyConfigUpgradeTask {
 			}
 
 			ConfigurationSection playerSection = getConfig().getConfigurationSection(playerId);
-			OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(playerId));
+			OfflinePlayer player = PlayerUtils.findPlayer(playerId);
 
 			if (playerSection != null) {
 				PlayerConfig newPlayerConfig = PlayerConfig.getConfig(player);

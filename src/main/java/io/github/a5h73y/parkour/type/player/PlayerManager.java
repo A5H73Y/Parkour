@@ -1060,13 +1060,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	 * @param targetPlayerId target player identifier
 	 */
 	public void resetPlayer(CommandSender commandSender, String targetPlayerId) {
-		OfflinePlayer targetPlayer;
-
-		if (ValidationUtils.isUuidFormat(targetPlayerId)) {
-			targetPlayer = Bukkit.getOfflinePlayer(UUID.fromString(targetPlayerId));
-		} else {
-			targetPlayer = Bukkit.getOfflinePlayer(targetPlayerId);
-		}
+		OfflinePlayer targetPlayer = PlayerUtils.findPlayer(targetPlayerId);
 
 		resetPlayer(targetPlayer);
 		TranslationUtils.sendValueTranslation("Parkour.Reset", targetPlayerId, commandSender);

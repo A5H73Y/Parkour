@@ -399,6 +399,20 @@
     "autoTabSyntax": "[course,player,leaderboard,prize,commands] {1:player=(player),*=(course)}"
   },
   {
+    "command": "setpropertyforeverysinglecourse",
+    "title": "Set Property for every Course",
+    "description": "Set the specified property for every single known Parkour Course, not providing a value will remove the property.",
+    "consoleSyntax": "pac setpropertyforeverysingleplayer (property) [value]",
+    "consoleOnly": true
+  },
+  {
+    "command": "setpropertyforeverysingleplayer",
+    "title": "Set Property for every Player",
+    "description": "Set the specified property for every single known Parkour player, not providing a value will remove the property.",
+    "consoleSyntax": "pac setpropertyforeverysingleplayer (property) [value]",
+    "consoleOnly": true
+  },
+  {
     "command": "respawn",
     "title": "Respawn to last Checkpoint",
     "example": "/pa respawn",
