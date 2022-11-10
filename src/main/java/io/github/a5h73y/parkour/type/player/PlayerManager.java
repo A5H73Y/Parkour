@@ -17,6 +17,7 @@ import static io.github.a5h73y.parkour.type.course.ParkourEventType.LEAVE;
 import static io.github.a5h73y.parkour.type.course.ParkourEventType.NO_PRIZE;
 import static io.github.a5h73y.parkour.type.course.ParkourEventType.PLAYER_COURSE_RECORD;
 import static io.github.a5h73y.parkour.type.course.ParkourEventType.PRIZE;
+import static io.github.a5h73y.parkour.type.course.ParkourEventType.RESTART;
 import static io.github.a5h73y.parkour.utility.TranslationUtils.sendConditionalValue;
 import static io.github.a5h73y.parkour.utility.TranslationUtils.sendValue;
 
@@ -32,6 +33,7 @@ import io.github.a5h73y.parkour.event.ParkourLeaveEvent;
 import io.github.a5h73y.parkour.event.ParkourPlayerNewLevelEvent;
 import io.github.a5h73y.parkour.event.ParkourPlayerNewRankEvent;
 import io.github.a5h73y.parkour.event.ParkourResetPlayerEvent;
+import io.github.a5h73y.parkour.event.ParkourRestartEvent;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.ParkourConstants;
 import io.github.a5h73y.parkour.other.TriConsumer;
@@ -588,6 +590,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 		parkour.getBountifulApi().sendSubTitle(player,
 				TranslationUtils.getTranslation("Parkour.Restarting", false), BountifulApi.JOIN_COURSE);
+		parkour.getCourseManager().runEventCommands(player, session, RESTART);
+		Bukkit.getServer().getPluginManager().callEvent(new ParkourRestartEvent(player, course.getName()));
 	}
 
 	private void fastRestartCourse(Player player) {
@@ -1672,11 +1676,13 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			return false;
 		}
 
+		/* Check if challenge only course */
 		if (courseConfig.getChallengeOnly() && !parkour.getChallengeManager().hasPlayerBeenChallenged(player)) {
 			TranslationUtils.sendTranslation("Error.ChallengeOnly", player);
 			return false;
 		}
 
+		/* Check they aren't joining a different challenge */
 		if (parkour.getChallengeManager().hasPlayerBeenChallenged(player)) {
 			Challenge challenge = parkour.getChallengeManager().getChallengeForPlayer(player);
 
@@ -1686,7 +1692,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			}
 		}
 
-		// check if the Course has a reward delay, and they have a prize cooldown outstanding
+		/* check if the Course has a reward delay, and they have a prize cooldown outstanding */
 		if (courseConfig.hasRewardDelay()
 				&& !parkour.getPlayerManager().hasPrizeCooldownDurationPassed(player, course.getName(), false)) {
 			return true;

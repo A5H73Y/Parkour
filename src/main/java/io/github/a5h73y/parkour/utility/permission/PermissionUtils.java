@@ -62,6 +62,7 @@ public class PermissionUtils {
 	                                            boolean displayMessage) {
 		if (commandSender.isOp()
 				|| commandSender.hasPermission(Permission.PARKOUR_ALL.getPermission())
+				|| commandSender.hasPermission(permission.getPermissionRoot() + "." + WILDCARD)
 				|| commandSender.hasPermission(permission.getPermissionRoot() + "." + permissionNode)) {
 			return true;
 		}

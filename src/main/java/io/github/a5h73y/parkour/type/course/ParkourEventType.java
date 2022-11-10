@@ -14,6 +14,7 @@ public enum ParkourEventType {
 	CHECKPOINT("Checkpoint"),
 	CHECKPOINT_ALL("CheckpointAll"),
 	DEATH("Death"),
+	RESTART("Restart"),
 	PLAYER_COURSE_RECORD("PlayerCourseRecord"),
 	GLOBAL_COURSE_RECORD("GlobalCourseRecord");
 
