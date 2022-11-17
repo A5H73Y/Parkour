@@ -24,15 +24,3 @@ Use the Search bar in the top left to quickly find anything you're looking for.
 Parkour allows you to create unlimited Courses, each with unlimited checkpoints, while tracking player times and the amount of deaths. Parkour can easily integrate with any server, allowing for a fully customised setup.
 
 Whether you are setting the plugin up as a mini-game, or as a dedicated Parkour server, the powerful configuration will allow you to choose exactly how you want the plugin to work. A 'ParkourKit' is a set of customisable Materials which will add a whole new level of fun to each Course.
-
-## Featured Servers
-
-These are servers that utilise the Parkour plugin well for you to try it out.
-
-    Name: Fancycraft
-    IP: fancycraft.cc
-    Version: 1.16.5
-
-    Name: Mythic-Realm
-    IP: play.mythic-realm.net
-    Version: 1.16.5
