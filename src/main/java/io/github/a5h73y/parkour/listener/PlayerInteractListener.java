@@ -40,16 +40,22 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         DefaultConfig config = parkour.getParkourConfig();
         registerParkourTool(config.getLastCheckpointTool(), "LastCheckpoint",
                 (player, event) -> parkour.getPlayerManager().playerDie(player));
+        
         registerParkourTool(config.getHideAllDisabledTool(), "HideAll",
                 (player, event) -> handleHideAllTool(player));
-        registerParkourTool(config.getHideAllDisabledTool(), "HideAll",
+        
+        registerParkourTool(config.getHideAllEnabledTool(), "HideAll",
                 (player, event) -> handleHideAllTool(player));
+        
         registerParkourTool(config.getLeaveTool(), "Leave",
                 (player, event) -> parkour.getPlayerManager().leaveCourse(player));
+        
         registerParkourTool(config.getRestartTool(), "Restart",
                 (player, event) -> handleRestartTool(player));
+        
         registerParkourTool(config.getRocketTool(), "Rockets", true, false, ParkourMode.ROCKETS,
                 (player, event) -> handleRocketTool(player));
+        
         registerParkourTool(config.getFreedomTool(), "Freedom", false, false, ParkourMode.FREEDOM,
                 (player, event) -> handleFreedomTool(player, event.getAction()));
     }
