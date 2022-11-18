@@ -1294,7 +1294,9 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}
 
 		giveParkourTool(player, "ParkourTool.LastCheckpoint");
-		giveParkourTool(player, "ParkourTool.HideAll");
+		String configPath = parkour.getParkourSessionManager().hasHiddenPlayers(player)
+				? "ParkourTool.HideAllEnabled" : "ParkourTool.HideAll";
+		giveParkourTool(player, configPath);
 		giveParkourTool(player, "ParkourTool.Leave");
 		giveParkourTool(player, "ParkourTool.Restart");
 
