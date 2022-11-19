@@ -86,7 +86,7 @@ public class CourseDataUpgradeTask extends TimedLegacyConfigUpgradeTask {
 					int amount = section.getInt(materialName + ".Amount");
 					String label = section.getString(materialName + ".Label");
 					boolean unbreakable = section.getBoolean(materialName + ".Unbreakable");
-					itemStacks.add(MaterialUtils.createItemStack(material, amount, label, unbreakable));
+					itemStacks.add(MaterialUtils.createItemStack(material, amount, label, unbreakable, null));
 				}
 			}
 

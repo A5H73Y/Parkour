@@ -429,7 +429,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     }
 
     private String getCompletedMessage(OfflinePlayer player, String courseName) {
-        boolean resultFound = parkour.getDatabaseManager().hasPlayerAchievedTime(player, courseName);
+        boolean resultFound = parkour.getConfigManager().getCourseCompletionsConfig().hasCompletedCourse(player, courseName);
         String key = resultFound ? "PlaceholderAPI.CurrentCourseCompleted" : "PlaceholderAPI.CurrentCourseNotCompleted";
         return TranslationUtils.getTranslation(key, false);
     }

@@ -191,7 +191,8 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("DisplayTitle.Finish.Stay", 20);
 
 		this.setDefault("AutoStart.Enabled", true);
-		this.setDefault("AutoStart.ResetWhenOnCourse", true);
+		this.setDefault("AutoStart.RestartWhenOnCourse.Enabled", true);
+		this.setDefault("AutoStart.RestartWhenOnCourse.Teleport", false);
 		this.setDefault("AutoStart.Material", "BEDROCK");
 		this.setDefault("AutoStart.TickDelay", 0);
 		this.setDefault("AutoStart.IncludeWorldName", true);

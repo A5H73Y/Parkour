@@ -14,6 +14,7 @@ import io.github.a5h73y.parkour.type.CacheableParkourManager;
 import io.github.a5h73y.parkour.type.Initializable;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
 import java.io.File;
 import java.io.IOException;
@@ -83,6 +84,12 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
      * @return course ID
      */
     public int getCourseId(@NotNull String courseNameRaw, boolean printError) {
+        int courseId = -1;
+
+        if (!ValidationUtils.isStringValid(courseNameRaw)) {
+            return courseId;
+        }
+
         String courseName = courseNameRaw.toLowerCase();
         if (courseIdCache.containsKey(courseName)) {
             PluginUtils.debug("Cached value found for " + courseName + ": " + courseIdCache.get(courseName));
@@ -90,7 +97,6 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
         }
 
         PluginUtils.debug("Finding course ID for " + courseName);
-        int courseId = -1;
         String courseIdQuery = "SELECT courseId FROM course WHERE name = ?;";
 
         try (PreparedStatement statement = getDatabaseConnection().prepareStatement(courseIdQuery)) {

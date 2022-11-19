@@ -944,8 +944,8 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			itemStack = MaterialUtils.getItemStackInPlayersHand((Player) commandSender);
 
 		} else {
-			Material material = MaterialUtils.lookupMaterial(args[2].toUpperCase());
-			if (material == null) {
+			MaterialUtils.MaterialData data = MaterialUtils.getMaterialData(args[2]);
+			if (data.getMaterial() == null) {
 				TranslationUtils.sendValueTranslation("Error.UnknownMaterial",
 						args[2].toUpperCase(), commandSender);
 				return;
@@ -957,10 +957,10 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			}
 
 			int amount = MaterialUtils.parseItemStackAmount(args[3]);
-			String label = args.length >= 5 ? args[4] : StringUtils.standardizeText(material.name());
+			String label = args.length >= 5 ? args[4] : StringUtils.standardizeText(data.getMaterial().name());
 			boolean unbreakable = args.length == 6 && Boolean.parseBoolean(args[5]);
 
-			itemStack = MaterialUtils.createItemStack(material, amount, label, unbreakable);
+			itemStack = MaterialUtils.createItemStack(data.getMaterial(), amount, label, unbreakable, data.getCustomModelData());
 		}
 
 		String name;

@@ -92,7 +92,7 @@ public class MaterialUtils {
 	 * @return created {@link ItemStack}
 	 */
 	public static ItemStack createItemStack(Material material, String itemLabel) {
-		return createItemStack(material, 1, itemLabel, false);
+		return createItemStack(material, 1, itemLabel, false, null);
 	}
 
 	/**
@@ -103,19 +103,26 @@ public class MaterialUtils {
 	 * @param itemLabel display name
 	 * @return created {@link ItemStack}
 	 */
-	public static ItemStack createItemStack(@NotNull Material material, int amount,
+	public static ItemStack createItemStack(@NotNull Material material,
+	                                        int amount,
 	                                        @Nullable String itemLabel,
-	                                        @Nullable Boolean unbreakable) {
+	                                        @Nullable Boolean unbreakable,
+											@Nullable Integer customModelData) {
 		ItemStack itemStack = new ItemStack(material, amount);
 		ItemMeta itemMeta = itemStack.getItemMeta();
 
-		if (itemLabel != null) {
-			itemMeta.setDisplayName(itemLabel);
+		if (itemMeta != null) {
+			if (itemLabel != null) {
+				itemMeta.setDisplayName(itemLabel);
+			}
+			if (Boolean.TRUE.equals(unbreakable)) {
+				itemMeta.setUnbreakable(true);
+			}
+			if (customModelData != null) {
+				itemMeta.setCustomModelData(customModelData);
+			}
+			itemStack.setItemMeta(itemMeta);
 		}
-		if (Boolean.TRUE.equals(unbreakable)) {
-			itemMeta.setUnbreakable(true);
-		}
-		itemStack.setItemMeta(itemMeta);
 		return itemStack;
 	}
 
@@ -236,6 +243,24 @@ public class MaterialUtils {
 				&& location1.getBlockZ() == location2.getBlockZ();
 	}
 
+	public static MaterialData getMaterialData(String materialData) {
+		MaterialData result = new MaterialData();
+		String materialName;
+
+		if (materialData.contains(":")) {
+			String[] dataParts = materialData.split(":");
+			materialName = dataParts[0];
+			if (ValidationUtils.isPositiveInteger(dataParts[1])) {
+				result.customModelData = Integer.valueOf(dataParts[1]);
+			}
+		} else {
+			materialName = materialData;
+		}
+
+		result.material = Material.getMaterial(materialName.toUpperCase());
+		return result;
+	}
+
 	/**
 	 * Get the known valid checkpoint materials.
 	 * We should update XBlock to include `isSlab` check.
@@ -268,4 +293,26 @@ public class MaterialUtils {
 	}
 
 	private MaterialUtils() {}
+
+	public static final class MaterialData {
+
+		private Material material;
+		private Integer customModelData;
+
+		public Material getMaterial() {
+			return material;
+		}
+
+		public void setMaterial(Material material) {
+			this.material = material;
+		}
+
+		public Integer getCustomModelData() {
+			return customModelData;
+		}
+
+		public void setCustomModelData(Integer customModelData) {
+			this.customModelData = customModelData;
+		}
+	}
 }

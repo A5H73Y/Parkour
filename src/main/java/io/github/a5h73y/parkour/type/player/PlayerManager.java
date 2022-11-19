@@ -433,7 +433,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		// they haven't yet achieved a checkpoint
 		if (session.getCurrentCheckpoint() == 0 && session.getFreedomLocation() == null) {
 			if (parkour.getParkourConfig().getBoolean("OnDie.ResetProgressWithNoCheckpoint")) {
-				session.resetProgress();
+				resetCourseProgress(player);
 			}
 
 			if (!inQuietMode) {
@@ -553,11 +553,11 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		playerConfig.setLastCompletedCourse(courseName);
 		playerConfig.setExistingSessionCourseName(null);
 
-		submitPlayerLeaderboard(player, session);
 		parkour.getParkourSessionManager().forceVisible(player);
 		parkour.getParkourSessionManager().deleteParkourSession(player, courseName);
 		parkour.getCourseManager().runEventCommands(player, session, FINISH);
 		parkour.getConfigManager().getCourseConfig(courseName).incrementCompletions();
+		submitPlayerLeaderboard(player, session);
 	}
 
 	/**
@@ -584,17 +584,20 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			if (!parkour.getParkourConfig().getBoolean("OnJoin.TeleportPlayer")) {
 				PlayerUtils.teleportToLocation(player, course.getCheckpoints().get(0).getLocation());
 			}
+			fireRestartEvent(player, session);
 		} else {
 			fastRestartCourse(player);
 		}
+	}
 
+	private void fireRestartEvent(Player player, ParkourSession session) {
 		parkour.getBountifulApi().sendSubTitle(player,
 				TranslationUtils.getTranslation("Parkour.Restarting", false), BountifulApi.JOIN_COURSE);
 		parkour.getCourseManager().runEventCommands(player, session, RESTART);
-		Bukkit.getServer().getPluginManager().callEvent(new ParkourRestartEvent(player, course.getName()));
+		Bukkit.getServer().getPluginManager().callEvent(new ParkourRestartEvent(player, session.getCourseName()));
 	}
 
-	private void fastRestartCourse(Player player) {
+	public void fastRestartCourse(Player player) {
 		ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
 
 		if (session != null) {
@@ -608,6 +611,17 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 				session.setStartTimer(false);
 			}
 			setupParkourMode(player);
+			fireRestartEvent(player, session);
+		}
+	}
+
+	public void resetCourseProgress(Player player) {
+		ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
+
+		if (session != null) {
+			session.resetProgress();
+			session.setFreedomLocation(null);
+			fireRestartEvent(player, session);
 		}
 	}
 
@@ -1126,13 +1140,19 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	 * @param translationKey label translation key
 	 */
 	public void giveParkourTool(Player player, String configPath, String translationKey) {
-		Material material = Material.getMaterial(parkour.getParkourConfig()
-				.getOrDefault(configPath + ".Material", "AIR").toUpperCase());
+		String materialData = parkour.getParkourConfig()
+				.getOrDefault(configPath + ".Material", "AIR").toUpperCase();
 
-		if (material != null && material != Material.AIR && !player.getInventory().contains(material)) {
+		MaterialUtils.MaterialData data = MaterialUtils.getMaterialData(materialData);
+		Material material = data.getMaterial();
+
+		if (material != null && material != Material.AIR
+				&& !player.getInventory().contains(material)) {
 			int slot = parkour.getParkourConfig().getInt(configPath + ".Slot");
-			player.getInventory().setItem(slot, MaterialUtils.createItemStack(material,
-					TranslationUtils.getTranslation(translationKey + ".Info", false)));
+			ItemStack itemStack = MaterialUtils.createItemStack(material, 1,
+					TranslationUtils.getTranslation(translationKey + ".Info", false), false,
+					data.getCustomModelData());
+			player.getInventory().setItem(slot, itemStack);
 		}
 	}
 
