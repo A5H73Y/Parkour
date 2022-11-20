@@ -74,6 +74,7 @@ public class LobbyManager extends CacheableParkourManager {
         // if they are on a course, force them to leave, which will ultimately run this method again.
         if (parkour.getParkourSessionManager().isPlaying(player)) {
             parkour.getConfigManager().getPlayerConfig(player).resetSessionJoinLocation();
+            // this will ignore the lobby name they provided, not sure if that's correct or not
             parkour.getPlayerManager().leaveCourse(player);
             return;
         }

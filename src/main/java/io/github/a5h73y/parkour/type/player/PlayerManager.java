@@ -358,6 +358,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			session.setCurrentCheckpoint(desiredCheckpoint);
 		}
 		parkour.getCourseManager().runEventCommands(player, session, CHECKPOINT);
+		parkour.getCourseManager().runEventCommands(player, session, "Checkpoint" + session.getCurrentCheckpoint());
 
 		ParkourEventType eventType = CHECKPOINT;
 		String checkpointTranslation = "Event.Checkpoint";

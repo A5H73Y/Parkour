@@ -8,6 +8,7 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.DEATHS_PLACEHOLDER
 import static io.github.a5h73y.parkour.other.ParkourConstants.PLAYER_DISPLAY_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.PLAYER_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.TIME_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.TOTAL_CHECKPOINT_PLACEHOLDER;
 import static io.github.a5h73y.parkour.utility.StringUtils.colour;
 
 import io.github.a5h73y.parkour.Parkour;
@@ -396,7 +397,8 @@ public class TranslationUtils {
 				.replace(COURSE_PLACEHOLDER, session.getCourse().getDisplayName())
 				.replace(DEATHS_PLACEHOLDER, String.valueOf(session.getDeaths()))
 				.replace(TIME_PLACEHOLDER, session.getDisplayTime())
-				.replace(CHECKPOINT_PLACEHOLDER, String.valueOf(session.getCurrentCheckpoint()));
+				.replace(CHECKPOINT_PLACEHOLDER, String.valueOf(session.getCurrentCheckpoint()))
+				.replace(TOTAL_CHECKPOINT_PLACEHOLDER, String.valueOf(session.getCourse().getNumberOfCheckpoints()));
 		return Parkour.getInstance().getPlaceholderApi().parsePlaceholders(player, result);
 	}
 

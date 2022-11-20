@@ -358,12 +358,20 @@ public class CourseManager extends AbstractPluginReceiver {
      * @param session parkour session
      * @param eventType event type
      */
-    public void runEventCommands(final Player player, final ParkourSession session, final ParkourEventType eventType) {
+    public void runEventCommands(final Player player,
+                                 final ParkourSession session,
+                                 final ParkourEventType eventType) {
+        runEventCommands(player, session, eventType.getConfigEntry());
+    }
+
+    public void runEventCommands(final Player player,
+                                       final ParkourSession session,
+                                       final String eventTypeKey) {
         CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(session.getCourseName());
 
-        List<String> eventCommands = courseConfig.getEventCommands(eventType);
+        List<String> eventCommands = new ArrayList<>(courseConfig.getEventCommands(eventTypeKey));
         if (eventCommands.isEmpty() || parkour.getParkourConfig().isCombinePerCourseCommands()) {
-            eventCommands.addAll(parkour.getParkourConfig().getDefaultEventCommands(eventType));
+            eventCommands.addAll(parkour.getParkourConfig().getDefaultEventCommands(eventTypeKey));
         }
 
         eventCommands.stream()

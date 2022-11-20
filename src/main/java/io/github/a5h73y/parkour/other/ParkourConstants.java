@@ -20,6 +20,8 @@ public class ParkourConstants {
 
     public static final String CHECKPOINT_PLACEHOLDER = "%CHECKPOINT%";
 
+    public static final String TOTAL_CHECKPOINT_PLACEHOLDER = "%TOTAL_CHECKPOINT%";
+
     public static final String DEATHS_PLACEHOLDER = "%DEATHS%";
 
     public static final String TIME_PLACEHOLDER = "%TIME%";

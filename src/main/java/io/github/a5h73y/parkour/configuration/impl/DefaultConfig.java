@@ -394,8 +394,13 @@ public class DefaultConfig extends Yaml {
 	}
 
 	@NotNull
+	public List<String> getDefaultEventCommands(@NotNull String eventTypeKey) {
+		return this.get("CourseDefault.Command." + eventTypeKey, new ArrayList<>());
+	}
+
+	@NotNull
 	public List<String> getDefaultEventCommands(@NotNull ParkourEventType eventType) {
-		return this.get("CourseDefault.Command." + eventType.getConfigEntry(), new ArrayList<>());
+		return getDefaultEventCommands(eventType.getConfigEntry());
 	}
 
 	public String getSoundName(@NotNull SoundType soundType) {

@@ -942,7 +942,12 @@ public class CourseConfig extends Json {
      */
     @NotNull
     public List<String> getEventCommands(@NotNull ParkourEventType eventType) {
-        return this.get(COMMAND_PREFIX + eventType.getConfigEntry(), new ArrayList<>());
+        return getEventCommands(eventType.getConfigEntry());
+    }
+
+    @NotNull
+    public List<String> getEventCommands(String eventTypeKey) {
+        return this.get(COMMAND_PREFIX + eventTypeKey, new ArrayList<>());
     }
 
     /**
