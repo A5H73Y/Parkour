@@ -675,19 +675,22 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		ItemStack result = null;
 		Material material;
 		int amount;
+		String label;
 
 		if (courseConfig.hasMaterialPrize()) {
 			material = courseConfig.getMaterialPrize();
 			amount = courseConfig.getMaterialPrizeAmount();
+			label = courseConfig.getMaterialPrizeLabel();
 
 		} else {
 			material = MaterialUtils.lookupMaterial(
 					parkour.getParkourConfig().getString("CourseDefault.Prize.Material"));
 			amount = parkour.getParkourConfig().getOrDefault("CourseDefault.Prize.Amount", 0);
+			label = parkour.getParkourConfig().getString("CourseDefault.Prize.Label");
 		}
 
-		if (material != null && amount > 0) {
-			result = new ItemStack(material, amount);
+		if (material != null && material != Material.AIR && amount > 0) {
+			result = MaterialUtils.createItemStack(material, amount, label, null, null);
 		}
 		return result;
 	}

@@ -66,6 +66,7 @@ public class CourseConfig extends Json {
     public static final String VIEWS = "Views";
     public static final String PRIZE_MATERIAL = "Prize.Material";
     public static final String PRIZE_AMOUNT = "Prize.Amount";
+    public static final String PRIZE_LABEL = "Prize.Label";
 
     private static final String CHECKPOINTS = "Checkpoints";
     private static final String COMMAND_PREFIX = "Command.";
@@ -423,14 +424,23 @@ public class CourseConfig extends Json {
     }
 
     /**
+     * Get display name of Material prize for Course.
+     * @return display name of material prize
+     */
+    public String getMaterialPrizeLabel() {
+        return this.getString(PRIZE_LABEL);
+    }
+
+    /**
      * Set the Material Prize for the Course.
      * The Material and Amount to be rewarded for finishing the Course.
      * @param materialName prize material
      * @param amount prize amount
      */
-    public void setMaterialPrize(@NotNull String materialName, int amount) {
+    public void setMaterialPrize(@NotNull String materialName, int amount, String label) {
         this.set(PRIZE_MATERIAL, materialName);
         this.set(PRIZE_AMOUNT, amount);
+        this.set(PRIZE_LABEL, label);
     }
 
     /**

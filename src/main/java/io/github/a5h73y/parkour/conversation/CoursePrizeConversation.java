@@ -7,6 +7,7 @@ import io.github.a5h73y.parkour.conversation.other.ParkourConversation;
 import io.github.a5h73y.parkour.type.course.ParkourEventType;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.conversations.BooleanPrompt;
@@ -111,9 +112,38 @@ public class CoursePrizeConversation extends ParkourConversation {
         @Override
         protected Prompt acceptValidatedInput(ConversationContext context, Number amount) {
             context.setSessionData(AMOUNT, amount.intValue());
-            return new MaterialProcessComplete();
+            return new ChooseDisplayName();
         }
     }
+
+    private static class ChooseDisplayName extends BooleanPrompt {
+		@Override
+		public String getPromptText(ConversationContext context) {
+			return ChatColor.LIGHT_PURPLE + " Would you like to add a custom display name?\n" +
+					ChatColor.GREEN + "[yes, no]";
+		}
+		@Override
+		protected Prompt acceptValidatedInput(ConversationContext context, boolean addName) {
+			if (addName) {
+				return new AddDisplayName();
+			}
+			context.setSessionData("label", "");
+			return new MaterialProcessComplete();
+		}
+	}
+
+	private static class AddDisplayName extends StringPrompt {
+		@Override
+		public String getPromptText(ConversationContext context) {
+			return ChatColor.LIGHT_PURPLE + " What display name do you want to attach to the " + context.getSessionData("material").toString() + "?";
+		}
+
+		@Override
+		public Prompt acceptInput(ConversationContext context, String message) {
+			context.setSessionData("label", message);
+			return new MaterialProcessComplete();
+		}
+	}
 
     private static class MaterialProcessComplete extends MessagePrompt {
 
@@ -123,7 +153,8 @@ public class CoursePrizeConversation extends ParkourConversation {
             String courseName = context.getSessionData(SESSION_COURSE_NAME).toString();
             Parkour.getInstance().getConfigManager().getCourseConfig(courseName).setMaterialPrize(
                     context.getSessionData(MATERIAL).toString(),
-                    Integer.parseInt(context.getSessionData(AMOUNT).toString()));
+                    Integer.parseInt(context.getSessionData(AMOUNT).toString()),
+                    context.getSessionData("label").toString());
 
             return TranslationUtils.getPropertySet("Material Prize", courseName,
                     context.getSessionData(AMOUNT) + " " + context.getSessionData(MATERIAL));
