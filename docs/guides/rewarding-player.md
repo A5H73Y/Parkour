@@ -12,7 +12,7 @@ More information: [Click Here](/tutorials/parkour-level-ranks.md)
 
 ## Course Prize
 
-You can reward the Player several ways after they complete a Course, this can be configured by starting the Prize conversation which is initiated by entering `/pa prize (course)`.
+You can reward the Player several ways after they complete a Course. This can be configured by starting the Prize conversation which is initiated by entering `/pa setcourse (course) prize`.
 
 This will start a conversation of what you want the prize to be, these can be stacked meaning you can have all options happen when the Player finishes a Course.
 
@@ -22,7 +22,7 @@ This was made to be as simple as possible, to allow you to answer each question 
 
 ### Material
 
-The Player can be rewarded with a Material for completing the Course, and amount can be specified. The example Materials available for each server version will differ, example Material names can be [found here](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html).  
+The Player can be rewarded with a Material for completing the Course. The amount and a custom display name can be specified. The example Materials available for each server version will differ, example Material names can be [found here](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html).  
 _Once the Player completes the Course, the ItemStack will be inserted into their inventory after their original inventory is restored._
 
 ![Material Prize](https://i.imgur.com/xgLug6k.jpg "Material Prize")

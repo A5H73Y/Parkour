@@ -181,6 +181,7 @@ CourseDefault:
   Prize:
     Material: DIAMOND
     Amount: 1
+    Label: ''
     XP: 0
   # Should the per-course commands be combined with the default commands below
   Commands:

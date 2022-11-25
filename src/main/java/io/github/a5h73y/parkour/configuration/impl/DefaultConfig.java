@@ -142,6 +142,7 @@ public class DefaultConfig extends Yaml {
 
 		this.setDefault("CourseDefault.Prize.Material", "DIAMOND");
 		this.setDefault("CourseDefault.Prize.Amount", 1);
+		this.setDefault("CourseDefault.Prize.Label", "");
 		this.setDefault("CourseDefault.Prize.XP", 0);
 		this.setDefault("CourseDefault.Commands.CombinePerCourseCommands", true);
 		Arrays.stream(ParkourEventType.values()).forEach(eventType ->
