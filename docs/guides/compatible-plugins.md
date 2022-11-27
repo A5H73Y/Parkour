@@ -81,8 +81,6 @@ For example:
 
 ## Holographic Displays (v3.0.0+)
 
-**At the time of writing, Holographic Displays v3.0.0 is still in beta and has some known issues and could change in the future.**
-
 Parkour doesn't directly support [Holographic Displays](https://dev.bukkit.org/projects/holographic-displays/files), however it can use PlaceholderAPI to create dynamic and nice looking Parkour holograms.  
 _Holographic Displays now natively supports PlaceholderAPI, so no other plugins are required._
 
@@ -134,57 +132,6 @@ Stand over the place where you want the pressure plate to be and enter
 For example:
 
 `/hd create tutorial_checkpoint_3 {papi:parkour_current_checkpoint_hologram_tutorial_3}`
-
-</details>
-
-## Holographic Displays (v2.x.x)
-
-Parkour doesn't directly support [Holographic Displays](https://dev.bukkit.org/projects/holographic-displays/files), however it can use PlaceholderAPI to create dynamic and nice looking Parkour holograms.
-
-You will need to install the following plugins to achieve this:
-* [Holographic Displays](https://dev.bukkit.org/projects/holographic-displays?gameCategorySlug=bukkit-plugins&projectID=75097)
-* [Holographic Extension](https://www.spigotmc.org/resources/holographic-extension.18461/)
-* [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/)
-
-### Refresh Rate
-
-Parkour will already cache database results, so we suggest to using the `slow` refresh rate. The supported refresh rates for Holographic Extension are:
-* `{slowest}` - 10 seconds
-* `{slow}` - 5 seconds
-* `{medium}` - 1 second
-* `{fast}` - 0.5 seconds
-* `{fastest}` - 0.1 seconds
-
-### Example Usages
-
-Once all the plugins have all installed successfully, we can create a few examples of what is now possible. For demonstration purposes, I will be using a Course named "tutorial".
-
-<details><summary>Parkour Leaderboards (Click to expand)</summary>
-
-First we create a new Parkour leaderboard Hologram using the command and giving it a title.  
-`/hd create Leaderboard_tutorial Parkour Leaderboard - Tutorial`
-
-Add a line for each position you want on the leaderboard (up to 10):
-
-`/hd addline Leaderboard_tutorial {slow}%parkour_topten_tutorial_1%`  
-`/hd addline Leaderboard_tutorial {slow}%parkour_topten_tutorial_2%`  
-`/hd addline Leaderboard_tutorial {slow}%parkour_topten_tutorial_3%`
-
-Above we are using the Parkour placeholder `%parkour_topten_(course)_(position)%`.
-There is an entry in the `strings.yml` named `PlaceholderAPI.TopTenResult` which will allow you to customise the appearance and colours used.
-
-</details>
-
-<details><summary>Parkour Course Best Player (Click to expand)</summary>
-
-First we create a new Parkour leader Hologram using the command and giving it a title.  
-`/hd create Leader_tutorial Parkour Leader - Tutorial`
-
-Add a line for each detail you want to display:
-
-`/hd addline Leader_tutorial {slow}Best Player: %parkour_leaderboard_tutorial_1_player%`  
-`/hd addline Leader_tutorial {slow}Time: %parkour_leaderboard_tutorial_1_time%`  
-`/hd addline Leader_tutorial {slow}Deaths: %parkour_leaderboard_tutorial_1_deaths%`
 
 </details>
 
