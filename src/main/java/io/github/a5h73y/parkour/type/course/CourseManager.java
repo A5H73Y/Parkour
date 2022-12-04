@@ -365,8 +365,8 @@ public class CourseManager extends AbstractPluginReceiver {
     }
 
     public void runEventCommands(final Player player,
-                                       final ParkourSession session,
-                                       final String eventTypeKey) {
+                                 final ParkourSession session,
+                                 final String eventTypeKey) {
         CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(session.getCourseName());
 
         List<String> eventCommands = new ArrayList<>(courseConfig.getEventCommands(eventTypeKey));

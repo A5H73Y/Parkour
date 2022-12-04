@@ -1596,7 +1596,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	}
 
 	@Override
-	public void processCommand(CommandSender commandSender, String... args) {
+	public void processCommand(@NotNull CommandSender commandSender, String... args) {
 		processCommand(commandSender, Bukkit.getOfflinePlayer(args[1]), args[0], args[2]);
 	}
 
