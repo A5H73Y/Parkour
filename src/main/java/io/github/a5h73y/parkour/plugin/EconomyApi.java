@@ -147,7 +147,7 @@ public class EconomyApi extends PluginWrapper {
 	/**
 	 * Validate and Charge the Player for joining Course.
 	 * Check if there is a Join Fee for the Course, and that the player has sufficient funds.
-	 * If there is a Fee, charge the Player and continue.
+	 * If there is a Fee, check if it's a one-time Fee, charge the Player and continue.
 	 *
 	 * @param player requesting player
 	 * @param courseName course name
@@ -159,17 +159,23 @@ public class EconomyApi extends PluginWrapper {
 			double joinFee = parkour.getConfigManager().getCourseConfig(courseName).getEconomyJoiningFee();
 
 			if (joinFee > 0) {
-				if (!hasAmount(player, joinFee)) {
-					player.sendMessage(TranslationUtils.getTranslation("Economy.Insufficient")
-							.replace(AMOUNT_PLACEHOLDER, joinFee + getCurrencyName())
-							.replace(COURSE_PLACEHOLDER, courseName));
-					allowed = false;
+				boolean oneTimeFee = parkour.getConfigManager().getCourseConfig(courseName).isOneTimeFee();
+				if (!oneTimeFee || (oneTimeFee && !parkour.getPermissionVault().hasPaidOneTimeFee(player, courseName))) {
+					if (!hasAmount(player, joinFee)) {
+						player.sendMessage(TranslationUtils.getTranslation("Economy.Insufficient")
+								.replace(AMOUNT_PLACEHOLDER, joinFee + getCurrencyName())
+								.replace(COURSE_PLACEHOLDER, courseName));
+						allowed = false;
 
-				} else {
-					chargePlayer(player, joinFee);
-					player.sendMessage(TranslationUtils.getTranslation("Economy.Fee")
-							.replace(AMOUNT_PLACEHOLDER, joinFee + getCurrencyName())
-							.replace(COURSE_PLACEHOLDER, courseName));
+					} else {
+						chargePlayer(player, joinFee);
+						player.sendMessage(TranslationUtils.getTranslation("Economy.Fee")
+								.replace(AMOUNT_PLACEHOLDER, joinFee + getCurrencyName())
+								.replace(COURSE_PLACEHOLDER, courseName));
+						if (oneTimeFee) {
+							parkour.getPermissionVault().setPaidOneTimeFee(player, courseName);
+						}
+					}
 				}
 			}
 		}
@@ -241,8 +247,8 @@ public class EconomyApi extends PluginWrapper {
 	}
 
 	private void processSetFeeCommand(CommandSender commandSender, String... args) {
-		if (args.length != 4) {
-			TranslationUtils.sendInvalidSyntax(commandSender, "econ", "setfee (course) (amount)");
+		if (args.length < 4) {
+			TranslationUtils.sendInvalidSyntax(commandSender, "econ", "setfee (course) (amount) [one-time-fee]");
 			return;
 		}
 
@@ -256,7 +262,9 @@ public class EconomyApi extends PluginWrapper {
 			return;
 		}
 
+		boolean value = args.length == 5 && args[4].equalsIgnoreCase("true") ? true : false;
 		parkour.getConfigManager().getCourseConfig(args[2]).setEconomyJoiningFee(Double.parseDouble(args[3]));
+		parkour.getConfigManager().getCourseConfig(args[2]).setEconomyOneTimeFee(value);
 		TranslationUtils.sendPropertySet(commandSender, "Join Fee", args[2], args[3]);
 	}
 

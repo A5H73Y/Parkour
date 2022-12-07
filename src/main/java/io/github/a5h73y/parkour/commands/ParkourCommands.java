@@ -199,7 +199,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
                     return false;
 
-                } else if (!ValidationUtils.validateArgs(player, args, 2, 4)) {
+                } else if (!ValidationUtils.validateArgs(player, args, 2, 5)) {
                     return false;
                 }
 

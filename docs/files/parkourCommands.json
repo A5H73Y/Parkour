@@ -141,7 +141,7 @@
     "permission": "parkour.admin.*",
     "commandGroup": "5",
     "consoleSyntax": "pac economy (info / setprize / setfee / add / deduct / amount)",
-    "autoTabSyntax": "[info,setprize,setfee,add,deduct,amount] {1:setprize=(course),1:setfee=(course),1:info=(nothing),*=(player)} {1:info=(nothing),1:amount=(nothing),*=(amount)}"
+    "autoTabSyntax": "[info,setprize,setfee,add,deduct,amount] {1:setprize=(course),1:setfee=(course),1:info=(nothing),*=(player)} {1:info=(nothing),1:amount=(nothing),*=(amount)} {1:setfee=(truefalse),*=(nothing)}"
   },
   {
     "command": "editkit",

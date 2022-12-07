@@ -20,6 +20,7 @@ import io.github.a5h73y.parkour.other.ParkourUpdater;
 import io.github.a5h73y.parkour.other.PluginBackupUtil;
 import io.github.a5h73y.parkour.plugin.BountifulApi;
 import io.github.a5h73y.parkour.plugin.EconomyApi;
+import io.github.a5h73y.parkour.plugin.PermissionVault;
 import io.github.a5h73y.parkour.plugin.PlaceholderApi;
 import io.github.a5h73y.parkour.type.Initializable;
 import io.github.a5h73y.parkour.type.Teardownable;
@@ -88,6 +89,7 @@ public class Parkour extends JavaPlugin {
 
     private BountifulApi bountifulApi;
     private EconomyApi economyApi;
+    private PermissionVault permissionVault;
     private PlaceholderApi placeholderApi;
 
     /**
@@ -219,6 +221,7 @@ public class Parkour extends JavaPlugin {
     private void setupPlugins() {
         bountifulApi = new BountifulApi(this);
         economyApi = new EconomyApi(this);
+        permissionVault = new PermissionVault(this);
         placeholderApi = new PlaceholderApi(this);
     }
 
@@ -386,6 +389,10 @@ public class Parkour extends JavaPlugin {
 
     public EconomyApi getEconomyApi() {
         return economyApi;
+    }
+
+    public PermissionVault getPermissionVault() {
+        return permissionVault;
     }
 
     public PlaceholderApi getPlaceholderApi() {
