@@ -4,27 +4,26 @@ Changelogs
 Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon server start up. There will be no manual intervention, unless stated in breaking changes.
 
 ## 7.1.0
-* Fixes to losing Player's JoinLocation
-
-* Reworked ParkourTools to be more structured
-* Fixed "/pa addjoinitem (course)"
-* Added missing "%parkour_current_checkpoint_next%" placeholder
-* Fixed various placeholders
-* Reworked ParkourTools to be more structured
-  * Added Rockets amount limit
-  * Each ParkourTool can have individual cooldown and cooldown message
-* Fixed full restart resetting player data
-* Reset Player's cooldowns on Restart
-* New Setting "AutoStart.RestartWhenOnCourse.Enabled" to reset progress on AutoStart action
-* New Setting "AutoStart.RestartWhenOnCourse.Teleport" to teleport when on Course
+* Improved ParkourTools to be more structured
+* Added ability for each ParkourTool to have individual cooldown and cooldown message
+* Added Rockets ParkourTool amount limit
+* Added ability for Material custom model data using "MATERIAL:123"
+* Added Setting "AutoStart.RestartWhenOnCourse.Enabled" to reset progress on AutoStart action
+* Added Setting "AutoStart.RestartWhenOnCourse.Teleport" to teleport whilst on Course
 * Added console command "pac setpropertyforeverysinglecourse (property) [value]"
 * Added console command "pac setpropertyforeverysingleplayer (property) [value]"
-* Added ability for per-checkpoint commands (manual process currently)
+* Added ability for per-checkpoint commands (currently a manual process)
+* Added missing "%parkour_current_checkpoint_next%" placeholder
+* Added option to set display name on Material prizes
+* Fixed "/pa addjoinitem (course)"
+* Fixed losing Player's JoinLocation
 * Fixed bug when merging default and per-course commands
-* Add ability for Material custom model data using "MATERIAL:123"
-* Fire BestTime events after finish event
-* Fire Restart events in more places
-* Added option to set display name on material prizes
+* Fixed various placeholders
+* Fixed full restart resetting player data
+* Fixed Restart events firing in more places
+* Fixed Too many open files
+* Player's cooldowns are reset on Restart
+* Changed BestTime events after finish event
 
 ### Breaking Changes
 * Please reapply your translations to the `ParkourTool` section.

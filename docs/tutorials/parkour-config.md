@@ -169,10 +169,13 @@ CourseDefault:
   # Settings which will be defaulted to on ALL Courses
   # These can be overridden on a per-Course basis
   Settings:
-    HasFallDamage: true
-    MaxFallTicks: 80
     DieInLiquid: false
     DieInVoid: false
+    HasFallDamage: true
+    ManualCheckpoints: false
+    MaxFallTicks: 80
+    MaxDeaths: 0
+    MaxTime: 0
     RewardOnce: false
     RewardDelay: 0
     RewardLevelAdd: 0
@@ -223,6 +226,8 @@ ParkourTool:
   Rockets:
     Material: FIREWORK_ROCKET
     Slot: 4
+    # Seconds delay before being able to fire again
+    SecondCooldown: 1
  
 # All the options for Parkour Challenges
 ParkourChallenge:
@@ -243,8 +248,6 @@ ParkourModes:
   Rockets:
     # Should the velocity be inverted (teleported forwards instead of backwards)
     Invert: false
-    # Seconds delay before being able to fire again
-    SecondCooldown: 1
     # Amount of force received from the rocket launching
     LaunchForce: 1.5
  
@@ -281,6 +284,11 @@ AutoStart:
   TickDelay: 0
   # Include the world name in the AutoStart to allow multi-world support
   IncludeWorldName: true
+  # Should the Player's progress be restarted when activated while on the Course
+  RestartWhenOnCourse:
+    Enabled: true
+    # Should the Player be teleported to the start of the Course
+    Teleport: false
  
 # All the options for displaying a Scoreboard while on a Course
 # Each entry can be disabled and the order changed
@@ -405,6 +413,8 @@ Other:
     MaximumParkourLevel: 99999999
     # Should the Player's potion effects be reset during Parkour events such as joining, dying, leaving, finishing etc.
     ResetPotionEffects: true
+    # Should Ops keep their GameMode when joining a Course
+    OpsBypassGameModeSet: false
     
   Display:
     # Should the plugin display a Join message to the Player "This server uses Parkour v6.X"
@@ -428,6 +438,8 @@ Other:
     StandardFormat: "HH:mm:ss"
     # The Detailed Time output format, with millisecond information. Used in leaderboard times
     DetailedFormat: "HH:mm:ss:SSS"
+    # The Placeholder Time output format. Used when time is displayed in PlaceholderAPI values.
+    PlaceholderFormat: "HH:mm:ss:SSS"
     # The TimeZone to use. Only change if you're having weird output.
     TimeZone: "GMT"
  
@@ -456,11 +468,13 @@ Plugin:
   # Vault is required to use economy functionality
   Vault:
     Enabled: true
+    # Should Parkour register itself as an Economy plugin, using Parkoins as a currency
+    RegisterParkoins: false
   # Allows Parkour to offer external placeholders, also allows using placeholderapi values in multiple places 
   PlaceholderAPI:
     Enabled: true
     # How many seconds should database results be cached for
-    CacheTime: 15
+    CacheTime: 3
  
 # How many time results should be cached per Course
 Database:
@@ -485,10 +499,10 @@ LobbySettings:
   EnforceWorld: false
  
 # The installed version of the plugin, used by the updater to automatically update your config
-Version: '7.0.0'
+Version: '7.1.0'
 ```
 
-_This is correct as of Parkour v7.0.0_
+_This is correct as of Parkour v7.1.0_
 
 </details>
 
