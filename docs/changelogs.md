@@ -5,8 +5,26 @@ Please note that each version of Parkour is backwards compatible with the previo
 
 ## 7.1.0
 * Fixes to losing Player's JoinLocation
-* Reset Player's cooldowns on Restart
+
 * Reworked ParkourTools to be more structured
+* Fixed "/pa addjoinitem (course)"
+* Added missing "%parkour_current_checkpoint_next%" placeholder
+* Fixed various placeholders
+* Reworked ParkourTools to be more structured
+  * Added Rockets amount limit
+  * Each ParkourTool can have individual cooldown and cooldown message
+* Fixed full restart resetting player data
+* Reset Player's cooldowns on Restart
+* New Setting "AutoStart.RestartWhenOnCourse.Enabled" to reset progress on AutoStart action
+* New Setting "AutoStart.RestartWhenOnCourse.Teleport" to teleport when on Course
+* Added console command "pac setpropertyforeverysinglecourse (property) [value]"
+* Added console command "pac setpropertyforeverysingleplayer (property) [value]"
+* Added ability for per-checkpoint commands (manual process currently)
+* Fixed bug when merging default and per-course commands
+* Add ability for Material custom model data using "MATERIAL:123"
+* Fire BestTime events after finish event
+* Fire Restart events in more places
+* Added option to set display name on material prizes
 
 ### Breaking Changes
 * Please reapply your translations to the `ParkourTool` section.

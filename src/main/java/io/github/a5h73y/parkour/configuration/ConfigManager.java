@@ -16,7 +16,6 @@ import io.github.a5h73y.parkour.type.player.completion.CourseCompletionConfig;
 import io.github.a5h73y.parkour.type.player.quiet.QuietModeConfig;
 import io.github.a5h73y.parkour.type.player.rank.ParkourRankConfig;
 import io.github.a5h73y.parkour.utility.PluginUtils;
-import io.github.a5h73y.parkour.utility.cache.GenericCache;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -24,7 +23,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -54,8 +55,8 @@ public class ConfigManager {
 	private final LobbyConfig lobbyConfig;
 
 	// cache
-	private final GenericCache<UUID, PlayerConfig> playerConfigCache;
-	private final GenericCache<String, CourseConfig> courseConfigCache;
+	private final Map<UUID, PlayerConfig> playerConfigCache;
+	private final Map<String, CourseConfig> courseConfigCache;
 
 	// directories
 	private final File playersDir;
@@ -91,8 +92,8 @@ public class ConfigManager {
 		quietModeConfig = new QuietModeConfig(new File(otherDir, "quiet-players.yml"));
 		lobbyConfig = new LobbyConfig(new File(otherDir, "parkour-lobbies.yml"));
 
-		this.playerConfigCache = new GenericCache<>(30L);
-		this.courseConfigCache = new GenericCache<>(30L);
+		this.playerConfigCache = new HashMap<>();
+		this.courseConfigCache = new HashMap<>();
 
 		SimplixSerializer.registerSerializable(itemStackSerializable);
 		SimplixSerializer.registerSerializable(new ItemStackArraySerializable());
@@ -103,7 +104,6 @@ public class ConfigManager {
 
 	/**
 	 * Get the Player's JSON config file.
-	 * Cached result will be retrieved, or fresh copy will be gathered otherwise.
 	 *
 	 * @param player offline player
 	 * @return player's config
@@ -111,16 +111,11 @@ public class ConfigManager {
 	@NotNull
 	public PlayerConfig getPlayerConfig(@NotNull OfflinePlayer player) {
 		UUID key = player.getUniqueId();
-		if (!playerConfigCache.containsKey(key) || playerConfigCache.get(key).isEmpty()) {
-			playerConfigCache.put(key, PlayerConfig.getConfig(player));
-		}
-
-		return playerConfigCache.get(key).orElse(PlayerConfig.getConfig(player));
+		return playerConfigCache.computeIfAbsent(key, id -> PlayerConfig.getConfig(player));
 	}
 
 	/**
 	 * Get the Course's JSON config file.
-	 * Cached result will be retrieved, or fresh copy will be gathered otherwise.
 	 *
 	 * @param courseName course name
 	 * @return course's config
@@ -128,11 +123,7 @@ public class ConfigManager {
 	@NotNull
 	public CourseConfig getCourseConfig(@NotNull String courseName) {
 		String key = courseName.toLowerCase();
-		if (!courseConfigCache.containsKey(key) || courseConfigCache.get(key).isEmpty()) {
-			courseConfigCache.put(key, CourseConfig.getConfig(courseName));
-		}
-
-		return courseConfigCache.get(key).orElse(CourseConfig.getConfig(courseName));
+		return courseConfigCache.computeIfAbsent(key, CourseConfig::getConfig);
 	}
 
 	/**
