@@ -1,4 +1,4 @@
-<p align="center"><img src="https://i.imgur.com/mBUvVNO.png" alt="Parkour Logo"></p>
+<p align="center">![image](https://user-images.githubusercontent.com/6440871/208645721-b047416c-1ca3-471d-b146-6af9424ce639.png)</p>
 
 [![discord server](https://img.shields.io/discord/328154925949517824.svg)](https://discord.gg/h9d2fSd)
 [![travis-ci](https://travis-ci.org/A5H73Y/Parkour.svg?branch=master)](https://travis-ci.org/A5H73Y/Parkour/branches)
@@ -13,15 +13,12 @@ Add a whole new element of fun to any server, highly competitive gameplay with r
 - [Tutorials / Documentation](https://a5h73y.github.io/Parkour/)
 - [Support Server (Discord)](https://discord.gg/Gc8RGYr)
 - [Spigot Page](https://www.spigotmc.org/resources/parkour.23685/)
-- [Bukkit Page (archive)](https://dev.bukkit.org/projects/parkour/)
-- [Plugin Statistics](https://bstats.org/plugin/bukkit/Parkour)
+- [Bukkit Page (Archive)](https://dev.bukkit.org/projects/parkour/)
+- [bStats (Plugin Statistics)](https://bstats.org/plugin/bukkit/Parkour)
 
 ## Supported plugins
-| Plugin        | Description  |
-| ------------- | ------------- |
-| [Vault](https://dev.bukkit.org/projects/vault) | Add economy support to the plugin, reward or penalise the player. <br>[GitHub Project by MilkBowl](https://github.com/MilkBowl/Vault) |
-| [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | Add placeholder support to the plugin. Allowing use of Parkour variables for external use. <br>[GitHub Project by clip](https://github.com/PlaceholderAPI/PlaceholderAPI) |
-| [Parkour Top Ten](https://www.spigotmc.org/resources/parkour-top-ten.46268/) | Create a top ten display of player heads for Parkour courses​. <br>[GitHub Project by steve4744](https://github.com/steve4744/ParkourTopTen) |
+There are many plugins that Parkour officially and unofficially supports, including Vault, PlaceholderAPI, BountifulAPI, PlateCommands, Parkour Top Ten, ConditionalEvents, LeaderHeads, AdvancedReplay, and more...
+For the list of known supported plugins and tutorials on how to set them up, [click here](https://a5h73y.github.io/Parkour/#/guides/compatible-plugins).
 
 ## Maven
 ```
