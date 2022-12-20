@@ -1,4 +1,4 @@
-<p align="center">![image](https://user-images.githubusercontent.com/6440871/208645721-b047416c-1ca3-471d-b146-6af9424ce639.png)</p>
+![Parkour Logo](https://user-images.githubusercontent.com/6440871/208645721-b047416c-1ca3-471d-b146-6af9424ce639.png)
 
 [![discord server](https://img.shields.io/discord/328154925949517824.svg)](https://discord.gg/h9d2fSd)
 [![travis-ci](https://travis-ci.org/A5H73Y/Parkour.svg?branch=master)](https://travis-ci.org/A5H73Y/Parkour/branches)
@@ -17,7 +17,7 @@ Add a whole new element of fun to any server, highly competitive gameplay with r
 - [bStats (Plugin Statistics)](https://bstats.org/plugin/bukkit/Parkour)
 
 ## Supported plugins
-There are many plugins that Parkour officially and unofficially supports, including Vault, PlaceholderAPI, BountifulAPI, PlateCommands, Parkour Top Ten, ConditionalEvents, LeaderHeads, AdvancedReplay, and more...
+There are many plugins that Parkour officially and unofficially supports, including Vault, PlaceholderAPI, BountifulAPI, PlateCommands, Parkour Top Ten, ConditionalEvents, LeaderHeads, AdvancedReplay, and more...<p />
 For the list of known supported plugins and tutorials on how to set them up, [click here](https://a5h73y.github.io/Parkour/#/guides/compatible-plugins).
 
 ## Maven
