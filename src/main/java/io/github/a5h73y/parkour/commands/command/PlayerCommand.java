@@ -4,34 +4,32 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.commands.type.AllowedCommandSender;
 import io.github.a5h73y.parkour.commands.type.BasicParkourCommand;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
-import io.github.a5h73y.parkour.utility.permission.Permission;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-public class DELETEMECommand extends BasicParkourCommand {
+public class PlayerCommand extends BasicParkourCommand {
 
-	public DELETEMECommand(Parkour parkour) {
-		super(parkour, "SETME",
+	public PlayerCommand(Parkour parkour) {
+		super(parkour, "player",
 				AllowedCommandSender.ANY,
-				"ANY?");
-	}
-
-	@Override
-	protected Permission getRequiredPermission() {
-		return Permission.ADMIN_ALL;
-	}
-
-	@Override
-	public boolean validatePlayerArguments(CommandSender commandSender, String[] args) {
-		return true;
+				"info");
 	}
 
 	@Override
 	public boolean validateConsoleArguments(CommandSender commandSender, String[] args) {
-		return true;
+		return ValidationUtils.validateArgs(commandSender, args, 2);
 	}
 
 	@Override
 	public void performAction(CommandSender commandSender, String[] args) {
+			parkour.getPlayerManager().displayParkourInfo(commandSender,
+					args.length <= 1 ? (OfflinePlayer) commandSender : Bukkit.getOfflinePlayer(args[1]));
+	}
 
+	@Override
+	public void performConsoleAction(CommandSender commandSender, String[] args) {
+		parkour.getPlayerManager().displayParkourInfo(commandSender, Bukkit.getOfflinePlayer(args[1]));
 	}
 }

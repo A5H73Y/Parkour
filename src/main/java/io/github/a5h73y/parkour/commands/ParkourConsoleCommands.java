@@ -51,111 +51,10 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
         }
 
         switch (args[0].toLowerCase()) {
-            case "addjoinitem":
-                if (!ValidationUtils.validateArgs(commandSender, args, 4, 6)) {
-                    return false;
-                }
-
-                parkour.getCourseSettingsManager().addJoinItem(commandSender, args);
-                break;
-
-            case "admin":
-            case "administrator":
-                if (!ValidationUtils.validateArgs(commandSender, args, 3)) {
-                    return false;
-                }
-
-                parkour.getAdministrationManager().processAdminCommand(commandSender, args[1], args[2]);
-                break;
-
-            case "cache":
-                parkour.getAdministrationManager().processCacheCommand(commandSender, args.length == 2 ? args[1] : null);
-                break;
-
-            case "cmds":
-                displayConsoleCommands();
-                break;
-
-            case "config":
-                if (!ValidationUtils.validateArgs(commandSender, args, 2)) {
-                    return false;
-                }
-
-                if (!args[1].startsWith("MySQL")) {
-                    TranslationUtils.sendValue(commandSender, args[1], parkour.getParkourConfig().getString(args[1]));
-                }
-                break;
-
-            case "stats":
-            case "course":
-                if (!ValidationUtils.validateArgs(commandSender, args, 2)) {
-                    return false;
-                }
-
-                CourseConfig.displayCourseInfo(commandSender, args[1]);
-                break;
-
-            case "createkit":
-            case "createparkourkit":
-                new CreateParkourKitConversation((Conversable) commandSender).begin();
-                break;
-
-            case "delete":
-                if (!ValidationUtils.validateArgs(commandSender, args, 3, 4)) {
-                    return false;
-                }
-
-                parkour.getAdministrationManager().processDeleteCommand(
-                        commandSender, args[1], args[2], args.length > 3 ? args[3] : null);
-                break;
-
-            case "econ":
-            case "economy":
-                if (!ValidationUtils.validateArgs(commandSender, args, 2, 4)) {
-                    return false;
-                }
-
-                parkour.getEconomyApi().processCommand(commandSender, args);
-                break;
 
             case "editkit":
             case "editparkourkit":
                 new EditParkourKitConversation((Conversable) commandSender).begin();
-                break;
-
-            case "finish":
-                if (!ValidationUtils.validateArgs(commandSender, args, 2)) {
-                    return false;
-
-                } else if (findPlayer(commandSender, args[1]) == null) {
-                    return false;
-                }
-
-                parkour.getPlayerManager().finishCourse(findPlayer(commandSender, args[1]));
-                break;
-
-            case "help":
-                parkour.getParkourCommands().displayCommandHelp(commandSender, args);
-                break;
-
-            case "info":
-            case "player":
-                if (!ValidationUtils.validateArgs(commandSender, args, 2)) {
-                    return false;
-                }
-
-                parkour.getPlayerManager().displayParkourInfo(commandSender, Bukkit.getOfflinePlayer(args[1]));
-                break;
-
-            case "join":
-                if (!ValidationUtils.validateArgs(commandSender, args, 3)) {
-                    return false;
-
-                } else if (findPlayer(commandSender, args[2]) == null) {
-                    return false;
-                }
-
-                parkour.getPlayerManager().joinCourse(findPlayer(commandSender, args[2]), args[1]);
                 break;
 
             case "leaderboard":
@@ -285,17 +184,6 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 parkour.getParkourRankManager().setRewardParkourRank(commandSender, args[1], args[2]);
                 break;
 
-            case "session":
-                if (!ValidationUtils.validateArgs(commandSender, args, 3)) {
-                    return false;
-
-                } else if (findPlayer(commandSender, args[2]) == null) {
-                    return false;
-                }
-
-                parkour.getParkourSessionManager().processCommand(findPlayer(commandSender, args[2]), args[1]);
-                break;
-
             case "setcheckpoint":
                 if (!ValidationUtils.validateArgs(commandSender, args, 3)) {
                     return false;
@@ -311,29 +199,12 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                         findPlayer(commandSender, args[1]), Integer.parseInt(args[2]));
                 break;
 
-
-            case "setcourse":
-                if (!ValidationUtils.validateArgs(commandSender, args, 2, 100)) {
-                    return false;
-                }
-
-                parkour.getCourseSettingsManager().processCommand(commandSender, args);
-                break;
-
             case "setlobbycommand":
                 if (!ValidationUtils.validateArgs(commandSender, args, 3, 100)) {
                     return false;
                 }
 
                 parkour.getLobbyManager().addLobbyCommand(commandSender, args[1], StringUtils.extractMessageFromArgs(args, 2));
-                break;
-
-            case "setplayer":
-                if (!ValidationUtils.validateArgs(commandSender, args, 2, 100)) {
-                    return false;
-                }
-
-                parkour.getPlayerManager().processSetCommand(commandSender, args);
                 break;
 
             case "sql":
@@ -372,10 +243,6 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 } else {
                     parkour.getQuestionManager().answerQuestion(commandSender, args[0]);
                 }
-                break;
-
-            case "backup":
-                PluginBackupUtil.backupNow(true);
                 break;
 
             case "setpropertyforeverysingleplayer":
@@ -426,26 +293,9 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 });
     }
 
-    private void displayConsoleCommands() {
+    public void displayConsoleCommands() {
         parkour.getParkourCommands().getCommandUsages().stream()
                 .filter(commandUsage -> commandUsage.getConsoleSyntax() != null)
                 .forEach(commandUsage -> PluginUtils.log(commandUsage.getConsoleSyntax()));
-    }
-
-    /**
-     * Attempt to find matching Player by name.
-     *
-     * @param commandSender command sender
-     * @param playerName target player name
-     * @return {@link Player}
-     */
-    @Nullable
-    private Player findPlayer(CommandSender commandSender, String playerName) {
-        Player targetPlayer = Bukkit.getPlayer(playerName);
-
-        if (targetPlayer == null) {
-            TranslationUtils.sendMessage(commandSender, "Player is not online");
-        }
-        return targetPlayer;
     }
 }

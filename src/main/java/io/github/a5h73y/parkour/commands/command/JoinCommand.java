@@ -6,13 +6,13 @@ import io.github.a5h73y.parkour.commands.type.BasicParkourCommand;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.permission.Permission;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-public class DELETEMECommand extends BasicParkourCommand {
+public class JoinCommand extends BasicParkourCommand {
 
-	public DELETEMECommand(Parkour parkour) {
-		super(parkour, "SETME",
-				AllowedCommandSender.ANY,
-				"ANY?");
+	public JoinCommand(Parkour parkour) {
+		super(parkour, "join",
+				AllowedCommandSender.ANY);
 	}
 
 	@Override
@@ -22,16 +22,22 @@ public class DELETEMECommand extends BasicParkourCommand {
 
 	@Override
 	public boolean validatePlayerArguments(CommandSender commandSender, String[] args) {
-		return true;
+		return ValidationUtils.validateArgs(commandSender, args, 2);
 	}
 
 	@Override
 	public boolean validateConsoleArguments(CommandSender commandSender, String[] args) {
-		return true;
+		return ValidationUtils.validateArgs(commandSender, args, 3)
+				&& findPlayer(commandSender, args[2]) != null;
 	}
 
 	@Override
 	public void performAction(CommandSender commandSender, String[] args) {
+		parkour.getPlayerManager().joinCourse((Player) commandSender, args[1]);
+	}
 
+	@Override
+	public void performConsoleAction(CommandSender commandSender, String[] args) {
+		parkour.getPlayerManager().joinCourse(findPlayer(commandSender, args[2]), args[1]);
 	}
 }

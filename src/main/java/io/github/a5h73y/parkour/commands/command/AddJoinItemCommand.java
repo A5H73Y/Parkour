@@ -7,24 +7,30 @@ import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.permission.Permission;
 import org.bukkit.command.CommandSender;
 
-public class SetPlayerCommand extends BasicParkourCommand {
+public class AddJoinItemCommand extends BasicParkourCommand {
 
-	public SetPlayerCommand(Parkour parkour) {
-		super(parkour, AllowedCommandSender.ANY, "setplayer");
+	public AddJoinItemCommand(Parkour parkour) {
+		super(parkour, "addjoinitem",
+				AllowedCommandSender.ANY);
 	}
 
 	@Override
 	protected Permission getRequiredPermission() {
-		return Permission.ADMIN_ALL;
+		return Permission.ADMIN_COURSE;
 	}
 
 	@Override
-	protected boolean validateArguments(CommandSender commandSender, String[] args) {
-		return ValidationUtils.validateArgs(commandSender, args, 2, 100);
+	public boolean validatePlayerArguments(CommandSender commandSender, String[] args) {
+		return ValidationUtils.validateArgs(commandSender, args, 1, 6);
+	}
+
+	@Override
+	public boolean validateConsoleArguments(CommandSender commandSender, String[] args) {
+		return ValidationUtils.validateArgs(commandSender, args, 4, 6);
 	}
 
 	@Override
 	public void performAction(CommandSender commandSender, String[] args) {
-		parkour.getPlayerManager().processSetCommand(commandSender, args);
+		parkour.getCourseSettingsManager().addJoinItem(commandSender, args);
 	}
 }
