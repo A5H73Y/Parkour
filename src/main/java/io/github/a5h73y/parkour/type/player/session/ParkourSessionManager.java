@@ -214,7 +214,7 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Com
 	public ParkourSession loadParkourSession(Player player, String courseName) {
 		ParkourSession result = null;
 
-		if (ParkourSessionConfig.hasParkourSessionConfig(player, courseName)) {
+		if (courseName != null && ParkourSessionConfig.hasParkourSessionConfig(player, courseName)) {
 			ParkourSessionConfig config = ParkourSessionConfig.getConfig(player, courseName);
 
 			// course is populated by deserializing

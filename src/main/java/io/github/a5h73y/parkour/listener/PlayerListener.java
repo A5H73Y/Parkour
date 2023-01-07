@@ -215,7 +215,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
 
         ParkourSession session = parkour.getParkourSessionManager().loadParkourSession(player,
                 playerConfig.getExistingSessionCourseName());
-        playerConfig.setExistingSessionCourseName(null);
+        playerConfig.removeExistingSessionCourseName();
 
         if (!parkour.getParkourSessionManager().isPlaying(player)) {
             return;
