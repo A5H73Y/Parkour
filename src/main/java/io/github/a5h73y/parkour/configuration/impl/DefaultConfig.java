@@ -278,9 +278,10 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("Other.Display.PrizeCooldown", true);
 		this.setDefault("Other.Display.OnlyReadyCourses", false);
 		this.setDefault("Other.Display.CompletedCourseJoinMessage", false);
-		this.setDefault("Other.Display.IncludeDeprecatedCommands", false);
+    this.setDefault("Other.Display.IncludeDeprecatedCommands", false);
+    this.setDefault("Other.Display.OneTopResultPerPlayer", false);
 
-		this.setDefault("Other.Time.StandardFormat", "HH:mm:ss");
+    this.setDefault("Other.Time.StandardFormat", "HH:mm:ss");
 		this.setDefault("Other.Time.DetailedFormat", "HH:mm:ss:SSS");
 		this.setDefault("Other.Time.PlaceholderFormat", "HH:mm:ss:SSS");
 		this.setDefault("Other.Time.TimeZone", "GMT");

@@ -134,8 +134,14 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
 
         if (courseId > 0) {
             int maxEntries = calculateResultsLimit(resultsLimit);
+            String courseResultsQuery;
             PluginUtils.debug("Getting top " + maxEntries + " results for " + courseName);
-            String courseResultsQuery = SELECT_TIME_DATA_QUERY + " WHERE courseId=? ORDER BY time LIMIT ?";
+            if (parkour.getParkourConfig().getBoolean("Other.Display.OneTopResultPerPlayer")) {
+              courseResultsQuery = "SELECT courseId, playerId, MIN(time) as time, deaths FROM time WHERE courseId=? GROUP BY playerId ORDER BY time LIMIT ?";
+            }
+            else {
+              courseResultsQuery = SELECT_TIME_DATA_QUERY + " WHERE courseId=? ORDER BY time LIMIT ?";
+            }
 
             try (PreparedStatement statement = getDatabaseConnection().prepareStatement(courseResultsQuery)) {
                 statement.setInt(1, courseId);
