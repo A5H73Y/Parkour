@@ -41,6 +41,7 @@ public class CourseConfig extends Json {
     public static final String DISPLAY_NAME = "DisplayName";
     public static final String ECONOMY_FINISH_REWARD = "EconomyFinishReward";
     public static final String ECONOMY_JOINING_FEE = "EconomyJoiningFee";
+    public static final String ECONOMY_ONETIME_FEE = "EconomyOneTimeFee";
     public static final String HAS_FALL_DAMAGE = "HasFallDamage";
     public static final String JOIN_ITEMS = "JoinItems";
     public static final String LINKED_COURSE = "LinkedCourse";
@@ -436,6 +437,7 @@ public class CourseConfig extends Json {
      * The Material and Amount to be rewarded for finishing the Course.
      * @param materialName prize material
      * @param amount prize amount
+     * @param label display name
      */
     public void setMaterialPrize(@NotNull String materialName, int amount, String label) {
         this.set(PRIZE_MATERIAL, materialName);
@@ -812,7 +814,7 @@ public class CourseConfig extends Json {
     }
 
     /**
-     * Get Economic Fee for joining Course.
+     * Get Economy Fee for joining Course.
      * @return joining fee
      */
     public double getEconomyJoiningFee() {
@@ -825,6 +827,22 @@ public class CourseConfig extends Json {
      */
     public boolean hasEconomyJoiningFee() {
         return this.contains(ECONOMY_JOINING_FEE);
+    }
+
+    /**
+     * Check if the Economy Joining fee is a one-time fee.
+     *  @return is one-time joining fee
+     */
+    public boolean isOneTimeFee() {
+        return this.getBoolean(ECONOMY_ONETIME_FEE);
+    }
+
+    /**
+     * Set Economy one-time fee.
+     *  @param is one-time joining fee
+     */
+    public void setEconomyOneTimeFee(Boolean OneTimeFee) {
+        this.set(ECONOMY_ONETIME_FEE, OneTimeFee);
     }
 
     /**
@@ -1090,6 +1108,8 @@ public class CourseConfig extends Json {
 
         if (parkour.getEconomyApi().isEnabled()) {
             sendConditionalValue(commandSender, "Join Fee", config.getEconomyJoiningFee());
+            sendConditionalValue(commandSender, "One-Time Fee",
+                config.hasEconomyJoiningFee() && config.isOneTimeFee(), "true");
             sendConditionalValue(commandSender, "Economy Reward", config.getEconomyFinishReward());
         }
 
