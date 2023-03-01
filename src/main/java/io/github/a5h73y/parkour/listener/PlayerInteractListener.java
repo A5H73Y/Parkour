@@ -40,22 +40,22 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         DefaultConfig config = parkour.getParkourConfig();
         registerParkourTool(config.getLastCheckpointTool(), "LastCheckpoint",
                 (player, event) -> parkour.getPlayerManager().playerDie(player));
-        
+
         registerParkourTool(config.getHideAllDisabledTool(), "HideAll",
                 (player, event) -> handleHideAllTool(player));
-        
+
         registerParkourTool(config.getHideAllEnabledTool(), "HideAll",
                 (player, event) -> handleHideAllTool(player));
-        
+
         registerParkourTool(config.getLeaveTool(), "Leave",
                 (player, event) -> parkour.getPlayerManager().leaveCourse(player));
-        
+
         registerParkourTool(config.getRestartTool(), "Restart",
                 (player, event) -> handleRestartTool(player));
-        
+
         registerParkourTool(config.getRocketTool(), "Rockets", true, false, ParkourMode.ROCKETS,
                 (player, event) -> handleRocketTool(player));
-        
+
         registerParkourTool(config.getFreedomTool(), "Freedom", false, false, ParkourMode.FREEDOM,
                 (player, event) -> handleFreedomTool(player, event.getAction()));
     }
@@ -113,13 +113,16 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         // we know they are using a valid ParkourTool - cancel any default behaviour
         event.setCancelled(true);
 
-        if (toolAction.isRightClickOnly()
-                && !event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
+        if (!parkour.getParkourConfig().getBoolean("ParkourTool.RemoveRightClickRestriction")
+                && (toolAction.isRightClickOnly()
+                    && !event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+                    && !event.getAction().equals(Action.RIGHT_CLICK_AIR))) {
             return;
         }
 
         if (toolAction.isIncludeSneakCheck()
-                && !player.isSneaking() && parkour.getParkourConfig().getBoolean("OnCourse.SneakToInteractItems")) {
+                && !player.isSneaking()
+                && parkour.getParkourConfig().getBoolean("OnCourse.SneakToInteractItems")) {
             return;
         }
 

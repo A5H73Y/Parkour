@@ -10,6 +10,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -130,7 +131,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
      *
      * @param event PlayerRespawnEvent
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         if (parkour.getParkourSessionManager().isPlaying(event.getPlayer())) {
             parkour.getPlayerManager().playerDie(event.getPlayer());

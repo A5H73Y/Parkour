@@ -3,6 +3,8 @@ package io.github.a5h73y.parkour.utility;
 import io.github.a5h73y.parkour.Parkour;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
+
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -105,6 +107,10 @@ public enum TaskCooldowns {
     public void clearCoolDowns(Player player) {
         taskDelays.entrySet()
                 .removeIf(entry -> entry.getKey().startsWith(String.valueOf(player.getUniqueId())));
+    }
+
+    public void clearCoolDowns(Predicate<Map.Entry<String, Long>> filter) {
+        taskDelays.entrySet().removeIf(filter);
     }
 
     public void clearCoolDown(Player player, String eventName) {

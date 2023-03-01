@@ -123,7 +123,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
                     .replace(PLAYER_PLACEHOLDER, challenge.getChallengeHost().getName()));
             if (challenge.getWager() != null) {
                 TranslationUtils.sendValueTranslation("Parkour.Challenge.InviteReceivedWager",
-                        challenge.getWager() + parkour.getEconomyApi().getCurrencyName(), targetPlayer);
+                        parkour.getEconomyApi().getAmount(challenge.getWager()), targetPlayer);
             }
             TranslationUtils.sendTranslation("Parkour.Challenge.AcceptDecline", false, targetPlayer);
         }
@@ -275,7 +275,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
                 double amount = challenge.getWager() * (challenge.getNumberOfParticipants() - 1);
                 parkour.getEconomyApi().rewardPlayer(winner, amount);
                 TranslationUtils.sendValueTranslation("Parkour.Challenge.WinnerWager",
-                        amount + parkour.getEconomyApi().getCurrencyName(), winner);
+                        parkour.getEconomyApi().getAmount(amount), winner);
             }
         }
     }

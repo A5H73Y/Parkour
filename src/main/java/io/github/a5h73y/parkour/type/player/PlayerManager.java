@@ -1296,7 +1296,9 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			parkour.getParkourSessionManager().hideVisibility(player, true);
 		}
 
-		TaskCooldowns.getInstance().clearCoolDowns(player);
+		TaskCooldowns.getInstance().clearCoolDowns((entry) ->
+				entry.getKey().startsWith(String.valueOf(player.getUniqueId()))
+						&& !entry.getKey().endsWith("Restart"));
 	}
 
 	private void resetDeathCounter(Player player) {

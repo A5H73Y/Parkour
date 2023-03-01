@@ -149,6 +149,7 @@ public class DefaultConfig extends Yaml {
 				this.setDefault("CourseDefault.Command." + eventType.getConfigEntry(),
 						Collections.singletonList("")));
 
+		this.setDefault("ParkourTool.RemoveRightClickRestriction", false);
 		this.setDefault("ParkourTool.LastCheckpoint.Material", "ARROW");
 		this.setDefault("ParkourTool.LastCheckpoint.Slot", 0);
 		this.setDefault("ParkourTool.HideAll.Material", "BONE");
@@ -279,6 +280,7 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("Other.Display.OnlyReadyCourses", false);
 		this.setDefault("Other.Display.CompletedCourseJoinMessage", false);
 		this.setDefault("Other.Display.IncludeDeprecatedCommands", false);
+		this.setDefault("Other.Display.CurrencyName", true);
 
 		this.setDefault("Other.Time.StandardFormat", "HH:mm:ss");
 		this.setDefault("Other.Time.DetailedFormat", "HH:mm:ss:SSS");

@@ -30,6 +30,8 @@ public class EconomyApi extends PluginWrapper {
 
 	private Economy economy;
 
+	private boolean displayCurrencyName;
+
 	public EconomyApi(Parkour parkour) {
 		super(parkour);
 	}
@@ -58,6 +60,7 @@ public class EconomyApi extends PluginWrapper {
 			}
 
 			economy = economyProvider.getProvider();
+			displayCurrencyName = parkour.getParkourConfig().getBoolean("Other.Display.CurrencyName");
 		}
 	}
 
@@ -123,10 +126,23 @@ public class EconomyApi extends PluginWrapper {
 				rewardPlayer(player, reward);
 
 				player.sendMessage(TranslationUtils.getTranslation("Economy.Reward")
-						.replace(AMOUNT_PLACEHOLDER, reward + getCurrencyName())
+						.replace(AMOUNT_PLACEHOLDER, getAmount(reward))
 						.replace(COURSE_PLACEHOLDER, courseName));
 			}
 		}
+	}
+
+	/**
+	 * Get formatted value of amount.
+	 * @param amount
+	 * @return formatted amount
+	 */
+	public String getAmount(double amount) {
+		StringBuilder sb = new StringBuilder(String.valueOf(amount));
+		if (displayCurrencyName) {
+			sb.append(getCurrencyName());
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -160,17 +176,17 @@ public class EconomyApi extends PluginWrapper {
 
 			if (joinFee > 0) {
 				boolean oneTimeFee = parkour.getConfigManager().getCourseConfig(courseName).isOneTimeFee();
-				if (!oneTimeFee || (oneTimeFee && !parkour.getPermissionVault().hasPaidOneTimeFee(player, courseName))) {
+				if (!oneTimeFee || !parkour.getPermissionVault().hasPaidOneTimeFee(player, courseName)) {
 					if (!hasAmount(player, joinFee)) {
 						player.sendMessage(TranslationUtils.getTranslation("Economy.Insufficient")
-								.replace(AMOUNT_PLACEHOLDER, joinFee + getCurrencyName())
+								.replace(AMOUNT_PLACEHOLDER, getAmount(joinFee))
 								.replace(COURSE_PLACEHOLDER, courseName));
 						allowed = false;
 
 					} else {
 						chargePlayer(player, joinFee);
 						player.sendMessage(TranslationUtils.getTranslation("Economy.Fee")
-								.replace(AMOUNT_PLACEHOLDER, joinFee + getCurrencyName())
+								.replace(AMOUNT_PLACEHOLDER, getAmount(joinFee))
 								.replace(COURSE_PLACEHOLDER, courseName));
 						if (oneTimeFee) {
 							parkour.getPermissionVault().setPaidOneTimeFee(player, courseName);
@@ -286,10 +302,11 @@ public class EconomyApi extends PluginWrapper {
 			return;
 		}
 
-		EconomyResponse response = economy.depositPlayer(targetPlayer, Double.parseDouble(args[3]));
+		double amount = Double.parseDouble(args[3]);
+		EconomyResponse response = economy.depositPlayer(targetPlayer, amount);
 		if (response.transactionSuccess()) {
-			TranslationUtils.sendMessage(commandSender, "Added &b" + args[3] + getCurrencyName() + "&f. "
-					+ args[2] + "'s new amount: &b" + economy.getBalance(targetPlayer) + getCurrencyName());
+			TranslationUtils.sendMessage(commandSender, "Added &b" + getAmount(amount) + "&f. "
+					+ args[2] + "'s new amount: &b" + getAmount(economy.getBalance(targetPlayer)));
 		} else {
 			TranslationUtils.sendMessage(commandSender, "Failed to add amount to Player.");
 		}
@@ -313,10 +330,11 @@ public class EconomyApi extends PluginWrapper {
 			return;
 		}
 
-		EconomyResponse response = economy.withdrawPlayer(targetPlayer, Double.parseDouble(args[3]));
+		double amount = Double.parseDouble(args[3]);
+		EconomyResponse response = economy.withdrawPlayer(targetPlayer, amount);
 		if (response.transactionSuccess()) {
-			TranslationUtils.sendMessage(commandSender, "Deducted &b" + args[3] + getCurrencyName() + "&f. "
-					+ args[2] + "'s new amount: &b" + economy.getBalance(targetPlayer) + getCurrencyName());
+			TranslationUtils.sendMessage(commandSender, "Deducted &b" + getAmount(amount) + "&f. "
+					+ args[2] + "'s new amount: &b" + getAmount(economy.getBalance(targetPlayer)));
 		} else {
 			TranslationUtils.sendMessage(commandSender, "Failed to deduct amount to Player.");
 		}
@@ -335,6 +353,6 @@ public class EconomyApi extends PluginWrapper {
 			return;
 		}
 
-		TranslationUtils.sendMessage(commandSender, args[2] + "'s balance: &b" + economy.getBalance(targetPlayer) + getCurrencyName());
+		TranslationUtils.sendMessage(commandSender, args[2] + "'s balance: &b" + getAmount(economy.getBalance(targetPlayer)));
 	}
 }
