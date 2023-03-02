@@ -28,8 +28,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.jetbrains.annotations.Nullable;
 
 public class PlayerInteractListener extends AbstractPluginReceiver implements Listener {
 
@@ -39,25 +41,52 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         super(parkour);
         DefaultConfig config = parkour.getParkourConfig();
         registerParkourTool(config.getLastCheckpointTool(), "LastCheckpoint",
-                (player, event) -> parkour.getPlayerManager().playerDie(player));
+                (player, rightClick) -> parkour.getPlayerManager().playerDie(player));
 
         registerParkourTool(config.getHideAllDisabledTool(), "HideAll",
-                (player, event) -> handleHideAllTool(player));
+                (player, rightClick) -> handleHideAllTool(player));
 
         registerParkourTool(config.getHideAllEnabledTool(), "HideAll",
-                (player, event) -> handleHideAllTool(player));
+                (player, rightClick) -> handleHideAllTool(player));
 
         registerParkourTool(config.getLeaveTool(), "Leave",
-                (player, event) -> parkour.getPlayerManager().leaveCourse(player));
+                (player, rightClick) -> parkour.getPlayerManager().leaveCourse(player));
 
         registerParkourTool(config.getRestartTool(), "Restart",
-                (player, event) -> handleRestartTool(player));
+                (player, rightClick) -> handleRestartTool(player));
 
         registerParkourTool(config.getRocketTool(), "Rockets", true, false, ParkourMode.ROCKETS,
-                (player, event) -> handleRocketTool(player));
+                (player, rightClick) -> handleRocketTool(player));
 
         registerParkourTool(config.getFreedomTool(), "Freedom", false, false, ParkourMode.FREEDOM,
-                (player, event) -> handleFreedomTool(player, event.getAction()));
+                (player, rightClick) -> handleFreedomTool(player, rightClick));
+    }
+
+    @EventHandler
+    public void onProjectileThrownEvent(ProjectileLaunchEvent event) {
+        if (!(event.getEntity().getShooter() instanceof Player)) {
+            return;
+        }
+        
+        Player player = (Player) event.getEntity().getShooter();
+
+        if (!parkour.getParkourSessionManager().isPlaying(player)) {
+            return;
+        }
+
+        if (parkour.getParkourSessionManager().isPlayerInTestMode(player)) {
+            return;
+        }
+
+        ParkourToolAction toolAction = getMatchingToolAction(player);
+
+        if (toolAction == null) {
+            return;
+        }
+
+        // we know they are using a valid ParkourTool - cancel any default behaviour
+        event.setCancelled(true);
+        handleParkourToolAction(player, toolAction, true);
     }
 
     /**
@@ -91,22 +120,9 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             return;
         }
 
-        Material materialInHand = MaterialUtils.getMaterialInPlayersHand(player);
-
-        if (XBlock.isAir(materialInHand)) {
-            return;
-        }
-
-        ParkourToolAction toolAction = parkourTools.get(materialInHand);
+        ParkourToolAction toolAction = getMatchingToolAction(player);
 
         if (toolAction == null) {
-            return;
-        }
-
-        ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
-
-        if (toolAction.getRequiredParkourMode() != null
-                && toolAction.getRequiredParkourMode() != session.getParkourMode()) {
             return;
         }
 
@@ -120,20 +136,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             return;
         }
 
-        if (toolAction.isIncludeSneakCheck()
-                && !player.isSneaking()
-                && parkour.getParkourConfig().getBoolean("OnCourse.SneakToInteractItems")) {
-            return;
-        }
-
-        int secondsDelay = parkour.getParkourConfig().get("ParkourTool." + toolAction.getActionName() + ".SecondCooldown", 1);
-        String messageKey = "ParkourTool." + toolAction.getActionName() + ".Cooldown";
-
-        if (!TaskCooldowns.getInstance().delayPlayer(player, toolAction.getActionName(), secondsDelay, messageKey, false)) {
-            return;
-        }
-
-        toolAction.getPlayerConsumer().accept(player, event);
+        handleParkourToolAction(player, toolAction, event.getAction().name().startsWith("RIGHT"));
     }
 
     /**
@@ -221,16 +224,13 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         }
     }
 
-    private void handleFreedomTool(Player player, Action action) {
-        if ((action.equals(Action.RIGHT_CLICK_BLOCK)
-                || action.equals(Action.RIGHT_CLICK_AIR))
-                && player.isOnGround()) {
+    private void handleFreedomTool(Player player, Boolean rightClick) {
+        if (rightClick && player.isOnGround()) {
             parkour.getParkourSessionManager().getParkourSession(player).setFreedomLocation(
                     parkour.getCheckpointManager().createCheckpointFromPlayerLocation(player).getLocation());
             TranslationUtils.sendTranslation("Mode.Freedom.Save", player);
 
-        } else if (action.equals(Action.LEFT_CLICK_BLOCK)
-                || action.equals(Action.LEFT_CLICK_AIR)) {
+        } else if (!rightClick) {
             Location location = parkour.getParkourSessionManager().getParkourSession(player).getFreedomLocation();
             if (location == null) {
                 TranslationUtils.sendTranslation("Error.UnknownCheckpoint", player);
@@ -282,19 +282,59 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         }
     }
 
+    private void handleParkourToolAction(Player player, ParkourToolAction toolAction, boolean rightClick) {
+        if (toolAction.isIncludeSneakCheck()
+                && !player.isSneaking()
+                && parkour.getParkourConfig().getBoolean("OnCourse.SneakToInteractItems")) {
+            return;
+        }
+
+        int secondsDelay = parkour.getParkourConfig().get("ParkourTool." + toolAction.getActionName() + ".SecondCooldown", 1);
+        String messageKey = "ParkourTool." + toolAction.getActionName() + ".Cooldown";
+
+        if (!TaskCooldowns.getInstance().delayPlayer(player, toolAction.getActionName(), secondsDelay, messageKey, false)) {
+            return;
+        }
+
+        toolAction.getPlayerConsumer().accept(player, rightClick);
+    }
+
+    @Nullable
+    private ParkourToolAction getMatchingToolAction(Player player) {
+        Material materialInHand = MaterialUtils.getMaterialInPlayersHand(player);
+
+        if (XBlock.isAir(materialInHand)) {
+            return null;
+        }
+
+        ParkourToolAction toolAction = parkourTools.get(materialInHand);
+
+        if (toolAction == null) {
+            return null;
+        }
+
+        ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
+
+        if (toolAction.getRequiredParkourMode() != null
+                && toolAction.getRequiredParkourMode() != session.getParkourMode()) {
+            return null;
+        }
+        return toolAction;
+    }
+
     private void registerParkourTool(Material material,
                                      String toolName,
                                      boolean rightClickOnly,
                                      boolean includeSneakCheck,
                                      ParkourMode requiredParkourMode,
-                                     BiConsumer<Player, PlayerInteractEvent> playerConsumer) {
+                                     BiConsumer<Player, Boolean> playerConsumer) {
         if (material != null && material != Material.AIR) {
             parkourTools.put(material,
                     new ParkourToolAction(toolName, requiredParkourMode, rightClickOnly, includeSneakCheck, playerConsumer));
         }
     }
 
-    private void registerParkourTool(Material material, String toolName, BiConsumer<Player, PlayerInteractEvent> playerConsumer) {
+    private void registerParkourTool(Material material, String toolName, BiConsumer<Player, Boolean> playerConsumer) {
         registerParkourTool(material, toolName, true, true, null, playerConsumer);
     }
 
@@ -308,13 +348,13 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
 
         private final boolean includeSneakCheck;
 
-        private final BiConsumer<Player, PlayerInteractEvent> playerConsumer;
+        private final BiConsumer<Player, Boolean> playerConsumer;
 
         public ParkourToolAction(String actionName,
                                  ParkourMode requiredParkourMode,
                                  boolean rightClickOnly,
                                  boolean includeSneakCheck,
-                                 BiConsumer<Player, PlayerInteractEvent> playerConsumer) {
+                                 BiConsumer<Player, Boolean> playerConsumer) {
             this.actionName = actionName;
             this.requiredParkourMode = requiredParkourMode;
             this.rightClickOnly = rightClickOnly;
@@ -338,7 +378,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             return includeSneakCheck;
         }
 
-        public BiConsumer<Player, PlayerInteractEvent> getPlayerConsumer() {
+        public BiConsumer<Player, Boolean> getPlayerConsumer() {
             return playerConsumer;
         }
     }
