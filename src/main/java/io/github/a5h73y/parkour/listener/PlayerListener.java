@@ -263,7 +263,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
      *
      * @param event PlayerTeleportEvent
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
 
@@ -279,7 +279,7 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         World nextCheckpointWorld = session.getNextCheckpoint() != null
                 ? session.getNextCheckpoint().getLocation().getWorld() : null;
 
-        if (event.getFrom().getWorld() != player.getWorld()
+        if (player.getWorld() != event.getTo().getWorld()
                 && (nextCheckpointWorld == null || nextCheckpointWorld != event.getTo().getWorld())) {
             if (parkour.getParkourConfig().isCourseEnforceWorldLeaveCourse()) {
                 parkour.getPlayerManager().leaveCourse(player, true);
