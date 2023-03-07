@@ -28,12 +28,12 @@ public abstract class BasicParkourCommand extends AbstractParkourCommand {
 	@Override
 	public boolean validateCommand(CommandSender commandSender, String[] args) {
 		if (!isCommandEnabled(commandSender)) {
-			TranslationUtils.sendMessage(commandSender, "This Command has been disabled.");
+			TranslationUtils.sendTranslation("Error.DisabledCommand", commandSender);
 			return false;
 		}
 
 		if (!isValidSender(commandSender)) {
-			TranslationUtils.sendMessage(commandSender, "You are not able to perform this command.");
+			sendInvalidSenderMesssage(commandSender);
 			return false;
 		}
 
@@ -42,6 +42,14 @@ public abstract class BasicParkourCommand extends AbstractParkourCommand {
 		}
 
 		return validateArguments(commandSender, args);
+	}
+
+	private void sendInvalidSenderMesssage(CommandSender commandSender) {
+		if (commandSender instanceof ConsoleCommandSender) {
+			TranslationUtils.sendTranslation("Error.PlayerOnlyCommand", commandSender);
+		} else {
+			TranslationUtils.sendTranslation("Error.ConsoleOnlyCommand", commandSender);
+		}
 	}
 
 	@Override

@@ -57,19 +57,6 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 new EditParkourKitConversation((Conversable) commandSender).begin();
                 break;
 
-            case "leaderboard":
-            case "leaderboards":
-                if (!ValidationUtils.validateArgs(commandSender, args, 3)) {
-                    return false;
-                }
-
-                parkour.getDatabaseManager().displayTimeEntries(commandSender, args[1],
-                        parkour.getDatabaseManager().getTopCourseResults(args[1], Integer.parseInt(args[2])));
-                break;
-
-            case "list":
-                parkour.getAdministrationManager().processListCommand(commandSender, args);
-                break;
 
             case "leave":
                 if (!ValidationUtils.validateArgs(commandSender, args, 2)) {

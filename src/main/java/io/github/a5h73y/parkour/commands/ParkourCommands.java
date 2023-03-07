@@ -1,6 +1,9 @@
 package io.github.a5h73y.parkour.commands;
 
 import static io.github.a5h73y.parkour.other.ParkourConstants.COMMAND_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT;
+import static io.github.a5h73y.parkour.utility.permission.Permission.BASIC_JOINALL;
+import static io.github.a5h73y.parkour.utility.permission.Permission.BASIC_KIT;
 
 import com.google.common.reflect.ClassPath;
 import com.google.gson.GsonBuilder;
@@ -9,6 +12,8 @@ import io.github.a5h73y.parkour.commands.type.AbstractParkourCommand;
 import io.github.a5h73y.parkour.commands.type.AliasCommand;
 import io.github.a5h73y.parkour.commands.type.BasicParkourCommand;
 import io.github.a5h73y.parkour.commands.type.ConsoleOnlyCommand;
+import io.github.a5h73y.parkour.commands.type.PlayerOnlyCommand;
+import io.github.a5h73y.parkour.gui.GuiMenu;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.PluginBackupUtil;
 import io.github.a5h73y.parkour.utility.PluginUtils;
@@ -49,7 +54,8 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
     public ParkourCommands(final Parkour parkour) {
         super(parkour);
-        populateParkourActionCommands();
+        populateMainParkourCommands();
+        populateQuickParkourCommands();
         populateCommandUsages();
     }
 
@@ -103,7 +109,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
         }
     }
 
-    private void populateParkourActionCommands() {
+    private void populateMainParkourCommands() {
         try {
             final ClassPath path = ClassPath.from(parkour.getClass().getClassLoader());
             for (final ClassPath.ClassInfo info : path.getTopLevelClasses(this.getClass().getPackage().getName() + ".command")) {
@@ -115,44 +121,37 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
             PluginUtils.log(e.getMessage(), 2);
             e.printStackTrace();
         }
-
-        populateQuickCommands();
     }
 
-    private void populateQuickCommands() {
-        registerParkourCommand(new ConsoleOnlyCommand(parkour, "backup",
-                ((commandSender, strings) -> PluginBackupUtil.backupNow(true))));
+    private void populateQuickParkourCommands() {
+        registerPlayerOnlyCommands();
+        registerConsoleOnlyCommands();
+        registerAliasCommands();
 
+
+
+    }
+
+    private void registerPlayerOnlyCommands() {
+        registerParkourCommand(new PlayerOnlyCommand(parkour, "joinall",
+                BASIC_JOINALL, ((commandSender, args) ->
+                parkour.getGuiManager().showMenu((Player) commandSender, GuiMenu.JOIN_COURSES))));
+
+        registerParkourCommand(new PlayerOnlyCommand(parkour, "kit",
+                BASIC_KIT, ((commandSender, args) ->
+                parkour.getParkourKitManager().giveParkourKit((Player) commandSender, args.length == 2 ? args[1] : DEFAULT))));
+    }
+
+    private void registerConsoleOnlyCommands() {
+        registerParkourCommand(new ConsoleOnlyCommand(parkour, "backup",
+                ((commandSender, args) -> PluginBackupUtil.backupNow(true))));
+    }
+
+    private void registerAliasCommands() {
         registerParkourCommand(new AliasCommand(parkour, "checkpoint", 3,
                 (args -> "setcourse " + args[0] + " challengeonly " + args[1])));
     }
 
-//
-//            case "joinall":
-//                if (!PermissionUtils.hasPermission(commandSender, Permission.BASIC_JOINALL)) {
-//                    return false;
-//                }
-//
-//                parkour.getGuiManager().showMenu(commandSender, GuiMenu.JOIN_COURSES);
-//                break;
-//
-//            case "kit":
-//                if (!PermissionUtils.hasPermission(commandSender, Permission.BASIC_KIT)) {
-//                    return false;
-//                }
-//
-//                parkour.getParkourKitManager().giveParkourKit(commandSender, args.length == 2 ? args[1] : DEFAULT);
-//                break;
-//
-//            case "leaderboard":
-//            case "leaderboards":
-//                if (!PermissionUtils.hasPermission(commandSender, Permission.BASIC_LEADERBOARD)) {
-//                    return false;
-//                }
-//
-//                parkour.getCourseManager().displayLeaderboards(commandSender, args);
-//                break;
-//
 //
 //            case "lobby":
 //                parkour.getLobbyManager().joinLobby(commandSender, args.length > 1 ? args[1] : DEFAULT);
