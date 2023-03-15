@@ -77,14 +77,15 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
             return true;
         }
 
-        String commandLabel = args[0].toLowerCase();
+        String combinedLabels = String.join(" ", args).toLowerCase();
 
-        if (parkour.getParkourConfig().getBoolean("DisableCommand." + commandLabel)
+        if (parkour.getParkourConfig().getBoolean("DisableCommand." + combinedLabels)
                 && !PermissionUtils.hasPermission(player, Permission.PARKOUR_ALL, false)) {
             TranslationUtils.sendTranslation("Error.DisabledCommand", player);
             return false;
         }
 
+        String commandLabel = args[0].toLowerCase();
         switch (commandLabel) {
             case "addjoinitem":
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_COURSE)) {
@@ -102,11 +103,11 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                 if (!PermissionUtils.hasPermission(player, Permission.ADMIN_ALL)) {
                     return false;
 
-                } else if (!ValidationUtils.validateArgs(player, args, 3)) {
+                } else if (!ValidationUtils.validateArgs(player, args, 3, 99)) {
                     return false;
                 }
 
-                parkour.getAdministrationManager().processAdminCommand(player, args[1], args[2]);
+                parkour.getAdministrationManager().processAdminCommand(player, args[1], args[2], args);
                 break;
 
             case "cache":
@@ -508,7 +509,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
             case "hideall":
             case "leave":
             case "restart":
-                parkour.getParkourSessionManager().processCommand(player, commandLabel);
+                this.onCommand(sender, command, label, "session", commandLabel);
                 break;
 
             // parkourkit aliases

@@ -96,7 +96,8 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("OnCourse.SequentialCheckpoints.AlertPlayer", true);
 		this.setDefault("OnCourse.SneakToInteractItems", true);
 		this.setDefault("OnCourse.TreatLastCheckpointAsFinish", false);
-		this.setDefault("OnCourse.UseParkourKit", true);
+		this.setDefault("OnCourse.ParkourKit.Enabled", true);
+		this.setDefault("OnCourse.ParkourKit.IncludeVehicles", false);
 		this.setDefault("OnCourse.EnforceParkourCommands.Enabled", true);
 		this.setDefault("OnCourse.EnforceParkourCommands.Whitelist", Collections.singletonList("login"));
 

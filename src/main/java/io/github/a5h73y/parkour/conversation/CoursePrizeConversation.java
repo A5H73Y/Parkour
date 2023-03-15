@@ -118,9 +118,10 @@ public class CoursePrizeConversation extends ParkourConversation {
     private static class ChooseDisplayName extends BooleanPrompt {
 		@Override
 		public String getPromptText(ConversationContext context) {
-			return ChatColor.LIGHT_PURPLE + " Would you like to add a custom display name?\n" +
-					ChatColor.GREEN + "[yes, no]";
+			return ChatColor.LIGHT_PURPLE + " Would you like to add a custom display name?\n"
+                    + ChatColor.GREEN + "[yes, no]";
 		}
+
 		@Override
 		protected Prompt acceptValidatedInput(ConversationContext context, boolean addName) {
 			if (addName) {

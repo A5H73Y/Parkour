@@ -23,6 +23,7 @@ public class PlayerConfig extends Json {
     public static final String PARKOUR_LEVEL = "ParkourLevel";
     public static final String PARKOUR_RANK = "ParkourRank";
     public static final String LAST_REWARDED = "LastRewarded.";
+    public static final String START_PARKOUR_INVENTORY = "StartParkourInventory";
     public static final String INVENTORY = "Inventory";
     public static final String ARMOR = "Armor";
     public static final String HEALTH = "Health";
@@ -195,6 +196,16 @@ public class PlayerConfig extends Json {
                 setPlayerJoinLocation(player);
             }
         }
+    }
+
+    public void setSnapshotStartParkourInventory(Player player) {
+        if (!this.contains(SNAPSHOT + START_PARKOUR_INVENTORY)) {
+            this.setSerializable(SNAPSHOT + START_PARKOUR_INVENTORY, player.getInventory().getContents());
+        }
+    }
+
+    public ItemStack[] getSnapshotStartParkourInventory() {
+        return this.getSerializable(SNAPSHOT + START_PARKOUR_INVENTORY, ItemStack[].class);
     }
 
     public boolean hasPlayerDataSnapshot() {

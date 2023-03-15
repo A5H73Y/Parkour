@@ -21,6 +21,17 @@ import static io.github.a5h73y.parkour.type.course.ParkourEventType.RESTART;
 import static io.github.a5h73y.parkour.utility.TranslationUtils.sendConditionalValue;
 import static io.github.a5h73y.parkour.utility.TranslationUtils.sendValue;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import com.cryptomorin.xseries.XPotion;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.commands.CommandProcessor;
@@ -57,13 +68,6 @@ import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
@@ -162,6 +166,11 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			PlayerUtils.teleportToLocation(player, course.getCheckpoints().get(0).getLocation());
 		}
 		preparePlayerForCourse(player, course.getName());
+
+		// TODO finish me
+//		if (parkour.getParkourConfig().getBoolean("SaveItemsBoop")) {
+//			playerConfig.setSnapshotStartParkourInventory(player);
+//		}
 
 		// already on a different course
 		if (parkour.getParkourSessionManager().isPlaying(player)
@@ -760,7 +769,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	 */
 	public boolean hasPrizeCooldownDurationPassed(Player player, String courseName, boolean displayMessage) {
 		double rewardDelay = parkour.getConfigManager().getCourseConfig(courseName)
-				.getCourseSettingOrDefault(CourseConfig.REWARD_DELAY, 0);
+				.getCourseSettingOrDefault(CourseConfig.REWARD_DELAY, 0.0);
 
 		if (rewardDelay <= 0) {
 			return true;
@@ -1257,8 +1266,30 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		player.setHealth(Math.min(Math.max(1, playerConfig.getSnapshotHealth()), player.getMaxHealth()));
 		player.setFoodLevel(playerConfig.getSnapshotHunger());
 		player.setLevel(playerConfig.getSnapshotXpLevel());
+		List<ItemStack> items = getItemsToRestore(player, playerConfig);
 		restoreInventoryArmor(player, playerConfig);
+		items.forEach(itemStack -> player.getInventory().addItem(itemStack));
 		restoreGameMode(player);
+	}
+
+	private List<ItemStack> getItemsToRestore(Player player, PlayerConfig playerConfig) {
+		List<ItemStack> itemsToGiveBack = new ArrayList<>();
+		// TODO finish me
+//		if (parkour.getParkourConfig().getBoolean("OnFinish.GiveGainItemsBack")) {
+//			List<Material> yooo = Arrays.stream(playerConfig.getSnapshotStartParkourInventory())
+//					.filter(Objects::nonNull)
+//					.map(ItemStack::getType)
+//					.collect(Collectors.toList());
+//			List<String> parkourTools = getEachParkourToolMaterial();
+//
+//			itemsToGiveBack = Arrays.stream(player.getInventory().getContents())
+//					.filter(Objects::nonNull)
+//					.filter((itemStack) -> !parkourTools.contains(itemStack.getType().name()))
+//					.filter((itemStack) -> !yooo.contains(itemStack.getType()))
+//					.collect(Collectors.toList());
+//
+//		}
+		return itemsToGiveBack;
 	}
 
 	/**
@@ -1327,6 +1358,14 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		giveParkourTool(player, "ParkourTool.Restart");
 
 		player.updateInventory();
+	}
+
+	private List<String> getEachParkourToolMaterial() {
+		return parkour.getParkourConfig().getSection("ParkourTool").keySet()
+				.stream()
+				.filter(key -> key.endsWith(".Material"))
+				.map((path) -> parkour.getParkourConfig().getString("ParkourTool." + path))
+				.collect(Collectors.toList());
 	}
 
 	private void addItemsToInventory(Player player, List<ItemStack> items) {

@@ -15,6 +15,7 @@ import io.github.a5h73y.parkour.listener.PlayerMoveListener;
 import io.github.a5h73y.parkour.listener.SignListener;
 import io.github.a5h73y.parkour.listener.interact.AutoStartListener;
 import io.github.a5h73y.parkour.listener.move.ParkourBlockListener;
+import io.github.a5h73y.parkour.listener.move.VehicleMoveListener;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.ParkourUpdater;
 import io.github.a5h73y.parkour.other.PluginBackupUtil;
@@ -248,8 +249,11 @@ public class Parkour extends JavaPlugin {
         if (getDefaultConfig().getBoolean("AutoStart.Enabled")) {
             pluginManager.registerEvents(new AutoStartListener(this), this);
         }
-        if (getDefaultConfig().getBoolean("OnCourse.UseParkourKit")) {
+        if (getDefaultConfig().getBoolean("OnCourse.ParkourKit.Enabled")) {
             pluginManager.registerEvents(new ParkourBlockListener(this), this);
+        }
+        if (getDefaultConfig().getBoolean("OnCourse.ParkourKit.IncludeVehicles")) {
+            pluginManager.registerEvents(new VehicleMoveListener(this), this);
         }
     }
 

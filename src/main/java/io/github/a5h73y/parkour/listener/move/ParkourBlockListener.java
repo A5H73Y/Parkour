@@ -23,7 +23,7 @@ import org.bukkit.util.Vector;
 
 public class ParkourBlockListener extends AbstractPluginReceiver implements Listener {
 
-	private static final List<BlockFace> BLOCK_FACES =
+	public static final List<BlockFace> BLOCK_FACES =
 			Arrays.asList(BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST);
 
 	public ParkourBlockListener(final Parkour parkour) {

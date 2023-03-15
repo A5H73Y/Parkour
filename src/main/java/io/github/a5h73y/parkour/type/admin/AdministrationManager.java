@@ -279,7 +279,8 @@ public class AdministrationManager extends AbstractPluginReceiver {
 	 */
 	public void processAdminCommand(@NotNull CommandSender commandSender,
 	                                @NotNull String command,
-	                                @NotNull String argument) {
+	                                @NotNull String argument,
+									@Nullable String... args) {
 
 		switch (command.toLowerCase()) {
 			case "addwhitelist":
@@ -291,11 +292,11 @@ public class AdministrationManager extends AbstractPluginReceiver {
 				break;
 
 			case "disablecommand":
-				disableParkourCommand(commandSender, argument);
+				disableParkourCommand(commandSender, StringUtils.extractMessageFromArgs(args, 2));
 				break;
 
 			case "enablecommand":
-				enableParkourCommand(commandSender, argument);
+				enableParkourCommand(commandSender, StringUtils.extractMessageFromArgs(args, 2));
 				break;
 
 			default:

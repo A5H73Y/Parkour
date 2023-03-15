@@ -61,11 +61,11 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
 
             case "admin":
             case "administrator":
-                if (!ValidationUtils.validateArgs(commandSender, args, 3)) {
+                if (!ValidationUtils.validateArgs(commandSender, args, 3, 99)) {
                     return false;
                 }
 
-                parkour.getAdministrationManager().processAdminCommand(commandSender, args[1], args[2]);
+                parkour.getAdministrationManager().processAdminCommand(commandSender, args[1], args[2], args);
                 break;
 
             case "cache":
@@ -306,6 +306,8 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 } else if (!ValidationUtils.isPositiveInteger(args[2])) {
                     return false;
                 }
+
+                // TODO if (--force) then parkour.getPlayerManager().increaseCheckpoint(
 
                 parkour.getPlayerManager().manuallyIncreaseCheckpoint(
                         findPlayer(commandSender, args[1]), Integer.parseInt(args[2]));
