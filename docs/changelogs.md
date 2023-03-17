@@ -3,6 +3,22 @@ Changelogs
 
 Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon server start up. There will be no manual intervention, unless stated in breaking changes.
 
+## 7.2.0
+
+* Added ability to set a one-time fee for a course
+Added "ParkourTool.RemoveRightClickRestriction" to support geyser controls
+* Added "Other.Display.CurrencyName" to show or hide currency name in messages
+* Added Throwables to be ParkourTools
+* Ability to disable nested parkour commands
+* Added ability to affect vehicles with ParkourKit (OnCourse.ParkourKit.IncludeVehicles)
+* Added ability to return items achieved while on Course (OnFinish.GiveGainedItemsBack & OnLeave.GiveGainedItemsBack)
+* Fixed decimal rewarddelay not working
+* Fixed teleporting away from a Course detection
+* Fixed Restart cooldown being reset
+* Fixed existing session NPE
+* Small ParkourKit optimisation
+* Update dependencies
+
 ## 7.1.0
 * Improved ParkourTools to be more structured
 * Added ability for each ParkourTool to have individual cooldown and cooldown message

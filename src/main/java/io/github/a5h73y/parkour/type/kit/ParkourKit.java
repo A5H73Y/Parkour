@@ -20,6 +20,8 @@ public class ParkourKit implements Serializable {
 
     private final String name;
     private final Map<Material, ParkourKitAction> parkourActions;
+    private final boolean hasFloorActions;
+    private final boolean hasWallActions;
 
     /**
      * Construct a ParkourKit from the details.
@@ -31,6 +33,10 @@ public class ParkourKit implements Serializable {
     public ParkourKit(final String name, Map<Material, ParkourKitAction> parkourActions) {
         this.name = name;
         this.parkourActions = parkourActions;
+        this.hasFloorActions = parkourActions.values().stream()
+                .anyMatch(parkourKitAction -> parkourKitAction.getActionType().isFloorType());
+        this.hasWallActions = parkourActions.values().stream()
+                .anyMatch(parkourKitAction -> !parkourKitAction.getActionType().isFloorType());
     }
 
     /**
@@ -57,5 +63,13 @@ public class ParkourKit implements Serializable {
      */
     public String getName() {
         return name;
+    }
+
+    public boolean isHasFloorActions() {
+        return hasFloorActions;
+    }
+
+    public boolean isHasWallActions() {
+        return hasWallActions;
     }
 }

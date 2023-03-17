@@ -74,9 +74,9 @@ public class ParkourBlockListener extends AbstractPluginReceiver implements List
 
 		ParkourKitAction kitAction = parkourKit.getAction(belowMaterial);
 
-		if (kitAction != null) {
-			performBelowAction(player, kitAction);
-		} else {
+		if (kitAction != null && parkourKit.isHasFloorActions()) {
+			performFloorAction(player, kitAction);
+		} else if (parkourKit.isHasWallActions()) {
 			performWallAction(player, parkourKit);
 		}
 	}
@@ -110,7 +110,7 @@ public class ParkourBlockListener extends AbstractPluginReceiver implements List
 		}
 	}
 
-	private void performBelowAction(Player player, ParkourKitAction kitAction) {
+	private void performFloorAction(Player player, ParkourKitAction kitAction) {
 		switch (kitAction.getActionType()) {
 			case FINISH:
 				parkour.getPlayerManager().finishCourse(player);

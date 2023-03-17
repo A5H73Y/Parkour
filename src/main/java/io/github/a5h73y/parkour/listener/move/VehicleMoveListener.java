@@ -58,15 +58,14 @@ public class VehicleMoveListener extends AbstractPluginReceiver implements Liste
         Material belowMaterial = event.getVehicle().getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
         ParkourKitAction kitAction = parkourKit.getAction(belowMaterial);
 
-        if (kitAction != null) {
-            performBelowAction(player, event.getVehicle(), kitAction);
-        } else {
+        if (kitAction != null && parkourKit.isHasFloorActions()) {
+            performFloorAction(player, event.getVehicle(), kitAction);
+        } else if (parkourKit.isHasWallActions()) {
             performWallAction(player, event.getVehicle(), parkourKit);
         }
     }
 
-    private void performBelowAction(Player player, Vehicle vehicle, ParkourKitAction kitAction) {
-        Vector velocity = vehicle.getVelocity();
+    private void performFloorAction(Player player, Vehicle vehicle, ParkourKitAction kitAction) {
         switch (kitAction.getActionType()) {
             case FINISH:
                 parkour.getPlayerManager().finishCourse(player);
@@ -77,9 +76,7 @@ public class VehicleMoveListener extends AbstractPluginReceiver implements Liste
                 break;
 
             case LAUNCH:
-//                player.sendMessage(String.valueOf(velocity.getY()));
-                // TODO why is this so temperamental
-                velocity.setY(velocity.getY() + 5);
+                vehicle.setVelocity(new Vector(0, 0.5, 0));
                 break;
 
             case BOUNCE:
@@ -116,8 +113,6 @@ public class VehicleMoveListener extends AbstractPluginReceiver implements Liste
             default:
                 break;
         }
-
-        vehicle.setVelocity(velocity);
     }
 
     private void performWallAction(Player player, Vehicle vehicle, ParkourKit parkourKit) {
@@ -138,7 +133,7 @@ public class VehicleMoveListener extends AbstractPluginReceiver implements Liste
                         double z = blockFace == BlockFace.EAST || blockFace == BlockFace.WEST ? 0
                                 : blockFace == BlockFace.NORTH ? strength : -strength;
 
-                        vehicle.setVelocity(new Vector(x, 0.3, z));
+                        vehicle.setVelocity(new Vector(x, 0.5, z));
                         break;
                     default:
                         break;
