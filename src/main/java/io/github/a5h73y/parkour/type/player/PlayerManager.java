@@ -167,11 +167,6 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}
 		preparePlayerForCourse(player, course.getName());
 
-		// TODO finish me
-//		if (parkour.getParkourConfig().getBoolean("SaveItemsBoop")) {
-//			playerConfig.setSnapshotStartParkourInventory(player);
-//		}
-
 		// already on a different course
 		if (parkour.getParkourSessionManager().isPlaying(player)
 				&& !parkour.getParkourSessionManager().getParkourSession(player)
@@ -199,6 +194,12 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		if (!parkour.getParkourConfig().isTreatFirstCheckpointAsStart()
 				&& !parkour.getChallengeManager().hasPlayerBeenChallenged(player)) {
 			session.setStartTimer(true);
+		}
+
+		// take a snapshot of exactly what was in their inventory as they started the Course
+		if (parkour.getParkourConfig().getBoolean("OnFinish.GiveGainedItemsBack")
+				|| parkour.getParkourConfig().getBoolean("OnLeave.GiveGainedItemsBack")) {
+			playerConfig.setSnapshotStartParkourInventory(player);
 		}
 
 		parkour.getSoundsManager().playSound(player, SoundType.JOIN_COURSE);
@@ -276,7 +277,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			parkour.getCourseManager().runEventCommands(player, session, LEAVE);
 		}
 		prepareParkourPlayer(player);
-		restorePlayerData(player, playerConfig);
+		restorePlayerData(player, playerConfig, false);
 
 		if (!silent) {
 			playerConfig.resetPlayerDataSnapshot();
@@ -533,7 +534,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			parkour.getScoreboardManager().removeScoreboard(player);
 
 			if (courseConfig.hasLinkedCourse()) {
-				restorePlayerData(player, playerConfig);
+				restorePlayerData(player, playerConfig, true);
 				rewardPrize(player, session);
 				playerConfig.resetPlayerDataSnapshot();
 				playerConfig.resetSessionData();
@@ -545,7 +546,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 				if (teleportBeforePrize) {
 					teleportCourseCompletion(player, courseName);
 				}
-				restorePlayerData(player, playerConfig);
+				restorePlayerData(player, playerConfig, true);
 				rewardPrize(player, session);
 
 				if (!teleportBeforePrize) {
@@ -1262,33 +1263,33 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	 *
 	 * @param player player
 	 */
-	private void restorePlayerData(Player player, PlayerConfig playerConfig) {
+	private void restorePlayerData(Player player, PlayerConfig playerConfig, boolean finishedCourse) {
 		player.setHealth(Math.min(Math.max(1, playerConfig.getSnapshotHealth()), player.getMaxHealth()));
 		player.setFoodLevel(playerConfig.getSnapshotHunger());
 		player.setLevel(playerConfig.getSnapshotXpLevel());
-		List<ItemStack> items = getItemsToRestore(player, playerConfig);
+		List<ItemStack> items = getItemsToRestore(player, playerConfig, finishedCourse);
 		restoreInventoryArmor(player, playerConfig);
 		items.forEach(itemStack -> player.getInventory().addItem(itemStack));
 		restoreGameMode(player);
 	}
 
-	private List<ItemStack> getItemsToRestore(Player player, PlayerConfig playerConfig) {
+	private List<ItemStack> getItemsToRestore(Player player, PlayerConfig playerConfig, boolean finishedCourse) {
 		List<ItemStack> itemsToGiveBack = new ArrayList<>();
-		// TODO finish me
-//		if (parkour.getParkourConfig().getBoolean("OnFinish.GiveGainItemsBack")) {
-//			List<Material> yooo = Arrays.stream(playerConfig.getSnapshotStartParkourInventory())
-//					.filter(Objects::nonNull)
-//					.map(ItemStack::getType)
-//					.collect(Collectors.toList());
-//			List<String> parkourTools = getEachParkourToolMaterial();
-//
-//			itemsToGiveBack = Arrays.stream(player.getInventory().getContents())
-//					.filter(Objects::nonNull)
-//					.filter((itemStack) -> !parkourTools.contains(itemStack.getType().name()))
-//					.filter((itemStack) -> !yooo.contains(itemStack.getType()))
-//					.collect(Collectors.toList());
-//
-//		}
+		if (playerConfig.getSnapshotStartParkourInventory() != null
+				&& ((parkour.getParkourConfig().getBoolean("OnFinish.GiveGainedItemsBack") && finishedCourse)
+				|| (parkour.getParkourConfig().getBoolean("OnLeave.GiveGainedItemsBack") && !finishedCourse))) {
+			List<String> parkourTools = getEachParkourToolMaterial();
+			List<Material> startedMaterials = Arrays.stream(playerConfig.getSnapshotStartParkourInventory())
+					.filter(Objects::nonNull)
+					.map(ItemStack::getType)
+					.collect(Collectors.toList());
+
+			itemsToGiveBack = Arrays.stream(player.getInventory().getContents())
+					.filter(Objects::nonNull)
+					.filter((itemStack) -> !parkourTools.contains(itemStack.getType().name()))
+					.filter((itemStack) -> !startedMaterials.contains(itemStack.getType()))
+					.collect(Collectors.toList());
+		}
 		return itemsToGiveBack;
 	}
 

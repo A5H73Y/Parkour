@@ -112,10 +112,12 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("OnFinish.TeleportDelay", 0);
 		this.setDefault("OnFinish.TeleportToJoinLocation", false);
 		this.setDefault("OnFinish.UpdatePlayerDatabaseTime", true);
+		this.setDefault("OnFinish.GiveGainedItemsBack", false);
 
 		this.setDefault("OnLeave.TeleportToLinkedLobby", false);
 		this.setDefault("OnLeave.DestroyCourseProgress", true);
 		this.setDefault("OnLeave.TeleportAway", true);
+		this.setDefault("OnLeave.GiveGainedItemsBack", false);
 
 		this.setDefault("OnRestart.FullPlayerRestart", false);
 		this.setDefault("OnRestart.RequireConfirmation", false);
