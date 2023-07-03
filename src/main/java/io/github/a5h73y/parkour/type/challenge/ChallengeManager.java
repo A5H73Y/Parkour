@@ -178,7 +178,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
      */
     public boolean hasPlayerBeenChallenged(Player player) {
         return hasPlayerBeenInvited(player)
-                || challenges.values().stream().anyMatch(challenge -> challenge.isPlayerParticipating(player));
+                || challenges.values().stream().filter(challenge -> challenge.hasStarted()).anyMatch(challenge -> challenge.isPlayerParticipating(player));
     }
 
     /**
@@ -248,7 +248,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
     public void completeChallenge(Player winner) {
         Challenge challenge = getChallengeForPlayer(winner);
 
-        if (challenge != null && !challenge.isForfeited(winner)) {
+        if (challenge != null && challenge.hasStarted() && !challenge.isForfeited(winner)) {
             removeChallenge(challenge.getChallengeHost());
 
             TranslationUtils.sendValueTranslation("Parkour.Challenge.Winner",
@@ -360,6 +360,9 @@ public class ChallengeManager extends AbstractPluginReceiver {
             parkour.getParkourSessionManager().forceInvisible(participant);
         }
 
+        if (parkour.getParkourSessionManager().isPlaying(participant)) {
+        	parkour.getPlayerManager().leaveCourse(participant, false);
+        }
         parkour.getPlayerManager().joinCourse(participant, challenge.getCourseName());
         participant.setWalkSpeed(0f);
         PlayerUtils.applyPotionEffect(PotionEffectType.JUMP, 100000, 100000, participant);
