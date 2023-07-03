@@ -26,8 +26,11 @@ public class ParkourBlockListener extends AbstractPluginReceiver implements List
 	public static final List<BlockFace> BLOCK_FACES =
 			Arrays.asList(BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST);
 
+	private final boolean floatingClosestBlock;
+
 	public ParkourBlockListener(final Parkour parkour) {
 		super(parkour);
+		this.floatingClosestBlock = parkour.getParkourConfig().getBoolean("OnCourse.ParkourKit.FloatingClosestBlock");
 	}
 
 	/**
@@ -64,7 +67,9 @@ public class ParkourBlockListener extends AbstractPluginReceiver implements List
 		}
 
 		// they are clearly hovering and another block is holding them up
-		if (player.isOnGround() && XBlock.isAir(belowMaterial)) {
+		if (player.isOnGround()
+				&& this.floatingClosestBlock
+				&& XBlock.isAir(belowMaterial)) {
 			belowMaterial = calculateClosestBlock(player);
 		}
 

@@ -5,6 +5,13 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.DEFAULT_WALK_SPEED
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 import static io.github.a5h73y.parkour.other.ParkourConstants.PLAYER_PLACEHOLDER;
 
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.WeakHashMap;
+
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.plugin.EconomyApi;
@@ -15,12 +22,6 @@ import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.WeakHashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
@@ -178,7 +179,8 @@ public class ChallengeManager extends AbstractPluginReceiver {
      */
     public boolean hasPlayerBeenChallenged(Player player) {
         return hasPlayerBeenInvited(player)
-                || challenges.values().stream().filter(challenge -> challenge.hasStarted()).anyMatch(challenge -> challenge.isPlayerParticipating(player));
+                || challenges.values().stream()
+                .anyMatch(challenge -> challenge.isPlayerParticipating(player));
     }
 
     /**
@@ -267,6 +269,8 @@ public class ChallengeManager extends AbstractPluginReceiver {
 
                     if (challenge.getWager() != null) {
                         parkour.getEconomyApi().chargePlayer(loser, challenge.getWager());
+                        TranslationUtils.sendValueTranslation("Parkour.Challenge.LoserWager",
+                                parkour.getEconomyApi().getAmount(challenge.getWager()), loser);
                     }
                 }
             }
@@ -361,7 +365,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
         }
 
         if (parkour.getParkourSessionManager().isPlaying(participant)) {
-        	parkour.getPlayerManager().leaveCourse(participant, false);
+            parkour.getPlayerManager().leaveCourse(participant, true);
         }
         parkour.getPlayerManager().joinCourse(participant, challenge.getCourseName());
         participant.setWalkSpeed(0f);
@@ -516,15 +520,9 @@ public class ChallengeManager extends AbstractPluginReceiver {
     }
 
     private void processSendInviteCommand(Player player, String... args) {
-        Challenge challenge = getChallengeForHost(player);
+        Challenge challenge = getChallengeForPlayer(player);
 
-        if (challenge == null) {
-            TranslationUtils.sendMessage(player, "You have not created a Challenge.");
-            return;
-        }
-
-        if (challenge.hasStarted()) {
-            TranslationUtils.sendMessage(player, "Your Challenge has already started.");
+        if (!validateChallengeAuthorityValidity(player, challenge)) {
             return;
         }
 
@@ -537,15 +535,9 @@ public class ChallengeManager extends AbstractPluginReceiver {
     }
 
     private void processStartCommand(Player player) {
-        Challenge challenge = getChallengeForHost(player);
+        Challenge challenge = getChallengeForPlayer(player);
 
-        if (challenge == null) {
-            TranslationUtils.sendMessage(player, "You have not created a challenge.");
-            return;
-        }
-
-        if (challenge.hasStarted()) {
-            TranslationUtils.sendMessage(player, "The Challenge has already started!");
+        if (!validateChallengeAuthorityValidity(player, challenge)) {
             return;
         }
 
@@ -557,6 +549,20 @@ public class ChallengeManager extends AbstractPluginReceiver {
         prepareParticipants(challenge);
         beginCountdown(challenge);
         challenge.markStarted();
+    }
+
+    private void processTerminateCommand(Player player) {
+        Challenge challenge = getChallengeForPlayer(player);
+
+        if (!validateChallengeAuthorityValidity(player, challenge)) {
+            return;
+        }
+
+        challenge.getParticipatingPlayers().forEach(participantId ->
+                TranslationUtils.sendMessage(Bukkit.getPlayer(participantId), "The host has terminated the Challenge."));
+
+        invites.entrySet().removeIf(entry -> entry.getValue().getChallenge().equals(challenge));
+        removeChallenge(player);
     }
 
     private void processInviteReceiveCommand(Player player, boolean accepted) {
@@ -574,24 +580,23 @@ public class ChallengeManager extends AbstractPluginReceiver {
         }
     }
 
-    private void processTerminateCommand(Player hostPlayer) {
-        Challenge challenge = getChallengeForHost(hostPlayer);
-
+    private boolean validateChallengeAuthorityValidity(Player player, Challenge challenge) {
         if (challenge == null) {
-            TranslationUtils.sendMessage(hostPlayer, "You have not created a Challenge.");
-            return;
+            TranslationUtils.sendMessage(player, "You are not on a Challenge.");
+            return false;
+        }
+
+        if (!challenge.getChallengeHost().getName().equals(player.getName())) {
+            TranslationUtils.sendMessage(player, "You are not the host of this Challenge.");
+            return false;
         }
 
         if (challenge.hasStarted()) {
-            TranslationUtils.sendMessage(hostPlayer, "You can not terminate a Challenge in progress.");
-            return;
+            TranslationUtils.sendMessage(player, "The Challenge has already started!");
+            return false;
         }
 
-        challenge.getParticipatingPlayers().forEach(participantId ->
-                TranslationUtils.sendMessage(Bukkit.getPlayer(participantId), "The host has terminated the Challenge."));
-
-        invites.entrySet().removeIf(entry -> entry.getValue().getChallenge().equals(challenge));
-        removeChallenge(hostPlayer);
+        return true;
     }
 
     /**
@@ -645,6 +650,11 @@ public class ChallengeManager extends AbstractPluginReceiver {
 
         if (parkour.getParkourSessionManager().isPlaying(player)) {
             TranslationUtils.sendMessage(player, "You are already on a Course!");
+            return false;
+        }
+
+        if (getChallengeForPlayer(player) != null) {
+            TranslationUtils.sendTranslation("Error.OnChallenge", player);
             return false;
         }
 

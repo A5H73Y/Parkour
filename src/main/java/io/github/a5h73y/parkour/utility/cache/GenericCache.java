@@ -44,14 +44,19 @@ public class GenericCache<K, V> implements IGenericCache<K, V> {
     }
 
     protected Set<K> getExpiredKeys() {
-        return this.cacheMap.keySet().parallelStream()
+        return this.cacheMap.keySet()
+                .parallelStream()
                 .filter(this::isExpired)
                 .collect(Collectors.toSet());
     }
 
     protected boolean isExpired(K key) {
-        LocalDateTime expirationDateTime = this.cacheMap.get(key).getCreatedAt().plus(this.cacheTimeout, ChronoUnit.SECONDS);
-        return LocalDateTime.now().isAfter(expirationDateTime);
+        boolean result = true;
+        if (this.cacheMap.containsKey(key)) {
+            LocalDateTime expirationDateTime = this.cacheMap.get(key).getCreatedAt().plus(this.cacheTimeout, ChronoUnit.SECONDS);
+            result = LocalDateTime.now().isAfter(expirationDateTime);
+        }
+        return result;
     }
 
     @Override

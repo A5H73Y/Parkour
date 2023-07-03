@@ -22,6 +22,10 @@ public abstract class PluginWrapper extends AbstractPluginReceiver {
 	 */
 	public abstract String getPluginName();
 
+	public String getPluginDisplayName() {
+		return this.getPluginName();
+	}
+
 	/**
 	 * Initialise the startup of the plugin on Construction of object.
 	 */
@@ -46,11 +50,11 @@ public abstract class PluginWrapper extends AbstractPluginReceiver {
 		// otherwise display error
 		if (externalPlugin != null && externalPlugin.isEnabled()) {
 			enabled = true;
-			PluginUtils.log("[" + getPluginName() + "] Successfully linked. "
+			PluginUtils.log("[" + getPluginDisplayName() + "] Successfully linked. "
 					+ "Version: " + externalPlugin.getDescription().getVersion(), 0);
 
 		} else {
-			PluginUtils.log("[" + getPluginName() + "] Plugin is missing, link was unsuccessful.", 1);
+			PluginUtils.log("[" + getPluginDisplayName() + "] Plugin is missing, link was unsuccessful.", 1);
 		}
 	}
 

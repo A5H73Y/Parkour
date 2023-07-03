@@ -55,4 +55,8 @@ public class PermissionVault extends PluginWrapper {
 		return "Vault";
 	}
 
+	@Override
+	public String getPluginDisplayName() {
+		return "Vault (Permissions)";
+	}
 }

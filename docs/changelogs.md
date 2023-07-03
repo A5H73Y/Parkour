@@ -6,7 +6,7 @@ Please note that each version of Parkour is backwards compatible with the previo
 ## 7.2.0
 
 * Added ability to set a one-time fee for a course
-Added "ParkourTool.RemoveRightClickRestriction" to support geyser controls
+* Added "ParkourTool.RemoveRightClickRestriction" to support geyser controls
 * Added "Other.Display.CurrencyName" to show or hide currency name in messages
 * Added Throwables to be ParkourTools
 * Ability to disable nested parkour commands

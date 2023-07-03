@@ -355,4 +355,9 @@ public class EconomyApi extends PluginWrapper {
 
 		TranslationUtils.sendMessage(commandSender, args[2] + "'s balance: &b" + getAmount(economy.getBalance(targetPlayer)));
 	}
+
+	@Override
+	public String getPluginDisplayName() {
+		return "Vault (Economy)";
+	}
 }

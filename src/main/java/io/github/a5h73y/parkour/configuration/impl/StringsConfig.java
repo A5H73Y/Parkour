@@ -94,6 +94,7 @@ public class StringsConfig extends Yaml {
 		this.setDefault("Parkour.Challenge.Winner", "Congratulations! You won the challenge on &b%VALUE%!");
 		this.setDefault("Parkour.Challenge.WinnerWager", "You have been rewarded &b%VALUE% &ffor winning the wager!");
 		this.setDefault("Parkour.Challenge.Loser", "&b%PLAYER% &fhas completed &b%COURSE% &fbefore you!");
+		this.setDefault("Parkour.Challenge.LoserWager", "You have had &b%VALUE% &fdeducted from your balance!");
 
 		this.setDefault("Event.Join", "This server uses &bParkour &3%VALUE%");
 		this.setDefault("Event.Checkpoint", "Checkpoint set to &b%CURRENT% &8/ &7%TOTAL%");
