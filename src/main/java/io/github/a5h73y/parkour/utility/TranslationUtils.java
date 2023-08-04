@@ -7,7 +7,11 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.COURSE_PLACEHOLDER
 import static io.github.a5h73y.parkour.other.ParkourConstants.DEATHS_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.PLAYER_DISPLAY_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.PLAYER_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.TIME_H_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.TIME_MS_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.TIME_M_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.TIME_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.TIME_S_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.TOTAL_CHECKPOINT_PLACEHOLDER;
 import static io.github.a5h73y.parkour.utility.StringUtils.colour;
 
@@ -16,6 +20,8 @@ import io.github.a5h73y.parkour.type.course.ParkourEventType;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import io.github.a5h73y.parkour.utility.time.MillisecondConverter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -392,11 +398,16 @@ public class TranslationUtils {
 	 * @return updated input message
 	 */
 	public static String replaceAllParkourPlaceholders(String input, Player player, ParkourSession session) {
+		MillisecondConverter converter = new MillisecondConverter(session.getAccumulatedTime());
 		String result = input.replace(PLAYER_PLACEHOLDER, player.getName())
 				.replace(PLAYER_DISPLAY_PLACEHOLDER, player.getDisplayName())
 				.replace(COURSE_PLACEHOLDER, session.getCourse().getDisplayName())
 				.replace(DEATHS_PLACEHOLDER, String.valueOf(session.getDeaths()))
 				.replace(TIME_PLACEHOLDER, session.getDisplayTime())
+				.replace(TIME_MS_PLACEHOLDER, String.valueOf(session.getAccumulatedTime()))
+				.replace(TIME_S_PLACEHOLDER, String.valueOf(converter.getTotalSeconds()))
+				.replace(TIME_M_PLACEHOLDER, String.valueOf(converter.getTotalMinutes()))
+				.replace(TIME_H_PLACEHOLDER, String.valueOf(converter.getTotalHours()))
 				.replace(CHECKPOINT_PLACEHOLDER, String.valueOf(session.getCurrentCheckpoint()))
 				.replace(TOTAL_CHECKPOINT_PLACEHOLDER, String.valueOf(session.getCourse().getNumberOfCheckpoints()));
 		return Parkour.getInstance().getPlaceholderApi().parsePlaceholders(player, result);

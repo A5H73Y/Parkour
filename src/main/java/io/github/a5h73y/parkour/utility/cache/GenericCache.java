@@ -53,7 +53,8 @@ public class GenericCache<K, V> implements IGenericCache<K, V> {
     protected boolean isExpired(K key) {
         boolean result = true;
         if (this.cacheMap.containsKey(key)) {
-            LocalDateTime expirationDateTime = this.cacheMap.get(key).getCreatedAt().plus(this.cacheTimeout, ChronoUnit.SECONDS);
+            LocalDateTime expirationDateTime = this.cacheMap.get(key)
+                    .getCreatedAt().plus(this.cacheTimeout, ChronoUnit.SECONDS);
             result = LocalDateTime.now().isAfter(expirationDateTime);
         }
         return result;

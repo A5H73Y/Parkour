@@ -3,6 +3,14 @@ Changelogs
 
 Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon server start up. There will be no manual intervention, unless stated in breaking changes.
 
+## 7.2.1
+
+* Added option to disable "OnCourse.ParkourKit.FloatingClosestBlock"
+* Improvement to use centre of each block when calculating closest block
+* Fixed various Challenge bugs
+* Fix NPE with placeholders
+* Update dependency versions
+
 ## 7.2.0
 
 * Added ability to set a one-time fee for a course

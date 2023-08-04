@@ -246,8 +246,12 @@ _They **must** be uppercase._
 * `%PLAYER_DISPLAY%` the Player's display name
 * `%COURSE%` the Course's name
 * `%DEATHS%` the amount of deaths accumulated
-* `%TIME%` the amount of time accumulated
 * `%CHECKPOINT%` the current checkpoint number
+* `%TIME%` a formatted output of time accumulated 
+* `%TIME_MS%` the total amount of milliseconds accumulated
+* `%TIME_S%` the total amount of seconds accumulated
+* `%TIME_M%` the total amount of minutes accumulated
+* `%TIME_H%` the total amount of hours accumulated
 
 ## Adding a Join Item
 

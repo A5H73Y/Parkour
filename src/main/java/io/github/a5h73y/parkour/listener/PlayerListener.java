@@ -251,8 +251,8 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
 
         parkour.getPlayerManager().teardownParkourPlayer(player);
 
-        if (player.isBanned()
-                && parkour.getParkourConfig().getBoolean("Other.OnPlayerBan.ResetParkourInfo")) {
+        if (parkour.getParkourConfig().getBoolean("Other.OnPlayerBan.ResetParkourInfo")
+                && player.isBanned()) {
             parkour.getPlayerManager().resetPlayer(player);
         }
     }

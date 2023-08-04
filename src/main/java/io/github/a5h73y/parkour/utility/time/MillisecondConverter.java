@@ -41,6 +41,10 @@ public class MillisecondConverter {
         this.seconds = seconds;
     }
 
+    public long getTotalSeconds() {
+        return seconds;
+    }
+
     public long getMinutes() {
         return minutes % 60;
     }
@@ -49,12 +53,20 @@ public class MillisecondConverter {
         this.minutes = minutes;
     }
 
+    public long getTotalMinutes() {
+        return minutes;
+    }
+
     public long getHours() {
         return hours % 24;
     }
 
     public void setHours(long hours) {
         this.hours = hours;
+    }
+
+    public long getTotalHours() {
+        return hours;
     }
 
     public long getDays() {

@@ -157,7 +157,11 @@ public class ParkourSession implements ParkourSerializable {
     }
 
     public String getDisplayTime() {
-        return DateTimeUtils.displayCurrentTime(hasFinished() ? getTimeFinished() : getCurrentTime());
+        return DateTimeUtils.displayCurrentTime(getAccumulatedTime());
+    }
+
+    public long getAccumulatedTime() {
+        return hasFinished() ? getTimeFinished() : getCurrentTime();
     }
 
     public void recalculateTime() {

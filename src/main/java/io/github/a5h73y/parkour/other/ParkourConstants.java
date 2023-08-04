@@ -26,6 +26,14 @@ public class ParkourConstants {
 
     public static final String TIME_PLACEHOLDER = "%TIME%";
 
+    public static final String TIME_MS_PLACEHOLDER = "%TIME_MS%";
+
+    public static final String TIME_S_PLACEHOLDER = "%TIME_S%";
+
+    public static final String TIME_M_PLACEHOLDER = "%TIME_M%";
+
+    public static final String TIME_H_PLACEHOLDER = "%TIME_H%";
+
     public static final String AMOUNT_PLACEHOLDER = "%AMOUNT%";
 
     public static final String PARKOUR_RANK_PLACEHOLDER = "%RANK%";
