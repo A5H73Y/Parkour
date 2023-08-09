@@ -82,4 +82,8 @@ summary.deprecated {
     padding-top: 0;
 }
 
+.markdown-section ol, .markdown-section ul {
+    margin: 0;
+}
+
 

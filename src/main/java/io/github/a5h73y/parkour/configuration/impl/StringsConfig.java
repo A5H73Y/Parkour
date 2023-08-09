@@ -155,7 +155,7 @@ public class StringsConfig extends Yaml {
 		this.setDefault("Help.SignCommands", "To display the sign commands menu, enter &b/pa cmds signs");
 		this.setDefault("Help.CommandSyntax", "&7Syntax: &f/pa %VALUE%");
 		this.setDefault("Help.ConsoleCommandSyntax", "&7Syntax: &f%VALUE%");
-		this.setDefault("Help.CommandExample", "&7Example: &f%VALUE%");
+		this.setDefault("Help.CommandExamples", "&7Examples:");
 		this.setDefault("Help.CommandUsage", "&3/pa &b%COMMAND%&e%ARGUMENTS% &0: &f%TITLE%");
 		this.setDefault("Help.SignUsage", "&b%COMMAND% &e%SHORTCUT% &0: &f%DESCRIPTION%");
 		this.setDefault("Help.DisplayValue", "%TITLE%: &b%VALUE%");

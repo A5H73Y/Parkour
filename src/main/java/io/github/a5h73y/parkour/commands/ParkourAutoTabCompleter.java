@@ -125,7 +125,7 @@ public class ParkourAutoTabCompleter extends AbstractPluginReceiver implements T
         }
 
         return parkour.getParkourCommands().getCommandUsages().stream()
-                .filter(commandUsage -> commandUsage.getExample() != null)
+                .filter(commandUsage -> commandUsage.getExamples() != null)
                 .filter(commandUsage -> commandUsage.getPermission() == null
                         || player.hasPermission(commandUsage.getPermission()))
                 .map(CommandUsage::getCommand)

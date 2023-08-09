@@ -41,11 +41,11 @@ function appendData(data, elementId, markupCallback) {
 }
 
 function createCommandSummary(command) {
-    const yoyo = group[command.commandGroup];
+    const group = group[command.commandGroup];
     const styleClass = command.deprecated ? 'deprecated' : '';
     let result = `<details>
                     <summary class="${styleClass}">
-                        <strong>${command.command}</strong> - ${command.title} <em>${yoyo}</em>
+                        <strong>${command.command}</strong> - ${command.title} <em>${group || ''}</em>
                     </summary>
                     <div>
                         <table>
@@ -66,8 +66,8 @@ function createCommandSummary(command) {
                                     <td><code>/pa ${command.command} ${command.arguments || ''}</code></td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">Example</th>
-                                    <td><code>${command.example}</code></td>
+                                    <th scope="row">Examples</th>
+                                    <td><ul>${command.examples.map(example => `<li><code>${example}</code></li>`).join(' ')}</ul></td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Permission</th>

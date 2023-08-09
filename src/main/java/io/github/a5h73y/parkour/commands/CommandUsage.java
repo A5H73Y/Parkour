@@ -4,6 +4,8 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.ARGUMENTS_PLACEHOL
 import static io.github.a5h73y.parkour.other.ParkourConstants.COMMAND_PLACEHOLDER;
 import static io.github.a5h73y.parkour.utility.permission.PermissionUtils.WILDCARD;
 
+import java.util.List;
+
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.command.CommandSender;
@@ -24,7 +26,7 @@ public class CommandUsage {
 	private String command;
 	private String title;
 	private String arguments;
-	private String example;
+	private List<String> examples;
 	private String description;
 	private String permission;
 	private String commandGroup;
@@ -49,7 +51,10 @@ public class CommandUsage {
 			String commandSyntax = arguments != null ? command + SPACE + arguments : command;
 			TranslationUtils.sendValueTranslation("Help.CommandSyntax", commandSyntax, false, commandSender);
 		}
-		TranslationUtils.sendValueTranslation("Help.CommandExample", example, false, commandSender);
+		if (getExamples() != null && !getExamples().isEmpty()) {
+			TranslationUtils.sendTranslation("Help.CommandExamples", false, commandSender);
+			getExamples().forEach(example -> commandSender.sendMessage("  " + example));
+		}
 		TranslationUtils.sendHeading("Description", commandSender);
 		commandSender.sendMessage(description);
 	}
@@ -97,8 +102,8 @@ public class CommandUsage {
 		return arguments;
 	}
 
-	public String getExample() {
-		return example;
+	public List<String> getExamples() {
+		return examples;
 	}
 
 	public String getDescription() {

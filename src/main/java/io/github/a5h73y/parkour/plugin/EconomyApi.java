@@ -8,6 +8,7 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_UNKNOWN_PLAY
 import static org.bukkit.Bukkit.getServer;
 
 import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
@@ -278,9 +279,10 @@ public class EconomyApi extends PluginWrapper {
 			return;
 		}
 
-		boolean value = args.length == 5 && args[4].equalsIgnoreCase("true") ? true : false;
-		parkour.getConfigManager().getCourseConfig(args[2]).setEconomyJoiningFee(Double.parseDouble(args[3]));
-		parkour.getConfigManager().getCourseConfig(args[2]).setEconomyOneTimeFee(value);
+		boolean oneTimeFee = args.length == 5 && args[4].equalsIgnoreCase("true");
+		CourseConfig config = parkour.getConfigManager().getCourseConfig(args[2]);
+		config.setEconomyJoiningFee(Double.parseDouble(args[3]));
+		config.setEconomyOneTimeFee(oneTimeFee);
 		TranslationUtils.sendPropertySet(commandSender, "Join Fee", args[2], args[3]);
 	}
 
