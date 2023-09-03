@@ -332,6 +332,77 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
     }
 
     /**
+     * Get the sum of Player's accumulated deaths.
+     * @param player target offline player
+     * @return total deaths
+     */
+    public int getAccumulatedDeaths(@NotNull OfflinePlayer player) {
+        int result = 0;
+        try (PreparedStatement statement = getDatabaseConnection().prepareStatement(
+                "SELECT SUM(deaths) AS total FROM time WHERE playerId = ?")) {
+            statement.setString(1, getPlayerId(player));
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                result = resultSet.getInt("total");
+            }
+            resultSet.getStatement().close();
+        } catch (SQLException e) {
+            logSqlException(e);
+        }
+
+        return result;
+    }
+
+    /**
+     * Get the sum of Player's accumulated time in milliseconds.
+     * @param player target offline player
+     * @return total time in ms
+     */
+    public long getAccumulatedTime(@NotNull OfflinePlayer player) {
+        long result = 0;
+        try (PreparedStatement statement = getDatabaseConnection().prepareStatement(
+                "SELECT SUM(time) AS total FROM time WHERE playerId = ?")) {
+            statement.setString(1, getPlayerId(player));
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                result = resultSet.getLong("total");
+            }
+            resultSet.getStatement().close();
+        } catch (SQLException e) {
+            logSqlException(e);
+        }
+
+        return result;
+    }
+
+    /**
+     * Get the sum of Player's recorded times.
+     * @param player target offline player
+     * @return total times
+     */
+    public int getAccumulatedTimes(@NotNull OfflinePlayer player) {
+        int result = 0;
+        try (PreparedStatement statement = getDatabaseConnection().prepareStatement(
+                "SELECT COUNT(*) AS total FROM time WHERE playerId = ?")) {
+            statement.setString(1, getPlayerId(player));
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                result = resultSet.getInt("total");
+            }
+            resultSet.getStatement().close();
+        } catch (SQLException e) {
+            logSqlException(e);
+        }
+
+        return result;
+    }
+
+
+
+    /**
      * Determine if this is the best time on the course.
      *
      * @param courseName name of the course

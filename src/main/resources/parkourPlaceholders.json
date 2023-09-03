@@ -90,6 +90,31 @@
         "placeholder": "%parkour_player_personal_best_(course)_deaths%",
         "output": "3",
         "description": "The number of deaths accumulated for the Player's personal best time on the specified Course."
+      },
+      {
+        "placeholder": "%parkour_player_total_leaderboard_deaths%",
+        "output": "53",
+        "description": "The number of recorded deaths accumulated by the Player across all Courses in the Leaderboards."
+      },
+      {
+        "placeholder": "%parkour_player_total_leaderboard_time%",
+        "output":  "01:02:34",
+        "description": "The accumulated recorded time by the Player across all Courses in the Leaderboards."
+      },
+      {
+        "placeholder": "%parkour_player_total_leaderboard_times%",
+        "output": "9",
+        "description": "The accumulated number of leaderboard times recorded by the Player across all Courses."
+      },
+      {
+        "placeholder": "%parkour_player_total_playing_deaths%",
+        "output": "153",
+        "description": "The total number of recorded deaths accumulated by the Player across all Courses."
+      },
+      {
+        "placeholder": "%parkour_player_total_playing_time%",
+        "output":  "02:03:45",
+        "description": "The total recorded time by the Player across all Courses."
       }
     ]
   },

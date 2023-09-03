@@ -378,6 +378,10 @@ public class DefaultConfig extends Yaml {
 		return this.getSerializableList(COURSE_DEFAULT_SETTINGS + JOIN_ITEMS, ItemStack.class);
 	}
 
+	/**
+	 * Add Material to default join items.
+	 * @param itemStack item stack to add
+	 */
 	public void addDefaultJoinItem(ItemStack itemStack) {
 		List<String> results = this.getStringList(COURSE_DEFAULT_SETTINGS + JOIN_ITEMS);
 		results.add(Parkour.getInstance().getConfigManager().getItemStackSerializable().serialize(itemStack));

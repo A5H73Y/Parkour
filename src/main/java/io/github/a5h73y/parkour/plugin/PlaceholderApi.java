@@ -3,6 +3,8 @@ package io.github.a5h73y.parkour.plugin;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.ParkourPlaceholders;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.utility.cache.CacheValue;
+import java.util.concurrent.ConcurrentMap;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -93,6 +95,18 @@ public class PlaceholderApi extends PluginWrapper {
 	public void clearCache() {
 		if (isEnabled()) {
 			this.getPlaceholders().clearCache();
+		}
+	}
+
+	public void printCacheSummary(CommandSender commandSender) {
+		if (isEnabled()) {
+			getPlaceholders().getCache().clean();
+			ConcurrentMap<String, CacheValue<String>> cacheMap = getPlaceholders().getCache().getCacheMap();
+			TranslationUtils.sendHeading(cacheMap.size() + " placeholders:", commandSender);
+			cacheMap.forEach((key, value) ->
+					commandSender.sendMessage(key + ": " + value.getValue()));
+		} else {
+			TranslationUtils.sendMessage(commandSender, "Placeholders are disabled.");
 		}
 	}
 }

@@ -86,12 +86,15 @@ public class ParkoinsVault extends AbstractEconomy {
 	@Override
 	public EconomyResponse withdrawPlayer(String playerName, double amount) {
 		if (!hasAccount(playerName)) {
-			return new EconomyResponse(amount, 0, EconomyResponse.ResponseType.FAILURE, "User doesn't have an account.");
+			return new EconomyResponse(amount, 0,
+					EconomyResponse.ResponseType.FAILURE, "User doesn't have an account.");
 		} else if (!has(playerName, amount)) {
-			return new EconomyResponse(amount, getBalance(playerName), EconomyResponse.ResponseType.FAILURE, "User doesn't have enough Parkoins.");
+			return new EconomyResponse(amount, getBalance(playerName),
+					EconomyResponse.ResponseType.FAILURE, "User doesn't have enough Parkoins.");
 		} else {
 			getPlayerConfig(playerName).decreaseParkoins(amount);
-			return new EconomyResponse(amount, getBalance(playerName), EconomyResponse.ResponseType.SUCCESS, "");
+			return new EconomyResponse(amount, getBalance(playerName),
+					EconomyResponse.ResponseType.SUCCESS, "");
 		}
 	}
 

@@ -141,9 +141,9 @@ public class Parkour extends JavaPlugin {
     /**
      * Get the Default config.
      * Overrides the default getConfig() method.
-     * @deprecated use getDefaultConfig()
      *
      * @return default config
+     * @deprecated use getDefaultConfig()
      */
     @Deprecated
     @Override

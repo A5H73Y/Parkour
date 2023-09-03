@@ -94,7 +94,8 @@ public class CourseDataUpgradeTask extends TimedLegacyConfigUpgradeTask {
 
 			List<String> results = itemStacks.stream()
 					.map(itemStack ->
-							getParkourUpgrader().getNewConfigManager().getItemStackSerializable().serialize(itemStack))
+							getParkourUpgrader().getNewConfigManager()
+									.getItemStackSerializable().serialize(itemStack))
 					.collect(Collectors.toList());
 
 			newCourseConfig.set(CourseConfig.JOIN_ITEMS, results);

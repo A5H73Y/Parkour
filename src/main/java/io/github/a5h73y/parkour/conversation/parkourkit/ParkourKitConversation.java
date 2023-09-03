@@ -77,6 +77,7 @@ public abstract class ParkourKitConversation extends ParkourConversation {
 
 	/**
 	 * Provide kit name to bypass name input prompts.
+	 *
 	 * @param kitName kit name
 	 * @return conversation instance
 	 */

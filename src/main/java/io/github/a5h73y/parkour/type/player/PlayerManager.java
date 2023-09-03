@@ -21,17 +21,6 @@ import static io.github.a5h73y.parkour.type.course.ParkourEventType.RESTART;
 import static io.github.a5h73y.parkour.utility.TranslationUtils.sendConditionalValue;
 import static io.github.a5h73y.parkour.utility.TranslationUtils.sendValue;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 import com.cryptomorin.xseries.XPotion;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.commands.CommandProcessor;
@@ -68,6 +57,16 @@ import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
@@ -285,6 +284,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}
 		playerConfig.resetSessionData();
 		playerConfig.removeExistingSessionCourseName();
+		playerConfig.recordStatistics(session);
 
 		parkour.getParkourSessionManager().forceVisible(player);
 		parkour.getScoreboardManager().removeScoreboard(player);
@@ -529,6 +529,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		parkour.getSoundsManager().playSound(player, SoundType.COURSE_FINISHED);
 		PlayerConfig playerConfig = parkour.getConfigManager().getPlayerConfig(player);
 		CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(courseName);
+		playerConfig.recordStatistics(session);
 
 		Bukkit.getScheduler().scheduleSyncDelayedTask(parkour, () -> {
 			parkour.getScoreboardManager().removeScoreboard(player);
@@ -608,6 +609,11 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		Bukkit.getServer().getPluginManager().callEvent(new ParkourRestartEvent(player, session.getCourseName()));
 	}
 
+	/**
+	 * Trigger a fast restart of the Course.
+	 * The minimum amount of action required to safely restart the Player on the Course.
+	 * @param player player
+	 */
 	public void fastRestartCourse(Player player) {
 		ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
 

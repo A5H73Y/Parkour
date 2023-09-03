@@ -26,7 +26,13 @@ import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_LEVEL_ADD
 import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_ONCE;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_PARKOINS;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import com.google.common.io.Files;
+import de.leonhard.storage.sections.FlatFileSection;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.commands.CommandProcessor;
 import io.github.a5h73y.parkour.conversation.CoursePrizeConversation;
@@ -43,11 +49,6 @@ import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import de.leonhard.storage.sections.FlatFileSection;
 import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.Conversable;
 import org.bukkit.entity.Player;
@@ -199,8 +200,8 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 	 * @param courseName course name
 	 */
 	public void setChallengeOnlyStatus(@NotNull CommandSender commandSender,
-	                                   @Nullable String courseName,
-	                                   @Nullable Boolean value) {
+									   @Nullable String courseName,
+									   @Nullable Boolean value) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;
@@ -245,8 +246,8 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 	 * @param value flag value
 	 */
 	public void setDieInLiquid(@NotNull final CommandSender commandSender,
-	                           @Nullable final String courseName,
-	                           @Nullable Boolean value) {
+							   @Nullable final String courseName,
+							   @Nullable Boolean value) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;
@@ -270,8 +271,8 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 	 * @param value flag value
 	 */
 	public void setDieInVoid(@NotNull final CommandSender commandSender,
-	                         @Nullable final String courseName,
-	                         @Nullable Boolean value) {
+							 @Nullable final String courseName,
+							 @Nullable Boolean value) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;
@@ -332,7 +333,8 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 		CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(courseName);
 		if (courseConfig.hasLinkedLobby()) {
 			TranslationUtils.sendMessage(commandSender, "A linked lobby exists on this Course.");
-			TranslationUtils.sendMessage(commandSender, "The Player will be taken to the linked Course instead of the Lobby on finish.");
+			TranslationUtils.sendMessage(commandSender,
+					"The Player will be taken to the linked Course instead of the Lobby on finish.");
 		}
 
 		courseConfig.setLinkedCourse(targetCourse);
@@ -362,7 +364,8 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 
 		if (courseConfig.hasLinkedCourse()) {
 			TranslationUtils.sendMessage(commandSender, "A linked Course exists on this Course.");
-			TranslationUtils.sendMessage(commandSender, "The Player will be taken to the linked Course instead of the Lobby on finish.");
+			TranslationUtils.sendMessage(commandSender,
+					"The Player will be taken to the linked Course instead of the Lobby on finish.");
 		}
 
 		courseConfig.setLinkedLobby(targetLobby);
@@ -574,10 +577,10 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 	 * @param joinMessage join message
 	 */
 	public void setPotionParkourMode(@NotNull final CommandSender commandSender,
-	                                 @NotNull final String courseName,
-	                                 @NotNull String potionEffectType,
-	                                 @Nullable String durationAmplifier,
-	                                 @Nullable String joinMessage) {
+									 @NotNull final String courseName,
+									 @NotNull String potionEffectType,
+									 @Nullable String durationAmplifier,
+									 @Nullable String joinMessage) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;
@@ -623,8 +626,8 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 	 * @param value value to set
 	 */
 	public void setReadyStatus(@NotNull final CommandSender commandSender,
-	                           @Nullable final String courseName,
-	                           @Nullable Boolean value) {
+							   @Nullable final String courseName,
+							   @Nullable Boolean value) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;
@@ -777,7 +780,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 	 * @param parkourLevelIncrease parkour level increase
 	 */
 	public void setRewardParkourLevelIncrease(final CommandSender commandSender, final String courseName,
-	                                          final String parkourLevelIncrease) {
+											  final String parkourLevelIncrease) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;
@@ -800,8 +803,8 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 	 * @param courseName course name
 	 */
 	public void setRewardOnceStatus(@NotNull final CommandSender commandSender,
-	                                @Nullable final String courseName,
-	                                @Nullable Boolean value) {
+									@Nullable final String courseName,
+									@Nullable Boolean value) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;
@@ -868,9 +871,9 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 	 * @param message message
 	 */
 	public void setCourseEventMessage(@NotNull CommandSender commandSender,
-	                                  @Nullable String courseName,
-	                                  @Nullable String eventTypeName,
-	                                  @Nullable String message) {
+									  @Nullable String courseName,
+									  @Nullable String eventTypeName,
+									  @Nullable String message) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;
@@ -898,9 +901,9 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 	 * @param command message
 	 */
 	public void addCourseEventCommand(@NotNull CommandSender commandSender,
-	                                  @Nullable String courseName,
-	                                  @Nullable String eventTypeName,
-	                                  @Nullable String command) {
+									  @Nullable String courseName,
+									  @Nullable String eventTypeName,
+									  @Nullable String command) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;
@@ -959,7 +962,8 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			String label = args.length >= 5 ? args[4] : StringUtils.standardizeText(data.getMaterial().name());
 			boolean unbreakable = args.length == 6 && Boolean.parseBoolean(args[5]);
 
-			itemStack = MaterialUtils.createItemStack(data.getMaterial(), amount, label, unbreakable, data.getCustomModelData());
+			itemStack = MaterialUtils.createItemStack(
+					data.getMaterial(), amount, label, unbreakable, data.getCustomModelData());
 		}
 
 		String name;
@@ -983,7 +987,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 	 * @param courseName course name
 	 */
 	public void startCoursePrizeConversation(@NotNull CommandSender commandSender,
-	                                         @Nullable String courseName) {
+											 @Nullable String courseName) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;

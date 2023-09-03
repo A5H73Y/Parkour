@@ -364,6 +364,16 @@ public class CourseManager extends AbstractPluginReceiver {
         runEventCommands(player, session, eventType.getConfigEntry());
     }
 
+    /**
+     * Execute the appropriate Event Commands for Course.
+     * When a Course has a matching Command for the {@link ParkourEventType}, execute each of them.
+     * The Commands will be dispatched either from the Console Sender or Player, based on prefix.
+     * The command will allow for a various internal placeholders to be replaced by ParkourSession values.
+     *
+     * @param player requesting player
+     * @param session parkour session
+     * @param eventTypeKey event type key
+     */
     public void runEventCommands(final Player player,
                                  final ParkourSession session,
                                  final String eventTypeKey) {

@@ -225,6 +225,10 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 parkour.getPlaceholderApi().evaluatePlaceholder(findPlayer(commandSender, args[2]), args[1]);
                 break;
 
+            case "printplaceholdercache":
+                parkour.getPlaceholderApi().printCacheSummary(commandSender);
+                break;
+
             case "prize":
             case "setprize":
                 if (!ValidationUtils.validateArgs(commandSender, args, 2)) {

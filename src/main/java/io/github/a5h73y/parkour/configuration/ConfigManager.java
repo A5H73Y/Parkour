@@ -1,5 +1,21 @@
 package io.github.a5h73y.parkour.configuration;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import de.leonhard.storage.internal.FlatFile;
+import de.leonhard.storage.internal.serialize.SimplixSerializer;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
 import io.github.a5h73y.parkour.configuration.impl.StringsConfig;
 import io.github.a5h73y.parkour.configuration.serializable.CourseSerializable;
@@ -16,21 +32,6 @@ import io.github.a5h73y.parkour.type.player.completion.CourseCompletionConfig;
 import io.github.a5h73y.parkour.type.player.quiet.QuietModeConfig;
 import io.github.a5h73y.parkour.type.player.rank.ParkourRankConfig;
 import io.github.a5h73y.parkour.utility.PluginUtils;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import de.leonhard.storage.internal.FlatFile;
-import de.leonhard.storage.internal.serialize.SimplixSerializer;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 

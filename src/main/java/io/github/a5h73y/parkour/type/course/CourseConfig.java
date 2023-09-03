@@ -839,10 +839,10 @@ public class CourseConfig extends Json {
 
     /**
      * Set Economy one-time fee.
-     *  @param is one-time joining fee
+     *  @param oneTimeFee is one-time joining fee
      */
-    public void setEconomyOneTimeFee(Boolean OneTimeFee) {
-        this.set(ECONOMY_ONETIME_FEE, OneTimeFee);
+    public void setEconomyOneTimeFee(Boolean oneTimeFee) {
+        this.set(ECONOMY_ONETIME_FEE, oneTimeFee);
     }
 
     /**
@@ -1131,10 +1131,17 @@ public class CourseConfig extends Json {
         }
     }
 
-    public <T> T getCourseSettingOrDefault(String key, T def) {
-        Object raw = this.get(key);
+    /**
+     * Get the Course's setting for the given key, or use default value.
+     * @param configKey key requested
+     * @param defaultValue default value
+     * @return value
+     * @param <T> type of object expected
+     */
+    public <T> T getCourseSettingOrDefault(String configKey, T defaultValue) {
+        Object raw = this.get(configKey);
         return raw == null
-                ? Parkour.getDefaultConfig().get("CourseDefault.Settings." + key, def)
-                : ClassWrapper.getFromDef(raw, def);
+                ? Parkour.getDefaultConfig().get("CourseDefault.Settings." + configKey, defaultValue)
+                : ClassWrapper.getFromDef(raw, defaultValue);
     }
 }

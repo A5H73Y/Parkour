@@ -2,11 +2,11 @@ package io.github.a5h73y.parkour.plugin;
 
 import static org.bukkit.Bukkit.getServer;
 
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class PermissionVault extends PluginWrapper {
 
@@ -22,7 +22,8 @@ public class PermissionVault extends PluginWrapper {
 		super.initialise();
 
 		if (isEnabled()) {
-			RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+			RegisteredServiceProvider<Permission> rsp =
+					getServer().getServicesManager().getRegistration(Permission.class);
 
 			if (rsp == null) {
 				PluginUtils.log("[Permission] Failed to connect to Vault's Permission service.", 2);

@@ -1,10 +1,12 @@
 package io.github.a5h73y.parkour.type.player;
 
-import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.utility.TranslationUtils;
+import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import java.io.File;
+
 import de.leonhard.storage.Json;
 import de.leonhard.storage.internal.FileType;
+import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -33,8 +35,13 @@ public class PlayerConfig extends Json {
     public static final String GAMEMODE = "GameMode";
     public static final String PARKOINS = "Parkoins";
     public static final String EXISTING_SESSION_COURSE_NAME = "ExistingSessionCourseName";
-    public static final String SNAPSHOT = "Snapshot.";
-    public static final String SESSION = "Session.";
+    public static final String ROCKETS_USED = "RocketsUsed";
+    public static final String TOTAL_DEATHS = "TotalDeaths";
+    public static final String TOTAL_TIME = "TotalTime";
+
+    public static final String SNAPSHOT_PREFIX = "Snapshot.";
+    public static final String SESSION_PREFIX = "Session.";
+    public static final String STATS_PREFIX = "Stats.";
 
 
     public PlayerConfig(File playerFile) {
@@ -185,12 +192,12 @@ public class PlayerConfig extends Json {
      */
     public void setPlayerDataSnapshot(Player player) {
         if (!hasPlayerDataSnapshot()) {
-            this.setSerializable(SNAPSHOT + INVENTORY, player.getInventory().getContents());
-            this.setSerializable(SNAPSHOT + ARMOR, player.getInventory().getArmorContents());
-            this.set(SNAPSHOT + HEALTH, player.getHealth());
-            this.set(SNAPSHOT + HUNGER, player.getFoodLevel());
-            this.set(SNAPSHOT + XP_LEVEL, player.getLevel());
-            this.set(SNAPSHOT + GAMEMODE, player.getGameMode().name());
+            this.setSerializable(SNAPSHOT_PREFIX + INVENTORY, player.getInventory().getContents());
+            this.setSerializable(SNAPSHOT_PREFIX + ARMOR, player.getInventory().getArmorContents());
+            this.set(SNAPSHOT_PREFIX + HEALTH, player.getHealth());
+            this.set(SNAPSHOT_PREFIX + HUNGER, player.getFoodLevel());
+            this.set(SNAPSHOT_PREFIX + XP_LEVEL, player.getLevel());
+            this.set(SNAPSHOT_PREFIX + GAMEMODE, player.getGameMode().name());
 
             if (!hasSnapshotJoinLocation()) {
                 setPlayerJoinLocation(player);
@@ -198,25 +205,30 @@ public class PlayerConfig extends Json {
         }
     }
 
+    /**
+     * Set the Snapshot data for the Player.
+     * This must not be overridden as the Player can join multiple courses without this data being touched.
+     * @param player player
+     */
     public void setSnapshotStartParkourInventory(Player player) {
-        if (!this.contains(SNAPSHOT + START_PARKOUR_INVENTORY)) {
-            this.setSerializable(SNAPSHOT + START_PARKOUR_INVENTORY, player.getInventory().getContents());
+        if (!this.contains(SNAPSHOT_PREFIX + START_PARKOUR_INVENTORY)) {
+            this.setSerializable(SNAPSHOT_PREFIX + START_PARKOUR_INVENTORY, player.getInventory().getContents());
         }
     }
 
     public ItemStack[] getSnapshotStartParkourInventory() {
-        return this.getSerializable(SNAPSHOT + START_PARKOUR_INVENTORY, ItemStack[].class);
+        return this.getSerializable(SNAPSHOT_PREFIX + START_PARKOUR_INVENTORY, ItemStack[].class);
     }
 
     public boolean hasPlayerDataSnapshot() {
-        return this.contains(SNAPSHOT);
+        return this.contains(SNAPSHOT_PREFIX);
     }
 
     /**
      * Reset the Player's Snapshot data.
      */
     public void resetPlayerDataSnapshot() {
-        this.remove(SNAPSHOT);
+        this.remove(SNAPSHOT_PREFIX);
     }
 
     /**
@@ -224,7 +236,7 @@ public class PlayerConfig extends Json {
      * @return ItemStacks representing inventory
      */
     public ItemStack[] getSnapshotInventory() {
-        return this.getSerializable(SNAPSHOT + INVENTORY, ItemStack[].class);
+        return this.getSerializable(SNAPSHOT_PREFIX + INVENTORY, ItemStack[].class);
     }
 
     /**
@@ -232,7 +244,7 @@ public class PlayerConfig extends Json {
      * @return ItemStacks representing armor
      */
     public ItemStack[] getSnapshotArmor() {
-        return this.getSerializable(SNAPSHOT + ARMOR, ItemStack[].class);
+        return this.getSerializable(SNAPSHOT_PREFIX + ARMOR, ItemStack[].class);
     }
 
     /**
@@ -277,7 +289,7 @@ public class PlayerConfig extends Json {
      * @return stored health
      */
     public double getSnapshotHealth() {
-        return this.getDouble(SNAPSHOT + HEALTH);
+        return this.getDouble(SNAPSHOT_PREFIX + HEALTH);
     }
 
     /**
@@ -285,7 +297,7 @@ public class PlayerConfig extends Json {
      * @return stored hunger
      */
     public int getSnapshotHunger() {
-        return this.getInt(SNAPSHOT + HUNGER);
+        return this.getInt(SNAPSHOT_PREFIX + HUNGER);
     }
 
     /**
@@ -293,7 +305,7 @@ public class PlayerConfig extends Json {
      * @return stored xp level
      */
     public int getSnapshotXpLevel() {
-        return this.getInt(SNAPSHOT + XP_LEVEL);
+        return this.getInt(SNAPSHOT_PREFIX + XP_LEVEL);
     }
 
     /**
@@ -301,7 +313,7 @@ public class PlayerConfig extends Json {
      * @return saved gamemode name
      */
     public String getSnapshotGameMode() {
-        return this.getString(SNAPSHOT + GAMEMODE).toUpperCase();
+        return this.getString(SNAPSHOT_PREFIX + GAMEMODE).toUpperCase();
     }
 
     /**
@@ -370,7 +382,28 @@ public class PlayerConfig extends Json {
      * Session Data is any random data to associate with the Player's current Parkour session.
      */
     public void resetSessionData() {
-        this.remove(SESSION);
+        this.remove(SESSION_PREFIX);
+    }
+
+    public int getRocketsUsedInSession() {
+        return this.getInt(SESSION_PREFIX + ROCKETS_USED);
+    }
+
+    public void increaseRocketsUsedInSession() {
+        this.set(SESSION_PREFIX + ROCKETS_USED, this.getInt(SESSION_PREFIX + ROCKETS_USED) + 1);
+    }
+
+    public void recordStatistics(ParkourSession session) {
+        this.set(STATS_PREFIX + TOTAL_DEATHS, this.getTotalDeaths() + session.getDeaths());
+        this.set(STATS_PREFIX + TOTAL_TIME, this.getTotalTime() + session.getAccumulatedTime());
+    }
+
+    public int getTotalDeaths() {
+        return this.getInt(STATS_PREFIX + TOTAL_DEATHS);
+    }
+
+    public long getTotalTime() {
+        return this.getLong(STATS_PREFIX + TOTAL_TIME);
     }
 
     private static String getPlayerJsonPath(OfflinePlayer player) {

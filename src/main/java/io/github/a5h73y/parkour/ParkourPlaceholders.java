@@ -36,6 +36,32 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     private static final String COURSE_INACTIVE = TranslationUtils.getTranslation("PlaceholderAPI.CourseInactive", false);
     private static final String NO_COOLDOWN_REMAINING = TranslationUtils.getTranslation("PlaceholderAPI.NoPrizeCooldown", false);
 
+    private static final String COMPLETED = "completed";
+    private static final String POSITION = "position";
+    private static final String PRIZE = "prize";
+    private static final String DELAY = "delay";
+    private static final String PERSONAL = "personal";
+    private static final String BEST = "best";
+    private static final String COURSE = "course";
+    private static final String UNCOMPLETED = "uncompleted";
+    private static final String COURSES = "courses";
+    private static final String JOINED = "joined";
+    private static final String LAST = "last";
+    private static final String TOTAL = "total";
+    private static final String LEADERBOARD = "leaderboard";
+    private static final String DEATHS = "deaths";
+    private static final String TIME = "time";
+    private static final String TIMES = "times";
+    private static final String PLAYING = "playing";
+    private static final String CHECKPOINT = "checkpoint";
+    private static final String MILLISECONDS = "milliseconds";
+    private static final String PLAYER = "player";
+    private static final String DELIMITER = "/";
+
+    private static final String PLACEHOLDER_API_CHECKPOINT_HOLOGRAM = "PlaceholderAPI.CheckpointHologram";
+    private static final String PLACEHOLDER_API_CURRENT_COURSE_COMPLETED = "PlaceholderAPI.CurrentCourseCompleted";
+    private static final String PLACEHOLDER_API_CURRENT_COURSE_NOT_COMPLETED = "PlaceholderAPI.CurrentCourseNotCompleted";
+
     private final Parkour parkour;
     private final GenericCache<String, String> cache;
 
@@ -78,6 +104,14 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
         return retrieveValue(offlinePlayer, placeholder.toLowerCase(), placeholder.toLowerCase().split("_"));
     }
 
+    public void clearCache() {
+        this.cache.clear();
+    }
+
+    public GenericCache<String, String> getCache() {
+        return this.cache;
+    }
+
     private String retrieveValue(OfflinePlayer offlinePlayer,
                                  @NotNull String placeholder,
                                  @NotNull String... arguments) {
@@ -94,11 +128,11 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return getGlobalPlaceholderValue(placeholder);
 
             case "pl":
-            case "player":
+            case PLAYER:
                 return getPlayerPlaceholderValue(offlinePlayer, arguments);
 
             case "co":
-            case "course":
+            case COURSE:
                 if (arguments.length < 3) {
                     return INVALID_SYNTAX;
                 }
@@ -109,7 +143,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return getCurrentPlaceholderValue(offlinePlayer, arguments);
 
             case "lb":
-            case "leaderboard":
+            case LEADERBOARD:
                 if (arguments.length != 4 || !ValidationUtils.isPositiveInteger(arguments[2])) {
                     return INVALID_SYNTAX;
                 }
@@ -160,67 +194,67 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             case "parkoins":
                 return String.valueOf(playerConfig.getParkoins());
 
-            case "last":
+            case LAST:
                 if (arguments.length < 3) {
                     return INVALID_SYNTAX;
                 }
                 switch (arguments[2]) {
-                    case "completed":
+                    case COMPLETED:
                         return playerConfig.getLastCompletedCourse();
 
-                    case "joined":
+                    case JOINED:
                         return playerConfig.getLastPlayedCourse();
 
                     default:
                         return INVALID_SYNTAX;
                 }
 
-            case "courses":
+            case COURSES:
                 if (arguments.length < 3) {
                     return INVALID_SYNTAX;
                 }
                 switch (arguments[2]) {
-                    case "completed":
+                    case COMPLETED:
                         return String.valueOf(parkour.getConfigManager().getCourseCompletionsConfig()
                                 .getNumberOfCompletedCourses(offlinePlayer));
 
-                    case "uncompleted":
+                    case UNCOMPLETED:
                         return String.valueOf(parkour.getPlayerManager().getNumberOfUncompletedCourses(offlinePlayer));
 
                     default:
                         return INVALID_SYNTAX;
                 }
 
-            case "course":
+            case COURSE:
                 if (arguments.length < 4) {
                     return INVALID_SYNTAX;
                 }
 
                 switch (arguments[2]) {
-                    case "completed":
-                        return getOrRetrieveCache(offlinePlayer.getName() + arguments[2] + arguments[3],
-                                () -> getCompletedMessage(offlinePlayer, arguments[3]));
+                    case COMPLETED:
+                        return getOrRetrieveCache(() -> getCompletedMessage(offlinePlayer, arguments[3]),
+                                offlinePlayer.getName(), arguments[1], arguments[2], arguments[3]);
 
-                    case "position":
-                        return getOrRetrieveCache(offlinePlayer.getName() + arguments[2] + arguments[3],
-                                () -> getLeaderboardPosition(offlinePlayer, arguments[3]));
+                    case POSITION:
+                        return getOrRetrieveCache(() -> getLeaderboardPosition(offlinePlayer, arguments[3]),
+                                offlinePlayer.getName(),arguments[1], arguments[2], arguments[3]);
 
                     default:
                         return INVALID_SYNTAX;
                 }
 
-            case "prize":
+            case PRIZE:
                 if (arguments.length < 4) {
                     return INVALID_SYNTAX;
                 }
-                if ("delay".equals(arguments[2])) {
-                    return getOrRetrieveCache(offlinePlayer.getName() + arguments[2] + arguments[3],
-                            () -> getDelayCooldown(offlinePlayer, arguments[3]));
+                if (DELAY.equals(arguments[2])) {
+                    return getOrRetrieveCache(() -> getDelayCooldown(offlinePlayer, arguments[3]),
+                            offlinePlayer.getName(), arguments[1], arguments[2], arguments[3]);
                 }
                 return INVALID_SYNTAX;
 
-            case "personal":
-                if (arguments.length != 5 || !arguments[2].equals("best")) {
+            case PERSONAL:
+                if (arguments.length != 5 || !arguments[2].equals(BEST)) {
                     return INVALID_SYNTAX;
                 }
                 Player player = offlinePlayer.getPlayer();
@@ -228,6 +262,45 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                     return "";
                 }
                 return getPersonalCourseRecord(player, arguments[3], arguments[4]);
+
+            case TOTAL:
+                if (arguments.length < 4) {
+                    return INVALID_SYNTAX;
+                }
+                switch (arguments[2]) {
+                    case LEADERBOARD:
+                        switch (arguments[3]) {
+                            case DEATHS:
+                                return getOrRetrieveCache(() -> String.valueOf(parkour.getDatabaseManager().getAccumulatedDeaths(offlinePlayer)),
+                                        offlinePlayer.getName(), arguments[1], arguments[2], arguments[3]);
+
+                            case TIME:
+                                return getOrRetrieveCache(() -> DateTimeUtils.displayCurrentTime(parkour.getDatabaseManager().getAccumulatedTime(offlinePlayer)),
+                                        offlinePlayer.getName(), arguments[1], arguments[2], arguments[3]);
+
+                            case TIMES:
+                                return getOrRetrieveCache(() -> String.valueOf(parkour.getDatabaseManager().getAccumulatedTimes(offlinePlayer)),
+                                        offlinePlayer.getName(), arguments[1], arguments[2], arguments[3]);
+
+                            default:
+                                return INVALID_SYNTAX;
+                        }
+
+                    case PLAYING:
+                        switch (arguments[3]) {
+                            case DEATHS:
+                                return String.valueOf(playerConfig.getTotalDeaths());
+
+                            case TIME:
+                                return DateTimeUtils.displayCurrentTime(playerConfig.getTotalTime());
+
+                            default:
+                                return INVALID_SYNTAX;
+                        }
+
+                    default:
+                        return INVALID_SYNTAX;
+                }
 
             default:
                 return INVALID_SYNTAX;
@@ -323,13 +396,13 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
         }
 
         switch (arguments[1]) {
-            case "course":
+            case COURSE:
                 if (arguments.length < 3) {
                     return INVALID_SYNTAX;
                 }
                 return getCurrentCoursePlaceholderValue(player, session, arguments);
 
-            case "checkpoint":
+            case CHECKPOINT:
                 if (arguments.length < 3) { // deprecated
                     return String.valueOf(session.getCurrentCheckpoint());
                 }
@@ -368,7 +441,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             case "displayname":
                 return session.getCourse().getDisplayName();
 
-            case "deaths":
+            case DEATHS:
                 return String.valueOf(session.getDeaths());
 
             case "timer":
@@ -377,9 +450,9 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
             case "checkpoints":
                 return String.valueOf(session.getCourse().getNumberOfCheckpoints());
 
-            case "completed":
-                return getOrRetrieveCache(player.getName() + arguments[2] + session.getCourseName(),
-                        () -> getCompletedMessage(player, session.getCourseName()));
+            case COMPLETED:
+                return getOrRetrieveCache(() -> getCompletedMessage(player, session.getCourseName()),
+                        player.getName(), arguments[1], arguments[2], session.getCourseName());
 
             case "record":
                 if (arguments.length != 4) {
@@ -387,14 +460,14 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 }
                 return getCourseRecord(session.getCourseName(), arguments[3]);
 
-            case "personal":
-                if (arguments.length != 5 || !arguments[3].equals("best")) {
+            case PERSONAL:
+                if (arguments.length != 5 || !arguments[3].equals(BEST)) {
                     return INVALID_SYNTAX;
                 }
                 return getPersonalCourseRecord(player, session.getCourseName(), arguments[4]);
 
             case "remaining":
-                if (arguments.length != 4 || !arguments[3].equals("deaths")) {
+                if (arguments.length != 4 || !arguments[3].equals(DEATHS)) {
                     return INVALID_SYNTAX;
                 }
                 return String.valueOf(session.getRemainingDeaths());
@@ -430,22 +503,22 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
 
     private String getCompletedMessage(OfflinePlayer player, String courseName) {
         boolean resultFound = parkour.getConfigManager().getCourseCompletionsConfig().hasCompletedCourse(player, courseName);
-        String key = resultFound ? "PlaceholderAPI.CurrentCourseCompleted" : "PlaceholderAPI.CurrentCourseNotCompleted";
+        String key = resultFound ? PLACEHOLDER_API_CURRENT_COURSE_COMPLETED : PLACEHOLDER_API_CURRENT_COURSE_NOT_COMPLETED;
         return TranslationUtils.getTranslation(key, false);
     }
 
-    private String getCourseRecord(String courseName, String key) {
-        return getCourseRecord(courseName, key, 1);
+    private String getCourseRecord(String courseName, String timeDetail) {
+        return getCourseRecord(courseName, timeDetail, 1);
     }
 
-    private String getCourseRecord(String courseName, String key, Integer position) {
-        return getOrRetrieveCache(courseName + key + position,
-                () -> extractResultDetails(parkour.getDatabaseManager().getNthBestTime(courseName, position), key));
+    private String getCourseRecord(String courseName, String timeDetail, Integer position) {
+        return getOrRetrieveCache(() -> extractResultDetails(parkour.getDatabaseManager().getNthBestTime(courseName, position), timeDetail),
+                courseName, timeDetail, String.valueOf(position));
     }
 
-    private String getPersonalCourseRecord(Player player, String courseName, String key) {
-        return getOrRetrieveCache(player.getName() + courseName + key,
-                () -> extractResultDetails(getTopPlayerResultForCourse(player, courseName), key));
+    private String getPersonalCourseRecord(Player player, String courseName, String timeDetail) {
+        return getOrRetrieveCache(() -> extractResultDetails(getTopPlayerResultForCourse(player, courseName), timeDetail),
+                player.getName(), courseName, timeDetail);
     }
 
     private String getLeaderboardPosition(OfflinePlayer player, String courseName) {
@@ -453,22 +526,22 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
         return result < 0 ? NO_TIME_RECORDED : String.valueOf(result + 1);
     }
 
-    private String extractResultDetails(TimeEntry result, String key) {
+    private String extractResultDetails(TimeEntry result, String timeDetail) {
         if (result == null) {
             return NO_TIME_RECORDED;
 
         } else {
-            switch (key) {
-                case "time":
+            switch (timeDetail) {
+                case TIME:
                     return getTimeValue(result.getTime());
 
-                case "milliseconds":
+                case MILLISECONDS:
                     return String.valueOf(result.getTime());
 
-                case "deaths":
+                case DEATHS:
                     return String.valueOf(result.getDeaths());
 
-                case "player":
+                case PLAYER:
                     return result.getPlayerName();
 
                 default:
@@ -480,14 +553,15 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     private String getCheckpointHologramMessage(ParkourSession session, String course, int checkpoint) {
         if (session.getCurrentCheckpoint() + 1 == checkpoint
                 && session.getCourseName().equals(course.toLowerCase())) {
-            return TranslationUtils.getValueTranslation("PlaceholderAPI.CheckpointHologram",
+            return TranslationUtils.getValueTranslation(PLACEHOLDER_API_CHECKPOINT_HOLOGRAM,
                     Integer.toString(checkpoint), false);
         } else {
             return "";
         }
     }
 
-    private String getOrRetrieveCache(String key, Supplier<String> callback) {
+    private String getOrRetrieveCache(Supplier<String> callback, String... keys) {
+        String key = generateCacheKey(keys);
         // check if the key exists or its 'get' is about to expire.
         if (!cache.containsKey(key) || cache.get(key).isEmpty()) {
             cache.put(key, callback.get());
@@ -496,11 +570,11 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
         return cache.get(key).orElse(NO_TIME_RECORDED);
     }
 
-    public void clearCache() {
-        this.cache.clear();
-    }
-
     private String getTimeValue(long milliseconds) {
         return StringUtils.colour(parkour.getParkourConfig().getPlaceholderTimeFormat().format(new Date(milliseconds)));
+    }
+
+    private String generateCacheKey(String... values) {
+        return String.join(DELIMITER, values);
     }
 }

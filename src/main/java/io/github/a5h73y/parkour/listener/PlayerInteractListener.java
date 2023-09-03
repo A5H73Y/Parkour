@@ -1,7 +1,5 @@
 package io.github.a5h73y.parkour.listener;
 
-import static io.github.a5h73y.parkour.type.player.PlayerConfig.SESSION;
-
 import com.cryptomorin.xseries.XBlock;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
@@ -37,6 +35,11 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
 
     private final EnumMap<Material, ParkourToolAction> parkourTools = new EnumMap<>(Material.class);
 
+    /**
+     * Initialise the PlayerInteractListener.
+     * Register each ParkourTool and the associated action.
+     * @param parkour parkour instance
+     */
     public PlayerInteractListener(final Parkour parkour) {
         super(parkour);
         DefaultConfig config = parkour.getParkourConfig();
@@ -59,7 +62,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
                 (player, rightClick) -> handleRocketTool(player));
 
         registerParkourTool(config.getFreedomTool(), "Freedom", false, false, ParkourMode.FREEDOM,
-                (player, rightClick) -> handleFreedomTool(player, rightClick));
+                this::handleFreedomTool);
     }
 
     @EventHandler
@@ -67,7 +70,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         if (!(event.getEntity().getShooter() instanceof Player)) {
             return;
         }
-        
+
         Player player = (Player) event.getEntity().getShooter();
 
         if (!parkour.getParkourSessionManager().isPlaying(player)) {
@@ -131,8 +134,8 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
 
         if (!parkour.getParkourConfig().getBoolean("ParkourTool.RemoveRightClickRestriction")
                 && (toolAction.isRightClickOnly()
-                    && !event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
-                    && !event.getAction().equals(Action.RIGHT_CLICK_AIR))) {
+                && !event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+                && !event.getAction().equals(Action.RIGHT_CLICK_AIR))) {
             return;
         }
 
@@ -248,14 +251,14 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
 
         if (maximumRockets != null) {
             PlayerConfig config = parkour.getConfigManager().getPlayerConfig(player);
-            int rocketsUsed = config.get(SESSION + "RocketsUsed", 0);
+            int rocketsUsed = config.getRocketsUsedInSession();
 
             if (rocketsUsed >= maximumRockets) {
                 TranslationUtils.sendMessage(player, "You have run out of Rockets!");
                 return;
             }
 
-            config.set(SESSION + "RocketsUsed", rocketsUsed + 1);
+            config.increaseRocketsUsedInSession();
         }
 
         parkour.getPlayerManager().rocketLaunchPlayer(player);

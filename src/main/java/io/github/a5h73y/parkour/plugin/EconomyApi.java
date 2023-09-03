@@ -48,7 +48,8 @@ public class EconomyApi extends PluginWrapper {
 
 		if (isEnabled()) {
 			if (parkour.getParkourConfig().getBoolean("Plugin.Vault.RegisterParkoins")) {
-				getServer().getServicesManager().register(Economy.class, new ParkoinsVault(parkour), parkour, ServicePriority.Normal);
+				getServer().getServicesManager().register(
+						Economy.class, new ParkoinsVault(parkour), parkour, ServicePriority.Normal);
 			}
 
 			RegisteredServiceProvider<Economy> economyProvider =
@@ -135,7 +136,7 @@ public class EconomyApi extends PluginWrapper {
 
 	/**
 	 * Get formatted value of amount.
-	 * @param amount
+	 * @param amount amount to format
 	 * @return formatted amount
 	 */
 	public String getAmount(double amount) {
@@ -355,7 +356,8 @@ public class EconomyApi extends PluginWrapper {
 			return;
 		}
 
-		TranslationUtils.sendMessage(commandSender, args[2] + "'s balance: &b" + getAmount(economy.getBalance(targetPlayer)));
+		TranslationUtils.sendMessage(commandSender, args[2] + "'s balance: &b"
+				+ getAmount(economy.getBalance(targetPlayer)));
 	}
 
 	@Override

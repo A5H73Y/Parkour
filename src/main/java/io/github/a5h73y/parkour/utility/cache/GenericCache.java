@@ -1,7 +1,7 @@
 package io.github.a5h73y.parkour.utility.cache;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -46,15 +46,17 @@ public class GenericCache<K, V> implements IGenericCache<K, V> {
     protected Set<K> getExpiredKeys() {
         return this.cacheMap.keySet()
                 .parallelStream()
+                .filter(Objects::nonNull)
                 .filter(this::isExpired)
                 .collect(Collectors.toSet());
     }
 
     protected boolean isExpired(K key) {
         boolean result = true;
-        if (this.cacheMap.containsKey(key)) {
-            LocalDateTime expirationDateTime = this.cacheMap.get(key)
-                    .getCreatedAt().plus(this.cacheTimeout, ChronoUnit.SECONDS);
+
+        CacheValue<V> cacheValue = this.cacheMap.get(key);
+        if (cacheValue != null) {
+            LocalDateTime expirationDateTime = cacheValue.getCreatedAt().plusSeconds(this.cacheTimeout);
             result = LocalDateTime.now().isAfter(expirationDateTime);
         }
         return result;
@@ -96,10 +98,8 @@ public class GenericCache<K, V> implements IGenericCache<K, V> {
         this.cacheMap.remove(key);
     }
 
-    protected interface CacheValue<V> {
-        V getValue();
-
-        LocalDateTime getCreatedAt();
+    public ConcurrentMap<K, CacheValue<V>> getCacheMap() {
+        return cacheMap;
     }
 
 }

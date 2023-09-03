@@ -170,7 +170,8 @@ public class ParkourBlockListener extends AbstractPluginReceiver implements List
 		BlockFace result = BLOCK_FACES.stream()
 				.filter(blockFace -> !XBlock.isAir(blockBelow.getRelative(blockFace).getType()))
 				.min(Comparator.comparing(blockFace ->
-						blockBelow.getRelative(blockFace).getLocation().add(0.5, 0.5, 0.5).distance(player.getLocation())))
+						blockBelow.getRelative(blockFace).getLocation()
+								.add(0.5, 0.5, 0.5).distance(player.getLocation())))
 				.orElse(BlockFace.NORTH);
 
 		return blockBelow.getRelative(result).getType();
