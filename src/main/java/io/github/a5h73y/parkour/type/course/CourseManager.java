@@ -28,6 +28,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -383,10 +384,16 @@ public class CourseManager extends AbstractPluginReceiver {
         if (eventCommands.isEmpty() || parkour.getParkourConfig().isCombinePerCourseCommands()) {
             eventCommands.addAll(parkour.getParkourConfig().getDefaultEventCommands(eventTypeKey));
         }
+        new BukkitRunnable() {
 
-        eventCommands.stream()
-                .filter(ValidationUtils::isStringValid)
-                .forEach(command -> PlayerUtils.dispatchServerPlayerCommand(command, player, session));
+            @Override
+            public void run() {
+                eventCommands.stream()
+                        .filter(ValidationUtils::isStringValid)
+                        .forEach(command -> PlayerUtils.dispatchServerPlayerCommand(command, player, session));
+            }
+        }.runTaskLater(parkour, 2L);
+
     }
 
     /**
