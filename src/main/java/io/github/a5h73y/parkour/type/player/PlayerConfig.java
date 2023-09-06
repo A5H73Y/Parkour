@@ -38,7 +38,7 @@ public class PlayerConfig extends Json {
     public static final String ROCKETS_USED = "RocketsUsed";
     public static final String TOTAL_DEATHS = "TotalDeaths";
     public static final String TOTAL_TIME = "TotalTime";
-
+    public static final String ALLOW_FLIGHT = "AllowFlight";
     public static final String SNAPSHOT_PREFIX = "Snapshot.";
     public static final String SESSION_PREFIX = "Session.";
     public static final String STATS_PREFIX = "Stats.";
@@ -198,7 +198,7 @@ public class PlayerConfig extends Json {
             this.set(SNAPSHOT_PREFIX + HUNGER, player.getFoodLevel());
             this.set(SNAPSHOT_PREFIX + XP_LEVEL, player.getLevel());
             this.set(SNAPSHOT_PREFIX + GAMEMODE, player.getGameMode().name());
-
+            this.set(SNAPSHOT_PREFIX + ALLOW_FLIGHT, player.getAllowFlight());
             if (!hasSnapshotJoinLocation()) {
                 setPlayerJoinLocation(player);
             }
@@ -405,6 +405,11 @@ public class PlayerConfig extends Json {
     public long getTotalTime() {
         return this.getLong(STATS_PREFIX + TOTAL_TIME);
     }
+    /**
+     * Get if the player is allowed to fly
+     * @return whether the player has allowFlight
+     */
+    public boolean getAllowFlight() { return this.getBoolean(SNAPSHOT_PREFIX + ALLOW_FLIGHT); }
 
     private static String getPlayerJsonPath(OfflinePlayer player) {
         return Parkour.getDefaultConfig().getPlayerConfigName(player) + "." + FileType.JSON.getExtension();
