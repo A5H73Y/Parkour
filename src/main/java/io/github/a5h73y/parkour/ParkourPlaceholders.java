@@ -182,6 +182,11 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
         if (offlinePlayer == null) {
             return "";
         }
+
+        if (!PlayerConfig.hasPlayerConfig(offlinePlayer)) {
+            return "Player not found";
+        }
+
         PlayerConfig playerConfig = PlayerConfig.getConfig(offlinePlayer);
 
         switch (arguments[1]) {

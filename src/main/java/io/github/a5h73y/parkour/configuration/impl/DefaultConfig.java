@@ -101,6 +101,7 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("OnCourse.ParkourKit.FloatingClosestBlock", true);
 		this.setDefault("OnCourse.EnforceParkourCommands.Enabled", true);
 		this.setDefault("OnCourse.EnforceParkourCommands.Whitelist", Collections.singletonList("login"));
+		this.setDefault("OnCourse.ManualCheckpointAnyPressurePlate", true);
 
 		this.setDefault("OnFinish.BroadcastLevel", "GLOBAL");
 		this.setDefault("OnFinish.DisplayNewRecords", false);

@@ -93,13 +93,20 @@ OnCourse:
   # Should achieving the final Checkpoint trigger the Course finish for the Player
   TreatLastCheckpointAsFinish: false
   # Should ParkourKits be enabled. If this is set to false, finish blocks will no longer work and Courses must be finished using a Finish Sign or other means.
-  UseParkourKit: true
+  ParkourKit: 
+    Enabled: true
+    # Should Vehicles be affected by ParkourKits when driven upon (excludes repulse and climb blocks)
+    IncludeVehicles: false
+    # Detect the closest block to the Player while floating on a solid block
+    FloatingClosestBlock: true
   # Should the Player be prevented from using non-Parkour commands
   EnforceParkourCommands:
     Enabled: true
     # These commands are the exception and are still allowed
     Whitelist:
     - login
+  # Should manual checkpoint Courses include the ability to set checkpoints using any pressure plate
+  ManualCheckpointAnyPressurePlate: true
  
 # All the options for when a Player finishes a Course
 OnFinish:
@@ -127,6 +134,8 @@ OnFinish:
   TeleportToJoinLocation: false
   # Should the Player's database time be updated every time the beat it, instead of inserting a new time with every completion
   UpdatePlayerDatabaseTime: true
+  # Give any items the Player collected whilst on the Course back to them after completion
+  GiveGainedItemsBack: false
  
 # All the options for when the Player leaves a Course
 OnLeave:
@@ -137,6 +146,8 @@ OnLeave:
   DestroyCourseProgress: true
   # Should the Player be teleported away to their destination
   TeleportAway: true
+  # Give any items the Player collected whilst on the Course back to them when leaving the Course
+  GiveGainedItemsBack: false
 
 # All the options for when the Player restarts the Course
 OnRestart:
@@ -197,9 +208,13 @@ CourseDefault:
 # Configuration for the Items the Player receives when Joining a Course, also known as Parkour Tools
 # The Material can be set to AIR if not wanted
 ParkourTool:
+  # Ability to use items with any type of click (useful for Bedrock servers)
+  RemoveRightClickRestriction: false
+  # Take the Player back to the last achieved Checkpoint
   LastCheckpoint:
     Material: ARROW
     Slot: 0
+  # Toggle visibility of Players
   HideAll:
     Material: BONE
     Slot: 1
@@ -207,22 +222,27 @@ ParkourTool:
     Global: true
     # Should all Players be hidden by default when joining a Course
     ActivateOnJoin: false
+  # Change Material when Hide All is enabled
   HideAllEnabled:
     Material: BONE
     Slot: 1
+  # Leave the current Course
   Leave:
     Material: OAK_SAPLING
     Slot: 2
+  # Restart the current Course
   Restart:
     Material: STICK
     Slot: 3
     # How many seconds must pass between each Restart usage
     SecondCooldown: 1
+  # Freedom tool lets the Player set and load checkpoints at any point
   Freedom:
     Material: REDSTONE_TORCH
     Slot: 4
     # How many seconds must pass between each Save Checkpoint usage
     SecondCooldown: 1
+  # Launch the Player
   Rockets:
     Material: FIREWORK_ROCKET
     Slot: 4
@@ -429,6 +449,8 @@ Other:
     CompletedCourseJoinMessage: false
     # Should deprecated commands be included in auto-tab and help menus
     IncludeDeprecatedCommands: false
+    # Include the currency name in economy related messages
+    CurrencyName: true
     
   # Time output settings
   # Colour codes can be used, however they need to be in a format which is ignored by the format processor. Surround each colour code with ''&b'' for it to be ignored.
@@ -540,6 +562,8 @@ Here are translations submitted by users for a specific language, I take no resp
 [Chinese / Mandarin (CH)](https://a5h73y.github.io/Parkour/files/translations/ch/strings.yml)
 
 [Spanish (ES)](https://a5h73y.github.io/Parkour/files/translations/es/strings.yml)
+
+[German (DE)](https://a5h73y.github.io/Parkour/files/translations/de/strings.yml)
 
 </details>
 

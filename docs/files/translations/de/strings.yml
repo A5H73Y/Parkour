@@ -1,0 +1,229 @@
+Parkour: 
+   Prefix: '&0[&bParkour&0] &f'
+   SignHeader: '&0[&bParkour&0]'
+   ConfigReloaded: Die Konfiguration wurde neu geladen.
+   SignRemoved: Parkour Schild entfernt!
+   SignCreated: '&b%VALUE% &fSchild erstellt.'
+   Heading: -- &9&l%VALUE% &r--
+   Join: Joined &b%VALUE%
+   JoinLives: '&7Du hast &3%VALUE% &7Leben auf dem Kurs!'
+   JoinTime: '&7Du hast &3%VALUE% &7um den Kurs zu beenden!'
+   JoinLivesAndTime: '&7Du hast &3%MAXTIME% &7und &3%LIVES% &7Leben um den Kurs zu beenden!'
+   TimerStarted: Timer gestartet!
+   Restarting: Lade den Kurs neu
+   Leave: Du verlässt &b%VALUE%
+   Created: '&b%VALUE% &fwurde erstellt!'
+   CheckpointCreated: Checkpoint &3%CHECKPOINT% &fwurde gesetzt in &b%COURSE%&f!
+   WhenReady: '&7Sobald du fertig editiert hast &b%VALUE%&7, gebe folgenden Befehl ein &b/pa ready %VALUE%'
+   Delete: '&b%VALUE% &fwurde gelöscht!'
+   DeleteCheckpoint: Checkpoint &b%CHECKPOINT% &fwurde gelöscht in &b%COURSE%
+   Reset: '&b%VALUE% &fwurde zurückgesetzt!'
+   JoinBroadcast: '&3%PLAYER% &fbetritt &b%COURSE%&f!'
+   FinishBroadcast: '&3%PLAYER% &fbeendet &b%COURSE% &fmit &b%DEATHS% &fToden, in &b%TIME%&f!'
+   FinishCourse1: Kurs &b%VALUE%&f abgeschlossen!
+   FinishCourse2: In &b%TIME%&f, gestorben &b%DEATHS% &fmal
+   JoinLocation: Du bist zu deinem vorherigen Punkt zurückgekehrt
+   Continue: Setze den Fortschritt fort in &b%VALUE%
+   TimeReset: Deine Zeit wurde zurückgesetzt!
+   Teleport: Du wurdest teleportiert zu &b%VALUE%
+   MaxDeaths: 'Du hast die maximale Anzahl an Toden erreicht: &b%VALUE%'
+   MaxTime: Du hast das Zeitlimit von %VALUE% erreicht!
+   Die1: Du bist gestorben! Kehre zurück zum Start!
+   Die2: Du bist gestorben! Kehre zurück zum Checkpoint &b%VALUE%
+   Die3: Du bist gestorben! Kehre zurück zu deinem Checkpoint.
+   LifeCount: '&b%VALUE% &fLeben noch vorhanden!'
+   Playing: ' &b%PLAYER% &f- &8K: &7%COURSE% &8T: &7%DEATHS% &8Z: &7%TIME%'
+   RewardLevel: Dein Level wurde auf &b%LEVEL% gesetzt &ffür das Abschließen von &b%COURSE%&f!
+   RewardRank: Dein Rank wurde auf %VALUE% gesetzt
+   RankInfo: '* Für das Parkourlevel &b%LEVEL% &fverdienst du: %RANK%'
+   RewardParkoins: '&b%AMOUNT% &fParkoins verdient! Neuer Stand: &7%TOTAL%'
+   Countdown: Starte in &b%VALUE% &fSekunden...
+   Go: Los!
+   BestTime: Deine neue Bestzeit!
+   CourseRecord: Neuer Kurs Rekord!
+   LeaderboardHeading: '%COURSE% : Top %AMOUNT% Ergebnisse'
+   LeaderboardEntry: '%POSITION%) &b%PLAYER% &fin &3%TIME%&f, gestorben &7%DEATHS% &fmal'
+   QuietOn: 'Leiser Modus: &bAN'
+   QuietOff: 'Leiser Modus: &bAUS'
+   TestModeOn: 'Test Modus: &bAN&f. Simuliere &b%VALUE%&f ParkourKit.'
+   TestModeOff: 'Test Modus: &bAUS'
+   AlreadyCompleted: Du hast diesen Kurs bereits abgeschlossen.
+   Question: Bitte gebe folgenden Befehl ein &a/pa yes &fzum bestätigen, oder &c/pa no &fzum abbrechen.
+   Challenge: 
+      Created: Herausforderung für &b%VALUE%&f erstellt
+      StartCommand: Wenn du bereit bist, gebe folgenden Befehl ein &b/pa challenge start
+      Wager: ', &fmit einem Einsatz von &b%VALUE%&f!'
+      InviteSent: Eine Herausforderungseinladung wurde gesendet an &b%VALUE%&f!
+      InviteReceived: Du wurdest Herausgefordert für den Kurs &b%COURSE% &fvon &b%PLAYER%&f!
+      InviteReceivedWager: Der Einsatz wurde gesetzt auf &b%VALUE%&f!
+      AcceptDecline: Zum akzeptieren &a/pa accept &foder &c/pa decline &fzum ablehnen.
+      Joined: Du hast die Herausforderungen angenommen für &b%VALUE%&f. Bitte warte während der Host startet.
+      Terminated: '&b%VALUE% &fhat die Herausforderung abgebrochen!'
+      Forfeited: '&b%VALUE% &fhat aufgegeben. Beende den Kurs um zu gewinnen!'
+      Quit: Du hast aufgegeben. Ein anderer Spieler muss den Kurs beenden um zu gewinnen!
+      Winner: Glückwunsch! Du hast die Herausforderung bestanden auf &b%VALUE%!
+      WinnerWager: Du wurdest belohnt mit &b%VALUE% &ffür das Gewinnen des Einsatzes!
+      Loser: '&b%PLAYER% &fhat &b%COURSE% &fvor dir beendet!'
+      LoserWager: Dir wurden &b%VALUE% &fvon deinem Account abgezogen!
+Event: 
+   Checkpoint: Checkpoint gesetzt auf &b%CURRENT% &8/ &7%TOTAL%
+   FreeCheckpoints: Checkpoint gesetzt
+   AllCheckpoints: Alle Checkpoints erreicht!
+   HideAll1: Alle Spieler sind auf wundersamer Weise wieder aufgetaucht!
+   HideAll2: Alle Spieler sind auf wundersamer Weise verschwunden!
+   Chat: '&0[&b%RANK%&0] &f%PLAYER%&0:&f %MESSAGE%'
+   DefaultRank: Newbie
+Error: 
+   NotOnCourse: Du befindest dich nicht auf dem Kurs!
+   NotOnAnyCourse: Du befindest dich auf keinem Kurs!
+   TooMany: Zu viele Argumente! (%VALUE%)
+   TooLittle: Nicht genug Argumente! (%VALUE%)
+   Exist: Dieser Kurs existiert bereits!
+   NoExist: '&b%VALUE% &fexistiert nicht!'
+   Command: Nicht-Parkour Befehle wurden deaktiviert!
+   Sign: Nicht-Parkour Schilder wurden deaktiviert!
+   WrongWorld: Du bist in der falschen Welt!
+   WorldTeleport: Das teleportieren in einer andere Welt wurde verhindert!
+   RequiredLvl: Du benötigst level &b%VALUE% &fum beitreten zu können!
+   NotReady: Dieser Kurs ist noch nicht bereit um von dir gespielt zu werden!
+   NotReadyWarning: Dieser Kurs ist noch nicht bereit.
+   SignProtected: Dieses Schild ist geschützt!
+   Syntax: '&cUngültiger Syntax: &3/pa &b%COMMAND% &e%ARGUMENTS%'
+   UnknownSignCommand: Unbekannter Schild-Befehl!
+   UnknownCommand: Unbekannter Befehl!
+   UnknownPlayer: Unbekannter Parkour Spieler!
+   UnknownMaterial: 'Unbekanntes Material: &4%VALUE%&c'
+   UnknownPotionEffectType: 'Unbekannter Trank Effekt: &4%VALUE%&c'
+   UnknownLobby: '%VALUE% Lobby existiert nicht!'
+   UnknownWorld: Die angeforderte Welt existiert nicht.
+   UnknownParkourKit: Unbekanntes ParkourKit.
+   UnknownCheckpoint: Unbekannter oder ungültiger Checkpoint.
+   Cheating1: Bitte nicht schummeln.
+   Cheating2: '&lDu musst alle &4&l%VALUE% &f&lcheckpoints erreichen!'
+   MissedCheckpoints: Du hast &4%VALUE% &fcheckpoints verpasst!
+   Cooldown: Langsam! Bitte warte noch &b%VALUE% &fSekunden.
+   PrizeCooldown: Du musst noch &b%VALUE% &fwarten, bevor du den Preis erneut erhalten kannst!
+   NoQuestion: Dir wurde keine Frage gestellt!
+   JoiningAnotherCourse: Du kannst keinem anderen Kurs beitreten, während du dich in einem Kurs befindest.
+   PluginNotLinked: '&b%VALUE% &fwurde nicht verbunden.'
+   NoPermission: 'Du hast nicht die Berechtigung: &b%VALUE%'
+   InvalidAmount: Die Anzahl muss eine Nummer sein.
+   InvalidQuestionAnswer: Ungültige Frageantwort.
+   QuestionAnswerChoices: Bitte benutze entweder &a/pa yes &foder &c/pa no
+   LimitExceeded: Die maximale Spielerzahl wurde für den Kurs erreicht.
+   InvalidSession: Deine Parkoursitzung ist ungültig.
+   ChallengeOnly: Dieser Kurs ist nur für Herausforderungen.
+   OnChallenge: Du befindest dich bereits in einer Herausforderung.
+   InvalidValue: Bitte gebe einen gültigen Wert ein.
+   DisabledCommand: Dieser Befehl wurde deaktiviert.
+Help: 
+   Command: Benutze &b/pa help &9%VALUE% &fum mehr über diesen Befehl zu erfahren.
+   Commands: Gebe für das Befehlsmenü folgenden Befehl ein &b/pa cmds
+   ConsoleCommands: Um alle Befehle anzuzeigen, gebe folgenden Befehl ein &f/pac cmds
+   SignCommands: Um das Schild-Befehlsmenü anzuzeigen, gebe folgenden Befehl ein &b/pa cmds signs
+   CommandSyntax: '&7Syntax: &f/pa %VALUE%'
+   ConsoleCommandSyntax: '&7Syntax: &f%VALUE%'
+   CommandExamples: '&7Beispiele:'
+   CommandUsage: '&3/pa &b%COMMAND%&e%ARGUMENTS% &0: &f%TITLE%'
+   SignUsage: '&b%COMMAND% &e%SHORTCUT% &0: &f%DESCRIPTION%'
+   DisplayValue: '%TITLE%: &b%VALUE%'
+ParkourTool: 
+   LastCheckpoint: 
+      Info: '&7Ducken + &6Rechtsklick um zum letzten Checkpoint zurückzukehren'
+   HideAll: 
+      Info: '&7Ducken + &6Rechtsklick um die Spieler zu verbergen'
+   HideAllEnabled: 
+      Info: '&7Ducken + &6Rechtsklick um die Spieler anzuzeigen'
+   Leave: 
+      Info: '&7Ducken + &6Rechtsklick um den Kurs zu verlassen'
+   Restart: 
+      Info: '&7Ducken + &6Rechtsklick um den Kurs neuzustarten'
+   RestartConfirmation: Zum bestätigen das Neustart-Werkzeug erneut benutzen.
+   Freedom: 
+      Info: '&6Freiheitswerkzeug'
+   Rockets: 
+      Info: '&6Rechtsklick um eine Rakete zu zünden'
+      Cooldown: '&b%VALUE% &fSekunden noch zum nachladen der Rakete.'
+Other: 
+   Kit: '&b%VALUE% &fParkourKit erhalten!'
+   PropertySet: Das &3%PROPERTY% &ffür &3%COURSE% &fwurde gesetzt auf &b%VALUE%&f!
+Lobby: 
+   Joined: Du hast die Lobby betreten
+   JoinedOther: Du hast die Lobby &b%VALUE% &fbetreten
+   Created: '&b%VALUE% &fLobby erstellt.'
+   RequiredLevelSet: Du hast das erforderliche Parkourlevel auf &b%VALUE%&f gesetzt.
+Scoreboard: 
+   MainHeading: '&b&l== Parkour =='
+   TitleFormat: '&b%VALUE%'
+   TextFormat: '&f%VALUE%'
+   NotCompleted: Nicht abgeschlossen
+   CourseNameTitle: 'Kurs:'
+   BestTimeEverTitle: 'Beste Zeit:'
+   BestTimeEverNameTitle: 'Beste Spieler:'
+   MyBestTimeTitle: 'Meine Bestzeit:'
+   CurrentDeathsTitle: 'Momentane Tode:'
+   RemainingDeathsTitle: 'Übrige Tode:'
+   CheckpointsTitle: 'Checkpoints:'
+   LiveTimerTitle: 'Momentane Zeit:'
+   TimeRemainingTitle: 'Zeit übrig:'
+Economy: 
+   Insufficient: Du brauchst mindestens &b%AMOUNT% &fbevor du &b%COURSE% &fbeitreten kannst
+   Fee: '&b%AMOUNT% &fwurden deinem Account abgezogen für das Betreten von &b%COURSE%'
+   Reward: Du verdienst &b%AMOUNT% &ffür das Abschließen von &b%COURSE%&f!
+Kit: 
+   Speed: '&bGeschwindigkeitsblock'
+   Climb: '&bKletterblock'
+   Launch: '&bStartblock'
+   Finish: '&bEndblock'
+   Norun: '&bKein Rennen Block'
+   Nofall: '&bKein Fallblock'
+   Nopotion: '&bKein Trankblock'
+   Sign: '&bSchild'
+   Death: '&bTodesblock'
+   Bounce: '&bSprungblock'
+   Repulse: '&bAbwehrblock'
+   Potion: '&bTrankblock'
+Mode: 
+   Freedom: 
+      JoinText: '&6Freiheitswerkzeug &f- Rechtsklick: &2Speichern&f, Linksklick: &5Laden'
+      Save: Position gespeichert
+      Load: Position geladen
+   Rockets: 
+      JoinText: Benutze den Raketenwerfer um dich selbst zu yeeten
+PlaceholderAPI: 
+   UnknownCourse: Unbekannter Kurs
+   InvalidSyntax: Ungültiger syntax
+   NoTimeRecorded: Keine Zeit aufgenommen
+   CurrentCourseCompleted: Ja
+   CurrentCourseNotCompleted: Nein
+   TopTenResult: '&f%POSITION%) &b%PLAYER%&f in &a%TIME%'
+   CourseActive: Aktiv
+   CourseInactive: Inaktiv
+   CheckpointHologram: Checkpoint &b%VALUE%
+   NoPrizeCooldown: Preis verfügbar
+GUI: 
+   JoinCourses: 
+      Heading: Parkour Kurse
+      Setup: 
+         Line1: '         '
+         Line2: ' GGGGGGG '
+         Line3: '  12 34  '
+      Description: '&fBeitritt &b%VALUE%'
+      Players: 'Spieler: &b%VALUE%'
+      Checkpoints: 'Checkpoints: &b%VALUE%'
+      Completed: 'Abgeschlossen: &b%VALUE%'
+   CourseSettings: 
+      Heading: '%VALUE% Einstellungen'
+      Setup: 
+         Line1: 'qwertzui '
+         Line2: asdfghjkl
+         Line3: 'yxcvbnm  '
+Display: 
+   Day: '%VALUE% Tag'
+   Days: '%VALUE% Tage'
+   Hour: '%VALUE% Stunde'
+   Hours: '%VALUE% Stunden'
+   Minute: '%VALUE% Minute'
+   Minutes: '%VALUE% Minuten'
+   Second: '%VALUE% Sekunde'
+   Seconds: '%VALUE% Sekunden'

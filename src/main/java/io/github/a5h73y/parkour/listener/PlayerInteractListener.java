@@ -172,7 +172,8 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
 
         ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
 
-        if (session.getCourse().getSettings().isManualCheckpoints()) {
+        if (session.getCourse().getSettings().isManualCheckpoints()
+                && parkour.getParkourConfig().getBoolean("OnCourse.ManualCheckpointAnyPressurePlate")) {
             setManualCheckpoint(player, event.getClickedBlock().getLocation(), session);
             return;
         }
