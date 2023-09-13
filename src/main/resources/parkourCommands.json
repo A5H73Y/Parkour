@@ -534,7 +534,7 @@
     "command": "setpropertyforeverysinglecourse",
     "title": "Set Property for every Course",
     "description": "Set the specified property for every single known Parkour Course, not providing a value will remove the property.",
-    "consoleSyntax": "pac setpropertyforeverysingleplayer (property) [value]",
+    "consoleSyntax": "pac setpropertyforeverysinglecourse (property) [value]",
     "consoleOnly": true
   },
   {

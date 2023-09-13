@@ -1,9 +1,9 @@
-const group = [];
-group[1] = 'Basic'
-group[2] = 'Create'
-group[3] = 'Course'
-group[4] = 'Player'
-group[5] = 'Admin'
+const groups = [];
+groups[1] = 'Basic'
+groups[2] = 'Create'
+groups[3] = 'Course'
+groups[4] = 'Player'
+groups[5] = 'Admin'
 
 function insertCommandsMarkup() {
     fetch('files/parkourCommands.json')
@@ -41,7 +41,7 @@ function appendData(data, elementId, markupCallback) {
 }
 
 function createCommandSummary(command) {
-    const group = group[command.commandGroup];
+    const group = groups[command.commandGroup];
     const styleClass = command.deprecated ? 'deprecated' : '';
     let result = `<details>
                     <summary class="${styleClass}">
