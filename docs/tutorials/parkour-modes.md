@@ -53,6 +53,4 @@ You will be given a 'Rocket Launcher', which is a Rocket by default. Simply righ
 
 ## Free Checkpoint
 
-This ParkourMode allows you to treat any Pressure Plate as a checkpoint. Upon walking on a Pressure Plate the Player will be notified that a checkpoint has been set, if the Player dies they will be taken back to the last checkpoint they set. This allows you to create alternate routes through a Course.
-
-![Free Checkpoints](https://i.imgur.com/zYyvTD9.png "Free Checkpoints")
+This ParkourMode has been replaced by a per-course [manualcheckpoints](/tutorials/parkour-courses?id=manualcheckpoints) setting now.

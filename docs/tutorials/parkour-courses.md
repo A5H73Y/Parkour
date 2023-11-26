@@ -63,8 +63,10 @@ _Command: `/pa setcourse (course) linkedlobby (lobby)`_
 
 ### manualcheckpoints
 
-When enabled, the Player's checkpoint position can be manually set whenever you want. This will allow the Player (and console) to use the "/pa manualcheckpoint" command, which sets the Player's current position to their Checkpoint. This can be used as an external way to set the Player's checkpoint position.
+When enabled, the Player's checkpoint position can be manually set whenever you want. This will allow the Player (and console) to use the `/pa manualcheckpoint` / `pac manualcheckpoint (player)` command, which sets the Player's current position to their Checkpoint. This can be used as an external way to set the Player's checkpoint position.
 In addition, when `OnCourse.ManualCheckpointAnyPressurePlate` is enabled, any pressure plate a Player triggers whilst on a Course will set the Player's checkpoint to that location.
+
+Once activated, the Player will be notified that a checkpoint has been set. If the Player dies, they will be taken back to the last checkpoint they set. This allows you to create alternate routes through a Course.
 
 _Command: `/pa setcourse (course) manualcheckpoints [true/false]`_
 
