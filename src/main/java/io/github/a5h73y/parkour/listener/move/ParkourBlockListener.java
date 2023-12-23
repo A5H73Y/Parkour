@@ -8,9 +8,6 @@ import io.github.a5h73y.parkour.type.kit.ParkourKitAction;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -21,16 +18,22 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+
 public class ParkourBlockListener extends AbstractPluginReceiver implements Listener {
 
 	public static final List<BlockFace> BLOCK_FACES =
 			Arrays.asList(BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST);
 
 	private final boolean floatingClosestBlock;
+	private final boolean bypassPotionCooldown;
 
 	public ParkourBlockListener(final Parkour parkour) {
 		super(parkour);
-		this.floatingClosestBlock = parkour.getParkourConfig().getBoolean("OnCourse.ParkourKit.FloatingClosestBlock");
+		this.floatingClosestBlock = parkour.getParkourConfig().getBoolean("ParkourKit.FloatingClosestBlock");
+		this.bypassPotionCooldown = parkour.getParkourConfig().getBoolean("ParkourKit.BypassPotionCooldown");
 	}
 
 	/**
@@ -130,14 +133,14 @@ public class ParkourBlockListener extends AbstractPluginReceiver implements List
 				break;
 
 			case BOUNCE:
-				if (!player.hasPotionEffect(PotionEffectType.JUMP)) {
+				if (!player.hasPotionEffect(PotionEffectType.JUMP) || bypassPotionCooldown) {
 					PlayerUtils.applyPotionEffect(PotionEffectType.JUMP, kitAction.getDuration(),
 							(int) kitAction.getStrength(), player);
 				}
 				break;
 
 			case SPEED:
-				if (!player.hasPotionEffect(PotionEffectType.SPEED)) {
+				if (!player.hasPotionEffect(PotionEffectType.SPEED) || bypassPotionCooldown) {
 					PlayerUtils.applyPotionEffect(PotionEffectType.SPEED, kitAction.getDuration(),
 							(int) kitAction.getStrength(), player);
 				}
@@ -145,7 +148,8 @@ public class ParkourBlockListener extends AbstractPluginReceiver implements List
 
 			case POTION:
 				PotionEffectType effect = PotionEffectType.getByName(kitAction.getEffect());
-				if (effect != null) {
+
+				if (effect != null && (!player.hasPotionEffect(effect) || bypassPotionCooldown)) {
 					PlayerUtils.applyPotionEffect(effect, kitAction.getDuration(),
 							(int) kitAction.getStrength(), player);
 				}

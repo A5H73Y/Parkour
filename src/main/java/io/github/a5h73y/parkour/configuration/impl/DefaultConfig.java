@@ -96,9 +96,6 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("OnCourse.SequentialCheckpoints.AlertPlayer", true);
 		this.setDefault("OnCourse.SneakToInteractItems", true);
 		this.setDefault("OnCourse.TreatLastCheckpointAsFinish", false);
-		this.setDefault("OnCourse.ParkourKit.Enabled", true);
-		this.setDefault("OnCourse.ParkourKit.IncludeVehicles", false);
-		this.setDefault("OnCourse.ParkourKit.FloatingClosestBlock", true);
 		this.setDefault("OnCourse.EnforceParkourCommands.Enabled", true);
 		this.setDefault("OnCourse.EnforceParkourCommands.Whitelist", Collections.singletonList("login"));
 		this.setDefault("OnCourse.ManualCheckpointAnyPressurePlate", true);
@@ -259,9 +256,13 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("ParkourGUI.Material", "BOOK");
 		this.setDefault("ParkourGUI.FillerMaterial", XMaterial.CYAN_STAINED_GLASS_PANE.parseMaterial().name());
 
+		this.setDefault("ParkourKit.Enabled", true);
+		this.setDefault("ParkourKit.IncludeVehicles", false);
+		this.setDefault("ParkourKit.FloatingClosestBlock", true);
 		this.setDefault("ParkourKit.ReplaceInventory", true);
 		this.setDefault("ParkourKit.GiveSign", true);
 		this.setDefault("ParkourKit.LegacyGroundDetection", false);
+		this.setDefault("ParkourKit.BypassPotionCooldown", false);
 
 		this.setDefault("ParkourRankChat.Enabled", false);
 		this.setDefault("ParkourRankChat.OverrideChat", true);

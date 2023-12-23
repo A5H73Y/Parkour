@@ -249,10 +249,10 @@ public class Parkour extends JavaPlugin {
         if (getDefaultConfig().getBoolean("AutoStart.Enabled")) {
             pluginManager.registerEvents(new AutoStartListener(this), this);
         }
-        if (getDefaultConfig().getBoolean("OnCourse.ParkourKit.Enabled")) {
+        if (getDefaultConfig().getBoolean("ParkourKit.Enabled")) {
             pluginManager.registerEvents(new ParkourBlockListener(this), this);
         }
-        if (getDefaultConfig().getBoolean("OnCourse.ParkourKit.IncludeVehicles")) {
+        if (getDefaultConfig().getBoolean("ParkourKit.IncludeVehicles")) {
             pluginManager.registerEvents(new VehicleMoveListener(this), this);
         }
     }

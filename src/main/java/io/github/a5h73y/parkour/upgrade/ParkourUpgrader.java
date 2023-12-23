@@ -33,7 +33,7 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 	private final File economyFile;
 	private final File parkourKitFile;
 
-	private final FileConfiguration defaultConfig;
+	private FileConfiguration defaultConfig;
 	private final FileConfiguration stringsConfig;
 	private final FileConfiguration playerConfig;
 	private final FileConfiguration inventoryConfig;
@@ -95,7 +95,6 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 				success = performPartialUpgrade();
 			}
 		} else {
-			// nothing to partially upgrade yet
 			success = performPartialUpgrade();
 		}
 
@@ -165,6 +164,8 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 			return false;
 		}
 
+		// reload the local config
+		defaultConfig = YamlConfiguration.loadConfiguration(defaultFile);
 		return new PlayerMinorUpgradeTask(this).start();
 	}
 

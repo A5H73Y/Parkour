@@ -92,13 +92,6 @@ OnCourse:
   SneakToInteractItems: true
   # Should achieving the final Checkpoint trigger the Course finish for the Player
   TreatLastCheckpointAsFinish: false
-  # Should ParkourKits be enabled. If this is set to false, finish blocks will no longer work and Courses must be finished using a Finish Sign or other means.
-  ParkourKit: 
-    Enabled: true
-    # Should Vehicles be affected by ParkourKits when driven upon (excludes repulse and climb blocks)
-    IncludeVehicles: false
-    # Detect the closest block to the Player while floating on a solid block
-    FloatingClosestBlock: true
   # Should the Player be prevented from using non-Parkour commands
   EnforceParkourCommands:
     Enabled: true
@@ -392,6 +385,12 @@ ParkourGUI:
 
 # ParkourKit settings
 ParkourKit:
+  # Should ParkourKits be enabled. If this is set to false, finish blocks will no longer work and Courses must be finished using a Finish Sign or other means.
+  Enabled: true
+  # Should Vehicles be affected by ParkourKits when driven upon (excludes repulse and climb blocks)
+  IncludeVehicles: false
+  # Detect the closest block to the Player while floating on a solid block
+  FloatingClosestBlock: true
   # When a Kit is requested, should it replace the Player's inventory
   ReplaceInventory: true
   # When a Kit is requested, should a Sign be included in the Kit
@@ -399,6 +398,8 @@ ParkourKit:
   # Should the plugin use the legacy ground detection. 
   # This will always check what is below the Player, for example when standing on a LILYPAD on WATER will consider the Material WATER, similar for CARPET.
   LegacyGroundDetection: false
+  # Should the Potion be re-applied to the Player when they already have it applied 
+  BypassPotionCooldown: false
 
 # ParkourRank Chat settings
 ParkourRankChat:

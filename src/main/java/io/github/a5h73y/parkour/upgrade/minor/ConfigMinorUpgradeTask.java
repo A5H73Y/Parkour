@@ -17,8 +17,11 @@ public class ConfigMinorUpgradeTask extends TimedConfigUpgradeTask<DefaultConfig
 	@Override
 	protected boolean doWork() {
 		updateConfigEntry("ParkourModes.Rockets.SecondCooldown", "ParkourTool.Rockets.SecondCooldown");
-		updateConfigEntry("OnCourse.UseParkourKit", "OnCourse.ParkourKit.Enabled");
-
+		updateConfigEntry("OnCourse.UseParkourKit", "ParkourKit.Enabled");
+		updateConfigEntry("OnCourse.ParkourKit.Enabled", "ParkourKit.Enabled");
+		updateConfigEntry("OnCourse.ParkourKit.IncludeVehicles", "ParkourKit.IncludeVehicles");
+		updateConfigEntry("OnCourse.ParkourKit.FloatingClosestBlock", "ParkourKit.FloatingClosestBlock");
+		this.config.forceReload();
 		return true;
 	}
 }

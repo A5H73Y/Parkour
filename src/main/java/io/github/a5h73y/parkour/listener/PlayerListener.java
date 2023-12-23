@@ -4,6 +4,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.player.PlayerConfig;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
+import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import org.bukkit.GameMode;
 import org.bukkit.World;
@@ -236,6 +237,17 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         if (parkour.getParkourConfig().getBoolean("OnLeaveServer.TeleportToLastCheckpoint")) {
             parkour.getPlayerManager().playerDie(player);
         }
+    }
+
+    /**
+     * Handle Players joining while Players have HideAll mode.
+     * @param event PlayerJoinEvent
+     */
+    @EventHandler
+    public void onPlayerJoinRestoreHideall(PlayerJoinEvent event) {
+        parkour.getParkourSessionManager().getOnlineParkourPlayers().stream()
+                .filter(player -> parkour.getParkourSessionManager().hasHiddenPlayers(player))
+                .forEach(player -> PlayerUtils.hidePlayer(player, event.getPlayer()));
     }
 
     /**

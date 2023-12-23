@@ -277,6 +277,9 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
 
                 } else if (!ValidationUtils.validateArgs(player, args, 2, 100)) {
                     return false;
+
+                } else if (!parkour.getParkourConfig().getBoolean("ParkourKit.Enabled")) {
+                    TranslationUtils.sendMessage(player, "&4ParkourKits have been disabled in the config.");
                 }
 
                 parkour.getParkourKitManager().processParkourKitCommand(player, args[1],

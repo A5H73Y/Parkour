@@ -3,9 +3,15 @@ Changelogs
 
 Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon server start up. There will be no manual intervention, unless stated in breaking changes.
 
+## 7.2.2
+
+* Added "ParkourKit.BypassPotionCooldown" setting
+* Tidied up ParkourKit config
+* Fix HideAll not applying to Player join afterwards
+
 ## 7.2.1
 
-* Added option to disable "OnCourse.ParkourKit.FloatingClosestBlock"
+* Added option to disable "ParkourKit.FloatingClosestBlock"
 * Improvement to use centre of each block when calculating closest block
 * Fixed various Challenge bugs
 * Fix NPE with placeholders
@@ -18,7 +24,7 @@ Please note that each version of Parkour is backwards compatible with the previo
 * Added "Other.Display.CurrencyName" to show or hide currency name in messages
 * Added Throwables to be ParkourTools
 * Ability to disable nested parkour commands
-* Added ability to affect vehicles with ParkourKit (OnCourse.ParkourKit.IncludeVehicles)
+* Added ability to affect vehicles with ParkourKit (ParkourKit.IncludeVehicles)
 * Added ability to return items achieved while on Course (OnFinish.GiveGainedItemsBack & OnLeave.GiveGainedItemsBack)
 * Fixed decimal rewarddelay not working
 * Fixed teleporting away from a Course detection
