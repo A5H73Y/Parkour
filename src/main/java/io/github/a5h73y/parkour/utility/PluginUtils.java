@@ -67,18 +67,6 @@ public class PluginUtils {
     }
 
     /**
-     * Debug a message to the console.
-     * Has to be manually enabled in the config.
-     *
-     * @param message message to log
-     */
-    public static void debug(String message) {
-        if (Parkour.getDefaultConfig().getOrDefault("Debug", false)) {
-            log(message, 3);
-        }
-    }
-
-    /**
      * Write message to `Parkour.log` file.
      * Used to log 'incriminating' events to a separate file that can't be erased.
      * Examples: playerA deleted courseB

@@ -117,11 +117,7 @@ public class CourseManager extends AbstractPluginReceiver {
             }
         } catch (Exception ex) {
             PluginUtils.log("Failed to load Course " + courseName, 2);
-            if (parkour.getParkourConfig().getBoolean("Debug")) {
-                ex.printStackTrace();
-            } else {
-                PluginUtils.log("Reason: " + ex.getMessage(), 2);
-            }
+            PluginUtils.log("Reason: " + ex.getMessage(), 2);
         }
 
         return course;

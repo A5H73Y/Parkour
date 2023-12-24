@@ -25,7 +25,7 @@ public class DatabaseUpgradeTask extends TimedUpgradeTask {
 	protected boolean doWork() {
 		Database database = getParkourUpgrader().getDatabase();
 		String sqlResourcePrefix = "sql/" + (database instanceof MySQL ? "mysql" : "sqlite") + "/";
-		PluginUtils.debug("Upgrading the 'time' table.");
+
 		try {
 			getParkourUpgrader().getLogger().info("Creating backup table...");
 			database.update("CREATE TABLE time_backup AS SELECT * FROM time;");
