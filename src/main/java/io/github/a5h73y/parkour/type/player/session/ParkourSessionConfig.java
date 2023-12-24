@@ -37,7 +37,8 @@ public class ParkourSessionConfig extends Json {
     }
 
     public static boolean hasParkourSessionConfig(OfflinePlayer player, String courseName) {
-        return getPlayerParkourSessionFile(player, courseName).exists();
+        File file = getPlayerParkourSessionFile(player, courseName);
+        return file.exists() && file.canWrite();
     }
 
     public static ParkourSessionConfig getConfig(OfflinePlayer player, String courseName) {

@@ -568,11 +568,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     private String getOrRetrieveCache(Supplier<String> callback, String... keys) {
         String key = generateCacheKey(keys);
         // check if the key exists or its 'get' is about to expire.
-        if (!cache.containsKey(key) || cache.get(key).isEmpty()) {
-            cache.put(key, callback.get());
-        }
-
-        return cache.get(key).orElse(NO_TIME_RECORDED);
+        return cache.computeIfAbsent(key, k -> cache.createCacheValue(callback.get()));
     }
 
     private String getTimeValue(long milliseconds) {

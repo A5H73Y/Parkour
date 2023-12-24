@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -78,7 +79,11 @@ public class GenericCache<K, V> implements IGenericCache<K, V> {
         this.cacheMap.put(key, this.createCacheValue(value));
     }
 
-    protected CacheValue<V> createCacheValue(V value) {
+    public V computeIfAbsent(K key, Function<K, CacheValue<V>> boop) {
+        return this.cacheMap.computeIfAbsent(key, boop).getValue();
+    }
+
+    public CacheValue<V> createCacheValue(V value) {
         LocalDateTime now = LocalDateTime.now();
         return new CacheValue<>() {
             @Override
