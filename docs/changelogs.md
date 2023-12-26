@@ -5,9 +5,16 @@ Please note that each version of Parkour is backwards compatible with the previo
 
 ## 7.2.2
 
+* Added "OnCourse.ManualCheckpointAnyPressurePlate" setting
+* Added Player stats (deaths & time)
+* Added 5 new placeholders
 * Added "ParkourKit.BypassPotionCooldown" setting
-* Tidied up ParkourKit config
 * Fix HideAll not applying to Player join afterwards
+* Fixed issue with Placeholders displaying blank values briefly
+* Fixed NPE when getting Placeholders
+* Tidied up ParkourKit config
+* Hopefully fixed permission exception
+* Removed debug functions
 
 ## 7.2.1
 
