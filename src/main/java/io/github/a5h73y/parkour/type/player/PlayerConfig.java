@@ -36,6 +36,7 @@ public class PlayerConfig extends Json {
     public static final String PARKOINS = "Parkoins";
     public static final String EXISTING_SESSION_COURSE_NAME = "ExistingSessionCourseName";
     public static final String ROCKETS_USED = "RocketsUsed";
+    public static final String MANUAL_CHECKPOINTS_USED = "ManualCheckpointsUsed";
     public static final String TOTAL_DEATHS = "TotalDeaths";
     public static final String TOTAL_TIME = "TotalTime";
 
@@ -390,7 +391,15 @@ public class PlayerConfig extends Json {
     }
 
     public void increaseRocketsUsedInSession() {
-        this.set(SESSION_PREFIX + ROCKETS_USED, this.getInt(SESSION_PREFIX + ROCKETS_USED) + 1);
+        this.set(SESSION_PREFIX + ROCKETS_USED, getRocketsUsedInSession() + 1);
+    }
+
+    public int getManualCheckpointsUsedInSession() {
+        return this.getInt(SESSION_PREFIX + MANUAL_CHECKPOINTS_USED);
+    }
+
+    public void increaseManualCheckpointsUsedInSession() {
+        this.set(SESSION_PREFIX + MANUAL_CHECKPOINTS_USED, getManualCheckpointsUsedInSession() + 1);
     }
 
     public void recordStatistics(ParkourSession session) {

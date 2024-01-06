@@ -248,7 +248,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
     private void handleRocketTool(Player player) {
         ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
         CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(session.getCourseName());
-        Integer maximumRockets = courseConfig.get("MaximumRockets", null);
+        Integer maximumRockets = courseConfig.getMaximumRockets();
 
         if (maximumRockets != null) {
             PlayerConfig config = parkour.getConfigManager().getPlayerConfig(player);

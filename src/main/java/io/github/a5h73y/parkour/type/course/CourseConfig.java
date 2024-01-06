@@ -932,6 +932,14 @@ public class CourseConfig extends Json {
         return getManualCheckpoints();
     }
 
+    public Integer getMaximumRockets() {
+        return get("MaximumRockets", null);
+    }
+
+    public Integer getMaximumManualCheckpoints() {
+        return get("MaximumManualCheckpoints", null);
+    }
+
     /**
      * Get the Event Message for this Course.
      * Possible events found within {@link ParkourEventType}.

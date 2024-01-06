@@ -620,6 +620,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		if (session != null) {
 			session.resetProgress();
 			session.setFreedomLocation(null);
+			parkour.getConfigManager().getPlayerConfig(player).resetSessionData();
 			preparePlayerForCourse(player, session.getCourse().getName());
 			PlayerUtils.teleportToLocation(player, session.getCheckpoint().getLocation());
 			parkour.getScoreboardManager().addScoreboard(player, session);
@@ -1203,12 +1204,28 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			return;
 		}
 
+		Integer maxManualCheckpoints = parkour.getConfigManager()
+				.getCourseConfig(session.getCourseName()).getMaximumManualCheckpoints();
+
+		if (maxManualCheckpoints != null) {
+			PlayerConfig config = parkour.getConfigManager().getPlayerConfig(player);
+			int checkpointsUsed = config.getManualCheckpointsUsedInSession();
+
+			if (checkpointsUsed >= maxManualCheckpoints) {
+				TranslationUtils.sendMessage(player, "You have run out of Checkpoints!");
+				return;
+			}
+
+			config.increaseManualCheckpointsUsedInSession();
+		}
+
 		if (parkour.getParkourConfig().isTreatFirstCheckpointAsStart() && session.getFreedomLocation() == null) {
 			session.resetTime();
 			session.setStartTimer(true);
 			parkour.getBountifulApi().sendActionBar(player,
 					TranslationUtils.getTranslation("Parkour.TimerStarted", false));
 		}
+
 		session.setFreedomLocation(location != null ? location : player.getLocation());
 		parkour.getSoundsManager().playSound(player, SoundType.CHECKPOINT_ACHIEVED);
 
