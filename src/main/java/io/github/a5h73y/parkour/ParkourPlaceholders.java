@@ -35,6 +35,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     private static final String COURSE_ACTIVE = TranslationUtils.getTranslation("PlaceholderAPI.CourseActive", false);
     private static final String COURSE_INACTIVE = TranslationUtils.getTranslation("PlaceholderAPI.CourseInactive", false);
     private static final String NO_COOLDOWN_REMAINING = TranslationUtils.getTranslation("PlaceholderAPI.NoPrizeCooldown", false);
+    private static final String PLAYER_NOT_FOUND = TranslationUtils.getTranslation("PlaceholderAPI.PlayerNotFound", false);
 
     private static final String COMPLETED = "completed";
     private static final String POSITION = "position";
@@ -184,7 +185,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
         }
 
         if (!PlayerConfig.hasPlayerConfig(offlinePlayer)) {
-            return "Player not found";
+            return PLAYER_NOT_FOUND;
         }
 
         PlayerConfig playerConfig = PlayerConfig.getConfig(offlinePlayer);
