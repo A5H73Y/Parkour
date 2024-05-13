@@ -117,7 +117,7 @@
 		<dependency>
 			<groupId>com.github.Huskehhh</groupId>
 			<artifactId>MySQL</artifactId>
-			<version>63040a058d</version>
+			<version>1.4.2</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
