@@ -565,11 +565,11 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		playerConfig.setLastCompletedCourse(courseName);
 		playerConfig.setExistingSessionCourseName(null);
 
+		submitPlayerLeaderboard(player, session);
 		parkour.getParkourSessionManager().forceVisible(player);
 		parkour.getParkourSessionManager().deleteParkourSession(player, courseName);
 		parkour.getCourseManager().runEventCommands(player, session, FINISH);
 		parkour.getConfigManager().getCourseConfig(courseName).incrementCompletions();
-		submitPlayerLeaderboard(player, session);
 	}
 
 	/**

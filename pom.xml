@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.a5h73y</groupId>
 	<artifactId>Parkour</artifactId>
-	<version>7.2.2</version>
+	<version>7.2.3</version>
 	<packaging>jar</packaging>
 
 	<name>Parkour</name>
@@ -112,14 +112,12 @@
 			<groupId>org.bstats</groupId>
 			<artifactId>bstats-bukkit</artifactId>
 			<version>3.0.2</version>
-			<scope>compile</scope>
 		</dependency>
 		<!-- MySQL Database -->
 		<dependency>
 			<groupId>com.github.Huskehhh</groupId>
 			<artifactId>MySQL</artifactId>
 			<version>63040a058d</version>
-			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
@@ -132,21 +130,18 @@
 			<groupId>de.themoep</groupId>
 			<artifactId>inventorygui</artifactId>
 			<version>1.5-SNAPSHOT</version>
-			<scope>compile</scope>
 		</dependency>
 		<!-- XSeries -->
 		<dependency>
 			<groupId>com.github.cryptomorin</groupId>
 			<artifactId>XSeries</artifactId>
-			<version>9.8.0</version>
-			<scope>compile</scope>
+			<version>10.0.0</version>
 		</dependency>
 		<!-- Version Compare -->
 		<dependency>
 			<groupId>io.github.g00fy2</groupId>
 			<artifactId>versioncompare</artifactId>
 			<version>1.5.0</version>
-			<scope>compile</scope>
 		</dependency>
 		<!-- Simplix Storage -->
 		<dependency>
@@ -159,16 +154,31 @@
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
 			<version>2.2</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.10.1</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
-			<version>20231013</version>
+			<version>20240303</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.esotericsoftware.yamlbeans</groupId>
+			<artifactId>yamlbeans</artifactId>
+			<version>1.17</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>33.2.0-jre</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
@@ -179,6 +189,10 @@
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>parkourPlaceholders.json</exclude>
+					<exclude>parkourCheckstyles.xml</exclude>
+				</excludes>
 				<filtering>true</filtering>
 			</resource>
 		</resources>
@@ -187,7 +201,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.12.0</version>
+				<version>3.13.0</version>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
@@ -197,7 +211,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.3.0</version>
+				<version>3.4.1</version>
 				<configuration>
 					<outputDirectory>${export_dir}</outputDirectory>
 				</configuration>
@@ -206,7 +220,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.5.1</version>
+				<version>3.5.3</version>
 				<configuration>
 					<createDependencyReducedPom>false</createDependencyReducedPom>
 					<minimizeJar>true</minimizeJar>

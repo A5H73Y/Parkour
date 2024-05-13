@@ -262,14 +262,14 @@ To achieve seamless integration with the plugin, Parkour's event command system 
 
 To apply to every single Course, set the `CourseDefault.Command.Join` to:
 
-`replay start %PLAYER%-%COURSE% %PLAYER%`  
+`replay start %PLAYER%-%COURSE_NAME% %PLAYER%`  
 
 This means only the Player which joined the Course is recorded, the recording name will be a combination of the Player's name and the Course name.
 
 To avoid complications, the recording will only be saved if they complete the Course with either their best time ever, or the Course's best time ever. All other events will discard the recording.
 
-Set the `Leave`, `Finish` commands to `replay stop %PLAYER%-%COURSE% -nosave`
+Set the `Leave`, `Finish` commands to `replay stop %PLAYER%-%COURSE_NAME% -nosave`
 
-Set the `PlayerCourseRecord` and `GlobalCourseRecord` commands to `replay stop %PLAYER%-%COURSE% -force`
+Set the `PlayerCourseRecord` and `GlobalCourseRecord` commands to `replay stop %PLAYER%-%COURSE_NAME% -force`
 
-Now you can use `/replay play (player)-(course)` to see that Player's best time on the Course. Also, if you have PlaceholderAPI integration you could evaluate the best Player on a given Course to see the best Course time run.
+Now you can use `/replay play (player)-(course)` to see that Player's best time on the Course. Also, if you have PlaceholderAPI integration you could evaluate the best player's name using `%parkour_course_record_(course)_player%` when wanting to watch the best player's run for the given Course.

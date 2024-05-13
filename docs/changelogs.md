@@ -3,6 +3,12 @@ Changelogs
 
 Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon server start up. There will be no manual intervention, unless stated in breaking changes.
 
+## 7.2.3
+
+* Added "%COURSE_NAME%" internal placeholder
+* Rearranged events to ensure Record events happen before Finish event
+* Bumped dependencies & optimised build size
+
 ## 7.2.2
 
 * Added "OnCourse.ManualCheckpointAnyPressurePlate" setting

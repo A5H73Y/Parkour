@@ -3,6 +3,7 @@ package io.github.a5h73y.parkour.utility;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ARGUMENTS_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.CHECKPOINT_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.COMMAND_PLACEHOLDER;
+import static io.github.a5h73y.parkour.other.ParkourConstants.COURSE_NAME_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.COURSE_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.DEATHS_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.PLAYER_DISPLAY_PLACEHOLDER;
@@ -18,10 +19,9 @@ import static io.github.a5h73y.parkour.utility.StringUtils.colour;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.type.course.ParkourEventType;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
+import io.github.a5h73y.parkour.utility.time.MillisecondConverter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import io.github.a5h73y.parkour.utility.time.MillisecondConverter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -45,7 +45,7 @@ public class TranslationUtils {
 	 * @return String of appropriate translation
 	 */
 	public static String getTranslation(@Nullable String translationKey,
-	                                    boolean prefix) {
+										boolean prefix) {
 		if (!ValidationUtils.isStringValid(translationKey)) {
 			return "Invalid translation.";
 		}
@@ -84,8 +84,8 @@ public class TranslationUtils {
 	 * @return String of appropriate translation
 	 */
 	public static String getValueTranslation(@Nullable String translationKey,
-	                                         @Nullable String value,
-	                                         boolean prefix) {
+											 @Nullable String value,
+											 boolean prefix) {
 		return VALUE_PLACEHOLDER.matcher(getTranslation(translationKey, prefix))
 				.replaceAll(value == null ? "" : Matcher.quoteReplacement(value));
 	}
@@ -101,8 +101,8 @@ public class TranslationUtils {
 	 * @return String of appropriate translation
 	 */
 	public static String getValueTranslation(@Nullable String translationKey,
-	                                         @Nullable Number value,
-	                                         boolean prefix) {
+											 @Nullable Number value,
+											 boolean prefix) {
 		return getValueTranslation(translationKey, String.valueOf(value), prefix);
 	}
 
@@ -116,7 +116,7 @@ public class TranslationUtils {
 	 * @return String of appropriate translation
 	 */
 	public static String getValueTranslation(@Nullable String translationKey,
-	                                         @Nullable String value) {
+											 @Nullable String value) {
 		return getValueTranslation(translationKey, value, true);
 	}
 
@@ -131,8 +131,8 @@ public class TranslationUtils {
 	 * @return course event message
 	 */
 	public static String getCourseEventMessage(@NotNull ParkourSession session,
-	                                           @NotNull ParkourEventType eventType,
-	                                           @Nullable String fallbackKey) {
+											   @NotNull ParkourEventType eventType,
+											   @Nullable String fallbackKey) {
 		String result = Parkour.getInstance().getConfigManager().getCourseConfig(session.getCourseName())
 				.getEventMessage(eventType);
 
@@ -152,7 +152,7 @@ public class TranslationUtils {
 	 * @param recipients targets to receive the message
 	 */
 	public static void sendTranslation(@Nullable String translationKey, boolean prefix,
-	                                   @Nullable CommandSender... recipients) {
+									   @Nullable CommandSender... recipients) {
 		String translation = getTranslation(translationKey, prefix);
 		if (recipients != null && !translation.isEmpty()) {
 			for (CommandSender recipient : recipients) {
@@ -168,7 +168,7 @@ public class TranslationUtils {
 	 * @param players to receive the message
 	 */
 	public static void sendTranslation(@Nullable String translationKey,
-	                                   @Nullable CommandSender... players) {
+									   @Nullable CommandSender... players) {
 		sendTranslation(translationKey, true, players);
 	}
 
@@ -180,8 +180,8 @@ public class TranslationUtils {
 	 * @param players targets to receive the message
 	 */
 	public static void sendValueTranslation(@Nullable String translationKey,
-	                                        @Nullable String value,
-	                                        @Nullable CommandSender... players) {
+											@Nullable String value,
+											@Nullable CommandSender... players) {
 		sendValueTranslation(translationKey, value, true, players);
 	}
 
@@ -193,8 +193,8 @@ public class TranslationUtils {
 	 * @param recipients targets to receive the message
 	 */
 	public static void sendValueTranslation(@Nullable String translationKey,
-	                                        @Nullable String value, boolean prefix,
-	                                        @Nullable CommandSender... recipients) {
+											@Nullable String value, boolean prefix,
+											@Nullable CommandSender... recipients) {
 		String translation = getValueTranslation(translationKey, value, prefix);
 		if (recipients != null && !translation.isEmpty()) {
 			for (CommandSender recipient : recipients) {
@@ -402,6 +402,7 @@ public class TranslationUtils {
 		String result = input.replace(PLAYER_PLACEHOLDER, player.getName())
 				.replace(PLAYER_DISPLAY_PLACEHOLDER, player.getDisplayName())
 				.replace(COURSE_PLACEHOLDER, session.getCourse().getDisplayName())
+				.replace(COURSE_NAME_PLACEHOLDER, session.getCourse().getName())
 				.replace(DEATHS_PLACEHOLDER, String.valueOf(session.getDeaths()))
 				.replace(TIME_PLACEHOLDER, session.getDisplayTime())
 				.replace(TIME_MS_PLACEHOLDER, String.valueOf(session.getAccumulatedTime()))

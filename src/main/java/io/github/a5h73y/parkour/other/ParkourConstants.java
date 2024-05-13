@@ -14,6 +14,8 @@ public class ParkourConstants {
 
     public static final String COURSE_PLACEHOLDER = "%COURSE%";
 
+    public static final String COURSE_NAME_PLACEHOLDER = "%COURSE_NAME%";
+
     public static final String PLAYER_PLACEHOLDER = "%PLAYER%";
 
     public static final String PLAYER_DISPLAY_PLACEHOLDER = "%PLAYER_DISPLAY%";

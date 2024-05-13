@@ -32,7 +32,7 @@ For the list of known supported plugins and tutorials on how to set them up, [cl
 <dependency>
     <groupId>com.github.A5H73Y</groupId>
     <artifactId>Parkour</artifactId>
-    <version>7.2.2</version>
+    <version>7.2.3</version>
     <type>jar</type>
     <scope>provided</scope>
 </dependency>
@@ -48,5 +48,5 @@ repositories {
 ```
 
 ```
-compile 'com.github.A5H73Y:Parkour:7.2.2'
+compile 'com.github.A5H73Y:Parkour:7.2.3'
 ```
