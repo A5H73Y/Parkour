@@ -100,8 +100,8 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     }
 
     @Override
-    public String onRequest(final OfflinePlayer offlinePlayer,
-                            final @NotNull String placeholder) {
+    public synchronized String onRequest(final OfflinePlayer offlinePlayer,
+                                         final @NotNull String placeholder) {
         return retrieveValue(offlinePlayer, placeholder.toLowerCase(), placeholder.toLowerCase().split("_"));
     }
 

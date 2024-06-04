@@ -853,12 +853,9 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
     }
 
     private List<TimeEntry> getCourseCache(String courseName) {
-        if (!resultsCache.containsKey(courseName.toLowerCase())) {
-            resultsCache.put(courseName.toLowerCase(),
-                    getTopCourseResults(courseName, getConfig().getMaximumCoursesCached()));
-        }
-
-        return resultsCache.get(courseName.toLowerCase());
+        String courseKey = courseName.toLowerCase();
+        return resultsCache.computeIfAbsent(courseKey,
+                key -> getTopCourseResults(key, getConfig().getMaximumCoursesCached()));
     }
 
     /**

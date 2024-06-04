@@ -1,9 +1,8 @@
 ![Parkour Logo](https://user-images.githubusercontent.com/6440871/208645721-b047416c-1ca3-471d-b146-6af9424ce639.png)
 
 [![discord server](https://img.shields.io/discord/328154925949517824.svg)](https://discord.gg/h9d2fSd)
-[![travis-ci](https://travis-ci.org/A5H73Y/Parkour.svg?branch=master)](https://travis-ci.org/A5H73Y/Parkour/branches)
-[![license: MIT](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://tldrlegal.com/license/mit-license)
 [![releases](https://img.shields.io/github/v/release/A5H73Y/Parkour.svg?label=github%20release)](https://github.com/A5H73Y/Parkour/releases/latest)
+[![license: MIT](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://tldrlegal.com/license/mit-license)
 
 Parkour is the original, most powerful Parkour based plugin available! 
 First released in November 2012, and has been updated since. Parkour is now open source, allowing you to contribute ideas and enhancements, or create your own spin on the plugin.<p />
