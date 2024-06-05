@@ -6,7 +6,10 @@ Please note that each version of Parkour is backwards compatible with the previo
 ## 7.2.3
 
 * Added "%COURSE_NAME%" internal placeholder
+* Added the ability for max manual checkpoints
+* Added "PlaceholderAPI.PlayerNotFound" string config
 * Rearranged events to ensure Record events happen before Finish event
+* Finally fixed non-synchronized placeholders
 * Bumped dependencies & optimised build size
 
 ## 7.2.2
