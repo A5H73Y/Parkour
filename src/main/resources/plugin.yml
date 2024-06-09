@@ -1,7 +1,7 @@
 name: Parkour
 version: ${project.version}
 description: ${project.description}
-softdepend: [Vault, PlaceholderAPI, BountifulAPI, Multiverse-Core]
+softdepend: [Vault, PlaceholderAPI, BountifulAPI, Multiverse-Core, My_Worlds]
 authors:
   - A5H73Y
   - steve4744
