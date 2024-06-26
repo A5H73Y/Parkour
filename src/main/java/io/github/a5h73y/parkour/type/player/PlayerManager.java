@@ -424,6 +424,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			} else {
 				TranslationUtils.sendValueTranslation("Parkour.MaxDeaths",
 						String.valueOf(session.getCourse().getSettings().getMaxDeaths()), player);
+				session.setMarkedForDeletion(true);
 				leaveCourse(player);
 				return;
 			}

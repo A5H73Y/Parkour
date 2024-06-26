@@ -129,13 +129,13 @@
 		<dependency>
 			<groupId>de.themoep</groupId>
 			<artifactId>inventorygui</artifactId>
-			<version>1.5-SNAPSHOT</version>
+			<version>1.6.2-SNAPSHOT</version>
 		</dependency>
 		<!-- XSeries -->
 		<dependency>
 			<groupId>com.github.cryptomorin</groupId>
 			<artifactId>XSeries</artifactId>
-			<version>10.0.0</version>
+			<version>11.1.0</version>
 		</dependency>
 		<!-- Version Compare -->
 		<dependency>
@@ -211,7 +211,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.4.1</version>
+				<version>3.4.2</version>
 				<configuration>
 					<outputDirectory>${export_dir}</outputDirectory>
 				</configuration>
@@ -294,7 +294,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>3.3.1</version>
+				<version>3.4.0</version>
 				<configuration>
 					<configLocation>src/main/resources/parkourCheckstyles.xml</configLocation>
 					<consoleOutput>true</consoleOutput>
