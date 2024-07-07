@@ -1,12 +1,11 @@
 package io.github.a5h73y.parkour.type.player;
 
-import io.github.a5h73y.parkour.type.player.session.ParkourSession;
-import java.io.File;
-
 import de.leonhard.storage.Json;
 import de.leonhard.storage.internal.FileType;
 import io.github.a5h73y.parkour.Parkour;
+import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
+import java.io.File;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -43,7 +42,7 @@ public class PlayerConfig extends Json {
     public static final String SNAPSHOT_PREFIX = "Snapshot.";
     public static final String SESSION_PREFIX = "Session.";
     public static final String STATS_PREFIX = "Stats.";
-
+    public static final String RESUMABLE_PREFIX = "Resumable.";
 
     public PlayerConfig(File playerFile) {
         super(playerFile);
@@ -193,8 +192,7 @@ public class PlayerConfig extends Json {
      */
     public void setPlayerDataSnapshot(Player player) {
         if (!hasPlayerDataSnapshot()) {
-            this.setSerializable(SNAPSHOT_PREFIX + INVENTORY, player.getInventory().getContents());
-            this.setSerializable(SNAPSHOT_PREFIX + ARMOR, player.getInventory().getArmorContents());
+            this.setPlayerInventoryContents(SNAPSHOT_PREFIX, player);
             this.set(SNAPSHOT_PREFIX + HEALTH, player.getHealth());
             this.set(SNAPSHOT_PREFIX + HUNGER, player.getFoodLevel());
             this.set(SNAPSHOT_PREFIX + XP_LEVEL, player.getLevel());
@@ -204,6 +202,31 @@ public class PlayerConfig extends Json {
                 setPlayerJoinLocation(player);
             }
         }
+    }
+
+    public void setPlayerDataResumable(Player player) {
+        this.setPlayerInventoryContents(RESUMABLE_PREFIX, player);
+    }
+
+    public boolean hasResumableInventory() {
+        return this.contains(RESUMABLE_PREFIX + INVENTORY);
+    }
+
+    public ItemStack[] getResumableInventory() {
+        return this.getSerializable(RESUMABLE_PREFIX + INVENTORY, ItemStack[].class);
+    }
+
+    public ItemStack[] getResumableArmor() {
+        return this.getSerializable(RESUMABLE_PREFIX + ARMOR, ItemStack[].class);
+    }
+
+    public void resetResumableInventory() {
+        this.remove(RESUMABLE_PREFIX);
+    }
+
+    private void setPlayerInventoryContents(String configPrefix, Player player) {
+        this.setSerializable(configPrefix + INVENTORY, player.getInventory().getContents());
+        this.setSerializable(configPrefix + ARMOR, player.getInventory().getArmorContents());
     }
 
     /**
@@ -219,6 +242,10 @@ public class PlayerConfig extends Json {
 
     public ItemStack[] getSnapshotStartParkourInventory() {
         return this.getSerializable(SNAPSHOT_PREFIX + START_PARKOUR_INVENTORY, ItemStack[].class);
+    }
+
+    public boolean hasSnapshotStartParkourInventory() {
+        return this.contains(SNAPSHOT_PREFIX + START_PARKOUR_INVENTORY);
     }
 
     public boolean hasPlayerDataSnapshot() {

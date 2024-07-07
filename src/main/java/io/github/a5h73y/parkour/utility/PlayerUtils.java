@@ -12,6 +12,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
@@ -261,8 +262,13 @@ public class PlayerUtils {
 		player.getInventory().setChestplate(null);
 		player.getInventory().setLeggings(null);
 		player.getInventory().setBoots(null);
-
 		player.updateInventory();
+	}
+
+	public static void setInventoryAndArmor(Player player, ItemStack[] inventory, ItemStack[] armor) {
+		player.getInventory().clear();
+		player.getInventory().setContents(inventory);
+		player.getInventory().setArmorContents(armor);
 	}
 
 	private PlayerUtils() {}

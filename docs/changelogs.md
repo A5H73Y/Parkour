@@ -3,6 +3,10 @@ Changelogs
 
 Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon server start up. There will be no manual intervention, unless stated in breaking changes.
 
+## 7.2.4
+
+* Added "OnLeave.RetainResumableInventory" setting to restore course inventory
+
 ## 7.2.3
 
 * Added "%COURSE_NAME%" internal placeholder

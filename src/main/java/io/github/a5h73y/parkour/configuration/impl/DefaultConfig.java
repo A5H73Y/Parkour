@@ -117,6 +117,7 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("OnLeave.DestroyCourseProgress", true);
 		this.setDefault("OnLeave.TeleportAway", true);
 		this.setDefault("OnLeave.GiveGainedItemsBack", false);
+		this.setDefault("OnLeave.RetainResumableInventory", false);
 
 		this.setDefault("OnRestart.FullPlayerRestart", false);
 		this.setDefault("OnRestart.RequireConfirmation", false);

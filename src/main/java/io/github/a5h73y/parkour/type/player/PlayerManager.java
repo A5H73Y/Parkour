@@ -201,6 +201,10 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			playerConfig.setSnapshotStartParkourInventory(player);
 		}
 
+		if (playerConfig.hasResumableInventory()) {
+			PlayerUtils.setInventoryAndArmor(player, playerConfig.getResumableInventory(), playerConfig.getResumableArmor());
+		}
+
 		parkour.getSoundsManager().playSound(player, SoundType.JOIN_COURSE);
 		parkour.getConfigManager().getCourseConfig(course.getName()).incrementViews();
 		Bukkit.getServer().getPluginManager().callEvent(new ParkourJoinEvent(player, course.getName(), silent));
@@ -250,14 +254,19 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}
 
 		teardownParkourMode(player);
+		PlayerConfig playerConfig = parkour.getConfigManager().getPlayerConfig(player);
+
 		if (session.isMarkedForDeletion()) {
 			parkour.getParkourSessionManager().deleteParkourSession(player, session.getCourseName());
 			parkour.getParkourSessionManager().removePlayer(player);
+			playerConfig.resetResumableInventory();
+
 		} else {
 			parkour.getParkourSessionManager().saveParkourSession(player, true);
+			if (parkour.getParkourConfig().getBoolean("OnLeave.RetainResumableInventory")) {
+				playerConfig.setPlayerDataResumable(player);
+			}
 		}
-
-		PlayerConfig playerConfig = parkour.getConfigManager().getPlayerConfig(player);
 
 		if (!silent) {
 			parkour.getSoundsManager().playSound(player, SoundType.COURSE_FAILED);
@@ -844,12 +853,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 				TranslationUtils.sendMessage(player, "No saved inventory to load.");
 				return;
 			}
-
-			player.getInventory().clear();
-			player.getInventory().setContents(inventoryContents);
-
 			ItemStack[] armorContents = playerConfig.getSnapshotArmor();
-			player.getInventory().setArmorContents(armorContents);
+			PlayerUtils.setInventoryAndArmor(player, inventoryContents, armorContents);
 		} else {
 //			TODO attempt to remove the Parkour Tools
 		}
@@ -1299,7 +1304,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 	private List<ItemStack> getItemsToRestore(Player player, PlayerConfig playerConfig, boolean finishedCourse) {
 		List<ItemStack> itemsToGiveBack = new ArrayList<>();
-		if (playerConfig.getSnapshotStartParkourInventory() != null
+		if (playerConfig.hasSnapshotStartParkourInventory()
 				&& ((parkour.getParkourConfig().getBoolean("OnFinish.GiveGainedItemsBack") && finishedCourse)
 				|| (parkour.getParkourConfig().getBoolean("OnLeave.GiveGainedItemsBack") && !finishedCourse))) {
 			List<String> parkourTools = getEachParkourToolMaterial();
