@@ -1461,12 +1461,19 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	 * Course Timer may increase or decrease based on whether the Course has a maximum time.
 	 */
 	private void startLiveTimerRunnable() {
-		final boolean displayLiveTimer = parkour.getParkourConfig().getBoolean("OnCourse.DisplayLiveTime");
+		final boolean displayLiveTimer = parkour.getParkourConfig().getBoolean("OnCourse.DisplayLiveTime.Enabled");
 
 		if (!displayLiveTimer
 				&& !(parkour.getParkourConfig().getBoolean("Scoreboard.Enabled")
 				&& parkour.getParkourConfig().getBoolean("Scoreboard.LiveTimer.Enabled"))) {
 			return;
+		}
+
+		boolean useTitles = parkour.getBountifulApi().hasTitleSupport();
+		boolean displayMilliseconds = parkour.getParkourConfig().getBoolean("OnCourse.DisplayLiveTime.Milliseconds");
+
+		if (displayMilliseconds && useTitles) {
+			startMillisecondLiveTimer();
 		}
 
 		Bukkit.getScheduler().runTaskTimer(parkour, () -> {
@@ -1493,7 +1500,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 					parkour.getSoundsManager().playSound(player, SoundType.SECOND_INCREMENT);
 				}
 
-				if (displayLiveTimer && parkour.getBountifulApi().hasTitleSupport()) {
+				if (!displayMilliseconds && displayLiveTimer && useTitles) {
 					parkour.getBountifulApi().sendActionBar(player, liveTimer);
 				}
 
@@ -1507,6 +1514,23 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 				}
 			}
 		}, 0, 20);
+	}
+
+	private void startMillisecondLiveTimer() {
+		Bukkit.getScheduler().runTaskTimer(parkour, () -> {
+			for (Map.Entry<UUID, ParkourSession> parkourPlayer :
+					parkour.getParkourSessionManager().getParkourPlayers().entrySet()) {
+				Player player = Bukkit.getPlayer(parkourPlayer.getKey());
+				ParkourSession session = parkourPlayer.getValue();
+
+				if (player == null || !session.isStartTimer()) {
+					continue;
+				}
+
+				String liveTimer = DateTimeUtils.displayCurrentTime(session.getCurrentTime());
+				parkour.getBountifulApi().sendActionBar(player, liveTimer);
+			}
+		}, 0, 1);
 	}
 
 	private Location determineJoinDestination(ParkourSession session) {

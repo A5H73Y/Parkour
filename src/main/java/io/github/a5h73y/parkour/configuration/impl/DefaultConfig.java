@@ -81,7 +81,8 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("OnCourse.DisablePlayerDamage", false);
 		this.setDefault("OnCourse.DisableFallDamage", false);
 		this.setDefault("OnCourse.DisableFly", true);
-		this.setDefault("OnCourse.DisplayLiveTime", false);
+		this.setDefault("OnCourse.DisplayLiveTime.Enabled", false);
+		this.setDefault("OnCourse.DisplayLiveTime.Milliseconds", false);
 		this.setDefault("OnCourse.EnforceParkourSigns", true);
 		this.setDefault("OnCourse.EnforceWorld.Enabled", true);
 		this.setDefault("OnCourse.EnforceWorld.LeaveCourse", false);

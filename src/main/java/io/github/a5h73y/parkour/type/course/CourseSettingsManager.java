@@ -474,7 +474,7 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 	 * @param secondsValue new maximum seconds
 	 */
 	public void setMaxTime(final CommandSender commandSender, final String courseName, final String secondsValue) {
-		if (!parkour.getParkourConfig().getBoolean("OnCourse.DisplayLiveTime")
+		if (!parkour.getParkourConfig().getBoolean("OnCourse.DisplayLiveTime.Enabled")
 				&& !(parkour.getParkourConfig().getBoolean("Scoreboard.Enabled")
 				&& parkour.getParkourConfig().getBoolean("Scoreboard.LiveTimer.Enabled"))) {
 			TranslationUtils.sendMessage(commandSender, "The live timer is disabled!");

@@ -29,10 +29,14 @@ public class PlayerMinorUpgradeTask extends TimedUpgradeTask {
 		uuids.stream()
 				.filter(Objects::nonNull)
 				.forEach(uuid -> {
-					OfflinePlayer player = PlayerUtils.findPlayer(uuid);
-					PlayerConfig config = getParkourUpgrader().getNewConfigManager().getPlayerConfig(player);
+					try {
+						OfflinePlayer player = PlayerUtils.findPlayer(uuid);
+						PlayerConfig config = getParkourUpgrader().getNewConfigManager().getPlayerConfig(player);
 
-					updateConfigEntry(config, "Snapshot.JoinLocation", "JoinLocation");
+						updateConfigEntry(config, "Snapshot.JoinLocation", "JoinLocation");
+					} catch (Exception ex) {
+						getParkourUpgrader().getLogger().severe("Failed to upgrade Player Config for UUID: " + uuid);
+					}
 				});
 
 		return true;
