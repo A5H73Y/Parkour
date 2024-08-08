@@ -558,7 +558,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 					teleportCourseCompletion(player, courseName);
 				}
 				restorePlayerData(player, playerConfig, true);
-				rewardPrize(player, session);
+
 
 				if (!teleportBeforePrize) {
 					teleportCourseCompletion(player, courseName);
@@ -567,6 +567,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 				playerConfig.resetPlayerDataSnapshot();
 				playerConfig.resetSessionJoinLocation();
 				playerConfig.resetSessionData();
+				rewardPrize(player, session);
 			}
 
 			parkour.getConfigManager().getCourseCompletionsConfig().addCompletedCourse(player, courseName);
@@ -1296,6 +1297,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		player.setHealth(Math.min(Math.max(1, playerConfig.getSnapshotHealth()), player.getMaxHealth()));
 		player.setFoodLevel(playerConfig.getSnapshotHunger());
 		player.setLevel(playerConfig.getSnapshotXpLevel());
+		player.setAllowFlight(playerConfig.getAllowFlight());
 		List<ItemStack> items = getItemsToRestore(player, playerConfig, finishedCourse);
 		restoreInventoryArmor(player, playerConfig);
 		items.forEach(itemStack -> player.getInventory().addItem(itemStack));
