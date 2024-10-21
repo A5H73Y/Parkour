@@ -115,6 +115,11 @@
         "placeholder": "%parkour_player_total_playing_time%",
         "output":  "02:03:45",
         "description": "The total recorded time by the Player across all Courses."
+      },
+      {
+        "placeholder": "%parkour_player_total_firstplaces%",
+        "output":  "2",
+        "description": "The total first place positions held by the Player across all Courses."
       }
     ]
   },
@@ -365,6 +370,18 @@
         "placeholder": "%parkour_topten_(course)_(position)%",
         "output": "&f1) &bA5H73Y&f in &a00:01:23",
         "description": "Display a summary of the global leaderboard entry. The output can be customised in the strings.yml (PlaceholderAPI.TopTenResult)"
+      }
+    ]
+  },
+  {
+    "heading": "TopFirstPlaces Placeholders",
+    "alias": "tfp",
+    "description": "Display a summary of the highest total first place positions held by the given row across all Courses.",
+    "placeholders": [
+      {
+        "placeholder": "%parkour_topfirstplaces_(position)%",
+        "output": "&f1) &bA5H73Y&f - &a5",
+        "description": "Display a summary of the top first place entry. The output can be customised in the strings.yml (PlaceholderAPI.TopFirstPlaceResult)"
       }
     ]
   }

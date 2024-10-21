@@ -221,6 +221,7 @@ public class StringsConfig extends Yaml {
 		this.setDefault("PlaceholderAPI.CurrentCourseCompleted", "Yes");
 		this.setDefault("PlaceholderAPI.CurrentCourseNotCompleted", "No");
 		this.setDefault("PlaceholderAPI.TopTenResult", "&f%POSITION%) &b%PLAYER%&f in &a%TIME%");
+		this.setDefault("PlaceholderAPI.TopFirstPlaceResult", "&f%POSITION%) &b%PLAYER%&f - &a%AMOUNT%");
 		this.setDefault("PlaceholderAPI.CourseActive", "Active");
 		this.setDefault("PlaceholderAPI.CourseInactive", "Inactive");
 		this.setDefault("PlaceholderAPI.CheckpointHologram", "Checkpoint &b%VALUE%");

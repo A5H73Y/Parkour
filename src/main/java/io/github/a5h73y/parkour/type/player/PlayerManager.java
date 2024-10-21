@@ -484,6 +484,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}
 
 		prepareParkourPlayer(player);
+		applyCoursePotionEffect(player);
 		setGameMode(player, parkour.getParkourConfig().getString("OnJoin.SetGameMode"));
 		Bukkit.getServer().getPluginManager().callEvent(new ParkourDeathEvent(player, session.getCourse().getName()));
 	}
@@ -824,18 +825,18 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			PlayerUtils.removeAllPotionEffects(player);
 		}
 
+		Damageable playerDamage = player;
+		playerDamage.setHealth(playerDamage.getMaxHealth());
+		PlayerUtils.resetPlayer(player);
+	}
+
+	public void applyCoursePotionEffect(Player player) {
 		ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
 
 		if (session != null && session.getParkourMode() == ParkourMode.POTION) {
 			XPotion.addEffects(player, parkour.getConfigManager().getCourseConfig(session.getCourseName())
 					.getPotionParkourModeEffects());
 		}
-
-		Damageable playerDamage = player;
-		playerDamage.setHealth(playerDamage.getMaxHealth());
-		player.setFallDistance(0);
-		player.setFireTicks(0);
-		player.eject();
 	}
 
 	/**
@@ -1337,6 +1338,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		addItemsToInventory(player, parkour.getConfigManager().getDefaultConfig().getDefaultJoinItems());
 		addItemsToInventory(player, courseConfig.getJoinItems());
 		prepareParkourPlayer(player);
+		applyCoursePotionEffect(player);
 		setGameMode(player, parkour.getParkourConfig().getString("OnJoin.SetGameMode"));
 
 		if (courseConfig.getCourseMode() == ParkourMode.NORUN) {

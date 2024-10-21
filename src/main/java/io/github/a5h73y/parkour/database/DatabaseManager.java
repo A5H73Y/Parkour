@@ -389,7 +389,44 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
         return result;
     }
 
+    public int getNumberOfFirstPlaces(@NotNull OfflinePlayer player) {
+        int result = 0;
+        try (PreparedStatement statement = getDatabaseConnection().prepareStatement(
+                "SELECT COUNT(*) AS total FROM time t JOIN (SELECT courseId, MIN(time) AS best_time FROM time GROUP BY courseId) best ON t.courseId = best.courseId AND t.time = best.best_time WHERE t.playerId = ?")) {
+            statement.setString(1, getPlayerId(player));
+            ResultSet resultSet = statement.executeQuery();
 
+            if (resultSet.next()) {
+                result = resultSet.getInt("total");
+            }
+            resultSet.getStatement().close();
+        } catch (SQLException e) {
+            logSqlException(e);
+        }
+
+        return result;
+    }
+
+    public FirstPlacesEntry getGlobalFirstPlaces(Integer rowNumber) {
+        FirstPlacesEntry result = null;
+        try (PreparedStatement statement = getDatabaseConnection().prepareStatement(
+                "SELECT t1.playerId, COUNT(*) AS total FROM time t1 JOIN (SELECT courseId, MIN(time) AS best_time FROM time GROUP BY courseId) AS best_times ON t1.courseId = best_times.courseId AND t1.time = best_times.best_time GROUP BY t1.playerId ORDER BY total DESC, t1.playerId LIMIT 1 OFFSET ?;")) {
+            statement.setString(1, rowNumber.toString());
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                result = new FirstPlacesEntry(
+                        resultSet.getString("playerId"),
+                        resultSet.getInt("total"));
+
+            }
+            resultSet.getStatement().close();
+        } catch (SQLException e) {
+            logSqlException(e);
+        }
+
+        return result;
+    }
 
     /**
      * Determine if this is the best time on the course.

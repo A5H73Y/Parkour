@@ -271,5 +271,11 @@ public class PlayerUtils {
 		player.getInventory().setArmorContents(armor);
 	}
 
+	public static void resetPlayer(Player player) {
+		player.setFallDistance(0);
+		player.setFireTicks(0);
+		player.eject();
+	}
+
 	private PlayerUtils() {}
 }

@@ -1,10 +1,12 @@
 package io.github.a5h73y.parkour;
 
+import static io.github.a5h73y.parkour.other.ParkourConstants.AMOUNT_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.DEATHS_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.PLAYER_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.POSITION_PLACEHOLDER;
 import static io.github.a5h73y.parkour.other.ParkourConstants.TIME_PLACEHOLDER;
 
+import io.github.a5h73y.parkour.database.FirstPlacesEntry;
 import io.github.a5h73y.parkour.database.TimeEntry;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.type.player.PlayerConfig;
@@ -32,6 +34,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     private static final String INVALID_SYNTAX = TranslationUtils.getTranslation("PlaceholderAPI.InvalidSyntax", false);
     private static final String NO_TIME_RECORDED = TranslationUtils.getTranslation("PlaceholderAPI.NoTimeRecorded", false);
     private static final String TOP_TEN_RESULT = TranslationUtils.getTranslation("PlaceholderAPI.TopTenResult", false);
+    private static final String TOP_FIRST_PLACE_RESULT = TranslationUtils.getTranslation("PlaceholderAPI.TopFirstPlaceResult", false);
     private static final String COURSE_ACTIVE = TranslationUtils.getTranslation("PlaceholderAPI.CourseActive", false);
     private static final String COURSE_INACTIVE = TranslationUtils.getTranslation("PlaceholderAPI.CourseInactive", false);
     private static final String NO_COOLDOWN_REMAINING = TranslationUtils.getTranslation("PlaceholderAPI.NoPrizeCooldown", false);
@@ -158,6 +161,14 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 }
                 return getTopTenPlaceholderValue(arguments);
 
+            case "tfp":
+            case "topfirstplaces":
+                if (arguments.length != 2 || !ValidationUtils.isPositiveInteger(arguments[1])) {
+                    return INVALID_SYNTAX;
+                }
+                return getOrRetrieveCache(() -> getTopFirstPlacePlaceholderValue(arguments[1]),
+                        arguments[0], arguments[1]);
+
             default:
                 return INVALID_SYNTAX;
         }
@@ -270,11 +281,12 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 return getPersonalCourseRecord(player, arguments[3], arguments[4]);
 
             case TOTAL:
-                if (arguments.length < 4) {
-                    return INVALID_SYNTAX;
-                }
                 switch (arguments[2]) {
                     case LEADERBOARD:
+                        if (arguments.length < 4) {
+                            return INVALID_SYNTAX;
+                        }
+
                         switch (arguments[3]) {
                             case DEATHS:
                                 return getOrRetrieveCache(() -> String.valueOf(parkour.getDatabaseManager().getAccumulatedDeaths(offlinePlayer)),
@@ -293,6 +305,10 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                         }
 
                     case PLAYING:
+                        if (arguments.length < 4) {
+                            return INVALID_SYNTAX;
+                        }
+
                         switch (arguments[3]) {
                             case DEATHS:
                                 return String.valueOf(playerConfig.getTotalDeaths());
@@ -303,6 +319,10 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                             default:
                                 return INVALID_SYNTAX;
                         }
+
+                    case "firstplaces":
+                        return getOrRetrieveCache(() -> String.valueOf(parkour.getDatabaseManager().getNumberOfFirstPlaces(offlinePlayer)),
+                                offlinePlayer.getName(), arguments[1], arguments[2]);
 
                     default:
                         return INVALID_SYNTAX;
@@ -499,6 +519,20 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                     .replace(POSITION_PLACEHOLDER, String.valueOf(position))
                     .replace(TIME_PLACEHOLDER, getTimeValue(result.getTime()))
                     .replace(DEATHS_PLACEHOLDER, String.valueOf(result.getDeaths()));
+        }
+    }
+
+    private String getTopFirstPlacePlaceholderValue(String rowNumber) {
+        int position = Integer.parseInt(rowNumber);
+        FirstPlacesEntry result = parkour.getDatabaseManager().getGlobalFirstPlaces(position - 1);
+
+        if (result == null) {
+            return NO_TIME_RECORDED;
+
+        } else {
+            return TOP_FIRST_PLACE_RESULT.replace(PLAYER_PLACEHOLDER, result.getPlayerName())
+                    .replace(POSITION_PLACEHOLDER, String.valueOf(position))
+                    .replace(AMOUNT_PLACEHOLDER, String.valueOf(result.getTotal()));
         }
     }
 
