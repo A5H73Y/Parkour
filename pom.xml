@@ -111,7 +111,7 @@
 		<dependency>
 			<groupId>org.bstats</groupId>
 			<artifactId>bstats-bukkit</artifactId>
-			<version>3.0.2</version>
+			<version>3.1.0</version>
 		</dependency>
 		<!-- MySQL Database -->
 		<dependency>
@@ -135,7 +135,7 @@
 		<dependency>
 			<groupId>com.github.cryptomorin</groupId>
 			<artifactId>XSeries</artifactId>
-			<version>11.1.0</version>
+			<version>13.0.0</version>
 		</dependency>
 		<!-- Version Compare -->
 		<dependency>
@@ -153,7 +153,7 @@
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
-			<version>2.2</version>
+			<version>2.3</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -165,7 +165,7 @@
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
-			<version>20240303</version>
+			<version>20241224</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -177,7 +177,7 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>33.2.1-jre</version>
+			<version>33.4.0-jre</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
@@ -229,6 +229,10 @@
 							<artifact>*:*</artifact>
 							<excludes>
 								<exclude>META-INF/</exclude>
+								<exclude>com/cryptomorin/xseries/XBiome*</exclude>
+								<exclude>com/cryptomorin/xseries/NMSExtras*</exclude>
+								<exclude>com/cryptomorin/xseries/NoteBlockMusic*</exclude>
+								<exclude>com/cryptomorin/xseries/SkullCacheListener*</exclude>
 							</excludes>
 						</filter>
 					</filters>

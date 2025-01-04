@@ -1301,6 +1301,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		restoreInventoryArmor(player, playerConfig);
 		items.forEach(itemStack -> player.getInventory().addItem(itemStack));
 		restoreGameMode(player);
+		player.setAllowFlight(playerConfig.getSnapshotAllowFlight());
 	}
 
 	private List<ItemStack> getItemsToRestore(Player player, PlayerConfig playerConfig, boolean finishedCourse) {

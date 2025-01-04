@@ -38,6 +38,7 @@ public class PlayerConfig extends Json {
     public static final String MANUAL_CHECKPOINTS_USED = "ManualCheckpointsUsed";
     public static final String TOTAL_DEATHS = "TotalDeaths";
     public static final String TOTAL_TIME = "TotalTime";
+    public static final String ALLOW_FLIGHT = "AllowFlight";
 
     public static final String SNAPSHOT_PREFIX = "Snapshot.";
     public static final String SESSION_PREFIX = "Session.";
@@ -343,6 +344,8 @@ public class PlayerConfig extends Json {
     public String getSnapshotGameMode() {
         return this.getString(SNAPSHOT_PREFIX + GAMEMODE).toUpperCase();
     }
+
+    public boolean getSnapshotAllowFlight() { return this.getBoolean(SNAPSHOT_PREFIX + ALLOW_FLIGHT); }
 
     /**
      * Get the number of accumulated Parkoins for Player.
