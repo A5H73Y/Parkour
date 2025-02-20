@@ -228,7 +228,7 @@ public class StringsConfig extends Yaml {
 		this.setDefault("PlaceholderAPI.NoPrizeCooldown", "Prize Available");
 		this.setDefault("PlaceholderAPI.PlayerNotFound", "Player not found");
 
-		this.setDefault("GUI.JoinCourses.Heading", "Parkour Courses");
+		this.setDefault("GUI.JoinCourses.Heading", "Join Courses");
 		this.setDefault("GUI.JoinCourses.Setup.Line1", "         ");
 		this.setDefault("GUI.JoinCourses.Setup.Line2", " GGGGGGG ");
 		this.setDefault("GUI.JoinCourses.Setup.Line3", "  12 34  ");
@@ -237,7 +237,7 @@ public class StringsConfig extends Yaml {
 		this.setDefault("GUI.JoinCourses.Checkpoints", "Checkpoints: &b%VALUE%");
 		this.setDefault("GUI.JoinCourses.Completed", "Completed: &b%VALUE%");
 		this.setDefault("GUI.CourseSettings.Heading", "%VALUE% Settings");
-		this.setDefault("GUI.CourseSettings.Setup.Line1", "qwertyui ");
+		this.setDefault("GUI.CourseSettings.Setup.Line1", "qwertyuio");
 		this.setDefault("GUI.CourseSettings.Setup.Line2", "asdfghjkl");
 		this.setDefault("GUI.CourseSettings.Setup.Line3", "zxcvbnm  ");
 

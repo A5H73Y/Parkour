@@ -4,6 +4,8 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.course.CourseSettings;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -36,8 +38,13 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
             return;
         }
 
-        if (player.getLocation().getBlock().isLiquid() && courseSettings.isDieInLiquid()) {
-            parkour.getPlayerManager().playerDie(player);
+        Block block = player.getLocation().getBlock();
+        if (block.isLiquid()) {
+            Material material = block.getType();
+            if ((material == Material.WATER && courseSettings.isDieInWater())
+                    || (material == Material.LAVA && courseSettings.isDieInLava())) {
+                parkour.getPlayerManager().playerDie(player);
+            }
         }
     }
 }

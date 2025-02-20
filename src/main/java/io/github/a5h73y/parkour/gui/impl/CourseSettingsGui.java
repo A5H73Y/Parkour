@@ -58,14 +58,16 @@ public class CourseSettingsGui implements AbstractMenu {
 				click -> courseSettings.setChallengeOnlyStatus(player, courseName, null)));
 		parent.addElement(createSettingToggle('r', "Resumable", courseConfig.getResumable(),
 				click -> courseSettings.setResumable(player, courseName, null)));
-		parent.addElement(createSettingToggle('t', "Die in Liquid", courseConfig.getDieInLiquid(),
-				click -> courseSettings.setDieInLiquid(player, courseName, null)));
+		parent.addElement(createSettingToggle('t', "Die in Lava", courseConfig.getDieInLava(),
+				click -> courseSettings.setDieInLava(player, courseName, null)));
 		parent.addElement(createSettingToggle('y', "Die in Void", courseConfig.getDieInVoid(),
 				click -> courseSettings.setDieInVoid(player, courseName, null)));
 		parent.addElement(createSettingToggle('u', "Fall Damage", courseConfig.getHasFallDamage(),
 				click -> courseSettings.setHasFallDamage(player, courseName, null)));
 		parent.addElement(createSettingToggle('i', "Manual Checkpoints", courseConfig.getManualCheckpoints(),
 				click -> courseSettings.setManualCheckpoints(player, courseName, null)));
+		parent.addElement(createSettingToggle('o', "Die in Water", courseConfig.getDieInWater(),
+				click -> courseSettings.setDieInWater(player, courseName, null)));
 
 		// input required
 		parent.addElement(createTextInput('a', player, "Creator",

@@ -6,6 +6,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.conversation.CoursePrizeConversation;
 import io.github.a5h73y.parkour.conversation.parkourkit.CreateParkourKitConversation;
 import io.github.a5h73y.parkour.conversation.parkourkit.EditParkourKitConversation;
+import io.github.a5h73y.parkour.gui.impl.JoinAllGui;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.PluginBackupUtil;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
@@ -15,6 +16,7 @@ import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.StringUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
+import java.util.Arrays;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -156,6 +158,17 @@ public class ParkourConsoleCommands extends AbstractPluginReceiver implements Co
                 }
 
                 parkour.getPlayerManager().joinCourse(findPlayer(commandSender, args[2]), args[1]);
+                break;
+
+            case "joinall":
+                if (!ValidationUtils.validateArgs(commandSender, args, 2, 100)) {
+                    return false;
+
+                } else if (findPlayer(commandSender, args[1]) == null) {
+                    return false;
+                }
+
+                parkour.getGuiManager().showMenu(findPlayer(commandSender, args[1]), new JoinAllGui(Arrays.asList(args).subList(1, args.length)));
                 break;
 
             case "leaderboard":

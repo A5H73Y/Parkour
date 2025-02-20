@@ -36,7 +36,8 @@ public class CourseConfig extends Json {
 
     public static final String CHALLENGE_ONLY = "ChallengeOnly";
     public static final String CREATOR = "Creator";
-    public static final String DIE_IN_LIQUID = "DieInLiquid";
+    public static final String DIE_IN_LAVA = "DieInLava";
+    public static final String DIE_IN_WATER = "DieInWater";
     public static final String DIE_IN_VOID = "DieInVoid";
     public static final String DISPLAY_NAME = "DisplayName";
     public static final String ECONOMY_FINISH_REWARD = "EconomyFinishReward";
@@ -597,27 +598,51 @@ public class CourseConfig extends Json {
     }
 
     /**
-     * Get the Die In Liquid status of the Course.
-     * @return die in liquid status
+     * Get the Die In Lava status of the Course.
+     * @return die in lava status
      */
-    public boolean getDieInLiquid() {
-        return this.getBoolean(DIE_IN_LIQUID);
+    public boolean getDieInLava() {
+        return this.getBoolean(DIE_IN_LAVA);
     }
 
     /**
-     * Set the Die In Liquid status of the Course.
-     * @param enabled die in liquid enabled
+     * Set the Die In Lava status of the Course.
+     * @param enabled die in lava enabled
      */
-    public void setDieInLiquid(boolean enabled) {
-        this.set(DIE_IN_LIQUID, enabled);
+    public void setDieInLava(boolean enabled) {
+        this.set(DIE_IN_LAVA, enabled);
     }
 
     /**
-     * Toggle the Die In Liquid status of the Course.
+     * Toggle the Die In Lava status of the Course.
      */
-    public boolean toggleDieInLiquid() {
-        setDieInLiquid(!getDieInLiquid());
-        return getDieInLiquid();
+    public boolean toggleDieInLava() {
+        setDieInLava(!getDieInLava());
+        return getDieInLava();
+    }
+
+    /**
+     * Get the Die In Water status of the Course.
+     * @return die in water status
+     */
+    public boolean getDieInWater() {
+        return this.getBoolean(DIE_IN_WATER);
+    }
+
+    /**
+     * Set the Die In Water status of the Course.
+     * @param enabled die in water enabled
+     */
+    public void setDieInWater(boolean enabled) {
+        this.set(DIE_IN_WATER, enabled);
+    }
+
+    /**
+     * Toggle the Die In Water status of the Course.
+     */
+    public boolean toggleDieInWater() {
+        setDieInWater(!getDieInWater());
+        return getDieInWater();
     }
 
     /**

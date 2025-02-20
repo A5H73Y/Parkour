@@ -24,7 +24,8 @@ public class DefaultConfigUpgradeTask extends TimedLegacyConfigUpgradeTask {
 		updateConfigEntry("Other.Parkour.ChatRankPrefix.OverrideChat", "ParkourRankChat.OverrideChat");
 
 		getConfig().set("OnJoin.AllowViaCommand", null);
-		getConfig().set("OnCourse.DieInLiquid", null);
+		getConfig().set("OnCourse.DieInLava", null);
+		getConfig().set("OnCourse.DieInWater", null);
 		getConfig().set("OnCourse.DieInVoid", null);
 		getConfig().set("OnCourse.MaxFallTicks", null);
 		getConfig().set("OnFinish.DefaultPrize", null);

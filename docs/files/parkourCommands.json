@@ -274,12 +274,18 @@
   {
     "command": "joinall",
     "title": "Display Join Courses Menu",
+    "arguments": "[owner / mode:(parkour-mode) / world / completed / uncompleted / minlevel / name_asc / name_desc / level_asc / level_desc / views_asc / views_desc]...",
     "examples": [
-      "/pa joinall"
+      "/pa joinall",
+      "/pa joinall mode:freedom uncompleted minlevel level_asc",
+      "/pa joinall owner views_desc",
+      "/pa joinall world name_asc"
     ],
     "description": "Display all the Parkour Courses available in a scrollable menu. Simply right click the Course entry to join it.",
     "permission": "parkour.basic.joinall",
-    "commandGroup": "1"
+    "commandGroup": "1",
+    "consoleSyntax": "pac joinall (player) [args]",
+    "autoTabSyntax": "[owner,mode:?,world,completed,uncompleted,minlevel,name_asc,name_desc,level_asc,level_desc,views_asc,views_desc] [owner,mode:?,world,completed,uncompleted,minlevel,name_asc,name_desc,level_asc,level_desc,views_asc,views_desc] [owner,mode:?,world,completed,uncompleted,minlevel,name_asc,name_desc,level_asc,level_desc,views_asc,views_desc] [owner,mode:?,world,completed,uncompleted,minlevel,name_asc,name_desc,level_asc,level_desc,views_asc,views_desc]"
   },
   {
     "command": "kit",
@@ -704,15 +710,15 @@
   {
     "command": "setcourse",
     "title": "Set Course Attributes",
-    "arguments": "(course) (challengeonly / creator / dieinliquid / dieinvoid / displayname / hasfalldamage / linkedcourse / linkedlobby / manualcheckpoints / maxdeaths / maxfallticks / maxtime / minimumlevel / parkourkit / parkourmode / playerlimit / ready / resumable / rewarddelay / rewardlevel / rewardleveladd / rewardonce / rewardparkoins / autostart / prize / rename / resetlink / start / message / command) [value]",
+    "arguments": "(course) (challengeonly / creator / dieinlava / dieinwater / dieinvoid / displayname / hasfalldamage / linkedcourse / linkedlobby / manualcheckpoints / maxdeaths / maxfallticks / maxtime / minimumlevel / parkourkit / parkourmode / playerlimit / ready / resumable / rewarddelay / rewardlevel / rewardleveladd / rewardonce / rewardparkoins / autostart / prize / rename / resetlink / start / message / command) [value]",
     "examples": [
       "/pa setcourse tutorial creator A5H73Y"
     ],
     "description": "Quickly set Course attributes using a simple command. If a message or command is provided, a valid parkour event type argument must be provided and the following arguments will be combined to make the final event message / command; colour codes are supported.",
     "permission": "parkour.admin.course",
     "commandGroup": "3",
-    "consoleSyntax": "pac setcourse (course) (challengeonly / creator / dieinliquid / dieinvoid / displayname / hasfalldamage / linkedcourse / linkedlobby / manualcheckpoints / maxdeaths / maxfallticks / maxtime / minimumlevel / parkourkit / parkourmode / playerlimit / ready / resumable / rewarddelay / rewardlevel / rewardleveladd / rewardonce / rewardparkoins / autostart / prize / rename / resetlink / start / message / command) [value]",
-    "autoTabSyntax": "(course) [challengeonly,creator,dieinliquid,dieinvoid,displayname,hasfalldamage,linkedcourse,linkedlobby,manualcheckpoints,maxdeaths,maxfallticks,maxtime,minimumlevel,parkourkit,parkourmode,playerlimit,ready,resumable,rewarddelay,rewardlevel,rewardleveladd,rewardonce,rewardparkoins,autostart,prize,rename,resetlink,start,message,command] {2:challengeonly=(truefalse),2:creator=(player),2:dieinliquid=(truefalse),2:dieinvoid=(truefalse),2:hasfalldamage=(truefalse),2:linkedcourse=(course),2:linkedlobby=(lobby),2:manualcheckpoints=(truefalse),2:parkourkit=(parkourkit),2:parkourmode=(nothing),2:ready=(truefalse),2:resumable=(truefalse),2:rewardonce=(truefalse),2:autostart=(truefalse),2:prize=(nothing),2:resetlink=(nothing),2:start=(nothing),2:message=(parkourevent),2:command=(parkourevent),*=(value)} {2:message=(value...),2:command=(value...)}"
+    "consoleSyntax": "pac setcourse (course) (challengeonly / creator / dieinlava / dieinwater / dieinvoid / displayname / hasfalldamage / linkedcourse / linkedlobby / manualcheckpoints / maxdeaths / maxfallticks / maxtime / minimumlevel / parkourkit / parkourmode / playerlimit / ready / resumable / rewarddelay / rewardlevel / rewardleveladd / rewardonce / rewardparkoins / autostart / prize / rename / resetlink / start / message / command) [value]",
+    "autoTabSyntax": "(course) [challengeonly,creator,dieinlava,dieinwater,dieinvoid,displayname,hasfalldamage,linkedcourse,linkedlobby,manualcheckpoints,maxdeaths,maxfallticks,maxtime,minimumlevel,parkourkit,parkourmode,playerlimit,ready,resumable,rewarddelay,rewardlevel,rewardleveladd,rewardonce,rewardparkoins,autostart,prize,rename,resetlink,start,message,command] {2:challengeonly=(truefalse),2:creator=(player),2:dieinlava=(truefalse),2:dieinwater=(truefalse),2:dieinvoid=(truefalse),2:hasfalldamage=(truefalse),2:linkedcourse=(course),2:linkedlobby=(lobby),2:manualcheckpoints=(truefalse),2:parkourkit=(parkourkit),2:parkourmode=(nothing),2:ready=(truefalse),2:resumable=(truefalse),2:rewardonce=(truefalse),2:autostart=(truefalse),2:prize=(nothing),2:resetlink=(nothing),2:start=(nothing),2:message=(parkourevent),2:command=(parkourevent),*=(value)} {2:message=(value...),2:command=(value...)}"
   },
   {
     "command": "setcreator",

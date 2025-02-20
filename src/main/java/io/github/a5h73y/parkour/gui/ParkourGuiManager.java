@@ -20,16 +20,6 @@ public class ParkourGuiManager extends AbstractPluginReceiver {
 	}
 
 	/**
-	 * Open the specified parkour menu for the player, using an enum.
-	 *
-	 * @param player requesting player
-	 * @param menu requested menu
-	 */
-	public void showMenu(Player player, GuiMenu menu) {
-		showMenu(player, menu.getMenu());
-	}
-
-	/**
 	 * Open the specified parkour menu for the player.
 	 *
 	 * @param player requesting player

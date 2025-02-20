@@ -6,7 +6,7 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_INVALID_AMOU
 
 import com.google.gson.GsonBuilder;
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.gui.GuiMenu;
+import io.github.a5h73y.parkour.gui.impl.JoinAllGui;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
@@ -239,7 +239,7 @@ public class ParkourCommands extends AbstractPluginReceiver implements CommandEx
                     return false;
                 }
 
-                parkour.getGuiManager().showMenu(player, GuiMenu.JOIN_COURSES);
+                parkour.getGuiManager().showMenu(player, new JoinAllGui(Arrays.asList(args).subList(1, args.length)));
                 break;
 
             case "kit":

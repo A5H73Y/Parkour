@@ -1,7 +1,8 @@
 package io.github.a5h73y.parkour.configuration.impl;
 
-import static io.github.a5h73y.parkour.type.course.CourseConfig.DIE_IN_LIQUID;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.DIE_IN_LAVA;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.DIE_IN_VOID;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.DIE_IN_WATER;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.HAS_FALL_DAMAGE;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.JOIN_ITEMS;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.MANUAL_CHECKPOINTS;
@@ -47,8 +48,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public class DefaultConfig extends Yaml {
 
+	public static final String COURSE_DEFAULT_SETTINGS = "CourseDefault.Settings.";
 	private static final String WHITELISTED_COMMANDS = "OnCourse.EnforceParkourCommands.Whitelist";
-	private static final String COURSE_DEFAULT_SETTINGS = "CourseDefault.Settings.";
 
 	private final DateFormat detailedTimeFormat;
 	private final DateFormat standardTimeFormat;
@@ -131,7 +132,8 @@ public class DefaultConfig extends Yaml {
 
 		this.setDefault("OnServerRestart.KickPlayerFromCourse", false);
 
-		this.setDefault(COURSE_DEFAULT_SETTINGS + DIE_IN_LIQUID, false);
+		this.setDefault(COURSE_DEFAULT_SETTINGS + DIE_IN_LAVA, false);
+		this.setDefault(COURSE_DEFAULT_SETTINGS + DIE_IN_WATER, false);
 		this.setDefault(COURSE_DEFAULT_SETTINGS + DIE_IN_VOID, false);
 		this.setDefault(COURSE_DEFAULT_SETTINGS + HAS_FALL_DAMAGE, true);
 		this.setDefault(COURSE_DEFAULT_SETTINGS + MANUAL_CHECKPOINTS, false);

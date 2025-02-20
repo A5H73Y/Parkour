@@ -3,7 +3,7 @@ package io.github.a5h73y.parkour.listener;
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 
 import io.github.a5h73y.parkour.Parkour;
-import io.github.a5h73y.parkour.gui.GuiMenu;
+import io.github.a5h73y.parkour.gui.impl.JoinAllGui;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.type.course.CourseConfig;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
@@ -13,6 +13,9 @@ import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -57,7 +60,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
 
             case "joinall":
             case "ja":
-                SignUtils.createStandardSign(event, player, "JoinAll");
+                SignUtils.createStandardSign(event, player, "JoinAll", false);
                 break;
 
             case "finish":
@@ -72,7 +75,7 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
 
             case "leave":
             case "le":
-                SignUtils.createStandardSign(event, player, "Leave");
+                SignUtils.createStandardSign(event, player, "Leave", true);
                 break;
 
             case "effect":
@@ -205,7 +208,8 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                     return;
                 }
 
-                parkour.getGuiManager().showMenu(player, GuiMenu.JOIN_COURSES);
+
+                parkour.getGuiManager().showMenu(player, new JoinAllGui(Arrays.asList((lines[2] + " " + lines[3]).split(" "))));
                 break;
 
             case "checkpoint":

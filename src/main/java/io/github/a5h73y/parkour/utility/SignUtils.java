@@ -22,10 +22,12 @@ public class SignUtils {
      * @param player target player
      * @param signType requested sign type
      */
-    public static void createStandardSign(SignChangeEvent signEvent, Player player, String signType) {
+    public static void createStandardSign(SignChangeEvent signEvent, Player player, String signType, boolean clearBottomLines) {
         signEvent.setLine(1, signType);
-        signEvent.setLine(2, "");
-        signEvent.setLine(3, "-----");
+        if (clearBottomLines) {
+            signEvent.setLine(2, "");
+            signEvent.setLine(3, "-----");
+        }
         TranslationUtils.sendValueTranslation("Parkour.SignCreated", signType, player);
     }
 

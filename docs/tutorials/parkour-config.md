@@ -173,7 +173,8 @@ CourseDefault:
   # Settings which will be defaulted to on ALL Courses
   # These can be overridden on a per-Course basis
   Settings:
-    DieInLiquid: false
+    DieInLava: false
+    DieInWater: false
     DieInVoid: false
     HasFallDamage: true
     ManualCheckpoints: false

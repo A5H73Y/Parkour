@@ -4,8 +4,9 @@ import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_INVALID_AMOU
 import static io.github.a5h73y.parkour.other.ParkourConstants.ERROR_NO_EXIST;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.CHALLENGE_ONLY;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.CREATOR;
-import static io.github.a5h73y.parkour.type.course.CourseConfig.DIE_IN_LIQUID;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.DIE_IN_LAVA;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.DIE_IN_VOID;
+import static io.github.a5h73y.parkour.type.course.CourseConfig.DIE_IN_WATER;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.DISPLAY_NAME;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.HAS_FALL_DAMAGE;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.LINKED_COURSE;
@@ -26,11 +27,6 @@ import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_LEVEL_ADD
 import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_ONCE;
 import static io.github.a5h73y.parkour.type.course.CourseConfig.REWARD_PARKOINS;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import com.google.common.io.Files;
 import de.leonhard.storage.sections.FlatFileSection;
 import io.github.a5h73y.parkour.Parkour;
@@ -49,6 +45,10 @@ import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import io.github.a5h73y.parkour.utility.time.DateTimeUtils;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.Conversable;
 import org.bukkit.entity.Player;
@@ -77,8 +77,10 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 		CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(courseName);
 
 		CourseSettings courseSettings = new CourseSettings();
-		courseSettings.setDieInLiquid(
-				courseConfig.get(DIE_IN_LIQUID, defaultSection.getBoolean(DIE_IN_LIQUID)));
+		courseSettings.setDieInLava(
+				courseConfig.get(DIE_IN_LAVA, defaultSection.getBoolean(DIE_IN_LAVA)));
+		courseSettings.setDieInWater(
+				courseConfig.get(DIE_IN_WATER, defaultSection.getBoolean(DIE_IN_WATER)));
 		courseSettings.setDieInVoid(
 				courseConfig.get(DIE_IN_VOID, defaultSection.getBoolean(DIE_IN_VOID)));
 		courseSettings.setHasFallDamage(
@@ -238,16 +240,16 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 	}
 
 	/**
-	 * Set the Course's DieInLiquid status.
-	 * Set whether the Player dies when they are within Liquid on the Course.
+	 * Set the Course's DieInLava status.
+	 * Set whether the Player dies when they are within Lava on the Course.
 	 *
 	 * @param commandSender command sender
 	 * @param courseName course name
 	 * @param value flag value
 	 */
-	public void setDieInLiquid(@NotNull final CommandSender commandSender,
-							   @Nullable final String courseName,
-							   @Nullable Boolean value) {
+	public void setDieInLava(@NotNull final CommandSender commandSender,
+							 @Nullable final String courseName,
+							 @Nullable Boolean value) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;
@@ -255,11 +257,36 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 
 		CourseConfig config = parkour.getConfigManager().getCourseConfig(courseName);
 		if (value == null) {
-			value = !config.getDieInLiquid();
+			value = !config.getDieInLava();
 		}
-		config.setDieInLiquid(value);
+		config.setDieInLava(value);
 		clearCourseCache(courseName);
-		notifyActionChange(commandSender, "Die In Liquid", courseName, String.valueOf(value));
+		notifyActionChange(commandSender, "Die In Lava", courseName, String.valueOf(value));
+	}
+
+	/**
+	 * Set the Course's DieInWater status.
+	 * Set whether the Player dies when they are within Water on the Course.
+	 *
+	 * @param commandSender command sender
+	 * @param courseName course name
+	 * @param value flag value
+	 */
+	public void setDieInWater(@NotNull final CommandSender commandSender,
+							 @Nullable final String courseName,
+							 @Nullable Boolean value) {
+		if (!doesCourseExist(courseName)) {
+			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
+			return;
+		}
+
+		CourseConfig config = parkour.getConfigManager().getCourseConfig(courseName);
+		if (value == null) {
+			value = !config.getDieInWater();
+		}
+		config.setDieInWater(value);
+		clearCourseCache(courseName);
+		notifyActionChange(commandSender, "Die In Water", courseName, String.valueOf(value));
 	}
 
 	/**
@@ -1017,8 +1044,10 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 				setChallengeOnlyStatus(commandSender, courseName, value != null ? Boolean.parseBoolean(value) : null));
 		courseSettingActions.put(CREATOR.toLowerCase(),
 				this::setCreator);
-		courseSettingActions.put(DIE_IN_LIQUID.toLowerCase(), (commandSender, courseName, value) ->
-				setDieInLiquid(commandSender, courseName, value != null ? Boolean.parseBoolean(value) : null));
+		courseSettingActions.put(DIE_IN_LAVA.toLowerCase(), (commandSender, courseName, value) ->
+				setDieInLava(commandSender, courseName, value != null ? Boolean.parseBoolean(value) : null));
+		courseSettingActions.put(DIE_IN_WATER.toLowerCase(), (commandSender, courseName, value) ->
+				setDieInWater(commandSender, courseName, value != null ? Boolean.parseBoolean(value) : null));
 		courseSettingActions.put(DIE_IN_VOID.toLowerCase(), (commandSender, courseName, value) ->
 				setDieInVoid(commandSender, courseName, value != null ? Boolean.parseBoolean(value) : null));
 		courseSettingActions.put(DISPLAY_NAME.toLowerCase(),

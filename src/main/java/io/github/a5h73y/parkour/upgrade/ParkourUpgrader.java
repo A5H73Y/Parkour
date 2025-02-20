@@ -11,6 +11,7 @@ import io.github.a5h73y.parkour.upgrade.major.DefaultConfigUpgradeTask;
 import io.github.a5h73y.parkour.upgrade.major.LobbyConfigUpgradeTask;
 import io.github.a5h73y.parkour.upgrade.major.PlayerDataUpgradeTask;
 import io.github.a5h73y.parkour.upgrade.minor.ConfigMinorUpgradeTask;
+import io.github.a5h73y.parkour.upgrade.minor.CourseMinorUpgradeTask;
 import io.github.a5h73y.parkour.upgrade.minor.PlayerMinorUpgradeTask;
 import io.github.g00fy2.versioncompare.Version;
 import java.io.File;
@@ -166,6 +167,11 @@ public class ParkourUpgrader extends AbstractPluginReceiver {
 
 		// reload the local config
 		defaultConfig = YamlConfiguration.loadConfiguration(defaultFile);
+
+		if (!new CourseMinorUpgradeTask(this).start()) {
+			return false;
+		}
+
 		return new PlayerMinorUpgradeTask(this).start();
 	}
 

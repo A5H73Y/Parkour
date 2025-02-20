@@ -47,7 +47,7 @@ You can give the Player Minecraft XP when they complete the Course, which is as 
 
 ![XP Prize](https://i.imgur.com/43qKmUn.jpg "XP Prize")
 
-## Ecomomy
+## Economy
 
 If the plugin is linked to Vault, you are able to set a financial reward when the player completes the course.
 

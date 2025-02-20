@@ -27,11 +27,17 @@ Overwriting the creator of a Course to a different Player, will allow the specif
 
 _Command: `/pa setcourse (course) creator (player)`_
 
-### dieinliquid
+### dieinlava
 
-If the Player were to enter a liquid (water or lava) should this be considered a death.
+If the Player were to enter lava, should this be considered a death.
 
-_Command: `/pa setcourse (course) dieinliquid [true/false]`_
+_Command: `/pa setcourse (course) dieinlava [true/false]`_
+
+### dieinwater
+
+If the Player were to enter water, should this be considered a death.
+
+_Command: `/pa setcourse (course) dieinwater [true/false]`_
 
 ### dieinvoid
 

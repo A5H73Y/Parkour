@@ -12,6 +12,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -146,8 +147,12 @@ public class PlayerUtils {
 	 * @param location location
 	 */
 	public static void teleportToLocation(Player player, Location location) {
-		player.setFallDistance(0);
-		player.teleport(location);
+		Parkour parkour = Parkour.getInstance();
+
+		parkour.getServer().getScheduler().runTaskLater(parkour, () -> {
+			player.setFallDistance(0);
+			player.teleport(location, PlayerTeleportEvent.TeleportCause.PLUGIN);
+		}, 1L);
 	}
 
 	/**

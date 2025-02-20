@@ -8,7 +8,8 @@ public class CourseSettings implements Serializable {
 	private int maxTime;
 	private int maxFallTicks;
 	private boolean manualCheckpoints;
-	private boolean dieInLiquid;
+	private boolean dieInLava;
+	private boolean dieInWater;
 	private boolean dieInVoid;
 	private boolean hasFallDamage;
 
@@ -74,12 +75,20 @@ public class CourseSettings implements Serializable {
 		this.manualCheckpoints = manualCheckpoints;
 	}
 
-	public boolean isDieInLiquid() {
-		return dieInLiquid;
+	public boolean isDieInLava() {
+		return dieInLava;
 	}
 
-	public void setDieInLiquid(boolean dieInLiquid) {
-		this.dieInLiquid = dieInLiquid;
+	public void setDieInLava(boolean dieInLava) {
+		this.dieInLava = dieInLava;
+	}
+
+	public boolean isDieInWater() {
+		return dieInWater;
+	}
+
+	public void setDieInWater(boolean dieInWater) {
+		this.dieInWater = dieInWater;
 	}
 
 	public boolean isDieInVoid() {
