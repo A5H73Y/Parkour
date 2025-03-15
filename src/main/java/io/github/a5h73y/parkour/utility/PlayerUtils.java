@@ -1,5 +1,6 @@
 package io.github.a5h73y.parkour.utility;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 import com.cryptomorin.xseries.XPotion;
@@ -263,6 +264,7 @@ public class PlayerUtils {
 	 */
 	public static void clearInventoryArmor(Player player) {
 		player.getInventory().clear();
+		player.getOpenInventory().getTopInventory().clear();
 		player.getInventory().setHelmet(null);
 		player.getInventory().setChestplate(null);
 		player.getInventory().setLeggings(null);
