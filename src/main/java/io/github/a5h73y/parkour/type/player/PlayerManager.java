@@ -277,7 +277,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 					BountifulApi.LEAVE);
 
 			if (parkour.getParkourConfig().getBoolean("OnLeave.TeleportAway")) {
-				if (parkour.getParkourConfig().isTeleportToJoinLocation()
+				if (parkour.getParkourConfig().isTeleportToJoinLocationOnLeave()
 						&& playerConfig.hasSnapshotJoinLocation()) {
 					PlayerUtils.teleportToLocation(player, playerConfig.getSnapshotJoinLocation());
 				} else {
@@ -313,8 +313,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}
 	}
 
-	private void restoreGameMode(Player player) {
-		String gameMode = parkour.getParkourConfig().getString("OnFinish.SetGameMode");
+	private void restoreGameMode(Player player, String source) {
+		String gameMode = parkour.getParkourConfig().getString(source);
 
 		if (gameMode.equalsIgnoreCase("RESTORE")) {
 			PlayerConfig playerConfig = parkour.getConfigManager().getPlayerConfig(player);
@@ -1303,7 +1303,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		List<ItemStack> items = getItemsToRestore(player, playerConfig, finishedCourse);
 		restoreInventoryArmor(player, playerConfig);
 		items.forEach(itemStack -> player.getInventory().addItem(itemStack));
-		restoreGameMode(player);
+		String source = finishedCourse ? "OnFinish.SetGameMode" : "OnLeave.SetGameMode";
+		restoreGameMode(player, source);
 		player.setAllowFlight(playerConfig.getSnapshotAllowFlight());
 	}
 
@@ -1623,7 +1624,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 				return;
 			}
 
-		} else if (parkour.getParkourConfig().isTeleportToJoinLocation()
+		} else if (parkour.getParkourConfig().isTeleportToJoinLocationOnFinish()
 				&& playerConfig.hasSnapshotJoinLocation()) {
 			PlayerUtils.teleportToLocation(player, playerConfig.getSnapshotJoinLocation());
 			TranslationUtils.sendTranslation("Parkour.JoinLocation", player);

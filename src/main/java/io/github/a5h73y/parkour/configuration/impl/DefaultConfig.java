@@ -120,6 +120,8 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("OnLeave.TeleportAway", true);
 		this.setDefault("OnLeave.GiveGainedItemsBack", false);
 		this.setDefault("OnLeave.RetainResumableInventory", false);
+		this.setDefault("OnLeave.SetGameMode", "SURVIVAL");
+		this.setDefault("OnLeave.TeleportToJoinLocation", false);
 
 		this.setDefault("OnRestart.FullPlayerRestart", false);
 		this.setDefault("OnRestart.RequireConfirmation", false);
@@ -512,8 +514,12 @@ public class DefaultConfig extends Yaml {
 		return this.getBoolean("OnJoin.TreatFirstCheckpointAsStart");
 	}
 
-	public boolean isTeleportToJoinLocation() {
+	public boolean isTeleportToJoinLocationOnFinish() {
 		return this.getBoolean("OnFinish.TeleportToJoinLocation");
+	}
+
+	public boolean isTeleportToJoinLocationOnLeave() {
+		return this.getBoolean("OnLeave.TeleportToJoinLocation");
 	}
 
 	public boolean isSoundEnabled() {

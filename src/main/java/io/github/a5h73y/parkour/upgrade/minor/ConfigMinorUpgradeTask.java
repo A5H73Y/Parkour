@@ -33,6 +33,9 @@ public class ConfigMinorUpgradeTask extends TimedConfigUpgradeTask<DefaultConfig
 			config.remove(COURSE_DEFAULT_SETTINGS + "DieInLiquid");
 		}
 
+		config.set("OnLeave.SetGameMode", config.getBoolean("OnFinish.SetGameMode"));
+		config.set("OnLeave.TeleportToJoinLocation", config.getBoolean("OnFinish.TeleportToJoinLocation"));
+
 		this.config.forceReload();
 		return true;
 	}

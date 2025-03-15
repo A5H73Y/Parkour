@@ -367,6 +367,7 @@ public class ChallengeManager extends AbstractPluginReceiver {
         if (parkour.getParkourSessionManager().isPlaying(participant)) {
             parkour.getPlayerManager().leaveCourse(participant, true);
         }
+        parkour.getParkourSessionManager().deleteParkourSession(participant, challenge.getCourseName());
         parkour.getPlayerManager().joinCourse(participant, challenge.getCourseName());
         participant.setWalkSpeed(0f);
         PlayerUtils.applyPotionEffect(PotionEffectType.JUMP, 100000, 100000, participant);
