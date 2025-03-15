@@ -760,6 +760,9 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
                     .replace(TIME_PLACEHOLDER, DateTimeUtils.displayCurrentTime(entry.getTime()))
                     .replace(DEATHS_PLACEHOLDER, String.valueOf(entry.getDeaths()));
 
+            if (commandSender instanceof Player) {
+                translation = parkour.getPlaceholderApi().parsePlaceholders((Player) commandSender, translation);
+            }
             commandSender.sendMessage(translation);
         }
     }
