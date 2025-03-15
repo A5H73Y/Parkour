@@ -6,6 +6,21 @@ Please note that each version of Parkour is backwards compatible with the previo
 ## 7.2.4
 
 * Added "OnLeave.RetainResumableInventory" setting to restore course inventory
+* Added "OnLeave.RetainResumableInventory" setting to restore course inventory
+* Added "OnCourse.DisplayLiveTime.Milliseconds" for milliseconds in live timer
+* Added %parkour_topfirstplaces_(position)% & %parkour_player_total_firstplaces% placeholders
+* Added "AllowFlight" in Player Snapshot data
+* Added MyWorlds as a soft-depend (Thanks Nadwey)
+* Added filters & sort to "joinall" command
+* Added "pac joinall (player) [args]" console command
+* Added "ParkourTimeResultEvent" event for Course leaderboards
+* Added leaderboards to use placeholders
+* Added split "DieInLiquid" config into "DieInLava" & "DieInWater"
+* Added split "OnLeave.SetGameMode" and "OnLeave.TeleportToJoinLocation" from OnFinish
+* Fix maxdeaths limit not resetting resumable progress
+* Fix player teleports to avoid "moved too fast" problems
+* Fix clearing crafting slots on course join (Thanks eegurt)
+* Fix for challenges restoring session on start
 
 ## 7.2.3
 
