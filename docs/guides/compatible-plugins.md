@@ -166,6 +166,35 @@ An example could be walking on a pressure plate to leave the Course:
 
 </details>
 
+## ParkourGhost
+
+[ParkourGhost](https://www.spigotmc.org/resources/parkourghost.122928/) was created by LOUDO that allows you race against a ghost of your best run, challenging yourself to beat your own record.
+
+![Parkour Top Ten](https://i.imgur.com/117kzs5.png "ParkourGhost example")
+
+<details><summary>Default setup (Click to expand)</summary>
+Once you've finished a Course for the first time, you will be able to challenge your ghost by typing `/pg play (course)`.
+This will join you to the Course automatically and display your ghost running the Course.
+</details>
+
+<details><summary>Integrated setup (Click to expand)</summary>
+For a more seamless experience, in ParkourGhost's config.yml set the following:
+
+```
+playback.countdown: false
+join_parkour_on_playback: false
+```
+
+Then in the Parkour config.yml add the following:
+
+```
+CourseDefault.Command.Join: 
+  - player:pg play %COURSE_NAME% 
+```
+
+This will automatically spawn the Ghost when you join the Course, and the countdown will be disabled.
+</details>
+
 ## Parkour Top Ten
 
 [Parkour Top Ten](https://www.spigotmc.org/resources/parkour-top-ten.46268/) was created by steve4744 to allow for the Player's Head to be proudly displayed next to their best times, great for a competitive Parkour server.
@@ -183,6 +212,7 @@ Parkour provides the following custom events for you to listen to:
 * io.github.a5h73y.parkour.event.ParkourCheckpointEvent
 * io.github.a5h73y.parkour.event.ParkourDeathEvent
 * io.github.a5h73y.parkour.event.ParkourFinishEvent
+* io.github.a5h73y.parkour.event.ParkourTimeResultEvent
 * io.github.a5h73y.parkour.event.ParkourJoinEvent
 * io.github.a5h73y.parkour.event.ParkourLeaveEvent
 * io.github.a5h73y.parkour.event.ParkourPlayerNewLevelEvent

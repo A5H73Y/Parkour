@@ -34,6 +34,7 @@ import io.github.a5h73y.parkour.event.ParkourPlayerNewLevelEvent;
 import io.github.a5h73y.parkour.event.ParkourPlayerNewRankEvent;
 import io.github.a5h73y.parkour.event.ParkourResetPlayerEvent;
 import io.github.a5h73y.parkour.event.ParkourRestartEvent;
+import io.github.a5h73y.parkour.event.ParkourTimeResultEvent;
 import io.github.a5h73y.parkour.other.AbstractPluginReceiver;
 import io.github.a5h73y.parkour.other.ParkourConstants;
 import io.github.a5h73y.parkour.other.TriConsumer;
@@ -120,19 +121,20 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	 * @param player requesting player
 	 * @param courseName course name
 	 */
-	public void joinCourse(Player player, String courseName) {
+	public boolean joinCourse(Player player, String courseName) {
 		Course course = parkour.getCourseManager().findCourse(courseName);
 
 		if (course == null) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, player);
-			return;
+			return false;
 		}
 
 		if (!canJoinCourse(player, course)) {
-			return;
+			return false;
 		}
 
 		joinCourse(player, course);
+		return true;
 	}
 
 	/**
@@ -530,7 +532,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 		final String courseName = session.getCourse().getName();
 		session.markTimeFinished();
-		Bukkit.getServer().getPluginManager().callEvent(new ParkourFinishEvent(player, courseName));
+		Bukkit.getServer().getPluginManager().callEvent(new ParkourFinishEvent(player, courseName, session));
 
 		announceCourseFinishMessage(player, session);
 		teardownParkourMode(player);
@@ -756,6 +758,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 	private void submitPlayerLeaderboard(Player player, ParkourSession session) {
 		TimeResult timeResult = calculateTimeResult(player, session);
+		Bukkit.getServer().getPluginManager().callEvent(new ParkourTimeResultEvent(player, session.getCourseName(), timeResult));
 
 		parkour.getDatabaseManager().insertOrUpdateTime(session.getCourseName(), player, session.getTimeFinished(),
 				session.getDeaths(), timeResult != TimeResult.NONE);

@@ -62,6 +62,7 @@ There are a list of Events that Parkour creates, that you can listen to:
 * io.github.a5h73y.parkour.event.ParkourCheckpointEvent
 * io.github.a5h73y.parkour.event.ParkourDeathEvent
 * io.github.a5h73y.parkour.event.ParkourFinishEvent
+* io.github.a5h73y.parkour.event.ParkourTimeResultEvent
 * io.github.a5h73y.parkour.event.ParkourJoinEvent
 * io.github.a5h73y.parkour.event.ParkourLeaveEvent
 * io.github.a5h73y.parkour.event.ParkourPlayerNewLevelEvent
