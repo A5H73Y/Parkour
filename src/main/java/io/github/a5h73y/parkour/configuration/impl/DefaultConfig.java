@@ -199,6 +199,7 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("DisplayTitle.Leave.Stay", 20);
 		this.setDefault("DisplayTitle.Finish.Enabled", true);
 		this.setDefault("DisplayTitle.Finish.Stay", 20);
+		this.setDefault("DisplayTitle.Record.Stay", 20);
 
 		this.setDefault("AutoStart.Enabled", true);
 		this.setDefault("AutoStart.Material", "BEDROCK");

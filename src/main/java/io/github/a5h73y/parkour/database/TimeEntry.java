@@ -1,7 +1,6 @@
 package io.github.a5h73y.parkour.database;
 
 import io.github.a5h73y.parkour.utility.PlayerUtils;
-import java.util.Date;
 
 /**
  * Representation model of a `Time` stored in the database.

@@ -1,6 +1,5 @@
 package io.github.a5h73y.parkour.utility;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 import com.cryptomorin.xseries.XPotion;
