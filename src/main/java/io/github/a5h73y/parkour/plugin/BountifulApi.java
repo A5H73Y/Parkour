@@ -21,6 +21,7 @@ public class BountifulApi extends PluginWrapper {
 	public static final String DEATH = "Death";
 	public static final String LEAVE = "Leave";
 	public static final String FINISH = "Finish";
+	public static final String RECORD = "Record";
 
 	private boolean useSpigotMethods;
 	private int inDuration;

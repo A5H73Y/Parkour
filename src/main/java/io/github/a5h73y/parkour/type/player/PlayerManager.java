@@ -776,7 +776,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 
 				parkour.getBountifulApi().sendFullTitle(player,
 						TranslationUtils.getCourseEventMessage(session, eventType, fallbackKey),
-						displayTime, null);
+						displayTime, BountifulApi.RECORD);
 			}
 		}
 	}
