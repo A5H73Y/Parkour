@@ -4,7 +4,6 @@ import static io.github.a5h73y.parkour.utility.PluginUtils.readContentsOfResourc
 
 import io.github.a5h73y.parkour.upgrade.ParkourUpgrader;
 import io.github.a5h73y.parkour.upgrade.TimedUpgradeTask;
-import io.github.a5h73y.parkour.utility.PluginUtils;
 import java.io.IOException;
 import java.sql.SQLException;
 import pro.husk.Database;
