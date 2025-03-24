@@ -3,9 +3,13 @@ Changelogs
 
 Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon server start up. There will be no manual intervention, unless stated in breaking changes.
 
+## 7.2.5
+
+* Reverted "Fix player teleports to avoid "moved too fast" problems" as it was causing too many issues
+* Applied fix specifically to fast restart to avoid "moved too fast" problems
+
 ## 7.2.4
 
-* Added "OnLeave.RetainResumableInventory" setting to restore course inventory
 * Added "OnLeave.RetainResumableInventory" setting to restore course inventory
 * Added "OnCourse.DisplayLiveTime.Milliseconds" for milliseconds in live timer
 * Added %parkour_topfirstplaces_(position)% & %parkour_player_total_firstplaces% placeholders

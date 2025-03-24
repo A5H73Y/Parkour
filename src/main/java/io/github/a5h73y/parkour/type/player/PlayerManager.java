@@ -635,7 +635,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			session.setFreedomLocation(null);
 			parkour.getConfigManager().getPlayerConfig(player).resetSessionData();
 			preparePlayerForCourse(player, session.getCourse().getName());
-			PlayerUtils.teleportToLocation(player, session.getCheckpoint().getLocation());
+			parkour.getServer().getScheduler().runTaskLater(parkour, () ->
+				PlayerUtils.teleportToLocation(player, session.getCheckpoint().getLocation()), 1L);
 			parkour.getScoreboardManager().addScoreboard(player, session);
 
 			if (parkour.getParkourConfig().isTreatFirstCheckpointAsStart()) {

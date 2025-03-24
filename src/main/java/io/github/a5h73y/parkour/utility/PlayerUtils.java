@@ -147,12 +147,8 @@ public class PlayerUtils {
 	 * @param location location
 	 */
 	public static void teleportToLocation(Player player, Location location) {
-		Parkour parkour = Parkour.getInstance();
-
-		parkour.getServer().getScheduler().runTaskLater(parkour, () -> {
-			player.setFallDistance(0);
-			player.teleport(location, PlayerTeleportEvent.TeleportCause.PLUGIN);
-		}, 1L);
+		player.setFallDistance(0);
+		player.teleport(location);
 	}
 
 	/**

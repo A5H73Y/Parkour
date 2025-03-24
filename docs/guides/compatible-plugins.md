@@ -173,11 +173,13 @@ An example could be walking on a pressure plate to leave the Course:
 ![Parkour Top Ten](https://i.imgur.com/117kzs5.png "ParkourGhost example")
 
 <details><summary>Default setup (Click to expand)</summary>
+
 Once you've finished a Course for the first time, you will be able to challenge your ghost by typing `/pg play (course)`.
 This will join you to the Course automatically and display your ghost running the Course.
 </details>
 
 <details><summary>Integrated setup (Click to expand)</summary>
+
 For a more seamless experience, in ParkourGhost's config.yml set the following:
 
 ```

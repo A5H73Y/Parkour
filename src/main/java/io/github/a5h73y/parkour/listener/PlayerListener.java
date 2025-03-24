@@ -86,7 +86,8 @@ public class PlayerListener extends AbstractPluginReceiver implements Listener {
         // they aren't on a Course and took void damage
         if (event.getCause() == EntityDamageEvent.DamageCause.VOID
                 && !playing && parkour.getParkourConfig().isVoidTeleportToLobby()) {
-            parkour.getLobbyManager().teleportToNearestLobby(player);
+            parkour.getServer().getScheduler().runTaskLater(parkour, () ->
+                    parkour.getLobbyManager().teleportToNearestLobby(player),1L);
         }
 
         if (!playing) {

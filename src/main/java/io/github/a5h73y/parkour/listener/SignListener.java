@@ -206,7 +206,6 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
                     return;
                 }
 
-
                 parkour.getGuiManager().showMenu(player, new JoinAllGui(Arrays.asList((lines[2] + " " + lines[3]).split(" "))));
                 break;
 
