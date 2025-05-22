@@ -185,6 +185,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			session = parkour.getParkourSessionManager().addPlayer(player, new ParkourSession(course));
 		}
 
+		teardownParkourMode(player);
+
 		displayJoinMessages(player, session);
 		setupParkourMode(player);
 
@@ -1636,16 +1638,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	}
 
 	private void teardownParkourMode(Player player) {
-		ParkourMode courseMode = parkour.getParkourSessionManager().getParkourSession(player).getParkourMode();
-
-		if (courseMode == ParkourMode.NONE) {
-			return;
-		}
-
-		if (courseMode == ParkourMode.SPEEDY) {
-			float speed = Float.parseFloat(parkour.getParkourConfig().getString("ParkourModes.Speedy.ResetSpeed"));
-			player.setWalkSpeed(speed);
-		}
+		float speed = Float.parseFloat(parkour.getParkourConfig().getString("ParkourModes.Speedy.ResetSpeed"));
+		player.setWalkSpeed(speed);
 	}
 
 	private void displayJoinMessages(Player player, ParkourSession session) {
