@@ -1638,8 +1638,10 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	}
 
 	private void teardownParkourMode(Player player) {
-		float speed = Float.parseFloat(parkour.getParkourConfig().getString("ParkourModes.Speedy.ResetSpeed"));
-		player.setWalkSpeed(speed);
+		if (player.getWalkSpeed() == Float.parseFloat(parkour.getParkourConfig().getString("ParkourModes.Speedy.SetSpeed"))) {
+			float speed = Float.parseFloat(parkour.getParkourConfig().getString("ParkourModes.Speedy.ResetSpeed"));
+			player.setWalkSpeed(speed);
+		}
 	}
 
 	private void displayJoinMessages(Player player, ParkourSession session) {
