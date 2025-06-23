@@ -172,6 +172,13 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		if (parkour.getParkourSessionManager().isPlaying(player)
 				&& !parkour.getParkourSessionManager().getParkourSession(player)
 				.getCourseName().equals(course.getName())) {
+			ParkourMode courseMode = parkour.getParkourSessionManager().getParkourSession(player).getParkourMode();
+
+			if (courseMode == ParkourMode.SPEEDY && course.getParkourMode() != ParkourMode.SPEEDY) {
+				float speed = Float.parseFloat(parkour.getParkourConfig().getString("ParkourModes.Speedy.ResetSpeed"));
+				player.setWalkSpeed(speed);
+			}
+
 			parkour.getParkourSessionManager().removePlayer(player);
 		}
 
@@ -184,8 +191,6 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		} else {
 			session = parkour.getParkourSessionManager().addPlayer(player, new ParkourSession(course));
 		}
-
-		teardownParkourMode(player);
 
 		displayJoinMessages(player, session);
 		setupParkourMode(player);
@@ -1638,7 +1643,13 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	}
 
 	private void teardownParkourMode(Player player) {
-		if (player.getWalkSpeed() != Float.parseFloat(parkour.getParkourConfig().getString("ParkourModes.Speedy.ResetSpeed"))) {
+		ParkourMode courseMode = parkour.getParkourSessionManager().getParkourSession(player).getParkourMode();
+
+		if (courseMode == ParkourMode.NONE) {
+			return;
+		}
+
+		if (courseMode == ParkourMode.SPEEDY) {
 			float speed = Float.parseFloat(parkour.getParkourConfig().getString("ParkourModes.Speedy.ResetSpeed"));
 			player.setWalkSpeed(speed);
 		}
