@@ -172,11 +172,8 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		if (parkour.getParkourSessionManager().isPlaying(player)
 				&& !parkour.getParkourSessionManager().getParkourSession(player)
 				.getCourseName().equals(course.getName())) {
-			ParkourMode courseMode = parkour.getParkourSessionManager().getParkourSession(player).getParkourMode();
-
-			if (courseMode == ParkourMode.SPEEDY && course.getParkourMode() != ParkourMode.SPEEDY) {
-				float speed = Float.parseFloat(parkour.getParkourConfig().getString("ParkourModes.Speedy.ResetSpeed"));
-				player.setWalkSpeed(speed);
+			if (course.getParkourMode() != ParkourMode.SPEEDY) {
+				teardownParkourMode(player);
 			}
 
 			parkour.getParkourSessionManager().removePlayer(player);
