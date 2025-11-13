@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Supplier;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -60,6 +61,7 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
     private static final String CHECKPOINT = "checkpoint";
     private static final String MILLISECONDS = "milliseconds";
     private static final String PLAYER = "player";
+    private static final String PLAYER_DISPLAY = "playerdisplay";
     private static final String DELIMITER = "/";
 
     private static final String PLACEHOLDER_API_CHECKPOINT_HOLOGRAM = "PlaceholderAPI.CheckpointHologram";
@@ -584,10 +586,18 @@ public class ParkourPlaceholders extends PlaceholderExpansion {
                 case PLAYER:
                     return result.getPlayerName();
 
+                case PLAYER_DISPLAY:
+                    return getDisplayName(result.getPlayerName());
+
                 default:
                     return INVALID_SYNTAX;
             }
         }
+    }
+
+    private String getDisplayName(String playerName) {
+        Player player = Bukkit.getPlayer(playerName);
+        return player != null ? player.getDisplayName() : playerName;
     }
 
     private String getCheckpointHologramMessage(ParkourSession session, String course, int checkpoint) {

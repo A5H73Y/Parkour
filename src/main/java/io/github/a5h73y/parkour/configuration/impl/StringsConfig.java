@@ -213,7 +213,9 @@ public class StringsConfig extends Yaml {
 		this.setDefault("Mode.Freedom.JoinText", "&6Freedom Tool &f- Right click: &2Save&f, Left click: &5Load");
 		this.setDefault("Mode.Freedom.Save", "Position saved");
 		this.setDefault("Mode.Freedom.Load", "Position loaded");
-		this.setDefault("Mode.Rockets.JoinText", "Use the Rocket Launcher to launch yourself");
+		this.setDefault("Mode.Rockets.JoinText", "Use the Rocket Launcher to launch yourself.");
+		this.setDefault("Mode.Rockets.MaxRockets", "You have been given &b%VALUE% &frockets to use on this course.");
+		this.setDefault("Mode.Rockets.RocketsExhausted", "You have run out of Rockets!");
 
 		this.setDefault("PlaceholderAPI.UnknownCourse", "Unknown Course");
 		this.setDefault("PlaceholderAPI.InvalidSyntax", "Invalid syntax");

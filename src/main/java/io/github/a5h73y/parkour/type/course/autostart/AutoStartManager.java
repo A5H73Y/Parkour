@@ -93,7 +93,7 @@ public class AutoStartManager extends ParkourManager {
 
 		getConfig().setAutoStartCourse(coordinates, courseName);
 
-		block.setType(XMaterial.STONE_PRESSURE_PLATE.parseMaterial());
+		block.setType(XMaterial.STONE_PRESSURE_PLATE.get());
 		Block blockUnder = block.getRelative(BlockFace.DOWN);
 		blockUnder.setType(parkour.getParkourConfig().getAutoStartMaterial());
 

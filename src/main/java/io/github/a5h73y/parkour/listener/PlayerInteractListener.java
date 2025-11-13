@@ -16,8 +16,10 @@ import io.github.a5h73y.parkour.utility.PlayerUtils;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TaskCooldowns;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
-import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BiConsumer;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -29,11 +31,12 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public class PlayerInteractListener extends AbstractPluginReceiver implements Listener {
 
-    private final EnumMap<Material, ParkourToolAction> parkourTools = new EnumMap<>(Material.class);
+    private final Map<String, ParkourToolAction> parkourTools = new HashMap<>();
 
     /**
      * Initialise the PlayerInteractListener.
@@ -255,7 +258,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             int rocketsUsed = config.getRocketsUsedInSession();
 
             if (rocketsUsed >= maximumRockets) {
-                TranslationUtils.sendMessage(player, "You have run out of Rockets!");
+                TranslationUtils.sendTranslation("Mode.Rockets.RocketsExhausted", player);
                 return;
             }
 
@@ -305,14 +308,25 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
 
     @Nullable
     private ParkourToolAction getMatchingToolAction(Player player) {
-        Material materialInHand = MaterialUtils.getMaterialInPlayersHand(player);
+        ItemStack materialInHand = MaterialUtils.getItemStackInPlayersHand(player);
 
-        if (XBlock.isAir(materialInHand)) {
+        if (XBlock.isAir(materialInHand.getType())) {
             return null;
         }
 
-        ParkourToolAction toolAction = parkourTools.get(materialInHand);
+        ParkourToolAction toolAction = null;
 
+        // does the custom name match?
+        if (materialInHand.getItemMeta() != null) {
+            toolAction = parkourTools.get(ChatColor.stripColor(materialInHand.getItemMeta().getDisplayName()));
+        }
+
+        // fallback to material name lookup
+        if (toolAction == null) {
+            toolAction = parkourTools.get(materialInHand.getType().name());
+        }
+
+        // nope, can't find anything
         if (toolAction == null) {
             return null;
         }
@@ -326,20 +340,20 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
         return toolAction;
     }
 
-    private void registerParkourTool(Material material,
+    private void registerParkourTool(String materialName,
                                      String toolName,
                                      boolean rightClickOnly,
                                      boolean includeSneakCheck,
                                      ParkourMode requiredParkourMode,
                                      BiConsumer<Player, Boolean> playerConsumer) {
-        if (material != null && material != Material.AIR) {
-            parkourTools.put(material,
+        if (materialName != null && !materialName.equals(Material.AIR.name())) {
+            parkourTools.put(materialName,
                     new ParkourToolAction(toolName, requiredParkourMode, rightClickOnly, includeSneakCheck, playerConsumer));
         }
     }
 
-    private void registerParkourTool(Material material, String toolName, BiConsumer<Player, Boolean> playerConsumer) {
-        registerParkourTool(material, toolName, true, true, null, playerConsumer);
+    private void registerParkourTool(String materialName, String toolName, BiConsumer<Player, Boolean> playerConsumer) {
+        registerParkourTool(materialName, toolName, true, true, null, playerConsumer);
     }
 
     public static class ParkourToolAction {

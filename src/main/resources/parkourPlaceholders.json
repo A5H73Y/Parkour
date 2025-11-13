@@ -150,8 +150,13 @@
       },
       {
         "placeholder": "%parkour_course_record_(course)_player%",
-        "output": "3",
+        "output": "A5H73Y",
         "description": "The Player's name for the global best time on the specified Course."
+      },
+      {
+        "placeholder": "%parkour_course_record_(course)_playerdisplay",
+        "output": "The Champion",
+        "description": "The Player's display name for the global best time on the specified Course."
       },
       {
         "placeholder": "%parkour_course_completions_(course)%",
@@ -291,6 +296,11 @@
         "description": "The Player's name for the global best time on the current Course."
       },
       {
+        "placeholder": "%parkour_current_course_record_playerdisplay%",
+        "output": "The Champion",
+        "description": "The Player's display name for the global best time on the current Course."
+      },
+      {
         "placeholder": "%parkour_current_course_personal_best_time%",
         "output": "00:01:23",
         "description": "The Player's best time on the current Course."
@@ -357,7 +367,12 @@
       {
         "placeholder": "%parkour_leaderboard_(course)_(position)_player%",
         "output": "A5H73Y",
-        "description": "The Player name on the specified Course, given the leaderboard position."
+        "description": "The Player's name on the specified Course, for the given leaderboard position."
+      },
+      {
+        "placeholder": "%parkour_leaderboard_(course)_(position)_playerdisplay%",
+        "output": "The Champion",
+        "description": "The Player's display name on the specified Course, for the given leaderboard position."
       }
     ]
   },

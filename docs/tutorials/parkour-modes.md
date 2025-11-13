@@ -45,7 +45,9 @@ This has now been replaced by the ability to set MaxFallTicks to 0, and setting 
 
 Inspired by CodJumping, when you use an RPG's explosion to propel yourself into the air to gain additional height and velocity.
 
-You will be given a 'Rocket Launcher', which is a Rocket by default. Simply right click with the item in your hand, and you will have a knock-back applied to your Player, which you can use to reach new heights and distances. The time between reuse can be configured, to reduce risk of it being abused.
+You will be given a 'Rocket Launcher', which is a Rocket by default. Simply right click with the item in your hand, and you will have a knock-back applied to your Player, which you can use to reach new heights and distances. 
+
+_The time between reuse can be configured, to reduce risk of it being abused. You can set a limit to the number of rockets given by setting `MaximumRockets` in the course's json file._
 
 ![Rocket Launcher Item](https://i.imgur.com/5xFkFHR.png "Rocket Launcher Item")
 

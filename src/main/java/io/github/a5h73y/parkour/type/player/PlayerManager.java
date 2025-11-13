@@ -172,6 +172,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		if (parkour.getParkourSessionManager().isPlaying(player)
 				&& !parkour.getParkourSessionManager().getParkourSession(player)
 				.getCourseName().equals(course.getName())) {
+			teardownParkourMode(player);
 			parkour.getParkourSessionManager().removePlayer(player);
 		}
 
@@ -721,7 +722,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		}
 
 		if (material != null && material != Material.AIR && amount > 0) {
-			result = MaterialUtils.createItemStack(material, amount, label, null, null);
+			result = MaterialUtils.createItemStack(material, amount, label, null);
 		}
 		return result;
 	}
@@ -1154,7 +1155,13 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			player.setWalkSpeed(speed);
 
 		} else if (courseMode == ParkourMode.ROCKETS) {
+            CourseConfig courseConfig = parkour.getConfigManager().getCourseConfig(session.getCourseName());
 			TranslationUtils.sendTranslation("Mode.Rockets.JoinText", player);
+            if (courseConfig.getMaximumRockets() != null) {
+                TranslationUtils.sendValueTranslation("Mode.Rockets.MaxRockets",
+                        String.valueOf(courseConfig.getMaximumRockets()), false, player);
+            }
+
 			giveParkourTool(player, "ParkourTool.Rockets");
 
 		} else if (courseMode == ParkourMode.POTION) {
@@ -1175,16 +1182,18 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 		String materialData = parkour.getParkourConfig()
 				.getOrDefault(configPath + ".Material", "AIR").toUpperCase();
 
-		MaterialUtils.MaterialData data = MaterialUtils.getMaterialData(materialData);
-		Material material = data.getMaterial();
+        Material material = MaterialUtils.lookupMaterial(materialData);
 
 		if (material != null && material != Material.AIR
 				&& !player.getInventory().contains(material)) {
 			int slot = parkour.getParkourConfig().getInt(configPath + ".Slot");
 			ItemStack itemStack = MaterialUtils.createItemStack(material, 1,
-					TranslationUtils.getTranslation(translationKey + ".Info", false), false,
-					data.getCustomModelData());
-			player.getInventory().setItem(slot, itemStack);
+					TranslationUtils.getTranslation(translationKey + ".Info", false), false);
+
+            while (player.getInventory().getItem(slot) != null && slot < player.getInventory().getSize() - 1) {
+                slot++;
+            }
+            player.getInventory().setItem(slot, itemStack);
 		}
 	}
 

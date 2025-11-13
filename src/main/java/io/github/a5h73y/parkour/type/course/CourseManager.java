@@ -579,7 +579,6 @@ public class CourseManager extends AbstractPluginReceiver {
                     findByName(courseName);
                 });
 
-        PluginUtils.log(courseNames.size() + " courses found.");
-        PluginUtils.log(courseCache.size() + " courses cached.");
+        PluginUtils.log(courseNames.size() + " courses found, " + courseCache.size() + " cached.");
     }
 }

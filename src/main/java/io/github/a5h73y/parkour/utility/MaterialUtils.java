@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -92,7 +93,7 @@ public class MaterialUtils {
 	 * @return created {@link ItemStack}
 	 */
 	public static ItemStack createItemStack(Material material, String itemLabel) {
-		return createItemStack(material, 1, itemLabel, false, null);
+		return createItemStack(material, 1, itemLabel, false);
 	}
 
 	/**
@@ -106,8 +107,7 @@ public class MaterialUtils {
 	public static ItemStack createItemStack(@NotNull Material material,
 	                                        int amount,
 	                                        @Nullable String itemLabel,
-	                                        @Nullable Boolean unbreakable,
-											@Nullable Integer customModelData) {
+	                                        @Nullable Boolean unbreakable) {
 		ItemStack itemStack = new ItemStack(material, amount);
 		ItemMeta itemMeta = itemStack.getItemMeta();
 
@@ -117,9 +117,6 @@ public class MaterialUtils {
 			}
 			if (Boolean.TRUE.equals(unbreakable)) {
 				itemMeta.setUnbreakable(true);
-			}
-			if (customModelData != null) {
-				itemMeta.setCustomModelData(customModelData);
 			}
 			itemStack.setItemMeta(itemMeta);
 		}
@@ -133,6 +130,7 @@ public class MaterialUtils {
 	 * @param materialName material name
 	 * @return matching Material
 	 */
+	@Nullable
 	public static Material lookupMaterial(String materialName) {
 		Material material = Material.getMaterial(materialName);
 
@@ -140,7 +138,7 @@ public class MaterialUtils {
 			Optional<XMaterial> matching = matchXMaterial(materialName);
 
 			if (matching.isPresent()) {
-				material = matching.get().parseMaterial();
+				material = matching.get().get();
 			}
 		}
 
@@ -158,21 +156,24 @@ public class MaterialUtils {
 	 */
 	public static void lookupMaterialInformation(Player player, @Nullable String materialName) {
 		Material material;
-		ItemStack data = null;
+		ItemStack item = null;
 
 		if (materialName != null) {
 			material = Material.getMaterial(materialName.toUpperCase());
 
 		} else {
-			data = getItemStackInPlayersHand(player);
-			material = data.getType();
+			item = getItemStackInPlayersHand(player);
+			material = item.getType();
 		}
 		if (material != null) {
 			TranslationUtils.sendValue(player, "Material", material.name());
-			if (data != null) {
-				TranslationUtils.sendValue(player, "Data", data.toString());
-				TranslationUtils.sendValue(player, "Base 64", Parkour.getInstance()
-						.getConfigManager().getItemStackSerializable().serialize(data));
+
+			if (item != null) {
+				TranslationUtils.sendValue(player, "Data", item.toString());
+
+				if (item.getItemMeta() != null) {
+					TranslationUtils.sendValue(player, "Display Name", ChatColor.stripColor(item.getItemMeta().getDisplayName()));
+				}
 			}
 		} else {
 			TranslationUtils.sendMessage(player, "Invalid Material!");
@@ -193,7 +194,7 @@ public class MaterialUtils {
 	 */
 	public static boolean isCheckpointSafe(Player player, Block block) {
 		//check if player is standing in a half-block
-		if (!block.getType().equals(Material.AIR) && !block.getType().equals(CAVE_AIR.parseMaterial())
+		if (!block.getType().equals(Material.AIR) && !block.getType().equals(CAVE_AIR.get())
 				&& !block.getType().equals(lookupMaterial(
 				Parkour.getDefaultConfig().getString("OnCourse.CheckpointMaterial")))) {
 			TranslationUtils.sendMessage(player, "Invalid Material for Checkpoint: &b" + block.getType());
@@ -243,24 +244,6 @@ public class MaterialUtils {
 				&& location1.getBlockZ() == location2.getBlockZ();
 	}
 
-	public static MaterialData getMaterialData(String materialData) {
-		MaterialData result = new MaterialData();
-		String materialName;
-
-		if (materialData.contains(":")) {
-			String[] dataParts = materialData.split(":");
-			materialName = dataParts[0];
-			if (ValidationUtils.isPositiveInteger(dataParts[1])) {
-				result.customModelData = Integer.valueOf(dataParts[1]);
-			}
-		} else {
-			materialName = materialData;
-		}
-
-		result.material = Material.getMaterial(materialName.toUpperCase());
-		return result;
-	}
-
 	/**
 	 * Get the known valid checkpoint materials.
 	 * We should update XBlock to include `isSlab` check.
@@ -270,49 +253,27 @@ public class MaterialUtils {
 	private static List<Material> getValidCheckpointMaterials() {
 		if (validCheckpointMaterials == null) {
 			validCheckpointMaterials = Arrays.asList(Material.AIR,
-					CAVE_AIR.parseMaterial(),
+					CAVE_AIR.get(),
 					Material.REDSTONE_BLOCK,
-					ACACIA_SLAB.parseMaterial(),
-					BIRCH_SLAB.parseMaterial(),
-					BRICK_SLAB.parseMaterial(),
-					COBBLESTONE_SLAB.parseMaterial(),
-					DARK_OAK_SLAB.parseMaterial(),
-					JUNGLE_SLAB.parseMaterial(),
-					OAK_SLAB.parseMaterial(),
-					NETHER_BRICK_SLAB.parseMaterial(),
-					PURPUR_SLAB.parseMaterial(),
-					QUARTZ_SLAB.parseMaterial(),
-					RED_SANDSTONE_SLAB.parseMaterial(),
-					SANDSTONE_SLAB.parseMaterial(),
-					SPRUCE_SLAB.parseMaterial(),
-					STONE_BRICK_SLAB.parseMaterial(),
-					STONE_SLAB.parseMaterial());
+					ACACIA_SLAB.get(),
+					BIRCH_SLAB.get(),
+					BRICK_SLAB.get(),
+					COBBLESTONE_SLAB.get(),
+					DARK_OAK_SLAB.get(),
+					JUNGLE_SLAB.get(),
+					OAK_SLAB.get(),
+					NETHER_BRICK_SLAB.get(),
+					PURPUR_SLAB.get(),
+					QUARTZ_SLAB.get(),
+					RED_SANDSTONE_SLAB.get(),
+					SANDSTONE_SLAB.get(),
+					SPRUCE_SLAB.get(),
+					STONE_BRICK_SLAB.get(),
+					STONE_SLAB.get());
 		}
 
 		return validCheckpointMaterials;
 	}
 
 	private MaterialUtils() {}
-
-	public static final class MaterialData {
-
-		private Material material;
-		private Integer customModelData;
-
-		public Material getMaterial() {
-			return material;
-		}
-
-		public void setMaterial(Material material) {
-			this.material = material;
-		}
-
-		public Integer getCustomModelData() {
-			return customModelData;
-		}
-
-		public void setCustomModelData(Integer customModelData) {
-			this.customModelData = customModelData;
-		}
-	}
 }

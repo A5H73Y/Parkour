@@ -49,6 +49,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.Conversable;
 import org.bukkit.entity.Player;
@@ -273,8 +274,8 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 	 * @param value flag value
 	 */
 	public void setDieInWater(@NotNull final CommandSender commandSender,
-							 @Nullable final String courseName,
-							 @Nullable Boolean value) {
+							  @Nullable final String courseName,
+							  @Nullable Boolean value) {
 		if (!doesCourseExist(courseName)) {
 			TranslationUtils.sendValueTranslation(ERROR_NO_EXIST, courseName, commandSender);
 			return;
@@ -973,8 +974,8 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			itemStack = MaterialUtils.getItemStackInPlayersHand((Player) commandSender);
 
 		} else {
-			MaterialUtils.MaterialData data = MaterialUtils.getMaterialData(args[2]);
-			if (data.getMaterial() == null) {
+			Material material = MaterialUtils.lookupMaterial(args[2]);
+			if (material == null) {
 				TranslationUtils.sendValueTranslation("Error.UnknownMaterial",
 						args[2].toUpperCase(), commandSender);
 				return;
@@ -986,15 +987,14 @@ public class CourseSettingsManager extends AbstractPluginReceiver implements Com
 			}
 
 			int amount = MaterialUtils.parseItemStackAmount(args[3]);
-			String label = args.length >= 5 ? args[4] : StringUtils.standardizeText(data.getMaterial().name());
+			String label = args.length >= 5 ? args[4] : StringUtils.standardizeText(material.name());
 			boolean unbreakable = args.length == 6 && Boolean.parseBoolean(args[5]);
 
-			itemStack = MaterialUtils.createItemStack(
-					data.getMaterial(), amount, label, unbreakable, data.getCustomModelData());
+			itemStack = MaterialUtils.createItemStack(material, amount, label, unbreakable);
 		}
 
 		String name;
-		// we didn't provide a course name
+		// we provided a course name
 		if (args.length > 1) {
 			name = args[1];
 			parkour.getConfigManager().getCourseConfig(args[1]).addJoinItem(itemStack);

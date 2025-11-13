@@ -166,15 +166,15 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("ParkourTool.HideAll.ActivateOnJoin", false);
 		this.setDefault("ParkourTool.HideAllEnabled.Material", "BONE");
 		this.setDefault("ParkourTool.HideAllEnabled.Slot", 1);
-		this.setDefault("ParkourTool.Leave.Material", XMaterial.OAK_SAPLING.parseMaterial().name());
+		this.setDefault("ParkourTool.Leave.Material", XMaterial.OAK_SAPLING.get().name());
 		this.setDefault("ParkourTool.Leave.Slot", 2);
 		this.setDefault("ParkourTool.Restart.Material", "STICK");
 		this.setDefault("ParkourTool.Restart.Slot", 3);
 		this.setDefault("ParkourTool.Restart.SecondCooldown", 1);
-		this.setDefault("ParkourTool.Freedom.Material", XMaterial.REDSTONE_TORCH.parseMaterial().name());
+		this.setDefault("ParkourTool.Freedom.Material", XMaterial.REDSTONE_TORCH.get().name());
 		this.setDefault("ParkourTool.Freedom.Slot", 4);
 		this.setDefault("ParkourTool.Freedom.SecondCooldown", 1);
-		this.setDefault("ParkourTool.Rockets.Material", XMaterial.FIREWORK_ROCKET.parseMaterial().name());
+		this.setDefault("ParkourTool.Rockets.Material", XMaterial.FIREWORK_ROCKET.get().name());
 		this.setDefault("ParkourTool.Rockets.Slot", 4);
 		this.setDefault("ParkourTool.Rockets.SecondCooldown", 1);
 
@@ -261,7 +261,7 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("Sounds.ReloadRocket.Pitch", 1.75f);
 
 		this.setDefault("ParkourGUI.Material", "BOOK");
-		this.setDefault("ParkourGUI.FillerMaterial", XMaterial.CYAN_STAINED_GLASS_PANE.parseMaterial().name());
+		this.setDefault("ParkourGUI.FillerMaterial", XMaterial.CYAN_STAINED_GLASS_PANE.get().name());
 
 		this.setDefault("ParkourKit.Enabled", true);
 		this.setDefault("ParkourKit.IncludeVehicles", false);
@@ -279,6 +279,7 @@ public class DefaultConfig extends Yaml {
 		this.setDefault("Other.LogAdminTasksToFile", true);
 		this.setDefault("Other.EnforceSafeCheckpoints", true);
 		this.setDefault("Other.PlayerConfigUsePlayerUUID", true);
+		this.setDefault("Other.ValidateMaterialNames", false);
 		this.setDefault("Other.Parkour.SignProtection", true);
 		this.setDefault("Other.Parkour.InventoryManagement", true);
 		this.setDefault("Other.Parkour.SignUsePermissions", false);
@@ -327,6 +328,10 @@ public class DefaultConfig extends Yaml {
 		detailedTimeFormat = setupDateFormat(this.getTimeDetailedFormatValue(), timeZone);
 		standardTimeFormat = setupDateFormat(this.getTimeStandardFormatValue(), timeZone);
 		placeholderTimeFormat = setupDateFormat(this.getTimePlaceholderValue(), timeZone);
+	}
+
+	public boolean isValidateMaterialNames() {
+		return this.getBoolean("Other.ValidateMaterialNames");
 	}
 
 	/**
@@ -552,32 +557,32 @@ public class DefaultConfig extends Yaml {
 	}
 
 	/* Materials */
-	public Material getLastCheckpointTool() {
-		return getMaterialOrDefault("ParkourTool.LastCheckpoint.Material", Material.AIR);
+	public String getLastCheckpointTool() {
+		return getMaterialNameOrDefault("ParkourTool.LastCheckpoint.Material", Material.AIR);
 	}
 
-	public Material getHideAllDisabledTool() {
-		return getMaterialOrDefault("ParkourTool.HideAll.Material", Material.AIR);
+	public String getHideAllDisabledTool() {
+		return getMaterialNameOrDefault("ParkourTool.HideAll.Material", Material.AIR);
 	}
 
-	public Material getHideAllEnabledTool() {
-		return getMaterialOrDefault("ParkourTool.HideAllEnabled.Material", Material.AIR);
+	public String getHideAllEnabledTool() {
+		return getMaterialNameOrDefault("ParkourTool.HideAllEnabled.Material", Material.AIR);
 	}
 
-	public Material getLeaveTool() {
-		return getMaterialOrDefault("ParkourTool.Leave.Material", Material.AIR);
+	public String getLeaveTool() {
+		return getMaterialNameOrDefault("ParkourTool.Leave.Material", Material.AIR);
 	}
 
-	public Material getRestartTool() {
-		return getMaterialOrDefault("ParkourTool.Restart.Material", Material.AIR);
+	public String getRestartTool() {
+		return getMaterialNameOrDefault("ParkourTool.Restart.Material", Material.AIR);
 	}
 
-	public Material getFreedomTool() {
-		return getMaterialOrDefault("ParkourTool.Freedom.Material", Material.AIR);
+	public String getFreedomTool() {
+		return getMaterialNameOrDefault("ParkourTool.Freedom.Material", Material.AIR);
 	}
 
-	public Material getRocketTool() {
-		return getMaterialOrDefault("ParkourTool.Rockets.Material", Material.AIR);
+	public String getRocketTool() {
+		return getMaterialNameOrDefault("ParkourTool.Rockets.Material", Material.AIR);
 	}
 
 	public Material getAutoStartMaterial() {
@@ -595,6 +600,14 @@ public class DefaultConfig extends Yaml {
 	private Material getMaterialOrDefault(String configPath, Material defaultMaterial) {
 		Material matchingMaterial = MaterialUtils.lookupMaterial(this.getString(configPath));
 		return matchingMaterial != null ? matchingMaterial : defaultMaterial;
+	}
+
+	private String getMaterialNameOrDefault(String configPath, Material defaultMaterial) {
+		if (isValidateMaterialNames()) {
+			return getMaterialOrDefault(configPath, defaultMaterial).name();
+		} else {
+			return this.getOrDefault(configPath, defaultMaterial.name());
+		}
 	}
 
 	public Material getCheckpointMaterial() {

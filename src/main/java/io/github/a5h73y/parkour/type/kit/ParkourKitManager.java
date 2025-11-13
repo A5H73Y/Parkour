@@ -115,7 +115,7 @@ public class ParkourKitManager extends CacheableParkourManager {
 		}
 
 		if (parkour.getParkourConfig().getBoolean("ParkourKit.GiveSign")) {
-			ItemStack itemStack = MaterialUtils.createItemStack(XMaterial.OAK_SIGN.parseMaterial(),
+			ItemStack itemStack = MaterialUtils.createItemStack(XMaterial.OAK_SIGN.get(),
 					TranslationUtils.getTranslation("Kit.Sign", false));
 			player.getInventory().addItem(itemStack);
 		}

@@ -52,9 +52,6 @@ public abstract class PluginWrapper extends AbstractPluginReceiver {
 			enabled = true;
 			PluginUtils.log("[" + getPluginDisplayName() + "] Successfully linked. "
 					+ "Version: " + externalPlugin.getDescription().getVersion(), 0);
-
-		} else {
-			PluginUtils.log("[" + getPluginDisplayName() + "] Plugin is missing, link was unsuccessful.", 1);
 		}
 	}
 
