@@ -1,13 +1,10 @@
 package io.github.a5h73y.parkour.utility.cache;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Generic Cache.
@@ -34,33 +31,20 @@ public class GenericCache<K, V> implements IGenericCache<K, V> {
 
     @Override
     public void clean() {
-        for (K key: this.getExpiredKeys()) {
-            this.remove(key);
-        }
+        LocalDateTime now = LocalDateTime.now();
+        cacheMap.entrySet().removeIf(entry -> {
+            CacheValue<V> cacheValue = entry.getValue();
+            if (cacheValue != null) {
+                LocalDateTime expirationDateTime = cacheValue.getCreatedAt().plusSeconds(this.cacheTimeout);
+                return now.isAfter(expirationDateTime);
+            }
+            return true;
+        });
     }
 
     @Override
     public boolean containsKey(K key) {
         return this.cacheMap.containsKey(key);
-    }
-
-    protected Set<K> getExpiredKeys() {
-        return this.cacheMap.keySet()
-                .parallelStream()
-                .filter(Objects::nonNull)
-                .filter(this::isExpired)
-                .collect(Collectors.toSet());
-    }
-
-    protected boolean isExpired(K key) {
-        boolean result = true;
-
-        CacheValue<V> cacheValue = this.cacheMap.get(key);
-        if (cacheValue != null) {
-            LocalDateTime expirationDateTime = cacheValue.getCreatedAt().plusSeconds(this.cacheTimeout);
-            result = LocalDateTime.now().isAfter(expirationDateTime);
-        }
-        return result;
     }
 
     @Override

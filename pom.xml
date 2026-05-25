@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.a5h73y</groupId>
 	<artifactId>Parkour</artifactId>
-	<version>7.2.5</version>
+	<version>7.2.6</version>
 	<packaging>jar</packaging>
 
 	<name>Parkour</name>
@@ -91,7 +91,7 @@
 		<dependency>
 			<groupId>me.clip</groupId>
 			<artifactId>placeholderapi</artifactId>
-			<version>2.11.7</version>
+			<version>2.12.2</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- Bountiful API -->
@@ -111,7 +111,7 @@
 		<dependency>
 			<groupId>org.bstats</groupId>
 			<artifactId>bstats-bukkit</artifactId>
-			<version>3.1.0</version>
+			<version>3.2.1</version>
 		</dependency>
 		<!-- MySQL Database -->
 		<dependency>
@@ -129,13 +129,13 @@
 		<dependency>
 			<groupId>de.themoep</groupId>
 			<artifactId>inventorygui</artifactId>
-			<version>1.6.2-SNAPSHOT</version>
+			<version>1.6.6-SNAPSHOT</version>
 		</dependency>
 		<!-- XSeries -->
 		<dependency>
 			<groupId>com.github.cryptomorin</groupId>
 			<artifactId>XSeries</artifactId>
-			<version>13.5.1</version>
+			<version>13.8.0</version>
 		</dependency>
 		<!-- Version Compare -->
 		<dependency>
@@ -153,19 +153,19 @@
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
-			<version>2.3</version>
+			<version>2.6</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>2.13.2</version>
+			<version>2.14.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
-			<version>20250517</version>
+			<version>20251224</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -177,7 +177,7 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>33.5.0-jre</version>
+			<version>33.6.0-jre</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
@@ -201,7 +201,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.14.1</version>
+				<version>3.15.0</version>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
@@ -211,7 +211,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.4.2</version>
+				<version>3.5.0</version>
 				<configuration>
 					<outputDirectory>${export_dir}</outputDirectory>
 				</configuration>
@@ -220,7 +220,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.6.1</version>
+				<version>3.6.2</version>
 				<configuration>
 					<createDependencyReducedPom>false</createDependencyReducedPom>
 					<minimizeJar>true</minimizeJar>
@@ -229,10 +229,13 @@
 							<artifact>*:*</artifact>
 							<excludes>
 								<exclude>META-INF/</exclude>
+								<exclude>com/cryptomorin/xseries/XAttribute*</exclude>
 								<exclude>com/cryptomorin/xseries/XBiome*</exclude>
+								<exclude>com/cryptomorin/xseries/XEnchantment*</exclude>
+								<exclude>com/cryptomorin/xseries/XItemFlag*</exclude>
+								<exclude>com/cryptomorin/xseries/particles/*</exclude>
 								<exclude>com/cryptomorin/xseries/NMSExtras*</exclude>
 								<exclude>com/cryptomorin/xseries/NoteBlockMusic*</exclude>
-								<exclude>com/cryptomorin/xseries/SkullCacheListener*</exclude>
 							</excludes>
 						</filter>
 					</filters>
@@ -270,7 +273,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.3.1</version>
+				<version>3.5.0</version>
 				<executions>
 					<execution>
 						<id>copy-my-resources</id>

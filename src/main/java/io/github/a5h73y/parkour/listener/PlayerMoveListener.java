@@ -25,12 +25,13 @@ public class PlayerMoveListener extends AbstractPluginReceiver implements Listen
      */
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (!parkour.getParkourSessionManager().isPlaying(event.getPlayer())) {
+        Player player = event.getPlayer();
+        ParkourSession session = parkour.getParkourSessionManager().getParkourSessionIfPlaying(player);
+
+        if (session == null) {
             return;
         }
 
-        Player player = event.getPlayer();
-        ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
         CourseSettings courseSettings = session.getCourse().getSettings();
 
         if (courseSettings.hasMaxFallTicks() && player.getFallDistance() > courseSettings.getMaxFallTicks()) {

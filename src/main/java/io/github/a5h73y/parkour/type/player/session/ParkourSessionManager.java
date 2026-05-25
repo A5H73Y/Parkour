@@ -96,6 +96,17 @@ public class ParkourSessionManager extends AbstractPluginReceiver implements Com
 	}
 
 	/**
+	 * Get the Player's {@link ParkourSession} if they are currently playing.
+	 *
+	 * @param player requesting player
+	 * @return player's ParkourSession if playing, null otherwise
+	 */
+	@Nullable
+	public ParkourSession getParkourSessionIfPlaying(Player player) {
+		return player != null ? parkourPlayers.get(player.getUniqueId()) : null;
+	}
+
+	/**
 	 * Check whether a Player has a ParkourSession.
 	 *
 	 * @param player requesting player

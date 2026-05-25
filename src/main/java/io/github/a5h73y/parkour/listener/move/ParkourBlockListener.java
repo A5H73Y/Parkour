@@ -8,6 +8,10 @@ import io.github.a5h73y.parkour.type.kit.ParkourKitAction;
 import io.github.a5h73y.parkour.type.player.session.ParkourSession;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
 import io.github.a5h73y.parkour.utility.PlayerUtils;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -17,10 +21,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
-
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
 
 public class ParkourBlockListener extends AbstractPluginReceiver implements Listener {
 
@@ -44,12 +44,13 @@ public class ParkourBlockListener extends AbstractPluginReceiver implements List
 	 */
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
-		if (!parkour.getParkourSessionManager().isPlaying(event.getPlayer())) {
+		Player player = event.getPlayer();
+		ParkourSession session = parkour.getParkourSessionManager().getParkourSessionIfPlaying(player);
+
+		if (session == null) {
 			return;
 		}
 
-		Player player = event.getPlayer();
-		ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
 		ParkourKit parkourKit = session.getCourse().getParkourKit();
 
 		if (parkourKit == null) {
@@ -61,12 +62,14 @@ public class ParkourBlockListener extends AbstractPluginReceiver implements List
 			return;
 		}
 
-		Material belowMaterial = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
+		Location playerLocation = player.getLocation();
+		Block playerBlock = playerLocation.getBlock();
+		Material belowMaterial = playerBlock.getRelative(BlockFace.DOWN).getType();
 
 		// if player is on half-block or jumping, get actual location.
 		if (!parkour.getParkourConfig().isLegacyGroundDetection()
-				&& (!XBlock.isAir(player.getLocation().getBlock().getType()) || !player.isOnGround())) {
-			belowMaterial = player.getLocation().getBlock().getType();
+				&& (!XBlock.isAir(playerBlock.getType()) || !player.isOnGround())) {
+			belowMaterial = playerBlock.getType();
 		}
 
 		// they are clearly hovering and another block is holding them up
@@ -90,8 +93,9 @@ public class ParkourBlockListener extends AbstractPluginReceiver implements List
 	}
 
 	private void performWallAction(Player player, ParkourKit parkourKit) {
+		Block playerBlock = player.getLocation().getBlock();
 		for (BlockFace blockFace : BLOCK_FACES) {
-			Material material = player.getLocation().getBlock().getRelative(blockFace).getType();
+			Material material = playerBlock.getRelative(blockFace).getType();
 			ParkourKitAction kitAction = parkourKit.getAction(material);
 
 			if (kitAction != null) {

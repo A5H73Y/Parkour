@@ -38,12 +38,12 @@ public class VehicleMoveListener extends AbstractPluginReceiver implements Liste
         }
 
         Player player = (Player) event.getVehicle().getPassenger();
+        ParkourSession session = parkour.getParkourSessionManager().getParkourSessionIfPlaying(player);
 
-        if (!parkour.getParkourSessionManager().isPlaying(player)) {
+        if (session == null) {
             return;
         }
 
-        ParkourSession session = parkour.getParkourSessionManager().getParkourSession(player);
         ParkourKit parkourKit = session.getCourse().getParkourKit();
 
         if (parkourKit == null) {

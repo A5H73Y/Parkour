@@ -12,6 +12,7 @@ import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.configuration.impl.DefaultConfig;
 import io.github.a5h73y.parkour.type.CacheableParkourManager;
 import io.github.a5h73y.parkour.type.Initializable;
+import io.github.a5h73y.parkour.type.player.TimeResult;
 import io.github.a5h73y.parkour.utility.PluginUtils;
 import io.github.a5h73y.parkour.utility.TranslationUtils;
 import io.github.a5h73y.parkour.utility.ValidationUtils;
@@ -27,7 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -234,7 +234,7 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
 
     /**
      * Get the Player's best time position on specified Course.
-     * 
+     *
      * @param player player
      * @param courseName course name
      * @return leaderboard position
@@ -451,6 +451,34 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
     }
 
     /**
+     * Asynchronously check if this is a best time (global or player).
+     * Executes database queries on async thread and invokes callback with result.
+     *
+     * @param player target player
+     * @param courseName course name
+     * @param time time in milliseconds
+     * @param callback consumer receiving TimeResult (GLOBAL_BEST, PLAYER_BEST, or NONE)
+     */
+    public void checkBestTimeAsync(OfflinePlayer player, String courseName, long time,
+                                   java.util.function.Consumer<TimeResult> callback) {
+        CompletableFuture.supplyAsync(() -> {
+            // Check global best first
+            if (isBestCourseTime(courseName, time)) {
+                return TimeResult.GLOBAL_BEST;
+            }
+            // Check player best
+            if (isBestCourseTime(player, courseName, time)) {
+                return TimeResult.PLAYER_BEST;
+            }
+            return TimeResult.NONE;
+        }).thenAccept(callback).exceptionally(throwable -> {
+            PluginUtils.log("[Database] Error checking best time: " + throwable.getMessage(), 2);
+            callback.accept(TimeResult.NONE);
+            return null;
+        });
+    }
+
+    /**
      * Insert a Course into the Database.
      * Once a course has been created, a record will be entered into the database giving it a unique numeric identifier.
      * This identifier is then used to reference the course throughout the database.
@@ -481,25 +509,26 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
 
         if (courseId > 0) {
             String insertTimeUpdate = "INSERT INTO time (courseId, playerId, time, deaths) VALUES (?, ?, ?, ?);";
+            String courseKey = courseName.toLowerCase();
 
-            try {
-                CompletableFuture.supplyAsync(() -> {
-                    int results = 0;
-                    try (PreparedStatement statement = getDatabaseConnection().prepareStatement(insertTimeUpdate)) {
-                        statement.setInt(1, courseId);
-                        statement.setString(2, getPlayerId(player));
-                        statement.setLong(3, time);
-                        statement.setInt(4, deaths);
-                        results = statement.executeUpdate();
-                    } catch (SQLException e) {
-                        logSqlException(e);
-                    }
-                    return results;
-                }).get();
-                resultsCache.remove(courseName.toLowerCase());
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
+            CompletableFuture.supplyAsync(() -> {
+                int results = 0;
+                try (PreparedStatement statement = getDatabaseConnection().prepareStatement(insertTimeUpdate)) {
+                    statement.setInt(1, courseId);
+                    statement.setString(2, getPlayerId(player));
+                    statement.setLong(3, time);
+                    statement.setInt(4, deaths);
+                    results = statement.executeUpdate();
+                } catch (SQLException e) {
+                    logSqlException(e);
+                }
+                return results;
+            }).thenAccept(results -> {
+                resultsCache.remove(courseKey);
+            }).exceptionally(throwable -> {
+                PluginUtils.log("[Database] Error inserting time: " + throwable.getMessage(), 2);
+                return null;
+            });
         }
     }
 
@@ -536,23 +565,24 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
     public void renameCourse(String targetCourseName, String desiredCourseName) {
         String renameCourseQuery = "UPDATE course SET name=? WHERE name=?";
 
-        try {
-            CompletableFuture.supplyAsync(() -> {
-                int results = 0;
-                try (PreparedStatement statement = getDatabaseConnection().prepareStatement(renameCourseQuery)) {
-                    statement.setString(1, targetCourseName);
-                    statement.setString(2, desiredCourseName);
-                    results = statement.executeUpdate();
-                } catch (SQLException e) {
-                    logSqlException(e);
-                }
-                return results;
-            }).get();
+        CompletableFuture.supplyAsync(() -> {
+            int results = 0;
+            try (PreparedStatement statement = getDatabaseConnection().prepareStatement(renameCourseQuery)) {
+                statement.setString(1, targetCourseName);
+                statement.setString(2, desiredCourseName);
+                results = statement.executeUpdate();
+            } catch (SQLException e) {
+                logSqlException(e);
+            }
+            return results;
+        }).thenAccept(results -> {
             resultsCache.remove(targetCourseName);
             courseIdCache.remove(targetCourseName);
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
+
+        }).exceptionally(throwable -> {
+            PluginUtils.log("[Database] Error renaming course: " + throwable.getMessage(), 2);
+            return null;
+        });
     }
 
     /**
@@ -564,21 +594,21 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
     public void deletePlayerTimes(@NotNull OfflinePlayer player) {
         String deletePlayerTimesUpdate = "DELETE FROM time WHERE playerId=?";
 
-        try {
-            CompletableFuture.supplyAsync(() -> {
-                int results = 0;
-                try (PreparedStatement statement = getDatabaseConnection().prepareStatement(deletePlayerTimesUpdate)) {
-                    statement.setString(1, getPlayerId(player));
-                    results = statement.executeUpdate();
-                } catch (SQLException e) {
-                    logSqlException(e);
-                }
-                return results;
-            }).get();
+        CompletableFuture.supplyAsync(() -> {
+            int results = 0;
+            try (PreparedStatement statement = getDatabaseConnection().prepareStatement(deletePlayerTimesUpdate)) {
+                statement.setString(1, getPlayerId(player));
+                results = statement.executeUpdate();
+            } catch (SQLException e) {
+                logSqlException(e);
+            }
+            return results;
+        }).thenAccept(results -> {
             clearCache();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
+        }).exceptionally(throwable -> {
+            PluginUtils.log("[Database] Error deleting player times: " + throwable.getMessage(), 2);
+            return null;
+        });
     }
 
     /**
@@ -590,22 +620,23 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
         int courseId = getCourseId(courseName);
         if (courseId > 0) {
             String deleteCourseTimesUpdate = "DELETE FROM time WHERE courseId=?";
+            String courseKey = courseName.toLowerCase();
 
-            try {
-                CompletableFuture.supplyAsync(() -> {
-                    int results = 0;
-                    try (PreparedStatement statement = getDatabaseConnection().prepareStatement(deleteCourseTimesUpdate)) {
-                        statement.setInt(1, courseId);
-                        results = statement.executeUpdate();
-                    } catch (SQLException e) {
-                        logSqlException(e);
-                    }
-                    return results;
-                }).get();
-                resultsCache.remove(courseName.toLowerCase());
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
+            CompletableFuture.supplyAsync(() -> {
+                int results = 0;
+                try (PreparedStatement statement = getDatabaseConnection().prepareStatement(deleteCourseTimesUpdate)) {
+                    statement.setInt(1, courseId);
+                    results = statement.executeUpdate();
+                } catch (SQLException e) {
+                    logSqlException(e);
+                }
+                return results;
+            }).thenAccept(results -> {
+                resultsCache.remove(courseKey);
+            }).exceptionally(throwable -> {
+                PluginUtils.log("[Database] Error deleting course times: " + throwable.getMessage(), 2);
+                return null;
+            });
         }
     }
 
@@ -620,23 +651,24 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
 
         if (courseId > 0) {
             String deletePlayerCourseTimes = "DELETE FROM time WHERE playerId=? AND courseId=?";
+            String courseKey = courseName.toLowerCase();
 
-            try {
-                CompletableFuture.supplyAsync(() -> {
-                    int results = 0;
-                    try (PreparedStatement statement = getDatabaseConnection().prepareStatement(deletePlayerCourseTimes)) {
-                        statement.setString(1, getPlayerId(player));
-                        statement.setInt(2, courseId);
-                        results = statement.executeUpdate();
-                    } catch (SQLException e) {
-                        logSqlException(e);
-                    }
-                    return results;
-                }).get();
-                resultsCache.remove(courseName.toLowerCase());
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
+            CompletableFuture.supplyAsync(() -> {
+                int results = 0;
+                try (PreparedStatement statement = getDatabaseConnection().prepareStatement(deletePlayerCourseTimes)) {
+                    statement.setString(1, getPlayerId(player));
+                    statement.setInt(2, courseId);
+                    results = statement.executeUpdate();
+                } catch (SQLException e) {
+                    logSqlException(e);
+                }
+                return results;
+            }).thenAccept(results -> {
+                resultsCache.remove(courseKey);
+            }).exceptionally(throwable -> {
+                PluginUtils.log("[Database] Error deleting player course times: " + throwable.getMessage(), 2);
+                return null;
+            });
         }
     }
 
@@ -651,22 +683,22 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
         String courseName = courseNameRaw.toLowerCase();
         String deleteCourseUpdate = "DELETE FROM course WHERE name=?";
 
-        try {
-            CompletableFuture.supplyAsync(() -> {
-                int results = 0;
-                try (PreparedStatement statement = getDatabaseConnection().prepareStatement(deleteCourseUpdate)) {
-                    statement.setString(1, courseName);
-                    results = statement.executeUpdate();
-                } catch (SQLException e) {
-                    logSqlException(e);
-                }
-                return results;
-            }).get();
+        CompletableFuture.supplyAsync(() -> {
+            int results = 0;
+            try (PreparedStatement statement = getDatabaseConnection().prepareStatement(deleteCourseUpdate)) {
+                statement.setString(1, courseName);
+                results = statement.executeUpdate();
+            } catch (SQLException e) {
+                logSqlException(e);
+            }
+            return results;
+        }).thenAccept(results -> {
             resultsCache.remove(courseName);
             courseIdCache.remove(courseName);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        }).exceptionally(throwable -> {
+            PluginUtils.log("[Database] Error deleting course and references: " + throwable.getMessage(), 2);
+            return null;
+        });
     }
 
     /**
@@ -688,6 +720,7 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
 
             count.close();
         } catch (SQLException throwables) {
+            PluginUtils.log("[Database] Error displaying database information: " + throwables.getMessage(), 2);
             throwables.printStackTrace();
         }
     }
@@ -835,6 +868,7 @@ public class DatabaseManager extends CacheableParkourManager implements Initiali
             database.update(readContentsOfResource(sqlResourcePrefix + "course.sql"));
             database.update(readContentsOfResource(sqlResourcePrefix + "time.sql"));
         } catch (IOException e) {
+            PluginUtils.log("[Database] Error setting up database tables: " + e.getMessage(), 2);
             e.printStackTrace();
         }
     }

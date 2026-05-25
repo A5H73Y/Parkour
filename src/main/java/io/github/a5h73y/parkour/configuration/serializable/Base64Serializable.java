@@ -4,10 +4,10 @@ import de.leonhard.storage.internal.serialize.SimplixSerializable;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.NotNull;
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 public abstract class Base64Serializable<T> implements SimplixSerializable<T> {
 
@@ -15,7 +15,7 @@ public abstract class Base64Serializable<T> implements SimplixSerializable<T> {
 	public T deserialize(Object input) throws ClassCastException {
 		T result = null;
 		try {
-			ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(input.toString()));
+			ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64.getMimeDecoder().decode(input.toString()));
 			BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
 			result = (T) dataInput.readObject();
 			dataInput.close();
@@ -32,7 +32,7 @@ public abstract class Base64Serializable<T> implements SimplixSerializable<T> {
 			BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
 			dataOutput.writeObject(value);
 			dataOutput.close();
-			return Base64Coder.encodeLines(outputStream.toByteArray());
+			return Base64.getMimeEncoder().encodeToString(outputStream.toByteArray());
 		} catch (Exception e) {
 			throw new IllegalStateException("Unable to save.", e);
 		}
