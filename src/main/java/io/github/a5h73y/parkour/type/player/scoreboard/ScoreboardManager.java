@@ -90,8 +90,7 @@ public class ScoreboardManager extends AbstractPluginReceiver {
 
         Scoreboard board = setupScoreboard(player, session);
 
-        if (parkour.getParkourConfig().isPreventPlayerCollisions()
-                && PluginUtils.getMinorServerVersion() > 8) {
+        if (parkour.getParkourConfig().isPreventPlayerCollisions()) {
             Team team = board.registerNewTeam(PLUGIN_NAME);
             team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
             team.addEntry(player.getName());
@@ -261,20 +260,12 @@ public class ScoreboardManager extends AbstractPluginReceiver {
 
     private String convertTitle(String title) {
         title = titleFormat.replace("%VALUE%", title);
-        return cropAndColour(title);
+        return StringUtils.colour(title);
     }
 
     private String convertText(String value) {
         value = textFormat.replace("%VALUE%", value);
-        return cropAndColour(value);
-    }
-
-    private String cropAndColour(String text) {
-        text = StringUtils.colour(text);
-        if (PluginUtils.getMinorServerVersion() < 10) {
-            text = text.substring(0, Math.min(15, text.length()));
-        }
-        return text;
+        return StringUtils.colour(value);
     }
 
     /**

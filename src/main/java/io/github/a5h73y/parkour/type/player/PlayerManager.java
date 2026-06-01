@@ -1497,10 +1497,9 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 			return;
 		}
 
-		boolean useTitles = parkour.getBountifulApi().hasTitleSupport();
 		boolean displayMilliseconds = parkour.getParkourConfig().getBoolean("OnCourse.DisplayLiveTime.Milliseconds");
 
-		if (displayMilliseconds && useTitles) {
+		if (displayMilliseconds) {
 			startMillisecondLiveTimer();
 		}
 
@@ -1528,7 +1527,7 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 					parkour.getSoundsManager().playSound(player, SoundType.SECOND_INCREMENT);
 				}
 
-				if (!displayMilliseconds && displayLiveTimer && useTitles) {
+				if (!displayMilliseconds && displayLiveTimer) {
 					parkour.getBountifulApi().sendActionBar(player, liveTimer);
 				}
 

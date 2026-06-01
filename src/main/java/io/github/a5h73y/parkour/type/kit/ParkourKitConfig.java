@@ -4,7 +4,6 @@ import de.leonhard.storage.Yaml;
 import io.github.a5h73y.parkour.Parkour;
 import io.github.a5h73y.parkour.other.ParkourConstants;
 import io.github.a5h73y.parkour.utility.MaterialUtils;
-import io.github.a5h73y.parkour.utility.PluginUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -168,16 +167,9 @@ public class ParkourKitConfig extends Yaml {
 		this.set(name + "." + matching.name() + ".Strength", 0.4);
 		matching = MaterialUtils.lookupMaterial("GOLD_BLOCK");
 		this.set(name + "." + matching.name() + ".Action", "norun");
-
-		if (PluginUtils.getMinorServerVersion() <= 12) {
-			this.set(name + ".HUGE_MUSHROOM_2.Action", "finish");
-			this.set(name + ".HUGE_MUSHROOM_1.Action", "nopotion");
-
-		} else {
-			matching = MaterialUtils.lookupMaterial("RED_MUSHROOM_BLOCK");
-			this.set(name + "." + matching.name() + ".Action", "finish");
-			matching = MaterialUtils.lookupMaterial("BROWN_MUSHROOM_BLOCK");
-			this.set(name + "." + matching.name() + ".Action", "nopotion");
-		}
+		matching = MaterialUtils.lookupMaterial("RED_MUSHROOM_BLOCK");
+		this.set(name + "." + matching.name() + ".Action", "finish");
+		matching = MaterialUtils.lookupMaterial("BROWN_MUSHROOM_BLOCK");
+		this.set(name + "." + matching.name() + ".Action", "nopotion");
 	}
 }

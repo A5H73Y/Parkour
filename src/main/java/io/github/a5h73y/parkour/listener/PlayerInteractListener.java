@@ -118,7 +118,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
             return;
         }
 
-        if (PluginUtils.getMinorServerVersion() > 8 && !EquipmentSlot.HAND.equals(event.getHand())) {
+        if (!EquipmentSlot.HAND.equals(event.getHand())) {
             return;
         }
 

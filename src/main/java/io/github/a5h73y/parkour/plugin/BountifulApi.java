@@ -23,7 +23,6 @@ public class BountifulApi extends PluginWrapper {
 	public static final String FINISH = "Finish";
 	public static final String RECORD = "Record";
 
-	private boolean useSpigotMethods;
 	private int inDuration;
 	private int outDuration;
 
@@ -40,14 +39,10 @@ public class BountifulApi extends PluginWrapper {
 	protected void initialise() {
 		super.initialise();
 
-		useSpigotMethods = PluginUtils.getMinorServerVersion() > 10;
 		inDuration = parkour.getParkourConfig().getTitleIn();
 		outDuration = parkour.getParkourConfig().getTitleOut();
 	}
 
-	public boolean hasTitleSupport() {
-		return useSpigotMethods || isEnabled();
-	}
 
 	/**
 	 * Send the Player the title.
@@ -94,14 +89,13 @@ public class BountifulApi extends PluginWrapper {
 		if (isTitleEnabled(configEntry)) {
 			int stayDuration = getStayDuration(configEntry);
 
-			if (useSpigotMethods) {
-				player.sendTitle(title, subTitle, inDuration, stayDuration, outDuration);
-				return;
-
-			} else if (isEnabled()) {
+			if (isEnabled()) {
 				BountifulAPI.sendTitle(player, inDuration, stayDuration, outDuration, title, subTitle);
-				return;
+
+			} else {
+				player.sendTitle(title, subTitle, inDuration, stayDuration, outDuration);
 			}
+			return;
 		}
 
 		StringBuilder message = new StringBuilder();
@@ -132,14 +126,10 @@ public class BountifulApi extends PluginWrapper {
 		}
 
 		if (isTitleEnabled(configEntry)) {
-			if (useSpigotMethods) {
-				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(title));
-
-			} else if (isEnabled()) {
+			if (isEnabled()) {
 				BountifulAPI.sendActionBar(player, title);
-
 			} else {
-				TranslationUtils.sendMessage(player, title);
+				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(title));
 			}
 		} else {
 			TranslationUtils.sendMessage(player, title);

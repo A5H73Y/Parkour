@@ -208,25 +208,6 @@ public class MaterialUtils {
 			return false;
 		}
 
-		if (PluginUtils.getMinorServerVersion() > 12) {
-			return true;
-		}
-
-		List<Material> validMaterials = getValidCheckpointMaterials();
-		if (!blockUnder.getType().isOccluding()) {
-			if (blockUnder.getState().getData() instanceof Stairs) {
-				Stairs stairs = (Stairs) blockUnder.getState().getData();
-				if (!stairs.isInverted()) {
-					TranslationUtils.sendMessage(player,
-							"Invalid Material for Checkpoint: &b" + blockUnder.getType());
-					return false;
-				}
-			} else if (!validMaterials.contains(blockUnder.getType())) {
-				TranslationUtils.sendMessage(player,
-						"Invalid Material for Checkpoint: &b" + blockUnder.getType());
-				return false;
-			}
-		}
 		return true;
 	}
 
@@ -242,37 +223,6 @@ public class MaterialUtils {
 				&& location1.getBlockX() == location2.getBlockX()
 				&& location1.getBlockY() == location2.getBlockY()
 				&& location1.getBlockZ() == location2.getBlockZ();
-	}
-
-	/**
-	 * Get the known valid checkpoint materials.
-	 * We should update XBlock to include `isSlab` check.
-	 *
-	 * @return valid materials
-	 */
-	private static List<Material> getValidCheckpointMaterials() {
-		if (validCheckpointMaterials == null) {
-			validCheckpointMaterials = Arrays.asList(Material.AIR,
-					CAVE_AIR.get(),
-					Material.REDSTONE_BLOCK,
-					ACACIA_SLAB.get(),
-					BIRCH_SLAB.get(),
-					BRICK_SLAB.get(),
-					COBBLESTONE_SLAB.get(),
-					DARK_OAK_SLAB.get(),
-					JUNGLE_SLAB.get(),
-					OAK_SLAB.get(),
-					NETHER_BRICK_SLAB.get(),
-					PURPUR_SLAB.get(),
-					QUARTZ_SLAB.get(),
-					RED_SANDSTONE_SLAB.get(),
-					SANDSTONE_SLAB.get(),
-					SPRUCE_SLAB.get(),
-					STONE_BRICK_SLAB.get(),
-					STONE_SLAB.get());
-		}
-
-		return validCheckpointMaterials;
 	}
 
 	private MaterialUtils() {}
