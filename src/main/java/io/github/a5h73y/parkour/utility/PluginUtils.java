@@ -97,8 +97,12 @@ public class PluginUtils {
     }
 
     public static String readContentsOfResource(String resourcePath) throws IOException {
-        InputStream inputStream = Parkour.getInstance().getResource(resourcePath);
-        return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        try (InputStream inputStream = Parkour.getInstance().getResource(resourcePath)) {
+            if (inputStream == null) {
+                throw new IOException("Resource not found: " + resourcePath);
+            }
+            return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        }
     }
 
     /**

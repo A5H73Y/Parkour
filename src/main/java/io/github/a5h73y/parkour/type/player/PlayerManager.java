@@ -759,39 +759,28 @@ public class PlayerManager extends AbstractPluginReceiver implements Initializab
 	}
 
 	private void submitPlayerLeaderboard(Player player, ParkourSession session) {
-		// Check best time asynchronously to avoid blocking main thread
-		parkour.getDatabaseManager().checkBestTimeAsync(player, session.getCourseName(),
-				session.getTimeFinished(), timeResult -> {
-					// This callback runs on the async thread, schedule back to main thread for Bukkit API calls
-					Bukkit.getScheduler().runTask(parkour, () -> {
-						// Fire event on main thread
-						Bukkit.getServer().getPluginManager().callEvent(
-								new ParkourTimeResultEvent(player, session.getCourseName(), timeResult));
+		TimeResult timeResult = calculateTimeResult(player, session);
+		Bukkit.getServer().getPluginManager().callEvent(new ParkourTimeResultEvent(player, session.getCourseName(), timeResult));
 
-						// Insert time asynchronously (non-blocking)
-						parkour.getDatabaseManager().insertOrUpdateTime(session.getCourseName(), player,
-								session.getTimeFinished(), session.getDeaths(), timeResult != TimeResult.NONE);
+		parkour.getDatabaseManager().insertOrUpdateTime(session.getCourseName(), player, session.getTimeFinished(),
+				session.getDeaths(), timeResult != TimeResult.NONE);
 
-						// Display record messages if applicable
-						if (timeResult != TimeResult.NONE) {
-							ParkourEventType eventType = timeResult == TimeResult.GLOBAL_BEST
-									? GLOBAL_COURSE_RECORD : PLAYER_COURSE_RECORD;
-							String fallbackKey = timeResult == TimeResult.GLOBAL_BEST
-									? "Parkour.CourseRecord" : "Parkour.BestTime";
+		if (timeResult != TimeResult.NONE) {
+			ParkourEventType eventType = timeResult == TimeResult.GLOBAL_BEST
+					? GLOBAL_COURSE_RECORD : PLAYER_COURSE_RECORD;
+			String fallbackKey = timeResult == TimeResult.GLOBAL_BEST ? "Parkour.CourseRecord" : "Parkour.BestTime";
 
-							parkour.getPlaceholderApi().clearCache();
-							parkour.getCourseManager().runEventCommands(player, session, eventType);
+			parkour.getPlaceholderApi().clearCache();
+			parkour.getCourseManager().runEventCommands(player, session, eventType);
 
-							if (parkour.getParkourConfig().getBoolean("OnFinish.DisplayNewRecords")) {
-								String displayTime = DateTimeUtils.displayCurrentTime(session.getTimeFinished());
+			if (parkour.getParkourConfig().getBoolean("OnFinish.DisplayNewRecords")) {
+				String displayTime = DateTimeUtils.displayCurrentTime(session.getTimeFinished());
 
-								parkour.getBountifulApi().sendFullTitle(player,
-										TranslationUtils.getCourseEventMessage(session, eventType, fallbackKey),
-										displayTime, BountifulApi.RECORD);
-							}
-						}
-					});
-				});
+				parkour.getBountifulApi().sendFullTitle(player,
+						TranslationUtils.getCourseEventMessage(session, eventType, fallbackKey),
+						displayTime, BountifulApi.RECORD);
+			}
+		}
 	}
 
 	/**
