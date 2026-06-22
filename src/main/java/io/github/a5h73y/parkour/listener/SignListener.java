@@ -14,6 +14,7 @@ import io.github.a5h73y.parkour.utility.ValidationUtils;
 import io.github.a5h73y.parkour.utility.permission.Permission;
 import io.github.a5h73y.parkour.utility.permission.PermissionUtils;
 import java.util.Arrays;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -265,8 +266,10 @@ public class SignListener extends AbstractPluginReceiver implements Listener {
 
                 } else if (TaskCooldowns.getInstance().delayPlayerWithMessage(player, "leaderboards", 4)) {
                     int amount = lines[3].isEmpty() ? 5 : Integer.parseInt(lines[3]);
-                    parkour.getDatabaseManager().displayTimeEntries(player, lines[2],
-                            parkour.getDatabaseManager().getTopCourseResults(lines[2], amount));
+                    String courseName = lines[2];
+                    Bukkit.getScheduler().runTaskAsynchronously(parkour, () ->
+                            parkour.getDatabaseManager().displayTimeEntries(player, courseName,
+                                    parkour.getDatabaseManager().getTopCourseResults(courseName, amount)));
                 }
                 break;
 
