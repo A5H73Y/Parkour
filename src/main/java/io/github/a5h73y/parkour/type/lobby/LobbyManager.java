@@ -263,9 +263,6 @@ public class LobbyManager extends CacheableParkourManager {
             } else {
                 TranslationUtils.sendMessage(player, "&cDefault Lobby has not been set! Please tell the Owner!");
             }
-        } else if (Bukkit.getWorld(Parkour.getLobbyConfig().getLobbyWorld(DEFAULT)) == null) {
-            TranslationUtils.sendTranslation("Error.UnknownWorld", player);
-            lobbySet = false;
         }
         return lobbySet;
     }
@@ -280,11 +277,6 @@ public class LobbyManager extends CacheableParkourManager {
     private boolean canJoinLobby(Player player, String lobbyName) {
         if (!Parkour.getLobbyConfig().doesLobbyExist(lobbyName)) {
             TranslationUtils.sendValueTranslation("Error.UnknownLobby", lobbyName, player);
-            return false;
-        }
-
-        if (Bukkit.getWorld(Parkour.getLobbyConfig().getLobbyWorld(lobbyName)) == null) {
-            TranslationUtils.sendTranslation("Error.UnknownWorld", player);
             return false;
         }
 
@@ -314,10 +306,6 @@ public class LobbyManager extends CacheableParkourManager {
      */
     private boolean canJoinLobbySilent(Player player, String lobbyName) {
         if (!Parkour.getLobbyConfig().doesLobbyExist(lobbyName)) {
-            return false;
-        }
-
-        if (Bukkit.getWorld(Parkour.getDefaultConfig().getString("Lobby." + lobbyName + ".World")) == null) {
             return false;
         }
 
