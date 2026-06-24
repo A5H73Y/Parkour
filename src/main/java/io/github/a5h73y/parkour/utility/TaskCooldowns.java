@@ -1,8 +1,8 @@
 package io.github.a5h73y.parkour.utility;
 
 import io.github.a5h73y.parkour.Parkour;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 import org.bukkit.entity.Player;
@@ -17,7 +17,7 @@ public enum TaskCooldowns {
 
     INSTANCE;
 
-    private final Map<String, Long> taskDelays = new HashMap<>();
+    private final Map<String, Long> taskDelays = new ConcurrentHashMap<>();
 
     TaskCooldowns() {
         initialiseCleanup();
@@ -122,11 +122,12 @@ public enum TaskCooldowns {
      * To keep the size of the map relatively small.
      */
     private void initialiseCleanup() {
+        long oneHourInTicks = 20L * 3600L;
         new BukkitRunnable() {
             @Override
             public void run() {
                 taskDelays.clear();
             }
-        }.runTaskTimer(Parkour.getInstance(), 0, 3600000);
+        }.runTaskTimer(Parkour.getInstance(), oneHourInTicks, oneHourInTicks);
     }
 }

@@ -154,6 +154,7 @@ public class PlayerInteractListener extends AbstractPluginReceiver implements Li
     @EventHandler
     public void onCheckpointEvent(PlayerInteractEvent event) {
         if (event.getAction() != Action.PHYSICAL
+                || event.getClickedBlock() == null
                 || !parkour.getParkourSessionManager().isPlaying(event.getPlayer())) {
             return;
         }

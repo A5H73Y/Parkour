@@ -3,6 +3,10 @@ Changelogs
 
 Please note that each version of Parkour is backwards compatible with the previous version and will automatically upgrade your config upon server start up. There will be no manual intervention, unless stated in breaking changes.
 
+## 7.2.8
+
+* Even more fixes for 26.1
+
 ## 7.2.7
 
 * More fixes for 26.1
